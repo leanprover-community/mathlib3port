@@ -152,7 +152,8 @@ def compRel {α : Type u} (r₁ r₂ : Set (α × α)) :=
 scoped[uniformity] infixl:55 " ○ " => compRel
 
 @[simp]
-theorem mem_comp_rel {r₁ r₂ : Set (α × α)} {x y : α} : (x, y) ∈ r₁ ○ r₂ ↔ ∃ z, (x, z) ∈ r₁ ∧ (z, y) ∈ r₂ :=
+theorem mem_comp_rel {r₁ r₂ : Set (α × α)} {x y : α} :
+    (x, y) ∈ r₁ ○ r₂ ↔ ∃ z, (x, z) ∈ r₁ ∧ (z, y) ∈ r₂ :=
   Iff.rfl
 #align mem_comp_rel mem_comp_rel
 
@@ -166,11 +167,12 @@ theorem monotone_comp_rel [Preorder β] {f g : β → Set (α × α)} (hf : Mono
 #align monotone_comp_rel monotone_comp_rel
 
 @[mono]
-theorem comp_rel_mono {f g h k : Set (α × α)} (h₁ : f ⊆ h) (h₂ : g ⊆ k) : f ○ g ⊆ h ○ k := fun ⟨x, y⟩ ⟨z, h, h'⟩ =>
-  ⟨z, h₁ h, h₂ h'⟩
+theorem comp_rel_mono {f g h k : Set (α × α)} (h₁ : f ⊆ h) (h₂ : g ⊆ k) : f ○ g ⊆ h ○ k :=
+  fun ⟨x, y⟩ ⟨z, h, h'⟩ => ⟨z, h₁ h, h₂ h'⟩
 #align comp_rel_mono comp_rel_mono
 
-theorem prod_mk_mem_comp_rel {a b c : α} {s t : Set (α × α)} (h₁ : (a, c) ∈ s) (h₂ : (c, b) ∈ t) : (a, b) ∈ s ○ t :=
+theorem prod_mk_mem_comp_rel {a b c : α} {s t : Set (α × α)} (h₁ : (a, c) ∈ s) (h₂ : (c, b) ∈ t) :
+    (a, b) ∈ s ○ t :=
   ⟨c, h₁, h₂⟩
 #align prod_mk_mem_comp_rel prod_mk_mem_comp_rel
 
@@ -183,7 +185,8 @@ theorem comp_rel_assoc {r s t : Set (α × α)} : r ○ s ○ t = r ○ (s ○ t
   ext p <;> cases p <;> simp only [mem_comp_rel] <;> tauto
 #align comp_rel_assoc comp_rel_assoc
 
-theorem left_subset_comp_rel {s t : Set (α × α)} (h : idRel ⊆ t) : s ⊆ s ○ t := fun ⟨x, y⟩ xy_in => ⟨y, xy_in, h <| rfl⟩
+theorem left_subset_comp_rel {s t : Set (α × α)} (h : idRel ⊆ t) : s ⊆ s ○ t := fun ⟨x, y⟩ xy_in =>
+  ⟨y, xy_in, h <| rfl⟩
 #align left_subset_comp_rel left_subset_comp_rel
 
 theorem right_subset_comp_rel {s t : Set (α × α)} (h : idRel ⊆ s) : t ⊆ s ○ t := fun ⟨x, y⟩ xy_in =>
@@ -194,7 +197,8 @@ theorem subset_comp_self {s : Set (α × α)} (h : idRel ⊆ s) : s ⊆ s ○ s 
   left_subset_comp_rel h
 #align subset_comp_self subset_comp_self
 
-theorem subset_iterate_comp_rel {s t : Set (α × α)} (h : idRel ⊆ s) (n : ℕ) : t ⊆ ((· ○ ·) s^[n]) t := by
+theorem subset_iterate_comp_rel {s t : Set (α × α)} (h : idRel ⊆ s) (n : ℕ) :
+    t ⊆ ((· ○ ·) s^[n]) t := by
   induction' n with n ihn generalizing t
   exacts[subset.rfl, (right_subset_comp_rel h).trans ihn]
 #align subset_iterate_comp_rel subset_iterate_comp_rel
@@ -222,7 +226,8 @@ theorem symmetrize_mono {V W : Set (α × α)} (h : V ⊆ W) : symmetrizeRel V �
   inter_subset_inter h <| preimage_mono h
 #align symmetrize_mono symmetrize_mono
 
-theorem SymmetricRel.mk_mem_comm {V : Set (α × α)} (hV : SymmetricRel V) {x y : α} : (x, y) ∈ V ↔ (y, x) ∈ V :=
+theorem SymmetricRel.mk_mem_comm {V : Set (α × α)} (hV : SymmetricRel V) {x y : α} :
+    (x, y) ∈ V ↔ (y, x) ∈ V :=
   Set.ext_iff.1 hV (y, x)
 #align symmetric_rel.mk_mem_comm SymmetricRel.mk_mem_comm
 
@@ -230,8 +235,8 @@ theorem SymmetricRel.eq {U : Set (α × α)} (hU : SymmetricRel U) : Prod.swap �
   hU
 #align symmetric_rel.eq SymmetricRel.eq
 
-theorem SymmetricRel.inter {U V : Set (α × α)} (hU : SymmetricRel U) (hV : SymmetricRel V) : SymmetricRel (U ∩ V) := by
-  rw [SymmetricRel, preimage_inter, hU.eq, hV.eq]
+theorem SymmetricRel.inter {U V : Set (α × α)} (hU : SymmetricRel U) (hV : SymmetricRel V) :
+    SymmetricRel (U ∩ V) := by rw [SymmetricRel, preimage_inter, hU.eq, hV.eq]
 #align symmetric_rel.inter SymmetricRel.inter
 
 /-- This core description of a uniform space is outside of the type class hierarchy. It is useful
@@ -246,7 +251,8 @@ structure UniformSpace.Core (α : Type u) where
 /-- An alternative constructor for `uniform_space.core`. This version unfolds various
 `filter`-related definitions. -/
 def UniformSpace.Core.mk' {α : Type u} (U : Filter (α × α)) (refl : ∀ r ∈ U, ∀ (x), (x, x) ∈ r)
-    (symm : ∀ r ∈ U, Prod.swap ⁻¹' r ∈ U) (comp : ∀ r ∈ U, ∃ t ∈ U, t ○ t ⊆ r) : UniformSpace.Core α :=
+    (symm : ∀ r ∈ U, Prod.swap ⁻¹' r ∈ U) (comp : ∀ r ∈ U, ∃ t ∈ U, t ○ t ⊆ r) :
+    UniformSpace.Core α :=
   ⟨U, fun r ru => id_rel_subset.2 (refl _ ru), symm, by
     intro r ru
     rw [mem_lift'_sets]
@@ -255,24 +261,31 @@ def UniformSpace.Core.mk' {α : Type u} (U : Filter (α × α)) (refl : ∀ r �
 #align uniform_space.core.mk' UniformSpace.Core.mk'
 
 /-- Defining an `uniform_space.core` from a filter basis satisfying some uniformity-like axioms. -/
-def UniformSpace.Core.mkOfBasis {α : Type u} (B : FilterBasis (α × α)) (refl : ∀ r ∈ B, ∀ (x), (x, x) ∈ r)
-    (symm : ∀ r ∈ B, ∃ t ∈ B, t ⊆ Prod.swap ⁻¹' r) (comp : ∀ r ∈ B, ∃ t ∈ B, t ○ t ⊆ r) : UniformSpace.Core α where
+def UniformSpace.Core.mkOfBasis {α : Type u} (B : FilterBasis (α × α))
+    (refl : ∀ r ∈ B, ∀ (x), (x, x) ∈ r) (symm : ∀ r ∈ B, ∃ t ∈ B, t ⊆ Prod.swap ⁻¹' r)
+    (comp : ∀ r ∈ B, ∃ t ∈ B, t ○ t ⊆ r) : UniformSpace.Core α where
   uniformity := B.filter
   refl := B.HasBasis.ge_iff.mpr fun r ru => id_rel_subset.2 <| refl _ ru
   symm := (B.HasBasis.tendsto_iff B.HasBasis).mpr symm
-  comp := (HasBasis.le_basis_iff (B.HasBasis.lift' (monotone_comp_rel monotone_id monotone_id)) B.HasBasis).mpr comp
+  comp :=
+    (HasBasis.le_basis_iff (B.HasBasis.lift' (monotone_comp_rel monotone_id monotone_id))
+          B.HasBasis).mpr
+      comp
 #align uniform_space.core.mk_of_basis UniformSpace.Core.mkOfBasis
 
 /-- A uniform space generates a topological space -/
-def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α) : TopologicalSpace α where
+def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α) :
+    TopologicalSpace α where
   IsOpen s := ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ u.uniformity
   is_open_univ := by simp <;> intro <;> exact univ_mem
   is_open_inter := fun s t hs ht x ⟨xs, xt⟩ => by
     filter_upwards [hs x xs, ht x xt] <;> simp (config := { contextual := true })
-  is_open_sUnion := fun s hs x ⟨t, ts, xt⟩ => by filter_upwards [hs t ts x xt] with p ph h using⟨t, ts, ph h⟩
+  is_open_sUnion := fun s hs x ⟨t, ts, xt⟩ => by
+    filter_upwards [hs t ts x xt] with p ph h using⟨t, ts, ph h⟩
 #align uniform_space.core.to_topological_space UniformSpace.Core.toTopologicalSpace
 
-theorem UniformSpace.core_eq : ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.uniformity = u₂.uniformity → u₁ = u₂
+theorem UniformSpace.core_eq :
+    ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.uniformity = u₂.uniformity → u₁ = u₂
   | ⟨u₁, _, _, _⟩, ⟨u₂, _, _, _⟩, h => by
     congr
     exact h
@@ -294,7 +307,8 @@ class UniformSpace (α : Type u) extends TopologicalSpace α, UniformSpace.Core 
 /-- Alternative constructor for `uniform_space α` when a topology is already given. -/
 @[match_pattern]
 def UniformSpace.mk' {α} (t : TopologicalSpace α) (c : UniformSpace.Core α)
-    (is_open_uniformity : ∀ s : Set α, t.IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ c.uniformity) :
+    (is_open_uniformity :
+      ∀ s : Set α, t.IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ c.uniformity) :
     UniformSpace α :=
   ⟨c, is_open_uniformity⟩
 #align uniform_space.mk' UniformSpace.mk'
@@ -317,7 +331,8 @@ def UniformSpace.ofCoreEq {α : Type u} (u : UniformSpace.Core α) (t : Topologi
 
 theorem UniformSpace.to_core_to_topological_space (u : UniformSpace α) :
     u.toCore.toTopologicalSpace = u.toTopologicalSpace :=
-  topological_space_eq <| funext fun s => by rw [UniformSpace.Core.toTopologicalSpace, UniformSpace.is_open_uniformity]
+  topological_space_eq <|
+    funext fun s => by rw [UniformSpace.Core.toTopologicalSpace, UniformSpace.is_open_uniformity]
 #align uniform_space.to_core_to_topological_space UniformSpace.to_core_to_topological_space
 
 @[ext.1]
@@ -359,7 +374,8 @@ def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
 -- mathport name: uniformity
 scoped[uniformity] notation "𝓤" => uniformity
 
-theorem is_open_uniformity {s : Set α} : IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
+theorem is_open_uniformity {s : Set α} :
+    IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
   UniformSpace.is_open_uniformity s
 #align is_open_uniformity is_open_uniformity
 
@@ -404,25 +420,28 @@ theorem eventually_uniformity_iterate_comp_subset {s : Set (α × α)} (hs : s �
     ∀ᶠ t in (𝓤 α).smallSets, ((· ○ ·) t^[n]) t ⊆ s := by
   suffices : ∀ᶠ t in (𝓤 α).smallSets, t ⊆ s ∧ ((· ○ ·) t^[n]) t ⊆ s
   exact (eventually_and.1 this).2
-  induction' n with n ihn generalizing s
+  induction' n with n ihn generalizing s;
   · simpa
     
   rcases comp_mem_uniformity_sets hs with ⟨t, htU, hts⟩
   refine' (ihn htU).mono fun U hU => _
   rw [Function.iterate_succ_apply']
-  exact ⟨hU.1.trans <| (subset_comp_self <| refl_le_uniformity htU).trans hts, (comp_rel_mono hU.1 hU.2).trans hts⟩
+  exact
+    ⟨hU.1.trans <| (subset_comp_self <| refl_le_uniformity htU).trans hts,
+      (comp_rel_mono hU.1 hU.2).trans hts⟩
 #align eventually_uniformity_iterate_comp_subset eventually_uniformity_iterate_comp_subset
 
 /-- If `s ∈ 𝓤 α`, then for any natural `n`, for a subset `t` of a sufficiently small set in `𝓤 α`,
 we have `t ○ t ⊆ s`. -/
-theorem eventually_uniformity_comp_subset {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∀ᶠ t in (𝓤 α).smallSets, t ○ t ⊆ s :=
+theorem eventually_uniformity_comp_subset {s : Set (α × α)} (hs : s ∈ 𝓤 α) :
+    ∀ᶠ t in (𝓤 α).smallSets, t ○ t ⊆ s :=
   eventually_uniformity_iterate_comp_subset hs 1
 #align eventually_uniformity_comp_subset eventually_uniformity_comp_subset
 
 /-- Relation `λ f g, tendsto (λ x, (f x, g x)) l (𝓤 α)` is transitive. -/
 theorem Filter.Tendsto.uniformity_trans {l : Filter β} {f₁ f₂ f₃ : β → α}
-    (h₁₂ : Tendsto (fun x => (f₁ x, f₂ x)) l (𝓤 α)) (h₂₃ : Tendsto (fun x => (f₂ x, f₃ x)) l (𝓤 α)) :
-    Tendsto (fun x => (f₁ x, f₃ x)) l (𝓤 α) := by
+    (h₁₂ : Tendsto (fun x => (f₁ x, f₂ x)) l (𝓤 α))
+    (h₂₃ : Tendsto (fun x => (f₂ x, f₃ x)) l (𝓤 α)) : Tendsto (fun x => (f₁ x, f₃ x)) l (𝓤 α) := by
   refine' le_trans (le_lift'.2 fun s hs => mem_map.2 _) comp_le_uniformity
   filter_upwards [h₁₂ hs, h₂₃ hs] with x hx₁₂ hx₂₃ using⟨_, hx₁₂, hx₂₃⟩
 #align filter.tendsto.uniformity_trans Filter.Tendsto.uniformity_trans
@@ -434,7 +453,8 @@ theorem Filter.Tendsto.uniformity_symm {l : Filter β} {f : β → α × α} (h 
 #align filter.tendsto.uniformity_symm Filter.Tendsto.uniformity_symm
 
 /-- Relation `λ f g, tendsto (λ x, (f x, g x)) l (𝓤 α)` is reflexive. -/
-theorem tendsto_diag_uniformity (f : β → α) (l : Filter β) : Tendsto (fun x => (f x, f x)) l (𝓤 α) := fun s hs =>
+theorem tendsto_diag_uniformity (f : β → α) (l : Filter β) :
+    Tendsto (fun x => (f x, f x)) l (𝓤 α) := fun s hs =>
   mem_map.2 <| univ_mem' fun x => refl_mem_uniformity hs
 #align tendsto_diag_uniformity tendsto_diag_uniformity
 
@@ -442,7 +462,8 @@ theorem tendsto_const_uniformity {a : α} {f : Filter β} : Tendsto (fun _ => (a
   tendsto_diag_uniformity (fun _ => a) f
 #align tendsto_const_uniformity tendsto_const_uniformity
 
-theorem symm_of_uniformity {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∃ t ∈ 𝓤 α, (∀ a b, (a, b) ∈ t → (b, a) ∈ t) ∧ t ⊆ s :=
+theorem symm_of_uniformity {s : Set (α × α)} (hs : s ∈ 𝓤 α) :
+    ∃ t ∈ 𝓤 α, (∀ a b, (a, b) ∈ t → (b, a) ∈ t) ∧ t ⊆ s :=
   have : preimage Prod.swap s ∈ 𝓤 α := symm_le_uniformity hs
   ⟨s ∩ preimage Prod.swap s, inter_mem hs this, fun a b ⟨h₁, h₂⟩ => ⟨h₂, h₁⟩, inter_subset_left _ _⟩
 #align symm_of_uniformity symm_of_uniformity
@@ -474,15 +495,18 @@ theorem symmetrize_mem_uniformity {V : Set (α × α)} (h : V ∈ 𝓤 α) : sym
 #align symmetrize_mem_uniformity symmetrize_mem_uniformity
 
 /-- Symmetric entourages form a basis of `𝓤 α` -/
-theorem UniformSpace.has_basis_symmetric : (𝓤 α).HasBasis (fun s : Set (α × α) => s ∈ 𝓤 α ∧ SymmetricRel s) id :=
+theorem UniformSpace.has_basis_symmetric :
+    (𝓤 α).HasBasis (fun s : Set (α × α) => s ∈ 𝓤 α ∧ SymmetricRel s) id :=
   has_basis_self.2 fun t t_in =>
-    ⟨symmetrizeRel t, symmetrize_mem_uniformity t_in, symmetric_symmetrize_rel t, symmetrize_rel_subset_self t⟩
+    ⟨symmetrizeRel t, symmetrize_mem_uniformity t_in, symmetric_symmetrize_rel t,
+      symmetrize_rel_subset_self t⟩
 #align uniform_space.has_basis_symmetric UniformSpace.has_basis_symmetric
 
 theorem uniformity_lift_le_swap {g : Set (α × α) → Filter β} {f : Filter β} (hg : Monotone g)
     (h : ((𝓤 α).lift fun s => g (preimage Prod.swap s)) ≤ f) : (𝓤 α).lift g ≤ f :=
   calc
-    (𝓤 α).lift g ≤ (Filter.map (@Prod.swap α α) <| 𝓤 α).lift g := lift_mono uniformity_le_symm le_rfl
+    (𝓤 α).lift g ≤ (Filter.map (@Prod.swap α α) <| 𝓤 α).lift g :=
+      lift_mono uniformity_le_symm le_rfl
     _ ≤ _ := by rw [map_lift_eq2 hg, image_swap_eq_preimage_swap] <;> exact h
     
 #align uniformity_lift_le_swap uniformity_lift_le_swap
@@ -500,7 +524,9 @@ theorem uniformity_lift_le_comp {f : Set (α × α) → Filter β} (h : Monotone
 
 theorem comp_le_uniformity3 : ((𝓤 α).lift' fun s : Set (α × α) => s ○ (s ○ s)) ≤ 𝓤 α :=
   calc
-    ((𝓤 α).lift' fun d => d ○ (d ○ d)) = (𝓤 α).lift fun s => (𝓤 α).lift' fun t : Set (α × α) => s ○ (t ○ t) := by
+    ((𝓤 α).lift' fun d => d ○ (d ○ d)) =
+        (𝓤 α).lift fun s => (𝓤 α).lift' fun t : Set (α × α) => s ○ (t ○ t) :=
+      by
       rw [lift_lift'_same_eq_lift']
       exact fun x => monotone_comp_rel monotone_const <| monotone_comp_rel monotone_id monotone_id
       exact fun x => monotone_comp_rel monotone_id monotone_const
@@ -516,7 +542,8 @@ theorem comp_le_uniformity3 : ((𝓤 α).lift' fun s : Set (α × α) => s ○ (
 #align comp_le_uniformity3 comp_le_uniformity3
 
 /-- See also `comp_open_symm_mem_uniformity_sets`. -/
-theorem comp_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∃ t ∈ 𝓤 α, SymmetricRel t ∧ t ○ t ⊆ s := by
+theorem comp_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) :
+    ∃ t ∈ 𝓤 α, SymmetricRel t ∧ t ○ t ⊆ s := by
   obtain ⟨w, w_in, w_sub⟩ : ∃ w ∈ 𝓤 α, w ○ w ⊆ s := comp_mem_uniformity_sets hs
   use symmetrizeRel w, symmetrize_mem_uniformity w_in, symmetric_symmetrize_rel w
   have : symmetrizeRel w ⊆ w := symmetrize_rel_subset_self w
@@ -563,7 +590,8 @@ theorem UniformSpace.mem_ball_self (x : α) {V : Set (α × α)} (hV : V ∈ �
 #align uniform_space.mem_ball_self UniformSpace.mem_ball_self
 
 /-- The triangle inequality for `uniform_space.ball` -/
-theorem mem_ball_comp {V W : Set (β × β)} {x y z} (h : y ∈ ball x V) (h' : z ∈ ball y W) : z ∈ ball x (V ○ W) :=
+theorem mem_ball_comp {V W : Set (β × β)} {x y z} (h : y ∈ ball x V) (h' : z ∈ ball y W) :
+    z ∈ ball x (V ○ W) :=
   prod_mk_mem_comp_rel h h'
 #align mem_ball_comp mem_ball_comp
 
@@ -587,20 +615,22 @@ theorem ball_inter_right (x : β) (V W : Set (β × β)) : ball x (V ∩ W) ⊆ 
   ball_mono (inter_subset_right V W) x
 #align ball_inter_right ball_inter_right
 
-theorem mem_ball_symmetry {V : Set (β × β)} (hV : SymmetricRel V) {x y} : x ∈ ball y V ↔ y ∈ ball x V :=
+theorem mem_ball_symmetry {V : Set (β × β)} (hV : SymmetricRel V) {x y} :
+    x ∈ ball y V ↔ y ∈ ball x V :=
   show (x, y) ∈ Prod.swap ⁻¹' V ↔ (x, y) ∈ V by
     unfold SymmetricRel at hV
     rw [hV]
 #align mem_ball_symmetry mem_ball_symmetry
 
-theorem ball_eq_of_symmetry {V : Set (β × β)} (hV : SymmetricRel V) {x} : ball x V = { y | (y, x) ∈ V } := by
+theorem ball_eq_of_symmetry {V : Set (β × β)} (hV : SymmetricRel V) {x} :
+    ball x V = { y | (y, x) ∈ V } := by
   ext y
   rw [mem_ball_symmetry hV]
   exact Iff.rfl
 #align ball_eq_of_symmetry ball_eq_of_symmetry
 
-theorem mem_comp_of_mem_ball {V W : Set (β × β)} {x y z : β} (hV : SymmetricRel V) (hx : x ∈ ball z V)
-    (hy : y ∈ ball z W) : (x, y) ∈ V ○ W := by
+theorem mem_comp_of_mem_ball {V W : Set (β × β)} {x y z : β} (hV : SymmetricRel V)
+    (hx : x ∈ ball z V) (hy : y ∈ ball z W) : (x, y) ∈ V ○ W := by
   rw [mem_ball_symmetry hV] at hx
   exact ⟨z, hx, hy⟩
 #align mem_comp_of_mem_ball mem_comp_of_mem_ball
@@ -628,7 +658,8 @@ theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β ×
 -/
 
 
-theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α := by
+theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} :
+    s ∈ 𝓝 x ↔ { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α := by
   refine' ⟨_, fun hs => _⟩
   · simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp]
     intro t ts ht xt
@@ -648,7 +679,8 @@ theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ {
     
 #align mem_nhds_uniformity_iff_right mem_nhds_uniformity_iff_right
 
-theorem mem_nhds_uniformity_iff_left {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α := by
+theorem mem_nhds_uniformity_iff_left {x : α} {s : Set α} :
+    s ∈ 𝓝 x ↔ { p : α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α := by
   rw [uniformity_eq_symm, mem_nhds_uniformity_iff_right]
   rfl
 #align mem_nhds_uniformity_iff_left mem_nhds_uniformity_iff_left
@@ -673,14 +705,14 @@ theorem is_open_iff_ball_subset {s : Set α} : IsOpen s ↔ ∀ x ∈ s, ∃ V �
   exact Iff.rfl
 #align is_open_iff_ball_subset is_open_iff_ball_subset
 
-theorem nhds_basis_uniformity' {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {x : α} :
-    (𝓝 x).HasBasis p fun i => ball x (s i) := by
+theorem nhds_basis_uniformity' {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
+    {x : α} : (𝓝 x).HasBasis p fun i => ball x (s i) := by
   rw [nhds_eq_comap_uniformity]
   exact h.comap (Prod.mk x)
 #align nhds_basis_uniformity' nhds_basis_uniformity'
 
-theorem nhds_basis_uniformity {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {x : α} :
-    (𝓝 x).HasBasis p fun i => { y | (y, x) ∈ s i } := by
+theorem nhds_basis_uniformity {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
+    {x : α} : (𝓝 x).HasBasis p fun i => { y | (y, x) ∈ s i } := by
   replace h := h.comap Prod.swap
   rw [← map_swap_eq_comap_swap, ← uniformity_eq_symm] at h
   exact nhds_basis_uniformity' h
@@ -696,7 +728,8 @@ theorem UniformSpace.ball_mem_nhds (x : α) ⦃V : Set (α × α)⦄ (V_in : V �
   exact ⟨V, V_in, subset.refl _⟩
 #align uniform_space.ball_mem_nhds UniformSpace.ball_mem_nhds
 
-theorem UniformSpace.mem_nhds_iff_symm {x : α} {s : Set α} : s ∈ 𝓝 x ↔ ∃ V ∈ 𝓤 α, SymmetricRel V ∧ ball x V ⊆ s := by
+theorem UniformSpace.mem_nhds_iff_symm {x : α} {s : Set α} :
+    s ∈ 𝓝 x ↔ ∃ V ∈ 𝓤 α, SymmetricRel V ∧ ball x V ⊆ s := by
   rw [UniformSpace.mem_nhds_iff]
   constructor
   · rintro ⟨V, V_in, V_sub⟩
@@ -720,8 +753,9 @@ theorem UniformSpace.mem_closure_iff_symm_ball {s : Set α} {x} :
   simp [mem_closure_iff_nhds_basis (has_basis_nhds x), Set.Nonempty]
 #align uniform_space.mem_closure_iff_symm_ball UniformSpace.mem_closure_iff_symm_ball
 
-theorem UniformSpace.mem_closure_iff_ball {s : Set α} {x} : x ∈ closure s ↔ ∀ {V}, V ∈ 𝓤 α → (ball x V ∩ s).Nonempty :=
-  by simp [mem_closure_iff_nhds_basis' (nhds_basis_uniformity' (𝓤 α).basis_sets)]
+theorem UniformSpace.mem_closure_iff_ball {s : Set α} {x} :
+    x ∈ closure s ↔ ∀ {V}, V ∈ 𝓤 α → (ball x V ∩ s).Nonempty := by
+  simp [mem_closure_iff_nhds_basis' (nhds_basis_uniformity' (𝓤 α).basis_sets)]
 #align uniform_space.mem_closure_iff_ball UniformSpace.mem_closure_iff_ball
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -730,7 +764,9 @@ theorem UniformSpace.has_basis_nhds_prod (x y : α) :
   rw [nhds_prod_eq]
   apply (has_basis_nhds x).prod_same_index (has_basis_nhds y)
   rintro U V ⟨U_in, U_symm⟩ ⟨V_in, V_symm⟩
-  exact ⟨U ∩ V, ⟨(𝓤 α).inter_sets U_in V_in, U_symm.inter V_symm⟩, ball_inter_left x U V, ball_inter_right y U V⟩
+  exact
+    ⟨U ∩ V, ⟨(𝓤 α).inter_sets U_in V_in, U_symm.inter V_symm⟩, ball_inter_left x U V,
+      ball_inter_right y U V⟩
 #align uniform_space.has_basis_nhds_prod UniformSpace.has_basis_nhds_prod
 
 theorem nhds_eq_uniformity {x : α} : 𝓝 x = (𝓤 α).lift' (ball x) :=
@@ -749,8 +785,9 @@ theorem mem_nhds_right (y : α) {s : Set (α × α)} (h : s ∈ 𝓤 α) : { x :
   mem_nhds_left _ (symm_le_uniformity h)
 #align mem_nhds_right mem_nhds_right
 
-theorem IsCompact.nhds_set_basis_uniformity {p : ι → Prop} {s : ι → Set (α × α)} (hU : (𝓤 α).HasBasis p s) {K : Set α}
-    (hK : IsCompact K) : (𝓝ˢ K).HasBasis p fun i => ⋃ x ∈ K, ball x (s i) := by
+theorem IsCompact.nhds_set_basis_uniformity {p : ι → Prop} {s : ι → Set (α × α)}
+    (hU : (𝓤 α).HasBasis p s) {K : Set α} (hK : IsCompact K) :
+    (𝓝ˢ K).HasBasis p fun i => ⋃ x ∈ K, ball x (s i) := by
   refine' ⟨fun U => _⟩
   simp only [mem_nhds_set_iff_forall, (nhds_basis_uniformity' hU).mem_iff, Union₂_subset_iff]
   refine' ⟨fun H => _, fun ⟨i, hpi, hi⟩ x hx => ⟨i, hpi, hi x hx⟩⟩
@@ -763,7 +800,8 @@ theorem IsCompact.nhds_set_basis_uniformity {p : ι → Prop} {s : ι → Set (�
     
   have : Nonempty { a // p a } := nonempty_subtype.2 hU.ex_mem
   choose! I hI using H
-  rcases hK.elim_nhds_subcover (fun x => ball x <| s (I x)) fun x hx => ball_mem_nhds _ <| hU.mem_of_mem (I x).2 with
+  rcases hK.elim_nhds_subcover (fun x => ball x <| s (I x)) fun x hx =>
+      ball_mem_nhds _ <| hU.mem_of_mem (I x).2 with
     ⟨t, htK, ht⟩
   obtain ⟨i, hpi, hi⟩ : ∃ (i : _)(hpi : p i), s i ⊆ ⋂ x ∈ t, s (I x)
   exact hU.mem_iff.1 ((bInter_finset_mem t).2 fun x hx => hU.mem_of_mem (I x).2)
@@ -776,8 +814,8 @@ theorem IsCompact.nhds_set_basis_uniformity {p : ι → Prop} {s : ι → Set (�
     
 #align is_compact.nhds_set_basis_uniformity IsCompact.nhds_set_basis_uniformity
 
-theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB : IsClosed B) (h : Disjoint A B) :
-    ∃ V ∈ 𝓤 α, Disjoint (⋃ x ∈ A, ball x V) (⋃ x ∈ B, ball x V) := by
+theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB : IsClosed B)
+    (h : Disjoint A B) : ∃ V ∈ 𝓤 α, Disjoint (⋃ x ∈ A, ball x V) (⋃ x ∈ B, ball x V) := by
   have : Bᶜ ∈ 𝓝ˢ A := hB.is_open_compl.mem_nhds_set.mpr h.le_compl_right
   rw [(hA.nhds_set_basis_uniformity (Filter.basis_sets _)).mem_iff] at this
   rcases this with ⟨U, hU, hUAB⟩
@@ -789,18 +827,22 @@ theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB
   exact hUAB (mem_Union₂_of_mem ha <| hVU <| mem_comp_of_mem_ball hVsymm hxa hxb) hb
 #align disjoint.exists_uniform_thickening Disjoint.exists_uniform_thickening
 
-theorem Disjoint.exists_uniform_thickening_of_basis {p : ι → Prop} {s : ι → Set (α × α)} (hU : (𝓤 α).HasBasis p s)
-    {A B : Set α} (hA : IsCompact A) (hB : IsClosed B) (h : Disjoint A B) :
-    ∃ i, p i ∧ Disjoint (⋃ x ∈ A, ball x (s i)) (⋃ x ∈ B, ball x (s i)) := by
+theorem Disjoint.exists_uniform_thickening_of_basis {p : ι → Prop} {s : ι → Set (α × α)}
+    (hU : (𝓤 α).HasBasis p s) {A B : Set α} (hA : IsCompact A) (hB : IsClosed B)
+    (h : Disjoint A B) : ∃ i, p i ∧ Disjoint (⋃ x ∈ A, ball x (s i)) (⋃ x ∈ B, ball x (s i)) := by
   rcases h.exists_uniform_thickening hA hB with ⟨V, hV, hVAB⟩
   rcases hU.mem_iff.1 hV with ⟨i, hi, hiV⟩
-  exact ⟨i, hi, hVAB.mono (Union₂_mono fun a _ => ball_mono hiV a) (Union₂_mono fun b _ => ball_mono hiV b)⟩
+  exact
+    ⟨i, hi,
+      hVAB.mono (Union₂_mono fun a _ => ball_mono hiV a) (Union₂_mono fun b _ => ball_mono hiV b)⟩
 #align disjoint.exists_uniform_thickening_of_basis Disjoint.exists_uniform_thickening_of_basis
 
-theorem tendsto_right_nhds_uniformity {a : α} : Tendsto (fun a' => (a', a)) (𝓝 a) (𝓤 α) := fun s => mem_nhds_right a
+theorem tendsto_right_nhds_uniformity {a : α} : Tendsto (fun a' => (a', a)) (𝓝 a) (𝓤 α) := fun s =>
+  mem_nhds_right a
 #align tendsto_right_nhds_uniformity tendsto_right_nhds_uniformity
 
-theorem tendsto_left_nhds_uniformity {a : α} : Tendsto (fun a' => (a, a')) (𝓝 a) (𝓤 α) := fun s => mem_nhds_left a
+theorem tendsto_left_nhds_uniformity {a : α} : Tendsto (fun a' => (a, a')) (𝓝 a) (𝓤 α) := fun s =>
+  mem_nhds_left a
 #align tendsto_left_nhds_uniformity tendsto_left_nhds_uniformity
 
 theorem lift_nhds_left {x : α} {g : Set α → Filter β} (hg : Monotone g) :
@@ -808,7 +850,8 @@ theorem lift_nhds_left {x : α} {g : Set α → Filter β} (hg : Monotone g) :
   Eq.trans
     (by
       rw [nhds_eq_uniformity]
-      exact Filter.lift_assoc <| monotone_principal.comp <| monotone_preimage.comp monotone_preimage)
+      exact
+        Filter.lift_assoc <| monotone_principal.comp <| monotone_preimage.comp monotone_preimage)
     (congr_arg _ <| funext fun s => Filter.lift_principal hg)
 #align lift_nhds_left lift_nhds_left
 
@@ -816,7 +859,8 @@ theorem lift_nhds_right {x : α} {g : Set α → Filter β} (hg : Monotone g) :
     (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (y, x) ∈ s } :=
   calc
     (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ s } := lift_nhds_left hg
-    _ = (@Prod.swap α α <$> 𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ s } := by rw [← uniformity_eq_symm]
+    _ = (@Prod.swap α α <$> 𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ s } := by
+      rw [← uniformity_eq_symm]
     _ = (𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ image Prod.swap s } :=
       map_lift_eq2 <| hg.comp monotone_preimage
     _ = _ := by simp [image_swap_eq_preimage_swap]
@@ -840,7 +884,9 @@ theorem nhds_nhds_eq_uniformity_uniformity_prod {a b : α} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhds_eq_uniformity_prod {a b : α} :
-    𝓝 (a, b) = (𝓤 α).lift' fun s : Set (α × α) => { y : α | (y, a) ∈ s } ×ˢ { y : α | (b, y) ∈ s } := by
+    𝓝 (a, b) =
+      (𝓤 α).lift' fun s : Set (α × α) => { y : α | (y, a) ∈ s } ×ˢ { y : α | (b, y) ∈ s } :=
+  by
   rw [nhds_prod_eq, nhds_nhds_eq_uniformity_uniformity_prod, lift_lift'_same_eq_lift']
   · intro s
     exact monotone_const.set_prod monotone_preimage
@@ -850,9 +896,10 @@ theorem nhds_eq_uniformity_prod {a b : α} :
     
 #align nhds_eq_uniformity_prod nhds_eq_uniformity_prod
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » cl_d) -/
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
-    ∃ t : Set (α × α), IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
+    ∃ t : Set (α × α),
+      IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
   let cl_d := { p : α × α | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d }
   have : ∀ p ∈ s, ∃ (t : _)(_ : t ⊆ cl_d), IsOpen t ∧ p ∈ t := fun ⟨x, y⟩ hp =>
     mem_nhds_iff.mp <|
@@ -860,13 +907,15 @@ theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd :
         rw [nhds_eq_uniformity_prod, mem_lift'_sets]
         exact ⟨d, hd, fun ⟨a, b⟩ ⟨ha, hb⟩ => ⟨x, y, ha, hp, hb⟩⟩
         exact monotone_preimage.set_prod monotone_preimage
-  have : ∃ t : ∀ (p : α × α) (h : p ∈ s), Set (α × α), ∀ p, ∀ h : p ∈ s, t p h ⊆ cl_d ∧ IsOpen (t p h) ∧ p ∈ t p h := by
-    simp [Classical.skolem] at this <;> simp <;> assumption
+  have :
+    ∃ t : ∀ (p : α × α) (h : p ∈ s), Set (α × α),
+      ∀ p, ∀ h : p ∈ s, t p h ⊆ cl_d ∧ IsOpen (t p h) ∧ p ∈ t p h :=
+    by simp [Classical.skolem] at this <;> simp <;> assumption
   match this with
   | ⟨t, ht⟩ =>
     ⟨(⋃ p : α × α, ⋃ h : p ∈ s, t p h : Set (α × α)),
-      is_open_Union fun p : α × α => is_open_Union fun hp => (ht p hp).right.left, fun ⟨a, b⟩ hp => by
-      simp <;> exact ⟨a, b, hp, (ht (a, b) hp).right.right⟩,
+      is_open_Union fun p : α × α => is_open_Union fun hp => (ht p hp).right.left, fun ⟨a, b⟩ hp =>
+      by simp <;> exact ⟨a, b, hp, (ht (a, b) hp).right.right⟩,
       Union_subset fun p => Union_subset fun hp => (ht p hp).left⟩
 #align nhdset_of_mem_uniformity nhdset_of_mem_uniformity
 
@@ -898,13 +947,17 @@ theorem nhds_set_diagonal_le_uniformity : 𝓝ˢ (diagonal α) ≤ 𝓤 α :=
 -/
 
 
-theorem closure_eq_uniformity (s : Set <| α × α) : closure s = ⋂ V ∈ { V | V ∈ 𝓤 α ∧ SymmetricRel V }, V ○ s ○ V := by
+theorem closure_eq_uniformity (s : Set <| α × α) :
+    closure s = ⋂ V ∈ { V | V ∈ 𝓤 α ∧ SymmetricRel V }, V ○ s ○ V := by
   ext ⟨x, y⟩
-  simp (config := { contextual := true }) only [mem_closure_iff_nhds_basis (UniformSpace.has_basis_nhds_prod x y),
-    mem_Inter, mem_set_of_eq, and_imp, mem_comp_comp, exists_prop, ← mem_inter_iff, inter_comm, Set.Nonempty]
+  simp (config :=
+    { contextual := true }) only [mem_closure_iff_nhds_basis (UniformSpace.has_basis_nhds_prod x y),
+    mem_Inter, mem_set_of_eq, and_imp, mem_comp_comp, exists_prop, ← mem_inter_iff, inter_comm,
+    Set.Nonempty]
 #align closure_eq_uniformity closure_eq_uniformity
 
-theorem uniformity_has_basis_closed : HasBasis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsClosed V) id := by
+theorem uniformity_has_basis_closed :
+    HasBasis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsClosed V) id := by
   refine' Filter.has_basis_self.2 fun t h => _
   rcases comp_comp_symm_mem_uniformity_sets h with ⟨w, w_in, w_symm, r⟩
   refine' ⟨closure w, mem_of_superset w_in subset_closure, isClosedClosure, _⟩
@@ -919,8 +972,8 @@ theorem uniformity_eq_uniformity_closure : 𝓤 α = (𝓤 α).lift' closure :=
   Eq.symm <| uniformity_has_basis_closed.lift'_closure_eq_self fun _ => And.right
 #align uniformity_eq_uniformity_closure uniformity_eq_uniformity_closure
 
-theorem Filter.HasBasis.uniformity_closure {p : ι → Prop} {U : ι → Set (α × α)} (h : (𝓤 α).HasBasis p U) :
-    (𝓤 α).HasBasis p fun i => closure (U i) :=
+theorem Filter.HasBasis.uniformity_closure {p : ι → Prop} {U : ι → Set (α × α)}
+    (h : (𝓤 α).HasBasis p U) : (𝓤 α).HasBasis p fun i => closure (U i) :=
   (@uniformity_eq_uniformity_closure α _).symm ▸ h.lift'_closure
 #align filter.has_basis.uniformity_closure Filter.HasBasis.uniformity_closure
 
@@ -934,7 +987,8 @@ theorem closure_eq_inter_uniformity {t : Set (α × α)} : closure t = ⋂ d ∈
     closure t = ⋂ (V) (hV : V ∈ 𝓤 α ∧ SymmetricRel V), V ○ t ○ V := closure_eq_uniformity t
     _ = ⋂ V ∈ 𝓤 α, V ○ t ○ V :=
       Eq.symm <|
-        UniformSpace.has_basis_symmetric.bInter_mem fun V₁ V₂ hV => comp_rel_mono (comp_rel_mono hV Subset.rfl) hV
+        UniformSpace.has_basis_symmetric.bInter_mem fun V₁ V₂ hV =>
+          comp_rel_mono (comp_rel_mono hV Subset.rfl) hV
     _ = ⋂ V ∈ 𝓤 α, V ○ (t ○ V) := by simp only [comp_rel_assoc]
     
 #align closure_eq_inter_uniformity closure_eq_inter_uniformity
@@ -944,7 +998,8 @@ theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' interior :
     (le_infi fun d =>
       le_infi fun hd => by
         let ⟨s, hs, hs_comp⟩ :=
-          (mem_lift'_sets <| monotone_comp_rel monotone_id <| monotone_comp_rel monotone_id monotone_id).mp
+          (mem_lift'_sets <|
+                monotone_comp_rel monotone_id <| monotone_comp_rel monotone_id monotone_id).mp
             (comp_le_uniformity3 hd)
         let ⟨t, ht, hst, ht_comp⟩ := nhdset_of_mem_uniformity s hs
         have : s ⊆ interior d :=
@@ -969,11 +1024,14 @@ theorem mem_uniformity_is_closed {s : Set (α × α)} (h : s ∈ 𝓤 α) : ∃ 
   ⟨t, ht_mem, htc, hts⟩
 #align mem_uniformity_is_closed mem_uniformity_is_closed
 
-theorem is_open_iff_open_ball_subset {s : Set α} : IsOpen s ↔ ∀ x ∈ s, ∃ V ∈ 𝓤 α, IsOpen V ∧ ball x V ⊆ s := by
+theorem is_open_iff_open_ball_subset {s : Set α} :
+    IsOpen s ↔ ∀ x ∈ s, ∃ V ∈ 𝓤 α, IsOpen V ∧ ball x V ⊆ s := by
   rw [is_open_iff_ball_subset]
   constructor <;> intro h x hx
   · obtain ⟨V, hV, hV'⟩ := h x hx
-    exact ⟨interior V, interior_mem_uniformity hV, is_open_interior, (ball_mono interior_subset x).trans hV'⟩
+    exact
+      ⟨interior V, interior_mem_uniformity hV, is_open_interior,
+        (ball_mono interior_subset x).trans hV'⟩
     
   · obtain ⟨V, hV, -, hV'⟩ := h x hx
     exact ⟨V, hV, hV'⟩
@@ -995,11 +1053,13 @@ theorem Dense.bUnion_uniformity_ball {s : Set α} {U : Set (α × α)} (hs : Den
 
 /-- Open elements of `𝓤 α` form a basis of `𝓤 α`. -/
 theorem uniformity_has_basis_open : HasBasis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsOpen V) id :=
-  has_basis_self.2 fun s hs => ⟨interior s, interior_mem_uniformity hs, is_open_interior, interior_subset⟩
+  has_basis_self.2 fun s hs =>
+    ⟨interior s, interior_mem_uniformity hs, is_open_interior, interior_subset⟩
 #align uniformity_has_basis_open uniformity_has_basis_open
 
-theorem Filter.HasBasis.mem_uniformity_iff {p : β → Prop} {s : β → Set (α × α)} (h : (𝓤 α).HasBasis p s)
-    {t : Set (α × α)} : t ∈ 𝓤 α ↔ ∃ (i : _)(hi : p i), ∀ a b, (a, b) ∈ s i → (a, b) ∈ t :=
+theorem Filter.HasBasis.mem_uniformity_iff {p : β → Prop} {s : β → Set (α × α)}
+    (h : (𝓤 α).HasBasis p s) {t : Set (α × α)} :
+    t ∈ 𝓤 α ↔ ∃ (i : _)(hi : p i), ∀ a b, (a, b) ∈ s i → (a, b) ∈ t :=
   h.mem_iff.trans <| by simp only [Prod.forall, subset_def]
 #align filter.has_basis.mem_uniformity_iff Filter.HasBasis.mem_uniformity_iff
 
@@ -1010,8 +1070,8 @@ theorem uniformity_has_basis_open_symmetric :
   simp only [← and_assoc']
   refine' uniformity_has_basis_open.restrict fun s hs => ⟨symmetrizeRel s, _⟩
   exact
-    ⟨⟨symmetrize_mem_uniformity hs.1, IsOpen.inter hs.2 (hs.2.Preimage continuous_swap)⟩, symmetric_symmetrize_rel s,
-      symmetrize_rel_subset_self s⟩
+    ⟨⟨symmetrize_mem_uniformity hs.1, IsOpen.inter hs.2 (hs.2.Preimage continuous_swap)⟩,
+      symmetric_symmetrize_rel s, symmetrize_rel_subset_self s⟩
 #align uniformity_has_basis_open_symmetric uniformity_has_basis_open_symmetric
 
 theorem comp_open_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) :
@@ -1033,8 +1093,9 @@ theorem UniformSpace.has_seq_basis [is_countably_generated <| 𝓤 α] :
 
 end
 
-theorem Filter.HasBasis.bInter_bUnion_ball {p : ι → Prop} {U : ι → Set (α × α)} (h : HasBasis (𝓤 α) p U) (s : Set α) :
-    (⋂ (i) (hi : p i), ⋃ x ∈ s, ball x (U i)) = closure s := by
+theorem Filter.HasBasis.bInter_bUnion_ball {p : ι → Prop} {U : ι → Set (α × α)}
+    (h : HasBasis (𝓤 α) p U) (s : Set α) : (⋂ (i) (hi : p i), ⋃ x ∈ s, ball x (U i)) = closure s :=
+  by
   ext x
   simp [mem_closure_iff_nhds_basis (nhds_basis_uniformity h), ball]
 #align filter.has_basis.bInter_bUnion_ball Filter.HasBasis.bInter_bUnion_ball
@@ -1068,39 +1129,47 @@ theorem uniform_continuous_iff_eventually [UniformSpace β] {f : α → β} :
   Iff.rfl
 #align uniform_continuous_iff_eventually uniform_continuous_iff_eventually
 
-theorem uniform_continuous_on_univ [UniformSpace β] {f : α → β} : UniformContinuousOn f univ ↔ UniformContinuous f := by
+theorem uniform_continuous_on_univ [UniformSpace β] {f : α → β} :
+    UniformContinuousOn f univ ↔ UniformContinuous f := by
   rw [UniformContinuousOn, UniformContinuous, univ_prod_univ, principal_univ, inf_top_eq]
 #align uniform_continuous_on_univ uniform_continuous_on_univ
 
-theorem uniform_continuous_of_const [UniformSpace β] {c : α → β} (h : ∀ a b, c a = c b) : UniformContinuous c :=
-  have : (fun x : α × α => (c x.fst, c x.snd)) ⁻¹' idRel = univ := eq_univ_iff_forall.2 fun ⟨a, b⟩ => h a b
+theorem uniform_continuous_of_const [UniformSpace β] {c : α → β} (h : ∀ a b, c a = c b) :
+    UniformContinuous c :=
+  have : (fun x : α × α => (c x.fst, c x.snd)) ⁻¹' idRel = univ :=
+    eq_univ_iff_forall.2 fun ⟨a, b⟩ => h a b
   le_trans (map_le_iff_le_comap.2 <| by simp [comap_principal, this, univ_mem]) refl_le_uniformity
 #align uniform_continuous_of_const uniform_continuous_of_const
 
-theorem uniform_continuous_id : UniformContinuous (@id α) := by simp [UniformContinuous] <;> exact tendsto_id
+theorem uniform_continuous_id : UniformContinuous (@id α) := by
+  simp [UniformContinuous] <;> exact tendsto_id
 #align uniform_continuous_id uniform_continuous_id
 
 theorem uniform_continuous_const [UniformSpace β] {b : β} : UniformContinuous fun a : α => b :=
   uniform_continuous_of_const fun _ _ => rfl
 #align uniform_continuous_const uniform_continuous_const
 
-theorem UniformContinuous.comp [UniformSpace β] [UniformSpace γ] {g : β → γ} {f : α → β} (hg : UniformContinuous g)
-    (hf : UniformContinuous f) : UniformContinuous (g ∘ f) :=
+theorem UniformContinuous.comp [UniformSpace β] [UniformSpace γ] {g : β → γ} {f : α → β}
+    (hg : UniformContinuous g) (hf : UniformContinuous f) : UniformContinuous (g ∘ f) :=
   hg.comp hf
 #align uniform_continuous.comp UniformContinuous.comp
 
 theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
-    (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} :
-    UniformContinuous f ↔ ∀ (i) (hi : q i), ∃ (j : _)(hj : p j), ∀ x y, (x, y) ∈ s j → (f x, f y) ∈ t i :=
+    (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t)
+    {f : α → β} :
+    UniformContinuous f ↔
+      ∀ (i) (hi : q i), ∃ (j : _)(hj : p j), ∀ x y, (x, y) ∈ s j → (f x, f y) ∈ t i :=
   (ha.tendsto_iff hb).trans <| by simp only [Prod.forall]
 #align filter.has_basis.uniform_continuous_iff Filter.HasBasis.uniform_continuous_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » S) -/
-theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
-    (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » S) -/
+theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → Prop}
+    {s : γ → Set (α × α)} (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)}
+    (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :
     UniformContinuousOn f S ↔
-      ∀ (i) (hi : q i), ∃ (j : _)(hj : p j), ∀ (x y) (_ : x ∈ S) (_ : y ∈ S), (x, y) ∈ s j → (f x, f y) ∈ t i :=
+      ∀ (i) (hi : q i),
+        ∃ (j : _)(hj : p j), ∀ (x y) (_ : x ∈ S) (_ : y ∈ S), (x, y) ∈ s j → (f x, f y) ∈ t i :=
   ((ha.inf_principal (S ×ˢ S)).tendsto_iff hb).trans <| by
     simp_rw [Prod.forall, Set.inter_comm (s _), ball_mem_comm, mem_inter_iff, mem_prod, and_imp]
 #align filter.has_basis.uniform_continuous_on_iff Filter.HasBasis.uniform_continuous_on_iff
@@ -1121,15 +1190,20 @@ instance : HasInf (UniformSpace α) :=
   ⟨fun s =>
     UniformSpace.ofCore
       { uniformity := ⨅ u ∈ s, @uniformity α u, refl := le_infi fun u => le_infi fun hu => u.refl,
-        symm := le_infi fun u => le_infi fun hu => le_trans (map_mono <| infi_le_of_le _ <| infi_le _ hu) u.symm,
+        symm :=
+          le_infi fun u =>
+            le_infi fun hu => le_trans (map_mono <| infi_le_of_le _ <| infi_le _ hu) u.symm,
         comp :=
-          le_infi fun u => le_infi fun hu => le_trans (lift'_mono (infi_le_of_le _ <| infi_le _ hu) <| le_rfl) u.comp }⟩
+          le_infi fun u =>
+            le_infi fun hu =>
+              le_trans (lift'_mono (infi_le_of_le _ <| infi_le _ hu) <| le_rfl) u.comp }⟩
 
 private theorem Inf_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) : inf tt ≤ t :=
   show (⨅ u ∈ tt, @uniformity α u) ≤ t.uniformity from infi_le_of_le t <| infi_le _ h
 #align Inf_le Inf_le
 
-private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') : t ≤ inf tt :=
+private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') :
+    t ≤ inf tt :=
   show t.uniformity ≤ ⨅ u ∈ tt, @uniformity α u from le_infi fun t' => le_infi fun ht' => h t' ht'
 #align le_Inf le_Inf
 
@@ -1137,40 +1211,48 @@ instance : HasTop (UniformSpace α) :=
   ⟨UniformSpace.ofCore { uniformity := ⊤, refl := le_top, symm := le_top, comp := le_top }⟩
 
 instance : HasBot (UniformSpace α) :=
-  ⟨{ toTopologicalSpace := ⊥, uniformity := 𝓟 idRel, refl := le_rfl, symm := by simp [tendsto] <;> apply subset.refl,
+  ⟨{ toTopologicalSpace := ⊥, uniformity := 𝓟 idRel, refl := le_rfl,
+      symm := by simp [tendsto] <;> apply subset.refl,
       comp := by
-        rw [lift'_principal]
+        rw [lift'_principal];
         · simp
           
         exact monotone_comp_rel monotone_id monotone_id,
-      is_open_uniformity := fun s => by simp (config := { contextual := true }) [is_open_fold, subset_def, idRel] }⟩
+      is_open_uniformity := fun s => by
+        simp (config := { contextual := true }) [is_open_fold, subset_def, idRel] }⟩
 
 instance : HasInf (UniformSpace α) :=
   ⟨fun u₁ u₂ =>
     @UniformSpace.replaceTopology _ (u₁.toTopologicalSpace ⊓ u₂.toTopologicalSpace)
         (UniformSpace.ofCore
-          { uniformity := u₁.uniformity ⊓ u₂.uniformity, refl := le_inf u₁.refl u₂.refl, symm := u₁.symm.inf u₂.symm,
+          { uniformity := u₁.uniformity ⊓ u₂.uniformity, refl := le_inf u₁.refl u₂.refl,
+            symm := u₁.symm.inf u₂.symm,
             comp := (lift'_inf_le _ _ _).trans <| inf_le_inf u₁.comp u₂.comp }) <|
-      eq_of_nhds_eq_nhds fun a => by simpa only [nhds_inf, nhds_eq_comap_uniformity] using comap_inf.symm⟩
+      eq_of_nhds_eq_nhds fun a => by
+        simpa only [nhds_inf, nhds_eq_comap_uniformity] using comap_inf.symm⟩
 
 instance : CompleteLattice (UniformSpace α) :=
   { UniformSpace.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf fun _ ⟨h, _⟩ => h, le_sup_right := fun a b => le_Inf fun _ ⟨_, h⟩ => h,
+    le_sup_left := fun a b => le_Inf fun _ ⟨h, _⟩ => h,
+    le_sup_right := fun a b => le_Inf fun _ ⟨_, h⟩ => h,
     sup_le := fun a b c h₁ h₂ => Inf_le ⟨h₁, h₂⟩, inf := (· ⊓ ·),
     le_inf := fun a b c h₁ h₂ => show a.uniformity ≤ _ from le_inf h₁ h₂,
     inf_le_left := fun a b => show _ ≤ a.uniformity from inf_le_left,
     inf_le_right := fun a b => show _ ≤ b.uniformity from inf_le_right, top := ⊤,
     le_top := fun a => show a.uniformity ≤ ⊤ from le_top, bot := ⊥, bot_le := fun u => u.refl,
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }, le_Sup := fun s u h => le_Inf fun u' h' => h' u h,
-    Sup_le := fun s u h => Inf_le h, inf := inf, le_Inf := fun s a hs => le_Inf hs, Inf_le := fun s a ha => Inf_le ha }
+    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t },
+    le_Sup := fun s u h => le_Inf fun u' h' => h' u h, Sup_le := fun s u h => Inf_le h, inf := inf,
+    le_Inf := fun s a hs => le_Inf hs, Inf_le := fun s a ha => Inf_le ha }
 
-theorem infi_uniformity {ι : Sort _} {u : ι → UniformSpace α} : (infi u).uniformity = ⨅ i, (u i).uniformity :=
+theorem infi_uniformity {ι : Sort _} {u : ι → UniformSpace α} :
+    (infi u).uniformity = ⨅ i, (u i).uniformity :=
   show (⨅ (a) (h : ∃ i : ι, u i = a), a.uniformity) = _ from
     le_antisymm (le_infi fun i => infi_le_of_le (u i) <| infi_le _ ⟨i, rfl⟩)
       (le_infi fun a => le_infi fun ⟨i, (ha : u i = a)⟩ => ha ▸ infi_le _ _)
 #align infi_uniformity infi_uniformity
 
-theorem infi_uniformity' {ι : Sort _} {u : ι → UniformSpace α} : @uniformity α (infi u) = ⨅ i, @uniformity α (u i) :=
+theorem infi_uniformity' {ι : Sort _} {u : ι → UniformSpace α} :
+    @uniformity α (infi u) = ⨅ i, @uniformity α (u i) :=
   infi_uniformity
 #align infi_uniformity' infi_uniformity'
 
@@ -1178,7 +1260,8 @@ theorem inf_uniformity {u v : UniformSpace α} : (u ⊓ v).uniformity = u.unifor
   rfl
 #align inf_uniformity inf_uniformity
 
-theorem inf_uniformity' {u v : UniformSpace α} : @uniformity α (u ⊓ v) = @uniformity α u ⊓ @uniformity α v :=
+theorem inf_uniformity' {u v : UniformSpace α} :
+    @uniformity α (u ⊓ v) = @uniformity α u ⊓ @uniformity α v :=
   rfl
 #align inf_uniformity' inf_uniformity'
 
@@ -1196,7 +1279,9 @@ def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α w
   uniformity := u.uniformity.comap fun p : α × α => (f p.1, f p.2)
   toTopologicalSpace := u.toTopologicalSpace.induced f
   refl := le_trans (by simp <;> exact fun ⟨a, b⟩ (h : a = b) => h ▸ rfl) (comap_mono u.refl)
-  symm := by simp [tendsto_comap_iff, Prod.swap, (· ∘ ·)] <;> exact tendsto_swap_uniformity.comp tendsto_comap
+  symm := by
+    simp [tendsto_comap_iff, Prod.swap, (· ∘ ·)] <;>
+      exact tendsto_swap_uniformity.comp tendsto_comap
   comp :=
     le_trans
       (by
@@ -1215,12 +1300,14 @@ def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α w
       
     · rintro ⟨t, ht, hts⟩
       exact
-        ⟨{ y | (f x, y) ∈ t }, fun y hy => @hts (x, y) hy rfl, mem_nhds_uniformity_iff_right.1 <| mem_nhds_left _ ht⟩
+        ⟨{ y | (f x, y) ∈ t }, fun y hy => @hts (x, y) hy rfl,
+          mem_nhds_uniformity_iff_right.1 <| mem_nhds_left _ ht⟩
       
 #align uniform_space.comap UniformSpace.comap
 
 theorem uniformity_comap [UniformSpace α] [UniformSpace β] {f : α → β}
-    (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) : 𝓤 α = comap (Prod.map f f) (𝓤 β) := by
+    (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) :
+    𝓤 α = comap (Prod.map f f) (𝓤 β) := by
   rw [h]
   rfl
 #align uniformity_comap uniformity_comap
@@ -1246,7 +1333,8 @@ theorem UniformSpace.comap_infi {ι α γ} {u : ι → UniformSpace γ} {f : α 
   simp [uniformity_comap rfl, infi_uniformity']
 #align uniform_space.comap_infi UniformSpace.comap_infi
 
-theorem UniformSpace.comap_mono {α γ} {f : α → γ} : Monotone fun u : UniformSpace γ => u.comap f := by
+theorem UniformSpace.comap_mono {α γ} {f : α → γ} : Monotone fun u : UniformSpace γ => u.comap f :=
+  by
   intro u₁ u₂ hu
   change 𝓤 _ ≤ 𝓤 _
   rw [uniformity_comap rfl]
@@ -1258,7 +1346,8 @@ theorem uniform_continuous_iff {α β} {uα : UniformSpace α} {uβ : UniformSpa
   Filter.map_le_iff_le_comap
 #align uniform_continuous_iff uniform_continuous_iff
 
-theorem le_iff_uniform_continuous_id {u v : UniformSpace α} : u ≤ v ↔ @UniformContinuous _ _ u v id := by
+theorem le_iff_uniform_continuous_id {u v : UniformSpace α} :
+    u ≤ v ↔ @UniformContinuous _ _ u v id := by
   rw [uniform_continuous_iff, uniform_space_comap_id, id]
 #align le_iff_uniform_continuous_id le_iff_uniform_continuous_id
 
@@ -1279,8 +1368,9 @@ theorem uniform_continuous_comap' {f : γ → β} {g : α → γ} [v : UniformSp
 #align uniform_continuous_comap' uniform_continuous_comap'
 
 theorem to_nhds_mono {u₁ u₂ : UniformSpace α} (h : u₁ ≤ u₂) (a : α) :
-    @nhds _ (@UniformSpace.toTopologicalSpace _ u₁) a ≤ @nhds _ (@UniformSpace.toTopologicalSpace _ u₂) a := by
-  rw [@nhds_eq_uniformity α u₁ a, @nhds_eq_uniformity α u₂ a] <;> exact lift'_mono h le_rfl
+    @nhds _ (@UniformSpace.toTopologicalSpace _ u₁) a ≤
+      @nhds _ (@UniformSpace.toTopologicalSpace _ u₂) a :=
+  by rw [@nhds_eq_uniformity α u₁ a, @nhds_eq_uniformity α u₂ a] <;> exact lift'_mono h le_rfl
 #align to_nhds_mono to_nhds_mono
 
 theorem to_topological_space_mono {u₁ u₂ : UniformSpace α} (h : u₁ ≤ u₂) :
@@ -1288,8 +1378,8 @@ theorem to_topological_space_mono {u₁ u₂ : UniformSpace α} (h : u₁ ≤ u�
   le_of_nhds_le_nhds <| to_nhds_mono h
 #align to_topological_space_mono to_topological_space_mono
 
-theorem UniformContinuous.continuous [UniformSpace α] [UniformSpace β] {f : α → β} (hf : UniformContinuous f) :
-    Continuous f :=
+theorem UniformContinuous.continuous [UniformSpace α] [UniformSpace β] {f : α → β}
+    (hf : UniformContinuous f) : Continuous f :=
   continuous_iff_le_induced.mpr <| to_topological_space_mono <| uniform_continuous_iff.1 hf
 #align uniform_continuous.continuous UniformContinuous.continuous
 
@@ -1336,7 +1426,8 @@ instance ULift.uniformSpace [UniformSpace α] : UniformSpace (ULift α) :=
 section UniformContinuousInfi
 
 theorem uniform_continuous_inf_rng {f : α → β} {u₁ : UniformSpace α} {u₂ u₃ : UniformSpace β}
-    (h₁ : @UniformContinuous u₁ u₂ f) (h₂ : @UniformContinuous u₁ u₃ f) : @UniformContinuous u₁ (u₂ ⊓ u₃) f :=
+    (h₁ : @UniformContinuous u₁ u₂ f) (h₂ : @UniformContinuous u₁ u₃ f) :
+    @UniformContinuous u₁ (u₂ ⊓ u₃) f :=
   tendsto_inf.mpr ⟨h₁, h₂⟩
 #align uniform_continuous_inf_rng uniform_continuous_inf_rng
 
@@ -1350,8 +1441,9 @@ theorem uniform_continuous_inf_dom_right {f : α → β} {u₁ u₂ : UniformSpa
   tendsto_inf_right hf
 #align uniform_continuous_inf_dom_right uniform_continuous_inf_dom_right
 
-theorem uniform_continuous_Inf_dom {f : α → β} {u₁ : Set (UniformSpace α)} {u₂ : UniformSpace β} {u : UniformSpace α}
-    (h₁ : u ∈ u₁) (hf : @UniformContinuous u u₂ f) : @UniformContinuous (inf u₁) u₂ f := by
+theorem uniform_continuous_Inf_dom {f : α → β} {u₁ : Set (UniformSpace α)} {u₂ : UniformSpace β}
+    {u : UniformSpace α} (h₁ : u ∈ u₁) (hf : @UniformContinuous u u₂ f) :
+    @UniformContinuous (inf u₁) u₂ f := by
   rw [UniformContinuous, Inf_eq_infi', infi_uniformity']
   exact tendsto_infi' ⟨u, h₁⟩ hf
 #align uniform_continuous_Inf_dom uniform_continuous_Inf_dom
@@ -1362,8 +1454,8 @@ theorem uniform_continuous_Inf_rng {f : α → β} {u₁ : UniformSpace α} {u�
   exact tendsto_infi.mpr fun ⟨u, hu⟩ => h u hu
 #align uniform_continuous_Inf_rng uniform_continuous_Inf_rng
 
-theorem uniform_continuous_infi_dom {f : α → β} {u₁ : ι → UniformSpace α} {u₂ : UniformSpace β} {i : ι}
-    (hf : @UniformContinuous (u₁ i) u₂ f) : @UniformContinuous (infi u₁) u₂ f := by
+theorem uniform_continuous_infi_dom {f : α → β} {u₁ : ι → UniformSpace α} {u₂ : UniformSpace β}
+    {i : ι} (hf : @UniformContinuous (u₁ i) u₂ f) : @UniformContinuous (infi u₁) u₂ f := by
   rw [UniformContinuous, infi_uniformity']
   exact tendsto_infi' i hf
 #align uniform_continuous_infi_dom uniform_continuous_infi_dom
@@ -1376,7 +1468,8 @@ theorem uniform_continuous_infi_rng {f : α → β} {u₁ : UniformSpace α} {u�
 end UniformContinuousInfi
 
 /-- A uniform space with the discrete uniformity has the discrete topology. -/
-theorem discreteTopologyOfDiscreteUniformity [hα : UniformSpace α] (h : uniformity α = 𝓟 idRel) : DiscreteTopology α :=
+theorem discreteTopologyOfDiscreteUniformity [hα : UniformSpace α] (h : uniformity α = 𝓟 idRel) :
+    DiscreteTopology α :=
   ⟨(uniform_space_eq h.symm : ⊥ = hα) ▸ rfl⟩
 #align discrete_topology_of_discrete_uniformity discreteTopologyOfDiscreteUniformity
 
@@ -1454,22 +1547,24 @@ theorem uniform_continuous_subtype_coe {p : α → Prop} [UniformSpace α] :
 #align uniform_continuous_subtype_coe uniform_continuous_subtype_coe
 
 theorem UniformContinuous.subtype_mk {p : α → Prop} [UniformSpace α] [UniformSpace β] {f : β → α}
-    (hf : UniformContinuous f) (h : ∀ x, p (f x)) : UniformContinuous (fun x => ⟨f x, h x⟩ : β → Subtype p) :=
+    (hf : UniformContinuous f) (h : ∀ x, p (f x)) :
+    UniformContinuous (fun x => ⟨f x, h x⟩ : β → Subtype p) :=
   uniform_continuous_comap' hf
 #align uniform_continuous.subtype_mk UniformContinuous.subtype_mk
 
-theorem uniform_continuous_on_iff_restrict [UniformSpace α] [UniformSpace β] {f : α → β} {s : Set α} :
-    UniformContinuousOn f s ↔ UniformContinuous (s.restrict f) := by
+theorem uniform_continuous_on_iff_restrict [UniformSpace α] [UniformSpace β] {f : α → β}
+    {s : Set α} : UniformContinuousOn f s ↔ UniformContinuous (s.restrict f) := by
   unfold UniformContinuousOn Set.restrict UniformContinuous tendsto
-  rw [show (fun x : s × s => (f x.1, f x.2)) = Prod.map f f ∘ coe by ext x <;> cases x <;> rfl, uniformity_comap rfl,
+  rw [show (fun x : s × s => (f x.1, f x.2)) = Prod.map f f ∘ coe by ext x <;> cases x <;> rfl,
+    uniformity_comap rfl,
     show Prod.map Subtype.val Subtype.val = (coe : s × s → α × α) by ext x <;> cases x <;> rfl]
   conv in map _ (comap _ _) => rw [← Filter.map_map]
-  rw [subtype_coe_map_comap_prod]
-  rfl
+  rw [subtype_coe_map_comap_prod]; rfl
 #align uniform_continuous_on_iff_restrict uniform_continuous_on_iff_restrict
 
-theorem tendsto_of_uniform_continuous_subtype [UniformSpace α] [UniformSpace β] {f : α → β} {s : Set α} {a : α}
-    (hf : UniformContinuous fun x : s => f x.val) (ha : s ∈ 𝓝 a) : Tendsto f (𝓝 a) (𝓝 (f a)) := by
+theorem tendsto_of_uniform_continuous_subtype [UniformSpace α] [UniformSpace β] {f : α → β}
+    {s : Set α} {a : α} (hf : UniformContinuous fun x : s => f x.val) (ha : s ∈ 𝓝 a) :
+    Tendsto f (𝓝 a) (𝓝 (f a)) := by
   rw [(@map_nhds_subtype_coe_eq α _ s a (mem_of_mem_nhds ha) ha).symm] <;>
     exact tendsto_map' (continuous_iff_continuous_at.mp hf.continuous _)
 #align tendsto_of_uniform_continuous_subtype tendsto_of_uniform_continuous_subtype
@@ -1486,7 +1581,8 @@ instance [UniformSpace α] : UniformSpace αᵐᵒᵖ :=
   UniformSpace.comap MulOpposite.unop ‹_›
 
 @[to_additive]
-theorem uniformity_mul_opposite [UniformSpace α] : 𝓤 αᵐᵒᵖ = comap (fun q : αᵐᵒᵖ × αᵐᵒᵖ => (q.1.unop, q.2.unop)) (𝓤 α) :=
+theorem uniformity_mul_opposite [UniformSpace α] :
+    𝓤 αᵐᵒᵖ = comap (fun q : αᵐᵒᵖ × αᵐᵒᵖ => (q.1.unop, q.2.unop)) (𝓤 α) :=
   rfl
 #align uniformity_mul_opposite uniformity_mul_opposite
 
@@ -1524,13 +1620,14 @@ example [u₁ : UniformSpace α] [u₂ : UniformSpace β] :
 
 theorem uniformity_prod [UniformSpace α] [UniformSpace β] :
     𝓤 (α × β) =
-      ((𝓤 α).comap fun p : (α × β) × α × β => (p.1.1, p.2.1)) ⊓ (𝓤 β).comap fun p : (α × β) × α × β => (p.1.2, p.2.2) :=
+      ((𝓤 α).comap fun p : (α × β) × α × β => (p.1.1, p.2.1)) ⊓
+        (𝓤 β).comap fun p : (α × β) × α × β => (p.1.2, p.2.2) :=
   rfl
 #align uniformity_prod uniformity_prod
 
 theorem uniformity_prod_eq_comap_prod [UniformSpace α] [UniformSpace β] :
-    𝓤 (α × β) = comap (fun p : (α × β) × α × β => ((p.1.1, p.2.1), (p.1.2, p.2.2))) (𝓤 α ×ᶠ 𝓤 β) := by
-  rw [uniformity_prod, Filter.prod, comap_inf, comap_comap, comap_comap]
+    𝓤 (α × β) = comap (fun p : (α × β) × α × β => ((p.1.1, p.2.1), (p.1.2, p.2.2))) (𝓤 α ×ᶠ 𝓤 β) :=
+  by rw [uniformity_prod, Filter.prod, comap_inf, comap_comap, comap_comap]
 #align uniformity_prod_eq_comap_prod uniformity_prod_eq_comap_prod
 
 theorem uniformity_prod_eq_prod [UniformSpace α] [UniformSpace β] :
@@ -1538,16 +1635,17 @@ theorem uniformity_prod_eq_prod [UniformSpace α] [UniformSpace β] :
   rw [map_swap4_eq_comap, uniformity_prod_eq_comap_prod]
 #align uniformity_prod_eq_prod uniformity_prod_eq_prod
 
-theorem mem_uniformity_of_uniform_continuous_invariant [UniformSpace α] [UniformSpace β] {s : Set (β × β)}
-    {f : α → α → β} (hf : UniformContinuous fun p : α × α => f p.1 p.2) (hs : s ∈ 𝓤 β) :
-    ∃ u ∈ 𝓤 α, ∀ a b c, (a, b) ∈ u → (f a c, f b c) ∈ s := by
+theorem mem_uniformity_of_uniform_continuous_invariant [UniformSpace α] [UniformSpace β]
+    {s : Set (β × β)} {f : α → α → β} (hf : UniformContinuous fun p : α × α => f p.1 p.2)
+    (hs : s ∈ 𝓤 β) : ∃ u ∈ 𝓤 α, ∀ a b c, (a, b) ∈ u → (f a c, f b c) ∈ s := by
   rw [UniformContinuous, uniformity_prod_eq_prod, tendsto_map'_iff, (· ∘ ·)] at hf
   rcases mem_prod_iff.1 (mem_map.1 <| hf hs) with ⟨u, hu, v, hv, huvt⟩
   exact ⟨u, hu, fun a b c hab => @huvt ((_, _), (_, _)) ⟨hab, refl_mem_uniformity hv⟩⟩
 #align mem_uniformity_of_uniform_continuous_invariant mem_uniformity_of_uniform_continuous_invariant
 
-theorem mem_uniform_prod [t₁ : UniformSpace α] [t₂ : UniformSpace β] {a : Set (α × α)} {b : Set (β × β)} (ha : a ∈ 𝓤 α)
-    (hb : b ∈ 𝓤 β) : { p : (α × β) × α × β | (p.1.1, p.2.1) ∈ a ∧ (p.1.2, p.2.2) ∈ b } ∈ @uniformity (α × β) _ := by
+theorem mem_uniform_prod [t₁ : UniformSpace α] [t₂ : UniformSpace β] {a : Set (α × α)}
+    {b : Set (β × β)} (ha : a ∈ 𝓤 α) (hb : b ∈ 𝓤 β) :
+    { p : (α × β) × α × β | (p.1.1, p.2.1) ∈ a ∧ (p.1.2, p.2.2) ∈ b } ∈ @uniformity (α × β) _ := by
   rw [uniformity_prod] <;> exact inter_mem_inf (preimage_mem_comap ha) (preimage_mem_comap hb)
 #align mem_uniform_prod mem_uniform_prod
 
@@ -1561,19 +1659,22 @@ theorem tendsto_prod_uniformity_snd [UniformSpace α] [UniformSpace β] :
   le_trans (map_mono inf_le_right) map_comap_le
 #align tendsto_prod_uniformity_snd tendsto_prod_uniformity_snd
 
-theorem uniform_continuous_fst [UniformSpace α] [UniformSpace β] : UniformContinuous fun p : α × β => p.1 :=
+theorem uniform_continuous_fst [UniformSpace α] [UniformSpace β] :
+    UniformContinuous fun p : α × β => p.1 :=
   tendsto_prod_uniformity_fst
 #align uniform_continuous_fst uniform_continuous_fst
 
-theorem uniform_continuous_snd [UniformSpace α] [UniformSpace β] : UniformContinuous fun p : α × β => p.2 :=
+theorem uniform_continuous_snd [UniformSpace α] [UniformSpace β] :
+    UniformContinuous fun p : α × β => p.2 :=
   tendsto_prod_uniformity_snd
 #align uniform_continuous_snd uniform_continuous_snd
 
 variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 
-theorem UniformContinuous.prod_mk {f₁ : α → β} {f₂ : α → γ} (h₁ : UniformContinuous f₁) (h₂ : UniformContinuous f₂) :
-    UniformContinuous fun a => (f₁ a, f₂ a) := by
-  rw [UniformContinuous, uniformity_prod] <;> exact tendsto_inf.2 ⟨tendsto_comap_iff.2 h₁, tendsto_comap_iff.2 h₂⟩
+theorem UniformContinuous.prod_mk {f₁ : α → β} {f₂ : α → γ} (h₁ : UniformContinuous f₁)
+    (h₂ : UniformContinuous f₂) : UniformContinuous fun a => (f₁ a, f₂ a) := by
+  rw [UniformContinuous, uniformity_prod] <;>
+    exact tendsto_inf.2 ⟨tendsto_comap_iff.2 h₁, tendsto_comap_iff.2 h₂⟩
 #align uniform_continuous.prod_mk UniformContinuous.prod_mk
 
 theorem UniformContinuous.prod_mk_left {f : α × β → γ} (h : UniformContinuous f) (b) :
@@ -1586,8 +1687,8 @@ theorem UniformContinuous.prod_mk_right {f : α × β → γ} (h : UniformContin
   h.comp (uniform_continuous_const.prod_mk uniform_continuous_id)
 #align uniform_continuous.prod_mk_right UniformContinuous.prod_mk_right
 
-theorem UniformContinuous.prod_map [UniformSpace δ] {f : α → γ} {g : β → δ} (hf : UniformContinuous f)
-    (hg : UniformContinuous g) : UniformContinuous (Prod.map f g) :=
+theorem UniformContinuous.prod_map [UniformSpace δ] {f : α → γ} {g : β → δ}
+    (hf : UniformContinuous f) (hg : UniformContinuous g) : UniformContinuous (Prod.map f g) :=
   (hf.comp uniform_continuous_fst).prod_mk (hg.comp uniform_continuous_snd)
 #align uniform_continuous.prod_map UniformContinuous.prod_map
 
@@ -1598,34 +1699,44 @@ theorem to_topological_space_prod {α} {β} [u : UniformSpace α] [v : UniformSp
 #align to_topological_space_prod to_topological_space_prod
 
 /-- A version of `uniform_continuous_inf_dom_left` for binary functions -/
-theorem uniform_continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ua1 ua2 : UniformSpace α} {ub1 ub2 : UniformSpace β}
-    {uc1 : UniformSpace γ}
-    (h : by haveI := ua1 <;> haveI := ub1 <;> exact UniformContinuous fun p : α × β => f p.1 p.2) : by
-    haveI := ua1 ⊓ ua2 <;> haveI := ub1 ⊓ ub2 <;> exact UniformContinuous fun p : α × β => f p.1 p.2 := by
+theorem uniform_continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ua1 ua2 : UniformSpace α}
+    {ub1 ub2 : UniformSpace β} {uc1 : UniformSpace γ}
+    (h : by haveI := ua1 <;> haveI := ub1 <;> exact UniformContinuous fun p : α × β => f p.1 p.2) :
+    by
+    haveI := ua1 ⊓ ua2 <;> haveI := ub1 ⊓ ub2 <;>
+      exact UniformContinuous fun p : α × β => f p.1 p.2 :=
+  by
   -- proof essentially copied from ``continuous_inf_dom_left₂`
   have ha := @uniform_continuous_inf_dom_left _ _ id ua1 ua2 ua1 (@uniform_continuous_id _ (id _))
   have hb := @uniform_continuous_inf_dom_left _ _ id ub1 ub2 ub1 (@uniform_continuous_id _ (id _))
-  have h_unif_cont_id := @UniformContinuous.prod_map _ _ _ _ (ua1 ⊓ ua2) (ub1 ⊓ ub2) ua1 ub1 _ _ ha hb
+  have h_unif_cont_id :=
+    @UniformContinuous.prod_map _ _ _ _ (ua1 ⊓ ua2) (ub1 ⊓ ub2) ua1 ub1 _ _ ha hb
   exact @UniformContinuous.comp _ _ _ (id _) (id _) _ _ _ h h_unif_cont_id
 #align uniform_continuous_inf_dom_left₂ uniform_continuous_inf_dom_left₂
 
 /-- A version of `uniform_continuous_inf_dom_right` for binary functions -/
-theorem uniform_continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ua1 ua2 : UniformSpace α} {ub1 ub2 : UniformSpace β}
-    {uc1 : UniformSpace γ}
-    (h : by haveI := ua2 <;> haveI := ub2 <;> exact UniformContinuous fun p : α × β => f p.1 p.2) : by
-    haveI := ua1 ⊓ ua2 <;> haveI := ub1 ⊓ ub2 <;> exact UniformContinuous fun p : α × β => f p.1 p.2 := by
+theorem uniform_continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ua1 ua2 : UniformSpace α}
+    {ub1 ub2 : UniformSpace β} {uc1 : UniformSpace γ}
+    (h : by haveI := ua2 <;> haveI := ub2 <;> exact UniformContinuous fun p : α × β => f p.1 p.2) :
+    by
+    haveI := ua1 ⊓ ua2 <;> haveI := ub1 ⊓ ub2 <;>
+      exact UniformContinuous fun p : α × β => f p.1 p.2 :=
+  by
   -- proof essentially copied from ``continuous_inf_dom_right₂`
   have ha := @uniform_continuous_inf_dom_right _ _ id ua1 ua2 ua2 (@uniform_continuous_id _ (id _))
   have hb := @uniform_continuous_inf_dom_right _ _ id ub1 ub2 ub2 (@uniform_continuous_id _ (id _))
-  have h_unif_cont_id := @UniformContinuous.prod_map _ _ _ _ (ua1 ⊓ ua2) (ub1 ⊓ ub2) ua2 ub2 _ _ ha hb
+  have h_unif_cont_id :=
+    @UniformContinuous.prod_map _ _ _ _ (ua1 ⊓ ua2) (ub1 ⊓ ub2) ua2 ub2 _ _ ha hb
   exact @UniformContinuous.comp _ _ _ (id _) (id _) _ _ _ h h_unif_cont_id
 #align uniform_continuous_inf_dom_right₂ uniform_continuous_inf_dom_right₂
 
 /-- A version of `uniform_continuous_Inf_dom` for binary functions -/
-theorem uniform_continuous_Inf_dom₂ {α β γ} {f : α → β → γ} {uas : Set (UniformSpace α)} {ubs : Set (UniformSpace β)}
-    {ua : UniformSpace α} {ub : UniformSpace β} {uc : UniformSpace γ} (ha : ua ∈ uas) (hb : ub ∈ ubs)
-    (hf : UniformContinuous fun p : α × β => f p.1 p.2) : by
-    haveI := Inf uas <;> haveI := Inf ubs <;> exact @UniformContinuous _ _ _ uc fun p : α × β => f p.1 p.2 := by
+theorem uniform_continuous_Inf_dom₂ {α β γ} {f : α → β → γ} {uas : Set (UniformSpace α)}
+    {ubs : Set (UniformSpace β)} {ua : UniformSpace α} {ub : UniformSpace β} {uc : UniformSpace γ}
+    (ha : ua ∈ uas) (hb : ub ∈ ubs) (hf : UniformContinuous fun p : α × β => f p.1 p.2) : by
+    haveI := Inf uas <;> haveI := Inf ubs <;>
+      exact @UniformContinuous _ _ _ uc fun p : α × β => f p.1 p.2 :=
+  by
   -- proof essentially copied from ``continuous_Inf_dom`
   let t : UniformSpace (α × β) := Prod.uniformSpace
   have ha := uniform_continuous_Inf_dom ha uniform_continuous_id
@@ -1640,7 +1751,8 @@ section
 
 open UniformSpace Function
 
-variable {δ' : Type _} [UniformSpace α] [UniformSpace β] [UniformSpace γ] [UniformSpace δ] [UniformSpace δ']
+variable {δ' : Type _} [UniformSpace α] [UniformSpace β] [UniformSpace γ] [UniformSpace δ]
+  [UniformSpace δ']
 
 -- mathport name: «expr ∘₂ »
 local notation f " ∘₂ " g => Function.bicompr f g
@@ -1650,7 +1762,8 @@ def UniformContinuous₂ (f : α → β → γ) :=
   UniformContinuous (uncurry f)
 #align uniform_continuous₂ UniformContinuous₂
 
-theorem uniform_continuous₂_def (f : α → β → γ) : UniformContinuous₂ f ↔ UniformContinuous (uncurry f) :=
+theorem uniform_continuous₂_def (f : α → β → γ) :
+    UniformContinuous₂ f ↔ UniformContinuous (uncurry f) :=
   Iff.rfl
 #align uniform_continuous₂_def uniform_continuous₂_def
 
@@ -1659,17 +1772,19 @@ theorem UniformContinuous₂.uniform_continuous {f : α → β → γ} (h : Unif
   h
 #align uniform_continuous₂.uniform_continuous UniformContinuous₂.uniform_continuous
 
-theorem uniform_continuous₂_curry (f : α × β → γ) : UniformContinuous₂ (Function.curry f) ↔ UniformContinuous f := by
+theorem uniform_continuous₂_curry (f : α × β → γ) :
+    UniformContinuous₂ (Function.curry f) ↔ UniformContinuous f := by
   rw [UniformContinuous₂, uncurry_curry]
 #align uniform_continuous₂_curry uniform_continuous₂_curry
 
-theorem UniformContinuous₂.comp {f : α → β → γ} {g : γ → δ} (hg : UniformContinuous g) (hf : UniformContinuous₂ f) :
-    UniformContinuous₂ (g ∘₂ f) :=
+theorem UniformContinuous₂.comp {f : α → β → γ} {g : γ → δ} (hg : UniformContinuous g)
+    (hf : UniformContinuous₂ f) : UniformContinuous₂ (g ∘₂ f) :=
   hg.comp hf
 #align uniform_continuous₂.comp UniformContinuous₂.comp
 
-theorem UniformContinuous₂.bicompl {f : α → β → γ} {ga : δ → α} {gb : δ' → β} (hf : UniformContinuous₂ f)
-    (hga : UniformContinuous ga) (hgb : UniformContinuous gb) : UniformContinuous₂ (bicompl f ga gb) :=
+theorem UniformContinuous₂.bicompl {f : α → β → γ} {ga : δ → α} {gb : δ' → β}
+    (hf : UniformContinuous₂ f) (hga : UniformContinuous ga) (hgb : UniformContinuous gb) :
+    UniformContinuous₂ (bicompl f ga gb) :=
   hf.UniformContinuous.comp (hga.prod_map hgb)
 #align uniform_continuous₂.bicompl UniformContinuous₂.bicompl
 
@@ -1692,8 +1807,10 @@ by taking independently an entourage of the diagonal in the first part, and an e
 the diagonal in the second part. -/
 def UniformSpace.Core.sum : UniformSpace.Core (Sum α β) :=
   UniformSpace.Core.mk'
-    (map (fun p : α × α => (inl p.1, inl p.2)) (𝓤 α) ⊔ map (fun p : β × β => (inr p.1, inr p.2)) (𝓤 β))
-    (fun r ⟨H₁, H₂⟩ x => by cases x <;> [apply refl_mem_uniformity H₁, apply refl_mem_uniformity H₂])
+    (map (fun p : α × α => (inl p.1, inl p.2)) (𝓤 α) ⊔
+      map (fun p : β × β => (inr p.1, inr p.2)) (𝓤 β))
+    (fun r ⟨H₁, H₂⟩ x => by
+      cases x <;> [apply refl_mem_uniformity H₁, apply refl_mem_uniformity H₂])
     (fun r ⟨H₁, H₂⟩ => ⟨symm_le_uniformity H₁, symm_le_uniformity H₂⟩) fun r ⟨Hrα, Hrβ⟩ => by
     rcases comp_mem_uniformity_sets Hrα with ⟨tα, htα, Htα⟩
     rcases comp_mem_uniformity_sets Hrβ with ⟨tβ, htβ, Htβ⟩
@@ -1724,16 +1841,21 @@ theorem union_mem_uniformity_sum {a : Set (α × α)} (ha : a ∈ 𝓤 α) {b : 
 the disjoint union topology, we need two lemmas saying that open sets can be characterized by
 the uniform structure -/
 theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Sum α β} (xs : x ∈ s) :
-    { p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈ (@UniformSpace.Core.sum α β _ _).uniformity := by
+    { p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈ (@UniformSpace.Core.sum α β _ _).uniformity :=
+  by
   cases x
   · refine'
-        mem_of_superset (union_mem_uniformity_sum (mem_nhds_uniformity_iff_right.1 (IsOpen.mem_nhds hs.1 xs)) univ_mem)
+        mem_of_superset
+          (union_mem_uniformity_sum (mem_nhds_uniformity_iff_right.1 (IsOpen.mem_nhds hs.1 xs))
+            univ_mem)
           (union_subset _ _) <;>
       rintro _ ⟨⟨_, b⟩, h, ⟨⟩⟩ ⟨⟩
     exact h rfl
     
   · refine'
-        mem_of_superset (union_mem_uniformity_sum univ_mem (mem_nhds_uniformity_iff_right.1 (IsOpen.mem_nhds hs.2 xs)))
+        mem_of_superset
+          (union_mem_uniformity_sum univ_mem
+            (mem_nhds_uniformity_iff_right.1 (IsOpen.mem_nhds hs.2 xs)))
           (union_subset _ _) <;>
       rintro _ ⟨⟨a, _⟩, h, ⟨⟩⟩ ⟨⟩
     exact h rfl
@@ -1741,7 +1863,10 @@ theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Su
 #align uniformity_sum_of_open_aux uniformity_sum_of_open_aux
 
 theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
-    (hs : ∀ x ∈ s, { p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈ (@UniformSpace.Core.sum α β _ _).uniformity) :
+    (hs :
+      ∀ x ∈ s,
+        { p : Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈
+          (@UniformSpace.Core.sum α β _ _).uniformity) :
     IsOpen s := by
   constructor
   · refine' (@is_open_iff_mem_nhds α _ _).2 fun a ha => mem_nhds_uniformity_iff_right.2 _
@@ -1765,7 +1890,9 @@ instance Sum.uniformSpace : UniformSpace (Sum α β) where
 #align sum.uniform_space Sum.uniformSpace
 
 theorem Sum.uniformity :
-    𝓤 (Sum α β) = map (fun p : α × α => (inl p.1, inl p.2)) (𝓤 α) ⊔ map (fun p : β × β => (inr p.1, inr p.2)) (𝓤 β) :=
+    𝓤 (Sum α β) =
+      map (fun p : α × α => (inl p.1, inl p.2)) (𝓤 α) ⊔
+        map (fun p : β × β => (inr p.1, inr p.2)) (𝓤 β) :=
   rfl
 #align sum.uniformity Sum.uniformity
 
@@ -1777,8 +1904,9 @@ end Constructions
 -- see topology/sequences.lean
 /-- Let `c : ι → set α` be an open cover of a compact set `s`. Then there exists an entourage
 `n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `c i`. -/
-theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} {c : ι → Set α} (hs : IsCompact s)
-    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ n ∈ 𝓤 α, ∀ x ∈ s, ∃ i, { y | (x, y) ∈ n } ⊆ c i := by
+theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} {c : ι → Set α}
+    (hs : IsCompact s) (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) :
+    ∃ n ∈ 𝓤 α, ∀ x ∈ s, ∃ i, { y | (x, y) ∈ n } ⊆ c i := by
   let u n := { x | ∃ i, ∃ m ∈ 𝓤 α, { y | (x, y) ∈ m ○ n } ⊆ c i }
   have hu₁ : ∀ n ∈ 𝓤 α, IsOpen (u n) := by
     refine' fun n hn => is_open_uniformity.2 _
@@ -1804,17 +1932,19 @@ theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} 
 
 /-- Let `c : set (set α)` be an open cover of a compact set `s`. Then there exists an entourage
 `n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `t ∈ c`. -/
-theorem lebesgue_number_lemma_sUnion {α : Type u} [UniformSpace α] {s : Set α} {c : Set (Set α)} (hs : IsCompact s)
-    (hc₁ : ∀ t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀c) : ∃ n ∈ 𝓤 α, ∀ x ∈ s, ∃ t ∈ c, ∀ y, (x, y) ∈ n → y ∈ t := by
+theorem lebesgue_number_lemma_sUnion {α : Type u} [UniformSpace α] {s : Set α} {c : Set (Set α)}
+    (hs : IsCompact s) (hc₁ : ∀ t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀c) :
+    ∃ n ∈ 𝓤 α, ∀ x ∈ s, ∃ t ∈ c, ∀ y, (x, y) ∈ n → y ∈ t := by
   rw [sUnion_eq_Union] at hc₂ <;> simpa using lebesgue_number_lemma hs (by simpa) hc₂
 #align lebesgue_number_lemma_sUnion lebesgue_number_lemma_sUnion
 
 /-- A useful consequence of the Lebesgue number lemma: given any compact set `K` contained in an
 open set `U`, we can find an (open) entourage `V` such that the ball of size `V` about any point of
 `K` is contained in `U`. -/
-theorem lebesgue_number_of_compact_open [UniformSpace α] {K U : Set α} (hK : IsCompact K) (hU : IsOpen U)
-    (hKU : K ⊆ U) : ∃ V ∈ 𝓤 α, IsOpen V ∧ ∀ x ∈ K, UniformSpace.ball x V ⊆ U := by
-  let W : K → Set (α × α) := fun k => Classical.choose <| is_open_iff_open_ball_subset.mp hU k.1 <| hKU k.2
+theorem lebesgue_number_of_compact_open [UniformSpace α] {K U : Set α} (hK : IsCompact K)
+    (hU : IsOpen U) (hKU : K ⊆ U) : ∃ V ∈ 𝓤 α, IsOpen V ∧ ∀ x ∈ K, UniformSpace.ball x V ⊆ U := by
+  let W : K → Set (α × α) := fun k =>
+    Classical.choose <| is_open_iff_open_ball_subset.mp hU k.1 <| hKU k.2
   have hW : ∀ k, W k ∈ 𝓤 α ∧ IsOpen (W k) ∧ UniformSpace.ball k.1 (W k) ⊆ U := by
     intro k
     obtain ⟨h₁, h₂, h₃⟩ := Classical.choose_spec (is_open_iff_open_ball_subset.mp hU k.1 (hKU k.2))
@@ -1866,11 +1996,13 @@ theorem tendsto_nhds_left {f : Filter β} {u : β → α} {a : α} :
 #align uniform.tendsto_nhds_left Uniform.tendsto_nhds_left
 
 theorem continuous_at_iff'_right [TopologicalSpace β] {f : β → α} {b : β} :
-    ContinuousAt f b ↔ Tendsto (fun x => (f b, f x)) (𝓝 b) (𝓤 α) := by rw [ContinuousAt, tendsto_nhds_right]
+    ContinuousAt f b ↔ Tendsto (fun x => (f b, f x)) (𝓝 b) (𝓤 α) := by
+  rw [ContinuousAt, tendsto_nhds_right]
 #align uniform.continuous_at_iff'_right Uniform.continuous_at_iff'_right
 
 theorem continuous_at_iff'_left [TopologicalSpace β] {f : β → α} {b : β} :
-    ContinuousAt f b ↔ Tendsto (fun x => (f x, f b)) (𝓝 b) (𝓤 α) := by rw [ContinuousAt, tendsto_nhds_left]
+    ContinuousAt f b ↔ Tendsto (fun x => (f x, f b)) (𝓝 b) (𝓤 α) := by
+  rw [ContinuousAt, tendsto_nhds_left]
 #align uniform.continuous_at_iff'_left Uniform.continuous_at_iff'_left
 
 theorem continuous_at_iff_prod [TopologicalSpace β] {f : β → α} {b : β} :

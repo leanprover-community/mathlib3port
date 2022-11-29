@@ -45,20 +45,21 @@ open Function LinearIsometry ContinuousLinearMap
 
 /-- A continuous linear map `f'` is said to be conformal if it's
     a nonzero multiple of a linear isometry. -/
-def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SeminormedAddCommGroup X] [SeminormedAddCommGroup Y]
-    [NormedSpace R X] [NormedSpace R Y] (f' : X →L[R] Y) :=
+def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SeminormedAddCommGroup X]
+    [SeminormedAddCommGroup Y] [NormedSpace R X] [NormedSpace R Y] (f' : X →L[R] Y) :=
   ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), f' = c • li.toContinuousLinearMap
 #align is_conformal_map IsConformalMap
 
 variable {R M N G M' : Type _} [NormedField R] [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
-  [SeminormedAddCommGroup G] [NormedSpace R M] [NormedSpace R N] [NormedSpace R G] [NormedAddCommGroup M']
-  [NormedSpace R M'] {f : M →L[R] N} {g : N →L[R] G} {c : R}
+  [SeminormedAddCommGroup G] [NormedSpace R M] [NormedSpace R N] [NormedSpace R G]
+  [NormedAddCommGroup M'] [NormedSpace R M'] {f : M →L[R] N} {g : N →L[R] G} {c : R}
 
 theorem isConformalMapId : IsConformalMap (id R M) :=
   ⟨1, one_ne_zero, id, by simp⟩
 #align is_conformal_map_id isConformalMapId
 
-theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) := by
+theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) :=
+  by
   rcases hf with ⟨c', hc', li, rfl⟩
   exact ⟨c * c', mul_ne_zero hc hc', li, smul_smul _ _ _⟩
 #align is_conformal_map.smul IsConformalMap.smul
@@ -67,7 +68,8 @@ theorem isConformalMapConstSmul (hc : c ≠ 0) : IsConformalMap (c • id R M) :
   isConformalMapId.smul hc
 #align is_conformal_map_const_smul isConformalMapConstSmul
 
-protected theorem LinearIsometry.isConformalMap (f' : M →ₗᵢ[R] N) : IsConformalMap f'.toContinuousLinearMap :=
+protected theorem LinearIsometry.isConformalMap (f' : M →ₗᵢ[R] N) :
+    IsConformalMap f'.toContinuousLinearMap :=
   ⟨1, one_ne_zero, f', (one_smul _ _).symm⟩
 #align linear_isometry.is_conformal_map LinearIsometry.isConformalMap
 

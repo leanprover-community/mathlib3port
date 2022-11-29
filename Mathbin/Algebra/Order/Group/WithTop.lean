@@ -18,8 +18,8 @@ section LinearOrderedAddCommGroup
 variable [LinearOrderedAddCommGroup α] {a b c d : α}
 
 instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWithTop (WithTop α) :=
-  { WithTop.linearOrderedAddCommMonoidWithTop, Option.nontrivial with neg := Option.map fun a : α => -a,
-    neg_top := @Option.map_none _ _ fun a : α => -a,
+  { WithTop.linearOrderedAddCommMonoidWithTop, Option.nontrivial with
+    neg := Option.map fun a : α => -a, neg_top := @Option.map_none _ _ fun a : α => -a,
     add_neg_cancel := by
       rintro (a | a) ha
       · exact (ha rfl).elim

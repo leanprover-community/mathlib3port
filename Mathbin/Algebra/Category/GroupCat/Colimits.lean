@@ -67,23 +67,28 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
   | refl : ∀ x, relation x x
   | symm : ∀ (x y) (h : relation x y), relation y x
-  | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
+  |
+  trans :
+    ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
   |
   map :
     ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
-      relation (of j' (F.map f x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
+      relation (of j' (F.map f x))
+        (of j x)-- Then one relation per operation, describing the interaction with `of`
 
   | zero : ∀ j, relation (of j 0) zero
   | neg : ∀ (j) (x : F.obj j), relation (of j (-x)) (neg (of j x))
   |
   add :
     ∀ (j) (x y : F.obj j),
-      relation (of j (x + y)) (add (of j x) (of j y))-- Then one relation per argument of each operation
+      relation (of j (x + y))
+        (add (of j x) (of j y))-- Then one relation per argument of each operation
 
   | neg_1 : ∀ (x x') (r : relation x x'), relation (neg x) (neg x')
   | add_1 : ∀ (x x' y) (r : relation x x'), relation (add x y) (add x' y)
-  | add_2 : ∀ (x y y') (r : relation y y'), relation (add x y) (add x y')-- And one relation per axiom
+  |
+  add_2 : ∀ (x y y') (r : relation y y'), relation (add x y) (add x y')-- And one relation per axiom
 
   | zero_add : ∀ x, relation (add zero x) x
   | add_zero : ∀ x, relation (add x zero) x
@@ -92,7 +97,8 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | add_assoc : ∀ x y z, relation (add (add x y) z) (add x (add y z))
 #align AddCommGroup.colimits.relation AddCommGroupCat.Colimits.Relation
 
-/-- The setoid corresponding to group expressions modulo abelian group relations and identifications.
+/--
+The setoid corresponding to group expressions modulo abelian group relations and identifications.
 -/
 def colimitSetoid : Setoid (Prequotient F) where
   R := Relation F
@@ -188,7 +194,8 @@ theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : Colimit
 #align AddCommGroup.colimits.quot_neg AddCommGroupCat.Colimits.quot_neg
 
 @[simp]
-theorem quot_add (x y) : Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
+theorem quot_add (x y) :
+    Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align AddCommGroup.colimits.quot_add AddCommGroupCat.Colimits.quot_add
 
@@ -211,7 +218,8 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
 #align AddCommGroup.colimits.cocone_morphism AddCommGroupCat.Colimits.coconeMorphism
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
+    F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
@@ -222,7 +230,8 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
-#align AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
+#align
+  AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit abelian group. -/
 def colimitCocone : Cocone F where
@@ -309,7 +318,8 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
     ext
     induction x
     induction x
-    · have w' := congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
+    · have w' :=
+        congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
       erw [w']
       rfl
       
@@ -320,13 +330,16 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
     · simp [*]
       
     rfl
-#align AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
+#align
+  AddCommGroup.colimits.colimit_cocone_is_colimit AddCommGroupCat.Colimits.colimitCoconeIsColimit
 
 instance has_colimits_AddCommGroup :
     HasColimits
       AddCommGroupCat where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
-#align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
+    { HasColimit := fun F =>
+        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+#align
+  AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.has_colimits_AddCommGroup
 
 end AddCommGroupCat.Colimits
 
@@ -356,15 +369,12 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
         induction H_1_h
         simp only [cokernel.condition_apply, zero_apply])
   -- obviously can take care of the next goals, but it is really slow
-  hom_inv_id' := by
-    ext1
-    simp only [coequalizer_as_cokernel, category.comp_id, cokernel.π_desc_assoc]
-    ext1
-    rfl
+  hom_inv_id' := by ext1;
+    simp only [coequalizer_as_cokernel, category.comp_id, cokernel.π_desc_assoc]; ext1; rfl
   inv_hom_id' := by
     ext x : 2
-    simp only [AddMonoidHom.coe_comp, Function.comp_apply, comp_apply, lift_mk, cokernel.π_desc_apply, mk'_apply,
-      id_apply]
+    simp only [AddMonoidHom.coe_comp, Function.comp_apply, comp_apply, lift_mk,
+      cokernel.π_desc_apply, mk'_apply, id_apply]
 #align AddCommGroup.cokernel_iso_quotient AddCommGroupCat.cokernelIsoQuotient
 
 end AddCommGroupCat

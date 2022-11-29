@@ -39,11 +39,13 @@ section Semiring
 
 variable [Semiring α]
 
-theorem geom_sum_succ {x : α} {n : ℕ} : (∑ i in range (n + 1), x ^ i) = (x * ∑ i in range n, x ^ i) + 1 := by
+theorem geom_sum_succ {x : α} {n : ℕ} :
+    (∑ i in range (n + 1), x ^ i) = (x * ∑ i in range n, x ^ i) + 1 := by
   simp only [mul_sum, ← pow_succ, sum_range_succ', pow_zero]
 #align geom_sum_succ geom_sum_succ
 
-theorem geom_sum_succ' {x : α} {n : ℕ} : (∑ i in range (n + 1), x ^ i) = x ^ n + ∑ i in range n, x ^ i :=
+theorem geom_sum_succ' {x : α} {n : ℕ} :
+    (∑ i in range (n + 1), x ^ i) = x ^ n + ∑ i in range n, x ^ i :=
   (sum_range_succ _ _).trans (add_comm _ _)
 #align geom_sum_succ' geom_sum_succ'
 
@@ -71,12 +73,14 @@ theorem one_geom_sum (n : ℕ) : (∑ i in range n, (1 : α) ^ i) = n := by simp
 #align one_geom_sum one_geom_sum
 
 @[simp]
-theorem op_geom_sum (x : α) (n : ℕ) : op (∑ i in range n, x ^ i) = ∑ i in range n, op x ^ i := by simp
+theorem op_geom_sum (x : α) (n : ℕ) : op (∑ i in range n, x ^ i) = ∑ i in range n, op x ^ i := by
+  simp
 #align op_geom_sum op_geom_sum
 
 @[simp]
 theorem op_geom_sum₂ (x y : α) (n : ℕ) :
-    op (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = ∑ i in range n, op y ^ i * op x ^ (n - 1 - i) := by
+    op (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = ∑ i in range n, op y ^ i * op x ^ (n - 1 - i) :=
+  by
   simp only [op_sum, op_mul, op_pow]
   rw [← sum_range_reflect]
   refine' sum_congr rfl fun j j_in => _
@@ -86,7 +90,8 @@ theorem op_geom_sum₂ (x y : α) (n : ℕ) :
   exact le_tsub_of_add_le_right j_in
 #align op_geom_sum₂ op_geom_sum₂
 
-theorem geom_sum₂_with_one (x : α) (n : ℕ) : (∑ i in range n, x ^ i * 1 ^ (n - 1 - i)) = ∑ i in range n, x ^ i :=
+theorem geom_sum₂_with_one (x : α) (n : ℕ) :
+    (∑ i in range n, x ^ i * 1 ^ (n - 1 - i)) = ∑ i in range n, x ^ i :=
   sum_congr rfl fun i _ => by rw [one_pow, mul_one]
 #align geom_sum₂_with_one geom_sum₂_with_one
 
@@ -120,7 +125,8 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
 end Semiring
 
 @[simp]
-theorem neg_one_geom_sum [Ring α] {n : ℕ} : (∑ i in range n, (-1 : α) ^ i) = if Even n then 0 else 1 := by
+theorem neg_one_geom_sum [Ring α] {n : ℕ} :
+    (∑ i in range n, (-1 : α) ^ i) = if Even n then 0 else 1 := by
   induction' n with k hk
   · simp
     
@@ -136,8 +142,9 @@ theorem neg_one_geom_sum [Ring α] {n : ℕ} : (∑ i in range n, (-1 : α) ^ i)
 theorem geom_sum₂_self {α : Type _} [CommRing α] (x : α) (n : ℕ) :
     (∑ i in range n, x ^ i * x ^ (n - 1 - i)) = n * x ^ (n - 1) :=
   calc
-    (∑ i in Finset.range n, x ^ i * x ^ (n - 1 - i)) = ∑ i in Finset.range n, x ^ (i + (n - 1 - i)) := by
-      simp_rw [← pow_add]
+    (∑ i in Finset.range n, x ^ i * x ^ (n - 1 - i)) =
+        ∑ i in Finset.range n, x ^ (i + (n - 1 - i)) :=
+      by simp_rw [← pow_add]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
       Finset.sum_congr rfl fun i hi =>
         congr_arg _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| Finset.mem_range.1 hi
@@ -152,7 +159,8 @@ theorem geom_sum₂_mul_add [CommSemiring α] (x y : α) (n : ℕ) :
   (Commute.all x y).geom_sum₂_mul_add n
 #align geom_sum₂_mul_add geom_sum₂_mul_add
 
-theorem geom_sum_mul_add [Semiring α] (x : α) (n : ℕ) : (∑ i in range n, (x + 1) ^ i) * x + 1 = (x + 1) ^ n := by
+theorem geom_sum_mul_add [Semiring α] (x : α) (n : ℕ) :
+    (∑ i in range n, (x + 1) ^ i) * x + 1 = (x + 1) ^ n := by
   have := (Commute.one_right x).geom_sum₂_mul_add n
   rw [one_pow, geom_sum₂_with_one] at this
   exact this
@@ -192,7 +200,8 @@ theorem mul_geom_sum [Ring α] (x : α) (n : ℕ) : ((x - 1) * ∑ i in range n,
   op_injective <| by simpa using geom_sum_mul (op x) n
 #align mul_geom_sum mul_geom_sum
 
-theorem geom_sum_mul_neg [Ring α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i) * (1 - x) = 1 - x ^ n := by
+theorem geom_sum_mul_neg [Ring α] (x : α) (n : ℕ) : (∑ i in range n, x ^ i) * (1 - x) = 1 - x ^ n :=
+  by
   have := congr_arg Neg.neg (geom_sum_mul x n)
   rw [neg_sub, ← mul_neg, neg_sub] at this
   exact this
@@ -202,9 +211,10 @@ theorem mul_neg_geom_sum [Ring α] (x : α) (n : ℕ) : ((1 - x) * ∑ i in rang
   op_injective <| by simpa using geom_sum_mul_neg (op x) n
 #align mul_neg_geom_sum mul_neg_geom_sum
 
-protected theorem Commute.geom_sum₂_comm {α : Type u} [Semiring α] {x y : α} (n : ℕ) (h : Commute x y) :
+protected theorem Commute.geom_sum₂_comm {α : Type u} [Semiring α] {x y : α} (n : ℕ)
+    (h : Commute x y) :
     (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = ∑ i in range n, y ^ i * x ^ (n - 1 - i) := by
-  cases n
+  cases n;
   · simp
     
   simp only [Nat.succ_eq_add_one, Nat.add_sub_cancel]
@@ -218,8 +228,8 @@ theorem geom_sum₂_comm {α : Type u} [CommSemiring α] (x y : α) (n : ℕ) :
   (Commute.all x y).geom_sum₂_comm n
 #align geom_sum₂_comm geom_sum₂_comm
 
-protected theorem Commute.geom_sum₂ [DivisionRing α] {x y : α} (h' : Commute x y) (h : x ≠ y) (n : ℕ) :
-    (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ n) / (x - y) := by
+protected theorem Commute.geom_sum₂ [DivisionRing α] {x y : α} (h' : Commute x y) (h : x ≠ y)
+    (n : ℕ) : (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ n) / (x - y) := by
   have : x - y ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
   rw [← h'.geom_sum₂_mul, mul_div_cancel _ this]
 #align commute.geom_sum₂ Commute.geom_sum₂
@@ -229,15 +239,20 @@ theorem geom₂_sum [Field α] {x y : α} (h : x ≠ y) (n : ℕ) :
   (Commute.all x y).geom_sum₂ h n
 #align geom₂_sum geom₂_sum
 
-theorem geom_sum_eq [DivisionRing α] {x : α} (h : x ≠ 1) (n : ℕ) : (∑ i in range n, x ^ i) = (x ^ n - 1) / (x - 1) := by
+theorem geom_sum_eq [DivisionRing α] {x : α} (h : x ≠ 1) (n : ℕ) :
+    (∑ i in range n, x ^ i) = (x ^ n - 1) / (x - 1) := by
   have : x - 1 ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
   rw [← geom_sum_mul, mul_div_cancel _ this]
 #align geom_sum_eq geom_sum_eq
 
-protected theorem Commute.mul_geom_sum₂_Ico [Ring α] {x y : α} (h : Commute x y) {m n : ℕ} (hmn : m ≤ n) :
+protected theorem Commute.mul_geom_sum₂_Ico [Ring α] {x y : α} (h : Commute x y) {m n : ℕ}
+    (hmn : m ≤ n) :
     ((x - y) * ∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = x ^ n - x ^ m * y ^ (n - m) := by
   rw [sum_Ico_eq_sub _ hmn]
-  have : (∑ k in range m, x ^ k * y ^ (n - 1 - k)) = ∑ k in range m, x ^ k * (y ^ (n - m) * y ^ (m - 1 - k)) := by
+  have :
+    (∑ k in range m, x ^ k * y ^ (n - 1 - k)) =
+      ∑ k in range m, x ^ k * (y ^ (n - m) * y ^ (m - 1 - k)) :=
+    by
     refine' sum_congr rfl fun j j_in => _
     rw [← pow_add]
     congr
@@ -247,12 +262,15 @@ protected theorem Commute.mul_geom_sum₂_Ico [Ring α] {x y : α} (h : Commute 
   rw [this]
   simp_rw [pow_mul_comm y (n - m) _]
   simp_rw [← mul_assoc]
-  rw [← sum_mul, mul_sub, h.mul_geom_sum₂, ← mul_assoc, h.mul_geom_sum₂, sub_mul, ← pow_add, add_tsub_cancel_of_le hmn,
-    sub_sub_sub_cancel_right (x ^ n) (x ^ m * y ^ (n - m)) (y ^ n)]
+  rw [← sum_mul, mul_sub, h.mul_geom_sum₂, ← mul_assoc, h.mul_geom_sum₂, sub_mul, ← pow_add,
+    add_tsub_cancel_of_le hmn, sub_sub_sub_cancel_right (x ^ n) (x ^ m * y ^ (n - m)) (y ^ n)]
 #align commute.mul_geom_sum₂_Ico Commute.mul_geom_sum₂_Ico
 
-protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ring α] {x y : α} (h : Commute x y) {n : ℕ} :
-    (∑ i in range (n + 1), x ^ i * y ^ (n - i)) = x ^ n + y * ∑ i in range n, x ^ i * y ^ (n - 1 - i) := by
+protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ring α] {x y : α} (h : Commute x y)
+    {n : ℕ} :
+    (∑ i in range (n + 1), x ^ i * y ^ (n - i)) =
+      x ^ n + y * ∑ i in range n, x ^ i * y ^ (n - 1 - i) :=
+  by
   simp_rw [mul_sum, sum_range_succ_comm, tsub_self, pow_zero, mul_one, add_right_inj, ← mul_assoc,
     (h.symm.pow_right _).Eq, mul_assoc, ← pow_succ]
   refine' sum_congr rfl fun i hi => _
@@ -266,7 +284,8 @@ protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ring α] {x y : α}
 #align commute.geom_sum₂_succ_eq Commute.geom_sum₂_succ_eq
 
 theorem geom_sum₂_succ_eq {α : Type u} [CommRing α] (x y : α) {n : ℕ} :
-    (∑ i in range (n + 1), x ^ i * y ^ (n - i)) = x ^ n + y * ∑ i in range n, x ^ i * y ^ (n - 1 - i) :=
+    (∑ i in range (n + 1), x ^ i * y ^ (n - i)) =
+      x ^ n + y * ∑ i in range n, x ^ i * y ^ (n - 1 - i) :=
   (Commute.all x y).geom_sum₂_succ_eq
 #align geom_sum₂_succ_eq geom_sum₂_succ_eq
 
@@ -275,11 +294,15 @@ theorem mul_geom_sum₂_Ico [CommRing α] (x y : α) {m n : ℕ} (hmn : m ≤ n)
   (Commute.all x y).mul_geom_sum₂_Ico hmn
 #align mul_geom_sum₂_Ico mul_geom_sum₂_Ico
 
-protected theorem Commute.geom_sum₂_Ico_mul [Ring α] {x y : α} (h : Commute x y) {m n : ℕ} (hmn : m ≤ n) :
+protected theorem Commute.geom_sum₂_Ico_mul [Ring α] {x y : α} (h : Commute x y) {m n : ℕ}
+    (hmn : m ≤ n) :
     (∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) * (x - y) = x ^ n - y ^ (n - m) * x ^ m := by
   apply op_injective
   simp only [op_sub, op_mul, op_pow, op_sum]
-  have : (∑ k in Ico m n, op y ^ (n - 1 - k) * op x ^ k) = ∑ k in Ico m n, op x ^ k * op y ^ (n - 1 - k) := by
+  have :
+    (∑ k in Ico m n, op y ^ (n - 1 - k) * op x ^ k) =
+      ∑ k in Ico m n, op x ^ k * op y ^ (n - 1 - k) :=
+    by
     refine' sum_congr rfl fun k k_in => _
     apply Commute.pow_pow (Commute.op h.symm)
   rw [this]
@@ -296,8 +319,9 @@ theorem geom_sum_Ico_mul_neg [Ring α] (x : α) {m n : ℕ} (hmn : m ≤ n) :
   rw [sum_Ico_eq_sub _ hmn, sub_mul, geom_sum_mul_neg, geom_sum_mul_neg, sub_sub_sub_cancel_left]
 #align geom_sum_Ico_mul_neg geom_sum_Ico_mul_neg
 
-protected theorem Commute.geom_sum₂_Ico [DivisionRing α] {x y : α} (h : Commute x y) (hxy : x ≠ y) {m n : ℕ}
-    (hmn : m ≤ n) : (∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) := by
+protected theorem Commute.geom_sum₂_Ico [DivisionRing α] {x y : α} (h : Commute x y) (hxy : x ≠ y)
+    {m n : ℕ} (hmn : m ≤ n) :
+    (∑ i in Finset.ico m n, x ^ i * y ^ (n - 1 - i)) = (x ^ n - y ^ (n - m) * x ^ m) / (x - y) := by
   have : x - y ≠ 0 := by simp_all [-sub_eq_add_neg, sub_eq_iff_eq_add]
   rw [← h.geom_sum₂_Ico_mul hmn, mul_div_cancel _ this]
 #align commute.geom_sum₂_Ico Commute.geom_sum₂_Ico
@@ -318,8 +342,8 @@ theorem geom_sum_Ico' [DivisionRing α] {x : α} (hx : x ≠ 1) {m n : ℕ} (hmn
   convert neg_div_neg_eq (x ^ m - x ^ n) (1 - x) <;> abel
 #align geom_sum_Ico' geom_sum_Ico'
 
-theorem geom_sum_Ico_le_of_lt_one [LinearOrderedField α] {x : α} (hx : 0 ≤ x) (h'x : x < 1) {m n : ℕ} :
-    (∑ i in ico m n, x ^ i) ≤ x ^ m / (1 - x) := by
+theorem geom_sum_Ico_le_of_lt_one [LinearOrderedField α] {x : α} (hx : 0 ≤ x) (h'x : x < 1)
+    {m n : ℕ} : (∑ i in ico m n, x ^ i) ≤ x ^ m / (1 - x) := by
   rcases le_or_lt m n with (hmn | hmn)
   · rw [geom_sum_Ico' h'x.ne hmn]
     apply div_le_div (pow_nonneg hx _) _ (sub_pos.2 h'x) le_rfl
@@ -341,9 +365,12 @@ theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) 
   have h₃ : x - 1 ≠ 0 := mt sub_eq_zero.1 hx1
   have h₄ : x * (x ^ n)⁻¹ = (x ^ n)⁻¹ * x :=
     Nat.recOn n (by simp) fun n h => by
-      rw [pow_succ, mul_inv_rev, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc, inv_mul_cancel hx0]
-  rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ← mul_right_inj' h₃, ← mul_assoc, ← mul_assoc, mul_inv_cancel h₃]
-  simp [mul_add, add_mul, mul_inv_cancel hx0, mul_assoc, h₄, sub_eq_add_neg, add_comm, add_left_comm]
+      rw [pow_succ, mul_inv_rev, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc,
+        inv_mul_cancel hx0]
+  rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ← mul_right_inj' h₃, ← mul_assoc, ← mul_assoc,
+    mul_inv_cancel h₃]
+  simp [mul_add, add_mul, mul_inv_cancel hx0, mul_assoc, h₄, sub_eq_add_neg, add_comm,
+    add_left_comm]
 #align geom_sum_inv geom_sum_inv
 
 variable {β : Type _}
@@ -353,17 +380,21 @@ theorem RingHom.map_geom_sum [Semiring α] [Semiring β] (x : α) (n : ℕ) (f :
 #align ring_hom.map_geom_sum RingHom.map_geom_sum
 
 theorem RingHom.map_geom_sum₂ [Semiring α] [Semiring β] (x y : α) (n : ℕ) (f : α →+* β) :
-    f (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = ∑ i in range n, f x ^ i * f y ^ (n - 1 - i) := by simp [f.map_sum]
+    f (∑ i in range n, x ^ i * y ^ (n - 1 - i)) = ∑ i in range n, f x ^ i * f y ^ (n - 1 - i) := by
+  simp [f.map_sum]
 #align ring_hom.map_geom_sum₂ RingHom.map_geom_sum₂
 
 /-! ### Geometric sum with `ℕ`-division -/
 
 
-theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) : ((b - 1) * ∑ i in range n.succ, a / b ^ i) ≤ a * b - a / b ^ n :=
+theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) :
+    ((b - 1) * ∑ i in range n.succ, a / b ^ i) ≤ a * b - a / b ^ n :=
   calc
     ((b - 1) * ∑ i in range n.succ, a / b ^ i) =
         (∑ i in range n, a / b ^ (i + 1) * b) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) :=
-      by rw [tsub_mul, mul_comm, sum_mul, one_mul, sum_range_succ', sum_range_succ, pow_zero, Nat.div_one]
+      by
+      rw [tsub_mul, mul_comm, sum_mul, one_mul, sum_range_succ', sum_range_succ, pow_zero,
+        Nat.div_one]
     _ ≤ (∑ i in range n, a / b ^ i) + a * b - ((∑ i in range n, a / b ^ i) + a / b ^ n) := by
       refine' tsub_le_tsub_right (add_le_add_right (sum_le_sum fun i _ => _) _) _
       rw [pow_succ', ← Nat.div_div_eq_div_mul]
@@ -372,7 +403,8 @@ theorem Nat.pred_mul_geom_sum_le (a b n : ℕ) : ((b - 1) * ∑ i in range n.suc
     
 #align nat.pred_mul_geom_sum_le Nat.pred_mul_geom_sum_le
 
-theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in range n, a / b ^ i) ≤ a * b / (b - 1) := by
+theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) :
+    (∑ i in range n, a / b ^ i) ≤ a * b / (b - 1) := by
   refine' (Nat.le_div_iff_mul_le <| tsub_pos_of_lt hb).2 _
   cases n
   · rw [sum_range_zero, zero_mul]
@@ -382,7 +414,8 @@ theorem Nat.geom_sum_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in range n
   exact (Nat.pred_mul_geom_sum_le a b n).trans tsub_le_self
 #align nat.geom_sum_le Nat.geom_sum_le
 
-theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in ico 1 n, a / b ^ i) ≤ a / (b - 1) := by
+theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) :
+    (∑ i in ico 1 n, a / b ^ i) ≤ a / (b - 1) := by
   cases n
   · rw [Ico_eq_empty_of_le (zero_le_one' ℕ), sum_empty]
     exact Nat.zero_le _
@@ -395,7 +428,8 @@ theorem Nat.geom_sum_Ico_le {b : ℕ} (hb : 2 ≤ b) (a n : ℕ) : (∑ i in ico
       rw [range_eq_Ico, ← Nat.Ico_insert_succ_left (Nat.succ_pos _), sum_insert]
       exact fun h => zero_lt_one.not_le (mem_Ico.1 h).1
     _ ≤ a * b / (b - 1) := Nat.geom_sum_le hb a _
-    _ = (a * 1 + a * (b - 1)) / (b - 1) := by rw [← mul_add, add_tsub_cancel_of_le (one_le_two.trans hb)]
+    _ = (a * 1 + a * (b - 1)) / (b - 1) := by
+      rw [← mul_add, add_tsub_cancel_of_le (one_le_two.trans hb)]
     _ = a + a / (b - 1) := by rw [mul_one, Nat.add_mul_div_right _ _ (tsub_pos_of_lt hb), add_comm]
     
 #align nat.geom_sum_Ico_le Nat.geom_sum_Ico_le
@@ -404,7 +438,8 @@ section Order
 
 variable {n : ℕ} {x : α}
 
-theorem geom_sum_pos [StrictOrderedSemiring α] (hx : 0 ≤ x) (hn : n ≠ 0) : 0 < ∑ i in range n, x ^ i :=
+theorem geom_sum_pos [StrictOrderedSemiring α] (hx : 0 ≤ x) (hn : n ≠ 0) :
+    0 < ∑ i in range n, x ^ i :=
   sum_pos' (fun k hk => pow_nonneg hx _) ⟨0, mem_range.2 hn.bot_lt, by simp⟩
 #align geom_sum_pos geom_sum_pos
 
@@ -465,7 +500,8 @@ theorem geom_sum_alternating_of_lt_neg_one [StrictOrderedRing α] (hx : x + 1 < 
     
 #align geom_sum_alternating_of_lt_neg_one geom_sum_alternating_of_lt_neg_one
 
-theorem geom_sum_pos' [LinearOrderedRing α] (hx : 0 < x + 1) (hn : n ≠ 0) : 0 < ∑ i in range n, x ^ i := by
+theorem geom_sum_pos' [LinearOrderedRing α] (hx : 0 < x + 1) (hn : n ≠ 0) :
+    0 < ∑ i in range n, x ^ i := by
   obtain _ | _ | n := n
   · cases hn rfl
     
@@ -496,7 +532,8 @@ theorem Odd.geom_sum_pos [LinearOrderedRing α] (h : Odd n) : 0 < ∑ i in range
     
 #align odd.geom_sum_pos Odd.geom_sum_pos
 
-theorem geom_sum_pos_iff [LinearOrderedRing α] (hn : n ≠ 0) : (0 < ∑ i in range n, x ^ i) ↔ Odd n ∨ 0 < x + 1 := by
+theorem geom_sum_pos_iff [LinearOrderedRing α] (hn : n ≠ 0) :
+    (0 < ∑ i in range n, x ^ i) ↔ Odd n ∨ 0 < x + 1 := by
   refine' ⟨fun h => _, _⟩
   · rw [or_iff_not_imp_left, ← not_le, ← Nat.even_iff_not_odd]
     refine' fun hn hx => h.not_le _
@@ -510,7 +547,8 @@ theorem geom_sum_pos_iff [LinearOrderedRing α] (hn : n ≠ 0) : (0 < ∑ i in r
     
 #align geom_sum_pos_iff geom_sum_pos_iff
 
-theorem geom_sum_ne_zero [LinearOrderedRing α] (hx : x ≠ -1) (hn : n ≠ 0) : (∑ i in range n, x ^ i) ≠ 0 := by
+theorem geom_sum_ne_zero [LinearOrderedRing α] (hx : x ≠ -1) (hn : n ≠ 0) :
+    (∑ i in range n, x ^ i) ≠ 0 := by
   obtain _ | _ | n := n
   · cases hn rfl
     
@@ -540,10 +578,12 @@ theorem geom_sum_eq_zero_iff_neg_one [LinearOrderedRing α] (hn : n ≠ 0) :
     
 #align geom_sum_eq_zero_iff_neg_one geom_sum_eq_zero_iff_neg_one
 
-theorem geom_sum_neg_iff [LinearOrderedRing α] (hn : n ≠ 0) : (∑ i in range n, x ^ i) < 0 ↔ Even n ∧ x + 1 < 0 := by
-  rw [← not_iff_not, not_lt, le_iff_lt_or_eq, eq_comm, or_congr (geom_sum_pos_iff hn) (geom_sum_eq_zero_iff_neg_one hn),
-    Nat.odd_iff_not_even, ← add_eq_zero_iff_eq_neg, not_and, not_lt, le_iff_lt_or_eq, eq_comm, ← imp_iff_not_or,
-    or_comm', and_comm', Decidable.and_or_imp, or_comm']
+theorem geom_sum_neg_iff [LinearOrderedRing α] (hn : n ≠ 0) :
+    (∑ i in range n, x ^ i) < 0 ↔ Even n ∧ x + 1 < 0 := by
+  rw [← not_iff_not, not_lt, le_iff_lt_or_eq, eq_comm,
+    or_congr (geom_sum_pos_iff hn) (geom_sum_eq_zero_iff_neg_one hn), Nat.odd_iff_not_even, ←
+    add_eq_zero_iff_eq_neg, not_and, not_lt, le_iff_lt_or_eq, eq_comm, ← imp_iff_not_or, or_comm',
+    and_comm', Decidable.and_or_imp, or_comm']
 #align geom_sum_neg_iff geom_sum_neg_iff
 
 end Order

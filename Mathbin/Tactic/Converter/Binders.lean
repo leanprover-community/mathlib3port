@@ -36,7 +36,8 @@ unsafe def congr_arg : old_conv Unit → old_conv Unit :=
 unsafe def congr_fun : old_conv Unit → old_conv Unit := fun c => congr_core c (return ())
 #align old_conv.congr_fun old_conv.congr_fun
 
-unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) : old_conv Unit := fun r lhs => do
+unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) : old_conv Unit :=
+  fun r lhs => do
   let meta_rhs ← infer_type lhs >>= mk_meta_var
   let t
     ←-- is maybe overly restricted for `heq`
@@ -193,7 +194,8 @@ unsafe def exists_eq_elim : binder_eq_elim where
   apply_elim_eq := apply' `` exists_elim_eq_left <|> apply' `` exists_elim_eq_right
 #align exists_eq_elim exists_eq_elim
 
-theorem forall_comm.{u, v} {α : Sort u} {β : Sort v} (p : α → β → Prop) : (∀ a b, p a b) ↔ ∀ b a, p a b :=
+theorem forall_comm.{u, v} {α : Sort u} {β : Sort v} (p : α → β → Prop) :
+    (∀ a b, p a b) ↔ ∀ b a, p a b :=
   ⟨fun h b a => h a b, fun h b a => h a b⟩
 #align forall_comm forall_comm
 
@@ -255,13 +257,13 @@ section
 
 variable [CompleteLattice α]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic old_conv.conversion -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : inf (Set.image f s) = ⨅ a ∈ s, f a := by
   simp [Inf_eq_infi, infi_and]
   run_tac
     conversion infi_eq_elim.old_conv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic old_conv.conversion -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic old_conv.conversion -/
 example {s : Set β} {f : β → α} : sup (Set.image f s) = ⨆ a ∈ s, f a := by
   simp [Sup_eq_supr, supr_and]
   run_tac

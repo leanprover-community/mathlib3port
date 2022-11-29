@@ -51,20 +51,22 @@ theorem is_transitive_iff_mem_trans : z.IsTransitive ↔ ∀ {x y : SetCat}, x �
 
 alias is_transitive_iff_mem_trans ↔ is_transitive.mem_trans _
 
-protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive) : (x ∩ y).IsTransitive :=
-  fun z hz w hw => by
+protected theorem IsTransitive.inter (hx : x.IsTransitive) (hy : y.IsTransitive) :
+    (x ∩ y).IsTransitive := fun z hz w hw => by
   rw [mem_inter] at hz⊢
   exact ⟨hx.mem_trans hw hz.1, hy.mem_trans hw hz.2⟩
 #align Set.is_transitive.inter SetCat.IsTransitive.inter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀ x).IsTransitive := fun y hy z hz => by
+protected theorem IsTransitive.sUnion (h : x.IsTransitive) : (⋃₀ x).IsTransitive := fun y hy z hz =>
+  by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem hz (h.mem_trans hw' hw)
 #align Set.is_transitive.sUnion SetCat.IsTransitive.sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTransitive := fun y hy z hz => by
+theorem IsTransitive.sUnion' (H : ∀ y ∈ x, IsTransitive y) : (⋃₀ x).IsTransitive := fun y hy z hz =>
+  by
   rcases mem_sUnion.1 hy with ⟨w, hw, hw'⟩
   exact mem_sUnion_of_mem ((H w hw).mem_trans hz hw') hw
 #align Set.is_transitive.sUnion' SetCat.IsTransitive.sUnion'

@@ -68,20 +68,19 @@ def generateFrom (g : Set (Set α)) : TopologicalSpace α where
   is_open_sUnion := GenerateOpen.sUnion
 #align topological_space.generate_from TopologicalSpace.generateFrom
 
-theorem is_open_generate_from_of_mem {g : Set (Set α)} {s : Set α} (hs : s ∈ g) : @IsOpen _ (generateFrom g) s :=
+theorem is_open_generate_from_of_mem {g : Set (Set α)} {s : Set α} (hs : s ∈ g) :
+    @IsOpen _ (generateFrom g) s :=
   GenerateOpen.basic s hs
 #align topological_space.is_open_generate_from_of_mem TopologicalSpace.is_open_generate_from_of_mem
 
-theorem nhds_generate_from {g : Set (Set α)} {a : α} : @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s :=
-  by
+theorem nhds_generate_from {g : Set (Set α)} {a : α} :
+    @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s := by
   rw [nhds_def] <;>
     exact
       le_antisymm (binfi_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩)
         (le_infi fun s =>
           le_infi fun ⟨as, hs⟩ => by
-            revert as
-            clear_
-            induction hs
+            revert as; clear_; induction hs
             case basic s hs => exact fun as => infi_le_of_le s <| infi_le _ ⟨as, hs⟩
             case univ =>
             rw [principal_univ]
@@ -103,7 +102,8 @@ theorem nhds_generate_from {g : Set (Set α)} {a : α} : @nhds α (generateFrom 
 theorem tendsto_nhds_generate_from {β : Type _} {m : α → β} {f : Filter α} {g : Set (Set β)} {b : β}
     (h : ∀ s ∈ g, b ∈ s → m ⁻¹' s ∈ f) : Tendsto m f (@nhds β (generateFrom g) b) := by
   rw [nhds_generate_from] <;>
-    exact tendsto_infi.2 fun s => tendsto_infi.2 fun ⟨hbs, hsg⟩ => tendsto_principal.2 <| h s hsg hbs
+    exact
+      tendsto_infi.2 fun s => tendsto_infi.2 fun ⟨hbs, hsg⟩ => tendsto_principal.2 <| h s hsg hbs
 #align topological_space.tendsto_nhds_generate_from TopologicalSpace.tendsto_nhds_generate_from
 
 /-- Construct a topology on α given the filter of neighborhoods of each point of α. -/
@@ -111,12 +111,13 @@ protected def mkOfNhds (n : α → Filter α) : TopologicalSpace α where
   IsOpen s := ∀ a ∈ s, s ∈ n a
   is_open_univ x h := univ_mem
   is_open_inter := fun s t hs ht x ⟨hxs, hxt⟩ => inter_mem (hs x hxs) (ht x hxt)
-  is_open_sUnion := fun s hs a ⟨x, hx, hxa⟩ => mem_of_superset (hs x hx _ hxa) (Set.subset_sUnion_of_mem hx)
+  is_open_sUnion := fun s hs a ⟨x, hx, hxa⟩ =>
+    mem_of_superset (hs x hx _ hxa) (Set.subset_sUnion_of_mem hx)
 #align topological_space.mk_of_nhds TopologicalSpace.mkOfNhds
 
 theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
-    (h₁ : ∀ {a s}, s ∈ n a → ∃ t ∈ n a, t ⊆ s ∧ ∀ a' ∈ t, s ∈ n a') : @nhds α (TopologicalSpace.mkOfNhds n) a = n a :=
-  by
+    (h₁ : ∀ {a s}, s ∈ n a → ∃ t ∈ n a, t ⊆ s ∧ ∀ a' ∈ t, s ∈ n a') :
+    @nhds α (TopologicalSpace.mkOfNhds n) a = n a := by
   letI := TopologicalSpace.mkOfNhds n
   refine' le_antisymm (fun s hs => _) fun s hs => _
   · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
@@ -132,7 +133,9 @@ theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
 #align topological_space.nhds_mk_of_nhds TopologicalSpace.nhds_mk_of_nhds
 
 theorem nhds_mk_of_nhds_single [DecidableEq α] {a₀ : α} {l : Filter α} (h : pure a₀ ≤ l) (b : α) :
-    @nhds α (TopologicalSpace.mkOfNhds <| update pure a₀ l) b = (update pure a₀ l : α → Filter α) b := by
+    @nhds α (TopologicalSpace.mkOfNhds <| update pure a₀ l) b =
+      (update pure a₀ l : α → Filter α) b :=
+  by
   refine' nhds_mk_of_nhds _ _ (le_update_iff.mpr ⟨h, fun _ _ => le_rfl⟩) fun a s hs => _
   rcases eq_or_ne a a₀ with (rfl | ha)
   · refine' ⟨s, hs, subset.rfl, fun b hb => _⟩
@@ -151,11 +154,13 @@ theorem nhds_mk_of_nhds_single [DecidableEq α] {a₀ : α} {l : Filter α} (h :
 theorem nhds_mk_of_nhds_filter_basis (B : α → FilterBasis α) (a : α) (h₀ : ∀ (x), ∀ n ∈ B x, x ∈ n)
     (h₁ : ∀ (x), ∀ n ∈ B x, ∃ n₁ ∈ B x, n₁ ⊆ n ∧ ∀ x' ∈ n₁, ∃ n₂ ∈ B x', n₂ ⊆ n) :
     @nhds α (TopologicalSpace.mkOfNhds fun x => (B x).filter) a = (B a).filter := by
-  rw [TopologicalSpace.nhds_mk_of_nhds] <;> intro x n hn <;> obtain ⟨m, hm₁, hm₂⟩ := (B x).mem_filter_iff.mp hn
+  rw [TopologicalSpace.nhds_mk_of_nhds] <;> intro x n hn <;>
+    obtain ⟨m, hm₁, hm₂⟩ := (B x).mem_filter_iff.mp hn
   · exact hm₂ (h₀ _ _ hm₁)
     
   · obtain ⟨n₁, hn₁, hn₂, hn₃⟩ := h₁ x m hm₁
-    refine' ⟨n₁, (B x).mem_filter_of_mem hn₁, hn₂.trans hm₂, fun x' hx' => (B x').mem_filter_iff.mp _⟩
+    refine'
+      ⟨n₁, (B x).mem_filter_of_mem hn₁, hn₂.trans hm₂, fun x' hx' => (B x').mem_filter_iff.mp _⟩
     obtain ⟨n₂, hn₄, hn₅⟩ := hn₃ x' hx'
     exact ⟨n₂, hn₄, hn₅.trans hm₂⟩
     
@@ -183,20 +188,22 @@ attribute [local instance] tmpOrder
 private theorem generate_from_le_iff_subset_is_open {g : Set (Set α)} {t : TopologicalSpace α} :
     TopologicalSpace.generateFrom g ≤ t ↔ g ⊆ { s | t.IsOpen s } :=
   Iff.intro (fun ht s hs => ht _ <| TopologicalSpace.GenerateOpen.basic s hs) fun hg s hs =>
-    hs.recOn (fun v hv => hg hv) t.is_open_univ (fun u v _ _ => t.is_open_inter u v) fun k _ => t.is_open_sUnion k
+    hs.recOn (fun v hv => hg hv) t.is_open_univ (fun u v _ _ => t.is_open_inter u v) fun k _ =>
+      t.is_open_sUnion k
 #align generate_from_le_iff_subset_is_open generate_from_le_iff_subset_is_open
 
 /-- If `s` equals the collection of open sets in the topology it generates,
   then `s` defines a topology. -/
-protected def mkOfClosure (s : Set (Set α)) (hs : { u | (TopologicalSpace.generateFrom s).IsOpen u } = s) :
-    TopologicalSpace α where
+protected def mkOfClosure (s : Set (Set α))
+    (hs : { u | (TopologicalSpace.generateFrom s).IsOpen u } = s) : TopologicalSpace α where
   IsOpen u := u ∈ s
   is_open_univ := hs ▸ TopologicalSpace.GenerateOpen.univ
   is_open_inter := hs ▸ TopologicalSpace.GenerateOpen.inter
   is_open_sUnion := hs ▸ TopologicalSpace.GenerateOpen.sUnion
 #align mk_of_closure mkOfClosure
 
-theorem mk_of_closure_sets {s : Set (Set α)} {hs : { u | (TopologicalSpace.generateFrom s).IsOpen u } = s} :
+theorem mk_of_closure_sets {s : Set (Set α)}
+    {hs : { u | (TopologicalSpace.generateFrom s).IsOpen u } = s} :
     mkOfClosure s hs = TopologicalSpace.generateFrom s :=
   topological_space_eq hs.symm
 #align mk_of_closure_sets mk_of_closure_sets
@@ -205,10 +212,12 @@ theorem mk_of_closure_sets {s : Set (Set α)} {hs : { u | (TopologicalSpace.gene
   sends a collection of subsets of α to the topology they generate, and whose upper part
   sends a topology to its collection of open subsets. -/
 def giGenerateFrom (α : Type _) :
-    GaloisInsertion TopologicalSpace.generateFrom fun t : TopologicalSpace α => { s | t.IsOpen s } where
+    GaloisInsertion TopologicalSpace.generateFrom fun t : TopologicalSpace α =>
+      { s | t.IsOpen s } where
   gc g t := generate_from_le_iff_subset_is_open
   le_l_u ts s hs := TopologicalSpace.GenerateOpen.basic s hs
-  choice g hg := mkOfClosure g (Subset.antisymm hg <| generate_from_le_iff_subset_is_open.1 <| le_rfl)
+  choice g hg :=
+    mkOfClosure g (Subset.antisymm hg <| generate_from_le_iff_subset_is_open.1 <| le_rfl)
   choice_eq s hs := mk_of_closure_sets
 #align gi_generate_from giGenerateFrom
 
@@ -217,7 +226,8 @@ theorem generate_from_mono {α} {g₁ g₂ : Set (Set α)} (h : g₁ ⊆ g₂) :
   (giGenerateFrom _).gc.monotone_l h
 #align generate_from_mono generate_from_mono
 
-theorem generate_from_set_of_is_open (t : TopologicalSpace α) : TopologicalSpace.generateFrom { s | t.IsOpen s } = t :=
+theorem generate_from_set_of_is_open (t : TopologicalSpace α) :
+    TopologicalSpace.generateFrom { s | t.IsOpen s } = t :=
   (giGenerateFrom α).l_u_eq t
 #align generate_from_set_of_is_open generate_from_set_of_is_open
 
@@ -226,7 +236,8 @@ theorem left_inverse_generate_from :
   (giGenerateFrom α).left_inverse_l_u
 #align left_inverse_generate_from left_inverse_generate_from
 
-theorem generate_from_surjective : Surjective (TopologicalSpace.generateFrom : Set (Set α) → TopologicalSpace α) :=
+theorem generate_from_surjective :
+    Surjective (TopologicalSpace.generateFrom : Set (Set α) → TopologicalSpace α) :=
   (giGenerateFrom α).l_surjective
 #align generate_from_surjective generate_from_surjective
 
@@ -243,24 +254,28 @@ def tmpCompleteLattice {α : Type u} : CompleteLattice (TopologicalSpace α) :=
 
 instance : LE (TopologicalSpace α) where le t s := s.IsOpen ≤ t.IsOpen
 
-protected theorem TopologicalSpace.le_def {α} {t s : TopologicalSpace α} : t ≤ s ↔ s.IsOpen ≤ t.IsOpen :=
+protected theorem TopologicalSpace.le_def {α} {t s : TopologicalSpace α} :
+    t ≤ s ↔ s.IsOpen ≤ t.IsOpen :=
   Iff.rfl
 #align topological_space.le_def TopologicalSpace.le_def
 
-theorem IsOpen.mono {α} {t₁ t₂ : TopologicalSpace α} {s : Set α} (hs : @IsOpen α t₂ s) (h : t₁ ≤ t₂) : @IsOpen α t₁ s :=
+theorem IsOpen.mono {α} {t₁ t₂ : TopologicalSpace α} {s : Set α} (hs : @IsOpen α t₂ s)
+    (h : t₁ ≤ t₂) : @IsOpen α t₁ s :=
   h s hs
 #align is_open.mono IsOpen.mono
 
-theorem IsClosed.mono {α} {t₁ t₂ : TopologicalSpace α} {s : Set α} (hs : @IsClosed α t₂ s) (h : t₁ ≤ t₂) :
-    @IsClosed α t₁ s :=
+theorem IsClosed.mono {α} {t₁ t₂ : TopologicalSpace α} {s : Set α} (hs : @IsClosed α t₂ s)
+    (h : t₁ ≤ t₂) : @IsClosed α t₁ s :=
   (@is_open_compl_iff α t₁ s).mp <| hs.is_open_compl.mono h
 #align is_closed.mono IsClosed.mono
 
 /-- The ordering on topologies on the type `α`.
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
 instance : PartialOrder (TopologicalSpace α) :=
-  { TopologicalSpace.hasLe with le_antisymm := fun t s h₁ h₂ => topological_space_eq <| le_antisymm h₂ h₁,
-    le_refl := fun t => le_refl t.IsOpen, le_trans := fun a b c h₁ h₂ => TopologicalSpace.le_def.mpr (le_trans h₂ h₁) }
+  { TopologicalSpace.hasLe with
+    le_antisymm := fun t s h₁ h₂ => topological_space_eq <| le_antisymm h₂ h₁,
+    le_refl := fun t => le_refl t.IsOpen,
+    le_trans := fun a b c h₁ h₂ => TopologicalSpace.le_def.mpr (le_trans h₂ h₁) }
 
 theorem le_generate_from_iff_subset_is_open {g : Set (Set α)} {t : TopologicalSpace α} :
     t ≤ TopologicalSpace.generateFrom g ↔ g ⊆ { s | t.IsOpen s } :=
@@ -274,16 +289,18 @@ theorem le_generate_from_iff_subset_is_open {g : Set (Set α)} {t : TopologicalS
 instance : CompleteLattice (TopologicalSpace α) :=
   @OrderDual.completeLattice _ tmpCompleteLattice
 
-theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
+theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} :
+    (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
   Iff.rfl
 #align is_open_implies_is_open_iff is_open_implies_is_open_iff
 
 /-- The only open sets in the indiscrete topology are the empty set and the whole space. -/
-theorem TopologicalSpace.is_open_top_iff {α} (U : Set α) : (⊤ : TopologicalSpace α).IsOpen U ↔ U = ∅ ∨ U = univ :=
+theorem TopologicalSpace.is_open_top_iff {α} (U : Set α) :
+    (⊤ : TopologicalSpace α).IsOpen U ↔ U = ∅ ∨ U = univ :=
   ⟨fun h => by
     induction' h with V h _ _ _ _ ih₁ ih₂ _ _ ih
     · cases h
-      
+      ;
     · exact Or.inr rfl
       
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
@@ -308,7 +325,8 @@ class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
   eq_bot : t = ⊥
 #align discrete_topology DiscreteTopology
 
-instance (priority := 100) discreteTopologyBot (α : Type _) : @DiscreteTopology α ⊥ where eq_bot := rfl
+instance (priority := 100) discreteTopologyBot (α : Type _) :
+    @DiscreteTopology α ⊥ where eq_bot := rfl
 #align discrete_topology_bot discreteTopologyBot
 
 @[simp]
@@ -322,8 +340,8 @@ theorem isClosedDiscrete [TopologicalSpace α] [DiscreteTopology α] (s : Set α
 #align is_closed_discrete isClosedDiscrete
 
 @[nontriviality]
-theorem continuous_of_discrete_topology [TopologicalSpace α] [DiscreteTopology α] [TopologicalSpace β] {f : α → β} :
-    Continuous f :=
+theorem continuous_of_discrete_topology [TopologicalSpace α] [DiscreteTopology α]
+    [TopologicalSpace β] {f : α → β} : Continuous f :=
   continuous_def.2 fun s hs => is_open_discrete _
 #align continuous_of_discrete_topology continuous_of_discrete_topology
 
@@ -337,25 +355,29 @@ theorem nhds_discrete (α : Type _) [TopologicalSpace α] [DiscreteTopology α] 
   (DiscreteTopology.eq_bot α).symm ▸ nhds_bot α
 #align nhds_discrete nhds_discrete
 
-theorem mem_nhds_discrete [TopologicalSpace α] [DiscreteTopology α] {x : α} {s : Set α} : s ∈ 𝓝 x ↔ x ∈ s := by
-  rw [nhds_discrete, mem_pure]
+theorem mem_nhds_discrete [TopologicalSpace α] [DiscreteTopology α] {x : α} {s : Set α} :
+    s ∈ 𝓝 x ↔ x ∈ s := by rw [nhds_discrete, mem_pure]
 #align mem_nhds_discrete mem_nhds_discrete
 
-theorem le_of_nhds_le_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x ≤ @nhds α t₂ x) : t₁ ≤ t₂ := fun s =>
+theorem le_of_nhds_le_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x ≤ @nhds α t₂ x) :
+    t₁ ≤ t₂ := fun s =>
   show @IsOpen α t₂ s → @IsOpen α t₁ s by
     simp only [is_open_iff_nhds, le_principal_iff]
     exact fun hs a ha => h _ <| hs _ ha
 #align le_of_nhds_le_nhds le_of_nhds_le_nhds
 
-theorem eq_of_nhds_eq_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x = @nhds α t₂ x) : t₁ = t₂ :=
-  le_antisymm (le_of_nhds_le_nhds fun x => le_of_eq <| h x) (le_of_nhds_le_nhds fun x => le_of_eq <| (h x).symm)
+theorem eq_of_nhds_eq_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x = @nhds α t₂ x) :
+    t₁ = t₂ :=
+  le_antisymm (le_of_nhds_le_nhds fun x => le_of_eq <| h x)
+    (le_of_nhds_le_nhds fun x => le_of_eq <| (h x).symm)
 #align eq_of_nhds_eq_nhds eq_of_nhds_eq_nhds
 
 theorem eq_bot_of_singletons_open {t : TopologicalSpace α} (h : ∀ x, t.IsOpen {x}) : t = ⊥ :=
   bot_unique fun s hs => bUnion_of_singleton s ▸ is_open_bUnion fun x _ => h x
 #align eq_bot_of_singletons_open eq_bot_of_singletons_open
 
-theorem forall_open_iff_discrete {X : Type _} [TopologicalSpace X] : (∀ s : Set X, IsOpen s) ↔ DiscreteTopology X :=
+theorem forall_open_iff_discrete {X : Type _} [TopologicalSpace X] :
+    (∀ s : Set X, IsOpen s) ↔ DiscreteTopology X :=
   ⟨fun h =>
     ⟨by
       ext U
@@ -371,7 +393,8 @@ theorem singletons_open_iff_discrete {X : Type _} [TopologicalSpace X] :
 
 /-- This lemma characterizes discrete topological spaces as those whose singletons are
 neighbourhoods. -/
-theorem discrete_topology_iff_nhds [TopologicalSpace α] : DiscreteTopology α ↔ ∀ x : α, 𝓝 x = pure x := by
+theorem discrete_topology_iff_nhds [TopologicalSpace α] :
+    DiscreteTopology α ↔ ∀ x : α, 𝓝 x = pure x := by
   constructor <;> intro h
   · intro x
     rw [nhds_discrete]
@@ -382,7 +405,8 @@ theorem discrete_topology_iff_nhds [TopologicalSpace α] : DiscreteTopology α �
     
 #align discrete_topology_iff_nhds discrete_topology_iff_nhds
 
-theorem discrete_topology_iff_nhds_ne [TopologicalSpace α] : DiscreteTopology α ↔ ∀ x : α, 𝓝[≠] x = ⊥ := by
+theorem discrete_topology_iff_nhds_ne [TopologicalSpace α] :
+    DiscreteTopology α ↔ ∀ x : α, 𝓝[≠] x = ⊥ := by
   rw [discrete_topology_iff_nhds]
   apply forall_congr' fun x => _
   rw [nhdsWithin, inf_principal_eq_bot, compl_compl]
@@ -403,19 +427,21 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 /-- Given `f : α → β` and a topology on `β`, the induced topology on `α` is the collection of
   sets that are preimages of some open set in `β`. This is the coarsest topology that
   makes `f` continuous. -/
-def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : TopologicalSpace β) : TopologicalSpace α where
+def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : TopologicalSpace β) :
+    TopologicalSpace α where
   IsOpen s := ∃ s', t.IsOpen s' ∧ f ⁻¹' s' = s
   is_open_univ := ⟨univ, t.is_open_univ, preimage_univ⟩
   is_open_inter := by
-    rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;> exact ⟨s'₁ ∩ s'₂, t.is_open_inter _ _ hs₁ hs₂, preimage_inter⟩
+    rintro s₁ s₂ ⟨s'₁, hs₁, rfl⟩ ⟨s'₂, hs₂, rfl⟩ <;>
+      exact ⟨s'₁ ∩ s'₂, t.is_open_inter _ _ hs₁ hs₂, preimage_inter⟩
   is_open_sUnion s h := by
     simp only [Classical.skolem] at h
     cases' h with f hf
     apply Exists.intro (⋃ (x : Set α) (h : x ∈ s), f x h)
-    simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]
-    refine' ⟨_, rfl⟩
+    simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
     exact
-      (@is_open_Union β _ t _) fun i => show IsOpen (⋃ h, f i h) from (@is_open_Union β _ t _) fun h => (hf i h).left
+      (@is_open_Union β _ t _) fun i =>
+        show IsOpen (⋃ h, f i h) from (@is_open_Union β _ t _) fun h => (hf i h).left
 #align topological_space.induced TopologicalSpace.induced
 
 theorem is_open_induced_iff [t : TopologicalSpace β] {s : Set α} {f : α → β} :
@@ -437,7 +463,8 @@ theorem is_closed_induced_iff [t : TopologicalSpace β] {s : Set α} {f : α →
 /-- Given `f : α → β` and a topology on `α`, the coinduced topology on `β` is defined
   such that `s:set β` is open if the preimage of `s` is open. This is the finest topology that
   makes `f` continuous. -/
-def TopologicalSpace.coinduced {α : Type u} {β : Type v} (f : α → β) (t : TopologicalSpace α) : TopologicalSpace β where
+def TopologicalSpace.coinduced {α : Type u} {β : Type v} (f : α → β) (t : TopologicalSpace α) :
+    TopologicalSpace β where
   IsOpen s := t.IsOpen (f ⁻¹' s)
   is_open_univ := by rw [preimage_univ] <;> exact t.is_open_univ
   is_open_inter s₁ s₂ h₁ h₂ := by rw [preimage_inter] <;> exact t.is_open_inter _ _ h₁ h₂
@@ -466,9 +493,10 @@ theorem Continuous.coinduced_le (h : @Continuous α β t t' f) : t.coinduced f �
   (continuous_def.1 h s hs : _)
 #align continuous.coinduced_le Continuous.coinduced_le
 
-theorem coinduced_le_iff_le_induced {f : α → β} {tα : TopologicalSpace α} {tβ : TopologicalSpace β} :
-    tα.coinduced f ≤ tβ ↔ tα ≤ tβ.induced f :=
-  Iff.intro (fun h s ⟨t, ht, hst⟩ => hst ▸ h _ ht) fun h s hs => show tα.IsOpen (f ⁻¹' s) from h _ ⟨s, hs, rfl⟩
+theorem coinduced_le_iff_le_induced {f : α → β} {tα : TopologicalSpace α}
+    {tβ : TopologicalSpace β} : tα.coinduced f ≤ tβ ↔ tα ≤ tβ.induced f :=
+  Iff.intro (fun h s ⟨t, ht, hst⟩ => hst ▸ h _ ht) fun h s hs =>
+    show tα.IsOpen (f ⁻¹' s) from h _ ⟨s, hs, rfl⟩
 #align coinduced_le_iff_le_induced coinduced_le_iff_le_induced
 
 theorem Continuous.le_induced (h : @Continuous α β t t' f) : t ≤ t'.induced f :=
@@ -499,7 +527,8 @@ theorem induced_inf : (t₁ ⊓ t₂).induced g = t₁.induced g ⊓ t₂.induce
 #align induced_inf induced_inf
 
 @[simp]
-theorem induced_infi {ι : Sort w} {t : ι → TopologicalSpace α} : (⨅ i, t i).induced g = ⨅ i, (t i).induced g :=
+theorem induced_infi {ι : Sort w} {t : ι → TopologicalSpace α} :
+    (⨅ i, t i).induced g = ⨅ i, (t i).induced g :=
   (gc_coinduced_induced g).u_infi
 #align induced_infi induced_infi
 
@@ -514,12 +543,14 @@ theorem coinduced_sup : (t₁ ⊔ t₂).coinduced f = t₁.coinduced f ⊔ t₂.
 #align coinduced_sup coinduced_sup
 
 @[simp]
-theorem coinduced_supr {ι : Sort w} {t : ι → TopologicalSpace α} : (⨆ i, t i).coinduced f = ⨆ i, (t i).coinduced f :=
+theorem coinduced_supr {ι : Sort w} {t : ι → TopologicalSpace α} :
+    (⨆ i, t i).coinduced f = ⨆ i, (t i).coinduced f :=
   (gc_coinduced_induced f).l_supr
 #align coinduced_supr coinduced_supr
 
 theorem induced_id [t : TopologicalSpace α] : t.induced id = t :=
-  topological_space_eq <| funext fun s => propext <| ⟨fun ⟨s', hs, h⟩ => h ▸ hs, fun hs => ⟨s, hs, rfl⟩⟩
+  topological_space_eq <|
+    funext fun s => propext <| ⟨fun ⟨s', hs, h⟩ => h ▸ hs, fun hs => ⟨s, hs, rfl⟩⟩
 #align induced_id induced_id
 
 theorem induced_compose [tγ : TopologicalSpace γ] {f : α → β} {g : β → γ} :
@@ -527,7 +558,8 @@ theorem induced_compose [tγ : TopologicalSpace γ] {f : α → β} {g : β → 
   topological_space_eq <|
     funext fun s =>
       propext <|
-        ⟨fun ⟨s', ⟨s, hs, h₂⟩, h₁⟩ => h₁ ▸ h₂ ▸ ⟨s, hs, rfl⟩, fun ⟨s, hs, h⟩ => ⟨preimage g s, ⟨s, hs, rfl⟩, h ▸ rfl⟩⟩
+        ⟨fun ⟨s', ⟨s, hs, h₂⟩, h₁⟩ => h₁ ▸ h₂ ▸ ⟨s, hs, rfl⟩, fun ⟨s, hs, h⟩ =>
+          ⟨preimage g s, ⟨s, hs, rfl⟩, h ▸ rfl⟩⟩
 #align induced_compose induced_compose
 
 theorem induced_const [t : TopologicalSpace α] {x : α} : (t.induced fun y : β => x) = ⊤ :=
@@ -558,7 +590,8 @@ theorem Equiv.induced_symm {α β : Type _} (e : α ≃ β) :
 #align equiv.induced_symm Equiv.induced_symm
 
 theorem Equiv.coinduced_symm {α β : Type _} (e : α ≃ β) :
-    TopologicalSpace.coinduced e.symm = TopologicalSpace.induced e := by rw [← e.symm.induced_symm, e.symm_symm]
+    TopologicalSpace.coinduced e.symm = TopologicalSpace.induced e := by
+  rw [← e.symm.induced_symm, e.symm_symm]
 #align equiv.coinduced_symm Equiv.coinduced_symm
 
 end GaloisConnection
@@ -574,10 +607,12 @@ instance inhabitedTopologicalSpace {α : Type u} : Inhabited (TopologicalSpace �
   ⟨⊤⟩
 #align inhabited_topological_space inhabitedTopologicalSpace
 
-instance (priority := 100) Subsingleton.uniqueTopologicalSpace [Subsingleton α] : Unique (TopologicalSpace α) where
+instance (priority := 100) Subsingleton.uniqueTopologicalSpace [Subsingleton α] :
+    Unique (TopologicalSpace α) where
   default := ⊥
   uniq t :=
-    eq_bot_of_singletons_open fun x => Subsingleton.set_cases (@is_open_empty _ t) (@is_open_univ _ t) ({x} : Set α)
+    eq_bot_of_singletons_open fun x =>
+      Subsingleton.set_cases (@is_open_empty _ t) (@is_open_univ _ t) ({x} : Set α)
 #align subsingleton.unique_topological_space Subsingleton.uniqueTopologicalSpace
 
 instance (priority := 100) Subsingleton.discreteTopology [t : TopologicalSpace α] [Subsingleton α] :
@@ -625,19 +660,22 @@ instance sierpinskiSpace : TopologicalSpace Prop :=
   generateFrom {{True}}
 #align sierpinski_space sierpinskiSpace
 
-theorem continuous_empty_function [TopologicalSpace α] [TopologicalSpace β] [IsEmpty β] (f : α → β) : Continuous f :=
+theorem continuous_empty_function [TopologicalSpace α] [TopologicalSpace β] [IsEmpty β]
+    (f : α → β) : Continuous f :=
   letI := Function.isEmpty f
   continuous_of_discrete_topology
 #align continuous_empty_function continuous_empty_function
 
-theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀ s ∈ g, IsOpen s) : t ≤ generateFrom g :=
+theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀ s ∈ g, IsOpen s) :
+    t ≤ generateFrom g :=
   le_generate_from_iff_subset_is_open.2 h
 #align le_generate_from le_generate_from
 
 theorem induced_generate_from_eq {α β} {b : Set (Set β)} {f : α → β} :
     (generateFrom b).induced f = TopologicalSpace.generateFrom (preimage f '' b) :=
   le_antisymm (le_generate_from <| ball_image_iff.2 fun s hs => ⟨s, GenerateOpen.basic _ hs, rfl⟩)
-    (coinduced_le_iff_le_induced.1 <| le_generate_from fun s hs => GenerateOpen.basic _ <| mem_image_of_mem _ hs)
+    (coinduced_le_iff_le_induced.1 <|
+      le_generate_from fun s hs => GenerateOpen.basic _ <| mem_image_of_mem _ hs)
 #align induced_generate_from_eq induced_generate_from_eq
 
 theorem le_induced_generate_from {α β} [t : TopologicalSpace α] {b : Set (Set β)} {f : α → β}
@@ -662,15 +700,18 @@ theorem gc_nhds (a : α) : GaloisConnection (nhdsAdjoint a) fun t => @nhds α t 
   exact ⟨fun H s hs has => H _ has hs, fun H s has hs => H _ hs has⟩
 #align gc_nhds gc_nhds
 
-theorem nhds_mono {t₁ t₂ : TopologicalSpace α} {a : α} (h : t₁ ≤ t₂) : @nhds α t₁ a ≤ @nhds α t₂ a :=
+theorem nhds_mono {t₁ t₂ : TopologicalSpace α} {a : α} (h : t₁ ≤ t₂) :
+    @nhds α t₁ a ≤ @nhds α t₂ a :=
   (gc_nhds a).monotone_u h
 #align nhds_mono nhds_mono
 
-theorem le_iff_nhds {α : Type _} (t t' : TopologicalSpace α) : t ≤ t' ↔ ∀ x, @nhds α t x ≤ @nhds α t' x :=
+theorem le_iff_nhds {α : Type _} (t t' : TopologicalSpace α) :
+    t ≤ t' ↔ ∀ x, @nhds α t x ≤ @nhds α t' x :=
   ⟨fun h x => nhds_mono h, le_of_nhds_le_nhds⟩
 #align le_iff_nhds le_iff_nhds
 
-theorem nhds_adjoint_nhds {α : Type _} (a : α) (f : Filter α) : @nhds α (nhdsAdjoint a f) a = pure a ⊔ f := by
+theorem nhds_adjoint_nhds {α : Type _} (a : α) (f : Filter α) :
+    @nhds α (nhdsAdjoint a f) a = pure a ⊔ f := by
   ext U
   rw [mem_nhds_iff]
   constructor
@@ -701,7 +742,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   exact nhds_adjoint_nhds_of_ne a f hb
 #align is_open_singleton_nhds_adjoint is_open_singleton_nhds_adjoint
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b := by
   rw [le_iff_nhds]
@@ -734,15 +775,18 @@ theorem le_nhds_adjoint_iff {α : Type _} (a : α) (f : Filter α) (t : Topologi
   rw [@is_open_singleton_iff_nhds_eq_pure α t b]
 #align le_nhds_adjoint_iff le_nhds_adjoint_iff
 
-theorem nhds_infi {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} : @nhds α (infi t) a = ⨅ i, @nhds α (t i) a :=
+theorem nhds_infi {ι : Sort _} {t : ι → TopologicalSpace α} {a : α} :
+    @nhds α (infi t) a = ⨅ i, @nhds α (t i) a :=
   (gc_nhds a).u_infi
 #align nhds_infi nhds_infi
 
-theorem nhds_Inf {s : Set (TopologicalSpace α)} {a : α} : @nhds α (inf s) a = ⨅ t ∈ s, @nhds α t a :=
+theorem nhds_Inf {s : Set (TopologicalSpace α)} {a : α} :
+    @nhds α (inf s) a = ⨅ t ∈ s, @nhds α t a :=
   (gc_nhds a).u_Inf
 #align nhds_Inf nhds_Inf
 
-theorem nhds_inf {t₁ t₂ : TopologicalSpace α} {a : α} : @nhds α (t₁ ⊓ t₂) a = @nhds α t₁ a ⊓ @nhds α t₂ a :=
+theorem nhds_inf {t₁ t₂ : TopologicalSpace α} {a : α} :
+    @nhds α (t₁ ⊓ t₂) a = @nhds α t₁ a ⊓ @nhds α t₂ a :=
   (gc_nhds a).u_inf
 #align nhds_inf nhds_inf
 
@@ -765,11 +809,13 @@ open TopologicalSpace
 
 variable {γ : Type _} {f : α → β} {ι : Sort _}
 
-theorem continuous_iff_coinduced_le {t₁ : tspace α} {t₂ : tspace β} : cont t₁ t₂ f ↔ coinduced f t₁ ≤ t₂ :=
+theorem continuous_iff_coinduced_le {t₁ : tspace α} {t₂ : tspace β} :
+    cont t₁ t₂ f ↔ coinduced f t₁ ≤ t₂ :=
   continuous_def.trans Iff.rfl
 #align continuous_iff_coinduced_le continuous_iff_coinduced_le
 
-theorem continuous_iff_le_induced {t₁ : tspace α} {t₂ : tspace β} : cont t₁ t₂ f ↔ t₁ ≤ induced f t₂ :=
+theorem continuous_iff_le_induced {t₁ : tspace α} {t₂ : tspace β} :
+    cont t₁ t₂ f ↔ t₁ ≤ induced f t₂ :=
   Iff.trans continuous_iff_coinduced_le (gc_coinduced_induced f _ _)
 #align continuous_iff_le_induced continuous_iff_le_induced
 
@@ -786,7 +832,8 @@ theorem continuous_induced_dom {t : tspace β} : cont (induced f t) t f := by
 #align continuous_induced_dom continuous_induced_dom
 
 theorem continuous_induced_rng {g : γ → α} {t₂ : tspace β} {t₁ : tspace γ} :
-    cont t₁ (induced f t₂) g ↔ cont t₁ t₂ (f ∘ g) := by simp only [continuous_iff_le_induced, induced_compose]
+    cont t₁ (induced f t₂) g ↔ cont t₁ t₂ (f ∘ g) := by
+  simp only [continuous_iff_le_induced, induced_compose]
 #align continuous_induced_rng continuous_induced_rng
 
 theorem continuous_coinduced_rng {t : tspace α} : cont t (coinduced f t) f := by
@@ -796,59 +843,70 @@ theorem continuous_coinduced_rng {t : tspace α} : cont t (coinduced f t) f := b
 #align continuous_coinduced_rng continuous_coinduced_rng
 
 theorem continuous_coinduced_dom {g : β → γ} {t₁ : tspace α} {t₂ : tspace γ} :
-    cont (coinduced f t₁) t₂ g ↔ cont t₁ t₂ (g ∘ f) := by simp only [continuous_iff_coinduced_le, coinduced_compose]
+    cont (coinduced f t₁) t₂ g ↔ cont t₁ t₂ (g ∘ f) := by
+  simp only [continuous_iff_coinduced_le, coinduced_compose]
 #align continuous_coinduced_dom continuous_coinduced_dom
 
-theorem continuous_le_dom {t₁ t₂ : tspace α} {t₃ : tspace β} (h₁ : t₂ ≤ t₁) (h₂ : cont t₁ t₃ f) : cont t₂ t₃ f := by
+theorem continuous_le_dom {t₁ t₂ : tspace α} {t₃ : tspace β} (h₁ : t₂ ≤ t₁) (h₂ : cont t₁ t₃ f) :
+    cont t₂ t₃ f := by
   rw [continuous_def] at h₂⊢
   intro s h
   exact h₁ _ (h₂ s h)
 #align continuous_le_dom continuous_le_dom
 
-theorem continuous_le_rng {t₁ : tspace α} {t₂ t₃ : tspace β} (h₁ : t₂ ≤ t₃) (h₂ : cont t₁ t₂ f) : cont t₁ t₃ f := by
+theorem continuous_le_rng {t₁ : tspace α} {t₂ t₃ : tspace β} (h₁ : t₂ ≤ t₃) (h₂ : cont t₁ t₂ f) :
+    cont t₁ t₃ f := by
   rw [continuous_def] at h₂⊢
   intro s h
   exact h₂ s (h₁ s h)
 #align continuous_le_rng continuous_le_rng
 
-theorem continuous_sup_dom {t₁ t₂ : tspace α} {t₃ : tspace β} : cont (t₁ ⊔ t₂) t₃ f ↔ cont t₁ t₃ f ∧ cont t₂ t₃ f := by
+theorem continuous_sup_dom {t₁ t₂ : tspace α} {t₃ : tspace β} :
+    cont (t₁ ⊔ t₂) t₃ f ↔ cont t₁ t₃ f ∧ cont t₂ t₃ f := by
   simp only [continuous_iff_le_induced, sup_le_iff]
 #align continuous_sup_dom continuous_sup_dom
 
-theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₂ f → cont t₁ (t₂ ⊔ t₃) f :=
+theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} :
+    cont t₁ t₂ f → cont t₁ (t₂ ⊔ t₃) f :=
   continuous_le_rng le_sup_left
 #align continuous_sup_rng_left continuous_sup_rng_left
 
-theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₃ f → cont t₁ (t₂ ⊔ t₃) f :=
+theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} :
+    cont t₁ t₃ f → cont t₁ (t₂ ⊔ t₃) f :=
   continuous_le_rng le_sup_right
 #align continuous_sup_rng_right continuous_sup_rng_right
 
-theorem continuous_Sup_dom {T : Set (tspace α)} {t₂ : tspace β} : cont (sup T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by
-  simp only [continuous_iff_le_induced, Sup_le_iff]
+theorem continuous_Sup_dom {T : Set (tspace α)} {t₂ : tspace β} :
+    cont (sup T) t₂ f ↔ ∀ t ∈ T, cont t t₂ f := by simp only [continuous_iff_le_induced, Sup_le_iff]
 #align continuous_Sup_dom continuous_Sup_dom
 
-theorem continuous_Sup_rng {t₁ : tspace α} {t₂ : Set (tspace β)} {t : tspace β} (h₁ : t ∈ t₂) (hf : cont t₁ t f) :
-    cont t₁ (sup t₂) f :=
+theorem continuous_Sup_rng {t₁ : tspace α} {t₂ : Set (tspace β)} {t : tspace β} (h₁ : t ∈ t₂)
+    (hf : cont t₁ t f) : cont t₁ (sup t₂) f :=
   continuous_iff_coinduced_le.2 <| le_Sup_of_le h₁ <| continuous_iff_coinduced_le.1 hf
 #align continuous_Sup_rng continuous_Sup_rng
 
-theorem continuous_supr_dom {t₁ : ι → tspace α} {t₂ : tspace β} : cont (supr t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
+theorem continuous_supr_dom {t₁ : ι → tspace α} {t₂ : tspace β} :
+    cont (supr t₁) t₂ f ↔ ∀ i, cont (t₁ i) t₂ f := by
   simp only [continuous_iff_le_induced, supr_le_iff]
 #align continuous_supr_dom continuous_supr_dom
 
-theorem continuous_supr_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) : cont t₁ (supr t₂) f :=
+theorem continuous_supr_rng {t₁ : tspace α} {t₂ : ι → tspace β} {i : ι} (h : cont t₁ (t₂ i) f) :
+    cont t₁ (supr t₂) f :=
   continuous_Sup_rng ⟨i, rfl⟩ h
 #align continuous_supr_rng continuous_supr_rng
 
-theorem continuous_inf_rng {t₁ : tspace α} {t₂ t₃ : tspace β} : cont t₁ (t₂ ⊓ t₃) f ↔ cont t₁ t₂ f ∧ cont t₁ t₃ f := by
+theorem continuous_inf_rng {t₁ : tspace α} {t₂ t₃ : tspace β} :
+    cont t₁ (t₂ ⊓ t₃) f ↔ cont t₁ t₂ f ∧ cont t₁ t₃ f := by
   simp only [continuous_iff_coinduced_le, le_inf_iff]
 #align continuous_inf_rng continuous_inf_rng
 
-theorem continuous_inf_dom_left {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₁ t₃ f → cont (t₁ ⊓ t₂) t₃ f :=
+theorem continuous_inf_dom_left {t₁ t₂ : tspace α} {t₃ : tspace β} :
+    cont t₁ t₃ f → cont (t₁ ⊓ t₂) t₃ f :=
   continuous_le_dom inf_le_left
 #align continuous_inf_dom_left continuous_inf_dom_left
 
-theorem continuous_inf_dom_right {t₁ t₂ : tspace α} {t₃ : tspace β} : cont t₂ t₃ f → cont (t₁ ⊓ t₂) t₃ f :=
+theorem continuous_inf_dom_right {t₁ t₂ : tspace α} {t₃ : tspace β} :
+    cont t₂ t₃ f → cont (t₁ ⊓ t₂) t₃ f :=
   continuous_le_dom inf_le_right
 #align continuous_inf_dom_right continuous_inf_dom_right
 
@@ -857,15 +915,18 @@ theorem continuous_Inf_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspa
   continuous_le_dom <| Inf_le h₁
 #align continuous_Inf_dom continuous_Inf_dom
 
-theorem continuous_Inf_rng {t₁ : tspace α} {T : Set (tspace β)} : cont t₁ (inf T) f ↔ ∀ t ∈ T, cont t₁ t f := by
+theorem continuous_Inf_rng {t₁ : tspace α} {T : Set (tspace β)} :
+    cont t₁ (inf T) f ↔ ∀ t ∈ T, cont t₁ t f := by
   simp only [continuous_iff_coinduced_le, le_Inf_iff]
 #align continuous_Inf_rng continuous_Inf_rng
 
-theorem continuous_infi_dom {t₁ : ι → tspace α} {t₂ : tspace β} {i : ι} : cont (t₁ i) t₂ f → cont (infi t₁) t₂ f :=
+theorem continuous_infi_dom {t₁ : ι → tspace α} {t₂ : tspace β} {i : ι} :
+    cont (t₁ i) t₂ f → cont (infi t₁) t₂ f :=
   continuous_le_dom <| infi_le _ _
 #align continuous_infi_dom continuous_infi_dom
 
-theorem continuous_infi_rng {t₁ : tspace α} {t₂ : ι → tspace β} : cont t₁ (infi t₂) f ↔ ∀ i, cont t₁ (t₂ i) f := by
+theorem continuous_infi_rng {t₁ : tspace α} {t₂ : ι → tspace β} :
+    cont t₁ (infi t₂) f ↔ ∀ i, cont t₁ (t₂ i) f := by
   simp only [continuous_iff_coinduced_le, le_infi_iff]
 #align continuous_infi_rng continuous_infi_rng
 
@@ -907,11 +968,13 @@ theorem nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) :
 
 theorem induced_iff_nhds_eq [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : β → α) :
     tβ = tα.induced f ↔ ∀ b, 𝓝 b = comap f (𝓝 <| f b) :=
-  ⟨fun h a => h.symm ▸ nhds_induced f a, fun h => eq_of_nhds_eq_nhds fun x => by rw [h, nhds_induced]⟩
+  ⟨fun h a => h.symm ▸ nhds_induced f a, fun h =>
+    eq_of_nhds_eq_nhds fun x => by rw [h, nhds_induced]⟩
 #align induced_iff_nhds_eq induced_iff_nhds_eq
 
-theorem map_nhds_induced_of_surjective [T : TopologicalSpace α] {f : β → α} (hf : Surjective f) (a : β) :
-    map f (@nhds β (TopologicalSpace.induced f T) a) = 𝓝 (f a) := by rw [nhds_induced, map_comap_of_surjective hf]
+theorem map_nhds_induced_of_surjective [T : TopologicalSpace α] {f : β → α} (hf : Surjective f)
+    (a : β) : map f (@nhds β (TopologicalSpace.induced f T) a) = 𝓝 (f a) := by
+  rw [nhds_induced, map_comap_of_surjective hf]
 #align map_nhds_induced_of_surjective map_nhds_induced_of_surjective
 
 end Constructions
@@ -924,7 +987,8 @@ variable {α : Type _} {β : Type _}
 
 variable [t : TopologicalSpace β] {f : α → β}
 
-theorem is_open_induced_eq {s : Set α} : @IsOpen _ (induced f t) s ↔ s ∈ preimage f '' { s | IsOpen s } :=
+theorem is_open_induced_eq {s : Set α} :
+    @IsOpen _ (induced f t) s ↔ s ∈ preimage f '' { s | IsOpen s } :=
   Iff.rfl
 #align is_open_induced_eq is_open_induced_eq
 
@@ -936,8 +1000,8 @@ theorem map_nhds_induced_eq (a : α) : map f (@nhds α (induced f t) a) = 𝓝[r
   rw [nhds_induced, Filter.map_comap, nhdsWithin]
 #align map_nhds_induced_eq map_nhds_induced_eq
 
-theorem map_nhds_induced_of_mem {a : α} (h : range f ∈ 𝓝 (f a)) : map f (@nhds α (induced f t) a) = 𝓝 (f a) := by
-  rw [nhds_induced, Filter.map_comap_of_mem h]
+theorem map_nhds_induced_of_mem {a : α} (h : range f ∈ 𝓝 (f a)) :
+    map f (@nhds α (induced f t) a) = 𝓝 (f a) := by rw [nhds_induced, Filter.map_comap_of_mem h]
 #align map_nhds_induced_of_mem map_nhds_induced_of_mem
 
 theorem closure_induced [t : TopologicalSpace β] {f : α → β} {a : α} {s : Set α} :
@@ -989,32 +1053,40 @@ section infi
 variable {α : Type u} {ι : Sort v}
 
 theorem generate_from_union (a₁ a₂ : Set (Set α)) :
-    TopologicalSpace.generateFrom (a₁ ∪ a₂) = TopologicalSpace.generateFrom a₁ ⊓ TopologicalSpace.generateFrom a₂ :=
-  @GaloisConnection.l_sup _ (TopologicalSpace α)ᵒᵈ a₁ a₂ _ _ _ _ fun g t => generate_from_le_iff_subset_is_open
+    TopologicalSpace.generateFrom (a₁ ∪ a₂) =
+      TopologicalSpace.generateFrom a₁ ⊓ TopologicalSpace.generateFrom a₂ :=
+  @GaloisConnection.l_sup _ (TopologicalSpace α)ᵒᵈ a₁ a₂ _ _ _ _ fun g t =>
+    generate_from_le_iff_subset_is_open
 #align generate_from_union generate_from_union
 
 theorem set_of_is_open_sup (t₁ t₂ : TopologicalSpace α) :
     { s | (t₁ ⊔ t₂).IsOpen s } = { s | t₁.IsOpen s } ∩ { s | t₂.IsOpen s } :=
-  @GaloisConnection.u_inf _ (TopologicalSpace α)ᵒᵈ t₁ t₂ _ _ _ _ fun g t => generate_from_le_iff_subset_is_open
+  @GaloisConnection.u_inf _ (TopologicalSpace α)ᵒᵈ t₁ t₂ _ _ _ _ fun g t =>
+    generate_from_le_iff_subset_is_open
 #align set_of_is_open_sup set_of_is_open_sup
 
 theorem generate_from_Union {f : ι → Set (Set α)} :
     TopologicalSpace.generateFrom (⋃ i, f i) = ⨅ i, TopologicalSpace.generateFrom (f i) :=
-  @GaloisConnection.l_supr _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) f
+  @GaloisConnection.l_supr _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _
+    (fun g t => generate_from_le_iff_subset_is_open) f
 #align generate_from_Union generate_from_Union
 
-theorem set_of_is_open_supr {t : ι → TopologicalSpace α} : { s | (⨆ i, t i).IsOpen s } = ⋂ i, { s | (t i).IsOpen s } :=
-  @GaloisConnection.u_infi _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) t
+theorem set_of_is_open_supr {t : ι → TopologicalSpace α} :
+    { s | (⨆ i, t i).IsOpen s } = ⋂ i, { s | (t i).IsOpen s } :=
+  @GaloisConnection.u_infi _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _
+    (fun g t => generate_from_le_iff_subset_is_open) t
 #align set_of_is_open_supr set_of_is_open_supr
 
 theorem generate_from_sUnion {S : Set (Set (Set α))} :
     TopologicalSpace.generateFrom (⋃₀S) = ⨅ s ∈ S, TopologicalSpace.generateFrom s :=
-  @GaloisConnection.l_Sup _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) S
+  @GaloisConnection.l_Sup _ (TopologicalSpace α)ᵒᵈ _ _ _ _
+    (fun g t => generate_from_le_iff_subset_is_open) S
 #align generate_from_sUnion generate_from_sUnion
 
 theorem set_of_is_open_Sup {T : Set (TopologicalSpace α)} :
     { s | (sup T).IsOpen s } = ⋂ t ∈ T, { s | (t : TopologicalSpace α).IsOpen s } :=
-  @GaloisConnection.u_Inf _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) T
+  @GaloisConnection.u_Inf _ (TopologicalSpace α)ᵒᵈ _ _ _ _
+    (fun g t => generate_from_le_iff_subset_is_open) T
 #align set_of_is_open_Sup set_of_is_open_Sup
 
 theorem generate_from_union_is_open (a b : TopologicalSpace α) :
@@ -1046,7 +1118,8 @@ theorem generate_from_Inter_of_generate_from_eq_self (f : ι → Set (Set α))
 variable {t : ι → TopologicalSpace α}
 
 theorem is_open_supr_iff {s : Set α} : @IsOpen _ (⨆ i, t i) s ↔ ∀ i, @IsOpen _ (t i) s :=
-  show s ∈ setOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by simp [set_of_is_open_supr]
+  show s ∈ setOf (supr t).IsOpen ↔ s ∈ { x : Set α | ∀ i : ι, (t i).IsOpen x } by
+    simp [set_of_is_open_supr]
 #align is_open_supr_iff is_open_supr_iff
 
 theorem is_closed_supr_iff {s : Set α} : @IsClosed _ (⨆ i, t i) s ↔ ∀ i, @IsClosed _ (t i) s := by

@@ -21,7 +21,8 @@ theorem IsGlb.exists_between_self_add (h : IsGlb s a) (hε : 0 < ε) : ∃ b ∈
   h.exists_between <| lt_add_of_pos_right _ hε
 #align is_glb.exists_between_self_add IsGlb.exists_between_self_add
 
-theorem IsGlb.exists_between_self_add' (h : IsGlb s a) (h₂ : a ∉ s) (hε : 0 < ε) : ∃ b ∈ s, a < b ∧ b < a + ε :=
+theorem IsGlb.exists_between_self_add' (h : IsGlb s a) (h₂ : a ∉ s) (hε : 0 < ε) :
+    ∃ b ∈ s, a < b ∧ b < a + ε :=
   h.exists_between' h₂ <| lt_add_of_pos_right _ hε
 #align is_glb.exists_between_self_add' IsGlb.exists_between_self_add'
 
@@ -29,7 +30,8 @@ theorem IsLub.exists_between_sub_self (h : IsLub s a) (hε : 0 < ε) : ∃ b ∈
   h.exists_between <| sub_lt_self _ hε
 #align is_lub.exists_between_sub_self IsLub.exists_between_sub_self
 
-theorem IsLub.exists_between_sub_self' (h : IsLub s a) (h₂ : a ∉ s) (hε : 0 < ε) : ∃ b ∈ s, a - ε < b ∧ b < a :=
+theorem IsLub.exists_between_sub_self' (h : IsLub s a) (h₂ : a ∉ s) (hε : 0 < ε) :
+    ∃ b ∈ s, a - ε < b ∧ b < a :=
   h.exists_between' h₂ <| sub_lt_self _ hε
 #align is_lub.exists_between_sub_self' IsLub.exists_between_sub_self'
 

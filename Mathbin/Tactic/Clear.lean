@@ -99,8 +99,8 @@ unsafe def clear_dependent (p : parse (many ident)) : tactic Unit := do
 
 add_tactic_doc
   { Name := "clear'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.clear', `tactic.interactive.clear_dependent], tags := ["context management"],
-    inheritDescriptionFrom := `tactic.interactive.clear' }
+    declNames := [`tactic.interactive.clear', `tactic.interactive.clear_dependent],
+    tags := ["context management"], inheritDescriptionFrom := `tactic.interactive.clear' }
 
 end Tactic.Interactive
 

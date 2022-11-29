@@ -73,7 +73,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let eq_t ← mk_app `eq [x, y]
   let t ← pis (args ++ [x, y] ++ bs) eq_t
   let pr ←
-    run_async <| do
+    run_async do
         let (_, pr) ←
           solve_aux t do
               let args ← intron args.length
@@ -93,22 +93,22 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let iff_t ← mk_app `iff [eq_t, rhs]
   let t ← pis (args ++ [x, y]) iff_t
   let pr ←
-    run_async <| do
+    run_async do
         let (_, pr) ←
-          solve_aux t <| do
+          (solve_aux t) do
               let args ← intron args.length
               let x ← intro1
               let y ← intro1
               cases x
               cases y
               split
-              solve1 <| do
+              solve1 do
                   let h ← intro1
                   let hs ← injection h
                   subst_vars
                   repeat (refine ``(And.intro _ _) >> reflexivity)
                   done <|> reflexivity
-              solve1 <| do
+              solve1 do
                   repeat do
                       refine ``(and_imp.mpr _)
                       let h ← intro1
@@ -202,7 +202,8 @@ see Note [user attribute parameters]
 attribute [local semireducible] reflected
 
 @[local instance]
-private unsafe def hacky_name_reflect : has_reflect Name := fun n => q((id $(expr.const n []) : Name))
+private unsafe def hacky_name_reflect : has_reflect Name := fun n =>
+  q((id $(expr.const n []) : Name))
 #align hacky_name_reflect hacky_name_reflect
 
 @[user_attribute]
@@ -333,7 +334,8 @@ unsafe def extensional_attribute : user_attribute Unit (Option Name) where
 #align extensional_attribute extensional_attribute
 
 add_tactic_doc
-  { Name := "ext", category := DocCategory.attr, declNames := [`extensional_attribute], tags := ["rewrite", "logic"] }
+  { Name := "ext", category := DocCategory.attr, declNames := [`extensional_attribute],
+    tags := ["rewrite", "logic"] }
 
 library_note "partially-applied ext lemmas"/--
 When possible, `ext` lemmas are stated without a full set of arguments. As an example, for bundled
@@ -370,10 +372,7 @@ namespace PLift
 
 -- This is stronger than the one generated automatically.
 @[ext.1]
-theorem ext {P : Prop} (a b : PLift P) : a = b := by
-  cases a
-  cases b
-  rfl
+theorem ext {P : Prop} (a b : PLift P) : a = b := by cases a; cases b; rfl
 #align plift.ext PLift.ext
 
 end PLift
@@ -418,13 +417,13 @@ private unsafe def try_intros_core : StateT ext_state tactic Unit := do
     | [] =>
       (do
           let es ← StateT.lift intros
-          when (es > 0) <| do
+          (when (es > 0)) do
               let msg := "intros " ++ " ".intercalate (es fun e => e)
               modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
         pure ()
     | x :: xs => do
       let tgt ← StateT.lift (target >>= whnf)
-      when tgt <| do
+      (when tgt) do
           StateT.lift (rintro [x])
           let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
@@ -444,7 +443,7 @@ unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := 
   let ⟨patts, trace_msg, _⟩ ← get
   let new_msgs ←
     StateT.lift <|
-        focus1 <| do
+        focus1 do
           let m ← get_ext_lemmas
           let tgt ← target
           when_tracing `ext <|
@@ -491,8 +490,8 @@ unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := d
 
 /-- Apply one extensionality lemma, and destruct the arguments using the given patterns.
   Returns the unused patterns. -/
-unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool := false) : tactic (List rcases_patt) :=
-  do
+unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool := false) :
+    tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ← StateT.run (ext1_core cfg) { patts := xs }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
@@ -500,8 +499,8 @@ unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool :
 
 /-- Apply multiple extensionality lemmas, destructing the arguments using the given patterns.
   `ext ps (some n)` applies at most `n` extensionality lemmas. Returns the unused patterns. -/
-unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  }) (trace : Bool := false) :
-    tactic (List rcases_patt) := do
+unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  })
+    (trace : Bool := false) : tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ← StateT.run (ext_core cfg) { patts := xs, fuel }
   when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
@@ -520,7 +519,8 @@ named automatically, as per `intro`. Placing a `?` after `ext1`
  (e.g. `ext1? i ⟨a,b⟩ : 3`) will display a sequence of tactic
 applications that can replace the call to `ext1`.
 -/
-unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse rcases_patt_parse_hi*) : tactic Unit :=
+unsafe def interactive.ext1 (trace : parse (tk "?")?) (xs : parse rcases_patt_parse_hi*) :
+    tactic Unit :=
   ext1 xs {  } trace.isSome $> ()
 #align tactic.interactive.ext1 tactic.interactive.ext1
 
@@ -656,7 +656,8 @@ A maximum depth can be provided with `ext x y z : 3`.
 -/
 add_tactic_doc
   { Name := "ext1 / ext", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.ext1, `tactic.interactive.ext], tags := ["rewriting", "logic"] }
+    declNames := [`tactic.interactive.ext1, `tactic.interactive.ext],
+    tags := ["rewriting", "logic"] }
 
 end Tactic
 

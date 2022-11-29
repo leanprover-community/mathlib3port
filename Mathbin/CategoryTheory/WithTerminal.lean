@@ -61,9 +61,9 @@ variable {C}
 
 /- warning: category_theory.with_terminal.hom -> CategoryTheory.WithTerminal.Hom is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithTerminal.{v u} C _inst_1) -> (CategoryTheory.WithTerminal.{v u} C _inst_1) -> Type.{v}
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C], (CategoryTheory.WithTerminal.{v, u} C _inst_1) -> (CategoryTheory.WithTerminal.{v, u} C _inst_1) -> Type.{v}
 but is expected to have type
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithTerminal.{v u} C _inst_1) -> (CategoryTheory.WithTerminal.{v u} C _inst_1) -> Type.{v}
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C], (CategoryTheory.WithTerminal.{v, u} C _inst_1) -> (CategoryTheory.WithTerminal.{v, u} C _inst_1) -> Type.{v}
 Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.hom CategoryTheory.WithTerminal.Homₓ'. -/
 /-- Morphisms for `with_terminal C`. -/
 @[simp, nolint has_nonempty_instance]
@@ -75,9 +75,9 @@ def Hom : WithTerminal C → WithTerminal C → Type v
 
 /- warning: category_theory.with_terminal.id -> CategoryTheory.WithTerminal.id is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] (X : CategoryTheory.WithTerminal.{v u} C _inst_1), CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 X X
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C] (X : CategoryTheory.WithTerminal.{v, u} C _inst_1), CategoryTheory.WithTerminal.Hom.{v, u} C _inst_1 X X
 but is expected to have type
-  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+  PUnit.{max (succ (succ u)) (succ (succ v))}
 Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.id CategoryTheory.WithTerminal.idₓ'. -/
 /-- Identity morphisms for `with_terminal C`. -/
 @[simp]
@@ -88,9 +88,9 @@ def id : ∀ X : WithTerminal C, Hom X X
 
 /- warning: category_theory.with_terminal.comp -> CategoryTheory.WithTerminal.comp is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] {X : CategoryTheory.WithTerminal.{v u} C _inst_1} {Y : CategoryTheory.WithTerminal.{v u} C _inst_1} {Z : CategoryTheory.WithTerminal.{v u} C _inst_1}, (CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 X Y) -> (CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 Y Z) -> (CategoryTheory.WithTerminal.Hom.{v u} C _inst_1 X Z)
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C] {X : CategoryTheory.WithTerminal.{v, u} C _inst_1} {Y : CategoryTheory.WithTerminal.{v, u} C _inst_1} {Z : CategoryTheory.WithTerminal.{v, u} C _inst_1}, (CategoryTheory.WithTerminal.Hom.{v, u} C _inst_1 X Y) -> (CategoryTheory.WithTerminal.Hom.{v, u} C _inst_1 Y Z) -> (CategoryTheory.WithTerminal.Hom.{v, u} C _inst_1 X Z)
 but is expected to have type
-  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+  PUnit.{max (succ (succ u)) (succ (succ v))}
 Case conversion may be inaccurate. Consider using '#align category_theory.with_terminal.comp CategoryTheory.WithTerminal.compₓ'. -/
 /-- Composition of morphisms for `with_terminal C`. -/
 @[simp]
@@ -174,16 +174,20 @@ def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.o
 
 theorem lift_map_lift_star {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (x : C) :
-    (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).Hom = (inclLift F M hM).Hom.app x ≫ M x := by
+    (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).Hom =
+      (inclLift F M hM).Hom.app x ≫ M x :=
+  by
   erw [category.id_comp, category.comp_id]
   rfl
-#align category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_lift_star
+#align
+  category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_lift_star
 
 /-- The uniqueness of `lift`. -/
 @[simp]
 def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F)
-    (hG : G.obj star ≅ Z) (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.Hom = h.Hom.app x ≫ M x) :
+    (hG : G.obj star ≅ Z)
+    (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.Hom = h.Hom.app x ≫ M x) :
     G ≅ lift F M hM :=
   NatIso.ofComponents
     (fun X =>
@@ -207,7 +211,8 @@ def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F
 
 /-- A variant of `lift` with `Z` a terminal object. -/
 @[simps]
-def liftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) : WithTerminal C ⥤ D :=
+def liftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) :
+    WithTerminal C ⥤ D :=
   lift F (fun x => hZ.from _) fun x y f => hZ.hom_ext _ _
 #align category_theory.with_terminal.lift_to_terminal CategoryTheory.WithTerminal.liftToTerminal
 
@@ -216,14 +221,16 @@ def liftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.
 def inclLiftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) :
     incl ⋙ liftToTerminal F hZ ≅ F :=
   inclLift _ _ _
-#align category_theory.with_terminal.incl_lift_to_terminal CategoryTheory.WithTerminal.inclLiftToTerminal
+#align
+  category_theory.with_terminal.incl_lift_to_terminal CategoryTheory.WithTerminal.inclLiftToTerminal
 
 /-- A variant of `lift_unique` with `Z` a terminal object. -/
 @[simps]
 def liftToTerminalUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z)
     (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToTerminal F hZ :=
   liftUnique F (fun z => hZ.from _) (fun x y f => hZ.hom_ext _ _) G h hG fun x => hZ.hom_ext _ _
-#align category_theory.with_terminal.lift_to_terminal_unique CategoryTheory.WithTerminal.liftToTerminalUnique
+#align
+  category_theory.with_terminal.lift_to_terminal_unique CategoryTheory.WithTerminal.liftToTerminalUnique
 
 /-- Constructs a morphism to `star` from `of X`. -/
 @[simp]
@@ -232,7 +239,8 @@ def homFrom (X : C) : incl.obj X ⟶ star :=
 #align category_theory.with_terminal.hom_from CategoryTheory.WithTerminal.homFrom
 
 instance is_iso_of_from_star {X : WithTerminal C} (f : star ⟶ X) : IsIso f := by tidy
-#align category_theory.with_terminal.is_iso_of_from_star CategoryTheory.WithTerminal.is_iso_of_from_star
+#align
+  category_theory.with_terminal.is_iso_of_from_star CategoryTheory.WithTerminal.is_iso_of_from_star
 
 end WithTerminal
 
@@ -244,9 +252,9 @@ variable {C}
 
 /- warning: category_theory.with_initial.hom -> CategoryTheory.WithInitial.Hom is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithInitial.{v u} C _inst_1) -> (CategoryTheory.WithInitial.{v u} C _inst_1) -> Type.{v}
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C], (CategoryTheory.WithInitial.{v, u} C _inst_1) -> (CategoryTheory.WithInitial.{v, u} C _inst_1) -> Type.{v}
 but is expected to have type
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C], (CategoryTheory.WithInitial.{v u} C _inst_1) -> (CategoryTheory.WithInitial.{v u} C _inst_1) -> Type.{v}
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C], (CategoryTheory.WithInitial.{v, u} C _inst_1) -> (CategoryTheory.WithInitial.{v, u} C _inst_1) -> Type.{v}
 Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.hom CategoryTheory.WithInitial.Homₓ'. -/
 /-- Morphisms for `with_initial C`. -/
 @[simp, nolint has_nonempty_instance]
@@ -258,9 +266,9 @@ def Hom : WithInitial C → WithInitial C → Type v
 
 /- warning: category_theory.with_initial.id -> CategoryTheory.WithInitial.id is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] (X : CategoryTheory.WithInitial.{v u} C _inst_1), CategoryTheory.WithInitial.Hom.{v u} C _inst_1 X X
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C] (X : CategoryTheory.WithInitial.{v, u} C _inst_1), CategoryTheory.WithInitial.Hom.{v, u} C _inst_1 X X
 but is expected to have type
-  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+  PUnit.{max (succ (succ u)) (succ (succ v))}
 Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.id CategoryTheory.WithInitial.idₓ'. -/
 /-- Identity morphisms for `with_initial C`. -/
 @[simp]
@@ -271,9 +279,9 @@ def id : ∀ X : WithInitial C, Hom X X
 
 /- warning: category_theory.with_initial.comp -> CategoryTheory.WithInitial.comp is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v u} C] {X : CategoryTheory.WithInitial.{v u} C _inst_1} {Y : CategoryTheory.WithInitial.{v u} C _inst_1} {Z : CategoryTheory.WithInitial.{v u} C _inst_1}, (CategoryTheory.WithInitial.Hom.{v u} C _inst_1 X Y) -> (CategoryTheory.WithInitial.Hom.{v u} C _inst_1 Y Z) -> (CategoryTheory.WithInitial.Hom.{v u} C _inst_1 X Z)
+  forall {C : Type.{u}} [_inst_1 : CategoryTheory.Category.{v, u} C] {X : CategoryTheory.WithInitial.{v, u} C _inst_1} {Y : CategoryTheory.WithInitial.{v, u} C _inst_1} {Z : CategoryTheory.WithInitial.{v, u} C _inst_1}, (CategoryTheory.WithInitial.Hom.{v, u} C _inst_1 X Y) -> (CategoryTheory.WithInitial.Hom.{v, u} C _inst_1 Y Z) -> (CategoryTheory.WithInitial.Hom.{v, u} C _inst_1 X Z)
 but is expected to have type
-  PUnit.{(max (succ (succ u)) (succ (succ v)))}
+  PUnit.{max (succ (succ u)) (succ (succ v))}
 Case conversion may be inaccurate. Consider using '#align category_theory.with_initial.comp CategoryTheory.WithInitial.compₓ'. -/
 /-- Composition of morphisms for `with_initial C`. -/
 @[simp]
@@ -357,7 +365,9 @@ def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z �
 
 theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (x : C) :
-    (liftStar F M hM).Hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) = M x ≫ (inclLift F M hM).Hom.app x := by
+    (liftStar F M hM).Hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) =
+      M x ≫ (inclLift F M hM).Hom.app x :=
+  by
   erw [category.id_comp, category.comp_id]
   rfl
 #align category_theory.with_initial.lift_star_lift_map CategoryTheory.WithInitial.lift_star_lift_map
@@ -365,8 +375,10 @@ theorem lift_star_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : 
 /-- The uniqueness of `lift`. -/
 @[simp]
 def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
-    (hh : ∀ x : C, hG.symm.Hom ≫ G.map (starInitial.to (incl.obj x)) = M x ≫ h.symm.Hom.app x) : G ≅ lift F M hM :=
+    (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F)
+    (hG : G.obj star ≅ Z)
+    (hh : ∀ x : C, hG.symm.Hom ≫ G.map (starInitial.to (incl.obj x)) = M x ≫ h.symm.Hom.app x) :
+    G ≅ lift F M hM :=
   NatIso.ofComponents
     (fun X =>
       match X with
@@ -392,7 +404,8 @@ def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z
 
 /-- A variant of `lift` with `Z` an initial object. -/
 @[simps]
-def liftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) : WithInitial C ⥤ D :=
+def liftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) :
+    WithInitial C ⥤ D :=
   lift F (fun x => hZ.to _) fun x y f => hZ.hom_ext _ _
 #align category_theory.with_initial.lift_to_initial CategoryTheory.WithInitial.liftToInitial
 
@@ -401,14 +414,16 @@ def liftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.I
 def inclLiftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) :
     incl ⋙ liftToInitial F hZ ≅ F :=
   inclLift _ _ _
-#align category_theory.with_initial.incl_lift_to_initial CategoryTheory.WithInitial.inclLiftToInitial
+#align
+  category_theory.with_initial.incl_lift_to_initial CategoryTheory.WithInitial.inclLiftToInitial
 
 /-- A variant of `lift_unique` with `Z` an initial object. -/
 @[simps]
-def liftToInitialUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) (G : WithInitial C ⥤ D)
-    (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToInitial F hZ :=
+def liftToInitialUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z)
+    (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z) : G ≅ liftToInitial F hZ :=
   liftUnique F (fun z => hZ.to _) (fun x y f => hZ.hom_ext _ _) G h hG fun x => hZ.hom_ext _ _
-#align category_theory.with_initial.lift_to_initial_unique CategoryTheory.WithInitial.liftToInitialUnique
+#align
+  category_theory.with_initial.lift_to_initial_unique CategoryTheory.WithInitial.liftToInitialUnique
 
 /-- Constructs a morphism from `star` to `of X`. -/
 @[simp]

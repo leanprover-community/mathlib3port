@@ -45,7 +45,8 @@ theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p
 #align witt_vector.frobenius_verschiebung WittVector.frobenius_verschiebung
 
 /-- Verschiebung is the same as multiplication by `p` on the ring of Witt vectors of `zmod p`. -/
-theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by rw [← frobenius_verschiebung, frobenius_zmodp]
+theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by
+  rw [← frobenius_verschiebung, frobenius_zmodp]
 #align witt_vector.verschiebung_zmod WittVector.verschiebung_zmod
 
 variable (p R)
@@ -54,7 +55,8 @@ theorem coeff_p_pow [CharP R p] (i : ℕ) : (p ^ i : 𝕎 R).coeff i = 1 := by
   induction' i with i h
   · simp only [one_coeff_zero, Ne.def, pow_zero]
     
-  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h, one_pow]
+  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h,
+      one_pow]
     
 #align witt_vector.coeff_p_pow WittVector.coeff_p_pow
 
@@ -107,7 +109,8 @@ theorem FractionRing.p_nonzero [Nontrivial R] [CharP R p] : (p : FractionRing (�
 variable {p R}
 
 /-- The “projection formula” for Frobenius and Verschiebung. -/
-theorem verschiebung_mul_frobenius (x y : 𝕎 R) : verschiebung (x * frobenius y) = verschiebung x * y := by
+theorem verschiebung_mul_frobenius (x y : 𝕎 R) :
+    verschiebung (x * frobenius y) = verschiebung x * y := by
   ghost_calc x y
   rintro ⟨⟩ <;> ghost_simp [mul_assoc]
 #align witt_vector.verschiebung_mul_frobenius WittVector.verschiebung_mul_frobenius
@@ -117,7 +120,8 @@ theorem mul_char_p_coeff_zero [CharP R p] (x : 𝕎 R) : (x * p).coeff 0 = 0 := 
   exact Nat.Prime.pos hp.out
 #align witt_vector.mul_char_p_coeff_zero WittVector.mul_char_p_coeff_zero
 
-theorem mul_char_p_coeff_succ [CharP R p] (x : 𝕎 R) (i : ℕ) : (x * p).coeff (i + 1) = x.coeff i ^ p := by
+theorem mul_char_p_coeff_succ [CharP R p] (x : 𝕎 R) (i : ℕ) :
+    (x * p).coeff (i + 1) = x.coeff i ^ p := by
   rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ]
 #align witt_vector.mul_char_p_coeff_succ WittVector.mul_char_p_coeff_succ
 
@@ -129,7 +133,8 @@ theorem verschiebung_frobenius [CharP R p] (x : 𝕎 R) : verschiebung (frobeniu
     
 #align witt_vector.verschiebung_frobenius WittVector.verschiebung_frobenius
 
-theorem verschiebung_frobenius_comm [CharP R p] : Function.Commute (verschiebung : 𝕎 R → 𝕎 R) frobenius := fun x => by
+theorem verschiebung_frobenius_comm [CharP R p] :
+    Function.Commute (verschiebung : 𝕎 R → 𝕎 R) frobenius := fun x => by
   rw [verschiebung_frobenius, frobenius_verschiebung]
 #align witt_vector.verschiebung_frobenius_comm WittVector.verschiebung_frobenius_comm
 
@@ -140,7 +145,8 @@ theorem verschiebung_frobenius_comm [CharP R p] : Function.Commute (verschiebung
 
 open Function
 
-theorem iterate_verschiebung_coeff (x : 𝕎 R) (n k : ℕ) : ((verschiebung^[n]) x).coeff (k + n) = x.coeff k := by
+theorem iterate_verschiebung_coeff (x : 𝕎 R) (n k : ℕ) :
+    ((verschiebung^[n]) x).coeff (k + n) = x.coeff k := by
   induction' n with k ih
   · simp
     
@@ -164,7 +170,9 @@ section CharP
 variable [CharP R p]
 
 theorem iterate_verschiebung_mul (x y : 𝕎 R) (i j : ℕ) :
-    (verschiebung^[i]) x * (verschiebung^[j]) y = (verschiebung^[i + j]) ((frobenius^[j]) x * (frobenius^[i]) y) := by
+    (verschiebung^[i]) x * (verschiebung^[j]) y =
+      (verschiebung^[i + j]) ((frobenius^[j]) x * (frobenius^[i]) y) :=
+  by
   calc
     _ = (verschiebung^[i]) (x * (frobenius^[i]) ((verschiebung^[j]) y)) := _
     _ = (verschiebung^[i]) (x * (verschiebung^[j]) ((frobenius^[i]) y)) := _
@@ -187,7 +195,8 @@ theorem iterate_verschiebung_mul (x y : 𝕎 R) (i j : ℕ) :
     
 #align witt_vector.iterate_verschiebung_mul WittVector.iterate_verschiebung_mul
 
-theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) : ((frobenius^[i]) x).coeff k = x.coeff k ^ p ^ i := by
+theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) :
+    ((frobenius^[i]) x).coeff k = x.coeff k ^ p ^ i := by
   induction' i with i ih
   · simp
     
@@ -198,7 +207,9 @@ theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) : ((frobenius^[i]) x).c
 
 /-- This is a slightly specialized form of [Hazewinkel, *Witt Vectors*][Haze09] 6.2 equation 5. -/
 theorem iterate_verschiebung_mul_coeff (x y : 𝕎 R) (i j : ℕ) :
-    ((verschiebung^[i]) x * (verschiebung^[j]) y).coeff (i + j) = x.coeff 0 ^ p ^ j * y.coeff 0 ^ p ^ i := by
+    ((verschiebung^[i]) x * (verschiebung^[j]) y).coeff (i + j) =
+      x.coeff 0 ^ p ^ j * y.coeff 0 ^ p ^ i :=
+  by
   calc
     _ = ((verschiebung^[i + j]) ((frobenius^[j]) x * (frobenius^[i]) y)).coeff (i + j) := _
     _ = ((frobenius^[j]) x * (frobenius^[i]) y).coeff 0 := _

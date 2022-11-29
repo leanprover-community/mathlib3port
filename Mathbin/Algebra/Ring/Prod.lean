@@ -29,11 +29,13 @@ namespace Prod
 
 /-- Product of two distributive types is distributive. -/
 instance [Distrib R] [Distrib S] : Distrib (R × S) :=
-  { Prod.hasAdd, Prod.hasMul with left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
+  { Prod.hasAdd, Prod.hasMul with
+    left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
     right_distrib := fun a b c => mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
 
 /-- Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
-instance [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S] : NonUnitalNonAssocSemiring (R × S) :=
+instance [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S] :
+    NonUnitalNonAssocSemiring (R × S) :=
   { Prod.addCommMonoid, Prod.mulZeroClass, Prod.distrib with }
 
 /-- Product of two `non_unital_semiring`s is a `non_unital_semiring`. -/
@@ -273,12 +275,14 @@ theorem coe_prod_comm_symm : ⇑(prodComm : R × S ≃+* S × R).symm = Prod.swa
 #align ring_equiv.coe_prod_comm_symm RingEquiv.coe_prod_comm_symm
 
 @[simp]
-theorem fst_comp_coe_prod_comm : (RingHom.fst S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.snd R S :=
+theorem fst_comp_coe_prod_comm :
+    (RingHom.fst S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.snd R S :=
   RingHom.ext fun _ => rfl
 #align ring_equiv.fst_comp_coe_prod_comm RingEquiv.fst_comp_coe_prod_comm
 
 @[simp]
-theorem snd_comp_coe_prod_comm : (RingHom.snd S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.fst R S :=
+theorem snd_comp_coe_prod_comm :
+    (RingHom.snd S R).comp ↑(prodComm : R × S ≃+* S × R) = RingHom.fst R S :=
   RingHom.ext fun _ => rfl
 #align ring_equiv.snd_comp_coe_prod_comm RingEquiv.snd_comp_coe_prod_comm
 
@@ -309,8 +313,8 @@ def zeroRingProd : R ≃+* S × R where
 end RingEquiv
 
 /-- The product of two nontrivial rings is not a domain -/
-theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [IsDomain (R × S)] [Nontrivial R]
-    [Nontrivial S] : False := by
+theorem false_of_nontrivial_of_product_domain (R S : Type _) [Ring R] [Ring S] [IsDomain (R × S)]
+    [Nontrivial R] [Nontrivial S] : False := by
   have := IsDomain.eq_zero_or_eq_zero_of_mul_eq_zero (show ((0 : R), (1 : S)) * (1, 0) = 0 by simp)
   rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at this
   rcases this with (⟨_, h⟩ | ⟨h, _⟩)
@@ -335,7 +339,8 @@ instance [OrderedCommSemiring α] [OrderedCommSemiring β] : OrderedCommSemiring
   { Prod.commSemiring, Prod.orderedSemiring with }
 
 instance [OrderedRing α] [OrderedRing β] : OrderedRing (α × β) :=
-  { Prod.ring, Prod.orderedSemiring with mul_nonneg := fun a b ha hb => ⟨mul_nonneg ha.1 hb.1, mul_nonneg ha.2 hb.2⟩ }
+  { Prod.ring, Prod.orderedSemiring with
+    mul_nonneg := fun a b ha hb => ⟨mul_nonneg ha.1 hb.1, mul_nonneg ha.2 hb.2⟩ }
 
 instance [OrderedCommRing α] [OrderedCommRing β] : OrderedCommRing (α × β) :=
   { Prod.commRing, Prod.orderedRing with }

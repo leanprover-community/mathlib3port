@@ -15,10 +15,15 @@ open Real TopologicalSpace BigOperators
 open Filter Finset intervalIntegral
 
 theorem integral_sin_pow_div_tendsto_one :
-    Tendsto (fun k => (∫ x in 0 ..π, sin x ^ (2 * k + 1)) / ∫ x in 0 ..π, sin x ^ (2 * k)) atTop (𝓝 1) := by
-  have h₃ : ∀ n, ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≤ 1 := fun n =>
-    (div_le_one (integral_sin_pow_pos _)).mpr (integral_sin_pow_succ_le _)
-  have h₄ : ∀ n, ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≥ 2 * n / (2 * n + 1) := by
+    Tendsto (fun k => (∫ x in 0 ..π, sin x ^ (2 * k + 1)) / ∫ x in 0 ..π, sin x ^ (2 * k)) atTop
+      (𝓝 1) :=
+  by
+  have h₃ : ∀ n, ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≤ 1 :=
+    fun n => (div_le_one (integral_sin_pow_pos _)).mpr (integral_sin_pow_succ_le _)
+  have h₄ :
+    ∀ n,
+      ((∫ x in 0 ..π, sin x ^ (2 * n + 1)) / ∫ x in 0 ..π, sin x ^ (2 * n)) ≥ 2 * n / (2 * n + 1) :=
+    by
     rintro ⟨n⟩
     · have : 0 ≤ (1 + 1) / π := div_nonneg (by norm_num) pi_pos.le
       simp [this]
@@ -77,11 +82,13 @@ theorem integral_sin_pow_div_tendsto_one :
   it converges to one using the squeeze theorem. The final product for `π` is obtained after some
   algebraic manipulation. -/
 theorem tendsto_prod_pi_div_two :
-    Tendsto (fun k => ∏ i in range k, ((2 : ℝ) * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) atTop
-      (𝓝 (π / 2)) :=
+    Tendsto (fun k => ∏ i in range k, ((2 : ℝ) * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3)))
+      atTop (𝓝 (π / 2)) :=
   by
   suffices h :
-    tendsto (fun k => (π / 2)⁻¹ * ∏ i in range k, (2 * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) at_top (𝓝 1)
+    tendsto
+      (fun k => (π / 2)⁻¹ * ∏ i in range k, (2 * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3)))
+      at_top (𝓝 1)
   · convert h.const_mul (π / 2)
     · simp_rw [mul_inv_cancel_left₀ (show π / 2 ≠ 0 by norm_num [pi_ne_zero] )]
       

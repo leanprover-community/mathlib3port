@@ -26,10 +26,12 @@ variable {R : Type _} {M : Type _} {N : Type _} {ι : Type _} {κ : Type _}
 variable [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
 
 /-- If b : ι → M and c : κ → N are bases then so is λ i, b i.1 ⊗ₜ c i.2 : ι × κ → M ⊗ N. -/
-def Basis.tensorProduct (b : Basis ι R M) (c : Basis κ R N) : Basis (ι × κ) R (TensorProduct R M N) :=
+def Basis.tensorProduct (b : Basis ι R M) (c : Basis κ R N) :
+    Basis (ι × κ) R (TensorProduct R M N) :=
   Finsupp.basisSingleOne.map
     ((TensorProduct.congr b.repr c.repr).trans <|
-        (finsuppTensorFinsupp R _ _ _ _).trans <| Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid R R)).symm
+        (finsuppTensorFinsupp R _ _ _ _).trans <|
+          Finsupp.lcongr (Equiv.refl _) (TensorProduct.lid R R)).symm
 #align basis.tensor_product Basis.tensorProduct
 
 @[simp]

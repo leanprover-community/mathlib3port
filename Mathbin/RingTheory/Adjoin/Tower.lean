@@ -25,20 +25,23 @@ variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
 
 namespace Algebra
 
-theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiring R] [CommSemiring S] [Semiring A]
-    [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :
+theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiring R] [CommSemiring S]
+    [Semiring A] [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :
     adjoin R (algebraMap S A '' s) = (adjoin R s).map (IsScalarTower.toAlgHom R S A) :=
   le_antisymm (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
     (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 #align algebra.adjoin_algebra_map Algebra.adjoin_algebra_map
 
-theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [Algebra C D]
-    [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
+theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E]
+    [Algebra C D] [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
     (Algebra.adjoin D S).restrictScalars C =
-      (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars C :=
+      (Algebra.adjoin ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) S).restrictScalars
+        C :=
   by
   suffices
-    Set.range (algebraMap D E) = Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E) by
+    Set.range (algebraMap D E) =
+      Set.range (algebraMap ((⊤ : Subalgebra C D).map (IsScalarTower.toAlgHom C D E)) E)
+    by
     ext x
     change x ∈ Subsemiring.closure (_ ∪ S) ↔ x ∈ Subsemiring.closure (_ ∪ S)
     rw [this]
@@ -52,15 +55,17 @@ theorem adjoin_restrict_scalars (C D E : Type _) [CommSemiring C] [CommSemiring 
     
 #align algebra.adjoin_restrict_scalars Algebra.adjoin_restrict_scalars
 
-theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E] [CommSemiring F]
-    [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F] [Algebra E F] [IsScalarTower C D F] [IsScalarTower C E F]
-    {S : Set D} {T : Set E} (hS : Algebra.adjoin C S = ⊤) (hT : Algebra.adjoin C T = ⊤) :
+theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D]
+    [CommSemiring E] [CommSemiring F] [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F]
+    [Algebra E F] [IsScalarTower C D F] [IsScalarTower C E F] {S : Set D} {T : Set E}
+    (hS : Algebra.adjoin C S = ⊤) (hT : Algebra.adjoin C T = ⊤) :
     (Algebra.adjoin E (algebraMap D F '' S)).restrictScalars C =
       (Algebra.adjoin D (algebraMap E F '' T)).restrictScalars C :=
   by
-  rw [adjoin_restrict_scalars C E, adjoin_restrict_scalars C D, ← hS, ← hT, ← Algebra.adjoin_image, ←
-    Algebra.adjoin_image, ← AlgHom.coe_to_ring_hom, ← AlgHom.coe_to_ring_hom, IsScalarTower.coe_to_alg_hom,
-    IsScalarTower.coe_to_alg_hom, ← adjoin_union_eq_adjoin_adjoin, ← adjoin_union_eq_adjoin_adjoin, Set.union_comm]
+  rw [adjoin_restrict_scalars C E, adjoin_restrict_scalars C D, ← hS, ← hT, ← Algebra.adjoin_image,
+    ← Algebra.adjoin_image, ← AlgHom.coe_to_ring_hom, ← AlgHom.coe_to_ring_hom,
+    IsScalarTower.coe_to_alg_hom, IsScalarTower.coe_to_alg_hom, ← adjoin_union_eq_adjoin_adjoin, ←
+    adjoin_union_eq_adjoin_adjoin, Set.union_comm]
 #align algebra.adjoin_res_eq_adjoin_res Algebra.adjoin_res_eq_adjoin_res
 
 end Algebra
@@ -69,14 +74,15 @@ section
 
 open Classical
 
-theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A] [Algebra R S]
-    [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg) (hSA : (⊤ : Subalgebra S A).Fg) :
-    (⊤ : Subalgebra R A).Fg :=
+theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A]
+    [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg)
+    (hSA : (⊤ : Subalgebra S A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
   ⟨s.image (algebraMap S A) ∪ t, by
-    rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
-      Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
+    rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin,
+      Algebra.adjoin_algebra_map, hs, Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht,
+      Subalgebra.restrict_scalars_top]⟩
 #align algebra.fg_trans' Algebra.fg_trans'
 
 end
@@ -103,7 +109,9 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   simp_rw [eq_top_iff', mem_span_finset] at this
   choose f hf
   let s : Finset B := Finset.image₂ f (x ∪ y * y) y
-  have hxy : ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) := fun xi hxi =>
+  have hxy :
+    ∀ xi ∈ x, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
+    fun xi hxi =>
     hf xi ▸
       sum_mem fun yj hyj =>
         smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
@@ -131,15 +139,17 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
           (sum_mem fun yk hyk =>
             smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 ↑y : Set C))
               ⟨f (yi * yj) yk,
-                Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
+                Algebra.subset_adjoin <|
+                  mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
       
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
   refine' restrict_scalars_injective A _ _ _
-  rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span, span_le]
+  rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span,
+    span_le]
   refine' fun r hr =>
-    Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _) fun p q hp hq =>
-      hyy <| Submodule.mul_mem_mul hp hq
+    Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _)
+      fun p q hp hq => hyy <| Submodule.mul_mem_mul hp hq
 #align exists_subalgebra_of_fg exists_subalgebra_of_fg
 
 end Semiring
@@ -155,8 +165,9 @@ A is noetherian, and C is algebra-finite over A, and C is module-finite over B,
 then B is algebra-finite over A.
 
 References: Atiyah--Macdonald Proposition 7.8; Stacks 00IS; Altman--Kleiman 16.17. -/
-theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg)
-    (hBCi : Function.Injective (algebraMap B C)) : (⊤ : Subalgebra A B).Fg :=
+theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg)
+    (hBC : (⊤ : Submodule B C).Fg) (hBCi : Function.Injective (algebraMap B C)) :
+    (⊤ : Subalgebra A B).Fg :=
   let ⟨B₀, hAB₀, hB₀C⟩ := exists_subalgebra_of_fg A B C hAC hBC
   Algebra.fg_trans' (B₀.fg_top.2 hAB₀) <|
     Subalgebra.fg_of_submodule_fg <|

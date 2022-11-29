@@ -91,7 +91,8 @@ theorem dvd_add_iff_left (h : a ∣ c) : a ∣ b ↔ a ∣ b + c :=
   ⟨fun h₂ => dvd_add h₂ h, fun H => by have t := dvd_sub H h <;> rwa [add_sub_cancel] at t⟩
 #align dvd_add_iff_left dvd_add_iff_left
 
-theorem dvd_add_iff_right (h : a ∣ b) : a ∣ c ↔ a ∣ b + c := by rw [add_comm] <;> exact dvd_add_iff_left h
+theorem dvd_add_iff_right (h : a ∣ b) : a ∣ c ↔ a ∣ b + c := by
+  rw [add_comm] <;> exact dvd_add_iff_left h
 #align dvd_add_iff_right dvd_add_iff_right
 
 /-- If an element a divides another element c in a commutative ring, a divides the sum of another
@@ -146,7 +147,8 @@ section NonUnitalCommRing
 
 variable [NonUnitalCommRing α] {a b c : α}
 
-theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ a * x - b * y := by
+theorem dvd_mul_sub_mul {k a b x y : α} (hab : k ∣ a - b) (hxy : k ∣ x - y) : k ∣ a * x - b * y :=
+  by
   convert dvd_add (hxy.mul_left a) (hab.mul_right y)
   rw [mul_sub_left_distrib, mul_sub_right_distrib]
   simp only [sub_eq_add_neg, add_assoc, neg_add_cancel_left]

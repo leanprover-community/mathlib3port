@@ -89,7 +89,8 @@ protected def hasSmul (R : Type _) [HasSmul R β] : HasSmul R α :=
   ⟨fun r x => e.symm (r • e x)⟩
 #align equiv.has_smul Equiv.hasSmul
 
-theorem smul_def {R : Type _} [HasSmul R β] (r : R) (x : α) : @HasSmul.smul _ _ (e.HasSmul R) r x = e.symm (r • e x) :=
+theorem smul_def {R : Type _} [HasSmul R β] (r : R) (x : α) :
+    @HasSmul.smul _ _ (e.HasSmul R) r x = e.symm (r • e x) :=
   rfl
 #align equiv.smul_def Equiv.smul_def
 
@@ -99,7 +100,8 @@ protected def hasPow (N : Type _) [Pow β N] : Pow α N :=
   ⟨fun x n => e.symm (e x ^ n)⟩
 #align equiv.has_pow Equiv.hasPow
 
-theorem pow_def {N : Type _} [Pow β N] (n : N) (x : α) : @Pow.pow _ _ (e.HasPow N) x n = e.symm (e x ^ n) :=
+theorem pow_def {N : Type _} [Pow β N] (n : N) (x : α) :
+    @Pow.pow _ _ (e.HasPow N) x n = e.symm (e x ^ n) :=
   rfl
 #align equiv.pow_def Equiv.pow_def
 
@@ -130,9 +132,7 @@ theorem mul_equiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a
 theorem mul_equiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     letI := Equiv.hasMul e
     (MulEquiv e).symm b = e.symm b :=
-  by
-  intros
-  rfl
+  by intros ; rfl
 #align equiv.mul_equiv_symm_apply Equiv.mul_equiv_symm_apply
 
 /-- An equivalence `e : α ≃ β` gives a ring equivalence `α ≃+* β`
@@ -162,9 +162,7 @@ theorem ring_equiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv
 theorem ring_equiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) : by
     letI := Equiv.hasAdd e
     letI := Equiv.hasMul e
-    exact (RingEquiv e).symm b = e.symm b := by
-  intros
-  rfl
+    exact (RingEquiv e).symm b = e.symm b := by intros ; rfl
 #align equiv.ring_equiv_symm_apply Equiv.ring_equiv_symm_apply
 
 /-- Transfer `semigroup` across an `equiv` -/
@@ -258,12 +256,14 @@ protected def commGroup [CommGroup β] : CommGroup α := by
 
 /-- Transfer `non_unital_non_assoc_semiring` across an `equiv` -/
 @[reducible]
-protected def nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring β] : NonUnitalNonAssocSemiring α := by
+protected def nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring β] :
+    NonUnitalNonAssocSemiring α := by
   let zero := e.HasZero
   let add := e.HasAdd
   let mul := e.HasMul
   let nsmul := e.HasSmul ℕ
-  skip <;> apply e.injective.non_unital_non_assoc_semiring _ <;> intros <;> exact e.apply_symm_apply _
+  skip <;> apply e.injective.non_unital_non_assoc_semiring _ <;> intros <;>
+    exact e.apply_symm_apply _
 #align equiv.non_unital_non_assoc_semiring Equiv.nonUnitalNonAssocSemiring
 
 /-- Transfer `non_unital_semiring` across an `equiv` -/
@@ -279,7 +279,8 @@ protected def nonUnitalSemiring [NonUnitalSemiring β] : NonUnitalSemiring α :=
 /-- Transfer `add_monoid_with_one` across an `equiv` -/
 @[reducible]
 protected def addMonoidWithOne [AddMonoidWithOne β] : AddMonoidWithOne α :=
-  { e.AddMonoid, e.HasOne with natCast := fun n => e.symm n, nat_cast_zero := show e.symm _ = _ by simp [zero_def],
+  { e.AddMonoid, e.HasOne with natCast := fun n => e.symm n,
+    nat_cast_zero := show e.symm _ = _ by simp [zero_def],
     nat_cast_succ := fun n => show e.symm _ = e.symm (e (e.symm _) + _) by simp [add_def, one_def] }
 #align equiv.add_monoid_with_one Equiv.addMonoidWithOne
 
@@ -563,8 +564,8 @@ end Equiv
 namespace RingEquiv
 
 @[reducible]
-protected theorem local_ring {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B] (e : A ≃+* B) :
-    LocalRing B :=
+protected theorem local_ring {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B]
+    (e : A ≃+* B) : LocalRing B :=
   haveI := e.symm.to_equiv.nontrivial
   LocalRing.of_surjective (e : A →+* B) e.surjective
 #align ring_equiv.local_ring RingEquiv.local_ring

@@ -53,12 +53,14 @@ theorem associator_obj_inr (X) : (associator C D E).obj (inr X) = inr (inr X) :=
 #align category_theory.sum.associator_obj_inr CategoryTheory.sum.associator_obj_inr
 
 @[simp]
-theorem associator_map_inl_inl {X Y : C} (f : inl (inl X) ⟶ inl (inl Y)) : (associator C D E).map f = f :=
+theorem associator_map_inl_inl {X Y : C} (f : inl (inl X) ⟶ inl (inl Y)) :
+    (associator C D E).map f = f :=
   rfl
 #align category_theory.sum.associator_map_inl_inl CategoryTheory.sum.associator_map_inl_inl
 
 @[simp]
-theorem associator_map_inl_inr {X Y : D} (f : inl (inr X) ⟶ inl (inr Y)) : (associator C D E).map f = f :=
+theorem associator_map_inl_inr {X Y : D} (f : inl (inr X) ⟶ inl (inr Y)) :
+    (associator C D E).map f = f :=
   rfl
 #align category_theory.sum.associator_map_inl_inr CategoryTheory.sum.associator_map_inl_inr
 
@@ -88,17 +90,21 @@ theorem inverse_associator_obj_inl (X) : (inverseAssociator C D E).obj (inl X) =
 #align category_theory.sum.inverse_associator_obj_inl CategoryTheory.sum.inverse_associator_obj_inl
 
 @[simp]
-theorem inverse_associator_obj_inr_inl (X) : (inverseAssociator C D E).obj (inr (inl X)) = inl (inr X) :=
+theorem inverse_associator_obj_inr_inl (X) :
+    (inverseAssociator C D E).obj (inr (inl X)) = inl (inr X) :=
   rfl
-#align category_theory.sum.inverse_associator_obj_inr_inl CategoryTheory.sum.inverse_associator_obj_inr_inl
+#align
+  category_theory.sum.inverse_associator_obj_inr_inl CategoryTheory.sum.inverse_associator_obj_inr_inl
 
 @[simp]
 theorem inverse_associator_obj_inr_inr (X) : (inverseAssociator C D E).obj (inr (inr X)) = inr X :=
   rfl
-#align category_theory.sum.inverse_associator_obj_inr_inr CategoryTheory.sum.inverse_associator_obj_inr_inr
+#align
+  category_theory.sum.inverse_associator_obj_inr_inr CategoryTheory.sum.inverse_associator_obj_inr_inr
 
 @[simp]
-theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) : (inverseAssociator C D E).map f = f :=
+theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) :
+    (inverseAssociator C D E).map f = f :=
   rfl
 #align category_theory.sum.inverse_associator_map_inl CategoryTheory.sum.inverse_associator_map_inl
 
@@ -106,13 +112,15 @@ theorem inverse_associator_map_inl {X Y : C} (f : inl X ⟶ inl Y) : (inverseAss
 theorem inverse_associator_map_inr_inl {X Y : D} (f : inr (inl X) ⟶ inr (inl Y)) :
     (inverseAssociator C D E).map f = f :=
   rfl
-#align category_theory.sum.inverse_associator_map_inr_inl CategoryTheory.sum.inverse_associator_map_inr_inl
+#align
+  category_theory.sum.inverse_associator_map_inr_inl CategoryTheory.sum.inverse_associator_map_inr_inl
 
 @[simp]
 theorem inverse_associator_map_inr_inr {X Y : E} (f : inr (inr X) ⟶ inr (inr Y)) :
     (inverseAssociator C D E).map f = f :=
   rfl
-#align category_theory.sum.inverse_associator_map_inr_inr CategoryTheory.sum.inverse_associator_map_inr_inr
+#align
+  category_theory.sum.inverse_associator_map_inr_inr CategoryTheory.sum.inverse_associator_map_inr_inr
 
 /-- The equivalence of categories expressing associativity of sums of categories.
 -/
@@ -128,7 +136,8 @@ instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
 
 instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
   (by infer_instance : IsEquivalence (associativity C D E).inverse)
-#align category_theory.sum.inverse_associator_is_equivalence CategoryTheory.sum.inverseAssociatorIsEquivalence
+#align
+  category_theory.sum.inverse_associator_is_equivalence CategoryTheory.sum.inverseAssociatorIsEquivalence
 
 -- TODO unitors?
 -- TODO pentagon natural transformation? ...satisfying?

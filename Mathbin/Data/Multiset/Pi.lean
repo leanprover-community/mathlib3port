@@ -20,9 +20,9 @@ open Function
 
 /- warning: multiset.pi.empty -> Multiset.Pi.empty is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (δ : α -> Type.{u_2}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
+  forall {α : Type.{u_1}} (δ : α -> Type.{u_2}) (a : α), (Membership.Mem.{u_1, u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
 but is expected to have type
-  forall {α : Type.{u_1}} (δ : α -> Type.{_aux_param_0}) (a : α), (Membership.Mem.{u_1 u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
+  forall {α : Type.{u_1}} (δ : α -> Type.{_aux_param_0}) (a : α), (Membership.Mem.{u_1, u_1} α (Multiset.{u_1} α) (Multiset.hasMem.{u_1} α) a (OfNat.ofNat.{u_1} (Multiset.{u_1} α) 0 (OfNat.mk.{u_1} (Multiset.{u_1} α) 0 (Zero.zero.{u_1} (Multiset.{u_1} α) (Multiset.hasZero.{u_1} α))))) -> (δ a)
 Case conversion may be inaccurate. Consider using '#align multiset.pi.empty Multiset.Pi.emptyₓ'. -/
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/
@@ -35,8 +35,8 @@ variable [DecidableEq α] {δ : α → Type _}
 /-- Given `δ : α → Type*`, a multiset `m` and a term `a`, as well as a term `b : δ a` and a
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
-def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a ∈ m, δ a) : ∀ a' ∈ a ::ₘ m, δ a' := fun a' ha' =>
-  if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
+def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a ∈ m, δ a) : ∀ a' ∈ a ::ₘ m, δ a' :=
+  fun a' ha' => if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
 #align multiset.pi.cons Multiset.Pi.cons
 
 theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h : a ∈ a ::ₘ m) :
@@ -44,13 +44,15 @@ theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a ∈ m, δ 
   dif_pos rfl
 #align multiset.pi.cons_same Multiset.Pi.cons_same
 
-theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
-    Pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
+theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h' : a' ∈ a ::ₘ m)
+    (h : a' ≠ a) : Pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
   dif_neg h
 #align multiset.pi.cons_ne Multiset.Pi.cons_ne
 
-theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a} (h : a ≠ a') :
-    HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
+theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a}
+    (h : a ≠ a') :
+    HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) :=
+  by
   apply hfunext rfl
   rintro a'' _ rfl
   refine' hfunext (by rw [cons_swap]) fun ha₁ ha₂ _ => _
@@ -61,7 +63,8 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
-  m.recOn {Pi.empty δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
+  m.recOn {Pi.empty δ}
+    (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
       by_cases eq : a = a'
@@ -95,8 +98,8 @@ theorem pi_cons (m : Multiset α) (t : ∀ a, Multiset (δ a)) (a : α) :
   rec_on_cons a m
 #align multiset.pi_cons Multiset.pi_cons
 
-theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) : Function.Injective (Pi.cons s a b) :=
-  fun f₁ f₂ eq =>
+theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
+    Function.Injective (Pi.cons s a b) := fun f₁ f₂ eq =>
   funext fun a' =>
     funext fun h' =>
       have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
@@ -108,7 +111,8 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
         
 #align multiset.pi_cons_injective Multiset.pi_cons_injective
 
-theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = prod (m.map fun a => card (t a)) :=
+theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
+    card (pi m t) = prod (m.map fun a => card (t a)) :=
   Multiset.induction_on m (by simp) (by simp (config := { contextual := true }) [mul_comm])
 #align multiset.card_pi Multiset.card_pi
 
@@ -120,11 +124,14 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
       have has : a ∉ s := by simp at hs <;> exact hs.1
       have hs : nodup s := by simp at hs <;> exact hs.2
       simp
-      refine' ⟨fun b hb => ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has), _⟩
+      refine'
+        ⟨fun b hb => ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has),
+          _⟩
       refine' (ht a <| mem_cons_self _ _).Pairwise _
       exact fun b₁ hb₁ b₂ hb₂ neb =>
         disjoint_map_map.2 fun f hf g hg eq =>
-          have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by rw [Eq]
+          have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) :=
+            by rw [Eq]
           neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
 #align multiset.nodup.pi Multiset.Nodup.pi
 

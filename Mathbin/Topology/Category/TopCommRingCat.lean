@@ -44,10 +44,9 @@ instance : Category TopCommRingCat.{u} where
   comp R S T f g :=
     ⟨g.val.comp f.val, by
       -- TODO automate
-      cases f
+      cases f;
       cases g
-      dsimp
-      apply Continuous.comp <;> assumption⟩
+      dsimp; apply Continuous.comp <;> assumption⟩
 
 instance : ConcreteCategory TopCommRingCat.{u} where
   forget := { obj := fun R => R, map := fun R S f => f.val }
@@ -59,11 +58,13 @@ def of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : TopC
 #align TopCommRing.of TopCommRingCat.of
 
 @[simp]
-theorem coe_of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] : (of X : Type u) = X :=
+theorem coe_of (X : Type u) [CommRing X] [TopologicalSpace X] [TopologicalRing X] :
+    (of X : Type u) = X :=
   rfl
 #align TopCommRing.coe_of TopCommRingCat.coe_of
 
-instance forgetTopologicalSpace (R : TopCommRingCat) : TopologicalSpace ((forget TopCommRingCat).obj R) :=
+instance forgetTopologicalSpace (R : TopCommRingCat) :
+    TopologicalSpace ((forget TopCommRingCat).obj R) :=
   R.isTopologicalSpace
 #align TopCommRing.forget_topological_space TopCommRingCat.forgetTopologicalSpace
 
@@ -71,25 +72,30 @@ instance forgetCommRing (R : TopCommRingCat) : CommRing ((forget TopCommRingCat)
   R.isCommRing
 #align TopCommRing.forget_comm_ring TopCommRingCat.forgetCommRing
 
-instance forget_topological_ring (R : TopCommRingCat) : TopologicalRing ((forget TopCommRingCat).obj R) :=
+instance forget_topological_ring (R : TopCommRingCat) :
+    TopologicalRing ((forget TopCommRingCat).obj R) :=
   R.is_topological_ring
 #align TopCommRing.forget_topological_ring TopCommRingCat.forget_topological_ring
 
 instance hasForgetToCommRing : HasForget₂ TopCommRingCat CommRingCat :=
-  HasForget₂.mk' (fun R => CommRingCat.of R) (fun x => rfl) (fun R S f => f.val) fun R S f => HEq.rfl
+  HasForget₂.mk' (fun R => CommRingCat.of R) (fun x => rfl) (fun R S f => f.val) fun R S f =>
+    HEq.rfl
 #align TopCommRing.has_forget_to_CommRing TopCommRingCat.hasForgetToCommRing
 
 instance forgetToCommRingTopologicalSpace (R : TopCommRingCat) :
     TopologicalSpace ((forget₂ TopCommRingCat CommRingCat).obj R) :=
   R.isTopologicalSpace
-#align TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingTopologicalSpace
+#align
+  TopCommRing.forget_to_CommRing_topological_space TopCommRingCat.forgetToCommRingTopologicalSpace
 
 /-- The forgetful functor to Top. -/
 instance hasForgetToTop : HasForget₂ TopCommRingCat TopCat :=
-  HasForget₂.mk' (fun R => TopCat.of R) (fun x => rfl) (fun R S f => ⟨⇑f.1, f.2⟩) fun R S f => HEq.rfl
+  HasForget₂.mk' (fun R => TopCat.of R) (fun x => rfl) (fun R S f => ⟨⇑f.1, f.2⟩) fun R S f =>
+    HEq.rfl
 #align TopCommRing.has_forget_to_Top TopCommRingCat.hasForgetToTop
 
-instance forgetToTopCommRing (R : TopCommRingCat) : CommRing ((forget₂ TopCommRingCat TopCat).obj R) :=
+instance forgetToTopCommRing (R : TopCommRingCat) :
+    CommRing ((forget₂ TopCommRingCat TopCat).obj R) :=
   R.isCommRing
 #align TopCommRing.forget_to_Top_comm_ring TopCommRingCat.forgetToTopCommRing
 

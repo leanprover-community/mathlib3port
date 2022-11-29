@@ -35,9 +35,11 @@ instance : HasDist (Completion α) :=
   ⟨Completion.extension₂ dist⟩
 
 /-- The new distance is uniformly continuous. -/
-protected theorem uniform_continuous_dist : UniformContinuous fun p : Completion α × Completion α => dist p.1 p.2 :=
+protected theorem uniform_continuous_dist :
+    UniformContinuous fun p : Completion α × Completion α => dist p.1 p.2 :=
   uniform_continuous_extension₂ dist
-#align uniform_space.completion.uniform_continuous_dist UniformSpace.Completion.uniform_continuous_dist
+#align
+  uniform_space.completion.uniform_continuous_dist UniformSpace.Completion.uniform_continuous_dist
 
 /-- The new distance is continuous. -/
 protected theorem continuous_dist [TopologicalSpace β] {f g : β → Completion α} (hf : Continuous f)
@@ -74,13 +76,13 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
     
 #align uniform_space.completion.dist_comm UniformSpace.Completion.dist_comm
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr completion.continuous_dist, ",", expr continuous.fst, ",", expr continuous.snd, ",", expr continuous_id, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr completion.continuous_dist, ",", expr continuous.fst, ",", expr continuous.snd, ",", expr continuous_id, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
   · refine' isClosedLe _ (Continuous.add _ _) <;>
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr completion.continuous_dist, \",\", expr continuous.fst, \",\", expr continuous.snd, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr completion.continuous_dist, \",\", expr continuous.fst, \",\", expr continuous.snd, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     
   · intro a b c
     rw [completion.dist_eq, completion.dist_eq, completion.dist_eq]
@@ -138,7 +140,8 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     let r : Set (ℝ × ℝ) := { p | dist p.1 p.2 < ε }
     have : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos
     have T := uniform_continuous_def.1 (@completion.uniform_continuous_dist α _) r this
-    simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map, Set.mem_set_of_eq] at T
+    simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map,
+      Set.mem_set_of_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩
     refine' mem_of_superset ht1 _
     have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε := by
@@ -168,9 +171,9 @@ protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : 
 
 /-- Reformulate `completion.mem_uniformity_dist` in terms that are suitable for the definition
 of the metric space structure. -/
-protected theorem uniformity_dist' : 𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
-  ext s
-  rw [mem_infi_of_directed]
+protected theorem uniformity_dist' :
+    𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } := by
+  ext s; rw [mem_infi_of_directed]
   · simp [completion.mem_uniformity_dist, subset_def]
     
   · rintro ⟨r, hr⟩ ⟨p, hp⟩

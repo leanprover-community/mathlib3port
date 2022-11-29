@@ -269,8 +269,9 @@ theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
   ⟨⟨⟨1, rfl⟩, ⟨0, rfl⟩⟩, (Tactic.Ring.horner_atom _).symm⟩
 #align tactic.ring2.horner_expr.cseval_atom Tactic.Ring2.HornerExpr.cseval_atom
 
-theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
-    (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e := by
+theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
+    (cs : e.IsCs) : (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e :=
+  by
   simp [add_const]
   cases k <;> simp! [*]
   simp [show ZNum.pos k ≠ 0 by decide]
@@ -304,8 +305,8 @@ theorem cseval_horner' {α} [CommSemiring α] (t : Tree α) (a x n b) (h₁ : Is
     
 #align tactic.ring2.horner_expr.cseval_horner' Tactic.Ring2.HornerExpr.cseval_horner'
 
-theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
-    (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ := by
+theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
+    (cs₂ : e₂.IsCs) : (add e₁ e₂).IsCs ∧ cseval t (add e₁ e₂) = cseval t e₁ + cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
     simpa using cseval_add_const t n₁ cs₂
@@ -314,10 +315,8 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   · rcases cs₂ with ⟨n₂, rfl⟩
     simp! [cseval_add_const t n₂ cs₁, add_comm]
     
-  cases' cs₁ with csa₁ csb₁
-  cases' id cs₂ with csa₂ csb₂
-  simp!
-  have C := PosNum.cmp_to_nat x₁ x₂
+  cases' cs₁ with csa₁ csb₁; cases' id cs₂ with csa₂ csb₂
+  simp! ; have C := PosNum.cmp_to_nat x₁ x₂
   cases PosNum.cmp x₁ x₂ <;> simp!
   · rcases B₁ csb₁ cs₂ with ⟨csh, h⟩
     refine' ⟨⟨csa₁, csh⟩, Eq.symm _⟩
@@ -326,7 +325,9 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
     
   · cases C
     have B0 :
-      is_cs 0 → ∀ {e₂ : horner_expr}, is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
+      is_cs 0 →
+        ∀ {e₂ : horner_expr},
+          is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
       fun _ e₂ c => ⟨c, (zero_add _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
     · have : n₁ = n₂ := by
@@ -375,8 +376,9 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
     
 #align tactic.ring2.horner_expr.cseval_add Tactic.Ring2.HornerExpr.cseval_add
 
-theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
-    (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k := by
+theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr}
+    (cs : e.IsCs) : (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k :=
+  by
   simp [mul_const]
   split_ifs with h h
   · cases (Num.to_znum_inj.1 h : k = 0)
@@ -402,8 +404,8 @@ theorem cseval_mul_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
     
 #align tactic.ring2.horner_expr.cseval_mul_const Tactic.Ring2.HornerExpr.cseval_mul_const
 
-theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs) (cs₂ : e₂.IsCs) :
-    (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
+theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr} (cs₁ : e₁.IsCs)
+    (cs₂ : e₂.IsCs) : (mul e₁ e₂).IsCs ∧ cseval t (mul e₁ e₂) = cseval t e₁ * cseval t e₂ := by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
     simpa [mul_comm] using cseval_mul_const t n₁ cs₂
@@ -412,10 +414,8 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   · rcases cs₂ with ⟨n₂, rfl⟩
     simpa! using cseval_mul_const t n₂ cs₁
     
-  cases' cs₁ with csa₁ csb₁
-  cases' id cs₂ with csa₂ csb₂
-  simp!
-  have C := PosNum.cmp_to_nat x₁ x₂
+  cases' cs₁ with csa₁ csb₁; cases' id cs₂ with csa₂ csb₂
+  simp! ; have C := PosNum.cmp_to_nat x₁ x₂
   cases' A₂ csa₂ with csA₂ hA₂
   cases PosNum.cmp x₁ x₂ <;> simp!
   · simp [A₁ csa₁ cs₂, B₁ csb₁ cs₂]
@@ -453,8 +453,7 @@ theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
   | 0 => ⟨⟨1, rfl⟩, (pow_zero _).symm⟩
   | Num.pos p => by
-    simp [pow]
-    induction' p with p ep p ep
+    simp [pow]; induction' p with p ep p ep
     · simp [*]
       
     · simp [pow_bit1]
@@ -514,11 +513,15 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
     |
         q( $ ( e₁ ) + $ ( e₂ ) )
         =>
-        let ( r₁ , l₁ ) := reflect_expr e₁ let ( r₂ , l₂ ) := reflect_expr e₂ ( r₁ . add r₂ , l₁ ++ l₂ )
+        let
+          ( r₁ , l₁ ) := reflect_expr e₁
+          let ( r₂ , l₂ ) := reflect_expr e₂ ( r₁ . add r₂ , l₁ ++ l₂ )
       |
         q( $ ( e₁ ) * $ ( e₂ ) )
         =>
-        let ( r₁ , l₁ ) := reflect_expr e₁ let ( r₂ , l₂ ) := reflect_expr e₂ ( r₁ . mul r₂ , l₁ ++ l₂ )
+        let
+          ( r₁ , l₁ ) := reflect_expr e₁
+          let ( r₂ , l₂ ) := reflect_expr e₂ ( r₁ . mul r₂ , l₁ ++ l₂ )
       |
         e @ q( $ ( e₁ ) ^ $ ( e₂ ) )
         =>
@@ -586,7 +589,11 @@ local postfix:1024 "?" => optional
     :=
       do
         sorry
-          let q( $ ( e₁ ) = $ ( e₂ ) ) ← target | fail "ring2 tactic failed: the goal is not an equality"
+          let
+            q( $ ( e₁ ) = $ ( e₂ ) )
+              ←
+              target
+              | fail "ring2 tactic failed: the goal is not an equality"
           let α ← infer_type e₁
           let expr.sort ( level.succ u ) ← infer_type α
           let ( r₁ , l₁ ) := reflect_expr e₁
@@ -606,7 +613,11 @@ local postfix:1024 "?" => optional
                 <|>
                 fail
                   (
-                    "ring2 tactic failed, cannot show equality:\n" ++ toString ( HornerExpr.ofCsexpr r₁ ) ++ "\n  =?=\n"
+                    "ring2 tactic failed, cannot show equality:\n"
+                          ++
+                          toString ( HornerExpr.ofCsexpr r₁ )
+                        ++
+                        "\n  =?=\n"
                       ++
                       toString ( HornerExpr.ofCsexpr r₂ )
                     )

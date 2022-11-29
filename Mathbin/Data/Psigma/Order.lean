@@ -123,11 +123,13 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
         
       · exact Or.inr (lex.left _ _ hji)
         ,
-    DecidableEq := PSigma.decidableEq, decidableLe := Lex.decidable _ _, decidableLt := Lex.decidable _ _ }
+    DecidableEq := PSigma.decidableEq, decidableLe := Lex.decidable _ _,
+    decidableLt := Lex.decidable _ _ }
 #align psigma.lex.linear_order PSigma.Lex.linearOrder
 
 /-- The lexicographical linear order on a sigma type. -/
-instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] : OrderBot (Σₗ' i, α i) where
+instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] :
+    OrderBot (Σₗ' i, α i) where
   bot := ⟨⊥, ⊥⟩
   bot_le := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_bot_or_bot_lt a
@@ -138,7 +140,8 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
 #align psigma.lex.order_bot PSigma.Lex.orderBot
 
 /-- The lexicographical linear order on a sigma type. -/
-instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] : OrderTop (Σₗ' i, α i) where
+instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] :
+    OrderTop (Σₗ' i, α i) where
   top := ⟨⊤, ⊤⟩
   le_top := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_top_or_lt_top a
@@ -149,8 +152,8 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
 #align psigma.lex.order_top PSigma.Lex.orderTop
 
 /-- The lexicographical linear order on a sigma type. -/
-instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] [OrderTop (α ⊤)] :
-    BoundedOrder (Σₗ' i, α i) :=
+instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)]
+    [OrderTop (α ⊤)] : BoundedOrder (Σₗ' i, α i) :=
   { Lex.orderBot, Lex.orderTop with }
 #align psigma.lex.bounded_order PSigma.Lex.boundedOrder
 
@@ -167,8 +170,8 @@ instance densely_ordered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α 
       ⟩
 #align psigma.lex.densely_ordered PSigma.Lex.densely_ordered
 
-instance densely_ordered_of_no_max_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
-    [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
+instance densely_ordered_of_no_max_order [Preorder ι] [∀ i, Preorder (α i)]
+    [∀ i, DenselyOrdered (α i)] [∀ i, NoMaxOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | @⟨_, _, b, h⟩)
     · obtain ⟨c, ha⟩ := exists_gt a
@@ -179,8 +182,8 @@ instance densely_ordered_of_no_max_order [Preorder ι] [∀ i, Preorder (α i)] 
       ⟩
 #align psigma.lex.densely_ordered_of_no_max_order PSigma.Lex.densely_ordered_of_no_max_order
 
-instance densely_ordered_of_no_min_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)]
-    [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
+instance densely_ordered_of_no_min_order [Preorder ι] [∀ i, Preorder (α i)]
+    [∀ i, DenselyOrdered (α i)] [∀ i, NoMinOrder (α i)] : DenselyOrdered (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩ (⟨_, _, h⟩ | @⟨_, _, b, h⟩)
     · obtain ⟨c, hb⟩ := exists_lt b
@@ -191,8 +194,8 @@ instance densely_ordered_of_no_min_order [Preorder ι] [∀ i, Preorder (α i)] 
       ⟩
 #align psigma.lex.densely_ordered_of_no_min_order PSigma.Lex.densely_ordered_of_no_min_order
 
-instance no_max_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
-    NoMaxOrder (Σₗ' i, α i) :=
+instance no_max_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
+    [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
@@ -200,8 +203,8 @@ instance no_max_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxO
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align psigma.lex.no_max_order_of_nonempty PSigma.Lex.no_max_order_of_nonempty
 
-instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι] [∀ i, Nonempty (α i)] :
-    NoMaxOrder (Σₗ' i, α i) :=
+instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxOrder ι]
+    [∀ i, Nonempty (α i)] : NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩
     obtain ⟨j, h⟩ := exists_gt i
@@ -209,14 +212,16 @@ instance no_min_order_of_nonempty [Preorder ι] [∀ i, Preorder (α i)] [NoMaxO
     exact ⟨⟨j, b⟩, left _ _ h⟩⟩
 #align psigma.lex.no_min_order_of_nonempty PSigma.Lex.no_min_order_of_nonempty
 
-instance no_max_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] : NoMaxOrder (Σₗ' i, α i) :=
+instance no_max_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMaxOrder (α i)] :
+    NoMaxOrder (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩
     obtain ⟨b, h⟩ := exists_gt a
     exact ⟨⟨i, b⟩, right _ h⟩⟩
 #align psigma.lex.no_max_order PSigma.Lex.no_max_order
 
-instance no_min_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] : NoMinOrder (Σₗ' i, α i) :=
+instance no_min_order [Preorder ι] [∀ i, Preorder (α i)] [∀ i, NoMinOrder (α i)] :
+    NoMinOrder (Σₗ' i, α i) :=
   ⟨by
     rintro ⟨i, a⟩
     obtain ⟨b, h⟩ := exists_lt a

@@ -16,7 +16,8 @@ open CategoryTheory
 
 namespace CategoryTheory.prod
 
-variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] (E : Type u₃) [Category.{v₃} E]
+variable (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] (E : Type u₃)
+  [Category.{v₃} E]
 
 /-- The associator functor `(C × D) × E ⥤ C × (D × E)`.
 -/
@@ -48,7 +49,8 @@ instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
 
 instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=
   (by infer_instance : IsEquivalence (associativity C D E).inverse)
-#align category_theory.prod.inverse_associator_is_equivalence CategoryTheory.prod.inverseAssociatorIsEquivalence
+#align
+  category_theory.prod.inverse_associator_is_equivalence CategoryTheory.prod.inverseAssociatorIsEquivalence
 
 -- TODO unitors?
 -- TODO pentagon natural transformation? ...satisfying?

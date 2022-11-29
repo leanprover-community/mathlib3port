@@ -52,7 +52,8 @@ open Ordinal
 
 theorem nim_def (o : Ordinal) :
     nim o =
-      Pgame.mk o.out.α o.out.α (fun o₂ => nim (Ordinal.typein (· < ·) o₂)) fun o₂ => nim (Ordinal.typein (· < ·) o₂) :=
+      Pgame.mk o.out.α o.out.α (fun o₂ => nim (Ordinal.typein (· < ·) o₂)) fun o₂ =>
+        nim (Ordinal.typein (· < ·) o₂) :=
   by
   rw [nim]
   rfl
@@ -68,12 +69,14 @@ theorem right_moves_nim (o : Ordinal) : (nim o).RightMoves = o.out.α := by
   rfl
 #align pgame.right_moves_nim Pgame.right_moves_nim
 
-theorem move_left_nim_heq (o : Ordinal) : HEq (nim o).moveLeft fun i : o.out.α => nim (typein (· < ·) i) := by
+theorem move_left_nim_heq (o : Ordinal) :
+    HEq (nim o).moveLeft fun i : o.out.α => nim (typein (· < ·) i) := by
   rw [nim_def]
   rfl
 #align pgame.move_left_nim_heq Pgame.move_left_nim_heq
 
-theorem move_right_nim_heq (o : Ordinal) : HEq (nim o).moveRight fun i : o.out.α => nim (typein (· < ·) i) := by
+theorem move_right_nim_heq (o : Ordinal) :
+    HEq (nim o).moveRight fun i : o.out.α => nim (typein (· < ·) i) := by
   rw [nim_def]
   rfl
 #align pgame.move_right_nim_heq Pgame.move_right_nim_heq
@@ -89,17 +92,20 @@ noncomputable def toRightMovesNim {o : Ordinal} : Set.iio o ≃ (nim o).RightMov
 #align pgame.to_right_moves_nim Pgame.toRightMovesNim
 
 @[simp]
-theorem to_left_moves_nim_symm_lt {o : Ordinal} (i : (nim o).LeftMoves) : ↑(toLeftMovesNim.symm i) < o :=
+theorem to_left_moves_nim_symm_lt {o : Ordinal} (i : (nim o).LeftMoves) :
+    ↑(toLeftMovesNim.symm i) < o :=
   (toLeftMovesNim.symm i).Prop
 #align pgame.to_left_moves_nim_symm_lt Pgame.to_left_moves_nim_symm_lt
 
 @[simp]
-theorem to_right_moves_nim_symm_lt {o : Ordinal} (i : (nim o).RightMoves) : ↑(toRightMovesNim.symm i) < o :=
+theorem to_right_moves_nim_symm_lt {o : Ordinal} (i : (nim o).RightMoves) :
+    ↑(toRightMovesNim.symm i) < o :=
   (toRightMovesNim.symm i).Prop
 #align pgame.to_right_moves_nim_symm_lt Pgame.to_right_moves_nim_symm_lt
 
 @[simp]
-theorem move_left_nim' {o : Ordinal.{u}} (i) : (nim o).moveLeft i = nim (toLeftMovesNim.symm i).val :=
+theorem move_left_nim' {o : Ordinal.{u}} (i) :
+    (nim o).moveLeft i = nim (toLeftMovesNim.symm i).val :=
   (congr_heq (move_left_nim_heq o).symm (cast_heq _ i)).symm
 #align pgame.move_left_nim' Pgame.move_left_nim'
 
@@ -107,7 +113,8 @@ theorem move_left_nim {o : Ordinal} (i) : (nim o).moveLeft (toLeftMovesNim i) = 
 #align pgame.move_left_nim Pgame.move_left_nim
 
 @[simp]
-theorem move_right_nim' {o : Ordinal} (i) : (nim o).moveRight i = nim (toRightMovesNim.symm i).val :=
+theorem move_right_nim' {o : Ordinal} (i) :
+    (nim o).moveRight i = nim (toRightMovesNim.symm i).val :=
   (congr_heq (move_right_nim_heq o).symm (cast_heq _ i)).symm
 #align pgame.move_right_nim' Pgame.move_right_nim'
 
@@ -158,21 +165,25 @@ noncomputable instance uniqueNimOneRightMoves : Unique (nim 1).RightMoves :=
 #align pgame.unique_nim_one_right_moves Pgame.uniqueNimOneRightMoves
 
 @[simp]
-theorem default_nim_one_left_moves_eq : (default : (nim 1).LeftMoves) = @toLeftMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
+theorem default_nim_one_left_moves_eq :
+    (default : (nim 1).LeftMoves) = @toLeftMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
   rfl
 #align pgame.default_nim_one_left_moves_eq Pgame.default_nim_one_left_moves_eq
 
 @[simp]
-theorem default_nim_one_right_moves_eq : (default : (nim 1).RightMoves) = @toRightMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
+theorem default_nim_one_right_moves_eq :
+    (default : (nim 1).RightMoves) = @toRightMovesNim 1 ⟨0, Ordinal.zero_lt_one⟩ :=
   rfl
 #align pgame.default_nim_one_right_moves_eq Pgame.default_nim_one_right_moves_eq
 
 @[simp]
-theorem to_left_moves_nim_one_symm (i) : (@toLeftMovesNim 1).symm i = ⟨0, Ordinal.zero_lt_one⟩ := by simp
+theorem to_left_moves_nim_one_symm (i) : (@toLeftMovesNim 1).symm i = ⟨0, Ordinal.zero_lt_one⟩ := by
+  simp
 #align pgame.to_left_moves_nim_one_symm Pgame.to_left_moves_nim_one_symm
 
 @[simp]
-theorem to_right_moves_nim_one_symm (i) : (@toRightMovesNim 1).symm i = ⟨0, Ordinal.zero_lt_one⟩ := by simp
+theorem to_right_moves_nim_one_symm (i) : (@toRightMovesNim 1).symm i = ⟨0, Ordinal.zero_lt_one⟩ :=
+  by simp
 #align pgame.to_right_moves_nim_one_symm Pgame.to_right_moves_nim_one_symm
 
 theorem nim_one_move_left (x) : (nim 1).moveLeft x = nim 0 := by simp
@@ -185,12 +196,8 @@ theorem nim_one_move_right (x) : (nim 1).moveRight x = nim 0 := by simp
 def nimOneRelabelling : nim 1 ≡r star := by
   rw [nim_def]
   refine' ⟨_, _, fun i => _, fun j => _⟩
-  any_goals
-  dsimp
-  apply Equiv.equivOfUnique
-  all_goals
-  simp
-  exact nim_zero_relabelling
+  any_goals dsimp; apply Equiv.equivOfUnique
+  all_goals simp; exact nim_zero_relabelling
 #align pgame.nim_one_relabelling Pgame.nimOneRelabelling
 
 theorem nim_one_equiv : nim 1 ≈ star :=
@@ -210,8 +217,7 @@ theorem nim_birthday (o : Ordinal) : (nim o).birthday = o := by
 @[simp]
 theorem neg_nim (o : Ordinal) : -nim o = nim o := by
   induction' o using Ordinal.induction with o IH
-  rw [nim_def]
-  dsimp <;> congr <;> funext i <;> exact IH _ (Ordinal.typein_lt_self i)
+  rw [nim_def]; dsimp <;> congr <;> funext i <;> exact IH _ (Ordinal.typein_lt_self i)
 #align pgame.neg_nim Pgame.neg_nim
 
 instance nim_impartial (o : Ordinal) : Impartial (nim o) := by
@@ -275,8 +281,8 @@ noncomputable def grundyValue : ∀ G : Pgame.{u}, Ordinal.{u}
   | G => Ordinal.mex.{u, u} fun i => grundy_value (G.moveLeft i)decreasing_by pgame_wf_tac
 #align pgame.grundy_value Pgame.grundyValue
 
-theorem grundy_value_eq_mex_left (G : Pgame) : grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveLeft i) :=
-  by rw [grundy_value]
+theorem grundy_value_eq_mex_left (G : Pgame) :
+    grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveLeft i) := by rw [grundy_value]
 #align pgame.grundy_value_eq_mex_left Pgame.grundy_value_eq_mex_left
 
 /-- The Sprague-Grundy theorem which states that every impartial game is equivalent to a game of
@@ -303,11 +309,14 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       rw [nim_def]
       intro i₂
       have h' :
-        ∃ i : G.left_moves, grundy_value (G.move_left i) = Ordinal.typein (Quotient.out (grundy_value G)).R i₂ := by
+        ∃ i : G.left_moves,
+          grundy_value (G.move_left i) = Ordinal.typein (Quotient.out (grundy_value G)).R i₂ :=
+        by
         revert i₂
         rw [grundy_value_eq_mex_left]
         intro i₂
-        have hnotin : _ ∉ _ := fun hin => (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (cInf_le' hin)
+        have hnotin : _ ∉ _ := fun hin =>
+          (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (cInf_le' hin)
         simpa using hnotin
       cases' h' with i hi
       use to_left_moves_add (Sum.inl i)
@@ -318,7 +327,8 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
   pgame_wf_tac
 #align pgame.equiv_nim_grundy_value Pgame.equiv_nim_grundy_value
 
-theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} : grundyValue G = o ↔ (G ≈ nim o) :=
+theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} :
+    grundyValue G = o ↔ (G ≈ nim o) :=
   ⟨by
     rintro rfl
     exact equiv_nim_grundy_value G, by
@@ -332,7 +342,8 @@ theorem nim_grundy_value (o : Ordinal.{u}) : grundyValue (nim o) = o :=
   grundy_value_eq_iff_equiv_nim.2 Pgame.equiv_rfl
 #align pgame.nim_grundy_value Pgame.nim_grundy_value
 
-theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] : grundyValue G = grundyValue H ↔ (G ≈ H) :=
+theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] :
+    grundyValue G = grundyValue H ↔ (G ≈ H) :=
   grundy_value_eq_iff_equiv_nim.trans (equiv_congr_left.1 (equiv_nim_grundy_value H) _).symm
 #align pgame.grundy_value_eq_iff_equiv Pgame.grundy_value_eq_iff_equiv
 
@@ -356,7 +367,8 @@ theorem grundy_value_neg (G : Pgame) [G.Impartial] : grundyValue (-G) = grundyVa
 #align pgame.grundy_value_neg Pgame.grundy_value_neg
 
 theorem grundy_value_eq_mex_right :
-    ∀ (G : Pgame) [G.Impartial], grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveRight i)
+    ∀ (G : Pgame) [G.Impartial],
+      grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveRight i)
   | ⟨l, r, L, R⟩ => by
     intro H
     rw [← grundy_value_neg, grundy_value_eq_mex_left]
@@ -367,7 +379,8 @@ theorem grundy_value_eq_mex_right :
 #align pgame.grundy_value_eq_mex_right Pgame.grundy_value_eq_mex_right
 
 @[simp]
-theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m := by
+theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m :=
+  by
   induction' n using Nat.strong_induction_on with n hn generalizing m
   induction' m using Nat.strong_induction_on with m hm
   rw [grundy_value_eq_mex_left]
@@ -397,7 +410,10 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     rw [Ordinal.nat_cast_inj] at h
     try rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
     exact hk.ne (Nat.lxor_left_injective h)
-  have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∈ Set.range fun i => grundy_value ((nim n + nim m).moveLeft i) := by
+  have h₁ :
+    ∀ u : Ordinal,
+      u < Nat.lxor n m → u ∈ Set.range fun i => grundy_value ((nim n + nim m).moveLeft i) :=
+    by
     -- Take any natural number `u` less than `n xor m`.
     intro ou hu
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_trans hu (Ordinal.nat_lt_omega _))
@@ -428,8 +444,8 @@ theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor n m) := 
   rw [← grundy_value_eq_iff_equiv_nim, grundy_value_nim_add_nim]
 #align pgame.nim_add_nim_equiv Pgame.nim_add_nim_equiv
 
-theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (hG : grundyValue G = n)
-    (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
+theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ}
+    (hG : grundyValue G = n) (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
   rw [← nim_grundy_value (Nat.lxor n m), grundy_value_eq_iff_equiv]
   refine' Equiv.trans _ nim_add_nim_equiv
   convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]

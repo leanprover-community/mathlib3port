@@ -131,18 +131,21 @@ end
 
 instance InducedCategory.groupoid {C : Type u} (D : Type u₂) [Groupoid.{v} D] (F : C → D) :
     Groupoid.{v} (InducedCategory D F) :=
-  { InducedCategory.category F with inv := fun X Y f => Groupoid.inv f, inv_comp' := fun X Y f => Groupoid.inv_comp f,
-    comp_inv' := fun X Y f => Groupoid.comp_inv f }
+  { InducedCategory.category F with inv := fun X Y f => Groupoid.inv f,
+    inv_comp' := fun X Y f => Groupoid.inv_comp f, comp_inv' := fun X Y f => Groupoid.comp_inv f }
 #align category_theory.induced_category.groupoid CategoryTheory.InducedCategory.groupoid
 
 section
 
 instance groupoidPi {I : Type u} {J : I → Type u₂} [∀ i, Groupoid.{v} (J i)] :
-    Groupoid.{max u v} (∀ i : I, J i) where inv (x y : ∀ i, J i) (f : ∀ i, x i ⟶ y i) := fun i : I => Groupoid.inv (f i)
+    Groupoid.{max u v}
+      (∀ i : I,
+        J i) where inv (x y : ∀ i, J i) (f : ∀ i, x i ⟶ y i) := fun i : I => Groupoid.inv (f i)
 #align category_theory.groupoid_pi CategoryTheory.groupoidPi
 
 instance groupoidProd {α : Type u} {β : Type v} [Groupoid.{u₂} α] [Groupoid.{v₂} β] :
-    Groupoid.{max u₂ v₂} (α × β) where inv (x y : α × β) (f : x ⟶ y) := (Groupoid.inv f.1, Groupoid.inv f.2)
+    Groupoid.{max u₂ v₂}
+      (α × β) where inv (x y : α × β) (f : x ⟶ y) := (Groupoid.inv f.1, Groupoid.inv f.2)
 #align category_theory.groupoid_prod CategoryTheory.groupoidProd
 
 end

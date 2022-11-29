@@ -18,7 +18,8 @@ theorem dvd_prod [CommMonoid α] {s : Multiset α} {a : α} : a ∈ s → a ∣ 
 #align multiset.dvd_prod Multiset.dvd_prod
 
 @[to_additive]
-theorem prod_eq_one_iff [CanonicallyOrderedMonoid α] {m : Multiset α} : m.Prod = 1 ↔ ∀ x ∈ m, x = (1 : α) :=
+theorem prod_eq_one_iff [CanonicallyOrderedMonoid α] {m : Multiset α} :
+    m.Prod = 1 ↔ ∀ x ∈ m, x = (1 : α) :=
   (Quotient.induction_on m) fun l => by simpa using List.prod_eq_one_iff l
 #align multiset.prod_eq_one_iff Multiset.prod_eq_one_iff
 
@@ -30,7 +31,8 @@ namespace Commute
 
 variable [NonUnitalNonAssocSemiring α] {a : α} {s : Multiset ι} {f : ι → α}
 
-theorem multiset_sum_right (s : Multiset α) (a : α) (h : ∀ b ∈ s, Commute a b) : Commute a s.Sum := by
+theorem multiset_sum_right (s : Multiset α) (a : α) (h : ∀ b ∈ s, Commute a b) : Commute a s.Sum :=
+  by
   induction s using Quotient.induction_on
   rw [quot_mk_to_coe, coe_sum]
   exact Commute.list_sum_right _ _ h

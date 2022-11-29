@@ -58,7 +58,8 @@ theorem lcm_add (s₁ s₂ : Multiset α) : (s₁ + s₂).lcm = GcdMonoid.lcm s�
 #align multiset.lcm_add Multiset.lcm_add
 
 theorem lcm_dvd {s : Multiset α} {a : α} : s.lcm ∣ a ↔ ∀ b ∈ s, b ∣ a :=
-  Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp, forall_and, lcm_dvd_iff])
+  Multiset.induction_on s (by simp)
+    (by simp (config := { contextual := true }) [or_imp, forall_and, lcm_dvd_iff])
 #align multiset.lcm_dvd Multiset.lcm_dvd
 
 theorem dvd_lcm {s : Multiset α} {a : α} (h : a ∈ s) : a ∣ s.lcm :=
@@ -145,7 +146,8 @@ theorem gcd_add (s₁ s₂ : Multiset α) : (s₁ + s₂).gcd = GcdMonoid.gcd s�
 #align multiset.gcd_add Multiset.gcd_add
 
 theorem dvd_gcd {s : Multiset α} {a : α} : a ∣ s.gcd ↔ ∀ b ∈ s, a ∣ b :=
-  Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp, forall_and, dvd_gcd_iff])
+  Multiset.induction_on s (by simp)
+    (by simp (config := { contextual := true }) [or_imp, forall_and, dvd_gcd_iff])
 #align multiset.dvd_gcd Multiset.dvd_gcd
 
 theorem gcd_dvd {s : Multiset α} {a : α} (h : a ∈ s) : s.gcd ∣ a :=
@@ -219,14 +221,17 @@ theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid
 
 end
 
-theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α)) (ht : s = t.map ((· * ·) s.gcd)) : t.gcd = 1 :=
-  ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <| by
+theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α))
+    (ht : s = t.map ((· * ·) s.gcd)) : t.gcd = 1 :=
+  ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by
+        conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <|
+    by
     contrapose! hs
     exact s.gcd_eq_zero_iff.1 hs
 #align multiset.extract_gcd' Multiset.extract_gcd'
 
-theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) : ∃ t : Multiset α, s = t.map ((· * ·) s.gcd) ∧ t.gcd = 1 := by
-  classical
+theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) :
+    ∃ t : Multiset α, s = t.map ((· * ·) s.gcd) ∧ t.gcd = 1 := by classical
   by_cases h : ∀ x ∈ s, x = (0 : α)
   · use repeat 1 s.card
     rw [map_repeat, eq_repeat, mul_one, s.gcd_eq_zero_iff.2 h, ← nsmul_singleton, ← gcd_dedup]

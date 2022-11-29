@@ -52,7 +52,8 @@ theorem symm {H K : Subgroup G} : Commensurable H K → Commensurable K H :=
 #align commensurable.symm Commensurable.symm
 
 @[trans]
-theorem trans {H K L : Subgroup G} (hhk : Commensurable H K) (hkl : Commensurable K L) : Commensurable H L :=
+theorem trans {H K L : Subgroup G} (hhk : Commensurable H K) (hkl : Commensurable K L) :
+    Commensurable H L :=
   ⟨Subgroup.relindex_ne_zero_trans hhk.1 hkl.1, Subgroup.relindex_ne_zero_trans hkl.2 hhk.2⟩
 #align commensurable.trans Commensurable.trans
 
@@ -61,20 +62,23 @@ theorem equivalence : Equivalence (@Commensurable G _) :=
 #align commensurable.equivalence Commensurable.equivalence
 
 /-- Equivalence of `K/H ⊓ K` with `gKg⁻¹/gHg⁻¹ ⊓ gKg⁻¹`-/
-def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) : K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
+def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
+    K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
   Quotient.congr (K.equivSmul g).toEquiv fun a b => by
-    rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq', Subgroup.mem_subgroup_of,
-      Subgroup.mem_subgroup_of, MulEquiv.to_equiv_eq_coe, MulEquiv.coe_to_equiv, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
-      Subgroup.equiv_smul_apply_coe, Subgroup.smul_mem_pointwise_smul_iff]
+    rw [← Quotient.eq', ← Quotient.eq', QuotientGroup.eq', QuotientGroup.eq',
+      Subgroup.mem_subgroup_of, Subgroup.mem_subgroup_of, MulEquiv.to_equiv_eq_coe,
+      MulEquiv.coe_to_equiv, ← MulEquiv.map_inv, ← MulEquiv.map_mul, Subgroup.equiv_smul_apply_coe,
+      Subgroup.smul_mem_pointwise_smul_iff]
 #align commensurable.quot_conj_equiv Commensurable.quotConjEquiv
 
-theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) : Commensurable H K ↔ Commensurable (g • H) (g • K) :=
+theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) :
+    Commensurable H K ↔ Commensurable (g • H) (g • K) :=
   and_congr (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv H K g))))
     (not_iff_not.mpr (Eq.congr_left (Cardinal.to_nat_congr (quotConjEquiv K H g))))
 #align commensurable.commensurable_conj Commensurable.commensurable_conj
 
-theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) : Commensurable (g • H) H ↔ Commensurable H (g⁻¹ • H) := by
-  rw [commensurable_conj, inv_smul_smul]
+theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) :
+    Commensurable (g • H) H ↔ Commensurable H (g⁻¹ • H) := by rw [commensurable_conj, inv_smul_smul]
 #align commensurable.commensurable_inv Commensurable.commensurable_inv
 
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : conj_aut G`
@@ -95,7 +99,8 @@ def commensurator (H : Subgroup G) : Subgroup G :=
 #align commensurable.commensurator Commensurable.commensurator
 
 @[simp]
-theorem commensurator'_mem_iff (H : Subgroup G) (g : ConjAct G) : g ∈ commensurator' H ↔ Commensurable (g • H) H :=
+theorem commensurator'_mem_iff (H : Subgroup G) (g : ConjAct G) :
+    g ∈ commensurator' H ↔ Commensurable (g • H) H :=
   Iff.rfl
 #align commensurable.commensurator'_mem_iff Commensurable.commensurator'_mem_iff
 

@@ -89,8 +89,8 @@ def Matrix.Represents (A : Matrix ι ι R) (f : Module.EndCat R M) : Prop :=
 
 variable {b}
 
-theorem Matrix.Represents.congr_fun {A : Matrix ι ι R} {f : Module.EndCat R M} (h : A.Represents b f) (x) :
-    Fintype.total R R b (A.mulVec x) = f (Fintype.total R R b x) :=
+theorem Matrix.Represents.congr_fun {A : Matrix ι ι R} {f : Module.EndCat R M}
+    (h : A.Represents b f) (x) : Fintype.total R R b (A.mulVec x) = f (Fintype.total R R b x) :=
   LinearMap.congr_fun h x
 #align matrix.represents.congr_fun Matrix.Represents.congr_fun
 
@@ -114,8 +114,8 @@ theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :
     
 #align matrix.represents_iff' Matrix.represents_iff'
 
-theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M} (h : A.Represents b f)
-    (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') := by
+theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
+    (h : A.Represents b f) (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') := by
   delta Matrix.Represents PiToModule.fromMatrix
   rw [LinearMap.comp_apply, AlgEquiv.to_linear_map_apply, map_mul]
   ext
@@ -131,20 +131,17 @@ theorem Matrix.Represents.one : (1 : Matrix ι ι R).Represents b 1 := by
   rfl
 #align matrix.represents.one Matrix.Represents.one
 
-theorem Matrix.Represents.add {A A' : Matrix ι ι R} {f f' : Module.EndCat R M} (h : A.Represents b f)
-    (h' : Matrix.Represents b A' f') : (A + A').Represents b (f + f') := by
-  delta Matrix.Represents at h h'⊢
-  rw [map_add, map_add, h, h']
+theorem Matrix.Represents.add {A A' : Matrix ι ι R} {f f' : Module.EndCat R M}
+    (h : A.Represents b f) (h' : Matrix.Represents b A' f') : (A + A').Represents b (f + f') := by
+  delta Matrix.Represents at h h'⊢; rw [map_add, map_add, h, h']
 #align matrix.represents.add Matrix.Represents.add
 
-theorem Matrix.Represents.zero : (0 : Matrix ι ι R).Represents b 0 := by
-  delta Matrix.Represents
+theorem Matrix.Represents.zero : (0 : Matrix ι ι R).Represents b 0 := by delta Matrix.Represents;
   rw [map_zero, map_zero]
 #align matrix.represents.zero Matrix.Represents.zero
 
-theorem Matrix.Represents.smul {A : Matrix ι ι R} {f : Module.EndCat R M} (h : A.Represents b f) (r : R) :
-    (r • A).Represents b (r • f) := by
-  delta Matrix.Represents at h⊢
+theorem Matrix.Represents.smul {A : Matrix ι ι R} {f : Module.EndCat R M} (h : A.Represents b f)
+    (r : R) : (r • A).Represents b (r • f) := by delta Matrix.Represents at h⊢;
   rw [map_smul, map_smul, h]
 #align matrix.represents.smul Matrix.Represents.smul
 
@@ -167,13 +164,15 @@ def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R) where
 #align matrix.is_representation Matrix.isRepresentation
 
 /-- The map sending a matrix to the endomorphism it represents. This is an `R`-algebra morphism. -/
-noncomputable def Matrix.isRepresentation.toEnd : Matrix.isRepresentation R b →ₐ[R] Module.EndCat R M where
+noncomputable def Matrix.isRepresentation.toEnd :
+    Matrix.isRepresentation R b →ₐ[R] Module.EndCat R M where
   toFun A := A.2.some
   map_one' := (1 : Matrix.isRepresentation R b).2.some_spec.Eq hb Matrix.Represents.one
   map_mul' A₁ A₂ := (A₁ * A₂).2.some_spec.Eq hb (A₁.2.some_spec.mul A₂.2.some_spec)
   map_zero' := (0 : Matrix.isRepresentation R b).2.some_spec.Eq hb Matrix.Represents.zero
   map_add' A₁ A₂ := (A₁ + A₂).2.some_spec.Eq hb (A₁.2.some_spec.add A₂.2.some_spec)
-  commutes' r := (r • 1 : Matrix.isRepresentation R b).2.some_spec.Eq hb (Matrix.Represents.one.smul r)
+  commutes' r :=
+    (r • 1 : Matrix.isRepresentation R b).2.some_spec.Eq hb (Matrix.Represents.one.smul r)
 #align matrix.is_representation.to_End Matrix.isRepresentation.toEnd
 
 theorem Matrix.isRepresentation.to_End_represents (A : Matrix.isRepresentation R b) :
@@ -181,13 +180,16 @@ theorem Matrix.isRepresentation.to_End_represents (A : Matrix.isRepresentation R
   A.2.some_spec
 #align matrix.is_representation.to_End_represents Matrix.isRepresentation.to_End_represents
 
-theorem Matrix.isRepresentation.eq_to_End_of_represents (A : Matrix.isRepresentation R b) {f : Module.EndCat R M}
-    (h : (A : Matrix ι ι R).Represents b f) : Matrix.isRepresentation.toEnd R b hb A = f :=
+theorem Matrix.isRepresentation.eq_to_End_of_represents (A : Matrix.isRepresentation R b)
+    {f : Module.EndCat R M} (h : (A : Matrix ι ι R).Represents b f) :
+    Matrix.isRepresentation.toEnd R b hb A = f :=
   A.2.some_spec.Eq hb h
-#align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_to_End_of_represents
+#align
+  matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_to_End_of_represents
 
-theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
-    ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I := by
+theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) (I : Ideal R)
+    (hI : f.range ≤ I • ⊤) : ∃ M, Matrix.isRepresentation.toEnd R b hb M = f ∧ ∀ i j, M.1 i j ∈ I :=
+  by
   have : ∀ x, f x ∈ (Ideal.finsuppTotal ι M I b).range := by
     rw [Ideal.range_finsupp_total, hb]
     exact fun x => hI (f.mem_range_self x)
@@ -200,11 +202,13 @@ theorem Matrix.isRepresentation.to_End_exists_mem_ideal (f : Module.EndCat R M) 
     specialize hbM' (b j)
     rwa [Ideal.finsupp_total_apply_eq_of_fintype] at hbM'
   exact
-    ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_to_End_of_represents R b hb ⟨A, f, this⟩ this, fun i j =>
-      (bM' (b j) i).Prop⟩
-#align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.to_End_exists_mem_ideal
+    ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_to_End_of_represents R b hb ⟨A, f, this⟩ this,
+      fun i j => (bM' (b j) i).Prop⟩
+#align
+  matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.to_End_exists_mem_ideal
 
-theorem Matrix.isRepresentation.to_End_surjective : Function.Surjective (Matrix.isRepresentation.toEnd R b hb) := by
+theorem Matrix.isRepresentation.to_End_surjective :
+    Function.Surjective (Matrix.isRepresentation.toEnd R b hb) := by
   intro f
   obtain ⟨M, e, -⟩ := Matrix.isRepresentation.to_End_exists_mem_ideal R b hb f ⊤ _
   exact ⟨M, e⟩
@@ -220,9 +224,10 @@ exists some `n` and some `aᵢ ∈ Iⁱ` such that `φⁿ + a₁ φⁿ⁻¹ + �
 This is the version found in Eisenbud 4.3, which is slightly weaker than Matsumura 2.1
 (this lacks the constraint on `n`), and is slightly stronger than Atiyah-Macdonald 2.4.
 -/
-theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul [Module.Finite R M]
-    (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
-    ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by classical
+theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul
+    [Module.Finite R M] (f : Module.EndCat R M) (I : Ideal R) (hI : f.range ≤ I • ⊤) :
+    ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
+  classical
   cases subsingleton_or_nontrivial R
   · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
     
@@ -237,7 +242,8 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
   · rw [Polynomial.aeval_alg_hom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
     congr 1
     ext1
-    rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
+    rw [Polynomial.aeval_subalgebra_coe, Subtype.val_eq_coe, Matrix.aeval_self_charpoly,
+      Subalgebra.coe_zero]
     
   · infer_instance
     
@@ -246,7 +252,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
 
 theorem LinearMap.exists_monic_and_aeval_eq_zero [Module.Finite R M] (f : Module.EndCat R M) :
     ∃ p : R[X], p.Monic ∧ Polynomial.aeval f p = 0 :=
-  (LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul R f ⊤ (by simp)).imp fun p h =>
-    h.imp_right And.right
+  (LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_smul R f ⊤ (by simp)).imp
+    fun p h => h.imp_right And.right
 #align linear_map.exists_monic_and_aeval_eq_zero LinearMap.exists_monic_and_aeval_eq_zero
 

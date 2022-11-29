@@ -46,7 +46,8 @@ end One
 
 section Group
 
-variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {s t : Set α}
+variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+  {s t : Set α}
 
 @[to_additive]
 theorem cSup_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : sup s⁻¹ = (inf s)⁻¹ := by
@@ -112,7 +113,8 @@ end One
 
 section Group
 
-variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)] (s t : Set α)
+variable [Group α] [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
+  (s t : Set α)
 
 @[to_additive]
 theorem Sup_inv (s : Set α) : sup s⁻¹ = (inf s)⁻¹ := by

@@ -102,7 +102,8 @@ section InsertErase
 variable [DecidableEq α]
 
 @[simp]
-theorem card_insert_of_not_mem (h : a ∉ s) : (insert a s).card = s.card + 1 := by rw [← cons_eq_insert _ _ h, card_cons]
+theorem card_insert_of_not_mem (h : a ∉ s) : (insert a s).card = s.card + 1 := by
+  rw [← cons_eq_insert _ _ h, card_cons]
 #align finset.card_insert_of_not_mem Finset.card_insert_of_not_mem
 
 theorem card_insert_of_mem (h : a ∈ s) : card (insert a s) = s.card := by rw [insert_eq_of_mem h]
@@ -189,7 +190,8 @@ theorem Multiset.to_finset_card_le : m.toFinset.card ≤ m.card :=
   card_le_of_le <| dedup_le _
 #align multiset.to_finset_card_le Multiset.to_finset_card_le
 
-theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) : m.toFinset.card = m.card :=
+theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) :
+    m.toFinset.card = m.card :=
   congr_arg card <| Multiset.dedup_eq_self.mpr h
 #align multiset.to_finset_card_of_nodup Multiset.to_finset_card_of_nodup
 
@@ -225,7 +227,8 @@ theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.image f).
   simp only [card, image_val_of_inj_on H, card_map]
 #align finset.card_image_of_inj_on Finset.card_image_of_inj_on
 
-theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card) : Set.InjOn f s := by
+theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.image f).card = s.card) : Set.InjOn f s :=
+  by
   change (s.1.map f).dedup.card = s.1.card at H
   have : (s.1.map f).dedup = s.1.map f := by
     refine' Multiset.eq_of_le_of_card_le (Multiset.dedup_le _) _
@@ -239,7 +242,8 @@ theorem card_image_iff [DecidableEq β] : (s.image f).card = s.card ↔ Set.InjO
   ⟨inj_on_of_card_image_eq, card_image_of_inj_on⟩
 #align finset.card_image_iff Finset.card_image_iff
 
-theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) : (s.image f).card = s.card :=
+theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) :
+    (s.image f).card = s.card :=
   card_image_of_inj_on fun x _ y _ h => H h
 #align finset.card_image_of_injective Finset.card_image_of_injective
 
@@ -254,11 +258,12 @@ theorem card_map (f : α ↪ β) : (s.map f).card = s.card :=
 #align finset.card_map Finset.card_map
 
 @[simp]
-theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) : (s.Subtype p).card = (s.filter p).card := by
-  simp [Finset.subtype]
+theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) :
+    (s.Subtype p).card = (s.filter p).card := by simp [Finset.subtype]
 #align finset.card_subtype Finset.card_subtype
 
-theorem card_filter_le (s : Finset α) (p : α → Prop) [DecidablePred p] : (s.filter p).card ≤ s.card :=
+theorem card_filter_le (s : Finset α) (p : α → Prop) [DecidablePred p] :
+    (s.filter p).card ≤ s.card :=
   card_le_of_subset <| filter_subset _ _
 #align finset.card_filter_le Finset.card_filter_le
 
@@ -270,8 +275,8 @@ theorem map_eq_of_subset {f : α ↪ α} (hs : s.map f ⊆ s) : s.map f = s :=
   eq_of_subset_of_card_le hs (card_map _).ge
 #align finset.map_eq_of_subset Finset.map_eq_of_subset
 
-theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).card = s.card) (x : α) (hx : x ∈ s) : p x :=
-  by
+theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).card = s.card) (x : α)
+    (hx : x ∈ s) : p x := by
   rw [← eq_of_subset_of_card_le (s.filter_subset p) h.ge, mem_filter] at hx
   exact hx.2
 #align finset.filter_card_eq Finset.filter_card_eq
@@ -281,8 +286,9 @@ theorem card_lt_card (h : s ⊂ t) : s.card < t.card :=
 #align finset.card_lt_card Finset.card_lt_card
 
 theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i, ∃ h : i < n, f i h = a)
-    (hf' : ∀ (i) (h : i < n), f i h ∈ s) (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) :
-    s.card = n := by classical
+    (hf' : ∀ (i) (h : i < n), f i h ∈ s)
+    (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j) : s.card = n := by
+  classical
   have : ∀ a : α, a ∈ s ↔ ∃ (i : _)(hi : i ∈ range n), f i (mem_range.1 hi) = a := fun a =>
     ⟨fun ha =>
       let ⟨i, hi, Eq⟩ := hf a ha
@@ -293,7 +299,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
   calc
     s.card = card ((range n).attach.image fun i => f i.1 (mem_range.1 i.2)) := by rw [this]
     _ = card (range n).attach :=
-      (card_image_of_injective _) fun ⟨i, hi⟩ ⟨j, hj⟩ eq => Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq
+      (card_image_of_injective _) fun ⟨i, hi⟩ ⟨j, hj⟩ eq =>
+        Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq
     _ = card (range n) := card_attach
     _ = n := card_range n
     
@@ -310,7 +317,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
         (Term.explicitBinder
          "("
          [`f]
-         [":" (Std.ExtendedBinder.«term∀__,_» "∀" (Lean.binderIdent `a) («binderTerm∈_» "∈" `s) "," `β)]
+         [":"
+          (Std.ExtendedBinder.«term∀__,_» "∀" (Lean.binderIdent `a) («binderTerm∈_» "∈" `s) "," `β)]
          []
          ")")
         (Term.explicitBinder
@@ -328,7 +336,10 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
            [`a `b `ha `hb]
            []
            ","
-           (Term.arrow («term_=_» (Term.app `f [`a `ha]) "=" (Term.app `f [`b `hb])) "→" («term_=_» `a "=" `b)))]
+           (Term.arrow
+            («term_=_» (Term.app `f [`a `ha]) "=" (Term.app `f [`b `hb]))
+            "→"
+            («term_=_» `a "=" `b)))]
          []
          ")")
         (Term.explicitBinder
@@ -342,7 +353,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
            ","
            («term∃_,_»
             "∃"
-            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a) (Lean.binderIdent `ha)] []))
+            (Lean.explicitBinders
+             (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a) (Lean.binderIdent `ha)] []))
             ","
             («term_=_» (Term.app `f [`a `ha]) "=" `b)))]
          []
@@ -373,7 +385,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                      [`a]
                      [(Term.typeSpec ":" («term{_:_//_}» "{" `a [] "//" («term_∈_» `a "∈" `s) "}"))]
                      "=>"
-                     (Term.app `f [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
+                     (Term.app
+                      `f
+                      [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
                  "."
                  `card))
                ":="
@@ -390,7 +404,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                      («term_<|_»
                       `Subtype.eq
                       "<|"
-                      (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
+                      (Term.app
+                       `h₂
+                       [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
               (calcStep
                («term_=_» (Term.hole "_") "=" `t.card)
                ":="
@@ -423,7 +439,10 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                             ":="
                             (Term.app (Term.proj `mem_image "." (fieldIdx "1")) [`h])))
                           []
-                          (Term.subst `ha₂ "▸" [(Term.app `h₁ [(Term.hole "_") (Term.hole "_")])]))))
+                          (Term.subst
+                           `ha₂
+                           "▸"
+                           [(Term.app `h₁ [(Term.hole "_") (Term.hole "_")])]))))
                        ","
                        (Term.fun
                         "fun"
@@ -451,7 +470,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                                "by"
                                (Tactic.tacticSeq
                                 (Tactic.tacticSeq1Indented
-                                 [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                                 [(Tactic.simp
+                                   "simp"
+                                   []
+                                   []
+                                   []
+                                   ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                                   [])])))]
                              "⟩")]))))]
                       "⟩")))])]))]))])))
        [])
@@ -483,7 +508,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                     [`a]
                     [(Term.typeSpec ":" («term{_:_//_}» "{" `a [] "//" («term_∈_» `a "∈" `s) "}"))]
                     "=>"
-                    (Term.app `f [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
+                    (Term.app
+                     `f
+                     [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
                 "."
                 `card))
               ":="
@@ -500,7 +527,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                     («term_<|_»
                      `Subtype.eq
                      "<|"
-                     (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
+                     (Term.app
+                      `h₂
+                      [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
              (calcStep
               («term_=_» (Term.hole "_") "=" `t.card)
               ":="
@@ -561,7 +590,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                               "by"
                               (Tactic.tacticSeq
                                (Tactic.tacticSeq1Indented
-                                [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                                [(Tactic.simp
+                                  "simp"
+                                  []
+                                  []
+                                  []
+                                  ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                                  [])])))]
                             "⟩")]))))]
                      "⟩")))])]))]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -585,7 +620,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                 [`a]
                 [(Term.typeSpec ":" («term{_:_//_}» "{" `a [] "//" («term_∈_» `a "∈" `s) "}"))]
                 "=>"
-                (Term.app `f [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
+                (Term.app
+                 `f
+                 [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
             "."
             `card))
           ":="
@@ -602,7 +639,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                 («term_<|_»
                  `Subtype.eq
                  "<|"
-                 (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
+                 (Term.app
+                  `h₂
+                  [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
          (calcStep
           («term_=_» (Term.hole "_") "=" `t.card)
           ":="
@@ -663,7 +702,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                           "by"
                           (Tactic.tacticSeq
                            (Tactic.tacticSeq1Indented
-                            [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                            [(Tactic.simp
+                              "simp"
+                              []
+                              []
+                              []
+                              ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                              [])])))]
                         "⟩")]))))]
                  "⟩")))])]))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -683,7 +728,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                [`a]
                [(Term.typeSpec ":" («term{_:_//_}» "{" `a [] "//" («term_∈_» `a "∈" `s) "}"))]
                "=>"
-               (Term.app `f [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
+               (Term.app
+                `f
+                [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
            "."
            `card))
          ":="
@@ -700,7 +747,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                («term_<|_»
                 `Subtype.eq
                 "<|"
-                (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
+                (Term.app
+                 `h₂
+                 [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])]))
         (calcStep
          («term_=_» (Term.hole "_") "=" `t.card)
          ":="
@@ -761,7 +810,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                          "by"
                          (Tactic.tacticSeq
                           (Tactic.tacticSeq1Indented
-                           [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                           [(Tactic.simp
+                             "simp"
+                             []
+                             []
+                             []
+                             ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                             [])])))]
                        "⟩")]))))]
                 "⟩")))])]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -822,7 +877,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                       "by"
                       (Tactic.tacticSeq
                        (Tactic.tacticSeq1Indented
-                        [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                        [(Tactic.simp
+                          "simp"
+                          []
+                          []
+                          []
+                          ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                          [])])))]
                     "⟩")]))))]
              "⟩")))])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -865,7 +926,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
               (Term.let
                "let"
                (Term.letDecl
-                (Term.letPatDecl (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩") [] [] ":=" (Term.app `h₃ [`b `h])))
+                (Term.letPatDecl
+                 (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
+                 []
+                 []
+                 ":="
+                 (Term.app `h₃ [`b `h])))
                []
                (Term.app
                 (Term.proj `mem_image "." (fieldIdx "2"))
@@ -877,7 +943,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                     "by"
                     (Tactic.tacticSeq
                      (Tactic.tacticSeq1Indented
-                      [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                      [(Tactic.simp
+                        "simp"
+                        []
+                        []
+                        []
+                        ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                        [])])))]
                   "⟩")]))))]
            "⟩")))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -918,7 +990,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
             (Term.let
              "let"
              (Term.letDecl
-              (Term.letPatDecl (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩") [] [] ":=" (Term.app `h₃ [`b `h])))
+              (Term.letPatDecl
+               (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
+               []
+               []
+               ":="
+               (Term.app `h₃ [`b `h])))
              []
              (Term.app
               (Term.proj `mem_image "." (fieldIdx "2"))
@@ -963,7 +1040,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
           (Term.let
            "let"
            (Term.letDecl
-            (Term.letPatDecl (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩") [] [] ":=" (Term.app `h₃ [`b `h])))
+            (Term.letPatDecl
+             (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
+             []
+             []
+             ":="
+             (Term.app `h₃ [`b `h])))
            []
            (Term.app
             (Term.proj `mem_image "." (fieldIdx "2"))
@@ -988,7 +1070,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
         (Term.let
          "let"
          (Term.letDecl
-          (Term.letPatDecl (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩") [] [] ":=" (Term.app `h₃ [`b `h])))
+          (Term.letPatDecl
+           (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
+           []
+           []
+           ":="
+           (Term.app `h₃ [`b `h])))
          []
          (Term.app
           (Term.proj `mem_image "." (fieldIdx "2"))
@@ -1006,7 +1093,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
       (Term.let
        "let"
        (Term.letDecl
-        (Term.letPatDecl (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩") [] [] ":=" (Term.app `h₃ [`b `h])))
+        (Term.letPatDecl
+         (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
+         []
+         []
+         ":="
+         (Term.app `h₃ [`b `h])))
        []
        (Term.app
         (Term.proj `mem_image "." (fieldIdx "2"))
@@ -1017,7 +1109,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
            (Term.byTactic
             "by"
             (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+             (Tactic.tacticSeq1Indented
+              [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
           "⟩")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -1029,7 +1122,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
           (Term.byTactic
            "by"
            (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+            (Tactic.tacticSeq1Indented
+             [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
@@ -1041,13 +1135,15 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
         (Term.byTactic
          "by"
          (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+          (Tactic.tacticSeq1Indented
+           [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])
@@ -1055,25 +1151,31 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`a "," `ha₁] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `mem_image "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `mem_image
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1082,35 +1184,43 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h₃
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -1150,16 +1260,20 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 75 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 75 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 75, term))
       `ha₂
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
@@ -1171,45 +1285,55 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `mem_image "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `mem_image
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Finset.ext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -1250,7 +1374,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
              (Term.let
               "let"
               (Term.letDecl
-               (Term.letPatDecl (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩") [] [] ":=" (Term.app `h₃ [`b `h])))
+               (Term.letPatDecl
+                (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂] "⟩")
+                []
+                []
+                ":="
+                (Term.app `h₃ [`b `h])))
               []
               (Term.app
                (Term.proj `mem_image "." (fieldIdx "2"))
@@ -1262,7 +1391,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
                    "by"
                    (Tactic.tacticSeq
                     (Tactic.tacticSeq1Indented
-                     [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"] [])])))]
+                     [(Tactic.simp
+                       "simp"
+                       []
+                       []
+                       []
+                       ["[" [(Tactic.simpLemma [] [] `ha₂)] "]"]
+                       [])])))]
                  "⟩")]))))]
           "⟩")))])
      ")")
@@ -1270,16 +1405,19 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `card
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `congr_arg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» (Term.hole "_") "=" `t.card)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t.card
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -1298,7 +1436,9 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
             («term_<|_»
              `Subtype.eq
              "<|"
-             (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])])
+             (Term.app
+              `h₂
+              [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1328,38 +1468,48 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
          "<|"
          (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_» `Subtype.eq "<|" (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))
+      («term_<|_»
+       `Subtype.eq
+       "<|"
+       (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `h₂ [(Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_") `h])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `Subtype.eq
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
@@ -1369,19 +1519,22 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `card_image_of_injective [(Term.hole "_")])
@@ -1389,12 +1542,18 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card_image_of_injective
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `card_image_of_injective [(Term.hole "_")]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `card_image_of_injective [(Term.hole "_")])
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -1413,7 +1572,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Eq.symm
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -1473,7 +1633,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1481,10 +1642,12 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term{_:_//_}» "{" `a [] "//" («term_∈_» `a "∈" `s) "}")
@@ -1492,22 +1655,26 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
       («term_∈_» `a "∈" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.attach.image
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -1521,7 +1688,8 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
          "=>"
          (Term.app `f [(Term.proj `a "." (fieldIdx "1")) (Term.proj `a "." (fieldIdx "2"))])))])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -1533,12 +1701,13 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
       («term_=_» `s.card "=" `s.attach.card)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s.attach.card
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `s.card
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1579,7 +1748,12 @@ theorem
                         ⟨
                           fun h => let ⟨ a , ha₁ , ha₂ ⟩ := mem_image . 1 h ha₂ ▸ h₁ _ _
                             ,
-                            fun h => let ⟨ a , ha₁ , ha₂ ⟩ := h₃ b h mem_image . 2 ⟨ ⟨ a , ha₁ ⟩ , by simp [ ha₂ ] ⟩
+                            fun
+                              h
+                                =>
+                                let
+                                  ⟨ a , ha₁ , ha₂ ⟩ := h₃ b h
+                                  mem_image . 2 ⟨ ⟨ a , ha₁ ⟩ , by simp [ ha₂ ] ⟩
                           ⟩
 #align finset.card_congr Finset.card_congr
 
@@ -1618,7 +1792,10 @@ theorem
             (Lean.binderIdent `a₂)
             («binderTerm∈_» "∈" `s)
             ","
-            (Term.arrow («term_=_» (Term.app `f [`a₁]) "=" (Term.app `f [`a₂])) "→" («term_=_» `a₁ "=" `a₂))))]
+            (Term.arrow
+             («term_=_» (Term.app `f [`a₁]) "=" (Term.app `f [`a₂]))
+             "→"
+             («term_=_» `a₁ "=" `a₂))))]
          []
          ")")]
        (Term.typeSpec ":" («term_≤_» (Term.proj `s "." `card) "≤" (Term.proj `t "." `card))))
@@ -1684,7 +1861,10 @@ theorem
         [(calcStep
           («term_≤_» (Term.hole "_") "≤" `t.card)
           ":="
-          («term_<|_» `card_le_of_subset "<|" (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf])))]))
+          («term_<|_»
+           `card_le_of_subset
+           "<|"
+           (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
@@ -1695,23 +1875,32 @@ theorem
        [(calcStep
          («term_≤_» (Term.hole "_") "≤" `t.card)
          ":="
-         («term_<|_» `card_le_of_subset "<|" (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf])))])
+         («term_<|_»
+          `card_le_of_subset
+          "<|"
+          (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf])))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_<|_» `card_le_of_subset "<|" (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf]))
+      («term_<|_»
+       `card_le_of_subset
+       "<|"
+       (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (Term.proj `image_subset_iff "." (fieldIdx "2")) [`hf])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hf
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `image_subset_iff "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `image_subset_iff
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `card_le_of_subset
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
@@ -1720,7 +1909,8 @@ theorem
       («term_≤_» (Term.hole "_") "≤" `t.card)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t.card
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -1733,12 +1923,17 @@ theorem
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f_inj
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card_image_of_inj_on
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `card_image_of_inj_on [`f_inj]) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `card_image_of_inj_on [`f_inj])
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» `s.card "=" (Term.proj (Term.app `s.image [`f]) "." `card))
@@ -1750,18 +1945,21 @@ theorem
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.image
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `s.image [`f]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `s.card
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1776,7 +1974,10 @@ theorem
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   card_le_card_of_inj_on
-  { t : Finset β } ( f : α → β ) ( hf : ∀ a ∈ s , f a ∈ t ) ( f_inj : ∀ a₁ ∈ s , ∀ a₂ ∈ s , f a₁ = f a₂ → a₁ = a₂ )
+  { t : Finset β }
+      ( f : α → β )
+      ( hf : ∀ a ∈ s , f a ∈ t )
+      ( f_inj : ∀ a₁ ∈ s , ∀ a₂ ∈ s , f a₁ = f a₂ → a₁ = a₂ )
     : s . card ≤ t . card
   :=
     by
@@ -1798,8 +1999,8 @@ theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.
   exact hz x hx y hy
 #align finset.exists_ne_map_eq_of_card_lt_of_maps_to Finset.exists_ne_map_eq_of_card_lt_of_maps_to
 
-theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s) (f_inj : ∀ i < n, ∀ j < n, f i = f j → i = j) :
-    n ≤ s.card :=
+theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s)
+    (f_inj : ∀ i < n, ∀ j < n, f i = f j → i = j) : n ≤ s.card :=
   calc
     n = card (range n) := (card_range n).symm
     _ ≤ s.card := card_le_card_of_inj_on f (by simpa only [mem_range] ) (by simpa only [mem_range] )
@@ -1807,11 +2008,12 @@ theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s) (f_
 #align finset.le_card_of_inj_on_range Finset.le_card_of_inj_on_range
 
 theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
-    (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) : ∀ b ∈ t, ∃ a ha, b = f a ha := by
-  classical
+    (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
+    ∀ b ∈ t, ∃ a ha, b = f a ha := by classical
   intro b hb
   have h : (s.attach.image fun a : { a // a ∈ s } => f a a.Prop).card = s.card :=
-    @card_attach _ s ▸ card_image_of_injective _ fun ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ h => Subtype.eq <| hinj _ _ _ _ h
+    @card_attach _ s ▸
+      card_image_of_injective _ fun ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ h => Subtype.eq <| hinj _ _ _ _ h
   have h' : image (fun a : { a // a ∈ s } => f a a.Prop) s.attach = t :=
     eq_of_subset_of_card_le
       (fun b h =>
@@ -1824,8 +2026,8 @@ theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf :
 #align finset.surj_on_of_inj_on_of_card_le Finset.surj_on_of_inj_on_of_card_le
 
 theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf : ∀ a ha, f a ha ∈ t)
-    (hsurj : ∀ b ∈ t, ∃ a ha, b = f a ha) (hst : s.card ≤ t.card) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s) (ha₂ : a₂ ∈ s)
-    (ha₁a₂ : f a₁ ha₁ = f a₂ ha₂) : a₁ = a₂ :=
+    (hsurj : ∀ b ∈ t, ∃ a ha, b = f a ha) (hst : s.card ≤ t.card) ⦃a₁ a₂⦄ (ha₁ : a₁ ∈ s)
+    (ha₂ : a₂ ∈ s) (ha₁a₂ : f a₁ ha₁ = f a₂ ha₂) : a₁ = a₂ :=
   haveI : Inhabited { x // x ∈ s } := ⟨⟨a₁, ha₁⟩⟩
   let f' : { x // x ∈ s } → { x // x ∈ t } := fun x => ⟨f x.1 x.2, hf x.1 x.2⟩
   let g : { x // x ∈ t } → { x // x ∈ s } :=
@@ -1836,9 +2038,11 @@ theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀ a ∈ s, β) (hf :
   have hsg : surjective g := fun x =>
     let ⟨y, hy⟩ :=
       surj_on_of_inj_on_of_card_le (fun (x : { x // x ∈ t }) (hx : x ∈ t.attach) => g x)
-        (fun x _ => show g x ∈ s.attach from mem_attach _ _) (fun x y _ _ hxy => hg hxy) (by simpa) x (mem_attach _ _)
+        (fun x _ => show g x ∈ s.attach from mem_attach _ _) (fun x y _ _ hxy => hg hxy) (by simpa)
+        x (mem_attach _ _)
     ⟨y, hy.snd.symm⟩
-  have hif : injective f' := (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).Injective
+  have hif : injective f' :=
+    (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).Injective
   Subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (Subtype.eq ha₁a₂))
 #align finset.inj_on_of_surj_on_of_card_le Finset.inj_on_of_surj_on_of_card_le
 
@@ -1854,7 +2058,8 @@ section Lattice
 
 variable [DecidableEq α]
 
-theorem card_union_add_card_inter (s t : Finset α) : (s ∪ t).card + (s ∩ t).card = s.card + t.card :=
+theorem card_union_add_card_inter (s t : Finset α) :
+    (s ∪ t).card + (s ∩ t).card = s.card + t.card :=
   (Finset.induction_on t (by simp)) fun a r har => by by_cases a ∈ s <;> simp [*] <;> cc
 #align finset.card_union_add_card_inter Finset.card_union_add_card_inter
 
@@ -1882,7 +2087,8 @@ theorem card_sdiff_add_card_eq_card {s t : Finset α} (h : s ⊆ t) : card (t \ 
 
 theorem le_card_sdiff (s t : Finset α) : t.card - s.card ≤ card (t \ s) :=
   calc
-    card t - card s ≤ card t - card (s ∩ t) := tsub_le_tsub_left (card_le_of_subset (inter_subset_left s t)) _
+    card t - card s ≤ card t - card (s ∩ t) :=
+      tsub_le_tsub_left (card_le_of_subset (inter_subset_left s t)) _
     _ = card (t \ (s ∩ t)) := (card_sdiff (inter_subset_right s t)).symm
     _ ≤ card (t \ s) := by rw [sdiff_inter_self_right t s]
     
@@ -1926,7 +2132,8 @@ theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : i + card B �
 #align finset.exists_intermediate_set Finset.exists_intermediate_set
 
 /-- We can shrink `A` to any smaller size. -/
-theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) : ∃ B : Finset α, B ⊆ A ∧ card B = i :=
+theorem exists_smaller_set (A : Finset α) (i : ℕ) (h₁ : i ≤ card A) :
+    ∃ B : Finset α, B ⊆ A ∧ card B = i :=
   let ⟨B, _, x₁, x₂⟩ := exists_intermediate_set i (by simpa) (empty_subset A)
   ⟨B, x₁, x₂⟩
 #align finset.exists_smaller_set Finset.exists_smaller_set
@@ -1942,7 +2149,8 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
     
   · exact ⟨Y \ X, h, Or.inr (Finset.sdiff_subset Y X)⟩
     
-#align finset.exists_subset_or_subset_of_two_mul_lt_card Finset.exists_subset_or_subset_of_two_mul_lt_card
+#align
+  finset.exists_subset_or_subset_of_two_mul_lt_card Finset.exists_subset_or_subset_of_two_mul_lt_card
 
 /-! ### Explicit description of a finset from its card -/
 
@@ -1951,7 +2159,7 @@ theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
   cases s <;> simp only [Multiset.card_eq_one, Finset.card, ← val_inj, singleton_val]
 #align finset.card_eq_one Finset.card_eq_one
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
   constructor
@@ -1959,8 +2167,11 @@ theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     exact ⟨subset_insert _ _, (card_insert_of_not_mem ha).symm⟩
     
   · rintro ⟨hst, h⟩
-    obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} := card_eq_one.1 (by rw [card_sdiff hst, ← h, add_tsub_cancel_left])
-    refine' ⟨a, fun hs => (_ : a ∉ {a}) <| mem_singleton_self _, by rw [insert_eq, ← ha, sdiff_union_of_subset hst]⟩
+    obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} :=
+      card_eq_one.1 (by rw [card_sdiff hst, ← h, add_tsub_cancel_left])
+    refine'
+      ⟨a, fun hs => (_ : a ∉ {a}) <| mem_singleton_self _, by
+        rw [insert_eq, ← ha, sdiff_union_of_subset hst]⟩
     rw [← ha]
     exact not_mem_sdiff_of_mem_right hs
     
@@ -2013,12 +2224,15 @@ theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ 
   simp only [exists_prop, exists_and_left]
 #align finset.one_lt_card_iff Finset.one_lt_card_iff
 
-theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by classical
+theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
+  classical
   refine' ⟨fun h => _, _⟩
   · obtain ⟨c, hc⟩ := card_pos.mp (zero_lt_two.trans h)
     have : 1 < (s.erase c).card := by rwa [← add_lt_add_iff_right 1, card_erase_add_one hc]
     obtain ⟨a, b, ha, hb, hab⟩ := one_lt_card_iff.mp this
-    exact ⟨a, b, c, mem_of_mem_erase ha, mem_of_mem_erase hb, hc, hab, ne_of_mem_erase ha, ne_of_mem_erase hb⟩
+    exact
+      ⟨a, b, c, mem_of_mem_erase ha, mem_of_mem_erase hb, hc, hab, ne_of_mem_erase ha,
+        ne_of_mem_erase hb⟩
     
   · rintro ⟨a, b, c, ha, hb, hc, hab, hac, hbc⟩
     rw [← card_erase_add_one hc, ← card_erase_add_one (mem_erase_of_ne_of_mem hbc hb), ←
@@ -2040,10 +2254,12 @@ theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧
     
 #align finset.exists_ne_of_one_lt_card Finset.exists_ne_of_one_lt_card
 
-theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.card = n :=
+theorem card_eq_succ [DecidableEq α] :
+    s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.card = n :=
   ⟨fun h =>
     let ⟨a, has⟩ := card_pos.mp (h.symm ▸ Nat.zero_lt_succ _ : 0 < s.card)
-    ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by simp only [h, card_erase_of_mem has, add_tsub_cancel_right]⟩,
+    ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by
+      simp only [h, card_erase_of_mem has, add_tsub_cancel_right]⟩,
     fun ⟨a, t, hat, s_eq, n_eq⟩ => s_eq ▸ n_eq ▸ card_insert_of_not_mem hat⟩
 #align finset.card_eq_succ Finset.card_eq_succ
 
@@ -2059,7 +2275,8 @@ theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {
     
 #align finset.card_eq_two Finset.card_eq_two
 
-theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} := by
+theorem card_eq_three [DecidableEq α] :
+    s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} := by
   constructor
   · rw [card_eq_succ]
     simp_rw [card_eq_two]
@@ -2068,8 +2285,8 @@ theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x
     exact ⟨a, b, c, abc.1, abc.2, bc, rfl⟩
     
   · rintro ⟨x, y, z, xy, xz, yz, rfl⟩
-    simp only [xy, xz, yz, mem_insert, card_insert_of_not_mem, not_false_iff, mem_singleton, or_self_iff,
-      card_singleton]
+    simp only [xy, xz, yz, mem_insert, card_insert_of_not_mem, not_false_iff, mem_singleton,
+      or_self_iff, card_singleton]
     
 #align finset.card_eq_three Finset.card_eq_three
 
@@ -2082,11 +2299,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {p : (Finset.{u_1} α) -> Sort.{_aux_param_0}}, (forall (s : Finset.{u_1} α), (forall (t : Finset.{u_1} α), (HasSSubset.SSubset.{u_1} (Finset.{u_1} α) (Finset.hasSsubset.{u_1} α) t s) -> (p t)) -> (p s)) -> (forall (s : Finset.{u_1} α), p s)
 Case conversion may be inaccurate. Consider using '#align finset.strong_induction Finset.strongInductionₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
-def strongInduction {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) : ∀ s : Finset α, p s
+def strongInduction {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
+    ∀ s : Finset α, p s
   | s =>
     H s fun t h =>
       have : t.card < s.card := card_lt_card h
@@ -2094,26 +2312,28 @@ def strongInduction {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s
   ⟨_, measure_wf card⟩
 #align finset.strong_induction Finset.strongInduction
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊂ » s) -/
-theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) (s : Finset α) :
-    strongInduction H s = H s fun t h => strongInduction H t := by rw [strong_induction]
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s)
+    (s : Finset α) : strongInduction H s = H s fun t h => strongInduction H t := by
+  rw [strong_induction]
 #align finset.strong_induction_eq Finset.strong_induction_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_elim]
-def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) → p s := fun H =>
-  strongInduction H s
+def strongInductionOn {p : Finset α → Sort _} (s : Finset α) :
+    (∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) → p s := fun H => strongInduction H s
 #align finset.strong_induction_on Finset.strongInductionOn
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊂ » s) -/
-theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊂ » s) -/
+theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α)
+    (H : ∀ s, (∀ (t) (_ : t ⊂ s), p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
   dsimp only [strong_induction_on]
   rw [strong_induction]
 #align finset.strong_induction_on_eq Finset.strong_induction_on_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 @[elab_as_elim]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
     (h₁ : ∀ a s, a ∉ s → (∀ (t) (_ : t ⊆ s), p t) → p (insert a s)) : p s :=
@@ -2143,7 +2363,8 @@ def strongDownwardInduction {p : Finset α → Sort _} {n : ℕ}
 #align finset.strong_downward_induction Finset.strongDownwardInduction
 
 theorem strong_downward_induction_eq {p : Finset α → Sort _}
-    (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) (s : Finset α) :
+    (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁)
+    (s : Finset α) :
     strongDownwardInduction H s = H s fun t ht hst => strongDownwardInduction H t ht := by
   rw [strong_downward_induction]
 #align finset.strong_downward_induction_eq Finset.strong_downward_induction_eq
@@ -2151,7 +2372,8 @@ theorem strong_downward_induction_eq {p : Finset α → Sort _}
 /-- Analogue of `strong_downward_induction` with order of arguments swapped. -/
 @[elab_as_elim]
 def strongDownwardInductionOn {p : Finset α → Sort _} (s : Finset α)
-    (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) : s.card ≤ n → p s :=
+    (H : ∀ t₁, (∀ {t₂ : Finset α}, t₂.card ≤ n → t₁ ⊂ t₂ → p t₂) → t₁.card ≤ n → p t₁) :
+    s.card ≤ n → p s :=
   strongDownwardInduction H s
 #align finset.strong_downward_induction_on Finset.strongDownwardInductionOn
 
@@ -2163,7 +2385,8 @@ theorem strong_downward_induction_on_eq {p : Finset α → Sort _} (s : Finset �
 #align finset.strong_downward_induction_on_eq Finset.strong_downward_induction_on_eq
 
 theorem lt_wf {α} : WellFounded (@LT.lt (Finset α) _) :=
-  have H : Subrelation (@LT.lt (Finset α) _) (InvImage (· < ·) card) := fun x y hxy => card_lt_card hxy
+  have H : Subrelation (@LT.lt (Finset α) _) (InvImage (· < ·) card) := fun x y hxy =>
+    card_lt_card hxy
   Subrelation.wf H <| InvImage.wf _ <| Nat.lt_wfRel
 #align finset.lt_wf Finset.lt_wf
 

@@ -132,11 +132,13 @@ def pullbackTotalSpaceEmbedding (f : B' → B) : TotalSpace (f *ᵖ E) → B' ×
 #align bundle.pullback_total_space_embedding Bundle.pullbackTotalSpaceEmbedding
 
 /-- The base map `f : B' → B` lifts to a canonical map on the total spaces. -/
-def Pullback.lift (f : B' → B) : TotalSpace (f *ᵖ E) → TotalSpace E := fun z => totalSpaceMk (f z.proj) z.2
+def Pullback.lift (f : B' → B) : TotalSpace (f *ᵖ E) → TotalSpace E := fun z =>
+  totalSpaceMk (f z.proj) z.2
 #align bundle.pullback.lift Bundle.Pullback.lift
 
 @[simp]
-theorem Pullback.proj_lift (f : B' → B) (x : TotalSpace (f *ᵖ E)) : (Pullback.lift f x).proj = f x.1 :=
+theorem Pullback.proj_lift (f : B' → B) (x : TotalSpace (f *ᵖ E)) :
+    (Pullback.lift f x).proj = f x.1 :=
   rfl
 #align bundle.pullback.proj_lift Bundle.Pullback.proj_lift
 
@@ -166,7 +168,8 @@ theorem coe_snd_map_apply (x : B) (v w : E x) :
 variable (R : Type _) [Semiring R] [∀ x, Module R (E x)]
 
 @[simp]
-theorem coe_snd_map_smul (x : B) (r : R) (v : E x) : (↑(r • v) : TotalSpace E).snd = r • (v : TotalSpace E).snd :=
+theorem coe_snd_map_smul (x : B) (r : R) (v : E x) :
+    (↑(r • v) : TotalSpace E).snd = r • (v : TotalSpace E).snd :=
   rfl
 #align bundle.coe_snd_map_smul Bundle.coe_snd_map_smul
 

@@ -131,11 +131,13 @@ theorem convex_hull_pair (x y : E) : convexHull 𝕜 {x, y} = segment 𝕜 x y :
   exact ⟨left_mem_segment _ _ _, right_mem_segment _ _ _⟩
 #align convex_hull_pair convex_hull_pair
 
-theorem convex_hull_convex_hull_union_left (s t : Set E) : convexHull 𝕜 (convexHull 𝕜 s ∪ t) = convexHull 𝕜 (s ∪ t) :=
+theorem convex_hull_convex_hull_union_left (s t : Set E) :
+    convexHull 𝕜 (convexHull 𝕜 s ∪ t) = convexHull 𝕜 (s ∪ t) :=
   ClosureOperator.closure_sup_closure_left _ _ _
 #align convex_hull_convex_hull_union_left convex_hull_convex_hull_union_left
 
-theorem convex_hull_convex_hull_union_right (s t : Set E) : convexHull 𝕜 (s ∪ convexHull 𝕜 t) = convexHull 𝕜 (s ∪ t) :=
+theorem convex_hull_convex_hull_union_right (s t : Set E) :
+    convexHull 𝕜 (s ∪ convexHull 𝕜 t) = convexHull 𝕜 (s ∪ t) :=
   ClosureOperator.closure_sup_closure_right _ _ _
 #align convex_hull_convex_hull_union_right convex_hull_convex_hull_union_right
 
@@ -147,7 +149,7 @@ theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Co
     exact hx.2 (mem_singleton _)
     
   rintro hx
-  suffices h : s \ {x} = convexHull 𝕜 (s \ {x})
+  suffices h : s \ {x} = convexHull 𝕜 (s \ {x});
   · convert convex_convex_hull 𝕜 _
     
   exact
@@ -155,17 +157,21 @@ theorem Convex.convex_remove_iff_not_mem_convex_hull_remove {s : Set E} (hs : Co
       ⟨convex_hull_min (diff_subset _ _) hs hy, by
         rintro (rfl : y = x)
         exact hx hy⟩
-#align convex.convex_remove_iff_not_mem_convex_hull_remove Convex.convex_remove_iff_not_mem_convex_hull_remove
+#align
+  convex.convex_remove_iff_not_mem_convex_hull_remove Convex.convex_remove_iff_not_mem_convex_hull_remove
 
 theorem IsLinearMap.convex_hull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   Set.Subset.antisymm
-    (convex_hull_min (image_subset _ (subset_convex_hull 𝕜 s)) <| (convex_convex_hull 𝕜 s).is_linear_image hf)
+    (convex_hull_min (image_subset _ (subset_convex_hull 𝕜 s)) <|
+      (convex_convex_hull 𝕜 s).is_linear_image hf)
     (image_subset_iff.2 <|
-      convex_hull_min (image_subset_iff.1 <| subset_convex_hull 𝕜 _) ((convex_convex_hull 𝕜 _).is_linear_preimage hf))
+      convex_hull_min (image_subset_iff.1 <| subset_convex_hull 𝕜 _)
+        ((convex_convex_hull 𝕜 _).is_linear_preimage hf))
 #align is_linear_map.convex_hull_image IsLinearMap.convex_hull_image
 
-theorem LinearMap.convex_hull_image (f : E →ₗ[𝕜] F) (s : Set E) : convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
+theorem LinearMap.convex_hull_image (f : E →ₗ[𝕜] F) (s : Set E) :
+    convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
   f.is_linear.convex_hull_image s
 #align linear_map.convex_hull_image LinearMap.convex_hull_image
 
@@ -191,14 +197,17 @@ section AddCommGroup
 
 variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F] (s : Set E)
 
-theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) := by
+theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) :=
+  by
   apply Set.Subset.antisymm
   · rw [Set.image_subset_iff]
     refine' convex_hull_min _ ((convex_convex_hull 𝕜 (⇑f '' s)).affine_preimage f)
     rw [← Set.image_subset_iff]
     exact subset_convex_hull 𝕜 (f '' s)
     
-  · exact convex_hull_min (Set.image_subset _ (subset_convex_hull 𝕜 s)) ((convex_convex_hull 𝕜 s).affine_image f)
+  · exact
+      convex_hull_min (Set.image_subset _ (subset_convex_hull 𝕜 s))
+        ((convex_convex_hull 𝕜 s).affine_image f)
     
 #align affine_map.image_convex_hull AffineMap.image_convex_hull
 

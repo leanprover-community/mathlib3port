@@ -57,11 +57,12 @@ theorem pow_factorization_choose_le (hn : 0 < n) : p ^ (choose n k).factorizatio
     
 #align nat.pow_factorization_choose_le Nat.pow_factorization_choose_le
 
-/-- Primes greater than about `sqrt n` appear only to multiplicity 0 or 1 in the binomial coefficient.
+/--
+Primes greater than about `sqrt n` appear only to multiplicity 0 or 1 in the binomial coefficient.
 -/
 theorem factorization_choose_le_one (p_large : n < p ^ 2) : (choose n k).factorization p ≤ 1 := by
   apply factorization_choose_le_log.trans
-  rcases n.eq_zero_or_pos with (rfl | hn0)
+  rcases n.eq_zero_or_pos with (rfl | hn0);
   · simp
     
   refine' lt_succ_iff.1 ((lt_pow_iff_log_lt _ hn0).1 p_large)
@@ -69,8 +70,8 @@ theorem factorization_choose_le_one (p_large : n < p ^ 2) : (choose n k).factori
   exact lt_succ_iff.1 (lt_of_lt_of_le p_large (pow_le_one' hn0 2))
 #align nat.factorization_choose_le_one Nat.factorization_choose_le_one
 
-theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk' : p ≤ n - k) (hn : n < 3 * p) :
-    (choose n k).factorization p = 0 := by
+theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk' : p ≤ n - k)
+    (hn : n < 3 * p) : (choose n k).factorization p = 0 := by
   cases' em' p.prime with hp hp
   · exact factorization_eq_zero_of_non_prime (choose n k) hp
     
@@ -85,8 +86,10 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   · rw [pow_one, ← add_lt_add_iff_left (2 * p), ← succ_mul, two_mul, add_add_add_comm]
     exact
       lt_of_le_of_lt
-        (add_le_add (add_le_add_right (le_mul_of_one_le_right' ((one_le_div_iff hp.pos).mpr hk)) (k % p))
-          (add_le_add_right (le_mul_of_one_le_right' ((one_le_div_iff hp.pos).mpr hk')) ((n - k) % p)))
+        (add_le_add
+          (add_le_add_right (le_mul_of_one_le_right' ((one_le_div_iff hp.pos).mpr hk)) (k % p))
+          (add_le_add_right (le_mul_of_one_le_right' ((one_le_div_iff hp.pos).mpr hk'))
+            ((n - k) % p)))
         (by rwa [div_add_mod, div_add_mod, add_tsub_cancel_of_le hkn])
     
   · replace hn : n < p ^ i
@@ -97,7 +100,8 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
         _ ≤ p ^ i := pow_le_pow hp.one_lt.le hi
         
       
-    rwa [mod_eq_of_lt (lt_of_le_of_lt hkn hn), mod_eq_of_lt (lt_of_le_of_lt tsub_le_self hn), add_tsub_cancel_of_le hkn]
+    rwa [mod_eq_of_lt (lt_of_le_of_lt hkn hn), mod_eq_of_lt (lt_of_le_of_lt tsub_le_self hn),
+      add_tsub_cancel_of_le hkn]
     
 #align nat.factorization_choose_of_lt_three_mul Nat.factorization_choose_of_lt_three_mul
 
@@ -116,34 +120,38 @@ theorem factorization_central_binom_of_two_mul_self_lt_three_mul (n_big : 2 < n)
   nat.factorization_central_binom_of_two_mul_self_lt_three_mul Nat.factorization_central_binom_of_two_mul_self_lt_three_mul
 
 theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factorization p = 0 := by
-  induction' n with n hn
+  induction' n with n hn;
   · simp
     
-  rw [factorial_succ, factorization_mul n.succ_ne_zero n.factorial_ne_zero, Finsupp.coe_add, Pi.add_apply,
-    hn (lt_of_succ_lt h), add_zero, factorization_eq_zero_of_lt h]
+  rw [factorial_succ, factorization_mul n.succ_ne_zero n.factorial_ne_zero, Finsupp.coe_add,
+    Pi.add_apply, hn (lt_of_succ_lt h), add_zero, factorization_eq_zero_of_lt h]
 #align nat.factorization_factorial_eq_zero_of_lt Nat.factorization_factorial_eq_zero_of_lt
 
 theorem factorization_choose_eq_zero_of_lt (h : n < p) : (choose n k).factorization p = 0 := by
-  by_cases hnk : n < k
+  by_cases hnk : n < k;
   · simp [choose_eq_zero_of_lt hnk]
     
   rw [choose_eq_factorial_div_factorial (le_of_not_lt hnk),
-    factorization_div (factorial_mul_factorial_dvd_factorial (le_of_not_lt hnk)), Finsupp.coe_tsub, Pi.sub_apply,
-    factorization_factorial_eq_zero_of_lt h, zero_tsub]
+    factorization_div (factorial_mul_factorial_dvd_factorial (le_of_not_lt hnk)), Finsupp.coe_tsub,
+    Pi.sub_apply, factorization_factorial_eq_zero_of_lt h, zero_tsub]
 #align nat.factorization_choose_eq_zero_of_lt Nat.factorization_choose_eq_zero_of_lt
 
 /-- If a prime `p` has positive multiplicity in the `n`th central binomial coefficient,
 `p` is no more than `2 * n`
 -/
-theorem factorization_central_binom_eq_zero_of_two_mul_lt (h : 2 * n < p) : (centralBinom n).factorization p = 0 :=
+theorem factorization_central_binom_eq_zero_of_two_mul_lt (h : 2 * n < p) :
+    (centralBinom n).factorization p = 0 :=
   factorization_choose_eq_zero_of_lt h
-#align nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_central_binom_eq_zero_of_two_mul_lt
+#align
+  nat.factorization_central_binom_eq_zero_of_two_mul_lt Nat.factorization_central_binom_eq_zero_of_two_mul_lt
 
 /-- Contrapositive form of `nat.factorization_central_binom_eq_zero_of_two_mul_lt`
 -/
-theorem le_two_mul_of_factorization_central_binom_pos (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
+theorem le_two_mul_of_factorization_central_binom_pos
+    (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
   le_of_not_lt (pos_iff_ne_zero.mp h_pos ∘ factorization_central_binom_eq_zero_of_two_mul_lt)
-#align nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_central_binom_pos
+#align
+  nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_central_binom_pos
 
 /-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/
 theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :

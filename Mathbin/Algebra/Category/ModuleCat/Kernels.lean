@@ -51,7 +51,8 @@ def cokernelCocone : CokernelCofork f :=
 /-- The projection onto the quotient is a cokernel in the categorical sense. -/
 def cokernelIsColimit : IsColimit (cokernelCocone f) :=
   Cofork.IsColimit.mk _
-    (fun s => f.range.liftq (Cofork.π s) <| LinearMap.range_le_ker_iff.2 <| CokernelCofork.condition s)
+    (fun s =>
+      f.range.liftq (Cofork.π s) <| LinearMap.range_le_ker_iff.2 <| CokernelCofork.condition s)
     (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h => by
     haveI : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
     apply (cancel_epi (as_hom f.range.mkq)).1
@@ -82,7 +83,8 @@ variable {G H : ModuleCat.{v} R} (f : G ⟶ H)
 /-- The categorical kernel of a morphism in `Module`
 agrees with the usual module-theoretical kernel.
 -/
-noncomputable def kernelIsoKer {G H : ModuleCat.{v} R} (f : G ⟶ H) : kernel f ≅ ModuleCat.of R f.ker :=
+noncomputable def kernelIsoKer {G H : ModuleCat.{v} R} (f : G ⟶ H) :
+    kernel f ≅ ModuleCat.of R f.ker :=
   limit.isoLimitCone ⟨_, kernelIsLimit f⟩
 #align Module.kernel_iso_ker ModuleCat.kernelIsoKer
 
@@ -107,14 +109,18 @@ noncomputable def cokernelIsoRangeQuotient {G H : ModuleCat.{v} R} (f : G ⟶ H)
 
 -- We now show this isomorphism commutes with the projection of target to the cokernel.
 @[simp, elementwise]
-theorem cokernel_π_cokernel_iso_range_quotient_hom : cokernel.π f ≫ (cokernelIsoRangeQuotient f).hom = f.range.mkq := by
+theorem cokernel_π_cokernel_iso_range_quotient_hom :
+    cokernel.π f ≫ (cokernelIsoRangeQuotient f).hom = f.range.mkq := by
   convert colimit.iso_colimit_cocone_ι_hom _ _ <;> rfl
-#align Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernel_iso_range_quotient_hom
+#align
+  Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernel_iso_range_quotient_hom
 
 @[simp, elementwise]
-theorem range_mkq_cokernel_iso_range_quotient_inv : ↿f.range.mkq ≫ (cokernelIsoRangeQuotient f).inv = cokernel.π f := by
+theorem range_mkq_cokernel_iso_range_quotient_inv :
+    ↿f.range.mkq ≫ (cokernelIsoRangeQuotient f).inv = cokernel.π f := by
   convert colimit.iso_colimit_cocone_ι_inv ⟨_, cokernel_is_colimit f⟩ _ <;> rfl
-#align Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
+#align
+  Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernel_iso_range_quotient_inv
 
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :
     cokernel.π f x = cokernel.π f y := by

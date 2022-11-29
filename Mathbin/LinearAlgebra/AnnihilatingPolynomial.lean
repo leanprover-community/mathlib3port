@@ -87,15 +87,16 @@ variable {𝕜}
 
 @[simp]
 theorem ann_ideal_generator_eq_zero_iff {a : A} : annIdealGenerator 𝕜 a = 0 ↔ annIdeal 𝕜 a = ⊥ := by
-  simp only [ann_ideal_generator, mul_eq_zero, is_principal.eq_bot_iff_generator_eq_zero, Polynomial.C_eq_zero,
-    inv_eq_zero, Polynomial.leading_coeff_eq_zero, or_self_iff]
+  simp only [ann_ideal_generator, mul_eq_zero, is_principal.eq_bot_iff_generator_eq_zero,
+    Polynomial.C_eq_zero, inv_eq_zero, Polynomial.leading_coeff_eq_zero, or_self_iff]
 #align polynomial.ann_ideal_generator_eq_zero_iff Polynomial.ann_ideal_generator_eq_zero_iff
 
 end
 
 /-- `ann_ideal_generator 𝕜 a` is indeed a generator. -/
 @[simp]
-theorem span_singleton_ann_ideal_generator (a : A) : Ideal.span {annIdealGenerator 𝕜 a} = annIdeal 𝕜 a := by
+theorem span_singleton_ann_ideal_generator (a : A) :
+    Ideal.span {annIdealGenerator 𝕜 a} = annIdeal 𝕜 a := by
   by_cases h : ann_ideal_generator 𝕜 a = 0
   · rw [h, ann_ideal_generator_eq_zero_iff.mp h, Set.singleton_zero, Ideal.span_zero]
     
@@ -119,7 +120,8 @@ theorem mem_iff_eq_smul_ann_ideal_generator {p : 𝕜[X]} (a : A) :
 #align polynomial.mem_iff_eq_smul_ann_ideal_generator Polynomial.mem_iff_eq_smul_ann_ideal_generator
 
 /-- The generator we chose for the annihilating ideal is monic when the ideal is non-zero. -/
-theorem monic_ann_ideal_generator (a : A) (hg : annIdealGenerator 𝕜 a ≠ 0) : Monic (annIdealGenerator 𝕜 a) :=
+theorem monic_ann_ideal_generator (a : A) (hg : annIdealGenerator 𝕜 a ≠ 0) :
+    Monic (annIdealGenerator 𝕜 a) :=
   monic_mul_leading_coeff_inv (mul_ne_zero_iff.mp hg).1
 #align polynomial.monic_ann_ideal_generator Polynomial.monic_ann_ideal_generator
 
@@ -136,16 +138,18 @@ theorem ann_ideal_generator_aeval_eq_zero (a : A) : aeval a (annIdealGenerator �
 
 variable {𝕜}
 
-theorem mem_iff_ann_ideal_generator_dvd {p : 𝕜[X]} {a : A} : p ∈ annIdeal 𝕜 a ↔ annIdealGenerator 𝕜 a ∣ p := by
+theorem mem_iff_ann_ideal_generator_dvd {p : 𝕜[X]} {a : A} :
+    p ∈ annIdeal 𝕜 a ↔ annIdealGenerator 𝕜 a ∣ p := by
   rw [← Ideal.mem_span_singleton, span_singleton_ann_ideal_generator]
 #align polynomial.mem_iff_ann_ideal_generator_dvd Polynomial.mem_iff_ann_ideal_generator_dvd
 
 /-- The generator of the annihilating ideal has minimal degree among
  the non-zero members of the annihilating ideal -/
-theorem degree_ann_ideal_generator_le_of_mem (a : A) (p : 𝕜[X]) (hp : p ∈ annIdeal 𝕜 a) (hpn0 : p ≠ 0) :
-    degree (annIdealGenerator 𝕜 a) ≤ degree p :=
+theorem degree_ann_ideal_generator_le_of_mem (a : A) (p : 𝕜[X]) (hp : p ∈ annIdeal 𝕜 a)
+    (hpn0 : p ≠ 0) : degree (annIdealGenerator 𝕜 a) ≤ degree p :=
   degree_le_of_dvd (mem_iff_ann_ideal_generator_dvd.1 hp) hpn0
-#align polynomial.degree_ann_ideal_generator_le_of_mem Polynomial.degree_ann_ideal_generator_le_of_mem
+#align
+  polynomial.degree_ann_ideal_generator_le_of_mem Polynomial.degree_ann_ideal_generator_le_of_mem
 
 variable (𝕜)
 
@@ -158,15 +162,17 @@ theorem ann_ideal_generator_eq_minpoly (a : A) : annIdealGenerator 𝕜 a = minp
     simpa only [ann_ideal_generator_eq_zero_iff.mp h] using mem_ann_ideal_iff_aeval_eq_zero.mpr hp
     
   · exact
-      minpoly.unique _ _ (monic_ann_ideal_generator _ _ h) (ann_ideal_generator_aeval_eq_zero _ _) fun q q_monic hq =>
-        degree_ann_ideal_generator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq) q_monic.NeZero
+      minpoly.unique _ _ (monic_ann_ideal_generator _ _ h) (ann_ideal_generator_aeval_eq_zero _ _)
+        fun q q_monic hq =>
+        degree_ann_ideal_generator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq)
+          q_monic.NeZero
     
 #align polynomial.ann_ideal_generator_eq_minpoly Polynomial.ann_ideal_generator_eq_minpoly
 
 /-- If a monic generates the annihilating ideal, it must match our choice
  of the annihilating ideal generator. -/
-theorem monic_generator_eq_minpoly (a : A) (p : 𝕜[X]) (p_monic : p.Monic) (p_gen : Ideal.span {p} = annIdeal 𝕜 a) :
-    annIdealGenerator 𝕜 a = p := by
+theorem monic_generator_eq_minpoly (a : A) (p : 𝕜[X]) (p_monic : p.Monic)
+    (p_gen : Ideal.span {p} = annIdeal 𝕜 a) : annIdealGenerator 𝕜 a = p := by
   by_cases h : p = 0
   · rwa [h, ann_ideal_generator_eq_zero_iff, ← p_gen, ideal.span_singleton_eq_bot.mpr]
     

@@ -139,12 +139,15 @@ class LocallyFiniteOrderBot (α : Type _) [Preorder α] where
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
 def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorder α] [DecidableRel ((· ≤ ·) : α → α → Prop)]
-    (finset_Icc : α → α → Finset α) (mem_Icc : ∀ a b x, x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b) : LocallyFiniteOrder α :=
+    (finset_Icc : α → α → Finset α) (mem_Icc : ∀ a b x, x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b) :
+    LocallyFiniteOrder α :=
   { finsetIcc, finsetIco := fun a b => (finset_Icc a b).filter fun x => ¬b ≤ x,
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a,
-    finsetIoo := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a ∧ ¬b ≤ x, finset_mem_Icc := mem_Icc,
+    finsetIoo := fun a b => (finset_Icc a b).filter fun x => ¬x ≤ a ∧ ¬b ≤ x,
+    finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc', lt_iff_le_not_le],
-    finset_mem_Ioc := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_not_le],
+    finset_mem_Ioc := fun a b x => by
+      rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_not_le],
     finset_mem_Ioo := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_not_le, lt_iff_le_not_le] }
 #align locally_finite_order.of_Icc' LocallyFiniteOrder.ofIcc'
@@ -152,13 +155,16 @@ def LocallyFiniteOrder.ofIcc' (α : Type _) [Preorder α] [DecidableRel ((· ≤
 /-- A constructor from a definition of `finset.Icc` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `partial_order` but only
 `decidable_eq`. -/
-def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrder α] [DecidableEq α] (finset_Icc : α → α → Finset α)
-    (mem_Icc : ∀ a b x, x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b) : LocallyFiniteOrder α :=
+def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrder α] [DecidableEq α]
+    (finset_Icc : α → α → Finset α) (mem_Icc : ∀ a b x, x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b) :
+    LocallyFiniteOrder α :=
   { finsetIcc, finsetIco := fun a b => (finset_Icc a b).filter fun x => x ≠ b,
     finsetIoc := fun a b => (finset_Icc a b).filter fun x => a ≠ x,
-    finsetIoo := fun a b => (finset_Icc a b).filter fun x => a ≠ x ∧ x ≠ b, finset_mem_Icc := mem_Icc,
+    finsetIoo := fun a b => (finset_Icc a b).filter fun x => a ≠ x ∧ x ≠ b,
+    finset_mem_Icc := mem_Icc,
     finset_mem_Ico := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_assoc', lt_iff_le_and_ne],
-    finset_mem_Ioc := fun a b x => by rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_and_ne],
+    finset_mem_Ioc := fun a b x => by
+      rw [Finset.mem_filter, mem_Icc, and_right_comm, lt_iff_le_and_ne],
     finset_mem_Ioo := fun a b x => by
       rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_and_ne, lt_iff_le_and_ne] }
 #align locally_finite_order.of_Icc LocallyFiniteOrder.ofIcc
@@ -167,17 +173,21 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrder α] [DecidableEq α] (f
 the ends. As opposed to `locally_finite_order_top.of_Ici`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
 def LocallyFiniteOrderTop.ofIci' (α : Type _) [Preorder α] [DecidableRel ((· ≤ ·) : α → α → Prop)]
-    (finset_Ici : α → Finset α) (mem_Ici : ∀ a x, x ∈ finset_Ici a ↔ a ≤ x) : LocallyFiniteOrderTop α :=
-  { finsetIci, finsetIoi := fun a => (finset_Ici a).filter fun x => ¬x ≤ a, finset_mem_Ici := mem_Ici,
+    (finset_Ici : α → Finset α) (mem_Ici : ∀ a x, x ∈ finset_Ici a ↔ a ≤ x) :
+    LocallyFiniteOrderTop α :=
+  { finsetIci, finsetIoi := fun a => (finset_Ici a).filter fun x => ¬x ≤ a,
+    finset_mem_Ici := mem_Ici,
     finset_mem_Ioi := fun a x => by rw [mem_filter, mem_Ici, lt_iff_le_not_le] }
 #align locally_finite_order_top.of_Ici' LocallyFiniteOrderTop.ofIci'
 
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici'`, this one requires `partial_order` but
 only `decidable_eq`. -/
-def LocallyFiniteOrderTop.ofIci (α : Type _) [PartialOrder α] [DecidableEq α] (finset_Ici : α → Finset α)
-    (mem_Ici : ∀ a x, x ∈ finset_Ici a ↔ a ≤ x) : LocallyFiniteOrderTop α :=
-  { finsetIci, finsetIoi := fun a => (finset_Ici a).filter fun x => a ≠ x, finset_mem_Ici := mem_Ici,
+def LocallyFiniteOrderTop.ofIci (α : Type _) [PartialOrder α] [DecidableEq α]
+    (finset_Ici : α → Finset α) (mem_Ici : ∀ a x, x ∈ finset_Ici a ↔ a ≤ x) :
+    LocallyFiniteOrderTop α :=
+  { finsetIci, finsetIoi := fun a => (finset_Ici a).filter fun x => a ≠ x,
+    finset_mem_Ici := mem_Ici,
     finset_mem_Ioi := fun a x => by rw [mem_filter, mem_Ici, lt_iff_le_and_ne] }
 #align locally_finite_order_top.of_Ici LocallyFiniteOrderTop.ofIci
 
@@ -185,17 +195,21 @@ def LocallyFiniteOrderTop.ofIci (α : Type _) [PartialOrder α] [DecidableEq α]
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
 only `preorder`. -/
 def LocallyFiniteOrderBot.ofIic' (α : Type _) [Preorder α] [DecidableRel ((· ≤ ·) : α → α → Prop)]
-    (finset_Iic : α → Finset α) (mem_Iic : ∀ a x, x ∈ finset_Iic a ↔ x ≤ a) : LocallyFiniteOrderBot α :=
-  { finsetIic, finsetIio := fun a => (finset_Iic a).filter fun x => ¬a ≤ x, finset_mem_Iic := mem_Iic,
+    (finset_Iic : α → Finset α) (mem_Iic : ∀ a x, x ∈ finset_Iic a ↔ x ≤ a) :
+    LocallyFiniteOrderBot α :=
+  { finsetIic, finsetIio := fun a => (finset_Iic a).filter fun x => ¬a ≤ x,
+    finset_mem_Iic := mem_Iic,
     finset_mem_Iio := fun a x => by rw [mem_filter, mem_Iic, lt_iff_le_not_le] }
 #align locally_finite_order_bot.of_Iic' LocallyFiniteOrderBot.ofIic'
 
 /-- A constructor from a definition of `finset.Iic` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order_top.of_Ici'`, this one requires `partial_order` but
 only `decidable_eq`. -/
-def LocallyFiniteOrderTop.ofIic (α : Type _) [PartialOrder α] [DecidableEq α] (finset_Iic : α → Finset α)
-    (mem_Iic : ∀ a x, x ∈ finset_Iic a ↔ x ≤ a) : LocallyFiniteOrderBot α :=
-  { finsetIic, finsetIio := fun a => (finset_Iic a).filter fun x => x ≠ a, finset_mem_Iic := mem_Iic,
+def LocallyFiniteOrderTop.ofIic (α : Type _) [PartialOrder α] [DecidableEq α]
+    (finset_Iic : α → Finset α) (mem_Iic : ∀ a x, x ∈ finset_Iic a ↔ x ≤ a) :
+    LocallyFiniteOrderBot α :=
+  { finsetIic, finsetIio := fun a => (finset_Iic a).filter fun x => x ≠ a,
+    finset_mem_Iic := mem_Iic,
     finset_mem_Iio := fun a x => by rw [mem_filter, mem_Iic, lt_iff_le_and_ne] }
 #align locally_finite_order_top.of_Iic LocallyFiniteOrderTop.ofIic
 
@@ -206,7 +220,7 @@ variable {α β : Type _}
 
 This is not an instance as it would not be defeq to more specific instances. -/
 @[reducible]
-protected def _root_.is_empty.to_locally_finite_order [Preorder α] [IsEmpty α] : LocallyFiniteOrder α where
+protected def IsEmpty.toLocallyFiniteOrder [Preorder α] [IsEmpty α] : LocallyFiniteOrder α where
   finsetIcc := isEmptyElim
   finsetIco := isEmptyElim
   finsetIoc := isEmptyElim
@@ -215,31 +229,33 @@ protected def _root_.is_empty.to_locally_finite_order [Preorder α] [IsEmpty α]
   finset_mem_Ico := isEmptyElim
   finset_mem_Ioc := isEmptyElim
   finset_mem_Ioo := isEmptyElim
-#align _root_.is_empty.to_locally_finite_order _root_.is_empty.to_locally_finite_order
+#align is_empty.to_locally_finite_order IsEmpty.toLocallyFiniteOrder
 
 -- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
 This is not an instance as it would not be defeq to more specific instances. -/
 @[reducible]
-protected def _root_.is_empty.to_locally_finite_order_top [Preorder α] [IsEmpty α] : LocallyFiniteOrderTop α where
+protected def IsEmpty.toLocallyFiniteOrderTop [Preorder α] [IsEmpty α] :
+    LocallyFiniteOrderTop α where
   finsetIci := isEmptyElim
   finsetIoi := isEmptyElim
   finset_mem_Ici := isEmptyElim
   finset_mem_Ioi := isEmptyElim
-#align _root_.is_empty.to_locally_finite_order_top _root_.is_empty.to_locally_finite_order_top
+#align is_empty.to_locally_finite_order_top IsEmpty.toLocallyFiniteOrderTop
 
 -- See note [reducible non-instances]
 /-- An empty type is locally finite.
 
 This is not an instance as it would not be defeq to more specific instances. -/
 @[reducible]
-protected def _root_.is_empty.to_locally_finite_order_bot [Preorder α] [IsEmpty α] : LocallyFiniteOrderBot α where
+protected def IsEmpty.toLocallyFiniteOrderBot [Preorder α] [IsEmpty α] :
+    LocallyFiniteOrderBot α where
   finsetIic := isEmptyElim
   finsetIio := isEmptyElim
   finset_mem_Iic := isEmptyElim
   finset_mem_Iio := isEmptyElim
-#align _root_.is_empty.to_locally_finite_order_bot _root_.is_empty.to_locally_finite_order_bot
+#align is_empty.to_locally_finite_order_bot IsEmpty.toLocallyFiniteOrderBot
 
 /-! ### Intervals as finsets -/
 
@@ -395,13 +411,13 @@ section OrderTop
 variable [LocallyFiniteOrder α] [OrderTop α] {a x : α}
 
 -- See note [lower priority instance]
-instance (priority := 100) _root_.locally_finite_order.to_locally_finite_order_top : LocallyFiniteOrderTop α where
+instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderTop :
+    LocallyFiniteOrderTop α where
   finsetIci b := icc b ⊤
   finsetIoi b := ioc b ⊤
   finset_mem_Ici a x := by rw [mem_Icc, and_iff_left le_top]
   finset_mem_Ioi a x := by rw [mem_Ioc, and_iff_left le_top]
-#align
-  finset._root_.locally_finite_order.to_locally_finite_order_top finset._root_.locally_finite_order.to_locally_finite_order_top
+#align locally_finite_order.to_locally_finite_order_top LocallyFiniteOrder.toLocallyFiniteOrderTop
 
 theorem Ici_eq_Icc (a : α) : ici a = icc a ⊤ :=
   rfl
@@ -418,12 +434,14 @@ section OrderBot
 variable [OrderBot α] [LocallyFiniteOrder α] {b x : α}
 
 -- See note [lower priority instance]
-instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderBot : LocallyFiniteOrderBot α where
+instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderBot :
+    LocallyFiniteOrderBot α where
   finsetIic := icc ⊥
   finsetIio := ico ⊥
   finset_mem_Iic a x := by rw [mem_Icc, and_iff_right bot_le]
   finset_mem_Iio a x := by rw [mem_Ico, and_iff_right bot_le]
-#align finset.locally_finite_order.to_locally_finite_order_bot Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot
+#align
+  finset.locally_finite_order.to_locally_finite_order_bot Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot
 
 theorem Iic_eq_Icc : Iic = icc (⊥ : α) :=
   rfl
@@ -473,19 +491,23 @@ def ioo (a b : α) : Multiset α :=
 #align multiset.Ioo Multiset.ioo
 
 @[simp]
-theorem mem_Icc {a b x : α} : x ∈ icc a b ↔ a ≤ x ∧ x ≤ b := by rw [Icc, ← Finset.mem_def, Finset.mem_Icc]
+theorem mem_Icc {a b x : α} : x ∈ icc a b ↔ a ≤ x ∧ x ≤ b := by
+  rw [Icc, ← Finset.mem_def, Finset.mem_Icc]
 #align multiset.mem_Icc Multiset.mem_Icc
 
 @[simp]
-theorem mem_Ico {a b x : α} : x ∈ ico a b ↔ a ≤ x ∧ x < b := by rw [Ico, ← Finset.mem_def, Finset.mem_Ico]
+theorem mem_Ico {a b x : α} : x ∈ ico a b ↔ a ≤ x ∧ x < b := by
+  rw [Ico, ← Finset.mem_def, Finset.mem_Ico]
 #align multiset.mem_Ico Multiset.mem_Ico
 
 @[simp]
-theorem mem_Ioc {a b x : α} : x ∈ ioc a b ↔ a < x ∧ x ≤ b := by rw [Ioc, ← Finset.mem_def, Finset.mem_Ioc]
+theorem mem_Ioc {a b x : α} : x ∈ ioc a b ↔ a < x ∧ x ≤ b := by
+  rw [Ioc, ← Finset.mem_def, Finset.mem_Ioc]
 #align multiset.mem_Ioc Multiset.mem_Ioc
 
 @[simp]
-theorem mem_Ioo {a b x : α} : x ∈ ioo a b ↔ a < x ∧ x < b := by rw [Ioo, ← Finset.mem_def, Finset.mem_Ioo]
+theorem mem_Ioo {a b x : α} : x ∈ ioo a b ↔ a < x ∧ x < b := by
+  rw [Ioo, ← Finset.mem_def, Finset.mem_Ioo]
 #align multiset.mem_Ioo Multiset.mem_Ioo
 
 end LocallyFiniteOrder
@@ -639,7 +661,8 @@ section Preorder
 variable [Preorder α] [Preorder β]
 
 /-- A noncomputable constructor from the finiteness of all closed intervals. -/
-noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.icc a b).Finite) : LocallyFiniteOrder α :=
+noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.icc a b).Finite) :
+    LocallyFiniteOrder α :=
   @LocallyFiniteOrder.ofIcc' α _ (Classical.decRel _) (fun a b => (h a b).toFinset) fun a b x => by
     rw [Set.Finite.mem_to_finset, Set.mem_Icc]
 #align locally_finite_order.of_finite_Icc LocallyFiniteOrder.ofFiniteIcc
@@ -870,41 +893,44 @@ end LocallyFiniteOrderTop
 namespace Prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance [LocallyFiniteOrder α] [LocallyFiniteOrder β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] :
-    LocallyFiniteOrder (α × β) :=
+instance [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+    [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] : LocallyFiniteOrder (α × β) :=
   LocallyFiniteOrder.ofIcc' (α × β) (fun a b => icc a.fst b.fst ×ˢ icc a.snd b.snd) fun a b x => by
     rw [mem_product, mem_Icc, mem_Icc, and_and_and_comm]
     rfl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance [LocallyFiniteOrderTop α] [LocallyFiniteOrderTop β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] :
-    LocallyFiniteOrderTop (α × β) :=
+instance [LocallyFiniteOrderTop α] [LocallyFiniteOrderTop β]
+    [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] : LocallyFiniteOrderTop (α × β) :=
   LocallyFiniteOrderTop.ofIci' (α × β) (fun a => ici a.fst ×ˢ ici a.snd) fun a x => by
     rw [mem_product, mem_Ici, mem_Ici]
     rfl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance [LocallyFiniteOrderBot α] [LocallyFiniteOrderBot β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] :
-    LocallyFiniteOrderBot (α × β) :=
+instance [LocallyFiniteOrderBot α] [LocallyFiniteOrderBot β]
+    [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] : LocallyFiniteOrderBot (α × β) :=
   LocallyFiniteOrderBot.ofIic' (α × β) (fun a => iic a.fst ×ˢ iic a.snd) fun a x => by
     rw [mem_product, mem_Iic, mem_Iic]
     rfl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Icc_eq [LocallyFiniteOrder α] [LocallyFiniteOrder β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)]
-    (p q : α × β) : Finset.icc p q = Finset.icc p.1 q.1 ×ˢ Finset.icc p.2 q.2 :=
+theorem Icc_eq [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+    [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
+    Finset.icc p q = Finset.icc p.1 q.1 ×ˢ Finset.icc p.2 q.2 :=
   rfl
 #align prod.Icc_eq Prod.Icc_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem Icc_mk_mk [LocallyFiniteOrder α] [LocallyFiniteOrder β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)]
-    (a₁ a₂ : α) (b₁ b₂ : β) : Finset.icc (a₁, b₁) (a₂, b₂) = Finset.icc a₁ a₂ ×ˢ Finset.icc b₁ b₂ :=
+theorem Icc_mk_mk [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+    [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (a₁ a₂ : α) (b₁ b₂ : β) :
+    Finset.icc (a₁, b₁) (a₂, b₂) = Finset.icc a₁ a₂ ×ˢ Finset.icc b₁ b₂ :=
   rfl
 #align prod.Icc_mk_mk Prod.Icc_mk_mk
 
-theorem card_Icc [LocallyFiniteOrder α] [LocallyFiniteOrder β] [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)]
-    (p q : α × β) : (Finset.icc p q).card = (Finset.icc p.1 q.1).card * (Finset.icc p.2 q.2).card :=
+theorem card_Icc [LocallyFiniteOrder α] [LocallyFiniteOrder β]
+    [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
+    (Finset.icc p q).card = (Finset.icc p.1 q.1).card * (Finset.icc p.2 q.2).card :=
   Finset.card_product _ _
 #align prod.card_Icc Prod.card_Icc
 
@@ -953,7 +979,8 @@ instance : LocallyFiniteOrder (WithTop α) where
   finset_mem_Icc a b x :=
     match a, b, x with
     | ⊤, ⊤, x => mem_singleton.trans (le_antisymm_iff.trans <| and_comm' _ _)
-    | ⊤, (b : α), x => iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt <| coe_lt_top _
+    | ⊤, (b : α), x =>
+      iff_of_false (not_mem_empty _) fun h => (h.1.trans h.2).not_lt <| coe_lt_top _
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match1]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match1, coe_eq_coe]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match1]
@@ -964,21 +991,25 @@ instance : LocallyFiniteOrder (WithTop α) where
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match2]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_top]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match2]
-    | (a : α), (b : α), (x : α) => by simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_coe]
+    | (a : α), (b : α), (x : α) => by
+      simp [WithTop.LocallyFiniteOrder._match2, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioc a b x :=
     match a, b, x with
     | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans_le h.2
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match3, coe_lt_top]
     | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match3]
-    | (a : α), (b : α), (x : α) => by simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
+    | (a : α), (b : α), (x : α) => by
+      simp [WithTop.LocallyFiniteOrder._match3, coe_eq_coe, coe_lt_coe]
   finset_mem_Ioo a b x :=
     match a, b, x with
     | ⊤, b, x => iff_of_false (not_mem_empty _) fun h => not_top_lt <| h.1.trans h.2
     | (a : α), ⊤, ⊤ => by simp [WithTop.LocallyFiniteOrder._match4, coe_lt_top]
-    | (a : α), ⊤, (x : α) => by simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe, coe_lt_top]
+    | (a : α), ⊤, (x : α) => by
+      simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe, coe_lt_top]
     | (a : α), (b : α), ⊤ => by simp [WithTop.LocallyFiniteOrder._match4]
-    | (a : α), (b : α), (x : α) => by simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe]
+    | (a : α), (b : α), (x : α) => by
+      simp [WithTop.LocallyFiniteOrder._match4, coe_eq_coe, coe_lt_coe]
 
 variable (a b : α)
 
@@ -1113,8 +1144,10 @@ instance [LocallyFiniteOrder α] : LocallyFiniteOrder (Subtype p) where
   finsetIoc a b := (ioc (a : α) b).Subtype p
   finsetIoo a b := (ioo (a : α) b).Subtype p
   finset_mem_Icc a b x := by simp_rw [Finset.mem_subtype, mem_Icc, Subtype.coe_le_coe]
-  finset_mem_Ico a b x := by simp_rw [Finset.mem_subtype, mem_Ico, Subtype.coe_le_coe, Subtype.coe_lt_coe]
-  finset_mem_Ioc a b x := by simp_rw [Finset.mem_subtype, mem_Ioc, Subtype.coe_le_coe, Subtype.coe_lt_coe]
+  finset_mem_Ico a b x := by
+    simp_rw [Finset.mem_subtype, mem_Ico, Subtype.coe_le_coe, Subtype.coe_lt_coe]
+  finset_mem_Ioc a b x := by
+    simp_rw [Finset.mem_subtype, mem_Ioc, Subtype.coe_le_coe, Subtype.coe_lt_coe]
   finset_mem_Ioo a b x := by simp_rw [Finset.mem_subtype, mem_Ioo, Subtype.coe_lt_coe]
 
 instance [LocallyFiniteOrderTop α] : LocallyFiniteOrderTop (Subtype p) where

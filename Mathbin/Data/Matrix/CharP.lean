@@ -19,9 +19,9 @@ instance Matrix.char_p [DecidableEq n] [Nonempty n] (p : ℕ) [CharP R p] : Char
   ⟨by
     intro k
     rw [← CharP.cast_eq_zero_iff R p k, ← Nat.cast_zero, ← map_nat_cast <| scalar n]
-    convert scalar_inj
+    convert scalar_inj;
     · simp
-      
+      ;
     · assumption
       ⟩
 #align matrix.char_p Matrix.char_p

@@ -92,7 +92,8 @@ def liftNc (f : k →+ R) (g : G → R) : MonoidAlgebra k G →+ R :=
 #align monoid_algebra.lift_nc MonoidAlgebra.liftNc
 
 @[simp]
-theorem lift_nc_single (f : k →+ R) (g : G → R) (a : G) (b : k) : liftNc f g (single a b) = f b * g a :=
+theorem lift_nc_single (f : k →+ R) (g : G → R) (a : G) (b : k) :
+    liftNc f g (single a b) = f b * g a :=
   lift_add_hom_apply_single _ _ _
 #align monoid_algebra.lift_nc_single MonoidAlgebra.lift_nc_single
 
@@ -108,25 +109,26 @@ variable [Semiring k] [Mul G]
 instance : Mul (MonoidAlgebra k G) :=
   ⟨fun f g => f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂)⟩
 
-theorem mul_def {f g : MonoidAlgebra k G} : f * g = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂) :=
+theorem mul_def {f g : MonoidAlgebra k G} :
+    f * g = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => single (a₁ * a₂) (b₁ * b₂) :=
   rfl
 #align monoid_algebra.mul_def MonoidAlgebra.mul_def
 
 instance : NonUnitalNonAssocSemiring (MonoidAlgebra k G) :=
   { Finsupp.addCommMonoid with zero := 0, mul := (· * ·), add := (· + ·),
     left_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-        forall₃_true_iff, sum_add],
+      simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
+        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add],
     right_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, add_mul, zero_mul, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-        forall₃_true_iff, sum_zero, sum_add],
+      simp only [mul_def, sum_add_index, add_mul, zero_mul, single_zero, single_add,
+        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add],
     zero_mul := fun f => by simp only [mul_def, sum_zero_index],
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero] }
 
 variable [Semiring R]
 
-theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom G R] (f : k →+* R) (g : g_hom) (a b : MonoidAlgebra k G)
-    (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g y)) :
+theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom G R] (f : k →+* R) (g : g_hom)
+    (a b : MonoidAlgebra k G) (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g y)) :
     liftNc (f : k →+ R) g (a * b) = liftNc (f : k →+ R) g a * liftNc (f : k →+ R) g b := by
   conv_rhs => rw [← sum_single a, ← sum_single b]
   simp_rw [mul_def, (lift_nc _ g).map_finsupp_sum, lift_nc_single, Finsupp.sum_mul, Finsupp.mul_sum]
@@ -143,9 +145,9 @@ variable [Semiring k] [Semigroup G] [Semiring R]
 instance : NonUnitalSemiring (MonoidAlgebra k G) :=
   { MonoidAlgebra.nonUnitalNonAssocSemiring with zero := 0, mul := (· * ·), add := (· + ·),
     mul_assoc := fun f g h => by
-      simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul, mul_add, add_assoc, mul_assoc, zero_mul, mul_zero,
-        sum_zero, sum_add] }
+      simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index,
+        single_zero, single_add, eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul,
+        mul_add, add_assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add] }
 
 end Semigroup
 
@@ -163,8 +165,8 @@ theorem one_def : (1 : MonoidAlgebra k G) = single 1 1 :=
 #align monoid_algebra.one_def MonoidAlgebra.one_def
 
 @[simp]
-theorem lift_nc_one {g_hom : Type _} [OneHomClass g_hom G R] (f : k →+* R) (g : g_hom) : liftNc (f : k →+ R) g 1 = 1 :=
-  by simp [one_def]
+theorem lift_nc_one {g_hom : Type _} [OneHomClass g_hom G R] (f : k →+* R) (g : g_hom) :
+    liftNc (f : k →+ R) g 1 = 1 := by simp [one_def]
 #align monoid_algebra.lift_nc_one MonoidAlgebra.lift_nc_one
 
 end One
@@ -174,13 +176,15 @@ section MulOneClass
 variable [Semiring k] [MulOneClass G]
 
 instance : NonAssocSemiring (MonoidAlgebra k G) :=
-  { MonoidAlgebra.nonUnitalNonAssocSemiring with one := 1, mul := (· * ·), zero := 0, add := (· + ·),
-    natCast := fun n => single 1 n, nat_cast_zero := by simp [Nat.cast],
+  { MonoidAlgebra.nonUnitalNonAssocSemiring with one := 1, mul := (· * ·), zero := 0,
+    add := (· + ·), natCast := fun n => single 1 n, nat_cast_zero := by simp [Nat.cast],
     nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl,
     one_mul := fun f => by
-      simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add, one_mul, sum_single],
+      simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add,
+        one_mul, sum_single],
     mul_one := fun f => by
-      simp only [mul_def, one_def, sum_single_index, mul_zero, single_zero, sum_zero, add_zero, mul_one, sum_single] }
+      simp only [mul_def, one_def, sum_single_index, mul_zero, single_zero, sum_zero, add_zero,
+        mul_one, sum_single] }
 
 theorem nat_cast_def (n : ℕ) : (n : MonoidAlgebra k G) = single 1 n :=
   rfl
@@ -196,13 +200,14 @@ section Semiring
 variable [Semiring k] [Monoid G]
 
 instance : Semiring (MonoidAlgebra k G) :=
-  { MonoidAlgebra.nonUnitalSemiring, MonoidAlgebra.nonAssocSemiring with one := 1, mul := (· * ·), zero := 0,
-    add := (· + ·) }
+  { MonoidAlgebra.nonUnitalSemiring, MonoidAlgebra.nonAssocSemiring with one := 1, mul := (· * ·),
+    zero := 0, add := (· + ·) }
 
 variable [Semiring R]
 
 /-- `lift_nc` as a `ring_hom`, for when `f x` and `g y` commute -/
-def liftNcRingHom (f : k →+* R) (g : G →* R) (h_comm : ∀ x y, Commute (f x) (g y)) : MonoidAlgebra k G →+* R :=
+def liftNcRingHom (f : k →+* R) (g : G →* R) (h_comm : ∀ x y, Commute (f x) (g y)) :
+    MonoidAlgebra k G →+* R :=
   { liftNc (f : k →+ R) g with toFun := liftNc (f : k →+ R) g, map_one' := lift_nc_one _ _,
     map_mul' := fun a b => (lift_nc_mul _ _ _ _) fun _ _ _ => h_comm _ _ }
 #align monoid_algebra.lift_nc_ring_hom MonoidAlgebra.liftNcRingHom
@@ -240,8 +245,9 @@ instance [Ring k] [Semigroup G] : NonUnitalRing (MonoidAlgebra k G) :=
   { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonUnitalSemiring with }
 
 instance [Ring k] [MulOneClass G] : NonAssocRing (MonoidAlgebra k G) :=
-  { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonAssocSemiring with intCast := fun z => single 1 (z : k),
-    int_cast_of_nat := fun n => by simpa, int_cast_neg_succ_of_nat := fun n => by simpa }
+  { MonoidAlgebra.addCommGroup, MonoidAlgebra.nonAssocSemiring with
+    intCast := fun z => single 1 (z : k), int_cast_of_nat := fun n => by simpa,
+    int_cast_neg_succ_of_nat := fun n => by simpa }
 
 theorem int_cast_def [Ring k] [MulOneClass G] (z : ℤ) : (z : MonoidAlgebra k G) = single 1 z :=
   rfl
@@ -274,16 +280,16 @@ instance [Monoid R] [Semiring k] [DistribMulAction R k] [HasFaithfulSmul R k] [N
     HasFaithfulSmul R (MonoidAlgebra k G) :=
   Finsupp.has_faithful_smul
 
-instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k] [HasSmul R S]
-    [IsScalarTower R S k] : IsScalarTower R S (MonoidAlgebra k G) :=
+instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
+    [HasSmul R S] [IsScalarTower R S k] : IsScalarTower R S (MonoidAlgebra k G) :=
   Finsupp.is_scalar_tower G k
 
-instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k] [SmulCommClass R S k] :
-    SmulCommClass R S (MonoidAlgebra k G) :=
+instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
+    [SmulCommClass R S k] : SmulCommClass R S (MonoidAlgebra k G) :=
   Finsupp.smul_comm_class G k
 
-instance [Monoid R] [Semiring k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k] [IsCentralScalar R k] :
-    IsCentralScalar R (MonoidAlgebra k G) :=
+instance [Monoid R] [Semiring k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k]
+    [IsCentralScalar R k] : IsCentralScalar R (MonoidAlgebra k G) :=
   Finsupp.is_central_scalar G k
 
 /-- This is not an instance as it conflicts with `monoid_algebra.distrib_mul_action` when `G = kˣ`.
@@ -331,7 +337,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            («term_↔_»
             («term_∈_» `p "∈" `s)
             "↔"
-            («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))]
+            («term_=_»
+             («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+             "="
+             `x)))]
          []
          ")")]
        (Term.typeSpec
@@ -377,7 +386,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                   (termIfThenElse
                    "if"
                    («term_=_»
-                    («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+                    («term_*_»
+                     (Term.proj `p "." (fieldIdx "1"))
+                     "*"
+                     (Term.proj `p "." (fieldIdx "2")))
                     "="
                     `x)
                    "then"
@@ -402,7 +414,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             ", "
             (BigOperators.Algebra.BigOperators.Basic.finset.sum
              "∑"
-             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
+             (Std.ExtendedBinder.extBinders
+              (Std.ExtendedBinder.extBinder (Lean.binderIdent `a₂) []))
              " in "
              (Term.proj `g "." `support)
              ", "
@@ -417,7 +430,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
              "∑"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
              " in "
-             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+             (Finset.Data.Finset.Prod.finset.product
+              (Term.proj `f "." `support)
+              " ×ˢ "
+              (Term.proj `g "." `support))
              ", "
              (Term.app `F [`p])))
            ":="
@@ -432,7 +448,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
              " in "
              (Term.app
               (Term.proj
-               (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+               (Finset.Data.Finset.Prod.finset.product
+                (Term.proj `f "." `support)
+                " ×ˢ "
+                (Term.proj `g "." `support))
                "."
                `filter)
               [(Term.fun
@@ -442,7 +461,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                  [(Term.typeSpec ":" («term_×_» `G "×" `G))]
                  "=>"
                  («term_=_»
-                  («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+                  («term_*_»
+                   (Term.proj `p "." (fieldIdx "1"))
+                   "*"
+                   (Term.proj `p "." (fieldIdx "2")))
                   "="
                   `x)))])
              ", "
@@ -543,7 +565,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                       ","
                       (Tactic.simpLemma [] [] `not_not)]
                      "]"]
-                    [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+                    [(Tactic.location
+                      "at"
+                      (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
                    []
                    (Classical.«tacticBy_cases_:_»
                     "by_cases"
@@ -556,7 +580,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                       (Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)]
+                        "]")
                        [])
                       [])])
                    []
@@ -568,7 +595,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                        []
                        (Tactic.rwRuleSeq
                         "["
-                        [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+                        [(Tactic.rwRule [] (Term.app `hp [`hps `h1]))
+                         ","
+                         (Tactic.rwRule [] `mul_zero)]
                         "]")
                        [])
                       [])])])))))]))]))
@@ -603,7 +632,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                  "exact"
                  (termIfThenElse
                   "if"
-                  («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+                  («term_=_»
+                   («term_*_»
+                    (Term.proj `p "." (fieldIdx "1"))
+                    "*"
+                    (Term.proj `p "." (fieldIdx "2")))
+                   "="
+                   `x)
                   "then"
                   («term_*_»
                    (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -641,7 +676,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
             " in "
-            (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+            (Finset.Data.Finset.Prod.finset.product
+             (Term.proj `f "." `support)
+             " ×ˢ "
+             (Term.proj `g "." `support))
             ", "
             (Term.app `F [`p])))
           ":="
@@ -656,7 +694,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             " in "
             (Term.app
              (Term.proj
-              (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+              (Finset.Data.Finset.Prod.finset.product
+               (Term.proj `f "." `support)
+               " ×ˢ "
+               (Term.proj `g "." `support))
               "."
               `filter)
              [(Term.fun
@@ -767,7 +808,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                      ","
                      (Tactic.simpLemma [] [] `not_not)]
                     "]"]
-                   [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+                   [(Tactic.location
+                     "at"
+                     (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
                   []
                   (Classical.«tacticBy_cases_:_»
                    "by_cases"
@@ -780,7 +823,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                      (Tactic.rwSeq
                       "rw"
                       []
-                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)]
+                       "]")
                       [])
                      [])])
                   []
@@ -792,7 +838,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                       []
                       (Tactic.rwRuleSeq
                        "["
-                       [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+                       [(Tactic.rwRule [] (Term.app `hp [`hps `h1]))
+                        ","
+                        (Tactic.rwRule [] `mul_zero)]
                        "]")
                       [])
                      [])])])))))]))]))
@@ -826,7 +874,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
            " in "
-           (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+           (Finset.Data.Finset.Prod.finset.product
+            (Term.proj `f "." `support)
+            " ×ˢ "
+            (Term.proj `g "." `support))
            ", "
            (Term.app `F [`p])))
          ":="
@@ -841,7 +892,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            " in "
            (Term.app
             (Term.proj
-             (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+             (Finset.Data.Finset.Prod.finset.product
+              (Term.proj `f "." `support)
+              " ×ˢ "
+              (Term.proj `g "." `support))
              "."
              `filter)
             [(Term.fun
@@ -952,7 +1006,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                     ","
                     (Tactic.simpLemma [] [] `not_not)]
                    "]"]
-                  [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+                  [(Tactic.location
+                    "at"
+                    (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
                  []
                  (Classical.«tacticBy_cases_:_»
                   "by_cases"
@@ -965,7 +1021,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                     (Tactic.rwSeq
                      "rw"
                      []
-                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+                     (Tactic.rwRuleSeq
+                      "["
+                      [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)]
+                      "]")
                      [])
                     [])])
                  []
@@ -977,7 +1036,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                      []
                      (Tactic.rwRuleSeq
                       "["
-                      [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+                      [(Tactic.rwRule [] (Term.app `hp [`hps `h1]))
+                       ","
+                       (Tactic.rwRule [] `mul_zero)]
                       "]")
                      [])
                     [])])])))))]))])
@@ -1008,7 +1069,9 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                  ","
                  (Tactic.simpLemma [] [] `not_not)]
                 "]"]
-               [(Tactic.location "at" (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
+               [(Tactic.location
+                 "at"
+                 (Tactic.locationHyp [`hp] [(patternIgnore (token.«⊢» "⊢"))]))])
               []
               (Classical.«tacticBy_cases_:_»
                "by_cases"
@@ -1021,7 +1084,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
                  (Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)]
+                   "]")
                   [])
                  [])])
               []
@@ -1135,7 +1201,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
              (Tactic.rwSeq
               "rw"
               []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)] "]")
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+               "]")
               [])
              [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -1146,33 +1215,43 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
          (Tactic.rwSeq
           "rw"
           []
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)] "]")
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+           "]")
           [])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
        "rw"
        []
-       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)] "]")
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] (Term.app `hp [`hps `h1])) "," (Tactic.rwRule [] `mul_zero)]
+        "]")
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mul_zero
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `hp [`hps `h1])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h1
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hps
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hp
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -1180,16 +1259,26 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       («tactic___;_»
        (cdotTk (patternIgnore (token.«·» "·")))
        [(group
-         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]") [])
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+          [])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]") [])
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h1) "," (Tactic.rwRule [] `zero_mul)] "]")
+       [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `zero_mul
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h1
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1201,7 +1290,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       («term_=_» (Term.app `f [(Term.proj `p "." (fieldIdx "1"))]) "=" (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
@@ -1211,10 +1301,12 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -1237,27 +1329,32 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hp
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `not_not
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `not_and
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_support_iff
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_filter
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -1265,19 +1362,22 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hp
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hps
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `sum_subset [(Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])])
@@ -1289,27 +1389,35 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `filter_subset
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sum_subset
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Term.app `sum_subset [(Term.paren "(" (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) ")")])
+     (Term.app
+      `sum_subset
+      [(Term.paren "(" (Term.app `filter_subset [(Term.hole "_") (Term.hole "_")]) ")")])
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1351,11 +1459,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
@@ -1365,15 +1476,18 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
@@ -1410,19 +1524,22 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `rfl))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
@@ -1469,22 +1586,26 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `and_comm'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_product
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_filter
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.Ext.«tacticExt___:_» "ext" [] [])
@@ -1516,7 +1637,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sum_congr
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -1579,11 +1701,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
@@ -1593,10 +1718,12 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1637,7 +1764,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.proj `p "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1652,7 +1780,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.proj `p "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1665,7 +1794,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       («term_×_» `G "×" `G)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `G
-[PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
       `G
 [PrettyPrinter.parenthesize] ...precedences are 36 >? 1024, (none, [anonymous]) <=? (some 35, term)
@@ -1675,14 +1805,16 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
       `p
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `s "." `filter)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -1697,15 +1829,18 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Finset.sum_filter
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -1722,7 +1857,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         " in "
         (Term.app
          (Term.proj
-          (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+          (Finset.Data.Finset.Prod.finset.product
+           (Term.proj `f "." `support)
+           " ×ˢ "
+           (Term.proj `g "." `support))
           "."
           `filter)
          [(Term.fun
@@ -1731,7 +1869,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             [`p]
             [(Term.typeSpec ":" («term_×_» `G "×" `G))]
             "=>"
-            («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))])
+            («term_=_»
+             («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+             "="
+             `x)))])
         ", "
         («term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -1744,7 +1885,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        " in "
        (Term.app
         (Term.proj
-         (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+         (Finset.Data.Finset.Prod.finset.product
+          (Term.proj `f "." `support)
+          " ×ˢ "
+          (Term.proj `g "." `support))
          "."
          `filter)
         [(Term.fun
@@ -1753,7 +1897,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
            [`p]
            [(Term.typeSpec ":" («term_×_» `G "×" `G))]
            "=>"
-           («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))])
+           («term_=_»
+            («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+            "="
+            `x)))])
        ", "
        («term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -1773,11 +1920,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
@@ -1787,16 +1937,21 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj
-        (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+        (Finset.Data.Finset.Prod.finset.product
+         (Term.proj `f "." `support)
+         " ×ˢ "
+         (Term.proj `g "." `support))
         "."
         `filter)
        [(Term.fun
@@ -1805,7 +1960,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
           [`p]
           [(Term.typeSpec ":" («term_×_» `G "×" `G))]
           "=>"
-          («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))])
+          («term_=_»
+           («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+           "="
+           `x)))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1815,12 +1973,19 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         [`p]
         [(Term.typeSpec ":" («term_×_» `G "×" `G))]
         "=>"
-        («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)))
+        («term_=_»
+         («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+         "="
+         `x)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+      («term_=_»
+       («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+       "="
+       `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1828,7 +1993,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.proj `p "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1841,7 +2007,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       («term_×_» `G "×" `G)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `G
-[PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 35 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 35, term))
       `G
 [PrettyPrinter.parenthesize] ...precedences are 36 >? 1024, (none, [anonymous]) <=? (some 35, term)
@@ -1851,21 +2018,29 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
       `p
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj
-       (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+       (Finset.Data.Finset.Prod.finset.product
+        (Term.proj `f "." `support)
+        " ×ˢ "
+        (Term.proj `g "." `support))
        "."
        `filter)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+      (Finset.Data.Finset.Prod.finset.product
+       (Term.proj `f "." `support)
+       " ×ˢ "
+       (Term.proj `g "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 82 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 82 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 82, term))
       (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1875,9 +2050,13 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 82, (some 82, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+     (Finset.Data.Finset.Prod.finset.product
+      (Term.proj `f "." `support)
+      " ×ˢ "
+      (Term.proj `g "." `support))
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -1898,7 +2077,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
         " in "
-        (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+        (Finset.Data.Finset.Prod.finset.product
+         (Term.proj `f "." `support)
+         " ×ˢ "
+         (Term.proj `g "." `support))
         ", "
         (Term.app `F [`p])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1906,7 +2088,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "∑"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `p) []))
        " in "
-       (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+       (Finset.Data.Finset.Prod.finset.product
+        (Term.proj `f "." `support)
+        " ×ˢ "
+        (Term.proj `g "." `support))
        ", "
        (Term.app `F [`p]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1915,19 +2100,25 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `p
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `F
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Finset.Data.Finset.Prod.finset.product (Term.proj `f "." `support) " ×ˢ " (Term.proj `g "." `support))
+      (Finset.Data.Finset.Prod.finset.product
+       (Term.proj `f "." `support)
+       " ×ˢ "
+       (Term.proj `g "." `support))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 82 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 82 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 82, term))
       (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1946,20 +2137,24 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `mul_apply
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -2008,28 +2203,34 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
       (Term.tuple "(" [`a₁ "," [`a₂]] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `F
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `g "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `f "." `support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app («term_*_» `f "*" `g) [`x])
@@ -2037,12 +2238,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       («term_*_» `f "*" `g)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -2069,7 +2272,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
               "exact"
               (termIfThenElse
                "if"
-               («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+               («term_=_»
+                («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+                "="
+                `x)
                "then"
                («term_*_»
                 (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -2089,7 +2295,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
             "exact"
             (termIfThenElse
              "if"
-             («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+             («term_=_»
+              («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+              "="
+              `x)
              "then"
              («term_*_»
               (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -2106,7 +2315,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
         "exact"
         (termIfThenElse
          "if"
-         («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+         («term_=_»
+          («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+          "="
+          `x)
          "then"
          («term_*_»
           (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -2119,7 +2331,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        "exact"
        (termIfThenElse
         "if"
-        («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+        («term_=_»
+         («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+         "="
+         `x)
         "then"
         («term_*_»
          (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -2130,7 +2345,10 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termIfThenElse
        "if"
-       («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+       («term_=_»
+        («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+        "="
+        `x)
        "then"
        («term_*_»
         (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -2140,7 +2358,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
        (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_*_»
        (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
@@ -2155,11 +2374,14 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `f [(Term.proj `p "." (fieldIdx "1"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
@@ -2169,17 +2391,23 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2"))) "=" `x)
+      («term_=_»
+       («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
+       "="
+       `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_*_» (Term.proj `p "." (fieldIdx "1")) "*" (Term.proj `p "." (fieldIdx "2")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2187,7 +2415,8 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `p
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.proj `p "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -2197,7 +2426,7 @@ theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -2227,10 +2456,24 @@ theorem
       calc
         f * g x = ∑ a₁ in f . support , ∑ a₂ in g . support , F ( a₁ , a₂ ) := mul_apply f g x
         _ = ∑ p in f . support ×ˢ g . support , F p := Finset.sum_product . symm
-          _ = ∑ p in f . support ×ˢ g . support . filter fun p : G × G => p . 1 * p . 2 = x , f p . 1 * g p . 2
+          _
+              =
+              ∑
+                p
+                in
+                f . support ×ˢ g . support . filter fun p : G × G => p . 1 * p . 2 = x
+                ,
+                f p . 1 * g p . 2
             :=
             Finset.sum_filter _ _ . symm
-          _ = ∑ p in s . filter fun p : G × G => p . 1 ∈ f . support ∧ p . 2 ∈ g . support , f p . 1 * g p . 2
+          _
+              =
+              ∑
+                p
+                in
+                s . filter fun p : G × G => p . 1 ∈ f . support ∧ p . 2 ∈ g . support
+                ,
+                f p . 1 * g p . 2
             :=
             sum_congr by ext simp only [ mem_filter , mem_product , hs , and_comm' ] fun _ _ => rfl
           _ = ∑ p in s , f p . 1 * g p . 2
@@ -2254,7 +2497,8 @@ theorem single_mul_single [Mul G] {a₁ a₂ : G} {b₁ b₂ : k} :
 #align monoid_algebra.single_mul_single MonoidAlgebra.single_mul_single
 
 @[simp]
-theorem single_pow [Monoid G] {a : G} {b : k} : ∀ n : ℕ, (single a b : MonoidAlgebra k G) ^ n = single (a ^ n) (b ^ n)
+theorem single_pow [Monoid G] {a : G} {b : k} :
+    ∀ n : ℕ, (single a b : MonoidAlgebra k G) ^ n = single (a ^ n) (b ^ n)
   | 0 => by
     simp only [pow_zero]
     rfl
@@ -2265,15 +2509,15 @@ section
 
 /-- Like `finsupp.map_domain_zero`, but for the `1` we define in this file -/
 @[simp]
-theorem map_domain_one {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [One α] [One α₂] {F : Type _}
-    [OneHomClass F α α₂] (f : F) :
+theorem map_domain_one {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [One α] [One α₂]
+    {F : Type _} [OneHomClass F α α₂] (f : F) :
     (mapDomain f (1 : MonoidAlgebra β α) : MonoidAlgebra β α₂) = (1 : MonoidAlgebra β α₂) := by
   simp_rw [one_def, map_domain_single, map_one]
 #align monoid_algebra.map_domain_one MonoidAlgebra.map_domain_one
 
 /-- Like `finsupp.map_domain_add`, but for the convolutive multiplication we define in this file -/
-theorem map_domain_mul {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [Mul α] [Mul α₂] {F : Type _}
-    [MulHomClass F α α₂] (f : F) (x y : MonoidAlgebra β α) :
+theorem map_domain_mul {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [Mul α] [Mul α₂]
+    {F : Type _} [MulHomClass F α α₂] (f : F) (x y : MonoidAlgebra β α) :
     (mapDomain f (x * y : MonoidAlgebra β α) : MonoidAlgebra β α₂) =
       (mapDomain f x * mapDomain f y : MonoidAlgebra β α₂) :=
   by
@@ -2344,7 +2588,12 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
          "("
          [`H]
          [":"
-          (Term.forall "∀" [`a] [] "," («term_↔_» («term_=_» («term_*_» `a "*" `x) "=" `z) "↔" («term_=_» `a "=" `y)))]
+          (Term.forall
+           "∀"
+           [`a]
+           []
+           ","
+           («term_↔_» («term_=_» («term_*_» `a "*" `x) "=" `z) "↔" («term_=_» `a "=" `y)))]
          []
          ")")]
        (Term.typeSpec
@@ -2387,9 +2636,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                         "=>"
                         (Term.app
                          `ite
-                         [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+                         [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+                          («term_*_» `b₁ "*" `b₂)
+                          (num "0")])))])
                     "="
-                    (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                    (Term.app
+                     `ite
+                     [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z)
+                      («term_*_» `b₁ "*" `r)
+                      (num "0")]))))]
                 ":="
                 (Term.fun
                  "fun"
@@ -2402,7 +2657,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                    "<|"
                    (Term.byTactic
                     "by"
-                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
               []
               (calc
                "calc"
@@ -2419,7 +2675,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                      [`a `b]
                      []
                      "=>"
-                     (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+                     (termIfThenElse
+                      "if"
+                      («term_=_» `a "=" `y)
+                      "then"
+                      («term_*_» `b "*" `r)
+                      "else"
+                      (num "0"))))]))
                 ":="
                 (Term.byTactic
                  "by"
@@ -2459,12 +2721,24 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                   (Tactic.tacticSeq
                    (Tactic.tacticSeq1Indented
                     [(Tactic.«tactic_<;>_»
-                      (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                      "<;>"
                       (Tactic.«tactic_<;>_»
-                       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                        "<;>"
-                       (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))))])))
+                       (Tactic.simp
+                        "simp"
+                        []
+                        []
+                        []
+                        []
+                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                      "<;>"
+                      (Tactic.simp
+                       "simp"
+                       []
+                       []
+                       []
+                       ["[" [(Tactic.simpLemma [] [] `h)] "]"]
+                       []))]))))]))))])))
        [])
       []
       []))
@@ -2503,9 +2777,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                        "=>"
                        (Term.app
                         `ite
-                        [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+                        [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+                         («term_*_» `b₁ "*" `b₂)
+                         (num "0")])))])
                    "="
-                   (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+                   (Term.app
+                    `ite
+                    [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z)
+                     («term_*_» `b₁ "*" `r)
+                     (num "0")]))))]
                ":="
                (Term.fun
                 "fun"
@@ -2518,7 +2798,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                   "<|"
                   (Term.byTactic
                    "by"
-                   (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
              []
              (calc
               "calc"
@@ -2535,7 +2816,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                     [`a `b]
                     []
                     "=>"
-                    (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+                    (termIfThenElse
+                     "if"
+                     («term_=_» `a "=" `y)
+                     "then"
+                     («term_*_» `b "*" `r)
+                     "else"
+                     (num "0"))))]))
                ":="
                (Term.byTactic
                 "by"
@@ -2575,12 +2862,24 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
                    [(Tactic.«tactic_<;>_»
-                     (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                     "<;>"
                      (Tactic.«tactic_<;>_»
-                      (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                      (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                       "<;>"
-                      (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))))])))
+                      (Tactic.simp
+                       "simp"
+                       []
+                       []
+                       []
+                       []
+                       [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                     "<;>"
+                     (Tactic.simp
+                      "simp"
+                      []
+                      []
+                      []
+                      ["[" [(Tactic.simpLemma [] [] `h)] "]"]
+                      []))]))))]))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -2609,9 +2908,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                    [`a₂ `b₂]
                    []
                    "=>"
-                   (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+                   (Term.app
+                    `ite
+                    [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+                     («term_*_» `b₁ "*" `b₂)
+                     (num "0")])))])
                "="
-               (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+               (Term.app
+                `ite
+                [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
            ":="
            (Term.fun
             "fun"
@@ -2624,7 +2929,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               "<|"
               (Term.byTactic
                "by"
-               (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
          []
          (calc
           "calc"
@@ -2641,7 +2947,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                 [`a `b]
                 []
                 "=>"
-                (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+                (termIfThenElse
+                 "if"
+                 («term_=_» `a "=" `y)
+                 "then"
+                 («term_*_» `b "*" `r)
+                 "else"
+                 (num "0"))))]))
            ":="
            (Term.byTactic
             "by"
@@ -2653,7 +2965,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                 []
                 ["only"]
                 ["["
-                 [(Tactic.simpLemma [] [] `mul_apply) "," (Tactic.simpLemma [] [] `A) "," (Tactic.simpLemma [] [] `H)]
+                 [(Tactic.simpLemma [] [] `mul_apply)
+                  ","
+                  (Tactic.simpLemma [] [] `A)
+                  ","
+                  (Tactic.simpLemma [] [] `H)]
                  "]"]
                 [])]))))
           [(calcStep
@@ -2677,12 +2993,18 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
                [(Tactic.«tactic_<;>_»
-                 (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                 "<;>"
                  (Tactic.«tactic_<;>_»
-                  (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                  (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                   "<;>"
-                  (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))))
+                  (Tactic.simp
+                   "simp"
+                   []
+                   []
+                   []
+                   []
+                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                 "<;>"
+                 (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -2707,9 +3029,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                   [`a₂ `b₂]
                   []
                   "=>"
-                  (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+                  (Term.app
+                   `ite
+                   [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+                    («term_*_» `b₁ "*" `b₂)
+                    (num "0")])))])
               "="
-              (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+              (Term.app
+               `ite
+               [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
           ":="
           (Term.fun
            "fun"
@@ -2722,7 +3050,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              "<|"
              (Term.byTactic
               "by"
-              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
         []
         (calc
          "calc"
@@ -2739,7 +3068,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                [`a `b]
                []
                "=>"
-               (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+               (termIfThenElse
+                "if"
+                («term_=_» `a "=" `y)
+                "then"
+                («term_*_» `b "*" `r)
+                "else"
+                (num "0"))))]))
           ":="
           (Term.byTactic
            "by"
@@ -2751,7 +3086,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                []
                ["only"]
                ["["
-                [(Tactic.simpLemma [] [] `mul_apply) "," (Tactic.simpLemma [] [] `A) "," (Tactic.simpLemma [] [] `H)]
+                [(Tactic.simpLemma [] [] `mul_apply)
+                 ","
+                 (Tactic.simpLemma [] [] `A)
+                 ","
+                 (Tactic.simpLemma [] [] `H)]
                 "]"]
                [])]))))
          [(calcStep
@@ -2775,12 +3114,18 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
             (Tactic.tacticSeq
              (Tactic.tacticSeq1Indented
               [(Tactic.«tactic_<;>_»
-                (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                "<;>"
                 (Tactic.«tactic_<;>_»
-                 (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                 (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                  "<;>"
-                 (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))])))
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  []
+                  []
+                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                "<;>"
+                (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
        "have"
@@ -2803,9 +3148,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
                  [`a₂ `b₂]
                  []
                  "=>"
-                 (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+                 (Term.app
+                  `ite
+                  [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+                   («term_*_» `b₁ "*" `b₂)
+                   (num "0")])))])
              "="
-             (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
+             (Term.app
+              `ite
+              [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))))]
          ":="
          (Term.fun
           "fun"
@@ -2818,7 +3169,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
             "<|"
             (Term.byTactic
              "by"
-             (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))))
        []
        (calc
         "calc"
@@ -2835,7 +3187,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               [`a `b]
               []
               "=>"
-              (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+              (termIfThenElse
+               "if"
+               («term_=_» `a "=" `y)
+               "then"
+               («term_*_» `b "*" `r)
+               "else"
+               (num "0"))))]))
          ":="
          (Term.byTactic
           "by"
@@ -2847,7 +3205,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
               []
               ["only"]
               ["["
-               [(Tactic.simpLemma [] [] `mul_apply) "," (Tactic.simpLemma [] [] `A) "," (Tactic.simpLemma [] [] `H)]
+               [(Tactic.simpLemma [] [] `mul_apply)
+                ","
+                (Tactic.simpLemma [] [] `A)
+                ","
+                (Tactic.simpLemma [] [] `H)]
                "]"]
               [])]))))
         [(calcStep
@@ -2871,12 +3233,18 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
              [(Tactic.«tactic_<;>_»
-               (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-               "<;>"
                (Tactic.«tactic_<;>_»
-                (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                 "<;>"
-                (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 []
+                 []
+                 [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+               "<;>"
+               (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calc
        "calc"
@@ -2893,7 +3261,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              [`a `b]
              []
              "=>"
-             (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+             (termIfThenElse
+              "if"
+              («term_=_» `a "=" `y)
+              "then"
+              («term_*_» `b "*" `r)
+              "else"
+              (num "0"))))]))
         ":="
         (Term.byTactic
          "by"
@@ -2905,7 +3279,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
              []
              ["only"]
              ["["
-              [(Tactic.simpLemma [] [] `mul_apply) "," (Tactic.simpLemma [] [] `A) "," (Tactic.simpLemma [] [] `H)]
+              [(Tactic.simpLemma [] [] `mul_apply)
+               ","
+               (Tactic.simpLemma [] [] `A)
+               ","
+               (Tactic.simpLemma [] [] `H)]
               "]"]
              [])]))))
        [(calcStep
@@ -2929,36 +3307,37 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
             [(Tactic.«tactic_<;>_»
-              (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-              "<;>"
               (Tactic.«tactic_<;>_»
-               (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+               (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                "<;>"
-               (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))])
+               (Tactic.simp
+                "simp"
+                []
+                []
+                []
+                []
+                [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+              "<;>"
+              (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-           "<;>"
            (Tactic.«tactic_<;>_»
-            (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+            (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
             "<;>"
-            (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))])))
+            (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+           "<;>"
+           (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-       "<;>"
        (Tactic.«tactic_<;>_»
-        (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+        (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
         "<;>"
-        (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+        (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
        "<;>"
        (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2967,19 +3346,26 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
+       "<;>"
+       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2988,17 +3374,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       («term_*_» (Term.app `f [`y]) "*" `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `f [`y])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -3011,15 +3400,18 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f.support.sum_ite_eq'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -3033,32 +3425,43 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         "else"
         (num "0")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (termIfThenElse "if" («term_∈_» `y "∈" `f.support) "then" («term_*_» (Term.app `f [`y]) "*" `r) "else" (num "0"))
+      (termIfThenElse
+       "if"
+       («term_∈_» `y "∈" `f.support)
+       "then"
+       («term_*_» (Term.app `f [`y]) "*" `r)
+       "else"
+       (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_*_» (Term.app `f [`y]) "*" `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `f [`y])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∈_» `y "∈" `f.support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.support
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -3079,7 +3482,11 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            []
            ["only"]
            ["["
-            [(Tactic.simpLemma [] [] `mul_apply) "," (Tactic.simpLemma [] [] `A) "," (Tactic.simpLemma [] [] `H)]
+            [(Tactic.simpLemma [] [] `mul_apply)
+             ","
+             (Tactic.simpLemma [] [] `A)
+             ","
+             (Tactic.simpLemma [] [] `H)]
             "]"]
            [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -3089,23 +3496,32 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
        []
        []
        ["only"]
-       ["[" [(Tactic.simpLemma [] [] `mul_apply) "," (Tactic.simpLemma [] [] `A) "," (Tactic.simpLemma [] [] `H)] "]"]
+       ["["
+        [(Tactic.simpLemma [] [] `mul_apply)
+         ","
+         (Tactic.simpLemma [] [] `A)
+         ","
+         (Tactic.simpLemma [] [] `H)]
+        "]"]
        [])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `A
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mul_apply
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3121,7 +3537,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            [`a `b]
            []
            "=>"
-           (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))]))
+           (termIfThenElse
+            "if"
+            («term_=_» `a "=" `y)
+            "then"
+            («term_*_» `b "*" `r)
+            "else"
+            (num "0"))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `Sum
@@ -3132,7 +3554,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
           [`a `b]
           []
           "=>"
-          (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))))])
+          (termIfThenElse
+           "if"
+           («term_=_» `a "=" `y)
+           "then"
+           («term_*_» `b "*" `r)
+           "else"
+           (num "0"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3147,12 +3575,14 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       (termIfThenElse "if" («term_=_» `a "=" `y) "then" («term_*_» `b "*" `r) "else" (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_*_» `b "*" `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `b
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -3161,7 +3591,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       («term_=_» `a "=" `y)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -3172,22 +3603,26 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Sum
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app («term_*_» `f "*" (Term.app `single [`x `r])) [`z])
@@ -3195,7 +3630,8 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       («term_*_» `f "*" (Term.app `single [`x `r]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3204,21 +3640,28 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `single
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 70, (some 71, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_*_» `f "*" (Term.app `single [`x `r])) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_*_» `f "*" (Term.app `single [`x `r]))
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -3232,14 +3675,20 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         («term_<|_»
          `sum_single_index
          "<|"
-         (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
        `sum_single_index
        "<|"
-       (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [])
@@ -3254,13 +3703,15 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.forall
@@ -3277,9 +3728,13 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
             [`a₂ `b₂]
             []
             "=>"
-            (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+            (Term.app
+             `ite
+             [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
         "="
-        (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")])))
+        (Term.app
+         `ite
+         [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
        (Term.app
@@ -3290,7 +3745,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
            [`a₂ `b₂]
            []
            "=>"
-           (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+           (Term.app
+            `ite
+            [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
        "="
        (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `x) "=" `z) («term_*_» `b₁ "*" `r) (num "0")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3299,14 +3756,16 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_*_» `b₁ "*" `r)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `b₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -3318,22 +3777,29 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       («term_=_» («term_*_» `a₁ "*" `x) "=" `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_*_» `a₁ "*" `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `a₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» («term_*_» `a₁ "*" `x) "=" `z) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_=_» («term_*_» `a₁ "*" `x) "=" `z)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app
        (Term.proj (Term.app `single [`x `r]) "." `Sum)
@@ -3343,7 +3809,9 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
           [`a₂ `b₂]
           []
           "=>"
-          (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
+          (Term.app
+           `ite
+           [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3353,21 +3821,25 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
         [`a₂ `b₂]
         []
         "=>"
-        (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))
+        (Term.app
+         `ite
+         [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ite [(«term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) («term_*_» `b₁ "*" `b₂) (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_*_» `b₁ "*" `b₂)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b₂
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `b₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -3379,34 +3851,42 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
       («term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_*_» `a₁ "*" `a₂)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₂
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `a₁
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» («term_*_» `a₁ "*" `a₂) "=" `z) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_=_» («term_*_» `a₁ "*" `a₂) "=" `z)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `single [`x `r]) "." `Sum)
@@ -3416,18 +3896,22 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `single
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `single [`x `r]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -3448,7 +3932,7 @@ def singleHom [MulOneClass G] : k × G →* MonoidAlgebra k G where
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -3472,16 +3956,23 @@ theorem
         exact
           have
             A
-              : ∀ a₁ b₁ , single x r . Sum fun a₂ b₂ => ite a₁ * a₂ = z b₁ * b₂ 0 = ite a₁ * x = z b₁ * r 0
+              :
+                ∀
+                  a₁ b₁
+                  ,
+                  single x r . Sum fun a₂ b₂ => ite a₁ * a₂ = z b₁ * b₂ 0 = ite a₁ * x = z b₁ * r 0
               :=
               fun a₁ b₁ => sum_single_index <| by simp
             calc
-              f * single x r z = Sum f fun a b => if a = y then b * r else 0 := by simp only [ mul_apply , A , H ]
+              f * single x r z = Sum f fun a b => if a = y then b * r else 0
+                :=
+                by simp only [ mul_apply , A , H ]
               _ = if y ∈ f.support then f y * r else 0 := f.support.sum_ite_eq' _ _
                 _ = f y * r := by split_ifs with h <;> simp at h <;> simp [ h ]
 #align monoid_algebra.mul_single_apply_aux MonoidAlgebra.mul_single_apply_aux
 
-theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) : (f * single 1 r) x = f x * r :=
+theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) :
+    (f * single 1 r) x = f x * r :=
   f.mul_single_apply_aux fun a => by rw [mul_one]
 #align monoid_algebra.mul_single_one_apply MonoidAlgebra.mul_single_one_apply
 
@@ -3500,7 +3991,12 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
          "("
          [`H]
          [":"
-          (Term.forall "∀" [`a] [] "," («term_↔_» («term_=_» («term_*_» `x "*" `a) "=" `y) "↔" («term_=_» `a "=" `z)))]
+          (Term.forall
+           "∀"
+           [`a]
+           []
+           ","
+           («term_↔_» («term_=_» («term_*_» `x "*" `a) "=" `y) "↔" («term_=_» `a "=" `z)))]
          []
          ")")]
        (Term.typeSpec
@@ -3538,13 +4034,16 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                        "=>"
                        (Term.app
                         `ite
-                        [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+                        [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                         («term_*_» (num "0") "*" `b)
+                         (num "0")])))])
                    "="
                    (num "0")))]
                 ":="
                 (Term.byTactic
                  "by"
-                 (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
               []
               (calc
                "calc"
@@ -3561,10 +4060,17 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                      [`a `b]
                      []
                      "=>"
-                     (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+                     (Term.app
+                      `ite
+                      [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                       («term_*_» `r "*" `b)
+                       (num "0")])))]))
                 ":="
                 («term_<|_»
-                 (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+                 (Term.proj
+                  (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                  "."
+                  `trans)
                  "<|"
                  (Term.app `sum_single_index [`this])))
                [(calcStep
@@ -3585,7 +4091,13 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                   "by"
                   (Tactic.tacticSeq
                    (Tactic.tacticSeq1Indented
-                    [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
+                    [(Tactic.simp
+                      "simp"
+                      []
+                      []
+                      ["only"]
+                      ["[" [(Tactic.simpLemma [] [] `H)] "]"]
+                      [])]))))
                 (calcStep
                  («term_=_»
                   (Term.hole "_")
@@ -3607,12 +4119,24 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                   (Tactic.tacticSeq
                    (Tactic.tacticSeq1Indented
                     [(Tactic.«tactic_<;>_»
-                      (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                      "<;>"
                       (Tactic.«tactic_<;>_»
-                       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                        "<;>"
-                       (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))))])))
+                       (Tactic.simp
+                        "simp"
+                        []
+                        []
+                        []
+                        []
+                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                      "<;>"
+                      (Tactic.simp
+                       "simp"
+                       []
+                       []
+                       []
+                       ["[" [(Tactic.simpLemma [] [] `h)] "]"]
+                       []))]))))]))))])))
        [])
       []
       []))
@@ -3646,13 +4170,16 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                       "=>"
                       (Term.app
                        `ite
-                       [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+                       [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                        («term_*_» (num "0") "*" `b)
+                        (num "0")])))])
                   "="
                   (num "0")))]
                ":="
                (Term.byTactic
                 "by"
-                (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
              []
              (calc
               "calc"
@@ -3669,10 +4196,17 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                     [`a `b]
                     []
                     "=>"
-                    (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+                    (Term.app
+                     `ite
+                     [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                      («term_*_» `r "*" `b)
+                      (num "0")])))]))
                ":="
                («term_<|_»
-                (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+                (Term.proj
+                 (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                 "."
+                 `trans)
                 "<|"
                 (Term.app `sum_single_index [`this])))
               [(calcStep
@@ -3693,7 +4227,13 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                  "by"
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
-                   [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])]))))
+                   [(Tactic.simp
+                     "simp"
+                     []
+                     []
+                     ["only"]
+                     ["[" [(Tactic.simpLemma [] [] `H)] "]"]
+                     [])]))))
                (calcStep
                 («term_=_»
                  (Term.hole "_")
@@ -3715,12 +4255,24 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
                    [(Tactic.«tactic_<;>_»
-                     (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                     "<;>"
                      (Tactic.«tactic_<;>_»
-                      (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                      (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                       "<;>"
-                      (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))))])))
+                      (Tactic.simp
+                       "simp"
+                       []
+                       []
+                       []
+                       []
+                       [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                     "<;>"
+                     (Tactic.simp
+                      "simp"
+                      []
+                      []
+                      []
+                      ["[" [(Tactic.simpLemma [] [] `h)] "]"]
+                      []))]))))]))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -3744,11 +4296,17 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                   [`a `b]
                   []
                   "=>"
-                  (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+                  (Term.app
+                   `ite
+                   [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                    («term_*_» (num "0") "*" `b)
+                    (num "0")])))])
               "="
               (num "0")))]
            ":="
-           (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
          []
          (calc
           "calc"
@@ -3765,10 +4323,15 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                 [`a `b]
                 []
                 "=>"
-                (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+                (Term.app
+                 `ite
+                 [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
            ":="
            («term_<|_»
-            (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+            (Term.proj
+             (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+             "."
+             `trans)
             "<|"
             (Term.app `sum_single_index [`this])))
           [(calcStep
@@ -3811,12 +4374,18 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
                [(Tactic.«tactic_<;>_»
-                 (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                 "<;>"
                  (Tactic.«tactic_<;>_»
-                  (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                  (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                   "<;>"
-                  (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))))
+                  (Tactic.simp
+                   "simp"
+                   []
+                   []
+                   []
+                   []
+                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                 "<;>"
+                 (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
@@ -3836,11 +4405,17 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                  [`a `b]
                  []
                  "=>"
-                 (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+                 (Term.app
+                  `ite
+                  [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                   («term_*_» (num "0") "*" `b)
+                   (num "0")])))])
              "="
              (num "0")))]
           ":="
-          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
         []
         (calc
          "calc"
@@ -3857,10 +4432,15 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                [`a `b]
                []
                "=>"
-               (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+               (Term.app
+                `ite
+                [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
           ":="
           («term_<|_»
-           (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+           (Term.proj
+            (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+            "."
+            `trans)
            "<|"
            (Term.app `sum_single_index [`this])))
          [(calcStep
@@ -3903,12 +4483,18 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
             (Tactic.tacticSeq
              (Tactic.tacticSeq1Indented
               [(Tactic.«tactic_<;>_»
-                (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-                "<;>"
                 (Tactic.«tactic_<;>_»
-                 (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                 (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                  "<;>"
-                 (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))])))
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  []
+                  []
+                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+                "<;>"
+                (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
        "have"
@@ -3926,11 +4512,17 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
                 [`a `b]
                 []
                 "=>"
-                (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+                (Term.app
+                 `ite
+                 [(«term_=_» («term_*_» `x "*" `a) "=" `y)
+                  («term_*_» (num "0") "*" `b)
+                  (num "0")])))])
             "="
             (num "0")))]
          ":="
-         (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))))
        []
        (calc
         "calc"
@@ -3947,10 +4539,15 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
               [`a `b]
               []
               "=>"
-              (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+              (Term.app
+               `ite
+               [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
          ":="
          («term_<|_»
-          (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+          (Term.proj
+           (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+           "."
+           `trans)
           "<|"
           (Term.app `sum_single_index [`this])))
         [(calcStep
@@ -3993,12 +4590,18 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
              [(Tactic.«tactic_<;>_»
-               (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-               "<;>"
                (Tactic.«tactic_<;>_»
-                (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+                (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                 "<;>"
-                (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))]))
+                (Tactic.simp
+                 "simp"
+                 []
+                 []
+                 []
+                 []
+                 [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+               "<;>"
+               (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calc
        "calc"
@@ -4015,10 +4618,15 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
              [`a `b]
              []
              "=>"
-             (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+             (Term.app
+              `ite
+              [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
         ":="
         («term_<|_»
-         (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+         (Term.proj
+          (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+          "."
+          `trans)
          "<|"
          (Term.app `sum_single_index [`this])))
        [(calcStep
@@ -4029,7 +4637,11 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            `f.sum
            [(Term.fun
              "fun"
-             (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+             (Term.basicFun
+              [`a `b]
+              []
+              "=>"
+              (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
          ":="
          (Term.byTactic
           "by"
@@ -4057,36 +4669,37 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
             [(Tactic.«tactic_<;>_»
-              (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-              "<;>"
               (Tactic.«tactic_<;>_»
-               (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+               (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
                "<;>"
-               (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))]))))])
+               (Tactic.simp
+                "simp"
+                []
+                []
+                []
+                []
+                [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+              "<;>"
+              (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-           "<;>"
            (Tactic.«tactic_<;>_»
-            (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+            (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
             "<;>"
-            (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))])))
+            (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+           "<;>"
+           (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
-       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
-       "<;>"
        (Tactic.«tactic_<;>_»
-        (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+        (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
         "<;>"
-        (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] [])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
+        (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
        "<;>"
        (Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `h)] "]"] []))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4095,26 +4708,34 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
+       "<;>"
+       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.splitIfs "split_ifs" [] ["with" [(Lean.binderIdent `h)]])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» (Term.hole "_") "=" (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -4125,15 +4746,18 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f.support.sum_ite_eq'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -4147,10 +4771,17 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
         "else"
         (num "0")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (termIfThenElse "if" («term_∈_» `z "∈" `f.support) "then" («term_*_» `r "*" (Term.app `f [`z])) "else" (num "0"))
+      (termIfThenElse
+       "if"
+       («term_∈_» `z "∈" `f.support)
+       "then"
+       («term_*_» `r "*" (Term.app `f [`z]))
+       "else"
+       (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_*_» `r "*" (Term.app `f [`z]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4159,11 +4790,14 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -4172,7 +4806,8 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       («term_∈_» `z "∈" `f.support)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.support
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `z
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -4186,7 +4821,8 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])])))
+        (Tactic.tacticSeq1Indented
+         [(Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `H)] "]"] [])
@@ -4194,7 +4830,8 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4205,33 +4842,47 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
         `f.sum
         [(Term.fun
           "fun"
-          (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
+          (Term.basicFun
+           [`a `b]
+           []
+           "=>"
+           (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `f.sum
        [(Term.fun
          "fun"
-         (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))])
+         (Term.basicFun
+          [`a `b]
+          []
+          "=>"
+          (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
-       (Term.basicFun [`a `b] [] "=>" (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))
+       (Term.basicFun
+        [`a `b]
+        []
+        "=>"
+        (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ite [(«term_=_» `a "=" `z) («term_*_» `r "*" `b) (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_*_» `r "*" `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -4243,7 +4894,8 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       («term_=_» `a "=" `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -4251,24 +4903,28 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» `a "=" `z) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f.sum
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
@@ -4276,7 +4932,10 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       («term_<|_»
-       (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
+       (Term.proj
+        (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+        "."
+        `trans)
        "<|"
        (Term.app `sum_single_index [`this]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4285,11 +4944,14 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `this
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sum_single_index
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `mul_apply [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "." `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4298,20 +4960,24 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `mul_apply
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -4332,7 +4998,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            [`a `b]
            []
            "=>"
-           (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
+           (Term.app
+            `ite
+            [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `Sum
@@ -4343,7 +5011,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
           [`a `b]
           []
           "=>"
-          (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))])
+          (Term.app
+           `ite
+           [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» `r "*" `b) (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4360,14 +5030,16 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_*_» `r "*" `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `r
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -4379,43 +5051,53 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       («term_=_» («term_*_» `x "*" `a) "=" `y)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_*_» `x "*" `a)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» («term_*_» `x "*" `a) "=" `y) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_=_» («term_*_» `x "*" `a) "=" `y)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Sum
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app («term_*_» (Term.app `single [`x `r]) "*" `f) [`y])
@@ -4423,35 +5105,45 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       («term_*_» (Term.app `single [`x `r]) "*" `f)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (Term.app `single [`x `r])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `r
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `single
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 1023, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 70, (some 71, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_*_» (Term.app `single [`x `r]) "*" `f) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_*_» (Term.app `single [`x `r]) "*" `f)
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp "simp" [] [] [] [] [])
@@ -4467,12 +5159,15 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
            [`a `b]
            []
            "=>"
-           (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+           (Term.app
+            `ite
+            [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
        "="
        (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app
        `f.sum
@@ -4482,7 +5177,9 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
           [`a `b]
           []
           "=>"
-          (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
+          (Term.app
+           `ite
+           [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4492,21 +5189,27 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
         [`a `b]
         []
         "=>"
-        (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))
+        (Term.app
+         `ite
+         [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `ite [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])
+      (Term.app
+       `ite
+       [(«term_=_» («term_*_» `x "*" `a) "=" `y) («term_*_» (num "0") "*" `b) (num "0")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_*_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_*_» (num "0") "*" `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -4518,38 +5221,47 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
       («term_=_» («term_*_» `x "*" `a) "=" `y)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_*_» `x "*" `a)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 70, (some 71, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» («term_*_» `x "*" `a) "=" `y) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     («term_=_» («term_*_» `x "*" `a) "=" `y)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f.sum
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -4569,7 +5281,7 @@ theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -4602,17 +5314,18 @@ theorem
                 _ = _ := by split_ifs with h <;> simp at h <;> simp [ h ]
 #align monoid_algebra.single_mul_apply_aux MonoidAlgebra.single_mul_apply_aux
 
-theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) : (single 1 r * f) x = r * f x :=
+theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) :
+    (single 1 r * f) x = r * f x :=
   f.single_mul_apply_aux fun a => by rw [one_mul]
 #align monoid_algebra.single_one_mul_apply MonoidAlgebra.single_one_mul_apply
 
 theorem lift_nc_smul [MulOneClass G] {R : Type _} [Semiring R] (f : k →+* R) (g : G →* R) (c : k)
     (φ : MonoidAlgebra k G) : liftNc (f : k →+ R) g (c • φ) = f c * liftNc (f : k →+ R) g φ := by
   suffices :
-    (lift_nc (↑f) g).comp (smulAddHom k (MonoidAlgebra k G) c) = (AddMonoidHom.mulLeft (f c)).comp (lift_nc (↑f) g)
+    (lift_nc (↑f) g).comp (smulAddHom k (MonoidAlgebra k G) c) =
+      (AddMonoidHom.mulLeft (f c)).comp (lift_nc (↑f) g)
   exact AddMonoidHom.congr_fun this φ
-  ext (a b)
-  simp [mul_assoc]
+  ext (a b); simp [mul_assoc]
 #align monoid_algebra.lift_nc_smul MonoidAlgebra.lift_nc_smul
 
 end MiscTheorems
@@ -4624,24 +5337,29 @@ section NonUnitalNonAssocAlgebra
 
 variable (k) [Semiring k] [DistribSmul R k] [Mul G]
 
-instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
+instance is_scalar_tower_self [IsScalarTower R k k] :
+    IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     ext m
-    classical simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc, sum_smul_index', zero_mul, if_t_t,
-        imp_true_iff, eq_self_iff_true, sum_zero, Finsupp.coe_smul, smul_eq_mul, Pi.smul_apply, smul_zero]⟩
+    classical simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc, sum_smul_index',
+        zero_mul, if_t_t, imp_true_iff, eq_self_iff_true, sum_zero, coe_smul, smul_eq_mul,
+        Pi.smul_apply, smul_zero]⟩
 #align monoid_algebra.is_scalar_tower_self MonoidAlgebra.is_scalar_tower_self
 
 /-- Note that if `k` is a `comm_semiring` then we have `smul_comm_class k k k` and so we can take
 `R = k` in the below. In other words, if the coefficients are commutative amongst themselves, they
 also commute with the algebra multiplication. -/
-instance smul_comm_class_self [SmulCommClass R k k] : SmulCommClass R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
+instance smul_comm_class_self [SmulCommClass R k k] :
+    SmulCommClass R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     ext m
-    simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index', imp_true_iff,
-      eq_self_iff_true, Finsupp.coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply, mul_zero, smul_zero]⟩
+    simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index',
+      imp_true_iff, eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply,
+      mul_zero, smul_zero]⟩
 #align monoid_algebra.smul_comm_class_self MonoidAlgebra.smul_comm_class_self
 
-instance smul_comm_class_symm_self [SmulCommClass k R k] : SmulCommClass (MonoidAlgebra k G) R (MonoidAlgebra k G) :=
+instance smul_comm_class_symm_self [SmulCommClass k R k] :
+    SmulCommClass (MonoidAlgebra k G) R (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     haveI := SmulCommClass.symm k R k
     rw [← smul_comm]⟩
@@ -4667,9 +5385,11 @@ theorem non_unital_alg_hom_ext' [DistribMulAction k A] {φ₁ φ₂ : MonoidAlge
 /-- The functor `G ↦ monoid_algebra k G`, from the category of magmas to the category of non-unital,
 non-associative algebras over `k` is adjoint to the forgetful functor in the other direction. -/
 @[simps]
-def liftMagma [Module k A] [IsScalarTower k A A] [SmulCommClass k A A] : (G →ₙ* A) ≃ (MonoidAlgebra k G →ₙₐ[k] A) where
+def liftMagma [Module k A] [IsScalarTower k A A] [SmulCommClass k A A] :
+    (G →ₙ* A) ≃ (MonoidAlgebra k G →ₙₐ[k] A) where
   toFun f :=
-    { liftAddHom fun x => (smulAddHom k A).flip (f x) with toFun := fun a => a.Sum fun m t => t • f m,
+    { liftAddHom fun x => (smulAddHom k A).flip (f x) with
+      toFun := fun a => a.Sum fun m t => t • f m,
       map_smul' := fun t' a => by
         rw [Finsupp.smul_sum, sum_smul_index']
         · simp_rw [smul_assoc]
@@ -4685,17 +5405,19 @@ def liftMagma [Module k A] [IsScalarTower k A A] [SmulCommClass k A A] : (G →�
         have h₂ : ∀ (m) (t₁ t₂ : k), g m (t₁ + t₂) = g m t₁ + g m t₂ := by
           intros
           rw [← add_smul]
-        simp_rw [Finsupp.mul_sum, Finsupp.sum_mul, smul_mul_smul, ← f.map_mul, mul_def, sum_comm a₂ a₁,
-          sum_sum_index h₁ h₂, sum_single_index (h₁ _)] }
+        simp_rw [Finsupp.mul_sum, Finsupp.sum_mul, smul_mul_smul, ← f.map_mul, mul_def,
+          sum_comm a₂ a₁, sum_sum_index h₁ h₂, sum_single_index (h₁ _)] }
   invFun F := F.toMulHom.comp (ofMagma k G)
   left_inv f := by
     ext m
-    simp only [NonUnitalAlgHom.coe_mk, of_magma_apply, NonUnitalAlgHom.to_mul_hom_eq_coe, sum_single_index,
-      Function.comp_apply, one_smul, zero_smul, MulHom.coe_comp, NonUnitalAlgHom.coe_to_mul_hom]
+    simp only [NonUnitalAlgHom.coe_mk, of_magma_apply, NonUnitalAlgHom.to_mul_hom_eq_coe,
+      sum_single_index, Function.comp_apply, one_smul, zero_smul, MulHom.coe_comp,
+      NonUnitalAlgHom.coe_to_mul_hom]
   right_inv F := by
     ext m
-    simp only [NonUnitalAlgHom.coe_mk, of_magma_apply, NonUnitalAlgHom.to_mul_hom_eq_coe, sum_single_index,
-      Function.comp_apply, one_smul, zero_smul, MulHom.coe_comp, NonUnitalAlgHom.coe_to_mul_hom]
+    simp only [NonUnitalAlgHom.coe_mk, of_magma_apply, NonUnitalAlgHom.to_mul_hom_eq_coe,
+      sum_single_index, Function.comp_apply, one_smul, zero_smul, MulHom.coe_comp,
+      NonUnitalAlgHom.coe_to_mul_hom]
 #align monoid_algebra.lift_magma MonoidAlgebra.liftMagma
 
 end NonUnitalNonAssocAlgebra
@@ -4723,20 +5445,21 @@ def singleOneRingHom [Semiring k] [MulOneClass G] : k →+* MonoidAlgebra k G :=
 /-- If `f : G → H` is a multiplicative homomorphism between two monoids, then
 `finsupp.map_domain f` is a ring homomorphism between their monoid algebras. -/
 @[simps]
-def mapDomainRingHom (k : Type _) {H F : Type _} [Semiring k] [Monoid G] [Monoid H] [MonoidHomClass F G H] (f : F) :
-    MonoidAlgebra k G →+* MonoidAlgebra k H :=
-  { (Finsupp.mapDomain.addMonoidHom f : MonoidAlgebra k G →+ MonoidAlgebra k H) with map_one' := map_domain_one f,
-    map_mul' := fun x y => map_domain_mul f x y }
+def mapDomainRingHom (k : Type _) {H F : Type _} [Semiring k] [Monoid G] [Monoid H]
+    [MonoidHomClass F G H] (f : F) : MonoidAlgebra k G →+* MonoidAlgebra k H :=
+  { (Finsupp.mapDomain.addMonoidHom f : MonoidAlgebra k G →+ MonoidAlgebra k H) with
+    map_one' := map_domain_one f, map_mul' := fun x y => map_domain_mul f x y }
 #align monoid_algebra.map_domain_ring_hom MonoidAlgebra.mapDomainRingHom
 
 /-- If two ring homomorphisms from `monoid_algebra k G` are equal on all `single a 1`
 and `single 1 b`, then they are equal. -/
 theorem ring_hom_ext {R} [Semiring k] [MulOneClass G] [Semiring R] {f g : MonoidAlgebra k G →+* R}
-    (h₁ : ∀ b, f (single 1 b) = g (single 1 b)) (h_of : ∀ a, f (single a 1) = g (single a 1)) : f = g :=
+    (h₁ : ∀ b, f (single 1 b) = g (single 1 b)) (h_of : ∀ a, f (single a 1) = g (single a 1)) :
+    f = g :=
   RingHom.coe_add_monoid_hom_injective <|
     add_hom_ext fun a b => by
-      rw [← one_mul a, ← mul_one b, ← single_mul_single, f.coe_add_monoid_hom, g.coe_add_monoid_hom, f.map_mul,
-        g.map_mul, h₁, h_of]
+      rw [← one_mul a, ← mul_one b, ← single_mul_single, f.coe_add_monoid_hom, g.coe_add_monoid_hom,
+        f.map_mul, g.map_mul, h₁, h_of]
 #align monoid_algebra.ring_hom_ext MonoidAlgebra.ring_hom_ext
 
 /-- If two ring homomorphisms from `monoid_algebra k G` are equal on all `single a 1`
@@ -4746,7 +5469,9 @@ See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem ring_hom_ext' {R} [Semiring k] [MulOneClass G] [Semiring R] {f g : MonoidAlgebra k G →+* R}
     (h₁ : f.comp singleOneRingHom = g.comp singleOneRingHom)
-    (h_of : (f : MonoidAlgebra k G →* R).comp (of k G) = (g : MonoidAlgebra k G →* R).comp (of k G)) : f = g :=
+    (h_of :
+      (f : MonoidAlgebra k G →* R).comp (of k G) = (g : MonoidAlgebra k G →* R).comp (of k G)) :
+    f = g :=
   ring_hom_ext (RingHom.congr_fun h₁) (MonoidHom.congr_fun h_of)
 #align monoid_algebra.ring_hom_ext' MonoidAlgebra.ring_hom_ext'
 
@@ -4754,7 +5479,8 @@ theorem ring_hom_ext' {R} [Semiring k] [MulOneClass G] [Semiring R] {f g : Monoi
 
 In particular this provides the instance `algebra k (monoid_algebra k G)`.
 -/
-instance {A : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid G] : Algebra k (MonoidAlgebra A G) :=
+instance {A : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid G] :
+    Algebra k (MonoidAlgebra A G) :=
   { singleOneRingHom.comp (algebraMap k A) with
     smul_def' := fun r a => by
       ext
@@ -4765,7 +5491,8 @@ instance {A : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid G] : A
 
 /-- `finsupp.single 1` as a `alg_hom` -/
 @[simps]
-def singleOneAlgHom {A : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid G] : A →ₐ[k] MonoidAlgebra A G :=
+def singleOneAlgHom {A : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid G] :
+    A →ₐ[k] MonoidAlgebra A G :=
   { singleOneRingHom with
     commutes' := fun r => by
       ext
@@ -4783,9 +5510,11 @@ theorem single_eq_algebra_map_mul_of [CommSemiring k] [Monoid G] (a : G) (b : k)
     single a b = algebraMap k (MonoidAlgebra k G) b * of k G a := by simp
 #align monoid_algebra.single_eq_algebra_map_mul_of MonoidAlgebra.single_eq_algebra_map_mul_of
 
-theorem single_algebra_map_eq_algebra_map_mul_of {A : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid G]
-    (a : G) (b : k) : single a (algebraMap k A b) = algebraMap k (MonoidAlgebra A G) b * of A G a := by simp
-#align monoid_algebra.single_algebra_map_eq_algebra_map_mul_of MonoidAlgebra.single_algebra_map_eq_algebra_map_mul_of
+theorem single_algebra_map_eq_algebra_map_mul_of {A : Type _} [CommSemiring k] [Semiring A]
+    [Algebra k A] [Monoid G] (a : G) (b : k) :
+    single a (algebraMap k A b) = algebraMap k (MonoidAlgebra A G) b * of A G a := by simp
+#align
+  monoid_algebra.single_algebra_map_eq_algebra_map_mul_of MonoidAlgebra.single_algebra_map_eq_algebra_map_mul_of
 
 theorem induction_on [Semiring k] [Monoid G] {p : MonoidAlgebra k G → Prop} (f : MonoidAlgebra k G)
     (hM : ∀ g, p (of k G g)) (hadd : ∀ f g : MonoidAlgebra k G, p f → p g → p (f + g))
@@ -4807,21 +5536,25 @@ variable {k G} [CommSemiring k] [Monoid G]
 variable {A : Type u₃} [Semiring A] [Algebra k A] {B : Type _} [Semiring B] [Algebra k B]
 
 /-- `lift_nc_ring_hom` as a `alg_hom`, for when `f` is an `alg_hom` -/
-def liftNcAlgHom (f : A →ₐ[k] B) (g : G →* B) (h_comm : ∀ x y, Commute (f x) (g y)) : MonoidAlgebra A G →ₐ[k] B :=
+def liftNcAlgHom (f : A →ₐ[k] B) (g : G →* B) (h_comm : ∀ x y, Commute (f x) (g y)) :
+    MonoidAlgebra A G →ₐ[k] B :=
   { liftNcRingHom (f : A →+* B) g h_comm with toFun := liftNcRingHom (f : A →+* B) g h_comm,
     commutes' := by simp [lift_nc_ring_hom] }
 #align monoid_algebra.lift_nc_alg_hom MonoidAlgebra.liftNcAlgHom
 
 /-- A `k`-algebra homomorphism from `monoid_algebra k G` is uniquely defined by its
 values on the functions `single a 1`. -/
-theorem alg_hom_ext ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄ (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
+theorem alg_hom_ext ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄
+    (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
   AlgHom.to_linear_map_injective <| Finsupp.lhom_ext' fun a => LinearMap.ext_ring (h a)
 #align monoid_algebra.alg_hom_ext MonoidAlgebra.alg_hom_ext
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem alg_hom_ext' ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄
-    (h : (φ₁ : MonoidAlgebra k G →* A).comp (of k G) = (φ₂ : MonoidAlgebra k G →* A).comp (of k G)) : φ₁ = φ₂ :=
+    (h :
+      (φ₁ : MonoidAlgebra k G →* A).comp (of k G) = (φ₂ : MonoidAlgebra k G →* A).comp (of k G)) :
+    φ₁ = φ₂ :=
   alg_hom_ext <| MonoidHom.congr_fun h
 #align monoid_algebra.alg_hom_ext' MonoidAlgebra.alg_hom_ext'
 
@@ -4842,12 +5575,13 @@ def lift : (G →* A) ≃ (MonoidAlgebra k G →ₐ[k] A) where
 
 variable {k G A}
 
-theorem lift_apply' (F : G →* A) (f : MonoidAlgebra k G) : lift k G A F f = f.Sum fun a b => algebraMap k A b * F a :=
+theorem lift_apply' (F : G →* A) (f : MonoidAlgebra k G) :
+    lift k G A F f = f.Sum fun a b => algebraMap k A b * F a :=
   rfl
 #align monoid_algebra.lift_apply' MonoidAlgebra.lift_apply'
 
-theorem lift_apply (F : G →* A) (f : MonoidAlgebra k G) : lift k G A F f = f.Sum fun a b => b • F a := by
-  simp only [lift_apply', Algebra.smul_def]
+theorem lift_apply (F : G →* A) (f : MonoidAlgebra k G) :
+    lift k G A F f = f.Sum fun a b => b • F a := by simp only [lift_apply', Algebra.smul_def]
 #align monoid_algebra.lift_apply MonoidAlgebra.lift_apply
 
 theorem lift_def (F : G →* A) : ⇑(lift k G A F) = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
@@ -4855,7 +5589,8 @@ theorem lift_def (F : G →* A) : ⇑(lift k G A F) = liftNc ((algebraMap k A : 
 #align monoid_algebra.lift_def MonoidAlgebra.lift_def
 
 @[simp]
-theorem lift_symm_apply (F : MonoidAlgebra k G →ₐ[k] A) (x : G) : (lift k G A).symm F x = F (single x 1) :=
+theorem lift_symm_apply (F : MonoidAlgebra k G →ₐ[k] A) (x : G) :
+    (lift k G A).symm F x = F (single x 1) :=
   rfl
 #align monoid_algebra.lift_symm_apply MonoidAlgebra.lift_symm_apply
 
@@ -4868,7 +5603,8 @@ theorem lift_single (F : G →* A) (a b) : lift k G A F (single a b) = b • F a
   rw [lift_def, lift_nc_single, Algebra.smul_def, RingHom.coe_add_monoid_hom]
 #align monoid_algebra.lift_single MonoidAlgebra.lift_single
 
-theorem lift_unique' (F : MonoidAlgebra k G →ₐ[k] A) : F = lift k G A ((F : MonoidAlgebra k G →* A).comp (of k G)) :=
+theorem lift_unique' (F : MonoidAlgebra k G →ₐ[k] A) :
+    F = lift k G A ((F : MonoidAlgebra k G →* A).comp (of k G)) :=
   ((lift k G A).apply_symm_apply F).symm
 #align monoid_algebra.lift_unique' MonoidAlgebra.lift_unique'
 
@@ -4883,14 +5619,15 @@ theorem lift_unique (F : MonoidAlgebra k G →ₐ[k] A) (f : MonoidAlgebra k G) 
 /-- If `f : G → H` is a homomorphism between two magmas, then
 `finsupp.map_domain f` is a non-unital algebra homomorphism between their magma algebras. -/
 @[simps]
-def mapDomainNonUnitalAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A] {G H F : Type _} [Mul G] [Mul H]
-    [MulHomClass F G H] (f : F) : MonoidAlgebra A G →ₙₐ[k] MonoidAlgebra A H :=
+def mapDomainNonUnitalAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A]
+    {G H F : Type _} [Mul G] [Mul H] [MulHomClass F G H] (f : F) :
+    MonoidAlgebra A G →ₙₐ[k] MonoidAlgebra A H :=
   { (Finsupp.mapDomain.addMonoidHom f : MonoidAlgebra A G →+ MonoidAlgebra A H) with
     map_mul' := fun x y => map_domain_mul f x y, map_smul' := fun r x => map_domain_smul r x }
 #align monoid_algebra.map_domain_non_unital_alg_hom MonoidAlgebra.mapDomainNonUnitalAlgHom
 
-theorem map_domain_algebra_map (k A : Type _) {H F : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [Monoid H]
-    [MonoidHomClass F G H] (f : F) (r : k) :
+theorem map_domain_algebra_map (k A : Type _) {H F : Type _} [CommSemiring k] [Semiring A]
+    [Algebra k A] [Monoid H] [MonoidHomClass F G H] (f : F) (r : k) :
     mapDomain f (algebraMap k (MonoidAlgebra A G) r) = algebraMap k (MonoidAlgebra A H) r := by
   simp only [coe_algebra_map, map_domain_single, map_one]
 #align monoid_algebra.map_domain_algebra_map MonoidAlgebra.map_domain_algebra_map
@@ -4898,8 +5635,8 @@ theorem map_domain_algebra_map (k A : Type _) {H F : Type _} [CommSemiring k] [S
 /-- If `f : G → H` is a multiplicative homomorphism between two monoids, then
 `finsupp.map_domain f` is an algebra homomorphism between their monoid algebras. -/
 @[simps]
-def mapDomainAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A] {H F : Type _} [Monoid H]
-    [MonoidHomClass F G H] (f : F) : MonoidAlgebra A G →ₐ[k] MonoidAlgebra A H :=
+def mapDomainAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A] {H F : Type _}
+    [Monoid H] [MonoidHomClass F G H] (f : F) : MonoidAlgebra A G →ₐ[k] MonoidAlgebra A H :=
   { mapDomainRingHom A f with commutes' := map_domain_algebra_map k A f }
 #align monoid_algebra.map_domain_alg_hom MonoidAlgebra.mapDomainAlgHom
 
@@ -4920,9 +5657,9 @@ def GroupSmul.linearMap [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMono
 #align monoid_algebra.group_smul.linear_map MonoidAlgebra.GroupSmul.linearMap
 
 @[simp]
-theorem GroupSmul.linear_map_apply [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMonoid V] [Module k V]
-    [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlgebra k G) V] (g : G) (v : V) :
-    (GroupSmul.linearMap k V g) v = (single g (1 : k) • v : V) :=
+theorem GroupSmul.linear_map_apply [Monoid G] [CommSemiring k] (V : Type u₃) [AddCommMonoid V]
+    [Module k V] [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlgebra k G) V] (g : G)
+    (v : V) : (GroupSmul.linearMap k V g) v = (single g (1 : k) • v : V) :=
   rfl
 #align monoid_algebra.group_smul.linear_map_apply MonoidAlgebra.GroupSmul.linear_map_apply
 
@@ -4930,9 +5667,10 @@ section
 
 variable {k}
 
-variable [Monoid G] [CommSemiring k] {V W : Type u₃} [AddCommMonoid V] [Module k V] [Module (MonoidAlgebra k G) V]
-  [IsScalarTower k (MonoidAlgebra k G) V] [AddCommMonoid W] [Module k W] [Module (MonoidAlgebra k G) W]
-  [IsScalarTower k (MonoidAlgebra k G) W] (f : V →ₗ[k] W)
+variable [Monoid G] [CommSemiring k] {V W : Type u₃} [AddCommMonoid V] [Module k V]
+  [Module (MonoidAlgebra k G) V] [IsScalarTower k (MonoidAlgebra k G) V] [AddCommMonoid W]
+  [Module k W] [Module (MonoidAlgebra k G) W] [IsScalarTower k (MonoidAlgebra k G) W]
+  (f : V →ₗ[k] W)
   (h : ∀ (g : G) (v : V), f (single g (1 : k) • v : V) = (single g (1 : k) • f v : W))
 
 include h
@@ -4948,7 +5686,8 @@ def equivariantOfLinearOfComm : V →ₗ[MonoidAlgebra k G] W where
     · intro g r c' nm nz w
       dsimp at *
       simp only [add_smul, f.map_add, w, add_left_inj, single_eq_algebra_map_mul_of, ← smul_smul]
-      erw [algebra_map_smul (MonoidAlgebra k G) r, algebra_map_smul (MonoidAlgebra k G) r, f.map_smul, h g v, of_apply]
+      erw [algebra_map_smul (MonoidAlgebra k G) r, algebra_map_smul (MonoidAlgebra k G) r,
+        f.map_smul, h g v, of_apply]
       all_goals infer_instance
       
 #align monoid_algebra.equivariant_of_linear_of_comm MonoidAlgebra.equivariantOfLinearOfComm
@@ -4956,7 +5695,8 @@ def equivariantOfLinearOfComm : V →ₗ[MonoidAlgebra k G] W where
 @[simp]
 theorem equivariant_of_linear_of_comm_apply (v : V) : (equivariantOfLinearOfComm f h) v = f v :=
   rfl
-#align monoid_algebra.equivariant_of_linear_of_comm_apply MonoidAlgebra.equivariant_of_linear_of_comm_apply
+#align
+  monoid_algebra.equivariant_of_linear_of_comm_apply MonoidAlgebra.equivariant_of_linear_of_comm_apply
 
 end
 
@@ -4986,26 +5726,32 @@ variable [Semiring k] [Group G]
 attribute [local reducible] MonoidAlgebra
 
 @[simp]
-theorem mul_single_apply (f : MonoidAlgebra k G) (r : k) (x y : G) : (f * single x r) y = f (y * x⁻¹) * r :=
+theorem mul_single_apply (f : MonoidAlgebra k G) (r : k) (x y : G) :
+    (f * single x r) y = f (y * x⁻¹) * r :=
   f.mul_single_apply_aux fun a => eq_mul_inv_iff_mul_eq.symm
 #align monoid_algebra.mul_single_apply MonoidAlgebra.mul_single_apply
 
 @[simp]
-theorem single_mul_apply (r : k) (x : G) (f : MonoidAlgebra k G) (y : G) : (single x r * f) y = r * f (x⁻¹ * y) :=
+theorem single_mul_apply (r : k) (x : G) (f : MonoidAlgebra k G) (y : G) :
+    (single x r * f) y = r * f (x⁻¹ * y) :=
   f.single_mul_apply_aux fun z => eq_inv_mul_iff_mul_eq.symm
 #align monoid_algebra.single_mul_apply MonoidAlgebra.single_mul_apply
 
-theorem mul_apply_left (f g : MonoidAlgebra k G) (x : G) : (f * g) x = f.Sum fun a b => b * g (a⁻¹ * x) :=
+theorem mul_apply_left (f g : MonoidAlgebra k G) (x : G) :
+    (f * g) x = f.Sum fun a b => b * g (a⁻¹ * x) :=
   calc
-    (f * g) x = Sum f fun a b => (single a b * g) x := by rw [← Finsupp.sum_apply, ← Finsupp.sum_mul, f.sum_single]
+    (f * g) x = Sum f fun a b => (single a b * g) x := by
+      rw [← Finsupp.sum_apply, ← Finsupp.sum_mul, f.sum_single]
     _ = _ := by simp only [single_mul_apply, Finsupp.sum]
     
 #align monoid_algebra.mul_apply_left MonoidAlgebra.mul_apply_left
 
 -- If we'd assumed `comm_semiring`, we could deduce this from `mul_apply_left`.
-theorem mul_apply_right (f g : MonoidAlgebra k G) (x : G) : (f * g) x = g.Sum fun a b => f (x * a⁻¹) * b :=
+theorem mul_apply_right (f g : MonoidAlgebra k G) (x : G) :
+    (f * g) x = g.Sum fun a b => f (x * a⁻¹) * b :=
   calc
-    (f * g) x = Sum g fun a b => (f * single a b) x := by rw [← Finsupp.sum_apply, ← Finsupp.mul_sum, g.sum_single]
+    (f * g) x = Sum g fun a b => (f * single a b) x := by
+      rw [← Finsupp.sum_apply, ← Finsupp.mul_sum, g.sum_single]
     _ = _ := by simp only [mul_single_apply, Finsupp.sum]
     
 #align monoid_algebra.mul_apply_right MonoidAlgebra.mul_apply_right
@@ -5021,8 +5767,10 @@ variable [Semiring k]
 /-- The opposite of an `monoid_algebra R I` equivalent as a ring to
 the `monoid_algebra Rᵐᵒᵖ Iᵐᵒᵖ` over the opposite ring, taking elements to their opposite. -/
 @[simps (config := { simpRhs := true })]
-protected noncomputable def opRingEquiv [Monoid G] : (MonoidAlgebra k G)ᵐᵒᵖ ≃+* MonoidAlgebra kᵐᵒᵖ Gᵐᵒᵖ :=
-  { opAddEquiv.symm.trans <| (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
+protected noncomputable def opRingEquiv [Monoid G] :
+    (MonoidAlgebra k G)ᵐᵒᵖ ≃+* MonoidAlgebra kᵐᵒᵖ Gᵐᵒᵖ :=
+  { opAddEquiv.symm.trans <|
+      (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
@@ -5133,13 +5881,14 @@ theorem mul_def {f g : AddMonoidAlgebra k G} :
 instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
   { Finsupp.addCommMonoid with zero := 0, mul := (· * ·), add := (· + ·),
     left_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-        forall₃_true_iff, sum_add],
+      simp only [mul_def, sum_add_index, mul_add, mul_zero, single_zero, single_add,
+        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_add],
     right_distrib := fun f g h => by
-      simp only [mul_def, sum_add_index, add_mul, mul_zero, zero_mul, single_zero, single_add, eq_self_iff_true,
-        forall_true_iff, forall₃_true_iff, sum_zero, sum_add],
+      simp only [mul_def, sum_add_index, add_mul, mul_zero, zero_mul, single_zero, single_add,
+        eq_self_iff_true, forall_true_iff, forall₃_true_iff, sum_zero, sum_add],
     zero_mul := fun f => by simp only [mul_def, sum_zero_index],
-    mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero], nsmul := fun n f => n • f,
+    mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero],
+    nsmul := fun n f => n • f,
     nsmul_zero' := by
       intros
       ext
@@ -5151,8 +5900,9 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
 
 variable [Semiring R]
 
-theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom (Multiplicative G) R] (f : k →+* R) (g : g_hom)
-    (a b : AddMonoidAlgebra k G) (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g <| Multiplicative.ofAdd y)) :
+theorem lift_nc_mul {g_hom : Type _} [MulHomClass g_hom (Multiplicative G) R] (f : k →+* R)
+    (g : g_hom) (a b : AddMonoidAlgebra k G)
+    (h_comm : ∀ {x y}, y ∈ a.support → Commute (f (b x)) (g <| Multiplicative.ofAdd y)) :
     liftNc (f : k →+ R) g (a * b) = liftNc (f : k →+ R) g a * liftNc (f : k →+ R) g b :=
   (MonoidAlgebra.lift_nc_mul f g _ _ @h_comm : _)
 #align add_monoid_algebra.lift_nc_mul AddMonoidAlgebra.lift_nc_mul
@@ -5173,8 +5923,8 @@ theorem one_def : (1 : AddMonoidAlgebra k G) = single 0 1 :=
 #align add_monoid_algebra.one_def AddMonoidAlgebra.one_def
 
 @[simp]
-theorem lift_nc_one {g_hom : Type _} [OneHomClass g_hom (Multiplicative G) R] (f : k →+* R) (g : g_hom) :
-    liftNc (f : k →+ R) g 1 = 1 :=
+theorem lift_nc_one {g_hom : Type _} [OneHomClass g_hom (Multiplicative G) R] (f : k →+* R)
+    (g : g_hom) : liftNc (f : k →+ R) g 1 = 1 :=
   (MonoidAlgebra.lift_nc_one f g : _)
 #align add_monoid_algebra.lift_nc_one AddMonoidAlgebra.lift_nc_one
 
@@ -5187,9 +5937,9 @@ variable [Semiring k] [AddSemigroup G]
 instance : NonUnitalSemiring (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.nonUnitalNonAssocSemiring with zero := 0, mul := (· * ·), add := (· + ·),
     mul_assoc := fun f g h => by
-      simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index, single_zero, single_add,
-        eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul, mul_add, add_assoc, mul_assoc, zero_mul, mul_zero,
-        sum_zero, sum_add] }
+      simp only [mul_def, sum_sum_index, sum_zero_index, sum_add_index, sum_single_index,
+        single_zero, single_add, eq_self_iff_true, forall_true_iff, forall₃_true_iff, add_mul,
+        mul_add, add_assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add] }
 
 end Semigroup
 
@@ -5198,13 +5948,15 @@ section MulOneClass
 variable [Semiring k] [AddZeroClass G]
 
 instance : NonAssocSemiring (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.nonUnitalNonAssocSemiring with one := 1, mul := (· * ·), zero := 0, add := (· + ·),
-    natCast := fun n => single 0 n, nat_cast_zero := by simp [Nat.cast],
+  { AddMonoidAlgebra.nonUnitalNonAssocSemiring with one := 1, mul := (· * ·), zero := 0,
+    add := (· + ·), natCast := fun n => single 0 n, nat_cast_zero := by simp [Nat.cast],
     nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl,
     one_mul := fun f => by
-      simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add, one_mul, sum_single],
+      simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add,
+        one_mul, sum_single],
     mul_one := fun f => by
-      simp only [mul_def, one_def, sum_single_index, mul_zero, single_zero, sum_zero, add_zero, mul_one, sum_single] }
+      simp only [mul_def, one_def, sum_single_index, mul_zero, single_zero, sum_zero, add_zero,
+        mul_one, sum_single] }
 
 theorem nat_cast_def (n : ℕ) : (n : AddMonoidAlgebra k G) = single 0 n :=
   rfl
@@ -5223,8 +5975,8 @@ instance {R : Type _} [Semiring k] [SmulZeroClass R k] : SmulZeroClass R (AddMon
 variable [Semiring k] [AddMonoid G]
 
 instance : Semiring (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.nonUnitalSemiring, AddMonoidAlgebra.nonAssocSemiring with one := 1, mul := (· * ·), zero := 0,
-    add := (· + ·) }
+  { AddMonoidAlgebra.nonUnitalSemiring, AddMonoidAlgebra.nonAssocSemiring with one := 1,
+    mul := (· * ·), zero := 0, add := (· + ·) }
 
 variable [Semiring R]
 
@@ -5238,7 +5990,8 @@ def liftNcRingHom (f : k →+* R) (g : Multiplicative G →* R) (h_comm : ∀ x 
 end Semiring
 
 instance [CommSemiring k] [AddCommSemigroup G] : NonUnitalCommSemiring (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.nonUnitalSemiring with mul_comm := @mul_comm (MonoidAlgebra k <| Multiplicative G) _ }
+  { AddMonoidAlgebra.nonUnitalSemiring with
+    mul_comm := @mul_comm (MonoidAlgebra k <| Multiplicative G) _ }
 
 instance [Semiring k] [Nontrivial k] [Nonempty G] : Nontrivial (AddMonoidAlgebra k G) :=
   Finsupp.nontrivial
@@ -5264,8 +6017,9 @@ instance [Ring k] [AddSemigroup G] : NonUnitalRing (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonUnitalSemiring with }
 
 instance [Ring k] [AddZeroClass G] : NonAssocRing (AddMonoidAlgebra k G) :=
-  { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonAssocSemiring with intCast := fun z => single 0 (z : k),
-    int_cast_of_nat := fun n => by simpa, int_cast_neg_succ_of_nat := fun n => by simpa }
+  { AddMonoidAlgebra.addCommGroup, AddMonoidAlgebra.nonAssocSemiring with
+    intCast := fun z => single 0 (z : k), int_cast_of_nat := fun n => by simpa,
+    int_cast_neg_succ_of_nat := fun n => by simpa }
 
 theorem int_cast_def [Ring k] [AddZeroClass G] (z : ℤ) : (z : AddMonoidAlgebra k G) = single 0 z :=
   rfl
@@ -5282,7 +6036,8 @@ instance [CommRing k] [AddCommMonoid G] : CommRing (AddMonoidAlgebra k G) :=
 
 variable {S : Type _}
 
-instance [Monoid R] [Semiring k] [DistribMulAction R k] : DistribMulAction R (AddMonoidAlgebra k G) :=
+instance [Monoid R] [Semiring k] [DistribMulAction R k] :
+    DistribMulAction R (AddMonoidAlgebra k G) :=
   Finsupp.distribMulAction G k
 
 instance [Monoid R] [Semiring k] [DistribMulAction R k] [HasFaithfulSmul R k] [Nonempty G] :
@@ -5292,16 +6047,16 @@ instance [Monoid R] [Semiring k] [DistribMulAction R k] [HasFaithfulSmul R k] [N
 instance [Semiring R] [Semiring k] [Module R k] : Module R (AddMonoidAlgebra k G) :=
   Finsupp.module G k
 
-instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k] [HasSmul R S]
-    [IsScalarTower R S k] : IsScalarTower R S (AddMonoidAlgebra k G) :=
+instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
+    [HasSmul R S] [IsScalarTower R S k] : IsScalarTower R S (AddMonoidAlgebra k G) :=
   Finsupp.is_scalar_tower G k
 
-instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k] [SmulCommClass R S k] :
-    SmulCommClass R S (AddMonoidAlgebra k G) :=
+instance [Monoid R] [Monoid S] [Semiring k] [DistribMulAction R k] [DistribMulAction S k]
+    [SmulCommClass R S k] : SmulCommClass R S (AddMonoidAlgebra k G) :=
   Finsupp.smul_comm_class G k
 
-instance [Monoid R] [Semiring k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k] [IsCentralScalar R k] :
-    IsCentralScalar R (AddMonoidAlgebra k G) :=
+instance [Monoid R] [Semiring k] [DistribMulAction R k] [DistribMulAction Rᵐᵒᵖ k]
+    [IsCentralScalar R k] : IsCentralScalar R (AddMonoidAlgebra k G) :=
   Finsupp.is_central_scalar G k
 
 /-! It is hard to state the equivalent of `distrib_mul_action G (add_monoid_algebra k G)`
@@ -5337,20 +6092,22 @@ theorem single_pow [AddMonoid G] {a : G} {b : k} :
   | 0 => by
     simp only [pow_zero, zero_nsmul]
     rfl
-  | n + 1 => by rw [pow_succ, pow_succ, single_pow n, single_mul_single, add_comm, add_nsmul, one_nsmul]
+  | n + 1 => by
+    rw [pow_succ, pow_succ, single_pow n, single_mul_single, add_comm, add_nsmul, one_nsmul]
 #align add_monoid_algebra.single_pow AddMonoidAlgebra.single_pow
 
 /-- Like `finsupp.map_domain_zero`, but for the `1` we define in this file -/
 @[simp]
-theorem map_domain_one {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [Zero α] [Zero α₂] {F : Type _}
-    [ZeroHomClass F α α₂] (f : F) :
-    (mapDomain f (1 : AddMonoidAlgebra β α) : AddMonoidAlgebra β α₂) = (1 : AddMonoidAlgebra β α₂) := by
-  simp_rw [one_def, map_domain_single, map_zero]
+theorem map_domain_one {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [Zero α] [Zero α₂]
+    {F : Type _} [ZeroHomClass F α α₂] (f : F) :
+    (mapDomain f (1 : AddMonoidAlgebra β α) : AddMonoidAlgebra β α₂) =
+      (1 : AddMonoidAlgebra β α₂) :=
+  by simp_rw [one_def, map_domain_single, map_zero]
 #align add_monoid_algebra.map_domain_one AddMonoidAlgebra.map_domain_one
 
 /-- Like `finsupp.map_domain_add`, but for the convolutive multiplication we define in this file -/
-theorem map_domain_mul {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [Add α] [Add α₂] {F : Type _}
-    [AddHomClass F α α₂] (f : F) (x y : AddMonoidAlgebra β α) :
+theorem map_domain_mul {α : Type _} {β : Type _} {α₂ : Type _} [Semiring β] [Add α] [Add α₂]
+    {F : Type _} [AddHomClass F α α₂] (f : F) (x y : AddMonoidAlgebra β α) :
     (mapDomain f (x * y : AddMonoidAlgebra β α) : AddMonoidAlgebra β α₂) =
       (mapDomain f x * mapDomain f y : AddMonoidAlgebra β α₂) :=
   by
@@ -5406,8 +6163,8 @@ theorem of'_eq_of [AddZeroClass G] (a : G) : of' k G a = of k G a :=
   rfl
 #align add_monoid_algebra.of'_eq_of AddMonoidAlgebra.of'_eq_of
 
-theorem of_injective [Nontrivial k] [AddZeroClass G] : Function.Injective (of k G) := fun a b h => by
-  simpa using (single_eq_single_iff _ _ _ _).mp h
+theorem of_injective [Nontrivial k] [AddZeroClass G] : Function.Injective (of k G) := fun a b h =>
+  by simpa using (single_eq_single_iff _ _ _ _).mp h
 #align add_monoid_algebra.of_injective AddMonoidAlgebra.of_injective
 
 /-- `finsupp.single` as a `monoid_hom` from the product type into the additive monoid algebra.
@@ -5422,8 +6179,8 @@ def singleHom [AddZeroClass G] : k × Multiplicative G →* AddMonoidAlgebra k G
   map_mul' a b := single_mul_single.symm
 #align add_monoid_algebra.single_hom AddMonoidAlgebra.singleHom
 
-theorem mul_single_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G) (H : ∀ a, a + x = z ↔ a = y) :
-    (f * single x r) z = f y * r :=
+theorem mul_single_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G)
+    (H : ∀ a, a + x = z ↔ a = y) : (f * single x r) z = f y * r :=
   @MonoidAlgebra.mul_single_apply_aux k (Multiplicative G) _ _ _ _ _ _ _ H
 #align add_monoid_algebra.mul_single_apply_aux AddMonoidAlgebra.mul_single_apply_aux
 
@@ -5432,8 +6189,8 @@ theorem mul_single_zero_apply [AddZeroClass G] (f : AddMonoidAlgebra k G) (r : k
   (f.mul_single_apply_aux r _ _ _) fun a => by rw [add_zero]
 #align add_monoid_algebra.mul_single_zero_apply AddMonoidAlgebra.mul_single_zero_apply
 
-theorem single_mul_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G) (H : ∀ a, x + a = y ↔ a = z) :
-    (single x r * f : AddMonoidAlgebra k G) y = r * f z :=
+theorem single_mul_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G)
+    (H : ∀ a, x + a = y ↔ a = z) : (single x r * f : AddMonoidAlgebra k G) y = r * f z :=
   @MonoidAlgebra.single_mul_apply_aux k (Multiplicative G) _ _ _ _ _ _ _ H
 #align add_monoid_algebra.single_mul_apply_aux AddMonoidAlgebra.single_mul_apply_aux
 
@@ -5452,13 +6209,15 @@ theorem single_mul_apply [AddGroup G] (r : k) (x : G) (f : AddMonoidAlgebra k G)
   @MonoidAlgebra.single_mul_apply k (Multiplicative G) _ _ _ _ _ _
 #align add_monoid_algebra.single_mul_apply AddMonoidAlgebra.single_mul_apply
 
-theorem lift_nc_smul {R : Type _} [AddZeroClass G] [Semiring R] (f : k →+* R) (g : Multiplicative G →* R) (c : k)
-    (φ : MonoidAlgebra k G) : liftNc (f : k →+ R) g (c • φ) = f c * liftNc (f : k →+ R) g φ :=
+theorem lift_nc_smul {R : Type _} [AddZeroClass G] [Semiring R] (f : k →+* R)
+    (g : Multiplicative G →* R) (c : k) (φ : MonoidAlgebra k G) :
+    liftNc (f : k →+ R) g (c • φ) = f c * liftNc (f : k →+ R) g φ :=
   @MonoidAlgebra.lift_nc_smul k (Multiplicative G) _ _ _ _ f g c φ
 #align add_monoid_algebra.lift_nc_smul AddMonoidAlgebra.lift_nc_smul
 
 theorem induction_on [AddMonoid G] {p : AddMonoidAlgebra k G → Prop} (f : AddMonoidAlgebra k G)
-    (hM : ∀ g, p (of k G (Multiplicative.ofAdd g))) (hadd : ∀ f g : AddMonoidAlgebra k G, p f → p g → p (f + g))
+    (hM : ∀ g, p (of k G (Multiplicative.ofAdd g)))
+    (hadd : ∀ f g : AddMonoidAlgebra k G, p f → p g → p (f + g))
     (hsmul : ∀ (r : k) (f), p f → p (r • f)) : p f := by
   refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
   · simpa using hsmul 0 (of k G (Multiplicative.ofAdd 0)) (hM 0)
@@ -5471,10 +6230,10 @@ theorem induction_on [AddMonoid G] {p : AddMonoidAlgebra k G → Prop} (f : AddM
 /-- If `f : G → H` is an additive homomorphism between two additive monoids, then
 `finsupp.map_domain f` is a ring homomorphism between their add monoid algebras. -/
 @[simps]
-def mapDomainRingHom (k : Type _) [Semiring k] {H F : Type _} [AddMonoid G] [AddMonoid H] [AddMonoidHomClass F G H]
-    (f : F) : AddMonoidAlgebra k G →+* AddMonoidAlgebra k H :=
-  { (Finsupp.mapDomain.addMonoidHom f : MonoidAlgebra k G →+ MonoidAlgebra k H) with map_one' := map_domain_one f,
-    map_mul' := fun x y => map_domain_mul f x y }
+def mapDomainRingHom (k : Type _) [Semiring k] {H F : Type _} [AddMonoid G] [AddMonoid H]
+    [AddMonoidHomClass F G H] (f : F) : AddMonoidAlgebra k G →+* AddMonoidAlgebra k H :=
+  { (Finsupp.mapDomain.addMonoidHom f : MonoidAlgebra k G →+ MonoidAlgebra k H) with
+    map_one' := map_domain_one f, map_mul' := fun x y => map_domain_mul f x y }
 #align add_monoid_algebra.map_domain_ring_hom AddMonoidAlgebra.mapDomainRingHom
 
 end MiscTheorems
@@ -5503,7 +6262,8 @@ protected def AddMonoidAlgebra.toMultiplicative [Semiring k] [Add G] :
 #align add_monoid_algebra.to_multiplicative AddMonoidAlgebra.toMultiplicative
 
 /-- The equivalence between `monoid_algebra` and `add_monoid_algebra` in terms of `additive` -/
-protected def MonoidAlgebra.toAdditive [Semiring k] [Mul G] : MonoidAlgebra k G ≃+* AddMonoidAlgebra k (Additive G) :=
+protected def MonoidAlgebra.toAdditive [Semiring k] [Mul G] :
+    MonoidAlgebra k G ≃+* AddMonoidAlgebra k (Additive G) :=
   { Finsupp.domCongr Additive.ofMul with toFun := equivMapDomain Additive.ofMul,
     map_mul' := fun x y => by
       repeat' rw [equiv_map_domain_eq_map_domain]
@@ -5522,14 +6282,16 @@ section NonUnitalNonAssocAlgebra
 
 variable (k) [Semiring k] [DistribSmul R k] [Add G]
 
-instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (AddMonoidAlgebra k G) (AddMonoidAlgebra k G) :=
+instance is_scalar_tower_self [IsScalarTower R k k] :
+    IsScalarTower R (AddMonoidAlgebra k G) (AddMonoidAlgebra k G) :=
   @MonoidAlgebra.is_scalar_tower_self k (Multiplicative G) R _ _ _ _
 #align add_monoid_algebra.is_scalar_tower_self AddMonoidAlgebra.is_scalar_tower_self
 
 /-- Note that if `k` is a `comm_semiring` then we have `smul_comm_class k k k` and so we can take
 `R = k` in the below. In other words, if the coefficients are commutative amongst themselves, they
 also commute with the algebra multiplication. -/
-instance smul_comm_class_self [SmulCommClass R k k] : SmulCommClass R (AddMonoidAlgebra k G) (AddMonoidAlgebra k G) :=
+instance smul_comm_class_self [SmulCommClass R k k] :
+    SmulCommClass R (AddMonoidAlgebra k G) (AddMonoidAlgebra k G) :=
   @MonoidAlgebra.smul_comm_class_self k (Multiplicative G) R _ _ _ _
 #align add_monoid_algebra.smul_comm_class_self AddMonoidAlgebra.smul_comm_class_self
 
@@ -5562,7 +6324,8 @@ def liftMagma [Module k A] [IsScalarTower k A A] [SmulCommClass k A A] :
     (Multiplicative G →ₙ* A) ≃ (AddMonoidAlgebra k G →ₙₐ[k] A) :=
   { (MonoidAlgebra.liftMagma k : (Multiplicative G →ₙ* A) ≃ (_ →ₙₐ[k] A)) with
     toFun := fun f =>
-      { (MonoidAlgebra.liftMagma k f : _) with toFun := fun a => Sum a fun m t => t • f (Multiplicative.ofAdd m) },
+      { (MonoidAlgebra.liftMagma k f : _) with
+        toFun := fun a => Sum a fun m t => t • f (Multiplicative.ofAdd m) },
     invFun := fun F => F.toMulHom.comp (ofMagma k G) }
 #align add_monoid_algebra.lift_magma AddMonoidAlgebra.liftMagma
 
@@ -5585,7 +6348,8 @@ def singleZeroRingHom [Semiring k] [AddMonoid G] : k →+* AddMonoidAlgebra k G 
 /-- If two ring homomorphisms from `add_monoid_algebra k G` are equal on all `single a 1`
 and `single 0 b`, then they are equal. -/
 theorem ring_hom_ext {R} [Semiring k] [AddMonoid G] [Semiring R] {f g : AddMonoidAlgebra k G →+* R}
-    (h₀ : ∀ b, f (single 0 b) = g (single 0 b)) (h_of : ∀ a, f (single a 1) = g (single a 1)) : f = g :=
+    (h₀ : ∀ b, f (single 0 b) = g (single 0 b)) (h_of : ∀ a, f (single a 1) = g (single a 1)) :
+    f = g :=
   @MonoidAlgebra.ring_hom_ext k (Multiplicative G) R _ _ _ _ _ h₀ h_of
 #align add_monoid_algebra.ring_hom_ext AddMonoidAlgebra.ring_hom_ext
 
@@ -5596,7 +6360,10 @@ See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem ring_hom_ext' {R} [Semiring k] [AddMonoid G] [Semiring R] {f g : AddMonoidAlgebra k G →+* R}
     (h₁ : f.comp singleZeroRingHom = g.comp singleZeroRingHom)
-    (h_of : (f : AddMonoidAlgebra k G →* R).comp (of k G) = (g : AddMonoidAlgebra k G →* R).comp (of k G)) : f = g :=
+    (h_of :
+      (f : AddMonoidAlgebra k G →* R).comp (of k G) =
+        (g : AddMonoidAlgebra k G →* R).comp (of k G)) :
+    f = g :=
   ring_hom_ext (RingHom.congr_fun h₁) (MonoidHom.congr_fun h_of)
 #align add_monoid_algebra.ring_hom_ext' AddMonoidAlgebra.ring_hom_ext'
 
@@ -5609,8 +6376,10 @@ variable [Semiring k]
 /-- The opposite of an `add_monoid_algebra R I` is ring equivalent to
 the `add_monoid_algebra Rᵐᵒᵖ I` over the opposite ring, taking elements to their opposite. -/
 @[simps (config := { simpRhs := true })]
-protected noncomputable def opRingEquiv [AddCommMonoid G] : (AddMonoidAlgebra k G)ᵐᵒᵖ ≃+* AddMonoidAlgebra kᵐᵒᵖ G :=
-  { MulOpposite.opAddEquiv.symm.trans (Finsupp.mapRange.addEquiv (MulOpposite.opAddEquiv : k ≃+ kᵐᵒᵖ)) with
+protected noncomputable def opRingEquiv [AddCommMonoid G] :
+    (AddMonoidAlgebra k G)ᵐᵒᵖ ≃+* AddMonoidAlgebra kᵐᵒᵖ G :=
+  { MulOpposite.opAddEquiv.symm.trans
+      (Finsupp.mapRange.addEquiv (MulOpposite.opAddEquiv : k ≃+ kᵐᵒᵖ)) with
     map_mul' := by
       dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
@@ -5635,7 +6404,8 @@ end Opposite
 
 In particular this provides the instance `algebra k (add_monoid_algebra k G)`.
 -/
-instance [CommSemiring R] [Semiring k] [Algebra R k] [AddMonoid G] : Algebra R (AddMonoidAlgebra k G) :=
+instance [CommSemiring R] [Semiring k] [Algebra R k] [AddMonoid G] :
+    Algebra R (AddMonoidAlgebra k G) :=
   { singleZeroRingHom.comp (algebraMap R k) with
     smul_def' := fun r a => by
       ext
@@ -5646,7 +6416,8 @@ instance [CommSemiring R] [Semiring k] [Algebra R k] [AddMonoid G] : Algebra R (
 
 /-- `finsupp.single 0` as a `alg_hom` -/
 @[simps]
-def singleZeroAlgHom [CommSemiring R] [Semiring k] [Algebra R k] [AddMonoid G] : k →ₐ[R] AddMonoidAlgebra k G :=
+def singleZeroAlgHom [CommSemiring R] [Semiring k] [Algebra R k] [AddMonoid G] :
+    k →ₐ[R] AddMonoidAlgebra k G :=
   { singleZeroRingHom with
     commutes' := fun r => by
       ext
@@ -5677,14 +6448,18 @@ def liftNcAlgHom (f : A →ₐ[k] B) (g : Multiplicative G →* B) (h_comm : ∀
 
 /-- A `k`-algebra homomorphism from `monoid_algebra k G` is uniquely defined by its
 values on the functions `single a 1`. -/
-theorem alg_hom_ext ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄ (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
+theorem alg_hom_ext ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄
+    (h : ∀ x, φ₁ (single x 1) = φ₂ (single x 1)) : φ₁ = φ₂ :=
   @MonoidAlgebra.alg_hom_ext k (Multiplicative G) _ _ _ _ _ _ _ h
 #align add_monoid_algebra.alg_hom_ext AddMonoidAlgebra.alg_hom_ext
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem alg_hom_ext' ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄
-    (h : (φ₁ : AddMonoidAlgebra k G →* A).comp (of k G) = (φ₂ : AddMonoidAlgebra k G →* A).comp (of k G)) : φ₁ = φ₂ :=
+    (h :
+      (φ₁ : AddMonoidAlgebra k G →* A).comp (of k G) =
+        (φ₂ : AddMonoidAlgebra k G →* A).comp (of k G)) :
+    φ₁ = φ₂ :=
   alg_hom_ext <| MonoidHom.congr_fun h
 #align add_monoid_algebra.alg_hom_ext' AddMonoidAlgebra.alg_hom_ext'
 
@@ -5708,10 +6483,12 @@ theorem lift_apply' (F : Multiplicative G →* A) (f : MonoidAlgebra k G) :
 #align add_monoid_algebra.lift_apply' AddMonoidAlgebra.lift_apply'
 
 theorem lift_apply (F : Multiplicative G →* A) (f : MonoidAlgebra k G) :
-    lift k G A F f = f.Sum fun a b => b • F (Multiplicative.ofAdd a) := by simp only [lift_apply', Algebra.smul_def]
+    lift k G A F f = f.Sum fun a b => b • F (Multiplicative.ofAdd a) := by
+  simp only [lift_apply', Algebra.smul_def]
 #align add_monoid_algebra.lift_apply AddMonoidAlgebra.lift_apply
 
-theorem lift_def (F : Multiplicative G →* A) : ⇑(lift k G A F) = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
+theorem lift_def (F : Multiplicative G →* A) :
+    ⇑(lift k G A F) = liftNc ((algebraMap k A : k →+* A) : k →+ A) F :=
   rfl
 #align add_monoid_algebra.lift_def AddMonoidAlgebra.lift_def
 
@@ -5721,12 +6498,13 @@ theorem lift_symm_apply (F : AddMonoidAlgebra k G →ₐ[k] A) (x : Multiplicati
   rfl
 #align add_monoid_algebra.lift_symm_apply AddMonoidAlgebra.lift_symm_apply
 
-theorem lift_of (F : Multiplicative G →* A) (x : Multiplicative G) : lift k G A F (of k G x) = F x := by
-  rw [of_apply, ← lift_symm_apply, Equiv.symm_apply_apply]
+theorem lift_of (F : Multiplicative G →* A) (x : Multiplicative G) :
+    lift k G A F (of k G x) = F x := by rw [of_apply, ← lift_symm_apply, Equiv.symm_apply_apply]
 #align add_monoid_algebra.lift_of AddMonoidAlgebra.lift_of
 
 @[simp]
-theorem lift_single (F : Multiplicative G →* A) (a b) : lift k G A F (single a b) = b • F (Multiplicative.ofAdd a) := by
+theorem lift_single (F : Multiplicative G →* A) (a b) :
+    lift k G A F (single a b) = b • F (Multiplicative.ofAdd a) := by
   rw [lift_def, lift_nc_single, Algebra.smul_def, RingHom.coe_add_monoid_hom]
 #align add_monoid_algebra.lift_single AddMonoidAlgebra.lift_single
 
@@ -5766,17 +6544,18 @@ theorem prod_single [CommSemiring k] [AddCommMonoid G] {s : Finset ι} {a : ι �
 
 end
 
-theorem map_domain_algebra_map {A H F : Type _} [CommSemiring k] [Semiring A] [Algebra k A] [AddMonoid G] [AddMonoid H]
-    [AddMonoidHomClass F G H] (f : F) (r : k) :
-    mapDomain f (algebraMap k (AddMonoidAlgebra A G) r) = algebraMap k (AddMonoidAlgebra A H) r := by
-  simp only [Function.comp_apply, map_domain_single, AddMonoidAlgebra.coe_algebra_map, map_zero]
+theorem map_domain_algebra_map {A H F : Type _} [CommSemiring k] [Semiring A] [Algebra k A]
+    [AddMonoid G] [AddMonoid H] [AddMonoidHomClass F G H] (f : F) (r : k) :
+    mapDomain f (algebraMap k (AddMonoidAlgebra A G) r) = algebraMap k (AddMonoidAlgebra A H) r :=
+  by simp only [Function.comp_apply, map_domain_single, AddMonoidAlgebra.coe_algebra_map, map_zero]
 #align add_monoid_algebra.map_domain_algebra_map AddMonoidAlgebra.map_domain_algebra_map
 
 /-- If `f : G → H` is a homomorphism between two additive magmas, then `finsupp.map_domain f` is a
 non-unital algebra homomorphism between their additive magma algebras. -/
 @[simps]
-def mapDomainNonUnitalAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A] {G H F : Type _} [Add G] [Add H]
-    [AddHomClass F G H] (f : F) : AddMonoidAlgebra A G →ₙₐ[k] AddMonoidAlgebra A H :=
+def mapDomainNonUnitalAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A]
+    {G H F : Type _} [Add G] [Add H] [AddHomClass F G H] (f : F) :
+    AddMonoidAlgebra A G →ₙₐ[k] AddMonoidAlgebra A H :=
   { (Finsupp.mapDomain.addMonoidHom f : MonoidAlgebra A G →+ MonoidAlgebra A H) with
     map_mul' := fun x y => map_domain_mul f x y, map_smul' := fun r x => map_domain_smul r x }
 #align add_monoid_algebra.map_domain_non_unital_alg_hom AddMonoidAlgebra.mapDomainNonUnitalAlgHom
@@ -5784,8 +6563,9 @@ def mapDomainNonUnitalAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algeb
 /-- If `f : G → H` is an additive homomorphism between two additive monoids, then
 `finsupp.map_domain f` is an algebra homomorphism between their add monoid algebras. -/
 @[simps]
-def mapDomainAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A] [AddMonoid G] {H F : Type _}
-    [AddMonoid H] [AddMonoidHomClass F G H] (f : F) : AddMonoidAlgebra A G →ₐ[k] AddMonoidAlgebra A H :=
+def mapDomainAlgHom (k A : Type _) [CommSemiring k] [Semiring A] [Algebra k A] [AddMonoid G]
+    {H F : Type _} [AddMonoid H] [AddMonoidHomClass F G H] (f : F) :
+    AddMonoidAlgebra A G →ₐ[k] AddMonoidAlgebra A H :=
   { mapDomainRingHom A f with commutes' := map_domain_algebra_map f }
 #align add_monoid_algebra.map_domain_alg_hom AddMonoidAlgebra.mapDomainAlgHom
 
@@ -5797,7 +6577,8 @@ variable [CommSemiring R] (k G)
 `multiplicative`. -/
 def AddMonoidAlgebra.toMultiplicativeAlgEquiv [Semiring k] [Algebra R k] [AddMonoid G] :
     AddMonoidAlgebra k G ≃ₐ[R] MonoidAlgebra k (Multiplicative G) :=
-  { AddMonoidAlgebra.toMultiplicative k G with commutes' := fun r => by simp [AddMonoidAlgebra.toMultiplicative] }
+  { AddMonoidAlgebra.toMultiplicative k G with
+    commutes' := fun r => by simp [AddMonoidAlgebra.toMultiplicative] }
 #align add_monoid_algebra.to_multiplicative_alg_equiv AddMonoidAlgebra.toMultiplicativeAlgEquiv
 
 /-- The algebra equivalence between `monoid_algebra` and `add_monoid_algebra` in terms of

@@ -44,7 +44,8 @@ def commMonoidOfSkeletalBraided [BraidedCategory C] (hC : Skeletal C) : CommMono
 noncomputable instance : MonoidalCategory (Skeleton C) :=
   Monoidal.transport (skeletonEquivalence C).symm
 
-/-- The skeleton of a monoidal category can be viewed as a monoid, where the multiplication is given by
+/--
+The skeleton of a monoidal category can be viewed as a monoid, where the multiplication is given by
 the tensor product, and satisfies the monoid axioms since it is a skeleton.
 -/
 noncomputable instance : Monoid (Skeleton C) :=

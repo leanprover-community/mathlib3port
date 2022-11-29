@@ -80,7 +80,9 @@ theorem coe_mk (s : Set V) (h₁ h₂ h₃) : (mk s h₁ h₂ h₃ : Set V) = s 
 
 instance : AddMonoid (ConvexBody V) where
   -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
-  add K L := ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact, K.Nonempty.add L.Nonempty⟩
+  add K L :=
+    ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact,
+      K.Nonempty.add L.Nonempty⟩
   add_assoc K L M := by
     ext
     simp only [coe_mk, Set.image2_add, add_assoc]
@@ -113,7 +115,9 @@ instance : AddCommMonoid (ConvexBody V) :=
 
 instance :
     HasSmul ℝ
-      (ConvexBody V) where smul c K := ⟨c • (K : Set V), K.Convex.smul _, K.IsCompact.smul _, K.Nonempty.smul_set⟩
+      (ConvexBody
+        V) where smul c K :=
+    ⟨c • (K : Set V), K.Convex.smul _, K.IsCompact.smul _, K.Nonempty.smul_set⟩
 
 @[simp]
 theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=

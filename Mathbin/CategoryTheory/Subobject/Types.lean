@@ -55,12 +55,15 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ S
             simp) }
   unitIso :=
     NatIso.ofComponents
-      (fun f => MonoOver.isoMk (Equiv.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso (by tidy)) (by tidy)
+      (fun f =>
+        MonoOver.isoMk (Equiv.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso (by tidy))
+      (by tidy)
   counitIso := NatIso.ofComponents (fun s => eqToIso Subtype.range_val) (by tidy)
 #align types.mono_over_equivalence_set Types.monoOverEquivalenceSet
 
 instance : WellPowered (Type u) :=
-  well_powered_of_essentially_small_mono_over fun α => EssentiallySmall.mk' (Types.monoOverEquivalenceSet α)
+  well_powered_of_essentially_small_mono_over fun α =>
+    EssentiallySmall.mk' (Types.monoOverEquivalenceSet α)
 
 /-- For `α : Type u`, `subobject α` is order isomorphic to `set α`.
 -/

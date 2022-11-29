@@ -43,7 +43,8 @@ def uniqueHomsetOfInitialIsoTerminal [HasInitial C] (i : ⊥_ C ≅ ⊤_ C) (X Y
       _ ≃ (X ⨯ ⊥_ C ⟶ Y) := Iso.homCongr (prod.mapIso (Iso.refl _) i.symm) (Iso.refl _)
       _ ≃ (⊥_ C ⟶ Y ^^ X) := (exp.adjunction _).homEquiv _ _
       
-#align category_theory.unique_homset_of_initial_iso_terminal CategoryTheory.uniqueHomsetOfInitialIsoTerminal
+#align
+  category_theory.unique_homset_of_initial_iso_terminal CategoryTheory.uniqueHomsetOfInitialIsoTerminal
 
 open ZeroObject
 
@@ -61,7 +62,8 @@ one morphism.
 -/
 def equivPunit [HasZeroObject C] : C ≌ Discrete PUnit :=
   Equivalence.mk (Functor.star C) (Functor.fromPunit 0)
-    (NatIso.ofComponents (fun X => { Hom := default, inv := default }) fun X Y f => by decide) (Functor.punitExt _ _)
+    (NatIso.ofComponents (fun X => { Hom := default, inv := default }) fun X Y f => by decide)
+    (Functor.punitExt _ _)
 #align category_theory.equiv_punit CategoryTheory.equivPunit
 
 end CategoryTheory

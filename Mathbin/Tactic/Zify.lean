@@ -86,7 +86,8 @@ This is often useful since `ℤ` has well-behaved subtraction.
 The list of extra lemmas is used in the `push_cast` step.
 
 Returns an expression `e'` and a proof that `e = e'`.-/
-unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr × expr) := fun z => do
+unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr × expr) := fun z =>
+  do
   let (z1, p1) ← zify.lift_to_z z <|> fail "failed to find an applicable zify lemma"
   let (z2, p2) ← norm_cast.derive_push_cast extra_lems z1
   Prod.mk z2 <$> mk_eq_trans p1 p2
@@ -136,7 +137,8 @@ integer `z` (in the supertype) to `ℕ` (the subtype), given a proof that `z ≥
 propositions concerning `z` will still be over `ℤ`. `zify` changes propositions about `ℕ` (the
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
 -/
-unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse location) : tactic Unit := do
+unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse location) : tactic Unit :=
+  do
   let locs ← l.get_locals
   replace_at (tactic.zify sl) locs l >>= guardb
 #align tactic.interactive.zify tactic.interactive.zify
@@ -144,7 +146,8 @@ unsafe def tactic.interactive.zify (sl : parse simp_arg_list) (l : parse locatio
 end
 
 add_tactic_doc
-  { Name := "zify", category := DocCategory.attr, declNames := [`zify.zify_attr], tags := ["coercions", "transport"] }
+  { Name := "zify", category := DocCategory.attr, declNames := [`zify.zify_attr],
+    tags := ["coercions", "transport"] }
 
 add_tactic_doc
   { Name := "zify", category := DocCategory.tactic, declNames := [`tactic.interactive.zify],

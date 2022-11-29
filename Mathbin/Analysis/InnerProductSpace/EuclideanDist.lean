@@ -51,7 +51,8 @@ def ball (x : E) (r : ℝ) : Set E :=
   { y | dist y x < r }
 #align euclidean.ball Euclidean.ball
 
-theorem ball_eq_preimage (x : E) (r : ℝ) : ball x r = toEuclidean ⁻¹' Metric.ball (toEuclidean x) r :=
+theorem ball_eq_preimage (x : E) (r : ℝ) :
+    ball x r = toEuclidean ⁻¹' Metric.ball (toEuclidean x) r :=
   rfl
 #align euclidean.ball_eq_preimage Euclidean.ball_eq_preimage
 
@@ -60,7 +61,8 @@ theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
   rfl
 #align euclidean.closed_ball_eq_preimage Euclidean.closed_ball_eq_preimage
 
-theorem ball_subset_closed_ball {x : E} {r : ℝ} : ball x r ⊆ closedBall x r := fun y (hy : _ < _) => le_of_lt hy
+theorem ball_subset_closed_ball {x : E} {r : ℝ} : ball x r ⊆ closedBall x r := fun y (hy : _ < _) =>
+  le_of_lt hy
 #align euclidean.ball_subset_closed_ball Euclidean.ball_subset_closed_ball
 
 theorem is_open_ball {x : E} {r : ℝ} : IsOpen (ball x r) :=
@@ -86,11 +88,12 @@ theorem isClosedClosedBall {x : E} {r : ℝ} : IsClosed (closedBall x r) :=
 #align euclidean.is_closed_closed_ball Euclidean.isClosedClosedBall
 
 theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = closedBall x r := by
-  rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h, closed_ball_eq_preimage]
+  rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h,
+    closed_ball_eq_preimage]
 #align euclidean.closure_ball Euclidean.closure_ball
 
-theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ ball x R) :
-    ∃ r ∈ ioo 0 R, s ⊆ ball x r := by
+theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s)
+    (h : s ⊆ ball x R) : ∃ r ∈ ioo 0 R, s ⊆ ball x r := by
   rw [ball_eq_preimage, ← image_subset_iff] at h
   rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
   exact ⟨r, hr, image_subset_iff.1 hsr⟩

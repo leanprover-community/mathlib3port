@@ -51,7 +51,8 @@ def leftCoset [Mul α] (a : α) (s : Set α) : Set α :=
 #align left_coset leftCoset
 
 /-- The right coset `s * a` for an element `a : α` and a subset `s : set α` -/
-@[to_additive rightAddCoset "The right coset `s+a` for an element `a : α`\nand a subset `s : set α`"]
+@[to_additive rightAddCoset
+      "The right coset `s+a` for an element `a : α`\nand a subset `s : set α`"]
 def rightCoset [Mul α] (s : Set α) (a : α) : Set α :=
   (fun x => x * a) '' s
 #align right_coset rightCoset
@@ -227,7 +228,8 @@ theorem eq_cosets_of_normal (N : s.Normal) (g : α) : g *l s = s *r g :=
 
 @[to_additive normal_of_eq_add_cosets]
 theorem normal_of_eq_cosets (h : ∀ g : α, g *l s = s *r g) : s.Normal :=
-  ⟨fun a ha g => show g * a * g⁻¹ ∈ (s : Set α) by rw [← mem_right_coset_iff, ← h] <;> exact mem_left_coset g ha⟩
+  ⟨fun a ha g =>
+    show g * a * g⁻¹ ∈ (s : Set α) by rw [← mem_right_coset_iff, ← h] <;> exact mem_left_coset g ha⟩
 #align normal_of_eq_cosets normal_of_eq_cosets
 
 @[to_additive normal_iff_eq_add_cosets]
@@ -280,7 +282,8 @@ variable [Group α] (s : Subgroup α)
 
 /-- The equivalence relation corresponding to the partition of a group by left cosets
 of a subgroup.-/
-@[to_additive "The equivalence relation corresponding to the partition of a group by left cosets\nof a subgroup."]
+@[to_additive
+      "The equivalence relation corresponding to the partition of a group by left cosets\nof a subgroup."]
 def leftRel : Setoid α :=
   MulAction.orbitRel s.opposite α
 #align quotient_group.left_rel QuotientGroup.leftRel
@@ -290,7 +293,8 @@ variable {s}
 @[to_additive]
 theorem left_rel_apply {x y : α} : @Setoid.r _ (leftRel s) x y ↔ x⁻¹ * y ∈ s :=
   calc
-    (∃ a : s.opposite, y * MulOpposite.unop a = x) ↔ ∃ a : s, y * a = x := s.oppositeEquiv.symm.exists_congr_left
+    (∃ a : s.opposite, y * MulOpposite.unop a = x) ↔ ∃ a : s, y * a = x :=
+      s.oppositeEquiv.symm.exists_congr_left
     _ ↔ ∃ a : s, x⁻¹ * y = a⁻¹ := by simp only [inv_mul_eq_iff_eq_mul, eq_mul_inv_iff_mul_eq]
     _ ↔ x⁻¹ * y ∈ s := by simp [SetLike.exists]
     
@@ -305,11 +309,13 @@ theorem left_rel_eq : @Setoid.r _ (leftRel s) = fun x y => x⁻¹ * y ∈ s :=
     apply left_rel_apply
 #align quotient_group.left_rel_eq QuotientGroup.left_rel_eq
 
-theorem left_rel_r_eq_left_coset_equivalence : @Setoid.r _ (QuotientGroup.leftRel s) = LeftCosetEquivalence s := by
+theorem left_rel_r_eq_left_coset_equivalence :
+    @Setoid.r _ (QuotientGroup.leftRel s) = LeftCosetEquivalence s := by
   ext
   rw [left_rel_eq]
   exact (left_coset_eq_iff s).symm
-#align quotient_group.left_rel_r_eq_left_coset_equivalence QuotientGroup.left_rel_r_eq_left_coset_equivalence
+#align
+  quotient_group.left_rel_r_eq_left_coset_equivalence QuotientGroup.left_rel_r_eq_left_coset_equivalence
 
 @[to_additive]
 instance leftRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (leftRel s).R := fun x y => by
@@ -326,7 +332,8 @@ instance : HasQuotient α (Subgroup α) :=
 
 /-- The equivalence relation corresponding to the partition of a group by right cosets of a
 subgroup. -/
-@[to_additive "The equivalence relation corresponding to the partition of a group by right cosets of\na subgroup."]
+@[to_additive
+      "The equivalence relation corresponding to the partition of a group by right cosets of\na subgroup."]
 def rightRel : Setoid α :=
   MulAction.orbitRel s α
 #align quotient_group.right_rel QuotientGroup.rightRel
@@ -336,7 +343,8 @@ variable {s}
 @[to_additive]
 theorem right_rel_apply {x y : α} : @Setoid.r _ (rightRel s) x y ↔ y * x⁻¹ ∈ s :=
   calc
-    (∃ a : s, (a : α) * y = x) ↔ ∃ a : s, y * x⁻¹ = a⁻¹ := by simp only [mul_inv_eq_iff_eq_mul, eq_inv_mul_iff_mul_eq]
+    (∃ a : s, (a : α) * y = x) ↔ ∃ a : s, y * x⁻¹ = a⁻¹ := by
+      simp only [mul_inv_eq_iff_eq_mul, eq_inv_mul_iff_mul_eq]
     _ ↔ y * x⁻¹ ∈ s := by simp [SetLike.exists]
     
 #align quotient_group.right_rel_apply QuotientGroup.right_rel_apply
@@ -350,11 +358,13 @@ theorem right_rel_eq : @Setoid.r _ (rightRel s) = fun x y => y * x⁻¹ ∈ s :=
     apply right_rel_apply
 #align quotient_group.right_rel_eq QuotientGroup.right_rel_eq
 
-theorem right_rel_r_eq_right_coset_equivalence : @Setoid.r _ (QuotientGroup.rightRel s) = RightCosetEquivalence s := by
+theorem right_rel_r_eq_right_coset_equivalence :
+    @Setoid.r _ (QuotientGroup.rightRel s) = RightCosetEquivalence s := by
   ext
   rw [right_rel_eq]
   exact (right_coset_eq_iff s).symm
-#align quotient_group.right_rel_r_eq_right_coset_equivalence QuotientGroup.right_rel_r_eq_right_coset_equivalence
+#align
+  quotient_group.right_rel_r_eq_right_coset_equivalence QuotientGroup.right_rel_r_eq_right_coset_equivalence
 
 @[to_additive]
 instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).R := fun x y => by
@@ -385,10 +395,12 @@ def quotientRightRelEquivQuotientLeftRel : Quotient (QuotientGroup.rightRel s) �
         (by
           simp only [inv_inv]
           exact Quotient.exact' rfl)
-#align quotient_group.quotient_right_rel_equiv_quotient_left_rel QuotientGroup.quotientRightRelEquivQuotientLeftRel
+#align
+  quotient_group.quotient_right_rel_equiv_quotient_left_rel QuotientGroup.quotientRightRelEquivQuotientLeftRel
 
 @[to_additive]
-instance fintypeQuotientRightRel [Fintype (α ⧸ s)] : Fintype (Quotient (QuotientGroup.rightRel s)) :=
+instance fintypeQuotientRightRel [Fintype (α ⧸ s)] :
+    Fintype (Quotient (QuotientGroup.rightRel s)) :=
   Fintype.ofEquiv (α ⧸ s) (QuotientGroup.quotientRightRelEquivQuotientLeftRel s).symm
 #align quotient_group.fintype_quotient_right_rel QuotientGroup.fintypeQuotientRightRel
 
@@ -490,17 +502,21 @@ theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁ * g₂) 
 #align quotient_group.mk_mul_of_mem QuotientGroup.mk_mul_of_mem
 
 @[to_additive]
-theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x : α | (x : α ⧸ s) = g } = leftCoset g s :=
-  Set.ext fun z => by rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
+theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) :
+    { x : α | (x : α ⧸ s) = g } = leftCoset g s :=
+  Set.ext fun z => by
+    rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
 #align quotient_group.eq_class_eq_left_coset QuotientGroup.eq_class_eq_left_coset
 
 @[to_additive]
 theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
     coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
   ext x
-  simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union, Set.mem_image,
-    SetLike.coe_mk, ← eq_inv_mul_iff_mul_eq]
-  exact ⟨fun ⟨y, hs, hN⟩ => ⟨_, N.inv_mem hN, by simpa using hs⟩, fun ⟨z, hz, hxz⟩ => ⟨x * z, hxz, by simpa using hz⟩⟩
+  simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union,
+    Set.mem_image, SetLike.coe_mk, ← eq_inv_mul_iff_mul_eq]
+  exact
+    ⟨fun ⟨y, hs, hN⟩ => ⟨_, N.inv_mem hN, by simpa using hs⟩, fun ⟨z, hz, hxz⟩ =>
+      ⟨x * z, hxz, by simpa using hz⟩⟩
 #align quotient_group.preimage_image_coe QuotientGroup.preimage_image_coe
 
 end QuotientGroup
@@ -514,15 +530,15 @@ variable [Group α] {s : Subgroup α}
 /-- The natural bijection between a left coset `g * s` and `s`. -/
 @[to_additive "The natural bijection between the cosets `g + s` and `s`."]
 def leftCosetEquivSubgroup (g : α) : leftCoset g s ≃ s :=
-  ⟨fun x => ⟨g⁻¹ * x.1, (mem_left_coset_iff _).1 x.2⟩, fun x => ⟨g * x.1, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
-    Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
+  ⟨fun x => ⟨g⁻¹ * x.1, (mem_left_coset_iff _).1 x.2⟩, fun x => ⟨g * x.1, x.1, x.2, rfl⟩,
+    fun ⟨x, hx⟩ => Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
 #align subgroup.left_coset_equiv_subgroup Subgroup.leftCosetEquivSubgroup
 
 /-- The natural bijection between a right coset `s * g` and `s`. -/
 @[to_additive "The natural bijection between the cosets `s + g` and `s`."]
 def rightCosetEquivSubgroup (g : α) : rightCoset (↑s) g ≃ s :=
-  ⟨fun x => ⟨x.1 * g⁻¹, (mem_right_coset_iff _).1 x.2⟩, fun x => ⟨x.1 * g, x.1, x.2, rfl⟩, fun ⟨x, hx⟩ =>
-    Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
+  ⟨fun x => ⟨x.1 * g⁻¹, (mem_right_coset_iff _).1 x.2⟩, fun x => ⟨x.1 * g, x.1, x.2, rfl⟩,
+    fun ⟨x, hx⟩ => Subtype.eq <| by simp, fun ⟨g, hg⟩ => Subtype.eq <| by simp⟩
 #align subgroup.right_coset_equiv_subgroup Subgroup.rightCosetEquivSubgroup
 
 /-- A (non-canonical) bijection between a group `α` and the product `(α/s) × s` -/
@@ -534,7 +550,8 @@ noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
       Equiv.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]
         show
-          (_root_.subtype fun x : α => Quotient.mk' x = L) ≃ _root_.subtype fun x : α => Quotient.mk' x = Quotient.mk' _
+          (_root_.subtype fun x : α => Quotient.mk' x = L) ≃
+            _root_.subtype fun x : α => Quotient.mk' x = Quotient.mk' _
         simp [-Quotient.eq']
     _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
@@ -552,7 +569,8 @@ def quotientEquivOfEq (h : s = t) : α ⧸ s ≃ α ⧸ t where
   right_inv q := induction_on' q fun g => rfl
 #align subgroup.quotient_equiv_of_eq Subgroup.quotientEquivOfEq
 
-theorem quotient_equiv_of_eq_mk (h : s = t) (a : α) : quotientEquivOfEq h (QuotientGroup.mk a) = QuotientGroup.mk a :=
+theorem quotient_equiv_of_eq_mk (h : s = t) (a : α) :
+    quotientEquivOfEq h (QuotientGroup.mk a) = QuotientGroup.mk a :=
   rfl
 #align subgroup.quotient_equiv_of_eq_mk Subgroup.quotient_equiv_of_eq_mk
 
@@ -561,14 +579,16 @@ of the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_o
 @[to_additive
       "If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse\nof the quotient map `G → G/K`. The classical version is `quotient_equiv_prod_of_le`.",
   simps]
-def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Function.RightInverse f QuotientGroup.mk) :
-    α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroupOf t where
+def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
+    (hf : Function.RightInverse f QuotientGroup.mk) : α ⧸ s ≃ (α ⧸ t) × t ⧸ s.subgroupOf t where
   toFun a :=
     ⟨a.map' id fun b c h => left_rel_apply.mpr (h_le (left_rel_apply.mp h)),
-      a.map' (fun g : α => ⟨(f (Quotient.mk' g))⁻¹ * g, left_rel_apply.mp (Quotient.exact' (hf g))⟩) fun b c h => by
+      a.map' (fun g : α => ⟨(f (Quotient.mk' g))⁻¹ * g, left_rel_apply.mp (Quotient.exact' (hf g))⟩)
+        fun b c h => by
         rw [left_rel_apply]
         change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
-        have key : f b = f c := congr_arg f (Quotient.sound' (left_rel_apply.mpr (h_le (left_rel_apply.mp h))))
+        have key : f b = f c :=
+          congr_arg f (Quotient.sound' (left_rel_apply.mpr (h_le (left_rel_apply.mp h))))
         rwa [key, mul_inv_rev, inv_inv, mul_assoc, mul_inv_cancel_left, ← left_rel_apply]⟩
   invFun a :=
     a.2.map' (fun b => f a.1 * b) fun b c h => by
@@ -597,8 +617,10 @@ noncomputable def quotientEquivProdOfLe (h_le : s ≤ t) : α ⧸ s ≃ (α ⧸ 
 #align subgroup.quotient_equiv_prod_of_le Subgroup.quotientEquivProdOfLe
 
 /-- If `s ≤ t`, then there is an embedding `s ⧸ H.subgroup_of s ↪ t ⧸ H.subgroup_of t`. -/
-@[to_additive "If `s ≤ t`, then there is an embedding\n  `s ⧸ H.add_subgroup_of s ↪ t ⧸ H.add_subgroup_of t`."]
-def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) : s ⧸ H.subgroupOf s ↪ t ⧸ H.subgroupOf t where
+@[to_additive
+      "If `s ≤ t`, then there is an embedding\n  `s ⧸ H.add_subgroup_of s ↪ t ⧸ H.add_subgroup_of t`."]
+def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) :
+    s ⧸ H.subgroupOf s ↪ t ⧸ H.subgroupOf t where
   toFun :=
     Quotient.map' (inclusion h) fun a b => by
       simp_rw [left_rel_eq]
@@ -613,11 +635,14 @@ def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) : s ⧸ H.su
 theorem quotient_subgroup_of_embedding_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) (g : s) :
     quotientSubgroupOfEmbeddingOfLe H h (QuotientGroup.mk g) = QuotientGroup.mk (inclusion h g) :=
   rfl
-#align subgroup.quotient_subgroup_of_embedding_of_le_apply_mk Subgroup.quotient_subgroup_of_embedding_of_le_apply_mk
+#align
+  subgroup.quotient_subgroup_of_embedding_of_le_apply_mk Subgroup.quotient_subgroup_of_embedding_of_le_apply_mk
 
 /-- If `s ≤ t`, then there is a map `H ⧸ s.subgroup_of H → H ⧸ t.subgroup_of H`. -/
-@[to_additive "If `s ≤ t`, then there is an map\n  `H ⧸ s.add_subgroup_of H → H ⧸ t.add_subgroup_of H`."]
-def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) : H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
+@[to_additive
+      "If `s ≤ t`, then there is an map\n  `H ⧸ s.add_subgroup_of H → H ⧸ t.add_subgroup_of H`."]
+def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) :
+    H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
   (Quotient.map' id) fun a b => by
     simp_rw [left_rel_eq]
     apply h
@@ -627,7 +652,8 @@ def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) : H ⧸ s.subgroup
 theorem quotient_subgroup_of_map_of_le_apply_mk (H : Subgroup α) (h : s ≤ t) (g : H) :
     quotientSubgroupOfMapOfLe H h (QuotientGroup.mk g) = QuotientGroup.mk g :=
   rfl
-#align subgroup.quotient_subgroup_of_map_of_le_apply_mk Subgroup.quotient_subgroup_of_map_of_le_apply_mk
+#align
+  subgroup.quotient_subgroup_of_map_of_le_apply_mk Subgroup.quotient_subgroup_of_map_of_le_apply_mk
 
 /-- If `s ≤ t`, then there is a map `α ⧸ s → α ⧸ t`. -/
 @[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]
@@ -638,32 +664,39 @@ def quotientMapOfLe (h : s ≤ t) : α ⧸ s → α ⧸ t :=
 #align subgroup.quotient_map_of_le Subgroup.quotientMapOfLe
 
 @[simp, to_additive]
-theorem quotient_map_of_le_apply_mk (h : s ≤ t) (g : α) : quotientMapOfLe h (QuotientGroup.mk g) = QuotientGroup.mk g :=
+theorem quotient_map_of_le_apply_mk (h : s ≤ t) (g : α) :
+    quotientMapOfLe h (QuotientGroup.mk g) = QuotientGroup.mk g :=
   rfl
 #align subgroup.quotient_map_of_le_apply_mk Subgroup.quotient_map_of_le_apply_mk
 
 /-- The natural embedding `H ⧸ (⨅ i, f i).subgroup_of H ↪ Π i, H ⧸ (f i).subgroup_of H`. -/
-@[to_additive "The natural embedding\n  `H ⧸ (⨅ i, f i).add_subgroup_of H) ↪ Π i, H ⧸ (f i).add_subgroup_of H`.", simps]
+@[to_additive
+      "The natural embedding\n  `H ⧸ (⨅ i, f i).add_subgroup_of H) ↪ Π i, H ⧸ (f i).add_subgroup_of H`.",
+  simps]
 def quotientInfiSubgroupOfEmbedding {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) :
     H ⧸ (⨅ i, f i).subgroupOf H ↪ ∀ i, H ⧸ (f i).subgroupOf H where
   toFun q i := quotientSubgroupOfMapOfLe H (infi_le f i) q
   inj' :=
     Quotient.ind₂' <| by
-      simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, eq', mem_subgroup_of, mem_infi, imp_self,
-        forall_const]
+      simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, eq', mem_subgroup_of, mem_infi,
+        imp_self, forall_const]
 #align subgroup.quotient_infi_subgroup_of_embedding Subgroup.quotientInfiSubgroupOfEmbedding
 
 @[simp, to_additive]
-theorem quotient_infi_subgroup_of_embedding_apply_mk {ι : Type _} (f : ι → Subgroup α) (H : Subgroup α) (g : H)
-    (i : ι) : quotientInfiSubgroupOfEmbedding f H (QuotientGroup.mk g) i = QuotientGroup.mk g :=
+theorem quotient_infi_subgroup_of_embedding_apply_mk {ι : Type _} (f : ι → Subgroup α)
+    (H : Subgroup α) (g : H) (i : ι) :
+    quotientInfiSubgroupOfEmbedding f H (QuotientGroup.mk g) i = QuotientGroup.mk g :=
   rfl
-#align subgroup.quotient_infi_subgroup_of_embedding_apply_mk Subgroup.quotient_infi_subgroup_of_embedding_apply_mk
+#align
+  subgroup.quotient_infi_subgroup_of_embedding_apply_mk Subgroup.quotient_infi_subgroup_of_embedding_apply_mk
 
 /-- The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`. -/
 @[to_additive "The natural embedding `α ⧸ (⨅ i, f i) ↪ Π i, α ⧸ f i`.", simps]
 def quotientInfiEmbedding {ι : Type _} (f : ι → Subgroup α) : (α ⧸ ⨅ i, f i) ↪ ∀ i, α ⧸ f i where
   toFun q i := quotientMapOfLe (infi_le f i) q
-  inj' := Quotient.ind₂' <| by simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]
+  inj' :=
+    Quotient.ind₂' <| by
+      simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]
 #align subgroup.quotient_infi_embedding Subgroup.quotientInfiEmbedding
 
 @[simp, to_additive]
@@ -676,7 +709,8 @@ theorem quotient_infi_embedding_apply_mk {ι : Type _} (f : ι → Subgroup α) 
 theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [Fintype s]
     [DecidablePred fun a => a ∈ s] : Fintype.card α = Fintype.card (α ⧸ s) * Fintype.card s := by
   rw [← Fintype.card_prod] <;> exact Fintype.card_congr Subgroup.groupEquivQuotientTimesSubgroup
-#align subgroup.card_eq_card_quotient_mul_card_subgroup Subgroup.card_eq_card_quotient_mul_card_subgroup
+#align
+  subgroup.card_eq_card_quotient_mul_card_subgroup Subgroup.card_eq_card_quotient_mul_card_subgroup
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -708,7 +742,9 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
        [(Term.instBinder "[" [] (Term.app `Fintype [`α]) "]")
         (Term.explicitBinder "(" [`s] [":" (Term.app `Subgroup [`α])] [] ")")
         (Term.instBinder "[" [] (Term.app `Fintype [`s]) "]")]
-       (Term.typeSpec ":" («term_∣_» (Term.app `Fintype.card [`s]) "∣" (Term.app `Fintype.card [`α]))))
+       (Term.typeSpec
+        ":"
+        («term_∣_» (Term.app `Fintype.card [`s]) "∣" (Term.app `Fintype.card [`α]))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -789,13 +825,16 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'termℕ', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termℕ "ℕ")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.explicit "@" `dvd_mul_left)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `dvd_mul_left
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (some 1024, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (some 1024,
+     term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
@@ -805,12 +844,14 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card_eq_card_quotient_mul_card_subgroup
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -825,7 +866,8 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 /-- **Lagrange's Theorem**: The order of a subgroup divides the order of its ambient group. -/
     @[
-      to_additive "**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\nambient group."
+      to_additive
+        "**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\nambient group."
       ]
   theorem
     card_subgroup_dvd_card
@@ -834,8 +876,9 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
 #align subgroup.card_subgroup_dvd_card Subgroup.card_subgroup_dvd_card
 
 @[to_additive]
-theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun a => a ∈ s] [Fintype s] :
-    Fintype.card (α ⧸ s) ∣ Fintype.card α := by simp [card_eq_card_quotient_mul_card_subgroup s, @dvd_mul_right ℕ]
+theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun a => a ∈ s]
+    [Fintype s] : Fintype.card (α ⧸ s) ∣ Fintype.card α := by
+  simp [card_eq_card_quotient_mul_card_subgroup s, @dvd_mul_right ℕ]
 #align subgroup.card_quotient_dvd_card Subgroup.card_quotient_dvd_card
 
 open Fintype
@@ -848,7 +891,9 @@ variable {H : Type _} [Group H]
       []
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
         "]")]
       []
       []
@@ -878,7 +923,9 @@ variable {H : Type _} [Group H]
               («term_=_»
                (Term.app `card [`α])
                "="
-               (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
+               (Term.app
+                `card
+                [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
               ":="
               (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])]))
              [(calcStep
@@ -904,7 +951,9 @@ variable {H : Type _} [Group H]
              («term_=_»
               (Term.app `card [`α])
               "="
-              (Term.app `card [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
+              (Term.app
+               `card
+               [(Term.typeAscription "(" `f.range ":" [(Term.app `Subgroup [`H])] ")")]))
              ":="
              (Term.app `card_congr [(Term.app `Equiv.ofInjective [`f `hf])]))
             [(calcStep
@@ -949,10 +998,12 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card_subgroup_dvd_card
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∣_» (Term.hole "_") "∣" (Term.app `card [`H]))
@@ -962,11 +1013,14 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -981,20 +1035,28 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hf
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Equiv.ofInjective
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Equiv.ofInjective [`f `hf]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Equiv.ofInjective [`f `hf])
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card_congr
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -1013,32 +1075,40 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Subgroup
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.range
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app `card [`α])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `card
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1072,7 +1142,8 @@ theorem card_dvd_of_le {H K : Subgroup α} [Fintype H] [Fintype K] (hHK : H ≤ 
 @[to_additive]
 theorem card_comap_dvd_of_injective (K : Subgroup H) [Fintype K] (f : α →* H) [Fintype (K.comap f)]
     (hf : Function.Injective f) : Fintype.card (K.comap f) ∣ Fintype.card K := by
-  haveI : Fintype ((K.comap f).map f) := Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
+  haveI : Fintype ((K.comap f).map f) :=
+      Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
     calc
       Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
         Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv
@@ -1090,25 +1161,31 @@ variable [Group α]
 /-- If `s` is a subgroup of the group `α`, and `t` is a subset of `α/s`, then
 there is a (typically non-canonical) bijection between the preimage of `t` in
 `α` and the product `s × t`. -/
-noncomputable def preimageMkEquivSubgroupTimesSet (s : Subgroup α) (t : Set (α ⧸ s)) : QuotientGroup.mk ⁻¹' t ≃ s × t :=
+noncomputable def preimageMkEquivSubgroupTimesSet (s : Subgroup α) (t : Set (α ⧸ s)) :
+    QuotientGroup.mk ⁻¹' t ≃ s × t :=
   have h :
     ∀ {x : α ⧸ s} {a : α},
-      x ∈ t → a ∈ s → (Quotient.mk' (Quotient.out' x * a) : α ⧸ s) = Quotient.mk' (Quotient.out' x) :=
+      x ∈ t →
+        a ∈ s → (Quotient.mk' (Quotient.out' x * a) : α ⧸ s) = Quotient.mk' (Quotient.out' x) :=
     fun x a hx ha =>
     Quotient.sound' <| by
-      rwa [left_rel_apply, ← s.inv_mem_iff, mul_inv_rev, inv_inv, ← mul_assoc, inv_mul_self, one_mul]
+      rwa [left_rel_apply, ← s.inv_mem_iff, mul_inv_rev, inv_inv, ← mul_assoc, inv_mul_self,
+        one_mul]
   { toFun := fun ⟨a, ha⟩ =>
       ⟨⟨(Quotient.out' (Quotient.mk' a))⁻¹ * a,
           left_rel_apply.mp (@Quotient.exact' _ (leftRel s) _ _ <| Quotient.out_eq' _)⟩,
         ⟨Quotient.mk' a, ha⟩⟩,
-    invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => ⟨Quotient.out' x * a, show Quotient.mk' _ ∈ t by simp [h hx ha, hx]⟩,
+    invFun := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ =>
+      ⟨Quotient.out' x * a, show Quotient.mk' _ ∈ t by simp [h hx ha, hx]⟩,
     left_inv := fun ⟨a, ha⟩ => Subtype.eq <| show _ * _ = a by simp,
     right_inv := fun ⟨⟨a, ha⟩, ⟨x, hx⟩⟩ => show (_, _) = _ by simp [h hx ha] }
-#align quotient_group.preimage_mk_equiv_subgroup_times_set QuotientGroup.preimageMkEquivSubgroupTimesSet
+#align
+  quotient_group.preimage_mk_equiv_subgroup_times_set QuotientGroup.preimageMkEquivSubgroupTimesSet
 
 end QuotientGroup
 
-library_note "use has_coe_t"/-- We use the class `has_coe_t` instead of `has_coe` if the first argument is a variable,
+library_note "use has_coe_t"/--
+We use the class `has_coe_t` instead of `has_coe` if the first argument is a variable,
 or if the second argument is a variable not occurring in the first.
 Using `has_coe` would cause looping of type-class inference. See
 <https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/remove.20all.20instances.20with.20variable.20domain>

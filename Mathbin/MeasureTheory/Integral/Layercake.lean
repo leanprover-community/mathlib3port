@@ -63,10 +63,12 @@ formula), with a measurability assumption that would also essentially follow fro
 integrability assumptions.
 
 See `measure_theory.layercake` for the main formulation of the layer cake theorem. -/
-theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
-    (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t) (g_mble : Measurable g)
-    (g_nn : ∀ t > 0, 0 ≤ g t) :
-    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) = ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) := by
+theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) [SigmaFinite μ]
+    (f_nn : 0 ≤ f) (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t)
+    (g_mble : Measurable g) (g_nn : ∀ t > 0, 0 ≤ g t) :
+    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) =
+      ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) :=
+  by
   have g_intble' : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t := by
     intro t ht
     cases eq_or_lt_of_le ht
@@ -74,10 +76,12 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
       
     · exact g_intble t h
       
-  have integrand_eq : ∀ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) = ∫⁻ t in Ioc 0 (f ω), Ennreal.ofReal (g t) := by
+  have integrand_eq :
+    ∀ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) = ∫⁻ t in Ioc 0 (f ω), Ennreal.ofReal (g t) := by
     intro ω
     have g_ae_nn : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g := by
-      filter_upwards [self_mem_ae_restrict (measurableSetIoc : MeasurableSet (Ioc 0 (f ω)))] with x hx using g_nn x hx.1
+      filter_upwards [self_mem_ae_restrict
+          (measurableSetIoc : MeasurableSet (Ioc 0 (f ω)))] with x hx using g_nn x hx.1
     rw [← of_real_integral_eq_lintegral_of_real (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
     congr
     exact intervalIntegral.integral_of_le (f_nn ω)
@@ -93,7 +97,8 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
       by
       funext a
       by_cases s ∈ Ioc (0 : ℝ) (f a)
-      · simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem, mul_one]
+      · simp only [h, show s ∈ Ioi (0 : ℝ) from h.1, show f a ∈ Ici s from h.2, indicator_of_mem,
+          mul_one]
         
       · have h_copy := h
         simp only [mem_Ioc, not_and, not_le] at h
@@ -101,7 +106,8 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
         · simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_le, mul_zero]
           
         · have : s ∉ Ioi (0 : ℝ) := h'
-          simp only [this, h', indicator_of_not_mem, not_false_iff, mul_zero, zero_mul, mem_Ioc, false_and_iff]
+          simp only [this, h', indicator_of_not_mem, not_false_iff, mul_zero, zero_mul, mem_Ioc,
+            false_and_iff]
           
         
     simp_rw [aux₁]
@@ -122,7 +128,8 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     swap
     · exact f_mble measurableSetIci
       
-    rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left, mul_assoc,
+    rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
+      mul_assoc,
       show
         (Ioi 0).indicator (fun _x : ℝ => (1 : ℝ≥0∞)) s * μ { a : α | s ≤ f a } =
           (Ioi 0).indicator (fun _x : ℝ => 1 * μ { a : α | s ≤ f a }) s
@@ -131,7 +138,8 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     rfl
     
   have aux₂ :
-    (Function.uncurry fun (x : α) (y : ℝ) => (Ioc 0 (f x)).indicator (fun t : ℝ => Ennreal.ofReal (g t)) y) =
+    (Function.uncurry fun (x : α) (y : ℝ) =>
+        (Ioc 0 (f x)).indicator (fun t : ℝ => Ennreal.ofReal (g t)) y) =
       { p : α × ℝ | p.2 ∈ Ioc 0 (f p.1) }.indicator fun p => Ennreal.ofReal (g p.2) :=
     by
     funext p
@@ -160,9 +168,12 @@ the integral over the positive real line of the "tail measures" `μ {ω | f(ω) 
 weighted by `g`.
 
 Roughly speaking, the statement is: `∫⁻ (G ∘ f) ∂μ = ∫⁻ t in 0 .. ∞, g(t) * μ {ω | f(ω) ≥ t}`. -/
-theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f) (f_mble : Measurable f)
-    (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t) (g_nn : ∀ᵐ t ∂volume.restrict (ioi 0), 0 ≤ g t) :
-    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) = ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) := by
+theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
+    (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t)
+    (g_nn : ∀ᵐ t ∂volume.restrict (ioi 0), 0 ≤ g t) :
+    (∫⁻ ω, Ennreal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) =
+      ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t) :=
+  by
   have ex_G : ∃ G : ℝ → ℝ, Measurable G ∧ 0 ≤ G ∧ g =ᵐ[volume.restrict (Ioi 0)] G := by
     refine' AeMeasurable.exists_measurable_nonneg _ g_nn
     exact aeMeasurableIoiOfForallIoc fun t ht => (g_intble t ht).1.1.AeMeasurable
@@ -183,22 +194,28 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   have eq₂ : ∀ ω, (∫ t in 0 ..f ω, g t) = ∫ t in 0 ..f ω, G t := by
     refine' fun ω => intervalIntegral.integral_congr_ae _
     have fω_nn : 0 ≤ f ω := f_nn ω
-    rw [interval_oc_of_le fω_nn, ← ae_restrict_iff' (measurableSetIoc : MeasurableSet (Ioc (0 : ℝ) (f ω)))]
+    rw [interval_oc_of_le fω_nn, ←
+      ae_restrict_iff' (measurableSetIoc : MeasurableSet (Ioc (0 : ℝ) (f ω)))]
     exact g_eq_G_on (f ω)
   simp_rw [eq₁, eq₂]
-  exact lintegral_comp_eq_lintegral_meas_le_mul_of_measurable μ f_nn f_mble G_intble G_mble fun t t_pos => G_nn t
-#align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul
+  exact
+    lintegral_comp_eq_lintegral_meas_le_mul_of_measurable μ f_nn f_mble G_intble G_mble
+      fun t t_pos => G_nn t
+#align
+  measure_theory.lintegral_comp_eq_lintegral_meas_le_mul MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul
 
 /-- The standard case of the layer cake formula / Cavalieri's principle / tail probability formula:
 
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
 be written (roughly speaking) as: `∫⁻ f ∂μ = ∫⁻ t in 0 .. ∞, μ {ω | f(ω) ≥ t}`. -/
-theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f) (f_mble : Measurable f) :
+theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
+    (f_mble : Measurable f) :
     (∫⁻ ω, Ennreal.ofReal (f ω) ∂μ) = ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } := by
   set cst := fun t : ℝ => (1 : ℝ) with def_cst
   have cst_intble : ∀ t > 0, IntervalIntegrable cst volume 0 t := fun _ _ => intervalIntegrableConst
   have key :=
-    lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble cst_intble (eventually_of_forall fun t => zero_le_one)
+    lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble cst_intble
+      (eventually_of_forall fun t => zero_le_one)
   simp_rw [def_cst, Ennreal.of_real_one, mul_one] at key
   rw [← key]
   congr with ω
@@ -209,8 +226,8 @@ theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn 
 
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
 be written (roughly speaking) as: `∫⁻ f^p ∂μ = p * ∫⁻ t in 0 .. ∞, t^(p-1) * μ {ω | f(ω) ≥ t}`. -/
-theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f) (f_mble : Measurable f)
-    {p : ℝ} (p_pos : 0 < p) :
+theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
+    (f_mble : Measurable f) {p : ℝ} (p_pos : 0 < p) :
     (∫⁻ ω, Ennreal.ofReal (f ω ^ p) ∂μ) =
       Ennreal.ofReal p * ∫⁻ t in ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (t ^ (p - 1)) :=
   by
@@ -235,7 +252,8 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     
   · exact ((f_mble.pow measurableConst).div_const p).ennrealOfReal
     
-#align measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
+#align
+  measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
 
 end MeasureTheory
 

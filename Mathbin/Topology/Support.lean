@@ -68,8 +68,10 @@ theorem image_eq_zero_of_nmem_mul_tsupport {f : X → α} {x : X} (hx : x ∉ mu
 #align image_eq_zero_of_nmem_mul_tsupport image_eq_zero_of_nmem_mul_tsupport
 
 @[to_additive]
-theorem range_subset_insert_image_mul_tsupport (f : X → α) : range f ⊆ insert 1 (f '' mulTsupport f) :=
-  (range_subset_insert_image_mul_support f).trans <| insert_subset_insert <| image_subset _ subset_closure
+theorem range_subset_insert_image_mul_tsupport (f : X → α) :
+    range f ⊆ insert 1 (f '' mulTsupport f) :=
+  (range_subset_insert_image_mul_support f).trans <|
+    insert_subset_insert <| image_subset _ subset_closure
 #align range_subset_insert_image_mul_tsupport range_subset_insert_image_mul_tsupport
 
 @[to_additive]
@@ -90,8 +92,8 @@ theorem tsupport_mul_subset_right {α : Type _} [MulZeroClass α] {f g : X → �
 
 end One
 
-theorem tsupport_smul_subset_left {M α} [TopologicalSpace X] [Zero M] [Zero α] [SmulWithZero M α] (f : X → M)
-    (g : X → α) : (tsupport fun x => f x • g x) ⊆ tsupport f :=
+theorem tsupport_smul_subset_left {M α} [TopologicalSpace X] [Zero M] [Zero α] [SmulWithZero M α]
+    (f : X → M) (g : X → α) : (tsupport fun x => f x • g x) ⊆ tsupport f :=
   closure_mono <| support_smul_subset_left f g
 #align tsupport_smul_subset_left tsupport_smul_subset_left
 
@@ -105,13 +107,13 @@ variable {g : β → γ} {f : α → β} {f₂ : α → γ} {m : β → γ → �
 
 @[to_additive]
 theorem not_mem_mul_tsupport_iff_eventually_eq : x ∉ mulTsupport f ↔ f =ᶠ[𝓝 x] 1 := by
-  simp_rw [mulTsupport, mem_closure_iff_nhds, not_forall, not_nonempty_iff_eq_empty, ← disjoint_iff_inter_eq_empty,
-    disjoint_mul_support_iff, eventually_eq_iff_exists_mem]
+  simp_rw [mulTsupport, mem_closure_iff_nhds, not_forall, not_nonempty_iff_eq_empty, ←
+    disjoint_iff_inter_eq_empty, disjoint_mul_support_iff, eventually_eq_iff_exists_mem]
 #align not_mem_mul_tsupport_iff_eventually_eq not_mem_mul_tsupport_iff_eventually_eq
 
 @[to_additive]
-theorem continuous_of_mul_tsupport [TopologicalSpace β] {f : α → β} (hf : ∀ x ∈ mulTsupport f, ContinuousAt f x) :
-    Continuous f :=
+theorem continuous_of_mul_tsupport [TopologicalSpace β] {f : α → β}
+    (hf : ∀ x ∈ mulTsupport f, ContinuousAt f x) : Continuous f :=
   continuous_iff_continuous_at.2 fun x =>
     ((em _).elim (hf x)) fun hx =>
       (@continuous_at_const _ _ _ _ _ 1).congr (not_mem_mul_tsupport_iff_eventually_eq.mp hx).symm
@@ -127,21 +129,22 @@ def HasCompactMulSupport (f : α → β) : Prop :=
 #align has_compact_mul_support HasCompactMulSupport
 
 @[to_additive]
-theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (closure (mulSupport f)) := by rfl
+theorem has_compact_mul_support_def : HasCompactMulSupport f ↔ IsCompact (closure (mulSupport f)) :=
+  by rfl
 #align has_compact_mul_support_def has_compact_mul_support_def
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem exists_compact_iff_has_compact_mul_support [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
-  simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl, has_compact_mul_support_def,
-    exists_compact_superset_iff]
+  simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl,
+    has_compact_mul_support_def, exists_compact_superset_iff]
 #align exists_compact_iff_has_compact_mul_support exists_compact_iff_has_compact_mul_support
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
-theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K) (hfK : ∀ (x) (_ : x ∉ K), f x = 1) :
-    HasCompactMulSupport f :=
+theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)
+    (hfK : ∀ (x) (_ : x ∉ K), f x = 1) : HasCompactMulSupport f :=
   exists_compact_iff_has_compact_mul_support.mp ⟨K, hK, hfK⟩
 #align has_compact_mul_support.intro HasCompactMulSupport.intro
 
@@ -151,36 +154,39 @@ theorem HasCompactMulSupport.is_compact (hf : HasCompactMulSupport f) : IsCompac
 #align has_compact_mul_support.is_compact HasCompactMulSupport.is_compact
 
 @[to_additive]
-theorem has_compact_mul_support_iff_eventually_eq : HasCompactMulSupport f ↔ f =ᶠ[coclosedCompact α] 1 :=
+theorem has_compact_mul_support_iff_eventually_eq :
+    HasCompactMulSupport f ↔ f =ᶠ[coclosedCompact α] 1 :=
   ⟨fun h =>
     mem_coclosed_compact.mpr
-      ⟨mulTsupport f, isClosedMulTsupport _, h, fun x => not_imp_comm.mpr fun hx => subset_mul_tsupport f hx⟩,
+      ⟨mulTsupport f, isClosedMulTsupport _, h, fun x =>
+        not_imp_comm.mpr fun hx => subset_mul_tsupport f hx⟩,
     fun h =>
     let ⟨C, hC⟩ := mem_coclosed_compact'.mp h
     is_compact_of_is_closed_subset hC.2.1 (isClosedMulTsupport _) (closure_minimal hC.2.2 hC.1)⟩
 #align has_compact_mul_support_iff_eventually_eq has_compact_mul_support_iff_eventually_eq
 
 @[to_additive]
-theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasCompactMulSupport f) (hf : Continuous f) :
-    IsCompact (range f) := by
+theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasCompactMulSupport f)
+    (hf : Continuous f) : IsCompact (range f) := by
   cases' range_eq_image_mul_tsupport_or f with h2 h2 <;> rw [h2]
   exacts[h.image hf, (h.image hf).insert 1]
 #align has_compact_mul_support.is_compact_range HasCompactMulSupport.is_compact_range
 
 @[to_additive]
-theorem HasCompactMulSupport.mono' {f' : α → γ} (hf : HasCompactMulSupport f) (hff' : mulSupport f' ⊆ mulTsupport f) :
-    HasCompactMulSupport f' :=
+theorem HasCompactMulSupport.mono' {f' : α → γ} (hf : HasCompactMulSupport f)
+    (hff' : mulSupport f' ⊆ mulTsupport f) : HasCompactMulSupport f' :=
   is_compact_of_is_closed_subset hf isClosedClosure <| closure_minimal hff' isClosedClosure
 #align has_compact_mul_support.mono' HasCompactMulSupport.mono'
 
 @[to_additive]
-theorem HasCompactMulSupport.mono {f' : α → γ} (hf : HasCompactMulSupport f) (hff' : mulSupport f' ⊆ mulSupport f) :
-    HasCompactMulSupport f' :=
+theorem HasCompactMulSupport.mono {f' : α → γ} (hf : HasCompactMulSupport f)
+    (hff' : mulSupport f' ⊆ mulSupport f) : HasCompactMulSupport f' :=
   hf.mono' <| hff'.trans subset_closure
 #align has_compact_mul_support.mono HasCompactMulSupport.mono
 
 @[to_additive]
-theorem HasCompactMulSupport.comp_left (hf : HasCompactMulSupport f) (hg : g 1 = 1) : HasCompactMulSupport (g ∘ f) :=
+theorem HasCompactMulSupport.comp_left (hf : HasCompactMulSupport f) (hg : g 1 = 1) :
+    HasCompactMulSupport (g ∘ f) :=
   hf.mono <| mul_support_comp_subset hg f
 #align has_compact_mul_support.comp_left HasCompactMulSupport.comp_left
 
@@ -191,8 +197,8 @@ theorem has_compact_mul_support_comp_left (hg : ∀ {x}, g x = 1 ↔ x = 1) :
 #align has_compact_mul_support_comp_left has_compact_mul_support_comp_left
 
 @[to_additive]
-theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f) {g : α' → α} (hg : ClosedEmbedding g) :
-    HasCompactMulSupport (f ∘ g) := by
+theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f) {g : α' → α}
+    (hg : ClosedEmbedding g) : HasCompactMulSupport (f ∘ g) := by
   rw [has_compact_mul_support_def, Function.mul_support_comp_eq_preimage]
   refine' is_compact_of_is_closed_subset (hg.is_compact_preimage hf) isClosedClosure _
   rw [hg.to_embedding.closure_eq_preimage_closure_image]
@@ -200,7 +206,8 @@ theorem HasCompactMulSupport.comp_closed_embedding (hf : HasCompactMulSupport f)
 #align has_compact_mul_support.comp_closed_embedding HasCompactMulSupport.comp_closed_embedding
 
 @[to_additive]
-theorem HasCompactMulSupport.comp₂_left (hf : HasCompactMulSupport f) (hf₂ : HasCompactMulSupport f₂) (hm : m 1 1 = 1) :
+theorem HasCompactMulSupport.comp₂_left (hf : HasCompactMulSupport f)
+    (hf₂ : HasCompactMulSupport f₂) (hm : m 1 1 = 1) :
     HasCompactMulSupport fun x => m (f x) (f₂ x) := by
   rw [has_compact_mul_support_iff_eventually_eq] at hf hf₂⊢
   filter_upwards [hf, hf₂] using fun x hx hx₂ => by simp_rw [hx, hx₂, Pi.one_apply, hm]
@@ -280,20 +287,23 @@ of open sets, then for any point we can find a neighbourhood on which only finit
 `f` are not equal to 1. -/
 @[to_additive
       " If a family of functions `f` has locally-finite support, subordinate to a family of open sets,\nthen for any point we can find a neighbourhood on which only finitely-many members of `f` are\nnon-zero. "]
-theorem exists_finset_nhd_mul_support_subset {f : ι → X → R} (hlf : LocallyFinite fun i => mulSupport (f i))
-    (hso : ∀ i, mulTsupport (f i) ⊆ U i) (ho : ∀ i, IsOpen (U i)) (x : X) :
-    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i), ∀ z ∈ n, (mulSupport fun i => f i z) ⊆ is :=
+theorem exists_finset_nhd_mul_support_subset {f : ι → X → R}
+    (hlf : LocallyFinite fun i => mulSupport (f i)) (hso : ∀ i, mulTsupport (f i) ⊆ U i)
+    (ho : ∀ i, IsOpen (U i)) (x : X) :
+    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
+      ∀ z ∈ n, (mulSupport fun i => f i z) ⊆ is :=
   by
   obtain ⟨n, hn, hnf⟩ := hlf x
   classical
   let is := hnf.to_finset.filter fun i => x ∈ U i
   let js := hnf.to_finset.filter fun j => x ∉ U j
   refine'
-    ⟨is, (n ∩ ⋂ j ∈ js, mulTsupport (f j)ᶜ) ∩ ⋂ i ∈ is, U i, inter_mem (inter_mem hn _) _, inter_subset_right _ _,
-      fun z hz => _⟩
+    ⟨is, (n ∩ ⋂ j ∈ js, mulTsupport (f j)ᶜ) ∩ ⋂ i ∈ is, U i, inter_mem (inter_mem hn _) _,
+      inter_subset_right _ _, fun z hz => _⟩
   · exact
       (bInter_finset_mem js).mpr fun j hj =>
-        IsClosed.compl_mem_nhds (isClosedMulTsupport _) (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
+        IsClosed.compl_mem_nhds (isClosedMulTsupport _)
+          (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
     
   · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
     
@@ -311,7 +321,8 @@ theorem exists_finset_nhd_mul_support_subset {f : ι → X → R} (hlf : Locally
     simp only [finite.coe_to_finset, mem_set_of_eq]
     exact ⟨z, ⟨hi, hzn⟩⟩
     
-#align locally_finite.exists_finset_nhd_mul_support_subset LocallyFinite.exists_finset_nhd_mul_support_subset
+#align
+  locally_finite.exists_finset_nhd_mul_support_subset LocallyFinite.exists_finset_nhd_mul_support_subset
 
 end LocallyFinite
 

@@ -136,7 +136,8 @@ theorem str_incl (X : CompactumCat) (x : X) : X.str (X.incl x) = x := by
 #align Compactum.str_incl CompactumCat.str_incl
 
 @[simp]
-theorem str_hom_commute (X Y : CompactumCat) (f : X ⟶ Y) (xs : Ultrafilter X) : f (X.str xs) = Y.str (map f xs) := by
+theorem str_hom_commute (X Y : CompactumCat) (f : X ⟶ Y) (xs : Ultrafilter X) :
+    f (X.str xs) = Y.str (map f xs) := by
   change (X.a ≫ f.f) _ = _
   rw [← f.h]
   rfl
@@ -154,9 +155,11 @@ instance {X : CompactumCat} : TopologicalSpace X where
   IsOpen U := ∀ F : Ultrafilter X, X.str F ∈ U → U ∈ F
   is_open_univ _ _ := Filter.univ_sets _
   is_open_inter S T h3 h4 h5 h6 := Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2)
-  is_open_sUnion := fun S h1 F ⟨T, hT, h2⟩ => mem_of_superset (h1 T hT _ h2) (Set.subset_sUnion_of_mem hT)
+  is_open_sUnion := fun S h1 F ⟨T, hT, h2⟩ =>
+    mem_of_superset (h1 T hT _ h2) (Set.subset_sUnion_of_mem hT)
 
-theorem is_closed_iff {X : CompactumCat} (S : Set X) : IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S := by
+theorem is_closed_iff {X : CompactumCat} (S : Set X) :
+    IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S := by
   rw [← is_open_compl_iff]
   constructor
   · intro cond F h
@@ -191,7 +194,8 @@ private def cl {X : CompactumCat} (A : Set X) : Set X :=
   X.str '' basic A
 #align Compactum.cl Compactum.cl
 
-private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B := by
+private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) = basic A ∩ basic B :=
+  by
   ext G
   constructor
   · intro hG
@@ -203,10 +207,11 @@ private theorem basic_inter {X : CompactumCat} (A B : Set X) : basic (A ∩ B) =
     
 #align Compactum.basic_inter Compactum.basic_inter
 
-private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a ha => ⟨X.incl a, ha, by simp⟩
+private theorem subset_cl {X : CompactumCat} (A : Set X) : A ⊆ cl A := fun a ha =>
+  ⟨X.incl a, ha, by simp⟩
 #align Compactum.subset_cl Compactum.subset_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : CompactumCat} (A : Set X) : cl (cl A) ⊆ cl A := by
   rintro _ ⟨F, hF, rfl⟩
   -- Notation to be used in this proof.
@@ -275,8 +280,9 @@ theorem isClosedCl {X : CompactumCat} (A : Set X) : IsClosed (cl A) := by
   exact cl_cl _ ⟨F, hF, rfl⟩
 #align Compactum.is_closed_cl CompactumCat.isClosedCl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
-theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
+  by
   -- Notation to be used in this proof.
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
@@ -354,8 +360,8 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
   exact finite_inter_closure.basic (@hT t ht)
 #align Compactum.str_eq_of_le_nhds CompactumCat.str_eq_of_le_nhds
 
-theorem le_nhds_of_str_eq {X : CompactumCat} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x := fun h =>
-  le_nhds_iff.mpr fun s hx hs => hs _ <| by rwa [h]
+theorem le_nhds_of_str_eq {X : CompactumCat} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x :=
+  fun h => le_nhds_iff.mpr fun s hx hs => hs _ <| by rwa [h]
 #align Compactum.le_nhds_of_str_eq CompactumCat.le_nhds_of_str_eq
 
 -- All the hard work above boils down to this t2_space instance.
@@ -392,7 +398,8 @@ theorem continuous_of_hom {X Y : CompactumCat} (f : X ⟶ Y) : Continuous f := b
 #align Compactum.continuous_of_hom CompactumCat.continuous_of_hom
 
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
-noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] : CompactumCat where
+noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X]
+    [T2Space X] : CompactumCat where
   a := X
   a := Ultrafilter.lim
   unit' := by
@@ -452,7 +459,8 @@ theorem faithful : Faithful compactumToCompHaus :=
 #align Compactum_to_CompHaus.faithful compactumToCompHaus.faithful
 
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
-def isoOfTopologicalSpace {D : CompHausCat} : compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅ D where
+def isoOfTopologicalSpace {D : CompHausCat} :
+    compactumToCompHaus.obj (CompactumCat.ofTopologicalSpace D) ≅ D where
   Hom :=
     { toFun := id,
       continuous_to_fun :=
@@ -485,7 +493,8 @@ end compactumToCompHaus
 
 /-- The forgetful functors of `Compactum` and `CompHaus` are compatible via
 `Compactum_to_CompHaus`. -/
-def compactumToCompHausCompForget : compactumToCompHaus ⋙ CategoryTheory.forget CompHausCat ≅ CompactumCat.forget :=
+def compactumToCompHausCompForget :
+    compactumToCompHaus ⋙ CategoryTheory.forget CompHausCat ≅ CompactumCat.forget :=
   (NatIso.ofComponents fun X => eqToIso rfl) <| by
     intro X Y f
     dsimp

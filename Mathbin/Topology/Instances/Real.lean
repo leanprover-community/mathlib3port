@@ -64,8 +64,10 @@ instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {ioo a b}) :=
-  is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo]) fun a v hav hv =>
+theorem Real.is_topological_basis_Ioo_rat :
+    @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {ioo a b}) :=
+  is_topological_basis_of_open_of_nhds (by simp (config := { contextual := true }) [is_open_Ioo])
+    fun a v hav hv =>
     let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
@@ -77,7 +79,8 @@ theorem Real.is_topological_basis_Ioo_rat : @IsTopologicalBasis ℝ _ (⋃ (a : 
 
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = at_bot ⊔ at_top := by
-  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero, comap_abs_at_top]
+  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero,
+    comap_abs_at_top]
 #align real.cocompact_eq Real.cocompact_eq
 
 /- TODO(Mario): Prove that these are uniform isomorphisms instead of uniform embeddings
@@ -86,8 +89,8 @@ _
 
 lemma uniform_embedding_mul_rat {q : ℚ} (hq : q ≠ 0) : uniform_embedding ((*) q) :=
 _ -/
-theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ closure s ↔ ∀ ε > 0, ∃ y ∈ s, |y - x| < ε := by
-  simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
+theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ closure s ↔ ∀ ε > 0, ∃ y ∈ s, |y - x| < ε :=
+  by simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 #align real.mem_closure_iff Real.mem_closure_iff
 
 theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x ∈ s, r ≤ |x|) :
@@ -98,7 +101,8 @@ theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : �
 #align real.uniform_continuous_inv Real.uniform_continuous_inv
 
 theorem Real.uniform_continuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
+  Metric.uniform_continuous_iff.2 fun ε ε0 =>
+    ⟨ε, ε0, fun a b => lt_of_le_of_lt (abs_abs_sub_abs_le_abs_sub _ _)⟩
 #align real.uniform_continuous_abs Real.uniform_continuous_abs
 
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
@@ -114,8 +118,8 @@ theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val
     Tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _)
 #align real.continuous_inv Real.continuous_inv
 
-theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0) (hf : Continuous f) :
-    Continuous fun a => (f a)⁻¹ :=
+theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0)
+    (hf : Continuous f) : Continuous fun a => (f a)⁻¹ :=
   show Continuous ((Inv.inv ∘ @Subtype.val ℝ fun r => r ≠ 0) ∘ fun a => ⟨f a, h a⟩) from
     Real.continuous_inv.comp (hf.subtype_mk _)
 #align real.continuous.inv Real.Continuous.inv
@@ -124,7 +128,8 @@ theorem Real.uniform_continuous_const_mul {x : ℝ} : UniformContinuous ((· * �
   uniform_continuous_const_smul x
 #align real.uniform_continuous_const_mul Real.uniform_continuous_const_mul
 
-theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ} (H : ∀ x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) :
+theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
+    (H : ∀ x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) :
     UniformContinuous fun p : s => p.1.1 * p.1.2 :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0
@@ -139,7 +144,8 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
     tendsto_of_uniform_continuous_subtype
       (Real.uniform_continuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
       (IsOpen.mem_nhds
-        (((is_open_gt' (|a₁| + 1)).Preimage continuous_abs).Prod ((is_open_gt' (|a₂| + 1)).Preimage continuous_abs))
+        (((is_open_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
+          ((is_open_gt' (|a₂| + 1)).Preimage continuous_abs))
         ⟨lt_add_one (|a₁|), lt_add_one (|a₂|)⟩)
 #align real.continuous_mul Real.continuous_mul
 
@@ -162,15 +168,17 @@ theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := b
 
 section
 
-theorem closure_of_rat_image_lt {q : ℚ} : closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
+theorem closure_of_rat_image_lt {q : ℚ} :
+    closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
   (Subset.antisymm
-      ((isClosedGe' _).closure_subset_iff.2 (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
+      ((isClosedGe' _).closure_subset_iff.2
+        (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h)))
     fun x hx =>
     mem_closure_iff_nhds.2 fun t ht =>
       let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
       let ⟨p, h₁, h₂⟩ := exists_rat_btwn ((lt_add_iff_pos_right x).2 ε0)
-      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_lt <| sub_pos.2 h₁), sub_lt_iff_lt_add']), p,
-        Rat.cast_lt.1 (@lt_of_le_of_lt ℝ _ _ _ _ hx h₁), rfl⟩
+      ⟨_, hε (show abs _ < _ by rwa [abs_of_nonneg (le_of_lt <| sub_pos.2 h₁), sub_lt_iff_lt_add']),
+        p, Rat.cast_lt.1 (@lt_of_le_of_lt ℝ _ _ _ _ hx h₁), rfl⟩
 #align closure_of_rat_image_lt closure_of_rat_image_lt
 
 /- TODO(Mario): Put these back only if needed later
@@ -192,7 +200,8 @@ theorem Real.bounded_iff_bdd_below_bdd_above {s : Set ℝ} : Bounded s ↔ BddBe
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bdd_below_bdd_above
 
 theorem Real.subset_Icc_Inf_Sup_of_bounded {s : Set ℝ} (h : Bounded s) : s ⊆ icc (inf s) (sup s) :=
-  subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1 (Real.bounded_iff_bdd_below_bdd_above.1 h).2
+  subset_Icc_cInf_cSup (Real.bounded_iff_bdd_below_bdd_above.1 h).1
+    (Real.bounded_iff_bdd_below_bdd_above.1 h).2
 #align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_Inf_Sup_of_bounded
 
 end
@@ -201,8 +210,8 @@ section Periodic
 
 namespace Function
 
-theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : 0 < c)
-    (hf : Continuous f) : IsCompact (range f) := by
+theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
+    (hc : 0 < c) (hf : Continuous f) : IsCompact (range f) := by
   convert is_compact_Icc.image hf
   ext x
   refine' ⟨_, mem_range_of_mem_image f (Icc 0 c)⟩
@@ -212,15 +221,15 @@ theorem Periodic.compact_of_continuous' [TopologicalSpace α] {f : ℝ → α} {
 #align function.periodic.compact_of_continuous' Function.Periodic.compact_of_continuous'
 
 /-- A continuous, periodic function has compact range. -/
-theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
-    (hf : Continuous f) : IsCompact (range f) := by
+theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
+    (hc : c ≠ 0) (hf : Continuous f) : IsCompact (range f) := by
   cases' lt_or_gt_of_ne hc with hneg hpos
   exacts[hp.neg.compact_of_continuous' (neg_pos.mpr hneg) hf, hp.compact_of_continuous' hpos hf]
 #align function.periodic.compact_of_continuous Function.Periodic.compact_of_continuous
 
 /-- A continuous, periodic function is bounded. -/
-theorem Periodic.boundedOfContinuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c) (hc : c ≠ 0)
-    (hf : Continuous f) : Bounded (range f) :=
+theorem Periodic.boundedOfContinuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
+    (hc : c ≠ 0) (hf : Continuous f) : Bounded (range f) :=
   (hp.compact_of_continuous hc hf).Bounded
 #align function.periodic.bounded_of_continuous Function.Periodic.boundedOfContinuous
 
@@ -244,7 +253,8 @@ theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact �
 
 /-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.
 inverse images of compact sets are finite. -/
-theorem tendsto_zmultiples_hom_cofinite {a : ℝ} (ha : a ≠ 0) : Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) := by
+theorem tendsto_zmultiples_hom_cofinite {a : ℝ} (ha : a ≠ 0) :
+    Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) := by
   convert (tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
   ext n
   simp
@@ -256,7 +266,8 @@ namespace AddSubgroup
 
 /-- The subgroup "multiples of `a`" (`zmultiples a`) is a discrete subgroup of `ℝ`, i.e. its
 intersection with compact sets is finite. -/
-theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) : Tendsto (zmultiples a).Subtype cofinite (cocompact ℝ) := by
+theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
+    Tendsto (zmultiples a).Subtype cofinite (cocompact ℝ) := by
   rcases eq_or_ne a 0 with (rfl | ha)
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
     intro K hK
@@ -266,10 +277,12 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) : Tendsto (zmultiples a).S
   intro K hK
   have H := Int.tendsto_zmultiples_hom_cofinite ha hK
   simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢
-  rw [← (zmultiplesHom ℝ a).range_restrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ), ← preimage_comp, ←
-    AddMonoidHom.coe_comp_range_restrict]
+  rw [←
+    (zmultiplesHom ℝ a).range_restrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ), ←
+    preimage_comp, ← AddMonoidHom.coe_comp_range_restrict]
   exact finite.image _ H
-#align add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofinite
+#align
+  add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofinite
 
 end AddSubgroup
 
@@ -287,7 +300,8 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
       
     · exact ⟨g₀, g₀_in, Hg₀⟩
       
-  obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a := ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
+  obtain ⟨a, ha⟩ : ∃ a, IsGlb G_pos a :=
+    ⟨Inf G_pos, is_glb_cInf ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
   have a_notin : a ∉ G_pos := by
     intro H
     exact H' a ⟨H, ha.1⟩
@@ -305,8 +319,8 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
 
 /-- Subgroups of `ℝ` are either dense or cyclic. See `real.subgroup_dense_of_no_min` and
 `subgroup_cyclic_of_min` for more precise statements. -/
-theorem Real.subgroup_dense_or_cyclic (G : AddSubgroup ℝ) : Dense (G : Set ℝ) ∨ ∃ a : ℝ, G = AddSubgroup.closure {a} :=
-  by
+theorem Real.subgroup_dense_or_cyclic (G : AddSubgroup ℝ) :
+    Dense (G : Set ℝ) ∨ ∃ a : ℝ, G = AddSubgroup.closure {a} := by
   cases' AddSubgroup.bot_or_exists_ne_zero G with H H
   · right
     use 0

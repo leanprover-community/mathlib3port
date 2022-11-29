@@ -112,7 +112,8 @@ when attempting to match lemmas with the goal.
 -/
 add_tactic_doc
   { Name := "continuity / continuity'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.continuity, `tactic.interactive.continuity'], tags := ["lemma application"] }
+    declNames := [`tactic.interactive.continuity, `tactic.interactive.continuity'],
+    tags := ["lemma application"] }
 
 end Interactive
 

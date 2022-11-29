@@ -92,19 +92,20 @@ theorem Rel.add_left (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (
   exact h.add_right _
 #align free_lie_algebra.rel.add_left FreeLieAlgebra.Rel.add_left
 
-theorem Rel.neg {a b : lib R X} (h : Rel R X a b) : Rel R X (-a) (-b) := by simpa only [neg_one_smul] using h.smul (-1)
+theorem Rel.neg {a b : lib R X} (h : Rel R X a b) : Rel R X (-a) (-b) := by
+  simpa only [neg_one_smul] using h.smul (-1)
 #align free_lie_algebra.rel.neg FreeLieAlgebra.Rel.neg
 
 theorem Rel.sub_left (a : lib R X) {b c : lib R X} (h : Rel R X b c) : Rel R X (a - b) (a - c) := by
   simpa only [sub_eq_add_neg] using h.neg.add_left a
 #align free_lie_algebra.rel.sub_left FreeLieAlgebra.Rel.sub_left
 
-theorem Rel.sub_right {a b : lib R X} (c : lib R X) (h : Rel R X a b) : Rel R X (a - c) (b - c) := by
-  simpa only [sub_eq_add_neg] using h.add_right (-c)
+theorem Rel.sub_right {a b : lib R X} (c : lib R X) (h : Rel R X a b) : Rel R X (a - c) (b - c) :=
+  by simpa only [sub_eq_add_neg] using h.add_right (-c)
 #align free_lie_algebra.rel.sub_right FreeLieAlgebra.Rel.sub_right
 
-theorem Rel.smul_of_tower {S : Type _} [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] (t : S) (a b : lib R X)
-    (h : Rel R X a b) : Rel R X (t • a) (t • b) := by
+theorem Rel.smul_of_tower {S : Type _} [Monoid S] [DistribMulAction S R] [IsScalarTower S R R]
+    (t : S) (a b : lib R X) (h : Rel R X a b) : Rel R X (t • a) (t • b) := by
   rw [← smul_one_smul R t a, ← smul_one_smul R t b]
   exact h.smul _
 #align free_lie_algebra.rel.smul_of_tower FreeLieAlgebra.Rel.smul_of_tower
@@ -121,24 +122,29 @@ namespace FreeLieAlgebra
 instance {S : Type _} [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] :
     HasSmul S (FreeLieAlgebra R X) where smul t := Quot.map ((· • ·) t) (Rel.smul_of_tower t)
 
-instance {S : Type _} [Monoid S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R] [IsScalarTower S R R]
-    [IsCentralScalar S R] :
+instance {S : Type _} [Monoid S] [DistribMulAction S R] [DistribMulAction Sᵐᵒᵖ R]
+    [IsScalarTower S R R] [IsCentralScalar S R] :
     IsCentralScalar S
-      (FreeLieAlgebra R X) where op_smul_eq_smul t := Quot.ind fun a => congr_arg (Quot.mk _) (op_smul_eq_smul t a)
+      (FreeLieAlgebra R
+        X) where op_smul_eq_smul t := Quot.ind fun a => congr_arg (Quot.mk _) (op_smul_eq_smul t a)
 
 instance : Zero (FreeLieAlgebra R X) where zero := Quot.mk _ 0
 
 instance :
-    Add (FreeLieAlgebra R X) where add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_left _) fun _ _ _ => Rel.add_right _
+    Add
+      (FreeLieAlgebra R
+        X) where add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_left _) fun _ _ _ => Rel.add_right _
 
 instance : Neg (FreeLieAlgebra R X) where neg := Quot.map Neg.neg fun _ _ => Rel.neg
 
 instance :
-    Sub (FreeLieAlgebra R X) where sub := Quot.map₂ Sub.sub (fun _ _ _ => Rel.sub_left _) fun _ _ _ => Rel.sub_right _
+    Sub
+      (FreeLieAlgebra R
+        X) where sub := Quot.map₂ Sub.sub (fun _ _ _ => Rel.sub_left _) fun _ _ _ => Rel.sub_right _
 
 instance : AddGroup (FreeLieAlgebra R X) :=
-  Function.Surjective.addGroup (Quot.mk _) (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ _ => rfl) fun _ _ => rfl
+  Function.Surjective.addGroup (Quot.mk _) (surjective_quot_mk _) rfl (fun _ _ => rfl)
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance : AddCommSemigroup (FreeLieAlgebra R X) :=
   Function.Surjective.addCommSemigroup (Quot.mk _) (surjective_quot_mk _) fun _ _ => rfl
@@ -146,8 +152,10 @@ instance : AddCommSemigroup (FreeLieAlgebra R X) :=
 instance : AddCommGroup (FreeLieAlgebra R X) :=
   { FreeLieAlgebra.addGroup R X, FreeLieAlgebra.addCommSemigroup R X with }
 
-instance {S : Type _} [Semiring S] [Module S R] [IsScalarTower S R R] : Module S (FreeLieAlgebra R X) :=
-  Function.Surjective.module S ⟨Quot.mk _, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) fun _ _ => rfl
+instance {S : Type _} [Semiring S] [Module S R] [IsScalarTower S R R] :
+    Module S (FreeLieAlgebra R X) :=
+  Function.Surjective.module S ⟨Quot.mk _, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) fun _ _ =>
+    rfl
 
 /-- Note that here we turn the `has_mul` coming from the `non_unital_non_assoc_semiring` structure
 on `lib R X` into a `has_bracket` on `free_lie_algebra`. -/
@@ -188,22 +196,27 @@ def liftAux (f : X → CommutatorRing L) :=
   lib.lift R f
 #align free_lie_algebra.lift_aux FreeLieAlgebra.liftAux
 
-theorem lift_aux_map_smul (f : X → L) (t : R) (a : lib R X) : liftAux R f (t • a) = t • liftAux R f a :=
+theorem lift_aux_map_smul (f : X → L) (t : R) (a : lib R X) :
+    liftAux R f (t • a) = t • liftAux R f a :=
   NonUnitalAlgHom.map_smul _ t a
 #align free_lie_algebra.lift_aux_map_smul FreeLieAlgebra.lift_aux_map_smul
 
-theorem lift_aux_map_add (f : X → L) (a b : lib R X) : liftAux R f (a + b) = liftAux R f a + liftAux R f b :=
+theorem lift_aux_map_add (f : X → L) (a b : lib R X) :
+    liftAux R f (a + b) = liftAux R f a + liftAux R f b :=
   NonUnitalAlgHom.map_add _ a b
 #align free_lie_algebra.lift_aux_map_add FreeLieAlgebra.lift_aux_map_add
 
-theorem lift_aux_map_mul (f : X → L) (a b : lib R X) : liftAux R f (a * b) = ⁅liftAux R f a, liftAux R f b⁆ :=
+theorem lift_aux_map_mul (f : X → L) (a b : lib R X) :
+    liftAux R f (a * b) = ⁅liftAux R f a, liftAux R f b⁆ :=
   NonUnitalAlgHom.map_mul _ a b
 #align free_lie_algebra.lift_aux_map_mul FreeLieAlgebra.lift_aux_map_mul
 
-theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) : liftAux R f a = liftAux R f b := by
+theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X a b) :
+    liftAux R f a = liftAux R f b := by
   induction h
   case lie_self a' => simp only [lift_aux_map_mul, NonUnitalAlgHom.map_zero, lie_self]
-  case leibniz_lie a' b' c' => simp only [lift_aux_map_mul, lift_aux_map_add, sub_add_cancel, lie_lie]
+  case leibniz_lie a' b' c' =>
+    simp only [lift_aux_map_mul, lift_aux_map_add, sub_add_cancel, lie_lie]
   case smul t a' b' h₁ h₂ => simp only [lift_aux_map_smul, h₂]
   case add_right a' b' c' h₁ h₂ => simp only [lift_aux_map_add, h₂]
   case mul_left a' b' c' h₁ h₂ => simp only [lift_aux_map_mul, h₂]
@@ -275,10 +288,9 @@ theorem lift_comp_of (F : FreeLieAlgebra R X →ₗ⁅R⁆ L) : lift R (F ∘ of
 #align free_lie_algebra.lift_comp_of FreeLieAlgebra.lift_comp_of
 
 @[ext.1]
-theorem hom_ext {F₁ F₂ : FreeLieAlgebra R X →ₗ⁅R⁆ L} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
-  have h' : (lift R).symm F₁ = (lift R).symm F₂ := by
-    ext
-    simp [h]
+theorem hom_ext {F₁ F₂ : FreeLieAlgebra R X →ₗ⁅R⁆ L} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) :
+    F₁ = F₂ :=
+  have h' : (lift R).symm F₁ = (lift R).symm F₂ := by ext; simp [h]
   (lift R).symm.Injective h'
 #align free_lie_algebra.hom_ext FreeLieAlgebra.hom_ext
 
@@ -287,7 +299,8 @@ variable (R X)
 /-- The universal enveloping algebra of the free Lie algebra is just the free unital associative
 algebra. -/
 @[simps]
-def universalEnvelopingEquivFreeAlgebra : UniversalEnvelopingAlgebra R (FreeLieAlgebra R X) ≃ₐ[R] FreeAlgebra R X :=
+def universalEnvelopingEquivFreeAlgebra :
+    UniversalEnvelopingAlgebra R (FreeLieAlgebra R X) ≃ₐ[R] FreeAlgebra R X :=
   AlgEquiv.ofAlgHom (UniversalEnvelopingAlgebra.lift R <| FreeLieAlgebra.lift R <| FreeAlgebra.ι R)
     (FreeAlgebra.lift R <| UniversalEnvelopingAlgebra.ι R ∘ FreeLieAlgebra.of R)
     (by
@@ -296,7 +309,8 @@ def universalEnvelopingEquivFreeAlgebra : UniversalEnvelopingAlgebra R (FreeLieA
     (by
       ext
       simp)
-#align free_lie_algebra.universal_enveloping_equiv_free_algebra FreeLieAlgebra.universalEnvelopingEquivFreeAlgebra
+#align
+  free_lie_algebra.universal_enveloping_equiv_free_algebra FreeLieAlgebra.universalEnvelopingEquivFreeAlgebra
 
 end FreeLieAlgebra
 

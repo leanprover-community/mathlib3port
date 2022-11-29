@@ -40,7 +40,8 @@ instance : Abelian (Cᵒᵖ ⥤ D) :=
   @Abelian.functorCategoryAbelian.{v} Cᵒᵖ _ D _ _
 
 -- This also needs to be specified manually, but I don't know why.
-instance : HasFiniteProducts (SheafCat J D) where out j := { HasLimit := fun F => by infer_instance }
+instance :
+    HasFiniteProducts (SheafCat J D) where out j := { HasLimit := fun F => by infer_instance }
 
 -- sheafification assumptions
 variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]

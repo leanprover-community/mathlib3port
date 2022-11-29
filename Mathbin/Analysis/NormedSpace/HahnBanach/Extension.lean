@@ -39,10 +39,11 @@ variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
     ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ‖g‖ = ‖f‖ := by
   rcases exists_extension_of_le_sublinear ⟨p, f⟩ (fun x => ‖f‖ * ‖x‖)
-      (fun c hc x => by simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_comm]) (fun x y => _)
-      fun x => le_trans (le_abs_self _) (f.le_op_norm _) with
+      (fun c hc x => by simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_comm])
+      (fun x y => _) fun x => le_trans (le_abs_self _) (f.le_op_norm _) with
     ⟨g, g_eq, g_le⟩
-  set g' := g.mk_continuous ‖f‖ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
+  set g' :=
+    g.mk_continuous ‖f‖ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
   · refine' ⟨g', g_eq, _⟩
     · apply le_antisymm (g.mk_continuous_norm_le (norm_nonneg f) _)
       refine' f.op_norm_le_bound (norm_nonneg _) fun x => _
@@ -84,15 +85,17 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   have h : ∀ x : p, g.extend_to_𝕜 x = f x := by
     intro x
     rw [ContinuousLinearMap.extend_to_𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
-    have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by rfl
+    have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by
+      rfl
     rw [this]
     apply ext
-    · simp only [add_zero, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul,
-        of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re, mul_zero, sub_neg_eq_add,
-        ContinuousLinearMap.map_smul]
+    · simp only [add_zero, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub,
+        I_im', zero_mul, of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re,
+        mul_zero, sub_neg_eq_add, ContinuousLinearMap.map_smul]
       
-    · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im', zero_mul, of_real_re,
-        mul_neg, mul_im, zero_add, of_real_neg, mul_re, sub_neg_eq_add, ContinuousLinearMap.map_smul]
+    · simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im',
+        zero_mul, of_real_re, mul_neg, mul_im, zero_add, of_real_neg, mul_re, sub_neg_eq_add,
+        ContinuousLinearMap.map_smul]
       
   -- And we derive the equality of the norms by bounding on both sides.
   refine' ⟨h, le_antisymm _ _⟩

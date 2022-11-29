@@ -31,7 +31,8 @@ theorem Finset.univ_disj_sum_univ {α β : Type _} [Fintype α] [Fintype β] :
 #align finset.univ_disj_sum_univ Finset.univ_disj_sum_univ
 
 @[simp]
-theorem Fintype.card_sum [Fintype α] [Fintype β] : Fintype.card (Sum α β) = Fintype.card α + Fintype.card β :=
+theorem Fintype.card_sum [Fintype α] [Fintype β] :
+    Fintype.card (Sum α β) = Fintype.card α + Fintype.card β :=
   card_disj_sum _ _
 #align fintype.card_sum Fintype.card_sum
 
@@ -56,8 +57,9 @@ theorem image_subtype_ne_univ_eq_image_erase [Fintype α] (k : β) (b : α → �
     
 #align image_subtype_ne_univ_eq_image_erase image_subtype_ne_univ_eq_image_erase
 
-theorem image_subtype_univ_ssubset_image_univ [Fintype α] (k : β) (b : α → β) (hk : k ∈ image b univ) (p : β → Prop)
-    [DecidablePred p] (hp : ¬p k) : image (fun i : { a // p (b a) } => b ↑i) univ ⊂ image b univ := by
+theorem image_subtype_univ_ssubset_image_univ [Fintype α] (k : β) (b : α → β)
+    (hk : k ∈ image b univ) (p : β → Prop) [DecidablePred p] (hp : ¬p k) :
+    image (fun i : { a // p (b a) } => b ↑i) univ ⊂ image b univ := by
   constructor
   · intro x hx
     rcases mem_image.1 hx with ⟨y, _, hy⟩
@@ -76,8 +78,9 @@ theorem image_subtype_univ_ssubset_image_univ [Fintype α] (k : β) (b : α → 
 
 /-- Any injection from a finset `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
 can be extended to a bijection between `α` and `t`. -/
-theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β} (hαt : Fintype.card α = t.card) {s : Finset α}
-    {f : α → β} (hfst : s.image f ⊆ t) (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by classical
+theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
+    (hαt : Fintype.card α = t.card) {s : Finset α} {f : α → β} (hfst : s.image f ⊆ t)
+    (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by classical
   induction' s using Finset.induction with a s has H generalizing f
   · obtain ⟨e⟩ : Nonempty (α ≃ ↥t) := by rwa [← Fintype.card_eq, Fintype.card_coe]
     use e
@@ -104,8 +107,9 @@ theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β} (hαt
 
 /-- Any injection from a set `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
 can be extended to a bijection between `α` and `t`. -/
-theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β} (hαt : Fintype.card α = t.card) {s : Set α}
-    {f : α → β} (hfst : s.MapsTo f t) (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by classical
+theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
+    (hαt : Fintype.card α = t.card) {s : Set α} {f : α → β} (hfst : s.MapsTo f t)
+    (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by classical
   let s' : Finset α := s.to_finset
   have hfst' : s'.image f ⊆ t := by simpa [← Finset.coe_subset] using hfst
   have hfs' : Set.InjOn f s' := by simpa using hfs
@@ -117,14 +121,16 @@ theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β} (
 
 theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fintype { x // q x }]
     [Fintype { x // p x ∨ q x }] :
-    Fintype.card { x // p x ∨ q x } ≤ Fintype.card { x // p x } + Fintype.card { x // q x } := by classical
+    Fintype.card { x // p x ∨ q x } ≤ Fintype.card { x // p x } + Fintype.card { x // q x } := by
+  classical
   convert Fintype.card_le_of_embedding (subtypeOrLeftEmbedding p q)
   rw [Fintype.card_sum]
 #align fintype.card_subtype_or Fintype.card_subtype_or
 
 theorem Fintype.card_subtype_or_disjoint (p q : α → Prop) (h : Disjoint p q) [Fintype { x // p x }]
     [Fintype { x // q x }] [Fintype { x // p x ∨ q x }] :
-    Fintype.card { x // p x ∨ q x } = Fintype.card { x // p x } + Fintype.card { x // q x } := by classical
+    Fintype.card { x // p x ∨ q x } = Fintype.card { x // p x } + Fintype.card { x // q x } := by
+  classical
   convert Fintype.card_congr (subtypeOrEquiv p q h)
   simp
 #align fintype.card_subtype_or_disjoint Fintype.card_subtype_or_disjoint
@@ -136,9 +142,7 @@ open Classical
 @[simp]
 theorem infinite_sum : Infinite (Sum α β) ↔ Infinite α ∨ Infinite β := by
   refine' ⟨fun H => _, fun H => H.elim (@Sum.infinite_of_left α β) (@Sum.infinite_of_right α β)⟩
-  contrapose! H
-  haveI := fintypeOfNotInfinite H.1
-  haveI := fintypeOfNotInfinite H.2
+  contrapose! H; haveI := fintypeOfNotInfinite H.1; haveI := fintypeOfNotInfinite H.2
   exact Infinite.false
 #align infinite_sum infinite_sum
 

@@ -52,7 +52,8 @@ instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono
   mono_of_is_limit_fork RegularMono.isLimit
 #align category_theory.regular_mono.mono CategoryTheory.RegularMono.mono
 
-instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : RegularMono (equalizer.ι g h) where
+instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] :
+    RegularMono (equalizer.ι g h) where
   z := Y
   left := g
   right := h
@@ -64,7 +65,8 @@ instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : Regula
 #align category_theory.equalizer_regular CategoryTheory.equalizerRegular
 
 /-- Every split monomorphism is a regular monomorphism. -/
-instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] : RegularMono f where
+instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono f] :
+    RegularMono f where
   z := Y
   left := 𝟙 Y
   right := retraction f ≫ f
@@ -85,8 +87,9 @@ def RegularMono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
 `regular_of_is_pullback_fst_of_regular` for the flipped version.
 -/
-def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hr : RegularMono h]
-    (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono g where
+def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [hr : RegularMono h] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
+    RegularMono g where
   z := hr.z
   left := k ≫ hr.left
   right := k ≫ hr.right
@@ -107,17 +110,20 @@ def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
       
     · exact z
       
-#align category_theory.regular_of_is_pullback_snd_of_regular CategoryTheory.regularOfIsPullbackSndOfRegular
+#align
+  category_theory.regular_of_is_pullback_snd_of_regular CategoryTheory.regularOfIsPullbackSndOfRegular
 
 /-- The first leg of a pullback cone is a regular monomorphism if the left component is too.
 
 See also `pullback.fst_of_mono` for the basic monomorphism version, and
 `regular_of_is_pullback_snd_of_regular` for the flipped version.
 -/
-def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hr : RegularMono k]
-    (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : RegularMono f :=
+def regularOfIsPullbackFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [hr : RegularMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
+    RegularMono f :=
   regularOfIsPullbackSndOfRegular comm.symm (PullbackCone.flipIsLimit t)
-#align category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
+#align
+  category_theory.regular_of_is_pullback_fst_of_regular CategoryTheory.regularOfIsPullbackFstOfRegular
 
 instance (priority := 100) strong_mono_of_regular_mono (f : X ⟶ Y) [RegularMono f] : StrongMono f :=
   StrongMono.mk'
@@ -182,7 +188,8 @@ instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :
   epi_of_is_colimit_cofork RegularEpi.isColimit
 #align category_theory.regular_epi.epi CategoryTheory.RegularEpi.epi
 
-instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : RegularEpi (coequalizer.π g h) where
+instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] :
+    RegularEpi (coequalizer.π g h) where
   w := X
   left := g
   right := h
@@ -205,7 +212,8 @@ instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : 
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
     `regular_epi.right` induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
-    (h : (RegularEpi.left : RegularEpi.w f ⟶ X) ≫ k = regular_epi.right ≫ k) : { l : Y ⟶ W // f ≫ l = k } :=
+    (h : (RegularEpi.left : RegularEpi.w f ⟶ X) ≫ k = regular_epi.right ≫ k) :
+    { l : Y ⟶ W // f ≫ l = k } :=
   Cofork.IsColimit.desc' RegularEpi.isColimit _ h
 #align category_theory.regular_epi.desc' CategoryTheory.RegularEpi.desc'
 
@@ -214,8 +222,9 @@ def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
 `regular_of_is_pushout_fst_of_regular` for the flipped version.
 -/
-def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [gr : RegularEpi g]
-    (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi h where
+def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [gr : RegularEpi g] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
+    RegularEpi h where
   w := gr.w
   left := gr.left ≫ f
   right := gr.right ≫ f
@@ -237,17 +246,20 @@ def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
     · erw [← cancel_epi g, ← reassoc_of comm, ← reassoc_of comm, z]
       rfl
       
-#align category_theory.regular_of_is_pushout_snd_of_regular CategoryTheory.regularOfIsPushoutSndOfRegular
+#align
+  category_theory.regular_of_is_pushout_snd_of_regular CategoryTheory.regularOfIsPushoutSndOfRegular
 
 /-- The first leg of a pushout cocone is a regular epimorphism if the left component is too.
 
 See also `pushout.fst_of_epi` for the basic epimorphism version, and
 `regular_of_is_pushout_snd_of_regular` for the flipped version.
 -/
-def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [fr : RegularEpi f]
-    (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : RegularEpi k :=
+def regularOfIsPushoutFstOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [fr : RegularEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
+    RegularEpi k :=
   regularOfIsPushoutSndOfRegular comm.symm (PushoutCocone.flipIsColimit t)
-#align category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
+#align
+  category_theory.regular_of_is_pushout_fst_of_regular CategoryTheory.regularOfIsPushoutFstOfRegular
 
 instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f] : StrongEpi f :=
   StrongEpi.mk'
@@ -259,7 +271,9 @@ instance (priority := 100) strong_epi_of_regular_epi (f : X ⟶ Y) [RegularEpi f
       obtain ⟨t, ht⟩ := regular_epi.desc' f u this
       exact
         comm_sq.has_lift.mk'
-          ⟨t, ht, (cancel_epi f).1 (by simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
+          ⟨t, ht,
+            (cancel_epi f).1
+              (by simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
 #align category_theory.strong_epi_of_regular_epi CategoryTheory.strong_epi_of_regular_epi
 
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
@@ -288,7 +302,8 @@ instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategor
     RegularEpiCategory C where regularEpiOfEpi _ _ f _ := by
     haveI := is_split_epi_of_epi f
     infer_instance
-#align category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
+#align
+  category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
 
 instance (priority := 100) strong_epi_category_of_regular_epi_category [RegularEpiCategory C] :
     StrongEpiCategory C where strong_epi_of_epi _ _ f _ := by

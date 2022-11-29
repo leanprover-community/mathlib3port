@@ -109,12 +109,15 @@ variable {X} (x : X)
   corresponding point. In fact they are definitionally equivalent. -/
 def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* EndCat (↑x : ActionCategory M X) :=
   MulEquiv.refl _
-#align category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
+#align
+  category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
 
 @[simp]
-theorem stabilizer_iso_End_apply (f : Stabilizer.submonoid M x) : (stabilizerIsoEnd M x).toFun f = f :=
+theorem stabilizer_iso_End_apply (f : Stabilizer.submonoid M x) :
+    (stabilizerIsoEnd M x).toFun f = f :=
   rfl
-#align category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizer_iso_End_apply
+#align
+  category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizer_iso_End_apply
 
 @[simp]
 theorem stabilizer_iso_End_symm_apply (f : EndCat _) : (stabilizerIsoEnd M x).invFun f = f :=
@@ -130,13 +133,15 @@ protected theorem id_val (x : ActionCategory M X) : Subtype.val (𝟙 x) = 1 :=
 #align category_theory.action_category.id_val CategoryTheory.ActionCategory.id_val
 
 @[simp]
-protected theorem comp_val {x y z : ActionCategory M X} (f : x ⟶ y) (g : y ⟶ z) : (f ≫ g).val = g.val * f.val :=
+protected theorem comp_val {x y z : ActionCategory M X} (f : x ⟶ y) (g : y ⟶ z) :
+    (f ≫ g).val = g.val * f.val :=
   rfl
 #align category_theory.action_category.comp_val CategoryTheory.ActionCategory.comp_val
 
 instance [IsPretransitive M X] [Nonempty X] : IsConnected (ActionCategory M X) :=
   zigzag_is_connected fun x y =>
-    Relation.ReflTransGen.single <| Or.inl <| nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
+    Relation.ReflTransGen.single <|
+      Or.inl <| nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
 
 section Group
 
@@ -147,8 +152,10 @@ noncomputable instance : Groupoid (ActionCategory G X) :=
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
 def endMulEquivSubgroup (H : Subgroup G) : EndCat (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
-  MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm (MulEquiv.subgroupCongr <| stabilizer_quotient H)
-#align category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup
+  MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm
+    (MulEquiv.subgroupCongr <| stabilizer_quotient H)
+#align
+  category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup
 
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
 def homOfPair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : ActionCategory G X) :=
@@ -161,8 +168,8 @@ theorem homOfPair.val (t : X) (g : G) : (homOfPair t g).val = g :=
 #align category_theory.action_category.hom_of_pair.val CategoryTheory.ActionCategory.homOfPair.val
 
 /-- Any morphism in the action groupoid is given by some pair. -/
-protected def cases {P : ∀ ⦃a b : ActionCategory G X⦄, (a ⟶ b) → Sort _} (hyp : ∀ t g, P (homOfPair t g)) ⦃a b⦄
-    (f : a ⟶ b) : P f := by
+protected def cases {P : ∀ ⦃a b : ActionCategory G X⦄, (a ⟶ b) → Sort _}
+    (hyp : ∀ t g, P (homOfPair t g)) ⦃a b⦄ (f : a ⟶ b) : P f := by
   refine' cast _ (hyp b.back f.val)
   rcases a with ⟨⟨⟩, a : X⟩
   rcases b with ⟨⟨⟩, b : X⟩
@@ -186,15 +193,15 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
       exact F_map_eq.symm.trans (F.map_id b),
     map_mul' := by
       intro g h
-      congr
-      funext
+      congr ; funext
       exact F_map_eq.symm.trans (F.map_comp (hom_of_pair (g⁻¹ • b) h) (hom_of_pair b g)) }
 #align category_theory.action_category.curry CategoryTheory.ActionCategory.curry
 
 /-- Given `G` acting on `X`, a group homomorphism `φ : G →* (X → H) ⋊ G` can be uncurried to
     a functor from the action groupoid to `H`, provided that `φ g = (_, g)` for all `g`. -/
 @[simps]
-def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right = g) : ActionCategory G X ⥤ SingleObj H where
+def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right = g) :
+    ActionCategory G X ⥤ SingleObj H where
   obj _ := ()
   map a b f := (F f.val).left b.back
   map_id' := by
@@ -202,8 +209,7 @@ def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right
     rw [action_category.id_val, F.map_one]
     rfl
   map_comp' := by
-    intro x y z f g
-    revert y z g
+    intro x y z f g; revert y z g
     refine' action_category.cases _
     simp [single_obj.comp_as_mul, sane]
 #align category_theory.action_category.uncurry CategoryTheory.ActionCategory.uncurry

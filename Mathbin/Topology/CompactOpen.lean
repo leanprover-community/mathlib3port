@@ -62,12 +62,14 @@ theorem gen_univ (s : Set α) : CompactOpen.gen s (Set.univ : Set β) = Set.univ
 #align continuous_map.gen_univ ContinuousMap.gen_univ
 
 @[simp]
-theorem gen_inter (s : Set α) (u v : Set β) : CompactOpen.gen s (u ∩ v) = CompactOpen.gen s u ∩ CompactOpen.gen s v :=
+theorem gen_inter (s : Set α) (u v : Set β) :
+    CompactOpen.gen s (u ∩ v) = CompactOpen.gen s u ∩ CompactOpen.gen s v :=
   Set.ext fun f => subset_inter_iff
 #align continuous_map.gen_inter ContinuousMap.gen_inter
 
 @[simp]
-theorem gen_union (s t : Set α) (u : Set β) : CompactOpen.gen (s ∪ t) u = CompactOpen.gen s u ∩ CompactOpen.gen t u :=
+theorem gen_union (s t : Set α) (u : Set β) :
+    CompactOpen.gen (s ∪ t) u = CompactOpen.gen s u ∩ CompactOpen.gen t u :=
   Set.ext fun f => (iff_of_eq (congr_arg (· ⊆ u) (image_union f s t))).trans union_subset_iff
 #align continuous_map.gen_union ContinuousMap.gen_union
 
@@ -122,7 +124,8 @@ theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(�
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Composition is a continuous map from `C(α, β) × C(β, γ)` to `C(α, γ)`, provided that `β` is
   locally compact. This is Prop. 9 of Chap. X, §3, №. 4 of Bourbaki's *Topologie Générale*. -/
-theorem continuous_comp' [LocallyCompactSpace β] : Continuous fun x : C(α, β) × C(β, γ) => x.2.comp x.1 :=
+theorem continuous_comp' [LocallyCompactSpace β] :
+    Continuous fun x : C(α, β) × C(β, γ) => x.2.comp x.1 :=
   continuous_generated_from
     (by
       rintro M ⟨K, hK, U, hU, rfl⟩
@@ -141,8 +144,9 @@ theorem continuous_comp' [LocallyCompactSpace β] : Continuous fun x : C(α, β)
       exact mem_prod.mpr ⟨hKL, image_subset_iff.mpr hLU⟩)
 #align continuous_map.continuous_comp' ContinuousMap.continuous_comp'
 
-theorem continuous.comp' {X : Type _} [TopologicalSpace X] [LocallyCompactSpace β] {f : X → C(α, β)} {g : X → C(β, γ)}
-    (hf : Continuous f) (hg : Continuous g) : Continuous fun x => (g x).comp (f x) :=
+theorem continuous.comp' {X : Type _} [TopologicalSpace X] [LocallyCompactSpace β] {f : X → C(α, β)}
+    {g : X → C(β, γ)} (hf : Continuous f) (hg : Continuous g) :
+    Continuous fun x => (g x).comp (f x) :=
   continuous_comp'.comp (hf.prod_mk hg : Continuous fun x => (f x, g x))
 #align continuous_map.continuous.comp' ContinuousMap.continuous.comp'
 
@@ -160,7 +164,8 @@ theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β)
   continuous_iff_continuous_at.mpr fun ⟨f, x⟩ n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
-    let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
+    let ⟨s, hs, sv, sc⟩ :=
+      LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
     let ⟨u, us, uo, xu⟩ := mem_nhds_iff.mp hs
     show (fun p : C(α, β) × α => p.1 p.2) ⁻¹' n ∈ 𝓝 (f, x) from
       let w := CompactOpen.gen s v ×ˢ u
@@ -176,7 +181,8 @@ theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β)
 #align continuous_map.continuous_eval' ContinuousMap.continuous_eval'
 
 /-- See also `continuous_map.continuous_eval_const` -/
-theorem continuous_eval_const' [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
+theorem continuous_eval_const' [LocallyCompactSpace α] (a : α) :
+    Continuous fun f : C(α, β) => f a :=
   continuous_eval'.comp (continuous_id.prod_mk continuous_const)
 #align continuous_map.continuous_eval_const' ContinuousMap.continuous_eval_const'
 
@@ -191,13 +197,15 @@ instance [T2Space β] : T2Space C(α, β) :=
     obtain ⟨x, hx⟩ := not_forall.mp (mt (FunLike.ext f₁ f₂) h)
     obtain ⟨u, v, hu, hv, hxu, hxv, huv⟩ := t2_separation hx
     refine'
-      ⟨compact_open.gen {x} u, compact_open.gen {x} v, ContinuousMap.is_open_gen is_compact_singleton hu,
+      ⟨compact_open.gen {x} u, compact_open.gen {x} v,
+        ContinuousMap.is_open_gen is_compact_singleton hu,
         ContinuousMap.is_open_gen is_compact_singleton hv, _, _, _⟩
     · rwa [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
       
     · rwa [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
       
-    · rw [disjoint_iff_inter_eq_empty, ← gen_inter, huv.inter_eq, gen_empty_right (singleton_nonempty _)]
+    · rw [disjoint_iff_inter_eq_empty, ← gen_inter, huv.inter_eq,
+        gen_empty_right (singleton_nonempty _)]
       ⟩
 
 end Ev
@@ -222,7 +230,8 @@ on `C(s, β)` for `s` a compact subset of `α`.  The key point of the proof is t
 compact subsets of `α` is equal to the union of compact subsets of the compact subsets of `α`. -/
 theorem compact_open_eq_Inf_induced :
     (ContinuousMap.compactOpen : TopologicalSpace C(α, β)) =
-      ⨅ (s : Set α) (hs : IsCompact s), TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
+      ⨅ (s : Set α) (hs : IsCompact s),
+        TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
   by
   refine' le_antisymm _ _
   · refine' le_infi₂ _
@@ -250,14 +259,17 @@ theorem nhds_compact_open_eq_Inf_nhds_induced (f : C(α, β)) :
     𝓝 f = ⨅ (s) (hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) := by
   rw [compact_open_eq_Inf_induced]
   simp [nhds_infi, nhds_induced]
-#align continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compact_open_eq_Inf_nhds_induced
+#align
+  continuous_map.nhds_compact_open_eq_Inf_nhds_induced ContinuousMap.nhds_compact_open_eq_Inf_nhds_induced
 
 theorem tendsto_compact_open_restrict {ι : Type _} {l : Filter ι} {F : ι → C(α, β)} {f : C(α, β)}
-    (hFf : Filter.Tendsto F l (𝓝 f)) (s : Set α) : Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
+    (hFf : Filter.Tendsto F l (𝓝 f)) (s : Set α) :
+    Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
   (continuous_restrict s).ContinuousAt.Tendsto.comp hFf
 #align continuous_map.tendsto_compact_open_restrict ContinuousMap.tendsto_compact_open_restrict
 
-theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι → C(α, β)) (f : C(α, β)) :
+theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι → C(α, β))
+    (f : C(α, β)) :
     Filter.Tendsto F l (𝓝 f) ↔
       ∀ (s) (hs : IsCompact s), Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
   by
@@ -267,8 +279,8 @@ theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι �
 
 /-- A family `F` of functions in `C(α, β)` converges in the compact-open topology, if and only if
 it converges in the compact-open topology on each compact subset of `α`. -/
-theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space α] [T2Space β] {ι : Type _}
-    {l : Filter ι} [Filter.NeBot l] (F : ι → C(α, β)) :
+theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space α] [T2Space β]
+    {ι : Type _} {l : Filter ι} [Filter.NeBot l] (F : ι → C(α, β)) :
     (∃ f, Filter.Tendsto F l (𝓝 f)) ↔
       ∀ (s : Set α) (hs : IsCompact s), ∃ f, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 f) :=
   by
@@ -302,7 +314,8 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
     rw [lift_cover_restrict']
     exact hf s hs
     
-#align continuous_map.exists_tendsto_compact_open_iff_forall ContinuousMap.exists_tendsto_compact_open_iff_forall
+#align
+  continuous_map.exists_tendsto_compact_open_iff_forall ContinuousMap.exists_tendsto_compact_open_iff_forall
 
 end InfInduced
 
@@ -357,12 +370,13 @@ theorem continuous_curry' (f : C(α × β, γ)) : Continuous (curry' f) :=
 
 /-- To show continuity of a map `α → C(β, γ)`, it suffices to show that its uncurried form
     `α × β → γ` is continuous. -/
-theorem continuous_of_continuous_uncurry (f : α → C(β, γ)) (h : Continuous (Function.uncurry fun x y => f x y)) :
-    Continuous f := by
+theorem continuous_of_continuous_uncurry (f : α → C(β, γ))
+    (h : Continuous (Function.uncurry fun x y => f x y)) : Continuous f := by
   convert continuous_curry' ⟨_, h⟩
   ext
   rfl
-#align continuous_map.continuous_of_continuous_uncurry ContinuousMap.continuous_of_continuous_uncurry
+#align
+  continuous_map.continuous_of_continuous_uncurry ContinuousMap.continuous_of_continuous_uncurry
 
 /-- The curried form of a continuous map `α × β → γ` as a continuous map `α → C(β, γ)`.
     If `a × β` is locally compact, this is continuous. If `α` and `β` are both locally
@@ -372,7 +386,8 @@ def curry (f : C(α × β, γ)) : C(α, C(β, γ)) :=
 #align continuous_map.curry ContinuousMap.curry
 
 /-- The currying process is a continuous map between function spaces. -/
-theorem continuous_curry [LocallyCompactSpace (α × β)] : Continuous (curry : C(α × β, γ) → C(α, C(β, γ))) := by
+theorem continuous_curry [LocallyCompactSpace (α × β)] :
+    Continuous (curry : C(α × β, γ) → C(α, C(β, γ))) := by
   apply continuous_of_continuous_uncurry
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _).symm]
@@ -388,7 +403,8 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
   continuous_eval'.comp <| f.Continuous.prod_map continuous_id
-#align continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
+#align
+  continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
     locally compact). If `α` is also locally compact, then this is a homeomorphism between the two
@@ -403,7 +419,8 @@ theorem continuous_uncurry [LocallyCompactSpace α] [LocallyCompactSpace β] :
     Continuous (uncurry : C(α, C(β, γ)) → C(α × β, γ)) := by
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _)]
-  apply Continuous.comp continuous_eval' (Continuous.prod_map continuous_eval' continuous_id) <;> infer_instance
+  apply Continuous.comp continuous_eval' (Continuous.prod_map continuous_eval' continuous_id) <;>
+    infer_instance
 #align continuous_map.continuous_uncurry ContinuousMap.continuous_uncurry
 
 /-- The family of constant maps: `β → C(α, β)` as a continuous map. -/
@@ -458,7 +475,8 @@ theorem continuous_map_of_unique_apply [Unique α] (b : β) (a : α) : continuou
 #align homeomorph.continuous_map_of_unique_apply Homeomorph.continuous_map_of_unique_apply
 
 @[simp]
-theorem continuous_map_of_unique_symm_apply [Unique α] (f : C(α, β)) : continuousMapOfUnique.symm f = f default :=
+theorem continuous_map_of_unique_symm_apply [Unique α] (f : C(α, β)) :
+    continuousMapOfUnique.symm f = f default :=
   rfl
 #align homeomorph.continuous_map_of_unique_symm_apply Homeomorph.continuous_map_of_unique_symm_apply
 
@@ -466,8 +484,8 @@ end Homeomorph
 
 section QuotientMap
 
-variable {X₀ X Y Z : Type _} [TopologicalSpace X₀] [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
-  [LocallyCompactSpace Y] {f : X₀ → X}
+variable {X₀ X Y Z : Type _} [TopologicalSpace X₀] [TopologicalSpace X] [TopologicalSpace Y]
+  [TopologicalSpace Z] [LocallyCompactSpace Y] {f : X₀ → X}
 
 theorem QuotientMap.continuous_lift_prod_left (hf : QuotientMap f) {g : X × Y → Z}
     (hg : Continuous fun p : X₀ × Y => g (f p.1, p.2)) : Continuous g := by
@@ -488,7 +506,8 @@ theorem QuotientMap.continuous_lift_prod_left (hf : QuotientMap f) {g : X × Y �
 
 theorem QuotientMap.continuous_lift_prod_right (hf : QuotientMap f) {g : Y × X → Z}
     (hg : Continuous fun p : Y × X₀ => g (p.1, f p.2)) : Continuous g := by
-  have : Continuous fun p : X₀ × Y => g ((Prod.swap p).1, f (Prod.swap p).2) := hg.comp continuous_swap
+  have : Continuous fun p : X₀ × Y => g ((Prod.swap p).1, f (Prod.swap p).2) :=
+    hg.comp continuous_swap
   have : Continuous fun p : X₀ × Y => (g ∘ Prod.swap) (f p.1, p.2) := this
   convert (hf.continuous_lift_prod_left this).comp continuous_swap
   ext x

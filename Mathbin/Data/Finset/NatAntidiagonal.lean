@@ -49,7 +49,8 @@ theorem antidiagonal_zero : antidiagonal 0 = {(0, 0)} :=
 theorem antidiagonal_succ (n : ℕ) :
     antidiagonal (n + 1) =
       cons (0, n + 1)
-        ((antidiagonal n).map (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _)))
+        ((antidiagonal n).map
+          (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _)))
         (by simp) :=
   by
   apply eq_of_veq
@@ -61,7 +62,8 @@ theorem antidiagonal_succ (n : ℕ) :
 theorem antidiagonal_succ' (n : ℕ) :
     antidiagonal (n + 1) =
       cons (n + 1, 0)
-        ((antidiagonal n).map (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩))
+        ((antidiagonal n).map
+          (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩))
         (by simp) :=
   by
   apply eq_of_veq
@@ -74,7 +76,8 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
       cons (0, n + 2)
         (cons (n + 2, 0)
             ((antidiagonal n).map
-              (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩)) <|
+              (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩
+                ⟨Nat.succ, Nat.succ_injective⟩)) <|
           by simp)
         (by simp) :=
   by
@@ -88,8 +91,8 @@ theorem map_swap_antidiagonal {n : ℕ} :
 #align finset.nat.map_swap_antidiagonal Finset.Nat.map_swap_antidiagonal
 
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
-theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n) (hq : q ∈ antidiagonal n) :
-    p = q ↔ p.fst = q.fst := by
+theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n)
+    (hq : q ∈ antidiagonal n) : p = q ↔ p.fst = q.fst := by
   refine' ⟨congr_arg Prod.fst, fun h => Prod.ext h ((add_right_inj q.fst).mp _)⟩
   rw [mem_antidiagonal] at hp hq
   rw [hq, ← h, hp]

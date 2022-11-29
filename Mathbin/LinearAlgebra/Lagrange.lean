@@ -43,16 +43,17 @@ open Function Fintype
 
 variable (s : Finset R)
 
-theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.card) (eval_f : ∀ x ∈ s, f.eval x = 0) :
-    f = 0 := by
+theorem eq_zero_of_degree_lt_of_eval_finset_eq_zero (degree_f_lt : f.degree < s.card)
+    (eval_f : ∀ x ∈ s, f.eval x = 0) : f = 0 := by
   rw [← mem_degree_lt] at degree_f_lt
   simp_rw [eval_eq_sum_degree_lt_equiv degree_f_lt] at eval_f
   rw [← degree_lt_equiv_eq_zero_iff_eq_zero degree_f_lt]
   exact
     Matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero
-      (injective.comp (embedding.subtype _).inj' (equiv_fin_of_card_eq (card_coe _)).symm.Injective) fun _ =>
-      eval_f _ (Finset.coe_mem _)
-#align polynomial.eq_zero_of_degree_lt_of_eval_finset_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_finset_eq_zero
+      (injective.comp (embedding.subtype _).inj' (equiv_fin_of_card_eq (card_coe _)).symm.Injective)
+      fun _ => eval_f _ (Finset.coe_mem _)
+#align
+  polynomial.eq_zero_of_degree_lt_of_eval_finset_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_finset_eq_zero
 
 theorem eq_of_degree_sub_lt_of_eval_finset_eq (degree_fg_lt : (f - g).degree < s.card)
     (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g := by
@@ -60,14 +61,14 @@ theorem eq_of_degree_sub_lt_of_eval_finset_eq (degree_fg_lt : (f - g).degree < s
   refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_fg_lt _
   simp_rw [eval_sub, sub_eq_zero]
   exact eval_fg
-#align polynomial.eq_of_degree_sub_lt_of_eval_finset_eq Polynomial.eq_of_degree_sub_lt_of_eval_finset_eq
+#align
+  polynomial.eq_of_degree_sub_lt_of_eval_finset_eq Polynomial.eq_of_degree_sub_lt_of_eval_finset_eq
 
-theorem eq_of_degrees_lt_of_eval_finset_eq (degree_f_lt : f.degree < s.card) (degree_g_lt : g.degree < s.card)
-    (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g := by
+theorem eq_of_degrees_lt_of_eval_finset_eq (degree_f_lt : f.degree < s.card)
+    (degree_g_lt : g.degree < s.card) (eval_fg : ∀ x ∈ s, f.eval x = g.eval x) : f = g := by
   rw [← mem_degree_lt] at degree_f_lt degree_g_lt
   refine' eq_of_degree_sub_lt_of_eval_finset_eq _ _ eval_fg
-  rw [← mem_degree_lt]
-  exact Submodule.sub_mem _ degree_f_lt degree_g_lt
+  rw [← mem_degree_lt]; exact Submodule.sub_mem _ degree_f_lt degree_g_lt
 #align polynomial.eq_of_degrees_lt_of_eval_finset_eq Polynomial.eq_of_degrees_lt_of_eval_finset_eq
 
 end Finset
@@ -78,22 +79,25 @@ open Finset
 
 variable {ι : Type _} {v : ι → R} (s : Finset ι)
 
-theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
-    (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by classical
+theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s)
+    (degree_f_lt : f.degree < s.card) (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by classical
   rw [← card_image_of_inj_on hvs] at degree_f_lt
   refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
   intro x hx
   rcases mem_image.mp hx with ⟨_, hj, rfl⟩
   exact eval_f _ hj
-#align polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero
+#align
+  polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero
 
-theorem eq_of_degree_sub_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_fg_lt : (f - g).degree < s.card)
-    (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) : f = g := by
+theorem eq_of_degree_sub_lt_of_eval_index_eq (hvs : Set.InjOn v s)
+    (degree_fg_lt : (f - g).degree < s.card) (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) :
+    f = g := by
   rw [← sub_eq_zero]
   refine' eq_zero_of_degree_lt_of_eval_index_eq_zero _ hvs degree_fg_lt _
   simp_rw [eval_sub, sub_eq_zero]
   exact eval_fg
-#align polynomial.eq_of_degree_sub_lt_of_eval_index_eq Polynomial.eq_of_degree_sub_lt_of_eval_index_eq
+#align
+  polynomial.eq_of_degree_sub_lt_of_eval_index_eq Polynomial.eq_of_degree_sub_lt_of_eval_index_eq
 
 theorem eq_of_degrees_lt_of_eval_index_eq (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card)
     (degree_g_lt : g.degree < s.card) (eval_fg : ∀ i ∈ s, f.eval (v i) = g.eval (v i)) : f = g := by
@@ -132,7 +136,8 @@ theorem basis_divisor_self : basisDivisor x x = 0 := by
 #align lagrange.basis_divisor_self Lagrange.basis_divisor_self
 
 theorem basis_divisor_inj (hxy : basisDivisor x y = 0) : x = y := by
-  simp_rw [basis_divisor, mul_eq_zero, X_sub_C_ne_zero, or_false_iff, C_eq_zero, inv_eq_zero, sub_eq_zero] at hxy
+  simp_rw [basis_divisor, mul_eq_zero, X_sub_C_ne_zero, or_false_iff, C_eq_zero, inv_eq_zero,
+    sub_eq_zero] at hxy
   exact hxy
 #align lagrange.basis_divisor_inj Lagrange.basis_divisor_inj
 
@@ -141,7 +146,8 @@ theorem basis_divisor_eq_zero_iff : basisDivisor x y = 0 ↔ x = y :=
   ⟨basis_divisor_inj, fun H => H ▸ basis_divisor_self⟩
 #align lagrange.basis_divisor_eq_zero_iff Lagrange.basis_divisor_eq_zero_iff
 
-theorem basis_divisor_ne_zero_iff : basisDivisor x y ≠ 0 ↔ x ≠ y := by rw [Ne.def, basis_divisor_eq_zero_iff]
+theorem basis_divisor_ne_zero_iff : basisDivisor x y ≠ 0 ↔ x ≠ y := by
+  rw [Ne.def, basis_divisor_eq_zero_iff]
 #align lagrange.basis_divisor_ne_zero_iff Lagrange.basis_divisor_ne_zero_iff
 
 theorem degree_basis_divisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).degree = 1 := by
@@ -150,10 +156,12 @@ theorem degree_basis_divisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).degree =
 #align lagrange.degree_basis_divisor_of_ne Lagrange.degree_basis_divisor_of_ne
 
 @[simp]
-theorem degree_basis_divisor_self : (basisDivisor x x).degree = ⊥ := by rw [basis_divisor_self, degree_zero]
+theorem degree_basis_divisor_self : (basisDivisor x x).degree = ⊥ := by
+  rw [basis_divisor_self, degree_zero]
 #align lagrange.degree_basis_divisor_self Lagrange.degree_basis_divisor_self
 
-theorem nat_degree_basis_divisor_self : (basisDivisor x x).natDegree = 0 := by rw [basis_divisor_self, nat_degree_zero]
+theorem nat_degree_basis_divisor_self : (basisDivisor x x).natDegree = 0 := by
+  rw [basis_divisor_self, nat_degree_zero]
 #align lagrange.nat_degree_basis_divisor_self Lagrange.nat_degree_basis_divisor_self
 
 theorem nat_degree_basis_divisor_of_ne (hxy : x ≠ y) : (basisDivisor x y).natDegree = 1 :=
@@ -191,13 +199,14 @@ theorem basis_empty : Lagrange.basis ∅ v i = 1 :=
 #align lagrange.basis_empty Lagrange.basis_empty
 
 @[simp]
-theorem basis_singleton (i : ι) : Lagrange.basis {i} v i = 1 := by rw [Lagrange.basis, erase_singleton, prod_empty]
+theorem basis_singleton (i : ι) : Lagrange.basis {i} v i = 1 := by
+  rw [Lagrange.basis, erase_singleton, prod_empty]
 #align lagrange.basis_singleton Lagrange.basis_singleton
 
 @[simp]
 theorem basis_pair_left (hij : i ≠ j) : Lagrange.basis {i, j} v i = basisDivisor (v i) (v j) := by
-  simp only [Lagrange.basis, hij, erase_insert_eq_erase, erase_eq_of_not_mem, mem_singleton, not_false_iff,
-    prod_singleton]
+  simp only [Lagrange.basis, hij, erase_insert_eq_erase, erase_eq_of_not_mem, mem_singleton,
+    not_false_iff, prod_singleton]
 #align lagrange.basis_pair_left Lagrange.basis_pair_left
 
 @[simp]
@@ -214,7 +223,8 @@ theorem basis_ne_zero (hvs : Set.InjOn v s) (hi : i ∈ s) : Lagrange.basis s v 
 #align lagrange.basis_ne_zero Lagrange.basis_ne_zero
 
 @[simp]
-theorem eval_basis_self (hvs : Set.InjOn v s) (hi : i ∈ s) : (Lagrange.basis s v i).eval (v i) = 1 := by
+theorem eval_basis_self (hvs : Set.InjOn v s) (hi : i ∈ s) :
+    (Lagrange.basis s v i).eval (v i) = 1 := by
   rw [Lagrange.basis, eval_prod]
   refine' prod_eq_one fun j H => _
   rw [eval_basis_divisor_left_of_ne]
@@ -229,7 +239,8 @@ theorem eval_basis_of_ne (hij : i ≠ j) (hj : j ∈ s) : (Lagrange.basis s v i)
 #align lagrange.eval_basis_of_ne Lagrange.eval_basis_of_ne
 
 @[simp]
-theorem nat_degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) : (Lagrange.basis s v i).natDegree = s.card - 1 := by
+theorem nat_degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
+    (Lagrange.basis s v i).natDegree = s.card - 1 := by
   have H : ∀ j, j ∈ s.erase i → basis_divisor (v i) (v j) ≠ 0 := by
     simp_rw [Ne.def, mem_erase, basis_divisor_eq_zero_iff]
     exact fun j ⟨hij₁, hj⟩ hij₂ => hij₁ (hvs hj hi hij₂.symm)
@@ -240,11 +251,13 @@ theorem nat_degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) : (Lagrange.basis 
   exact H _ hj
 #align lagrange.nat_degree_basis Lagrange.nat_degree_basis
 
-theorem degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) : (Lagrange.basis s v i).degree = ↑(s.card - 1) := by
+theorem degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
+    (Lagrange.basis s v i).degree = ↑(s.card - 1) := by
   rw [degree_eq_nat_degree (basis_ne_zero hvs hi), nat_degree_basis hvs hi]
 #align lagrange.degree_basis Lagrange.degree_basis
 
-theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrange.basis s v j) = 1 := by
+theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrange.basis s v j) = 1 :=
+  by
   refine' eq_of_degrees_lt_of_eval_index_eq s hvs (lt_of_le_of_lt (degree_sum_le _ _) _) _ _
   · rw [Finset.sup_lt_iff (WithBot.bot_lt_coe s.card)]
     intro i hi
@@ -255,16 +268,20 @@ theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrang
     exact nonempty.card_pos hs
     
   · intro i hi
-    rw [eval_finset_sum, eval_one, ← add_sum_erase _ _ hi, eval_basis_self hvs hi, add_right_eq_self]
+    rw [eval_finset_sum, eval_one, ← add_sum_erase _ _ hi, eval_basis_self hvs hi,
+      add_right_eq_self]
     refine' sum_eq_zero fun j hj => _
     rcases mem_erase.mp hj with ⟨hij, hj⟩
     rw [eval_basis_of_ne hij hi]
     
 #align lagrange.sum_basis Lagrange.sum_basis
 
-theorem basis_divisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 := by
-  classical rw [← sum_basis (Set.inj_on_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
-      sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy, basis_pair_right hxy, id, id]
+theorem basis_divisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 :=
+  by
+  classical rw [←
+      sum_basis (Set.inj_on_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
+      sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
+      basis_pair_right hxy, id, id]
 #align lagrange.basis_divisor_add_symm Lagrange.basis_divisor_add_symm
 
 end Basis
@@ -282,7 +299,8 @@ polynomial of degree `< s.card` that takes value `r i` on `v i` for all `i` in `
 def interpolate (s : Finset ι) (v : ι → F) : (ι → F) →ₗ[F] F[X] where
   toFun r := ∑ i in s, c (r i) * Lagrange.basis s v i
   map_add' f g := by simp_rw [← Finset.sum_add_distrib, ← add_mul, ← C_add, Pi.add_apply]
-  map_smul' c f := by simp_rw [Finset.smul_sum, C_mul', smul_smul, Pi.smul_apply, RingHom.id_apply, smul_eq_mul]
+  map_smul' c f := by
+    simp_rw [Finset.smul_sum, C_mul', smul_smul, Pi.smul_apply, RingHom.id_apply, smul_eq_mul]
 #align lagrange.interpolate Lagrange.interpolate
 
 @[simp]
@@ -299,14 +317,16 @@ theorem interpolate_one (hvs : Set.InjOn v s) (hs : s.Nonempty) : interpolate s 
   exact sum_basis hvs hs
 #align lagrange.interpolate_one Lagrange.interpolate_one
 
-theorem eval_interpolate_at_node (hvs : Set.InjOn v s) (hi : i ∈ s) : eval (v i) (interpolate s v r) = r i := by
+theorem eval_interpolate_at_node (hvs : Set.InjOn v s) (hi : i ∈ s) :
+    eval (v i) (interpolate s v r) = r i := by
   rw [interpolate_apply, eval_finset_sum, ← add_sum_erase _ _ hi]
   simp_rw [eval_mul, eval_C, eval_basis_self hvs hi, mul_one, add_right_eq_self]
   refine' sum_eq_zero fun j H => _
   rw [eval_basis_of_ne (mem_erase.mp H).1 hi, mul_zero]
 #align lagrange.eval_interpolate_at_node Lagrange.eval_interpolate_at_node
 
-theorem degree_interpolate_le (hvs : Set.InjOn v s) : (interpolate s v r).degree ≤ ↑(s.card - 1) := by
+theorem degree_interpolate_le (hvs : Set.InjOn v s) : (interpolate s v r).degree ≤ ↑(s.card - 1) :=
+  by
   refine' (degree_sum_le _ _).trans _
   rw [Finset.sup_le_iff]
   intro i hi
@@ -335,12 +355,13 @@ theorem degree_interpolate_erase_lt (hvs : Set.InjOn v s) (hi : i ∈ s) :
   exact degree_interpolate_lt _ (Set.InjOn.mono (coe_subset.mpr (erase_subset _ _)) hvs)
 #align lagrange.degree_interpolate_erase_lt Lagrange.degree_interpolate_erase_lt
 
-theorem values_eq_on_of_interpolate_eq (hvs : Set.InjOn v s) (hrr' : interpolate s v r = interpolate s v r') :
-    ∀ i ∈ s, r i = r' i := fun _ hi => by
+theorem values_eq_on_of_interpolate_eq (hvs : Set.InjOn v s)
+    (hrr' : interpolate s v r = interpolate s v r') : ∀ i ∈ s, r i = r' i := fun _ hi => by
   rw [← eval_interpolate_at_node r hvs hi, hrr', eval_interpolate_at_node r' hvs hi]
 #align lagrange.values_eq_on_of_interpolate_eq Lagrange.values_eq_on_of_interpolate_eq
 
-theorem interpolate_eq_of_values_eq_on (hrr' : ∀ i ∈ s, r i = r' i) : interpolate s v r = interpolate s v r' :=
+theorem interpolate_eq_of_values_eq_on (hrr' : ∀ i ∈ s, r i = r' i) :
+    interpolate s v r = interpolate s v r' :=
   sum_congr rfl fun i hi => by rw [hrr' _ hi]
 #align lagrange.interpolate_eq_of_values_eq_on Lagrange.interpolate_eq_of_values_eq_on
 
@@ -381,7 +402,8 @@ def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F
   map_add' f g := funext fun v => eval_add
   map_smul' c f := funext <| by simp
   invFun r :=
-    ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0, mem_degree_lt.2 <| degree_interpolate_lt _ hvs⟩
+    ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0,
+      mem_degree_lt.2 <| degree_interpolate_lt _ hvs⟩
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
@@ -395,7 +417,8 @@ def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F
     exact dif_pos hi
 #align lagrange.fun_equiv_degree_lt Lagrange.funEquivDegreeLt
 
-theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : s.Nonempty) (hst : s ⊆ t) :
+theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : s.Nonempty)
+    (hst : s ⊆ t) :
     interpolate t v r = ∑ i in s, interpolate (insert i (t \ s)) v r * Lagrange.basis s v i := by
   symm
   refine' eq_interpolate_of_eval_eq _ hvt (lt_of_le_of_lt (degree_sum_le _ _) _) fun i hi => _
@@ -404,17 +427,20 @@ theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : 
     have hs : 1 ≤ s.card := nonempty.card_pos ⟨_, hi⟩
     have hst' : s.card ≤ t.card := card_le_of_subset hst
     have H : t.card = 1 + (t.card - s.card) + (s.card - 1) := by
-      rw [add_assoc, tsub_add_tsub_cancel hst' hs, ← add_tsub_assoc_of_le (hs.trans hst'), Nat.succ_add_sub_one,
-        zero_add]
+      rw [add_assoc, tsub_add_tsub_cancel hst' hs, ← add_tsub_assoc_of_le (hs.trans hst'),
+        Nat.succ_add_sub_one, zero_add]
     rw [degree_basis (Set.InjOn.mono hst hvt) hi, H, WithBot.coe_add,
       WithBot.add_lt_add_iff_right (@WithBot.coe_ne_bot _ (s.card - 1))]
-    convert degree_interpolate_lt _ (hvt.mono (coe_subset.mpr (insert_subset.mpr ⟨hst hi, sdiff_subset _ _⟩)))
+    convert
+      degree_interpolate_lt _
+        (hvt.mono (coe_subset.mpr (insert_subset.mpr ⟨hst hi, sdiff_subset _ _⟩)))
     rw [card_insert_of_not_mem (not_mem_sdiff_of_mem_right hi), card_sdiff hst, add_comm]
     
   · simp_rw [eval_finset_sum, eval_mul]
     by_cases hi' : i ∈ s
     · rw [← add_sum_erase _ _ hi', eval_basis_self (hvt.mono hst) hi',
-        eval_interpolate_at_node _ (hvt.mono (coe_subset.mpr (insert_subset.mpr ⟨hi, sdiff_subset _ _⟩)))
+        eval_interpolate_at_node _
+          (hvt.mono (coe_subset.mpr (insert_subset.mpr ⟨hi, sdiff_subset _ _⟩)))
           (mem_insert_self _ _),
         mul_one, add_right_eq_self]
       refine' sum_eq_zero fun j hj => _
@@ -431,16 +457,21 @@ theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : 
           (mem_insert.mpr (Or.inr (mem_sdiff.mpr ⟨hi, hi'⟩)))
       
     
-#align lagrange.interpolate_eq_sum_interpolate_insert_sdiff Lagrange.interpolate_eq_sum_interpolate_insert_sdiff
+#align
+  lagrange.interpolate_eq_sum_interpolate_insert_sdiff Lagrange.interpolate_eq_sum_interpolate_insert_sdiff
 
-theorem interpolate_eq_add_interpolate_erase (hvs : Set.InjOn v s) (hi : i ∈ s) (hj : j ∈ s) (hij : i ≠ j) :
+theorem interpolate_eq_add_interpolate_erase (hvs : Set.InjOn v s) (hi : i ∈ s) (hj : j ∈ s)
+    (hij : i ≠ j) :
     interpolate s v r =
-      interpolate (s.erase j) v r * basisDivisor (v i) (v j) + interpolate (s.erase i) v r * basisDivisor (v j) (v i) :=
+      interpolate (s.erase j) v r * basisDivisor (v i) (v j) +
+        interpolate (s.erase i) v r * basisDivisor (v j) (v i) :=
   by
   rw [interpolate_eq_sum_interpolate_insert_sdiff _ hvs ⟨i, mem_insert_self i {j}⟩ _,
-    sum_insert (not_mem_singleton.mpr hij), sum_singleton, basis_pair_left hij, basis_pair_right hij,
-    sdiff_insert_insert_of_mem_of_not_mem hi (not_mem_singleton.mpr hij), sdiff_singleton_eq_erase, pair_comm,
-    sdiff_insert_insert_of_mem_of_not_mem hj (not_mem_singleton.mpr hij.symm), sdiff_singleton_eq_erase]
+    sum_insert (not_mem_singleton.mpr hij), sum_singleton, basis_pair_left hij,
+    basis_pair_right hij, sdiff_insert_insert_of_mem_of_not_mem hi (not_mem_singleton.mpr hij),
+    sdiff_singleton_eq_erase, pair_comm,
+    sdiff_insert_insert_of_mem_of_not_mem hj (not_mem_singleton.mpr hij.symm),
+    sdiff_singleton_eq_erase]
   · exact insert_subset.mpr ⟨hi, singleton_subset_iff.mpr hj⟩
     
 #align lagrange.interpolate_eq_add_interpolate_erase Lagrange.interpolate_eq_add_interpolate_erase
@@ -491,8 +522,8 @@ theorem eval_nodal_not_at_node (hx : ∀ i ∈ s, x ≠ v i) : eval x (nodal s v
   exact hx
 #align lagrange.eval_nodal_not_at_node Lagrange.eval_nodal_not_at_node
 
-theorem nodal_eq_mul_nodal_erase [DecidableEq ι] (hi : i ∈ s) : nodal s v = (X - c (v i)) * nodal (s.erase i) v := by
-  simp_rw [nodal, mul_prod_erase _ _ hi]
+theorem nodal_eq_mul_nodal_erase [DecidableEq ι] (hi : i ∈ s) :
+    nodal s v = (X - c (v i)) * nodal (s.erase i) v := by simp_rw [nodal, mul_prod_erase _ _ hi]
 #align lagrange.nodal_eq_mul_nodal_erase Lagrange.nodal_eq_mul_nodal_erase
 
 theorem X_sub_C_dvd_nodal (v : ι → F) (hi : i ∈ s) : X - c (v i) ∣ nodal s v :=
@@ -501,7 +532,8 @@ theorem X_sub_C_dvd_nodal (v : ι → F) (hi : i ∈ s) : X - c (v i) ∣ nodal 
 
 variable [DecidableEq ι]
 
-theorem nodal_erase_eq_nodal_div (hi : i ∈ s) : nodal (s.erase i) v = nodal s v / (X - c (v i)) := by
+theorem nodal_erase_eq_nodal_div (hi : i ∈ s) : nodal (s.erase i) v = nodal s v / (X - c (v i)) :=
+  by
   rw [nodal_eq_mul_nodal_erase hi, EuclideanDomain.mul_div_cancel_left]
   exact X_sub_C_ne_zero _
 #align lagrange.nodal_erase_eq_nodal_div Lagrange.nodal_erase_eq_nodal_div
@@ -514,8 +546,8 @@ theorem derivative_nodal : (nodal s v).derivative = ∑ i in s, nodal (s.erase i
   refine' Finset.induction_on s _ fun _ _ hit IH => _
   · rw [nodal_empty, derivative_one, sum_empty]
     
-  · rw [nodal_insert_eq_nodal hit, derivative_mul, IH, derivative_sub, derivative_X, derivative_C, sub_zero, one_mul,
-      sum_insert hit, mul_sum, erase_insert hit, add_right_inj]
+  · rw [nodal_insert_eq_nodal hit, derivative_mul, IH, derivative_sub, derivative_X, derivative_C,
+      sub_zero, one_mul, sum_insert hit, mul_sum, erase_insert hit, add_right_inj]
     refine' sum_congr rfl fun j hjt => _
     rw [nodal_erase_eq_nodal_div (mem_insert_of_mem hjt), nodal_insert_eq_nodal hit,
       EuclideanDomain.mul_div_assoc _ (X_sub_C_dvd_nodal v hjt), nodal_erase_eq_nodal_div hjt]
@@ -535,12 +567,14 @@ def nodalWeight (s : Finset ι) (v : ι → F) (i : ι) :=
   ∏ j in s.erase i, (v i - v j)⁻¹
 #align lagrange.nodal_weight Lagrange.nodalWeight
 
-theorem nodal_weight_eq_eval_nodal_erase_inv : nodalWeight s v i = (eval (v i) (nodal (s.erase i) v))⁻¹ := by
+theorem nodal_weight_eq_eval_nodal_erase_inv :
+    nodalWeight s v i = (eval (v i) (nodal (s.erase i) v))⁻¹ := by
   rw [eval_nodal, nodal_weight, prod_inv_distrib]
 #align lagrange.nodal_weight_eq_eval_nodal_erase_inv Lagrange.nodal_weight_eq_eval_nodal_erase_inv
 
-theorem nodal_weight_eq_eval_nodal_derative (hi : i ∈ s) : nodalWeight s v i = (eval (v i) (nodal s v).derivative)⁻¹ :=
-  by rw [eval_nodal_derivative_eval_node_eq hi, nodal_weight_eq_eval_nodal_erase_inv]
+theorem nodal_weight_eq_eval_nodal_derative (hi : i ∈ s) :
+    nodalWeight s v i = (eval (v i) (nodal s v).derivative)⁻¹ := by
+  rw [eval_nodal_derivative_eval_node_eq hi, nodal_weight_eq_eval_nodal_erase_inv]
 #align lagrange.nodal_weight_eq_eval_nodal_derative Lagrange.nodal_weight_eq_eval_nodal_derative
 
 theorem nodal_weight_ne_zero (hvs : Set.InjOn v s) (hi : i ∈ s) : nodalWeight s v i ≠ 0 := by
@@ -552,15 +586,15 @@ theorem nodal_weight_ne_zero (hvs : Set.InjOn v s) (hi : i ∈ s) : nodalWeight 
 
 theorem basis_eq_prod_sub_inv_mul_nodal_div (hi : i ∈ s) :
     Lagrange.basis s v i = c (nodalWeight s v i) * (nodal s v / (X - c (v i))) := by
-  simp_rw [Lagrange.basis, basis_divisor, nodal_weight, prod_mul_distrib, map_prod, ← nodal_erase_eq_nodal_div hi,
-    nodal]
+  simp_rw [Lagrange.basis, basis_divisor, nodal_weight, prod_mul_distrib, map_prod, ←
+    nodal_erase_eq_nodal_div hi, nodal]
 #align lagrange.basis_eq_prod_sub_inv_mul_nodal_div Lagrange.basis_eq_prod_sub_inv_mul_nodal_div
 
 theorem eval_basis_not_at_node (hi : i ∈ s) (hxi : x ≠ v i) :
     eval x (Lagrange.basis s v i) = eval x (nodal s v) * (nodalWeight s v i * (x - v i)⁻¹) := by
-  rw [mul_comm, basis_eq_prod_sub_inv_mul_nodal_div hi, eval_mul, eval_C, ← nodal_erase_eq_nodal_div hi, eval_nodal,
-    eval_nodal, mul_assoc, ← mul_prod_erase _ _ hi, ← mul_assoc (x - v i)⁻¹, inv_mul_cancel (sub_ne_zero_of_ne hxi),
-    one_mul]
+  rw [mul_comm, basis_eq_prod_sub_inv_mul_nodal_div hi, eval_mul, eval_C, ←
+    nodal_erase_eq_nodal_div hi, eval_nodal, eval_nodal, mul_assoc, ← mul_prod_erase _ _ hi, ←
+    mul_assoc (x - v i)⁻¹, inv_mul_cancel (sub_ne_zero_of_ne hxi), one_mul]
 #align lagrange.eval_basis_not_at_node Lagrange.eval_basis_not_at_node
 
 theorem interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C :
@@ -571,22 +605,27 @@ theorem interpolate_eq_nodal_weight_mul_nodal_div_X_sub_C :
 
 /-- This is the first barycentric form of the Lagrange interpolant. -/
 theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
-    eval x (interpolate s v r) = eval x (nodal s v) * ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ * r i := by
+    eval x (interpolate s v r) =
+      eval x (nodal s v) * ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ * r i :=
+  by
   simp_rw [interpolate_apply, mul_sum, eval_finset_sum, eval_mul, eval_C]
   refine' sum_congr rfl fun i hi => _
   rw [← mul_assoc, mul_comm, eval_basis_not_at_node hi (hx _ hi)]
 #align lagrange.eval_interpolate_not_at_node Lagrange.eval_interpolate_not_at_node
 
-theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i) (hs : s.Nonempty) :
-    (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
+theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i)
+    (hs : s.Nonempty) : (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
   @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ <| by
-    simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_one] using (eval_interpolate_not_at_node 1 hx).symm
+    simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_one] using
+      (eval_interpolate_not_at_node 1 hx).symm
 #align lagrange.sum_nodal_weight_mul_inv_sub_ne_zero Lagrange.sum_nodal_weight_mul_inv_sub_ne_zero
 
 /-- This is the second barycentric form of the Lagrange interpolant. -/
-theorem eval_interpolate_not_at_node' (hvs : Set.InjOn v s) (hs : s.Nonempty) (hx : ∀ i ∈ s, x ≠ v i) :
+theorem eval_interpolate_not_at_node' (hvs : Set.InjOn v s) (hs : s.Nonempty)
+    (hx : ∀ i ∈ s, x ≠ v i) :
     eval x (interpolate s v r) =
-      (∑ i in s, nodalWeight s v i * (x - v i)⁻¹ * r i) / ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ :=
+      (∑ i in s, nodalWeight s v i * (x - v i)⁻¹ * r i) /
+        ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ :=
   by
   rw [← div_one (eval x (interpolate s v r)), ← @eval_one _ _ x, ← interpolate_one hvs hs,
     eval_interpolate_not_at_node r hx, eval_interpolate_not_at_node 1 hx]

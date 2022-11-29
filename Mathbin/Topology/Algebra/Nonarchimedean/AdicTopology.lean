@@ -85,7 +85,8 @@ theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
 
 /-- For the `I`-adic topology, the neighborhoods of zero has basis given by the powers of `I`. -/
 theorem has_basis_nhds_zero_adic (I : Ideal R) :
-    HasBasis (@nhds R I.adicTopology (0 : R)) (fun n : ℕ => True) fun n => ((I ^ n : Ideal R) : Set R) :=
+    HasBasis (@nhds R I.adicTopology (0 : R)) (fun n : ℕ => True) fun n =>
+      ((I ^ n : Ideal R) : Set R) :=
   ⟨by
     intro U
     rw [I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
@@ -100,7 +101,9 @@ theorem has_basis_nhds_zero_adic (I : Ideal R) :
 #align ideal.has_basis_nhds_zero_adic Ideal.has_basis_nhds_zero_adic
 
 theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
-    HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n => (fun y => x + y) '' (I ^ n : Ideal R) := by
+    HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n =>
+      (fun y => x + y) '' (I ^ n : Ideal R) :=
+  by
   letI := I.adic_topology
   have := I.has_basis_nhds_zero_adic.map fun y => x + y
   rwa [map_add_left_nhds_zero x] at this
@@ -108,11 +111,13 @@ theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
 
 variable (I : Ideal R) (M : Type _) [AddCommGroup M] [Module R M]
 
-theorem adic_module_basis : I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
+theorem adic_module_basis :
+    I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
       ⟨max i j,
         le_inf_iff.mpr
-          ⟨smul_mono_left <| pow_le_pow (le_max_left i j), smul_mono_left <| pow_le_pow (le_max_right i j)⟩⟩,
+          ⟨smul_mono_left <| pow_le_pow (le_max_left i j),
+            smul_mono_left <| pow_le_pow (le_max_right i j)⟩⟩,
     smul := fun m i =>
       ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩, fun a a_in => by
         replace a_in : a ∈ I ^ i := by simpa [(I ^ i).mul_top] using a_in
@@ -150,7 +155,8 @@ def IsAdic [H : TopologicalSpace R] (J : Ideal R) : Prop :=
 open neighborhoods of zero. -/
 theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} :
     IsAdic J ↔
-      (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧ ∀ s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
+      (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧
+        ∀ s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s :=
   by
   constructor
   · intro H
@@ -265,8 +271,8 @@ example : NonarchimedeanRing R := by infer_instance
 
 example : TopologicalRing (UniformSpace.Completion R) := by infer_instance
 
-example (M : Type _) [AddCommGroup M] [Module R M] : @TopologicalAddGroup M (WithIdeal.topologicalSpaceModule R M) _ :=
-  by infer_instance
+example (M : Type _) [AddCommGroup M] [Module R M] :
+    @TopologicalAddGroup M (WithIdeal.topologicalSpaceModule R M) _ := by infer_instance
 
 example (M : Type _) [AddCommGroup M] [Module R M] :
     @HasContinuousSmul R M _ _ (WithIdeal.topologicalSpaceModule R M) := by infer_instance

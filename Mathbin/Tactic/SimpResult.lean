@@ -82,8 +82,9 @@ intercepts any results it assigns to the goals,
 and runs `dsimp` on those results
 before assigning the simplified values to the original goals.
 -/
-unsafe def dsimp_result {α} (t : tactic α) (cfg : DsimpConfig := { failIfUnchanged := false }) (no_defaults := false)
-    (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic α :=
+unsafe def dsimp_result {α} (t : tactic α) (cfg : DsimpConfig := { failIfUnchanged := false })
+    (no_defaults := false) (attr_names : List Name := []) (hs : List simp_arg_type := []) :
+    tactic α :=
   intercept_result (fun g => g.dsimp cfg no_defaults attr_names hs) t
 #align tactic.dsimp_result tactic.dsimp_result
 
@@ -111,8 +112,8 @@ before assigning the simplified values to the original goals.
 You can use the usual interactive syntax for `dsimp`, e.g.
 `dsimp_result only [a, b, c] with attr { tac }`.
 -/
-unsafe def dsimp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
-    (t : itactic) : itactic :=
+unsafe def dsimp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (t : itactic) : itactic :=
   tactic.dsimp_result t { failIfUnchanged := false } no_defaults attr_names hs
 #align tactic.interactive.dsimp_result tactic.interactive.dsimp_result
 
@@ -125,8 +126,8 @@ before assigning the simplified values to the original goals.
 You can use the usual interactive syntax for `simp`, e.g.
 `simp_result only [a, b, c] with attr { tac }`.
 -/
-unsafe def simp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
-    (t : itactic) : itactic :=
+unsafe def simp_result (no_defaults : parse only_flag) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (t : itactic) : itactic :=
   tactic.simp_result t { failIfUnchanged := false } failed no_defaults attr_names hs
 #align tactic.interactive.simp_result tactic.interactive.simp_result
 
@@ -143,8 +144,8 @@ You can use the usual interactive syntax for `simp`, e.g.
 (and so only simplifiying along definitional lemmas).
 -/
 add_tactic_doc
-  { Name := "simp_result", category := DocCategory.tactic, declNames := [`` simp_result, `` dsimp_result],
-    tags := ["simplification"] }
+  { Name := "simp_result", category := DocCategory.tactic,
+    declNames := [`` simp_result, `` dsimp_result], tags := ["simplification"] }
 
 end Interactive
 

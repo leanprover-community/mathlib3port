@@ -42,7 +42,8 @@ theorem all_iff_forall {p : α → Bool} : all l p ↔ ∀ a ∈ l, p a := by
   simp only [all_cons, Bool.and_coe_iff, ih, forall_mem_cons]
 #align list.all_iff_forall List.all_iff_forall
 
-theorem all_iff_forall_prop : (all l fun a => p a) ↔ ∀ a ∈ l, p a := by simp only [all_iff_forall, Bool.of_decide_iff]
+theorem all_iff_forall_prop : (all l fun a => p a) ↔ ∀ a ∈ l, p a := by
+  simp only [all_iff_forall, Bool.of_decide_iff]
 #align list.all_iff_forall_prop List.all_iff_forall_prop
 
 #print List.any_nil /-

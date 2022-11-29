@@ -60,9 +60,10 @@ satisfy the ring axioms.
 
 include hp
 
-private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
-  by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zero, one_mul, tsub_zero]
+private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
+    ghostComponent n (teichmullerFun p r) = r ^ p ^ n := by
+  rw [ghost_component_apply, aeval_witt_polynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
+    tsub_zero]
   · rfl
     
   · intro i hi h0
@@ -83,7 +84,8 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) : ghostCompone
     
 #align witt_vector.ghost_component_teichmuller_fun witt_vector.ghost_component_teichmuller_fun
 
-private theorem map_teichmuller_fun (f : R →+* S) (r : R) : map f (teichmullerFun p r) = teichmullerFun p (f r) := by
+private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
+    map f (teichmullerFun p r) = teichmullerFun p (f r) := by
   ext n
   cases n
   · rfl
@@ -102,7 +104,9 @@ private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by
-  refine' map_injective (MvPolynomial.map (Int.castRingHom ℚ)) (MvPolynomial.map_injective _ Int.cast_injective) _
+  refine'
+    map_injective (MvPolynomial.map (Int.castRingHom ℚ))
+      (MvPolynomial.map_injective _ Int.cast_injective) _
   simp only [teichmuller_mul_aux₁, map_teichmuller_fun, RingHom.map_mul]
 #align witt_vector.teichmuller_mul_aux₂ witt_vector.teichmuller_mul_aux₂
 
@@ -152,7 +156,8 @@ theorem map_teichmuller (f : R →+* S) (r : R) : map f (teichmuller p r) = teic
 
 /-- The `n`-th ghost component of `teichmuller p r` is `r ^ p ^ n`. -/
 @[simp]
-theorem ghost_component_teichmuller (r : R) (n : ℕ) : ghostComponent n (teichmuller p r) = r ^ p ^ n :=
+theorem ghost_component_teichmuller (r : R) (n : ℕ) :
+    ghostComponent n (teichmuller p r) = r ^ p ^ n :=
   ghost_component_teichmuller_fun _ _ _
 #align witt_vector.ghost_component_teichmuller WittVector.ghost_component_teichmuller
 

@@ -51,10 +51,12 @@ theorem inv_units_sub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R 
 #align power_series.inv_units_sub_mul_X PowerSeries.inv_units_sub_mul_X
 
 @[simp]
-theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by simp [mul_sub, sub_sub_cancel]
+theorem inv_units_sub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
+  simp [mul_sub, sub_sub_cancel]
 #align power_series.inv_units_sub_mul_sub PowerSeries.inv_units_sub_mul_sub
 
-theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) : map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) := by
+theorem map_inv_units_sub (f : R →+* S) (u : Rˣ) :
+    map f (invUnitsSub u) = invUnitsSub (Units.map (f : R →* S) u) := by
   ext
   simp [← map_pow]
 #align power_series.map_inv_units_sub PowerSeries.map_inv_units_sub
@@ -101,18 +103,19 @@ theorem coeff_sin_bit0 : coeff A (bit0 n) (sin A) = 0 := by rw [sin, coeff_mk, i
 
 @[simp]
 theorem coeff_sin_bit1 : coeff A (bit1 n) (sin A) = (-1) ^ n * coeff A (bit1 n) (exp A) := by
-  rw [sin, coeff_mk, if_neg n.not_even_bit1, Nat.bit1_div_two, ← mul_one_div, map_mul, map_pow, map_neg, map_one,
-    coeff_exp]
+  rw [sin, coeff_mk, if_neg n.not_even_bit1, Nat.bit1_div_two, ← mul_one_div, map_mul, map_pow,
+    map_neg, map_one, coeff_exp]
 #align power_series.coeff_sin_bit1 PowerSeries.coeff_sin_bit1
 
 @[simp]
 theorem coeff_cos_bit0 : coeff A (bit0 n) (cos A) = (-1) ^ n * coeff A (bit0 n) (exp A) := by
-  rw [cos, coeff_mk, if_pos (even_bit0 n), Nat.bit0_div_two, ← mul_one_div, map_mul, map_pow, map_neg, map_one,
-    coeff_exp]
+  rw [cos, coeff_mk, if_pos (even_bit0 n), Nat.bit0_div_two, ← mul_one_div, map_mul, map_pow,
+    map_neg, map_one, coeff_exp]
 #align power_series.coeff_cos_bit0 PowerSeries.coeff_cos_bit0
 
 @[simp]
-theorem coeff_cos_bit1 : coeff A (bit1 n) (cos A) = 0 := by rw [cos, coeff_mk, if_neg n.not_even_bit1]
+theorem coeff_cos_bit1 : coeff A (bit1 n) (cos A) = 0 := by
+  rw [cos, coeff_mk, if_neg n.not_even_bit1]
 #align power_series.coeff_cos_bit1 PowerSeries.coeff_cos_bit1
 
 @[simp]
@@ -145,12 +148,13 @@ variable {A : Type _} [CommRing A]
 theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
     rescale a (exp A) * rescale b (exp A) = rescale (a + b) (exp A) := by
   ext
-  simp only [coeff_mul, exp, rescale, coeff_mk, coe_mk, factorial, nat.sum_antidiagonal_eq_sum_range_succ_mk, add_pow,
-    sum_mul]
+  simp only [coeff_mul, exp, rescale, coeff_mk, coe_mk, factorial,
+    nat.sum_antidiagonal_eq_sum_range_succ_mk, add_pow, sum_mul]
   apply sum_congr rfl
   rintro x hx
   suffices
-    a ^ x * b ^ (n - x) * (algebraMap ℚ A (1 / ↑x.factorial) * algebraMap ℚ A (1 / ↑(n - x).factorial)) =
+    a ^ x * b ^ (n - x) *
+        (algebraMap ℚ A (1 / ↑x.factorial) * algebraMap ℚ A (1 / ↑(n - x).factorial)) =
       a ^ x * b ^ (n - x) * (↑(n.choose x) * (algebraMap ℚ A) (1 / ↑n.factorial))
     by convert this using 1 <;> ring
   congr 1
@@ -179,10 +183,11 @@ theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 
 /-- Shows that $(e^{X})^k = e^{kX}$. -/
 theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (k : A) (exp A) := by
   induction' k with k h
-  · simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero, coe_comp]
+  · simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
+      coe_comp]
     
-  simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply, rescale_one] using
-    pow_succ' (exp A) k
+  simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply,
+    rescale_one] using pow_succ' (exp A) k
 #align power_series.exp_pow_eq_rescale_exp PowerSeries.exp_pow_eq_rescale_exp
 
 /-- Shows that

@@ -37,7 +37,8 @@ structure IsSpectralMap (f : α → β) extends Continuous f : Prop where
   is_compact_preimage_of_is_open ⦃s : Set β⦄ : IsOpen s → IsCompact s → IsCompact (f ⁻¹' s)
 #align is_spectral_map IsSpectralMap
 
-theorem IsCompact.preimage_of_is_open (hf : IsSpectralMap f) (h₀ : IsCompact s) (h₁ : IsOpen s) : IsCompact (f ⁻¹' s) :=
+theorem IsCompact.preimage_of_is_open (hf : IsSpectralMap f) (h₀ : IsCompact s) (h₁ : IsOpen s) :
+    IsCompact (f ⁻¹' s) :=
   hf.is_compact_preimage_of_is_open h₁ h₀
 #align is_compact.preimage_of_is_open IsCompact.preimage_of_is_open
 
@@ -68,8 +69,8 @@ section
 /-- `spectral_map_class F α β` states that `F` is a type of spectral maps.
 
 You should extend this class when you extend `spectral_map`. -/
-class SpectralMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
-  FunLike F α fun _ => β where
+class SpectralMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
+  [TopologicalSpace β] extends FunLike F α fun _ => β where
   map_spectral (f : F) : IsSpectralMap f
 #align spectral_map_class SpectralMapClass
 
@@ -80,12 +81,13 @@ export SpectralMapClass (map_spectral)
 attribute [simp] map_spectral
 
 -- See note [lower instance priority]
-instance (priority := 100) SpectralMapClass.toContinuousMapClass [TopologicalSpace α] [TopologicalSpace β]
-    [SpectralMapClass F α β] : ContinuousMapClass F α β :=
+instance (priority := 100) SpectralMapClass.toContinuousMapClass [TopologicalSpace α]
+    [TopologicalSpace β] [SpectralMapClass F α β] : ContinuousMapClass F α β :=
   { ‹SpectralMapClass F α β› with map_continuous := fun f => (map_spectral f).Continuous }
 #align spectral_map_class.to_continuous_map_class SpectralMapClass.toContinuousMapClass
 
-instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] : CoeTC F (SpectralMap α β) :=
+instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] :
+    CoeTC F (SpectralMap α β) :=
   ⟨fun f => ⟨_, map_spectral f⟩⟩
 
 /-! ### Spectral maps -/

@@ -202,7 +202,8 @@ theorem IsField.nontrivial {R : Type u} [Semiring R] (h : IsField R) : Nontrivia
 #align is_field.nontrivial IsField.nontrivial
 
 @[simp]
-theorem not_is_field_of_subsingleton (R : Type u) [Semiring R] [Subsingleton R] : ¬IsField R := fun h =>
+theorem not_is_field_of_subsingleton (R : Type u) [Semiring R] [Subsingleton R] : ¬IsField R :=
+  fun h =>
   let ⟨x, y, h⟩ := h.exists_pair_ne
   h (Subsingleton.elim _ _)
 #align not_is_field_of_subsingleton not_is_field_of_subsingleton
@@ -211,7 +212,8 @@ open Classical
 
 /-- Transferring from `is_field` to `semifield`. -/
 noncomputable def IsField.toSemifield {R : Type u} [Semiring R] (h : IsField R) : Semifield R :=
-  { ‹Semiring R›, h with inv := fun a => if ha : a = 0 then 0 else Classical.choose (IsField.mul_inv_cancel h ha),
+  { ‹Semiring R›, h with
+    inv := fun a => if ha : a = 0 then 0 else Classical.choose (IsField.mul_inv_cancel h ha),
     inv_zero := dif_pos rfl,
     mul_inv_cancel := fun a ha => by
       convert Classical.choose_spec (IsField.mul_inv_cancel h ha)
@@ -227,7 +229,8 @@ noncomputable def IsField.toField {R : Type u} [Ring R] (h : IsField R) : Field 
 Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.
 -/
-theorem uniq_inv_of_is_field (R : Type u) [Ring R] (hf : IsField R) : ∀ x : R, x ≠ 0 → ∃! y : R, x * y = 1 := by
+theorem uniq_inv_of_is_field (R : Type u) [Ring R] (hf : IsField R) :
+    ∀ x : R, x ≠ 0 → ∃! y : R, x * y = 1 := by
   intro x hx
   apply exists_unique_of_exists_of_unique
   · exact hf.mul_inv_cancel hx

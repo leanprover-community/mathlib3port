@@ -83,7 +83,8 @@ noncomputable def IsTensorProduct.equiv (h : IsTensorProduct f) : M₁ ⊗[R] M�
 #align is_tensor_product.equiv IsTensorProduct.equiv
 
 @[simp]
-theorem IsTensorProduct.equiv_to_linear_map (h : IsTensorProduct f) : h.Equiv.toLinearMap = TensorProduct.lift f :=
+theorem IsTensorProduct.equiv_to_linear_map (h : IsTensorProduct f) :
+    h.Equiv.toLinearMap = TensorProduct.lift f :=
   rfl
 #align is_tensor_product.equiv_to_linear_map IsTensorProduct.equiv_to_linear_map
 
@@ -97,24 +98,25 @@ theorem IsTensorProduct.equiv_symm_apply (h : IsTensorProduct f) (x₁ : M₁) (
 
 /-- If `M` is the tensor product of `M₁` and `M₂`, we may lift a bilinear map `M₁ →ₗ[R] M₂ →ₗ[R] M'`
 to a `M →ₗ[R] M'`. -/
-noncomputable def IsTensorProduct.lift (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') : M →ₗ[R] M' :=
+noncomputable def IsTensorProduct.lift (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') :
+    M →ₗ[R] M' :=
   (TensorProduct.lift f').comp h.Equiv.symm.toLinearMap
 #align is_tensor_product.lift IsTensorProduct.lift
 
-theorem IsTensorProduct.lift_eq (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') (x₁ : M₁) (x₂ : M₂) :
-    h.lift f' (f x₁ x₂) = f' x₁ x₂ := by
+theorem IsTensorProduct.lift_eq (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') (x₁ : M₁)
+    (x₂ : M₂) : h.lift f' (f x₁ x₂) = f' x₁ x₂ := by
   delta IsTensorProduct.lift
   simp
 #align is_tensor_product.lift_eq IsTensorProduct.lift_eq
 
 /-- The tensor product of a pair of linear maps between modules. -/
-noncomputable def IsTensorProduct.map (hf : IsTensorProduct f) (hg : IsTensorProduct g) (i₁ : M₁ →ₗ[R] N₁)
-    (i₂ : M₂ →ₗ[R] N₂) : M →ₗ[R] N :=
+noncomputable def IsTensorProduct.map (hf : IsTensorProduct f) (hg : IsTensorProduct g)
+    (i₁ : M₁ →ₗ[R] N₁) (i₂ : M₂ →ₗ[R] N₂) : M →ₗ[R] N :=
   hg.Equiv.toLinearMap.comp ((TensorProduct.map i₁ i₂).comp hf.Equiv.symm.toLinearMap)
 #align is_tensor_product.map IsTensorProduct.map
 
-theorem IsTensorProduct.map_eq (hf : IsTensorProduct f) (hg : IsTensorProduct g) (i₁ : M₁ →ₗ[R] N₁) (i₂ : M₂ →ₗ[R] N₂)
-    (x₁ : M₁) (x₂ : M₂) : hf.map hg i₁ i₂ (f x₁ x₂) = g (i₁ x₁) (i₂ x₂) := by
+theorem IsTensorProduct.map_eq (hf : IsTensorProduct f) (hg : IsTensorProduct g) (i₁ : M₁ →ₗ[R] N₁)
+    (i₂ : M₂ →ₗ[R] N₂) (x₁ : M₁) (x₂ : M₂) : hf.map hg i₁ i₂ (f x₁ x₂) = g (i₁ x₁) (i₂ x₂) := by
   delta IsTensorProduct.map
   simp
 #align is_tensor_product.map_eq IsTensorProduct.map_eq
@@ -153,7 +155,8 @@ include f
 `f : M →ₗ[R] N` is the base change of `M` to `S` if the map `S × M → N, (s, m) ↦ s • f m` is the
 tensor product. -/
 def IsBaseChange : Prop :=
-  IsTensorProduct (((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] N)).toLinearMap.flip f).restrictScalars R)
+  IsTensorProduct
+    (((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] N)).toLinearMap.flip f).restrictScalars R)
 #align is_base_change IsBaseChange
 
 variable {S f} (h : IsBaseChange S f)
@@ -169,9 +172,11 @@ variable [Module R Q] [IsScalarTower R S Q]
 /-- Suppose `f : M →ₗ[R] N` is the base change of `M` along `R → S`. Then any `R`-linear map from
 `M` to an `S`-module factors thorugh `f`. -/
 noncomputable def IsBaseChange.lift (g : M →ₗ[R] Q) : N →ₗ[S] Q :=
-  { h.lift (((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R) with
+  { h.lift
+      (((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R) with
     map_smul' := fun r x => by
-      let F := ((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R
+      let F :=
+        ((Algebra.ofId S <| Module.EndCat S (M →ₗ[R] Q)).toLinearMap.flip g).restrictScalars R
       have hF : ∀ (s : S) (m : M), h.lift F (s • f m) = s • g m := h.lift_eq F
       change h.lift F (r • x) = r • h.lift F x
       apply h.induction_on x
@@ -260,11 +265,13 @@ theorem IsBaseChange.of_lift_unique
     (h :
       ∀ (Q : Type max v₁ v₂ v₃) [AddCommMonoid Q],
         ∀ [Module R Q] [Module S Q],
-          ∀ [IsScalarTower R S Q], ∀ g : M →ₗ[R] Q, ∃! g' : N →ₗ[S] Q, (g'.restrictScalars R).comp f = g) :
+          ∀ [IsScalarTower R S Q],
+            ∀ g : M →ₗ[R] Q, ∃! g' : N →ₗ[S] Q, (g'.restrictScalars R).comp f = g) :
     IsBaseChange S f := by
   delta IsBaseChange IsTensorProduct
   obtain ⟨g, hg, hg'⟩ :=
-    h (ULift.{v₂} <| S ⊗[R] M) (ulift.module_equiv.symm.to_linear_map.comp <| TensorProduct.mk R S M 1)
+    h (ULift.{v₂} <| S ⊗[R] M)
+      (ulift.module_equiv.symm.to_linear_map.comp <| TensorProduct.mk R S M 1)
   let f' : S ⊗[R] M →ₗ[R] N := _
   change Function.Bijective f'
   let f'' : S ⊗[R] M →ₗ[S] N := by
@@ -273,9 +280,10 @@ theorem IsBaseChange.of_lift_unique
     · simp only [map_zero, smul_zero, LinearMap.to_fun_eq_coe]
       
     · intro x y
-      simp only [Algebra.of_id_apply, Algebra.id.smul_eq_mul, AlgHom.to_linear_map_apply, LinearMap.mul_apply,
-        TensorProduct.lift.tmul', LinearMap.smul_apply, RingHom.id_apply, Module.algebra_map_End_apply, f',
-        _root_.map_mul, TensorProduct.smul_tmul', LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply]
+      simp only [Algebra.of_id_apply, Algebra.id.smul_eq_mul, AlgHom.to_linear_map_apply,
+        LinearMap.mul_apply, TensorProduct.lift.tmul', LinearMap.smul_apply, RingHom.id_apply,
+        Module.algebra_map_End_apply, f', _root_.map_mul, TensorProduct.smul_tmul',
+        LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply]
       
     · intro x y hx hy
       dsimp at hx hy⊢
@@ -289,13 +297,16 @@ theorem IsBaseChange.of_lift_unique
     · simp only [map_zero]
       
     · intro x y
-      have := (congr_arg (fun a => x • a) (LinearMap.congr_fun hg y)).trans (ulift.module_equiv.symm.map_smul x _).symm
-      apply (ULift.moduleEquiv : ULift.{v₂} (S ⊗ M) ≃ₗ[S] S ⊗ M).toEquiv.apply_eq_iff_eq_symm_apply.mpr
+      have :=
+        (congr_arg (fun a => x • a) (LinearMap.congr_fun hg y)).trans
+          (ulift.module_equiv.symm.map_smul x _).symm
+      apply
+        (ULift.moduleEquiv : ULift.{v₂} (S ⊗ M) ≃ₗ[S] S ⊗ M).toEquiv.apply_eq_iff_eq_symm_apply.mpr
       any_goals infer_instance
       simpa only [Algebra.of_id_apply, smul_tmul', Algebra.id.smul_eq_mul, lift.tmul',
         LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
-        Module.algebra_map_End_apply, LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.map_smulₛₗ, mk_apply,
-        mul_one] using this
+        Module.algebra_map_End_apply, LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.map_smulₛₗ,
+        mk_apply, mul_one] using this
       
     · intro x y hx hy
       simp only [map_add, hx, hy]
@@ -316,8 +327,8 @@ theorem IsBaseChange.of_lift_unique
     have := LinearMap.congr_fun hg y
     dsimp [ULift.moduleEquiv] at this⊢
     rw [this]
-    simp only [lift.tmul, LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply, AlgHom.to_linear_map_apply,
-      _root_.map_one, LinearMap.one_apply]
+    simp only [lift.tmul, LinearMap.coe_restrict_scalars_eq_coe, LinearMap.flip_apply,
+      AlgHom.to_linear_map_apply, _root_.map_one, LinearMap.one_apply]
     
 #align is_base_change.of_lift_unique IsBaseChange.of_lift_unique
 
@@ -327,7 +338,8 @@ theorem IsBaseChange.iff_lift_unique :
     IsBaseChange S f ↔
       ∀ (Q : Type max v₁ v₂ v₃) [AddCommMonoid Q],
         ∀ [Module R Q] [Module S Q],
-          ∀ [IsScalarTower R S Q], ∀ g : M →ₗ[R] Q, ∃! g' : N →ₗ[S] Q, (g'.restrictScalars R).comp f = g :=
+          ∀ [IsScalarTower R S Q],
+            ∀ g : M →ₗ[R] Q, ∃! g' : N →ₗ[S] Q, (g'.restrictScalars R).comp f = g :=
   ⟨fun h => by
     intros
     exact ⟨h.lift g, h.lift_comp g, fun g' e => h.alg_hom_ext' _ _ (e.trans (h.lift_comp g).symm)⟩,
@@ -356,8 +368,8 @@ variable [AddCommMonoid O] [Module R O] [Module S O] [Module T O] [IsScalarTower
 
 variable [IsScalarTower R S O] [IsScalarTower R T O]
 
-theorem IsBaseChange.comp {f : M →ₗ[R] N} (hf : IsBaseChange S f) {g : N →ₗ[S] O} (hg : IsBaseChange T g) :
-    IsBaseChange T ((g.restrictScalars R).comp f) := by
+theorem IsBaseChange.comp {f : M →ₗ[R] N} (hf : IsBaseChange S f) {g : N →ₗ[S] O}
+    (hg : IsBaseChange T g) : IsBaseChange T ((g.restrictScalars R).comp f) := by
   apply IsBaseChange.of_lift_unique
   intro Q _ _ _ _ i
   letI := Module.compHom Q (algebraMap S T)
@@ -409,7 +421,8 @@ theorem Algebra.IsPushout.symm (h : Algebra.IsPushout R S R' S') : Algebra.IsPus
   let e : R' ⊗[R] S ≃ₗ[R'] S' := by
     refine' { (TensorProduct.comm R R' S).trans <| h.1.Equiv.restrictScalars R with map_smul' := _ }
     intro r x
-    change h.1.Equiv (TensorProduct.comm R R' S (r • x)) = r • h.1.Equiv (TensorProduct.comm R R' S x)
+    change
+      h.1.Equiv (TensorProduct.comm R R' S (r • x)) = r • h.1.Equiv (TensorProduct.comm R R' S x)
     apply TensorProduct.induction_on x
     · simp only [smul_zero, map_zero]
       
@@ -420,7 +433,10 @@ theorem Algebra.IsPushout.symm (h : Algebra.IsPushout R S R' S') : Algebra.IsPus
     · intro x y hx hy
       simp only [map_add, smul_add, hx, hy]
       
-  have : (to_alg_hom R S S').toLinearMap = (e.to_linear_map.restrict_scalars R).comp (TensorProduct.mk R R' S 1) := by
+  have :
+    (to_alg_hom R S S').toLinearMap =
+      (e.to_linear_map.restrict_scalars R).comp (TensorProduct.mk R R' S 1) :=
+    by
     ext
     simp [e, h.1.equiv_tmul, Algebra.smul_def]
   constructor
@@ -440,11 +456,13 @@ variable {R S R'}
 such that `f x` and `g y` commutes for all `x, y` descends to a (unique) homomoprhism `S' → A`.
 -/
 @[simps (config := lemmasOnly) apply]
-noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A] [Algebra R A]
-    (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (hf : ∀ x y, f x * g y = g y * f x) : S' →ₐ[R] A := by
+noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
+    [Algebra R A] (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (hf : ∀ x y, f x * g y = g y * f x) :
+    S' →ₐ[R] A := by
   letI := Module.compHom A f.to_ring_hom
   haveI : IsScalarTower R S A :=
-    { smul_assoc := fun r s a => show f (r • s) * a = r • (f s * a) by rw [f.map_smul, smul_mul_assoc] }
+    { smul_assoc := fun r s a =>
+        show f (r • s) * a = r • (f s * a) by rw [f.map_smul, smul_mul_assoc] }
   haveI : IsScalarTower S A A := { smul_assoc := fun r a b => mul_assoc _ _ _ }
   have : ∀ x, H.out.lift g.to_linear_map (algebraMap R' S' x) = g x := H.out.lift_eq _
   refine' AlgHom.ofLinearMap ((H.out.lift g.to_linear_map).restrictScalars R) _ _
@@ -486,32 +504,36 @@ noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Typ
 #align algebra.pushout_desc Algebra.pushoutDesc
 
 @[simp]
-theorem Algebra.pushout_desc_left [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A] [Algebra R A]
-    (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) (x : S) : Algebra.pushoutDesc S' f g H (algebraMap S S' x) = f x := by
+theorem Algebra.pushout_desc_left [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
+    [Algebra R A] (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) (x : S) :
+    Algebra.pushoutDesc S' f g H (algebraMap S S' x) = f x := by
   rw [Algebra.pushout_desc_apply, Algebra.algebra_map_eq_smul_one, LinearMap.map_smul, ←
     Algebra.pushout_desc_apply S' f g H, _root_.map_one]
   exact mul_one (f x)
 #align algebra.pushout_desc_left Algebra.pushout_desc_left
 
-theorem Algebra.lift_alg_hom_comp_left [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A] [Algebra R A]
-    (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) : (Algebra.pushoutDesc S' f g H).comp (toAlgHom R S S') = f :=
+theorem Algebra.lift_alg_hom_comp_left [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
+    [Algebra R A] (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) :
+    (Algebra.pushoutDesc S' f g H).comp (toAlgHom R S S') = f :=
   AlgHom.ext fun x => (Algebra.pushout_desc_left S' f g H x : _)
 #align algebra.lift_alg_hom_comp_left Algebra.lift_alg_hom_comp_left
 
 @[simp]
-theorem Algebra.pushout_desc_right [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A] [Algebra R A]
-    (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) (x : R') : Algebra.pushoutDesc S' f g H (algebraMap R' S' x) = g x := by
+theorem Algebra.pushout_desc_right [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
+    [Algebra R A] (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) (x : R') :
+    Algebra.pushoutDesc S' f g H (algebraMap R' S' x) = g x := by
   apply (config := { instances := false }) @IsBaseChange.lift_eq
 #align algebra.pushout_desc_right Algebra.pushout_desc_right
 
-theorem Algebra.lift_alg_hom_comp_right [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A] [Algebra R A]
-    (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) : (Algebra.pushoutDesc S' f g H).comp (toAlgHom R R' S') = g :=
+theorem Algebra.lift_alg_hom_comp_right [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
+    [Algebra R A] (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) :
+    (Algebra.pushoutDesc S' f g H).comp (toAlgHom R R' S') = g :=
   AlgHom.ext fun x => (Algebra.pushout_desc_right S' f g H x : _)
 #align algebra.lift_alg_hom_comp_right Algebra.lift_alg_hom_comp_right
 
 @[ext.1]
-theorem Algebra.IsPushout.alg_hom_ext [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A] [Algebra R A]
-    {f g : S' →ₐ[R] A} (h₁ : f.comp (toAlgHom R R' S') = g.comp (toAlgHom R R' S'))
+theorem Algebra.IsPushout.alg_hom_ext [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
+    [Algebra R A] {f g : S' →ₐ[R] A} (h₁ : f.comp (toAlgHom R R' S') = g.comp (toAlgHom R R' S'))
     (h₂ : f.comp (toAlgHom R S S') = g.comp (toAlgHom R S S')) : f = g := by
   ext x
   apply H.1.induction_on x

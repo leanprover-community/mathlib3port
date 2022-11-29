@@ -162,7 +162,12 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
            [(«term_≤_» `I "≤" `J)
             ","
             («term_⊆_»
-             (Term.typeAscription "(" `I ":" [(Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))])] ")")
+             (Term.typeAscription
+              "("
+              `I
+              ":"
+              [(Term.app `Set [(Term.arrow `ι "→" (Data.Real.Basic.termℝ "ℝ"))])]
+              ")")
              "⊆"
              `J)
             ","
@@ -183,7 +188,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
         (Tactic.tacticSeq
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
-           []
+           ";"
            (Tactic.exact "exact" `Iff.rfl)
            []
            (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
@@ -212,11 +217,11 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "↔" (num "4"))
-           []
+           ";"
            (Tactic.exact "exact" (Term.app `Icc_subset_Icc_iff [`I.lower_le_upper]))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
-           []
+           ";"
            (Tactic.exact
             "exact"
             (Term.fun
@@ -243,7 +248,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
-          []
+          ";"
           (Tactic.exact "exact" `Iff.rfl)
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "3"))
@@ -272,11 +277,11 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "↔" (num "4"))
-          []
+          ";"
           (Tactic.exact "exact" (Term.app `Icc_subset_Icc_iff [`I.lower_le_upper]))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "2"))
-          []
+          ";"
           (Tactic.exact
            "exact"
            (Term.fun
@@ -336,11 +341,14 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hx [`i]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
@@ -350,15 +358,21 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `h "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app (Term.proj `h "." (fieldIdx "2")) [`i]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `h "." (fieldIdx "2")) [`i])
+     ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -367,43 +381,54 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `h "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app (Term.proj `h "." (fieldIdx "1")) [`i]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `h "." (fieldIdx "1")) [`i])
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Ioc_subset_Ioc
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -436,12 +461,15 @@ theorem
   :=
     by
       tfae_have 1 ↔ 2
+        ;
         exact Iff.rfl
         tfae_have 2 → 3
         · intro h simpa [ coe_eq_pi , closure_pi_set , lower_ne_upper ] using closure_mono h
         tfae_have 3 ↔ 4
+        ;
         exact Icc_subset_Icc_iff I.lower_le_upper
         tfae_have 4 → 2
+        ;
         exact fun h x hx i => Ioc_subset_Ioc h . 1 i h . 2 i hx i
         tfae_finish
 #align box_integral.box.le_tfae BoxIntegral.Box.le_tfae
@@ -534,10 +562,13 @@ instance : HasSup (Box ι) :=
       (min_le_left _ _).trans_lt <| (I.lower_lt_upper i).trans_le (le_max_left _ _)⟩⟩
 
 instance : SemilatticeSup (Box ι) :=
-  { Box.partialOrder, Box.hasSup with le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
+  { Box.partialOrder, Box.hasSup with
+    le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
     le_sup_right := fun I J => le_iff_bounds.2 ⟨inf_le_right, le_sup_right⟩,
     sup_le := fun I₁ I₂ J h₁ h₂ =>
-      le_iff_bounds.2 ⟨le_inf (antitone_lower h₁) (antitone_lower h₂), sup_le (monotone_upper h₁) (monotone_upper h₂)⟩ }
+      le_iff_bounds.2
+        ⟨le_inf (antitone_lower h₁) (antitone_lower h₂),
+          sup_le (monotone_upper h₁) (monotone_upper h₂)⟩ }
 
 /-!
 ### `with_bot (box ι)`
@@ -569,16 +600,17 @@ theorem is_some_iff : ∀ {I : WithBot (Box ι)}, I.isSome ↔ (I : Set (ι → 
     simp [I.nonempty_coe]
 #align box_integral.box.is_some_iff BoxIntegral.Box.is_some_iff
 
-theorem bUnion_coe_eq_coe (I : WithBot (Box ι)) : (⋃ (J : Box ι) (hJ : ↑J = I), (J : Set (ι → ℝ))) = I := by
+theorem bUnion_coe_eq_coe (I : WithBot (Box ι)) :
+    (⋃ (J : Box ι) (hJ : ↑J = I), (J : Set (ι → ℝ))) = I := by
   induction I using WithBot.recBotCoe <;> simp [WithBot.coe_eq_coe]
 #align box_integral.box.bUnion_coe_eq_coe BoxIntegral.Box.bUnion_coe_eq_coe
 
 @[simp, norm_cast]
 theorem with_bot_coe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J := by
-  induction I using WithBot.recBotCoe
+  induction I using WithBot.recBotCoe;
   · simp
     
-  induction J using WithBot.recBotCoe
+  induction J using WithBot.recBotCoe;
   · simp [subset_empty_iff]
     
   simp
@@ -604,9 +636,7 @@ theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i := 
 
 @[simp]
 theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.upper := by
-  cases' I with lI uI hI
-  rw [mk']
-  split_ifs
+  cases' I with lI uI hI; rw [mk']; split_ifs
   · simp [WithBot.coe_eq_coe]
     
   · suffices l = lI → u ≠ uI by simpa
@@ -617,8 +647,7 @@ theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.up
 
 @[simp]
 theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun i => ioc (l i) (u i) := by
-  rw [mk']
-  split_ifs
+  rw [mk']; split_ifs
   · exact coe_eq_pi _
     
   · rcases not_forall.mp h with ⟨i, hi⟩
@@ -634,16 +663,17 @@ instance : HasInf (WithBot (Box ι)) :=
 
 @[simp]
 theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I ∩ J := by
-  induction I using WithBot.recBotCoe
+  induction I using WithBot.recBotCoe;
   · change ∅ = _
     simp
     
-  induction J using WithBot.recBotCoe
+  induction J using WithBot.recBotCoe;
   · change ∅ = _
     simp
     
   change ↑(mk' _ _) = _
-  simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk', coe_coe]
+  simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk',
+    coe_coe]
 #align box_integral.box.coe_inf BoxIntegral.Box.coe_inf
 
 instance : Lattice (WithBot (Box ι)) :=
@@ -659,7 +689,8 @@ instance : Lattice (WithBot (Box ι)) :=
       exact subset_inter h₁ h₂ }
 
 @[simp, norm_cast]
-theorem disjoint_with_bot_coe {I J : WithBot (Box ι)} : Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J := by
+theorem disjoint_with_bot_coe {I J : WithBot (Box ι)} :
+    Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J := by
   simp only [disjoint_iff_inf_le, ← with_bot_coe_subset_iff, coe_inf]
   rfl
 #align box_integral.box.disjoint_with_bot_coe BoxIntegral.Box.disjoint_with_bot_coe
@@ -668,9 +699,11 @@ theorem disjoint_coe : Disjoint (I : WithBot (Box ι)) J ↔ Disjoint (I : Set (
   disjoint_with_bot_coe.symm
 #align box_integral.box.disjoint_coe BoxIntegral.Box.disjoint_coe
 
-theorem not_disjoint_coe_iff_nonempty_inter : ¬Disjoint (I : WithBot (Box ι)) J ↔ (I ∩ J : Set (ι → ℝ)).Nonempty := by
+theorem not_disjoint_coe_iff_nonempty_inter :
+    ¬Disjoint (I : WithBot (Box ι)) J ↔ (I ∩ J : Set (ι → ℝ)).Nonempty := by
   rw [disjoint_coe, Set.not_disjoint_iff_nonempty_inter]
-#align box_integral.box.not_disjoint_coe_iff_nonempty_inter BoxIntegral.Box.not_disjoint_coe_iff_nonempty_inter
+#align
+  box_integral.box.not_disjoint_coe_iff_nonempty_inter BoxIntegral.Box.not_disjoint_coe_iff_nonempty_inter
 
 /-!
 ### Hyperface of a box in `ℝⁿ⁺¹ = fin (n + 1) → ℝ`
@@ -691,27 +724,29 @@ theorem face_mk {n} (l u : Fin (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : Fin 
 #align box_integral.box.face_mk BoxIntegral.Box.face_mk
 
 @[mono]
-theorem face_mono {n} {I J : Box (Fin (n + 1))} (h : I ≤ J) (i : Fin (n + 1)) : face I i ≤ face J i := fun x hx i =>
+theorem face_mono {n} {I J : Box (Fin (n + 1))} (h : I ≤ J) (i : Fin (n + 1)) :
+    face I i ≤ face J i := fun x hx i =>
   Ioc_subset_Ioc ((le_iff_bounds.1 h).1 _) ((le_iff_bounds.1 h).2 _) (hx _)
 #align box_integral.box.face_mono BoxIntegral.Box.face_mono
 
-theorem monotone_face {n} (i : Fin (n + 1)) : Monotone fun I => face I i := fun I J h => face_mono h i
+theorem monotone_face {n} (i : Fin (n + 1)) : Monotone fun I => face I i := fun I J h =>
+  face_mono h i
 #align box_integral.box.monotone_face BoxIntegral.Box.monotone_face
 
 theorem maps_to_insert_nth_face_Icc {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
-    (hx : x ∈ icc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).icc I.icc := fun y hy =>
-  Fin.insert_nth_mem_Icc.2 ⟨hx, hy⟩
+    (hx : x ∈ icc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).icc I.icc :=
+  fun y hy => Fin.insert_nth_mem_Icc.2 ⟨hx, hy⟩
 #align box_integral.box.maps_to_insert_nth_face_Icc BoxIntegral.Box.maps_to_insert_nth_face_Icc
 
 theorem maps_to_insert_nth_face {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
     (hx : x ∈ ioc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i) I := fun y hy => by
-  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Fin.insert_nth_apply_same, Fin.insert_nth_apply_succ_above,
-    true_and_iff]
+  simpa only [mem_coe, mem_def, i.forall_iff_succ_above, hx, Fin.insert_nth_apply_same,
+    Fin.insert_nth_apply_succ_above, true_and_iff]
 #align box_integral.box.maps_to_insert_nth_face BoxIntegral.Box.maps_to_insert_nth_face
 
-theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) → ℝ) → X} {I : Box (Fin (n + 1))}
-    (h : ContinuousOn f I.icc) {i : Fin (n + 1)} {x : ℝ} (hx : x ∈ icc (I.lower i) (I.upper i)) :
-    ContinuousOn (f ∘ i.insertNth x) (I.face i).icc :=
+theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) → ℝ) → X}
+    {I : Box (Fin (n + 1))} (h : ContinuousOn f I.icc) {i : Fin (n + 1)} {x : ℝ}
+    (hx : x ∈ icc (I.lower i) (I.upper i)) : ContinuousOn (f ∘ i.insertNth x) (I.face i).icc :=
   h.comp (continuous_on_const.fin_insert_nth i continuous_on_id) (I.maps_to_insert_nth_face_Icc hx)
 #align box_integral.box.continuous_on_face_Icc BoxIntegral.Box.continuous_on_face_Icc
 
@@ -723,7 +758,8 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) �
 /-- The interior of a box. -/
 protected def ioo : Box ι →o Set (ι → ℝ) where
   toFun I := pi univ fun i => ioo (I.lower i) (I.upper i)
-  monotone' I J h := pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
+  monotone' I J h :=
+    pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
 #align box_integral.box.Ioo BoxIntegral.Box.ioo
 
 theorem Ioo_subset_coe (I : Box ι) : I.ioo ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivial)
@@ -738,7 +774,8 @@ theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ :
     (⋃ n, (J n).ioo) = I.ioo :=
   have hl' : ∀ i, Antitone fun n => (J n).lower i := fun i =>
     (monotone_eval i).comp_antitone (antitone_lower.comp_monotone hJ)
-  have hu' : ∀ i, Monotone fun n => (J n).upper i := fun i => (monotone_eval i).comp (monotone_upper.comp hJ)
+  have hu' : ∀ i, Monotone fun n => (J n).upper i := fun i =>
+    (monotone_eval i).comp (monotone_upper.comp hJ)
   calc
     (⋃ n, (J n).ioo) = pi univ fun i => ⋃ n, ioo ((J n).lower i) ((J n).upper i) :=
       Union_univ_pi_of_monotone fun i => (hl' i).ioo (hu' i)
@@ -752,7 +789,8 @@ theorem Union_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ :
 
 theorem exists_seq_mono_tendsto (I : Box ι) :
     ∃ J : ℕ →o Box ι,
-      (∀ n, (J n).icc ⊆ I.ioo) ∧ Tendsto (lower ∘ J) atTop (𝓝 I.lower) ∧ Tendsto (upper ∘ J) atTop (𝓝 I.upper) :=
+      (∀ n, (J n).icc ⊆ I.ioo) ∧
+        Tendsto (lower ∘ J) atTop (𝓝 I.lower) ∧ Tendsto (upper ∘ J) atTop (𝓝 I.upper) :=
   by
   choose a b ha_anti hb_mono ha_mem hb_mem hab ha_tendsto hb_tendsto using fun i =>
     exists_seq_strict_anti_strict_mono_tendsto (I.lower_lt_upper i)
@@ -775,7 +813,8 @@ def distortion (I : Box ι) : ℝ≥0 :=
 #align box_integral.box.distortion BoxIntegral.Box.distortion
 
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
-    (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J := by
+    (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J :=
+  by
   simp only [distortion, nndist_pi_def, Real.nndist_eq', h, map_div₀]
   congr 1 with i
   have : 0 < r := by
@@ -789,26 +828,31 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
 theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
     nndist I.lower I.upper ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
   calc
-    nndist I.lower I.upper = nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
+    nndist I.lower I.upper =
+        nndist I.lower I.upper / nndist (I.lower i) (I.upper i) * nndist (I.lower i) (I.upper i) :=
       (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
-    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) := mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
+    _ ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
+      mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
     
 #align box_integral.box.nndist_le_distortion_mul BoxIntegral.Box.nndist_le_distortion_mul
 
-theorem dist_le_distortion_mul (I : Box ι) (i : ι) : dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
+theorem dist_le_distortion_mul (I : Box ι) (i : ι) :
+    dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) := by
   have A : I.lower i - I.upper i < 0 := sub_neg.2 (I.lower_lt_upper i)
-  simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A, neg_sub] using
-    I.nndist_le_distortion_mul i
+  simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A,
+    neg_sub] using I.nndist_le_distortion_mul i
 #align box_integral.box.dist_le_distortion_mul BoxIntegral.Box.dist_le_distortion_mul
 
 theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.distortion ≤ c) :
     diam I.icc ≤ c * (I.upper i - I.lower i) :=
-  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) := mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
+  have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) :=
+    mul_nonneg c.coe_nonneg (sub_nonneg.2 <| I.lower_le_upper _)
   (diam_le_of_forall_dist_le this) fun x hx y hy =>
     calc
       dist x y ≤ dist I.lower I.upper := Real.dist_le_of_mem_pi_Icc hx hy
       _ ≤ I.distortion * (I.upper i - I.lower i) := I.dist_le_distortion_mul i
-      _ ≤ c * (I.upper i - I.lower i) := mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
+      _ ≤ c * (I.upper i - I.lower i) :=
+        mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
       
 #align box_integral.box.diam_Icc_le_of_distortion_le BoxIntegral.Box.diam_Icc_le_of_distortion_le
 

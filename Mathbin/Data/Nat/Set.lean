@@ -22,7 +22,8 @@ theorem zero_union_range_succ : {0} ∪ range succ = univ := by
 #align nat.zero_union_range_succ Nat.zero_union_range_succ
 
 @[simp]
-protected theorem range_succ : range succ = { i | 0 < i } := by ext (_ | i) <;> simp [succ_pos, succ_ne_zero]
+protected theorem range_succ : range succ = { i | 0 < i } := by
+  ext (_ | i) <;> simp [succ_pos, succ_ne_zero]
 #align nat.range_succ Nat.range_succ
 
 variable {α : Type _}
@@ -32,7 +33,9 @@ theorem range_of_succ (f : ℕ → α) : {f 0} ∪ range (f ∘ succ) = range f 
 #align nat.range_of_succ Nat.range_of_succ
 
 theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
-    (Set.range fun n => Nat.rec x f n : Set α) = {x} ∪ Set.range fun n => Nat.rec (f 0 x) (f ∘ succ) n := by
+    (Set.range fun n => Nat.rec x f n : Set α) =
+      {x} ∪ Set.range fun n => Nat.rec (f 0 x) (f ∘ succ) n :=
+  by
   convert (range_of_succ _).symm
   ext n
   induction' n with n ihn

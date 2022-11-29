@@ -33,8 +33,8 @@ The axiom `map_id` expresses preservation of identities, and
 
 See <https://stacks.math.columbia.edu/tag/001B>.
 -/
-structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] extends Prefunctor C D :
-  Type max v₁ v₂ u₁ u₂ where
+structure Functor (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] extends
+  Prefunctor C D : Type max v₁ v₂ u₁ u₂ where
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) := by obviously
   map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g := by obviously
 #align category_theory.functor CategoryTheory.Functor
@@ -95,7 +95,8 @@ end
 
 section
 
-variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃}
+  [Category.{v₃} E]
 
 /-- `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).
 -/
@@ -123,8 +124,10 @@ protected theorem id_comp (F : C ⥤ D) : 𝟭 C ⋙ F = F := by cases F <;> rfl
 #align category_theory.functor.id_comp CategoryTheory.Functor.id_comp
 
 @[simp]
-theorem map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [Decidable P] (f : P → (X ⟶ Y)) (g : ¬P → (X ⟶ Y)) :
-    F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) := by split_ifs <;> rfl
+theorem map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [Decidable P] (f : P → (X ⟶ Y))
+    (g : ¬P → (X ⟶ Y)) :
+    F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) := by
+  split_ifs <;> rfl
 #align category_theory.functor.map_dite CategoryTheory.Functor.map_dite
 
 @[simp]
@@ -138,7 +141,8 @@ theorem to_prefunctor_map (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : F.toPrefunctor
 #align category_theory.functor.to_prefunctor_map CategoryTheory.Functor.to_prefunctor_map
 
 @[simp]
-theorem to_prefunctor_comp (F : C ⥤ D) (G : D ⥤ E) : F.toPrefunctor.comp G.toPrefunctor = (F ⋙ G).toPrefunctor :=
+theorem to_prefunctor_comp (F : C ⥤ D) (G : D ⥤ E) :
+    F.toPrefunctor.comp G.toPrefunctor = (F ⋙ G).toPrefunctor :=
   rfl
 #align category_theory.functor.to_prefunctor_comp CategoryTheory.Functor.to_prefunctor_comp
 

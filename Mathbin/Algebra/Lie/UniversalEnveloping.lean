@@ -91,21 +91,22 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A) 
   toFun f :=
     RingQuot.liftAlgHom R
       ⟨TensorAlgebra.lift R (f : L →ₗ[R] A), by
-        intro a b h
-        induction' h with x y
-        simp only [LieRing.of_associative_ring_bracket, map_add, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map,
-          LieHom.map_lie, map_mul, sub_add_cancel]⟩
+        intro a b h; induction' h with x y
+        simp only [LieRing.of_associative_ring_bracket, map_add, TensorAlgebra.lift_ι_apply,
+          LieHom.coe_to_linear_map, LieHom.map_lie, map_mul, sub_add_cancel]⟩
   invFun F := (F : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)
   left_inv f := by
     ext
-    simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map, LinearMap.to_fun_eq_coe,
-      LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lie_hom, LieHom.coe_mk, Function.comp_apply,
-      AlgHom.to_linear_map_apply, RingQuot.lift_alg_hom_mk_alg_hom_apply]
+    simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map,
+      LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lie_hom,
+      LieHom.coe_mk, Function.comp_apply, AlgHom.to_linear_map_apply,
+      RingQuot.lift_alg_hom_mk_alg_hom_apply]
   right_inv F := by
     ext
-    simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map, LinearMap.to_fun_eq_coe,
-      LinearMap.coe_comp, LieHom.coe_linear_map_comp, AlgHom.comp_to_linear_map, Function.comp_apply,
-      AlgHom.to_linear_map_apply, RingQuot.lift_alg_hom_mk_alg_hom_apply, AlgHom.coe_to_lie_hom, LieHom.coe_mk]
+    simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linear_map,
+      LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_linear_map_comp,
+      AlgHom.comp_to_linear_map, Function.comp_apply, AlgHom.to_linear_map_apply,
+      RingQuot.lift_alg_hom_mk_alg_hom_apply, AlgHom.coe_to_lie_hom, LieHom.coe_mk]
 #align universal_enveloping_algebra.lift UniversalEnvelopingAlgebra.lift
 
 @[simp]
@@ -120,7 +121,8 @@ theorem ι_comp_lift : lift R f ∘ ι R = f :=
 #align universal_enveloping_algebra.ι_comp_lift UniversalEnvelopingAlgebra.ι_comp_lift
 
 @[simp]
-theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x := by rw [← Function.comp_apply (lift R f) (ι R) x, ι_comp_lift]
+theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x := by
+  rw [← Function.comp_apply (lift R f) (ι R) x, ι_comp_lift]
 #align universal_enveloping_algebra.lift_ι_apply UniversalEnvelopingAlgebra.lift_ι_apply
 
 theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : g ∘ ι R = f ↔ g = lift R f := by
@@ -139,9 +141,7 @@ theorem hom_ext {g₁ g₂ : UniversalEnvelopingAlgebra R L →ₐ[R] A}
       (g₁ : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R) =
         (g₂ : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)) :
     g₁ = g₂ :=
-  have h' : (lift R).symm g₁ = (lift R).symm g₂ := by
-    ext
-    simp [h]
+  have h' : (lift R).symm g₁ = (lift R).symm g₂ := by ext; simp [h]
   (lift R).symm.Injective h'
 #align universal_enveloping_algebra.hom_ext UniversalEnvelopingAlgebra.hom_ext
 

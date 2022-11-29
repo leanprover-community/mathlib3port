@@ -35,16 +35,16 @@ variable {M : Submonoid A} [Algebra A S] [IsLocalization M S] [Algebra A K] [IsF
 
 open Finsupp IsFractionRing IsLocalization Polynomial
 
-theorem scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M} (hr : aeval (mk' S r s) p = 0) :
-    aeval (algebraMap A S r) (scaleRoots p s) = 0 := by
+theorem scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M}
+    (hr : aeval (mk' S r s) p = 0) : aeval (algebraMap A S r) (scaleRoots p s) = 0 := by
   convert scale_roots_eval₂_eq_zero (algebraMap A S) hr
   rw [aeval_def, mk'_spec' _ r s]
 #align scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero
 
 variable [IsDomain A]
 
-theorem num_is_root_scale_roots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : A[X]} {x : K} (hr : aeval x p = 0) :
-    IsRoot (scaleRoots p (denom A x)) (Num A x) := by
+theorem num_is_root_scale_roots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : A[X]} {x : K}
+    (hr : aeval x p = 0) : IsRoot (scaleRoots p (denom A x)) (Num A x) := by
   apply is_root_of_eval₂_map_eq_zero (IsFractionRing.injective A K)
   refine' scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero _
   rw [mk'_num_denom]
@@ -90,9 +90,12 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
 /-- Rational root theorem part 2:
 if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the denominator of `r` divides the leading coefficient -/
-theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : (denom A r : A) ∣ p.leadingCoeff := by
+theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
+    (denom A r : A) ∣ p.leadingCoeff := by
   suffices (denom A r : A) ∣ p.leading_coeff * Num A r ^ p.nat_degree by
-    refine' dvd_of_dvd_mul_left_of_no_prime_factors (mem_non_zero_divisors_iff_ne_zero.mp (denom A r).2) _ this
+    refine'
+      dvd_of_dvd_mul_left_of_no_prime_factors (mem_non_zero_divisors_iff_ne_zero.mp (denom A r).2) _
+        this
     intro q dvd_denom dvd_num_pow hq
     apply hq.not_unit
     exact num_denom_reduced A r (hq.dvd_of_dvd_pow dvd_num_pow) dvd_denom
@@ -115,7 +118,8 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : (denom A 
 /-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
-theorem is_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) : IsInteger A r :=
+theorem is_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) :
+    IsInteger A r :=
   is_integer_of_is_unit_denom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
 #align is_integer_of_is_root_of_monic is_integer_of_is_root_of_monic
 

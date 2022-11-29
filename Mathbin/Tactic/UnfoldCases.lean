@@ -104,7 +104,10 @@ namespace UnfoldCases
   def
     find_splitting_expr
     : expr → tactic expr
-    | q( @ ite _ $ ( cond ) $ ( dec_inst ) _ _ = _ ) => pure q( @ Decidable.em $ ( cond ) $ ( dec_inst ) )
+    |
+        q( @ ite _ $ ( cond ) $ ( dec_inst ) _ _ = _ )
+        =>
+        pure q( @ Decidable.em $ ( cond ) $ ( dec_inst ) )
       | q( $ ( app x y ) = _ ) => pure y
       |
         e
@@ -132,7 +135,7 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
       do
       let tgt ← target
       let e ← find_splitting_expr tgt
-      focus1 <| do
+      focus1 do
           cases e
           all_goals <| dsimp_target >> unfold_cases_core <|> skip
           skip
@@ -216,7 +219,7 @@ open UnfoldCases
   Further examples can be found in `test/unfold_cases.lean`.
 -/
 unsafe def unfold_cases (inner : itactic) : tactic Unit :=
-  focus1 <| do
+  focus1 do
     tactic.intros
     let tgt ← target
     unfold_tgt tgt
@@ -225,8 +228,8 @@ unsafe def unfold_cases (inner : itactic) : tactic Unit :=
 #align tactic.interactive.unfold_cases tactic.interactive.unfold_cases
 
 add_tactic_doc
-  { Name := "unfold_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.unfold_cases],
-    tags := ["induction", "case bashing"] }
+  { Name := "unfold_cases", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.unfold_cases], tags := ["induction", "case bashing"] }
 
 end Interactive
 

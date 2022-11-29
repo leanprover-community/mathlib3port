@@ -121,7 +121,8 @@ protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x ∈ p, q ⟨x
   SetCoe.forall
 #align set_like.forall SetLike.forall
 
-theorem coe_injective : Function.Injective (coe : A → Set B) := fun x y h => SetLike.coe_injective' h
+theorem coe_injective : Function.Injective (coe : A → Set B) := fun x y h =>
+  SetLike.coe_injective' h
 #align set_like.coe_injective SetLike.coe_injective
 
 @[simp, norm_cast]
@@ -206,7 +207,8 @@ theorem exists_of_lt : p < q → ∃ x ∈ q, x ∉ p :=
   Set.exists_of_ssubset
 #align set_like.exists_of_lt SetLike.exists_of_lt
 
-theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p := by rw [lt_iff_le_not_le, not_le_iff_exists]
+theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p := by
+  rw [lt_iff_le_not_le, not_le_iff_exists]
 #align set_like.lt_iff_le_and_exists SetLike.lt_iff_le_and_exists
 
 end SetLike

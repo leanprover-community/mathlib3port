@@ -241,14 +241,15 @@ theorem mul_single_one (i : I) : mulSingle i (1 : f i) = 1 :=
 
 /-- On non-dependent functions, `pi.mul_single` can be expressed as an `ite` -/
 @[to_additive "On non-dependent functions, `pi.single` can be expressed as an `ite`"]
-theorem mul_single_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = if i' = i then x else 1 :=
+theorem mul_single_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
+    mulSingle i x i' = if i' = i then x else 1 :=
   Function.update_apply 1 i x i'
 #align pi.mul_single_apply Pi.mul_single_apply
 
 /-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
 @[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
-theorem mul_single_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) : mulSingle i x i' = mulSingle i' x i := by
-  simp [mul_single_apply, eq_comm]
+theorem mul_single_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
+    mulSingle i x i' = mulSingle i' x i := by simp [mul_single_apply, eq_comm]
 #align pi.mul_single_comm Pi.mul_single_comm
 
 @[to_additive]
@@ -258,8 +259,8 @@ theorem apply_mul_single (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i 
 #align pi.apply_mul_single Pi.apply_mul_single
 
 @[to_additive apply_single₂]
-theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i) (y : g i) (j : I) :
-    f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
+theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 1 1 = 1) (i : I) (x : f i)
+    (y : g i) (j : I) : f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
   by_cases h : j = i
   · subst h
     simp only [mul_single_eq_same]
@@ -269,14 +270,14 @@ theorem apply_mul_single₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i
 #align pi.apply_mul_single₂ Pi.apply_mul_single₂
 
 @[to_additive]
-theorem mul_single_op {g : I → Type _} [∀ i, One (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 1 = 1) (i : I) (x : f i) :
-    mulSingle i (op i x) = fun j => op j (mulSingle i x j) :=
+theorem mul_single_op {g : I → Type _} [∀ i, One (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 1 = 1)
+    (i : I) (x : f i) : mulSingle i (op i x) = fun j => op j (mulSingle i x j) :=
   Eq.symm <| funext <| apply_mul_single op h i x
 #align pi.mul_single_op Pi.mul_single_op
 
 @[to_additive]
-theorem mul_single_op₂ {g₁ g₂ : I → Type _} [∀ i, One (g₁ i)] [∀ i, One (g₂ i)] (op : ∀ i, g₁ i → g₂ i → f i)
-    (h : ∀ i, op i 1 1 = 1) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
+theorem mul_single_op₂ {g₁ g₂ : I → Type _} [∀ i, One (g₁ i)] [∀ i, One (g₂ i)]
+    (op : ∀ i, g₁ i → g₂ i → f i) (h : ∀ i, op i 1 1 = 1) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
     mulSingle i (op i x₁ x₂) = fun j => op j (mulSingle i x₁ j) (mulSingle i x₂ j) :=
   Eq.symm <| funext <| apply_mul_single₂ op h i x₁ x₂
 #align pi.mul_single_op₂ Pi.mul_single_op₂
@@ -348,7 +349,8 @@ theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Surjective (F i)
 #align function.surjective_pi_map Function.surjective_pi_map
 
 theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Injective (F i)) :
-    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_fun h i : _)
+    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h =>
+  funext fun i => hF i <| (congr_fun h i : _)
 #align function.injective_pi_map Function.injective_pi_map
 
 theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Bijective (F i)) :
@@ -360,13 +362,14 @@ end Function
 
 /-- If the one function is surjective, the codomain is trivial. -/
 @[to_additive "If the zero function is surjective, the codomain is trivial."]
-def uniqueOfSurjectiveOne (α : Type _) {β : Type _} [One β] (h : Function.Surjective (1 : α → β)) : Unique β :=
+def uniqueOfSurjectiveOne (α : Type _) {β : Type _} [One β] (h : Function.Surjective (1 : α → β)) :
+    Unique β :=
   h.uniqueOfSurjectiveConst α (1 : β)
 #align unique_of_surjective_one uniqueOfSurjectiveOne
 
 @[to_additive Subsingleton.pi_single_eq]
-theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I) (x : α) :
-    Pi.mulSingle i x = fun _ => x :=
+theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I)
+    (x : α) : Pi.mulSingle i x = fun _ => x :=
   funext fun j => by rw [Subsingleton.elim j i, Pi.mul_single_eq_same]
 #align subsingleton.pi_mul_single_eq Subsingleton.pi_mul_single_eq
 

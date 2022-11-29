@@ -38,7 +38,8 @@ def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u} where
 @[to_additive hasForgetToAddSemigroup]
 instance hasForgetToSemigroup :
     HasForget₂ MonCat
-      SemigroupCat where forget₂ := { obj := fun M => SemigroupCat.of M, map := fun M N => MonoidHom.toMulHom }
+      SemigroupCat where forget₂ :=
+    { obj := fun M => SemigroupCat.of M, map := fun M N => MonoidHom.toMulHom }
 #align has_forget_to_Semigroup hasForgetToSemigroup
 
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/

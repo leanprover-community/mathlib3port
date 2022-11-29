@@ -27,21 +27,24 @@ open Filter Finset
 local notation "d" => dist
 
 @[simp]
-theorem pos_div_pow_pos {α : Type _} [LinearOrderedSemifield α] {a b : α} (ha : 0 < a) (hb : 0 < b) (k : ℕ) :
-    0 < a / b ^ k :=
+theorem pos_div_pow_pos {α : Type _} [LinearOrderedSemifield α] {a b : α} (ha : 0 < a) (hb : 0 < b)
+    (k : ℕ) : 0 < a / b ^ k :=
   div_pos ha (pow_pos hb k)
 #align pos_div_pow_pos pos_div_pow_pos
 
-theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε) {ϕ : X → ℝ}
-    (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
-    ∃ ε' > 0, ∃ x' : X, ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' := by
+theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε)
+    {ϕ : X → ℝ} (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
+    ∃ ε' > 0,
+      ∃ x' : X, ε' ≤ ε ∧ d x' x ≤ 2 * ε ∧ ε * ϕ x ≤ ε' * ϕ x' ∧ ∀ y, d x' y ≤ ε' → ϕ y ≤ 2 * ϕ x' :=
+  by
   by_contra H
   have reformulation : ∀ (x') (k : ℕ), ε * ϕ x ≤ ε / 2 ^ k * ϕ x' ↔ 2 ^ k * ϕ x ≤ ϕ x' := by
     intro x' k
     rw [div_mul_eq_mul_div, le_div_iff, mul_assoc, mul_le_mul_left ε_pos, mul_comm]
     positivity
   -- Now let's specialize to `ε/2^k`
-  replace H : ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
+  replace H :
+    ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'
     push_neg  at H
     simpa [reformulation] using H (ε / 2 ^ k) (by simp [ε_pos]) x' (by simp [ε_pos.le, one_le_two])
@@ -55,7 +58,9 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   have hu0 : u 0 = x := rfl
   -- The properties of F translate to properties of u
   have hu :
-    ∀ n, d (u n) x ≤ 2 * ε ∧ 2 ^ n * ϕ x ≤ ϕ (u n) → d (u n) (u <| n + 1) ≤ ε / 2 ^ n ∧ 2 * ϕ (u n) < ϕ (u <| n + 1) :=
+    ∀ n,
+      d (u n) x ≤ 2 * ε ∧ 2 ^ n * ϕ x ≤ ϕ (u n) →
+        d (u n) (u <| n + 1) ≤ ε / 2 ^ n ∧ 2 * ϕ (u n) < ϕ (u <| n + 1) :=
     by
     intro n
     exact hF n (u n)
@@ -73,7 +78,8 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
       -- range (n+1) = {0, ..., n}
       calc
         d (u 0) (u (n + 1)) ≤ ∑ i in r, d (u i) (u <| i + 1) := dist_le_range_sum_dist u (n + 1)
-        _ ≤ ∑ i in r, ε / 2 ^ i := sum_le_sum fun i i_in => (IH i <| nat.lt_succ_iff.mp <| finset.mem_range.mp i_in).1
+        _ ≤ ∑ i in r, ε / 2 ^ i :=
+          sum_le_sum fun i i_in => (IH i <| nat.lt_succ_iff.mp <| finset.mem_range.mp i_in).1
         _ = ∑ i in r, (1 / 2) ^ i * ε := by
           congr with i
           field_simp

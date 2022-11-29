@@ -89,7 +89,8 @@ theorem stereo_to_fun_apply [CompleteSpace E] (x : E) :
   rfl
 #align stereo_to_fun_apply stereo_to_fun_apply
 
-theorem contDiffOnStereoToFun [CompleteSpace E] : ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
+theorem contDiffOnStereoToFun [CompleteSpace E] :
+    ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
   refine' ContDiffOn.smul _ (orthogonalProjection (ℝ ∙ v)ᗮ).ContDiff.ContDiffOn
   refine' cont_diff_const.cont_diff_on.div _ _
   · exact (cont_diff_const.sub (innerSL v : E →L[ℝ] ℝ).ContDiff).ContDiffOn
@@ -118,32 +119,38 @@ def stereoInvFunAux (w : E) : E :=
 variable {v}
 
 @[simp]
-theorem stereo_inv_fun_aux_apply (w : E) : stereoInvFunAux v w = (‖w‖ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) :=
+theorem stereo_inv_fun_aux_apply (w : E) :
+    stereoInvFunAux v w = (‖w‖ ^ 2 + 4)⁻¹ • ((4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) :=
   rfl
 #align stereo_inv_fun_aux_apply stereo_inv_fun_aux_apply
 
-theorem stereo_inv_fun_aux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)ᗮ) : stereoInvFunAux v w ∈ sphere (0 : E) 1 := by
+theorem stereo_inv_fun_aux_mem (hv : ‖v‖ = 1) {w : E} (hw : w ∈ (ℝ ∙ v)ᗮ) :
+    stereoInvFunAux v w ∈ sphere (0 : E) 1 := by
   have h₁ : 0 ≤ ‖w‖ ^ 2 + 4 := by nlinarith
   suffices ‖(4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v‖ = ‖w‖ ^ 2 + 4 by
     have h₂ : ‖w‖ ^ 2 + 4 ≠ 0 := by nlinarith
-    simp only [mem_sphere_zero_iff_norm, norm_smul, Real.norm_eq_abs, abs_inv, this, abs_of_nonneg h₁,
-      stereo_inv_fun_aux_apply]
+    simp only [mem_sphere_zero_iff_norm, norm_smul, Real.norm_eq_abs, abs_inv, this,
+      abs_of_nonneg h₁, stereo_inv_fun_aux_apply]
     field_simp
   suffices ‖(4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v‖ ^ 2 = (‖w‖ ^ 2 + 4) ^ 2 by
     have h₃ : 0 ≤ ‖stereoInvFunAux v w‖ := norm_nonneg _
     simpa [h₁, h₃, -one_pow] using this
-  simp [norm_add_sq_real, norm_smul, inner_smul_left, inner_smul_right, inner_left_of_mem_orthogonal_singleton _ hw,
-    mul_pow, Real.norm_eq_abs, hv]
+  simp [norm_add_sq_real, norm_smul, inner_smul_left, inner_smul_right,
+    inner_left_of_mem_orthogonal_singleton _ hw, mul_pow, Real.norm_eq_abs, hv]
   ring
 #align stereo_inv_fun_aux_mem stereo_inv_fun_aux_mem
 
-theorem hasFderivAtStereoInvFunAux (v : E) : HasFderivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) 0 := by
+theorem hasFderivAtStereoInvFunAux (v : E) :
+    HasFderivAt (stereoInvFunAux v) (ContinuousLinearMap.id ℝ E) 0 := by
   have h₀ : HasFderivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 := by
     convert (hasStrictFderivAtNormSq _).HasFderivAt
     simp
   have h₁ : HasFderivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
     convert (hasFderivAtInv _).comp _ (h₀.add (hasFderivAtConst 4 0)) <;> simp
-  have h₂ : HasFderivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E) 0 := by
+  have h₂ :
+    HasFderivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E)
+      0 :=
+    by
     convert
       ((hasFderivAtConst (4 : ℝ) 0).smul (hasFderivAtId 0)).add
         ((h₀.sub (hasFderivAtConst (4 : ℝ) 0)).smul (hasFderivAtConst v 0))
@@ -195,7 +202,8 @@ theorem stereo_inv_fun_ne_north_pole (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) :
       · nlinarith
         
       linarith
-    simpa [real_inner_comm, inner_add_right, inner_smul_right, real_inner_self_eq_norm_mul_norm, hw, hv] using hw'
+    simpa [real_inner_comm, inner_add_right, inner_smul_right, real_inner_self_eq_norm_mul_norm, hw,
+      hv] using hw'
     
   · simpa using stereo_inv_fun_aux_mem hv w.2
     
@@ -250,9 +258,10 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
       
     ring
   -- deduce the result
-  convert congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
-  · simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul, mul_pow,
-      Real.norm_eq_abs, sq_abs, norm_smul]
+  convert
+    congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
+  · simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul,
+      mul_pow, Real.norm_eq_abs, sq_abs, norm_smul]
     
   · simp [split, add_comm]
     
@@ -265,7 +274,8 @@ theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v
     field_simp
     ring
   convert congr_arg (fun c => c • w) this
-  · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 := orthogonal_projection_orthogonal_complement_singleton_eq_zero v
+  · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
+      orthogonal_projection_orthogonal_complement_singleton_eq_zero v
     have h₂ : orthogonalProjection (ℝ ∙ v)ᗮ w = w := orthogonal_projection_mem_subspace_eq_self w
     have h₃ : innerSL v w = (0 : ℝ) := inner_right_of_mem_orthogonal_singleton v w.2
     have h₄ : innerSL v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
@@ -310,12 +320,14 @@ theorem stereographic_target (hv : ‖v‖ = 1) : (stereographic hv).target = Se
 #align stereographic_target stereographic_target
 
 @[simp]
-theorem stereographic_apply_neg (v : sphere (0 : E) 1) : stereographic (norm_eq_of_mem_sphere v) (-v) = 0 := by
+theorem stereographic_apply_neg (v : sphere (0 : E) 1) :
+    stereographic (norm_eq_of_mem_sphere v) (-v) = 0 := by
   simp [stereographic_apply, orthogonal_projection_orthogonal_complement_singleton_eq_zero]
 #align stereographic_apply_neg stereographic_apply_neg
 
 @[simp]
-theorem stereographic_neg_apply (v : sphere (0 : E) 1) : stereographic (norm_eq_of_mem_sphere (-v)) v = 0 := by
+theorem stereographic_neg_apply (v : sphere (0 : E) 1) :
+    stereographic (norm_eq_of_mem_sphere (-v)) v = 0 := by
   convert stereographic_apply_neg (-v)
   ext1
   simp
@@ -351,7 +363,8 @@ from `(ℝ ∙ v)ᗮ` to the Euclidean space. -/
 def stereographic' (n : ℕ) [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     LocalHomeomorph (sphere (0 : E) 1) (EuclideanSpace ℝ (Fin n)) :=
   stereographic (norm_eq_of_mem_sphere v) ≫ₕ
-    (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere v)).repr.toHomeomorph.toLocalHomeomorph
+    (OrthonormalBasis.fromOrthogonalSpanSingleton n
+            (ne_zero_of_mem_unit_sphere v)).repr.toHomeomorph.toLocalHomeomorph
 #align stereographic' stereographic'
 
 @[simp]
@@ -366,7 +379,8 @@ theorem stereographic'_target {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphe
 
 /-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a charted space
 modelled on the Euclidean space of dimension `n`. -/
-instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : ChartedSpace (EuclideanSpace ℝ (Fin n)) (sphere (0 : E) 1) where
+instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
+    ChartedSpace (EuclideanSpace ℝ (Fin n)) (sphere (0 : E) 1) where
   atlas := { f | ∃ v : sphere (0 : E) 1, f = stereographic' n v }
   chartAt v := stereographic' n (-v)
   mem_chart_source v := by simpa using ne_neg_of_mem_unit_sphere ℝ v
@@ -395,7 +409,8 @@ theorem stereographic'_symm_apply {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : 
 
 /-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a smooth manifold,
 modelled on the Euclidean space of dimension `n`. -/
-instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (𝓡 n) (sphere (0 : E) 1) :=
+instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
+    SmoothManifoldWithCorners (𝓡 n) (sphere (0 : E) 1) :=
   smoothManifoldWithCornersOfContDiffOn (𝓡 n) (sphere (0 : E) 1)
     (by
       rintro _ _ ⟨v, rfl⟩ ⟨v', rfl⟩
@@ -407,13 +422,17 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
         (-- Removed type ascription, and this helped for some reason with timeout issues?
             OrthonormalBasis.fromOrthogonalSpanSingleton
             n (ne_zero_of_mem_unit_sphere v')).repr
-      have hUv : stereographic' n v = stereographic (norm_eq_of_mem_sphere v) ≫ₕ U.to_homeomorph.to_local_homeomorph :=
+      have hUv :
+        stereographic' n v =
+          stereographic (norm_eq_of_mem_sphere v) ≫ₕ U.to_homeomorph.to_local_homeomorph :=
         rfl
       have hU'v' :
-        stereographic' n v' = (stereographic (norm_eq_of_mem_sphere v')).trans U'.to_homeomorph.to_local_homeomorph :=
+        stereographic' n v' =
+          (stereographic (norm_eq_of_mem_sphere v')).trans U'.to_homeomorph.to_local_homeomorph :=
         rfl
       have H₁ := U'.cont_diff.comp_cont_diff_on contDiffOnStereoToFun
-      have H₂ := (cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
+      have H₂ :=
+        (cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
       convert H₁.comp' (H₂.cont_diff_on : ContDiffOn ℝ ⊤ _ Set.univ) using 1
       ext
       simp [sphere_ext_iff, stereographic'_symm_apply, real_inner_comm])
@@ -430,7 +449,9 @@ theorem contMdiffCoeSphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
       (-- Again, removing type ascription...
           OrthonormalBasis.fromOrthogonalSpanSingleton
           n (ne_zero_of_mem_unit_sphere (-v))).repr
-    exact ((cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff).ContDiffOn
+    exact
+      ((cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.ContDiff).comp
+          U.symm.cont_diff).ContDiffOn
     
 #align cont_mdiff_coe_sphere contMdiffCoeSphere
 
@@ -482,19 +503,26 @@ Note that there is an abuse here of the defeq between `E` and the tangent space 
 In general this defeq is not canonical, but in this case (the tangent space of a vector space) it is
 canonical. -/
 theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
-    (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v : TangentSpace (𝓡 n) v →L[ℝ] E).range = (ℝ ∙ (v : E))ᗮ := by
+    (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v : TangentSpace (𝓡 n) v →L[ℝ] E).range =
+      (ℝ ∙ (v : E))ᗮ :=
+  by
   rw [((contMdiffCoeSphere v).MdifferentiableAt le_top).mfderiv]
   simp only [chart_at, stereographic', stereographic_neg_apply, fderiv_within_univ,
-    LinearIsometryEquiv.to_homeomorph_symm, LinearIsometryEquiv.coe_to_homeomorph, LinearIsometryEquiv.map_zero,
-    mfld_simps]
+    LinearIsometryEquiv.to_homeomorph_symm, LinearIsometryEquiv.coe_to_homeomorph,
+    LinearIsometryEquiv.map_zero, mfld_simps]
   let U := (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))).repr
   change (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ coe) ∘ U.symm) 0).range = (ℝ ∙ (v : E))ᗮ
   have :
-    HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E)) (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) := by
+    HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
+      (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
+    by
     convert hasFderivAtStereoInvFunAuxCompCoe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
-  convert (U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp (ℝ ∙ (↑(-v) : E))ᗮ.Subtype using 1
+  convert
+    (U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
+      (ℝ ∙ (↑(-v) : E))ᗮ.Subtype using
+    1
   simp only [Submodule.range_subtype, coe_neg_sphere]
   congr 1
   -- we must show `submodule.span ℝ {v} = submodule.span ℝ {-v}`
@@ -515,12 +543,14 @@ theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v
     Injective (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v) := by
   rw [((contMdiffCoeSphere v).MdifferentiableAt le_top).mfderiv]
   simp only [chart_at, stereographic', stereographic_neg_apply, fderiv_within_univ,
-    LinearIsometryEquiv.to_homeomorph_symm, LinearIsometryEquiv.coe_to_homeomorph, LinearIsometryEquiv.map_zero,
-    mfld_simps]
+    LinearIsometryEquiv.to_homeomorph_symm, LinearIsometryEquiv.coe_to_homeomorph,
+    LinearIsometryEquiv.map_zero, mfld_simps]
   let U := (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))).repr
   change injective (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ coe) ∘ U.symm) 0)
   have :
-    HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E)) (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) := by
+    HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
+      (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
+    by
     convert hasFderivAtStereoInvFunAuxCompCoe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]

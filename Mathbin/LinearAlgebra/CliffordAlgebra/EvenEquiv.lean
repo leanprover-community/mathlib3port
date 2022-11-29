@@ -64,8 +64,8 @@ def v : M →ₗ[R] CliffordAlgebra (q' Q) :=
 #align clifford_algebra.equiv_even.v CliffordAlgebra.EquivEven.v
 
 theorem ι_eq_v_add_smul_e0 (m : M) (r : R) : ι (q' Q) (m, r) = v Q m + r • e0 Q := by
-  rw [e0, v, LinearMap.comp_apply, LinearMap.inl_apply, ← LinearMap.map_smul, Prod.smul_mk, smul_zero, smul_eq_mul,
-    mul_one, ← LinearMap.map_add, Prod.mk_add_mk, zero_add, add_zero]
+  rw [e0, v, LinearMap.comp_apply, LinearMap.inl_apply, ← LinearMap.map_smul, Prod.smul_mk,
+    smul_zero, smul_eq_mul, mul_one, ← LinearMap.map_add, Prod.mk_add_mk, zero_add, add_zero]
 #align clifford_algebra.equiv_even.ι_eq_v_add_smul_e0 CliffordAlgebra.EquivEven.ι_eq_v_add_smul_e0
 
 theorem e0_mul_e0 : e0 Q * e0 Q = -1 :=
@@ -79,8 +79,8 @@ theorem v_sq_scalar (m : M) : v Q m * v Q m = algebraMap _ _ (Q m) :=
 theorem neg_e0_mul_v (m : M) : -(e0 Q * v Q m) = v Q m * e0 Q := by
   refine' neg_eq_of_add_eq_zero_right ((ι_mul_ι_add_swap _ _).trans _)
   dsimp [QuadraticForm.polar]
-  simp only [add_zero, mul_zero, mul_one, zero_add, neg_zero, QuadraticForm.map_zero, add_sub_cancel, sub_self,
-    map_zero, zero_sub]
+  simp only [add_zero, mul_zero, mul_one, zero_add, neg_zero, QuadraticForm.map_zero,
+    add_sub_cancel, sub_self, map_zero, zero_sub]
 #align clifford_algebra.equiv_even.neg_e0_mul_v CliffordAlgebra.EquivEven.neg_e0_mul_v
 
 theorem neg_v_mul_e0 (m : M) : -(v Q m * e0 Q) = e0 Q * v Q m := by
@@ -126,8 +126,8 @@ def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (q' Q) := by
     exact Submodule.mul_mem_mul (LinearMap.mem_range_self _ _) (LinearMap.mem_range_self _ _)
     
   · ext1
-    dsimp only [Subalgebra.coe_mul, LinearMap.cod_restrict_apply, LinearMap.comp_apply, LinearMap.mul_left_apply,
-      LinearMap.inl_apply, Subalgebra.coe_algebra_map]
+    dsimp only [Subalgebra.coe_mul, LinearMap.cod_restrict_apply, LinearMap.comp_apply,
+      LinearMap.mul_left_apply, LinearMap.inl_apply, Subalgebra.coe_algebra_map]
     rw [← mul_assoc, e0_mul_v_mul_e0, v_sq_scalar]
     
 #align clifford_algebra.to_even CliffordAlgebra.toEven
@@ -149,11 +149,16 @@ def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q := by
     -/
   let f : M × R →ₗ[R] M × R →ₗ[R] CliffordAlgebra Q :=
     ((Algebra.lmul R (CliffordAlgebra Q)).toLinearMap.comp <|
-          (ι Q).comp (LinearMap.fst _ _ _) + (Algebra.linearMap R _).comp (LinearMap.snd _ _ _)).compl₂
+          (ι Q).comp (LinearMap.fst _ _ _) +
+            (Algebra.linearMap R _).comp (LinearMap.snd _ _ _)).compl₂
       ((ι Q).comp (LinearMap.fst _ _ _) - (Algebra.linearMap R _).comp (LinearMap.snd _ _ _))
-  have f_apply : ∀ x y, f x y = (ι Q x.1 + algebraMap R _ x.2) * (ι Q y.1 - algebraMap R _ y.2) := fun x y => rfl
+  have f_apply : ∀ x y, f x y = (ι Q x.1 + algebraMap R _ x.2) * (ι Q y.1 - algebraMap R _ y.2) :=
+    fun x y => rfl
   have hc : ∀ (r : R) (x : CliffordAlgebra Q), Commute (algebraMap _ _ r) x := Algebra.commutes
-  have hm : ∀ m : M × R, ι Q m.1 * ι Q m.1 - algebraMap R _ m.2 * algebraMap R _ m.2 = algebraMap R _ (Q' Q m) := by
+  have hm :
+    ∀ m : M × R,
+      ι Q m.1 * ι Q m.1 - algebraMap R _ m.2 * algebraMap R _ m.2 = algebraMap R _ (Q' Q m) :=
+    by
     intro m
     rw [ι_sq_scalar, ← RingHom.map_mul, ← RingHom.map_sub, sub_eq_add_neg, Q'_apply, sub_eq_add_neg]
   refine' even.lift (Q' Q) ⟨f, _, _⟩ <;> simp_rw [f_apply]
@@ -161,13 +166,14 @@ def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q := by
     rw [← (hc _ _).symm.mul_self_sub_mul_self_eq, hm]
     
   · intro m₁ m₂ m₃
-    rw [← mul_smul_comm, ← mul_assoc, mul_assoc (_ + _), ← (hc _ _).symm.mul_self_sub_mul_self_eq', Algebra.smul_def, ←
-      mul_assoc, hm]
+    rw [← mul_smul_comm, ← mul_assoc, mul_assoc (_ + _), ← (hc _ _).symm.mul_self_sub_mul_self_eq',
+      Algebra.smul_def, ← mul_assoc, hm]
     
 #align clifford_algebra.of_even CliffordAlgebra.ofEven
 
 theorem of_even_ι (x y : M × R) :
-    ofEven Q ((even.ι _).bilin x y) = (ι Q x.1 + algebraMap R _ x.2) * (ι Q y.1 - algebraMap R _ y.2) :=
+    ofEven Q ((even.ι _).bilin x y) =
+      (ι Q x.1 + algebraMap R _ x.2) * (ι Q y.1 - algebraMap R _ y.2) :=
   even.lift_ι _ _ _ _
 #align clifford_algebra.of_even_ι CliffordAlgebra.of_even_ι
 
@@ -183,17 +189,21 @@ theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
               ↑(toEven Q (ofEven Q ((even.ι (q' Q)).bilin (m₁, r₁) (m₂, r₂)))) =
                   (e0 Q * v Q m₁ + algebraMap R _ r₁) * (e0 Q * v Q m₂ - algebraMap R _ r₂) :=
                 by
-                rw [of_even_ι, AlgHom.map_mul, AlgHom.map_add, AlgHom.map_sub, AlgHom.commutes, AlgHom.commutes,
-                  Subalgebra.coe_mul, Subalgebra.coe_add, Subalgebra.coe_sub, to_even_ι, to_even_ι,
-                  Subalgebra.coe_algebra_map, Subalgebra.coe_algebra_map]
+                rw [of_even_ι, AlgHom.map_mul, AlgHom.map_add, AlgHom.map_sub, AlgHom.commutes,
+                  AlgHom.commutes, Subalgebra.coe_mul, Subalgebra.coe_add, Subalgebra.coe_sub,
+                  to_even_ι, to_even_ι, Subalgebra.coe_algebra_map, Subalgebra.coe_algebra_map]
               _ =
                   e0 Q * v Q m₁ * (e0 Q * v Q m₂) + r₁ • e0 Q * v Q m₂ - r₂ • e0 Q * v Q m₁ -
                     algebraMap R _ (r₁ * r₂) :=
                 by
-                rw [mul_sub, add_mul, add_mul, ← Algebra.commutes, ← Algebra.smul_def, ← map_mul, ← Algebra.smul_def,
-                  sub_add_eq_sub_sub, smul_mul_assoc, smul_mul_assoc]
-              _ = v Q m₁ * v Q m₂ + r₁ • e0 Q * v Q m₂ + v Q m₁ * r₂ • e0 Q + r₁ • e0 Q * r₂ • e0 Q := by
-                have h1 : e0 Q * v Q m₁ * (e0 Q * v Q m₂) = v Q m₁ * v Q m₂ := by rw [← mul_assoc, e0_mul_v_mul_e0]
+                rw [mul_sub, add_mul, add_mul, ← Algebra.commutes, ← Algebra.smul_def, ← map_mul, ←
+                  Algebra.smul_def, sub_add_eq_sub_sub, smul_mul_assoc, smul_mul_assoc]
+              _ =
+                  v Q m₁ * v Q m₂ + r₁ • e0 Q * v Q m₂ + v Q m₁ * r₂ • e0 Q +
+                    r₁ • e0 Q * r₂ • e0 Q :=
+                by
+                have h1 : e0 Q * v Q m₁ * (e0 Q * v Q m₂) = v Q m₁ * v Q m₂ := by
+                  rw [← mul_assoc, e0_mul_v_mul_e0]
                 have h2 : -(r₂ • e0 Q * v Q m₁) = v Q m₁ * r₂ • e0 Q := by
                   rw [mul_smul_comm, smul_mul_assoc, ← smul_neg, neg_e0_mul_v]
                 have h3 : -algebraMap R _ (r₁ * r₂) = r₁ • e0 Q * r₂ • e0 Q := by
@@ -208,7 +218,8 @@ theorem of_even_comp_to_even : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
   CliffordAlgebra.hom_ext <|
     LinearMap.ext fun m =>
       calc
-        ofEven Q (toEven Q (ι Q m)) = ofEven Q ⟨_, (toEven Q (ι Q m)).Prop⟩ := by rw [Subtype.coe_eta]
+        ofEven Q (toEven Q (ι Q m)) = ofEven Q ⟨_, (toEven Q (ι Q m)).Prop⟩ := by
+          rw [Subtype.coe_eta]
         _ = (ι Q 0 + algebraMap R _ 1) * (ι Q m - algebraMap R _ 0) := by
           simp_rw [to_even_ι]
           exact of_even_ι Q _ _
@@ -231,8 +242,8 @@ theorem coe_to_even_reverse_involute (x : CliffordAlgebra Q) :
   induction x using CliffordAlgebra.induction
   case h_grade0 r => simp only [AlgHom.commutes, Subalgebra.coe_algebra_map, reverse.commutes]
   case h_grade1 m =>
-    simp only [involute_ι, Subalgebra.coe_neg, to_even_ι, reverse.map_mul, reverse_v, reverse_e0, reverse_ι,
-      neg_e0_mul_v, map_neg]
+    simp only [involute_ι, Subalgebra.coe_neg, to_even_ι, reverse.map_mul, reverse_v, reverse_e0,
+      reverse_ι, neg_e0_mul_v, map_neg]
   case h_mul x y hx hy => simp only [map_mul, Subalgebra.coe_mul, reverse.map_mul, hx, hy]
   case h_add x y hx hy => simp only [map_add, Subalgebra.coe_add, hx, hy]
 #align clifford_algebra.coe_to_even_reverse_involute CliffordAlgebra.coe_to_even_reverse_involute
@@ -241,14 +252,16 @@ theorem coe_to_even_reverse_involute (x : CliffordAlgebra Q) :
 
 
 /-- One direction of `clifford_algebra.even_equiv_even_neg` -/
-def evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) : CliffordAlgebra.even Q →ₐ[R] CliffordAlgebra.even Q' :=
+def evenToNeg (Q' : QuadraticForm R M) (h : Q' = -Q) :
+    CliffordAlgebra.even Q →ₐ[R] CliffordAlgebra.even Q' :=
   even.lift Q
     { bilin := -(even.ι Q' : _).bilin,
       contract := fun m => by
-        simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticForm.neg_apply, map_neg, neg_neg],
+        simp_rw [LinearMap.neg_apply, even_hom.contract, h, QuadraticForm.neg_apply, map_neg,
+          neg_neg],
       contract_mid := fun m₁ m₂ m₃ => by
-        simp_rw [LinearMap.neg_apply, neg_mul_neg, even_hom.contract_mid, h, QuadraticForm.neg_apply, smul_neg,
-          neg_smul] }
+        simp_rw [LinearMap.neg_apply, neg_mul_neg, even_hom.contract_mid, h,
+          QuadraticForm.neg_apply, smul_neg, neg_smul] }
 #align clifford_algebra.even_to_neg CliffordAlgebra.evenToNeg
 
 @[simp]
@@ -260,8 +273,8 @@ theorem even_to_neg_ι (Q' : QuadraticForm R M) (h : Q' = -Q) (m₁ m₂ : M) :
 theorem even_to_neg_comp_even_to_neg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' : Q = -Q') :
     (evenToNeg Q' Q h').comp (evenToNeg Q Q' h) = AlgHom.id R _ := by
   ext (m₁ m₂) : 4
-  dsimp only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
-    AlgHom.id_apply]
+  dsimp only [even_hom.compr₂_bilin, LinearMap.compr₂_apply, AlgHom.to_linear_map_apply,
+    AlgHom.comp_apply, AlgHom.id_apply]
   rw [even_to_neg_ι, map_neg, even_to_neg_ι, neg_neg]
 #align clifford_algebra.even_to_neg_comp_even_to_neg CliffordAlgebra.even_to_neg_comp_even_to_neg
 
@@ -270,8 +283,8 @@ theorem even_to_neg_comp_even_to_neg (Q' : QuadraticForm R M) (h : Q' = -Q) (h' 
 Stated another way, `𝒞ℓ⁺(p,q,r)` and `𝒞ℓ⁺(q,p,r)` are isomorphic. -/
 @[simps]
 def evenEquivEvenNeg : CliffordAlgebra.even Q ≃ₐ[R] CliffordAlgebra.even (-Q) :=
-  AlgEquiv.ofAlgHom (evenToNeg Q _ rfl) (evenToNeg (-Q) _ (neg_neg _).symm) (even_to_neg_comp_even_to_neg _ _ _ _)
-    (even_to_neg_comp_even_to_neg _ _ _ _)
+  AlgEquiv.ofAlgHom (evenToNeg Q _ rfl) (evenToNeg (-Q) _ (neg_neg _).symm)
+    (even_to_neg_comp_even_to_neg _ _ _ _) (even_to_neg_comp_even_to_neg _ _ _ _)
 #align clifford_algebra.even_equiv_even_neg CliffordAlgebra.evenEquivEvenNeg
 
 end CliffordAlgebra

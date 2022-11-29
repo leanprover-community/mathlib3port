@@ -64,8 +64,7 @@ noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
   map_add' := by
     intro x y
     haveI := F'.m_mono
-    apply (mono_iff_injective F'.m).1
-    infer_instance
+    apply (mono_iff_injective F'.m).1; infer_instance
     rw [LinearMap.map_add]
     change (F'.e ≫ F'.m) _ = (F'.e ≫ F'.m) _ + (F'.e ≫ F'.m) _
     rw [F'.fac]
@@ -75,8 +74,7 @@ noncomputable def image.lift (F' : MonoFactorisation f) : image f ⟶ F'.i where
     rfl
   map_smul' c x := by
     haveI := F'.m_mono
-    apply (mono_iff_injective F'.m).1
-    infer_instance
+    apply (mono_iff_injective F'.m).1; infer_instance
     rw [LinearMap.map_smul]
     change (F'.e ≫ F'.m) _ = _ • (F'.e ≫ F'.m) _
     rw [F'.fac]
@@ -111,7 +109,8 @@ noncomputable def isImage : IsImage (monoFactorisation f) where
 /-- The categorical image of a morphism in `Module R`
 agrees with the linear algebraic range.
 -/
-noncomputable def imageIsoRange {G H : ModuleCat.{v} R} (f : G ⟶ H) : Limits.image f ≅ ModuleCat.of R f.range :=
+noncomputable def imageIsoRange {G H : ModuleCat.{v} R} (f : G ⟶ H) :
+    Limits.image f ≅ ModuleCat.of R f.range :=
   IsImage.isoExt (Image.isImage f) (isImage f)
 #align Module.image_iso_range ModuleCat.imageIsoRange
 

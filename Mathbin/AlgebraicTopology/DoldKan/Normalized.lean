@@ -26,7 +26,8 @@ with a functor (definitionally) equal to `normalized_Moore_complex A`.
 -/
 
 
-open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject CategoryTheory.Idempotents
+open
+  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject CategoryTheory.Idempotents
 
 open DoldKan
 
@@ -43,8 +44,10 @@ variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 theorem HigherFacesVanish.inclusion_of_Moore_complex_map (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj => by
   dsimp [inclusion_of_Moore_complex_map]
-  rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ])), assoc,
-    kernel_subobject_arrow_comp, comp_zero]
+  rw [←
+    factor_thru_arrow _ _
+      (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ])),
+    assoc, kernel_subobject_arrow_comp, comp_zero]
 #align
   algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusion_of_Moore_complex_map
 
@@ -64,17 +67,19 @@ theorem factors_normalized_Moore_complex_P_infty (n : ℕ) :
 /-- P_infty factors through the normalized Moore complex -/
 @[simps]
 def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
-  ChainComplex.ofHom _ _ _ _ _ _ (fun n => factorThru _ _ (factors_normalized_Moore_complex_P_infty n)) fun n => by
+  ChainComplex.ofHom _ _ _ _ _ _
+    (fun n => factorThru _ _ (factors_normalized_Moore_complex_P_infty n)) fun n => by
     rw [← cancel_mono (normalized_Moore_complex.obj_X X n).arrow, assoc, assoc, factor_thru_arrow, ←
       inclusion_of_Moore_complex_map_f, ← normalized_Moore_complex_obj_d, ←
-      (inclusion_of_Moore_complex_map X).comm' (n + 1) n rfl, inclusion_of_Moore_complex_map_f, factor_thru_arrow_assoc,
-      ← alternating_face_map_complex_obj_d]
+      (inclusion_of_Moore_complex_map X).comm' (n + 1) n rfl, inclusion_of_Moore_complex_map_f,
+      factor_thru_arrow_assoc, ← alternating_face_map_complex_obj_d]
     exact P_infty.comm' (n + 1) n rfl
 #align
   algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex
 
 @[simp, reassoc]
-theorem P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map (X : SimplicialObject A) :
+theorem P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map
+    (X : SimplicialObject A) :
     pInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = P_infty := by tidy
 #align
   algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map
@@ -112,7 +117,8 @@ instance : Mono (inclusionOfMooreComplexMap X) :=
     exact HomologicalComplex.congr_hom hf n⟩
 
 /-- `inclusion_of_Moore_complex_map X` is a split mono. -/
-def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) : SplitMono (inclusionOfMooreComplexMap X) where
+def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) :
+    SplitMono (inclusionOfMooreComplexMap X) where
   retraction := pInftyToNormalizedMooreComplex X
   id' := by
     simp only [← cancel_mono (inclusion_of_Moore_complex_map X), assoc, id_comp,
@@ -132,12 +138,13 @@ def n₁IsoNormalizedMooreComplexCompToKaroubi : N₁ ≅ normalizedMooreComplex
   inv := { app := fun X => { f := inclusionOfMooreComplexMap X, comm := by tidy } }
   hom_inv_id' := by
     ext X : 3
-    simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map, nat_trans.comp_app,
-      karoubi.comp, N₁_obj_p, nat_trans.id_app, karoubi.id_eq]
+    simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
+      nat_trans.comp_app, karoubi.comp, N₁_obj_p, nat_trans.id_app, karoubi.id_eq]
   inv_hom_id' := by
     ext X : 3
-    simp only [← cancel_mono (inclusion_of_Moore_complex_map X), nat_trans.comp_app, karoubi.comp, assoc,
-      nat_trans.id_app, karoubi.id_eq, P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
+    simp only [← cancel_mono (inclusion_of_Moore_complex_map X), nat_trans.comp_app, karoubi.comp,
+      assoc, nat_trans.id_app, karoubi.id_eq,
+      P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
       inclusion_of_Moore_complex_map_comp_P_infty]
     dsimp only [functor.comp_obj, to_karoubi]
     rw [id_comp]

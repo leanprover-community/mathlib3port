@@ -20,12 +20,14 @@ section ConditionallyCompleteLattice
 
 variable [ConditionallyCompleteLattice α] {s t : Set α} {a b : α}
 
-theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) : s.sup' hs f = sup (f '' s) :=
-  eq_of_forall_ge_iff fun a => by simp [cSup_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
+theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) :
+    s.sup' hs f = sup (f '' s) :=
+  eq_of_forall_ge_iff fun a => by
+    simp [cSup_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
 #align finset.nonempty.sup'_eq_cSup_image Finset.Nonempty.sup'_eq_cSup_image
 
-theorem Finset.Nonempty.sup'_id_eq_cSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = sup s := by
-  rw [hs.sup'_eq_cSup_image, image_id]
+theorem Finset.Nonempty.sup'_id_eq_cSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = sup s :=
+  by rw [hs.sup'_eq_cSup_image, image_id]
 #align finset.nonempty.sup'_id_eq_cSup Finset.Nonempty.sup'_id_eq_cSup
 
 end ConditionallyCompleteLattice
@@ -99,8 +101,8 @@ theorem inf'_eq_cInf_image [ConditionallyCompleteLattice β] (s : Finset α) (H)
   @sup'_eq_cSup_image _ βᵒᵈ _ _ H _
 #align finset.inf'_eq_cInf_image Finset.inf'_eq_cInf_image
 
-theorem sup'_id_eq_cSup [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.sup' H id = sup s := by
-  rw [sup'_eq_cSup_image s H, Set.image_id]
+theorem sup'_id_eq_cSup [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.sup' H id = sup s :=
+  by rw [sup'_eq_cSup_image s H, Set.image_id]
 #align finset.sup'_id_eq_cSup Finset.sup'_id_eq_cSup
 
 theorem inf'_id_eq_cInf [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.inf' H id = inf s :=

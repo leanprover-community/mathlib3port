@@ -38,7 +38,8 @@ Motivated by the theory of Banach Lattices, this section introduces normed latti
 -- mathport name: abs
 local notation "|" a "|" => abs a
 
-/-- Let `α` be a normed commutative group equipped with a partial order covariant with addition, with
+/--
+Let `α` be a normed commutative group equipped with a partial order covariant with addition, with
 respect which `α` forms a lattice. Suppose that `α` is *solid*, that is to say, for `a` and `b` in
 `α`, with absolute values `|a|` and `|b|` respectively, `|a| ≤ |b|` implies `‖a‖ ≤ ‖b‖`. Then `α` is
 said to be a normed lattice ordered group.
@@ -62,7 +63,8 @@ instance : NormedLatticeAddCommGroup ℝ where
 instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : Type _}
     [h : NormedLatticeAddCommGroup α] : OrderedAddCommGroup α :=
   { h with }
-#align normed_lattice_add_comm_group_to_ordered_add_comm_group normedLatticeAddCommGroupToOrderedAddCommGroup
+#align
+  normed_lattice_add_comm_group_to_ordered_add_comm_group normedLatticeAddCommGroupToOrderedAddCommGroup
 
 variable {α : Type _} [NormedLatticeAddCommGroup α]
 
@@ -136,7 +138,8 @@ theorem norm_sup_le_add (x y : α) : ‖x ⊔ y‖ ≤ ‖x‖ + ‖y‖ := by
 -- see Note [lower instance priority]
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
-instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : HasContinuousInf α := by
+instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : HasContinuousInf α :=
+  by
   refine' ⟨continuous_iff_continuous_at.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
   have : ∀ p : α × α, ‖p.1 ⊓ p.2 - q.1 ⊓ q.2‖ ≤ ‖p.1 - q.1‖ + ‖p.2 - q.2‖ := fun _ =>
     norm_inf_sub_inf_le_add_norm _ _ _ _
@@ -145,16 +148,19 @@ instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : Ha
     ((continuous_fst.tendsto q).sub tendsto_const_nhds).norm.add
       ((continuous_snd.tendsto q).sub tendsto_const_nhds).norm
   simp
-#align normed_lattice_add_comm_group_has_continuous_inf normed_lattice_add_comm_group_has_continuous_inf
+#align
+  normed_lattice_add_comm_group_has_continuous_inf normed_lattice_add_comm_group_has_continuous_inf
 
 -- see Note [lower instance priority]
-instance (priority := 100) normed_lattice_add_comm_group_has_continuous_sup {α : Type _} [NormedLatticeAddCommGroup α] :
-    HasContinuousSup α :=
+instance (priority := 100) normed_lattice_add_comm_group_has_continuous_sup {α : Type _}
+    [NormedLatticeAddCommGroup α] : HasContinuousSup α :=
   OrderDual.has_continuous_sup αᵒᵈ
-#align normed_lattice_add_comm_group_has_continuous_sup normed_lattice_add_comm_group_has_continuous_sup
+#align
+  normed_lattice_add_comm_group_has_continuous_sup normed_lattice_add_comm_group_has_continuous_sup
 
 -- see Note [lower instance priority]
-/-- Let `α` be a normed lattice ordered group. Then `α` is a topological lattice in the norm topology.
+/--
+Let `α` be a normed lattice ordered group. Then `α` is a topological lattice in the norm topology.
 -/
 instance (priority := 100) normedLatticeAddCommGroupTopologicalLattice : TopologicalLattice α :=
   TopologicalLattice.mk
@@ -198,9 +204,11 @@ theorem isClosedNonneg {E} [NormedLatticeAddCommGroup E] : IsClosed { x : E | 0 
   simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_set_of_eq, neg_eq_zero_iff]
 #align is_closed_nonneg isClosedNonneg
 
-theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G] [HasContinuousSub G]
-    (h : IsClosed { x : G | 0 ≤ x }) : IsClosed { p : G × G | p.fst ≤ p.snd } := by
-  have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } := by
+theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace G]
+    [HasContinuousSub G] (h : IsClosed { x : G | 0 ≤ x }) :
+    IsClosed { p : G × G | p.fst ≤ p.snd } := by
+  have : { p : G × G | p.fst ≤ p.snd } = (fun p : G × G => p.snd - p.fst) ⁻¹' { x : G | 0 ≤ x } :=
+    by
     ext1 p
     simp only [sub_nonneg, Set.preimage_set_of_eq]
   rw [this]
@@ -208,8 +216,9 @@ theorem isClosedLeOfIsClosedNonneg {G} [OrderedAddCommGroup G] [TopologicalSpace
 #align is_closed_le_of_is_closed_nonneg isClosedLeOfIsClosedNonneg
 
 -- See note [lower instance priority]
-instance (priority := 100) NormedLatticeAddCommGroup.orderClosedTopology {E} [NormedLatticeAddCommGroup E] :
-    OrderClosedTopology E :=
+instance (priority := 100) NormedLatticeAddCommGroup.orderClosedTopology {E}
+    [NormedLatticeAddCommGroup E] : OrderClosedTopology E :=
   ⟨isClosedLeOfIsClosedNonneg isClosedNonneg⟩
-#align normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.orderClosedTopology
+#align
+  normed_lattice_add_comm_group.order_closed_topology NormedLatticeAddCommGroup.orderClosedTopology
 

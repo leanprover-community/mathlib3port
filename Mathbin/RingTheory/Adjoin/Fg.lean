@@ -32,7 +32,8 @@ open Pointwise
 
 namespace Algebra
 
-variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A] [Algebra R A] {s t : Set A}
+variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A] [Algebra R A]
+  {s t : Set A}
 
 theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t).toSubmodule.Fg) :
     (adjoin R (s ∪ t)).toSubmodule.Fg := by
@@ -128,7 +129,8 @@ theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R 
       exact Algebra.subset_adjoin⟩
 #align subalgebra.fg_of_submodule_fg Subalgebra.fg_of_submodule_fg
 
-theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg := by
+theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg :=
+  by
   obtain ⟨s, hs⟩ := fg_def.1 hS
   obtain ⟨t, ht⟩ := fg_def.1 hT
   rw [← hs.2, ← ht.2]
@@ -151,7 +153,8 @@ theorem Fg.map {S : Subalgebra R A} (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).
 
 end
 
-theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.Fg :=
+theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f)
+    (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
   ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
     map_injective hf <| by
@@ -170,8 +173,8 @@ theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
 #align subalgebra.fg_top Subalgebra.fg_top
 
 theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
-    (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
-  classical
+    (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S)))
+    (S : Subalgebra R A) : P S := by classical
   obtain ⟨t, rfl⟩ := S.fg_of_noetherian
   refine' Finset.induction_on t _ _
   · simpa using base
@@ -190,7 +193,8 @@ variable {R : Type u} {A : Type v} {B : Type w}
 variable [CommSemiring R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
 /-- The image of a Noetherian R-algebra under an R-algebra map is a Noetherian ring. -/
-instance AlgHom.is_noetherian_ring_range (f : A →ₐ[R] B) [IsNoetherianRing A] : IsNoetherianRing f.range :=
+instance AlgHom.is_noetherian_ring_range (f : A →ₐ[R] B) [IsNoetherianRing A] :
+    IsNoetherianRing f.range :=
   is_noetherian_ring_range f.toRingHom
 #align alg_hom.is_noetherian_ring_range AlgHom.is_noetherian_ring_range
 
@@ -202,15 +206,18 @@ variable {R : Type u} {A : Type v} {B : Type w}
 
 variable [CommRing R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
-theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.Fg) [IsNoetherianRing R] : IsNoetherianRing S :=
+theorem is_noetherian_ring_of_fg {S : Subalgebra R A} (HS : S.Fg) [IsNoetherianRing R] :
+    IsNoetherianRing S :=
   let ⟨t, ht⟩ := HS
   ht ▸
     (Algebra.adjoin_eq_range R (↑t : Set A)).symm ▸ by
       haveI : IsNoetherianRing (MvPolynomial (↑t : Set A) R) := MvPolynomial.is_noetherian_ring <;>
-        convert AlgHom.is_noetherian_ring_range _ <;> infer_instance
+          convert AlgHom.is_noetherian_ring_range _ <;>
+        infer_instance
 #align is_noetherian_ring_of_fg is_noetherian_ring_of_fg
 
-theorem is_noetherian_subring_closure (s : Set R) (hs : s.Finite) : IsNoetherianRing (Subring.closure s) :=
+theorem is_noetherian_subring_closure (s : Set R) (hs : s.Finite) :
+    IsNoetherianRing (Subring.closure s) :=
   show IsNoetherianRing (subalgebraOfSubring (Subring.closure s)) from
     Algebra.adjoin_int s ▸ is_noetherian_ring_of_fg (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
 #align is_noetherian_subring_closure is_noetherian_subring_closure

@@ -55,14 +55,16 @@ def Dual :=
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] R»
 #align module.dual Module.Dual
 
-instance {S : Type _} [CommRing S] {N : Type _} [AddCommGroup N] [Module S N] : AddCommGroup (Dual S N) :=
+instance {S : Type _} [CommRing S] {N : Type _} [AddCommGroup N] [Module S N] :
+    AddCommGroup (Dual S N) :=
   LinearMap.addCommGroup
 
 instance : LinearMapClass (Dual R M) R M R :=
   LinearMap.semilinearMapClass
 
 /-- The canonical pairing of a vector space and its algebraic dual. -/
-def dualPairing (R M) [CommSemiring R] [AddCommMonoid M] [Module R M] : Module.Dual R M →ₗ[R] M →ₗ[R] R :=
+def dualPairing (R M) [CommSemiring R] [AddCommMonoid M] [Module R M] :
+    Module.Dual R M →ₗ[R] M →ₗ[R] R :=
   LinearMap.id
 #align module.dual_pairing Module.dualPairing
 
@@ -105,7 +107,8 @@ theorem transpose_apply (u : M →ₗ[R] M') (l : Dual R M') : transpose u l = l
 
 variable {M'' : Type _} [AddCommMonoid M''] [Module R M'']
 
-theorem transpose_comp (u : M' →ₗ[R] M'') (v : M →ₗ[R] M') : transpose (u.comp v) = (transpose v).comp (transpose u) :=
+theorem transpose_comp (u : M' →ₗ[R] M'') (v : M →ₗ[R] M') :
+    transpose (u.comp v) = (transpose v).comp (transpose u) :=
   rfl
 #align module.dual.transpose_comp Module.Dual.transpose_comp
 
@@ -141,9 +144,11 @@ theorem to_dual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0
 #align basis.to_dual_apply Basis.to_dual_apply
 
 @[simp]
-theorem to_dual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total ι M R b f) (b i) = f i := by
+theorem to_dual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total ι M R b f) (b i) = f i :=
+  by
   rw [Finsupp.total_apply, Finsupp.sum, LinearMap.map_sum, LinearMap.sum_apply]
-  simp_rw [LinearMap.map_smul, LinearMap.smul_apply, to_dual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq']
+  simp_rw [LinearMap.map_smul, LinearMap.smul_apply, to_dual_apply, smul_eq_mul, mul_boole,
+    Finset.sum_ite_eq']
   split_ifs with h
   · rfl
     
@@ -152,7 +157,8 @@ theorem to_dual_total_left (f : ι →₀ R) (i : ι) : b.toDual (Finsupp.total 
 #align basis.to_dual_total_left Basis.to_dual_total_left
 
 @[simp]
-theorem to_dual_total_right (f : ι →₀ R) (i : ι) : b.toDual (b i) (Finsupp.total ι M R b f) = f i := by
+theorem to_dual_total_right (f : ι →₀ R) (i : ι) : b.toDual (b i) (Finsupp.total ι M R b f) = f i :=
+  by
   rw [Finsupp.total_apply, Finsupp.sum, LinearMap.map_sum]
   simp_rw [LinearMap.map_smul, to_dual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq]
   split_ifs with h
@@ -225,8 +231,8 @@ variable (b : Basis ι R M)
 @[simp]
 theorem sum_dual_apply_smul_coord (f : Module.Dual R M) : (∑ x, f (b x) • b.Coord x) = f := by
   ext m
-  simp_rw [LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, mul_comm (f _), ← smul_eq_mul, ← f.map_smul, ←
-    f.map_sum, Basis.coord_apply, Basis.sum_repr]
+  simp_rw [LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, mul_comm (f _), ← smul_eq_mul, ←
+    f.map_smul, ← f.map_sum, Basis.coord_apply, Basis.sum_repr]
 #align basis.sum_dual_apply_smul_coord Basis.sum_dual_apply_smul_coord
 
 end
@@ -258,7 +264,8 @@ theorem dual_basis_apply_self (i j : ι) : b.dualBasis i (b j) = if j = i then 1
   rw [@eq_comm _ j i]
 #align basis.dual_basis_apply_self Basis.dual_basis_apply_self
 
-theorem total_dual_basis (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i := by
+theorem total_dual_basis (f : ι →₀ R) (i : ι) :
+    Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i := by
   cases nonempty_fintype ι
   rw [Finsupp.total_apply, Finsupp.sum_fintype, LinearMap.sum_apply]
   · simp_rw [LinearMap.smul_apply, smul_eq_mul, dual_basis_apply_self, mul_boole, Finset.sum_ite_eq,
@@ -286,14 +293,14 @@ theorem coe_dual_basis : ⇑b.dualBasis = b.Coord := by
 @[simp]
 theorem to_dual_to_dual : b.dualBasis.toDual.comp b.toDual = Dual.eval R M := by
   refine' b.ext fun i => b.dual_basis.ext fun j => _
-  rw [LinearMap.comp_apply, to_dual_apply_left, coe_to_dual_self, ← coe_dual_basis, dual.eval_apply, Basis.repr_self,
-    Finsupp.single_apply, dual_basis_apply_self]
+  rw [LinearMap.comp_apply, to_dual_apply_left, coe_to_dual_self, ← coe_dual_basis, dual.eval_apply,
+    Basis.repr_self, Finsupp.single_apply, dual_basis_apply_self]
 #align basis.to_dual_to_dual Basis.to_dual_to_dual
 
 end Finite
 
-theorem dual_basis_equiv_fun [Fintype ι] (l : Dual R M) (i : ι) : b.dualBasis.equivFun l i = l (b i) := by
-  rw [Basis.equiv_fun_apply, dual_basis_repr]
+theorem dual_basis_equiv_fun [Fintype ι] (l : Dual R M) (i : ι) :
+    b.dualBasis.equivFun l i = l (b i) := by rw [Basis.equiv_fun_apply, dual_basis_repr]
 #align basis.dual_basis_equiv_fun Basis.dual_basis_equiv_fun
 
 theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ := by
@@ -315,7 +322,8 @@ def evalEquiv {ι : Type _} [Finite ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R 
 #align basis.eval_equiv Basis.evalEquiv
 
 @[simp]
-theorem eval_equiv_to_linear_map {ι : Type _} [Finite ι] (b : Basis ι R M) : b.evalEquiv.toLinearMap = Dual.eval R M :=
+theorem eval_equiv_to_linear_map {ι : Type _} [Finite ι] (b : Basis ι R M) :
+    b.evalEquiv.toLinearMap = Dual.eval R M :=
   rfl
 #align basis.eval_equiv_to_linear_map Basis.eval_equiv_to_linear_map
 
@@ -339,8 +347,8 @@ end CommRing
 
 /-- `simp` normal form version of `total_dual_basis` -/
 @[simp]
-theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : Basis ι R M) (f : ι →₀ R) (i : ι) :
-    Finsupp.total ι (Dual R M) R b.Coord f (b i) = f i := by
+theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : Basis ι R M)
+    (f : ι →₀ R) (i : ι) : Finsupp.total ι (Dual R M) R b.Coord f (b i) = f i := by
   haveI := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 #align basis.total_coord Basis.total_coord
@@ -387,7 +395,8 @@ theorem forall_dual_apply_eq_zero_iff (v : V) : (∀ φ : Module.Dual K V, φ v 
 end
 
 -- TODO(jmc): generalize to rings, once `module.rank` is generalized
-theorem dual_dim_eq [FiniteDimensional K V] : Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) :=
+theorem dual_dim_eq [FiniteDimensional K V] :
+    Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) :=
   (Basis.ofVectorSpace K V).dual_dim_eq
 #align module.dual_dim_eq Module.dual_dim_eq
 
@@ -406,7 +415,8 @@ def evalEquiv [FiniteDimensional K V] : V ≃ₗ[K] Dual K (Dual K V) :=
 variable {K V}
 
 @[simp]
-theorem eval_equiv_to_linear_map [FiniteDimensional K V] : (evalEquiv K V).toLinearMap = Dual.eval K V :=
+theorem eval_equiv_to_linear_map [FiniteDimensional K V] :
+    (evalEquiv K V).toLinearMap = Dual.eval K V :=
   rfl
 #align module.eval_equiv_to_linear_map Module.eval_equiv_to_linear_map
 
@@ -524,7 +534,8 @@ theorem coe_basis : ⇑h.Basis = e := by
 #align module.dual_bases.coe_basis Module.DualBases.coe_basis
 
 -- `convert` to get rid of a `decidable_eq` mismatch
-theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '' H)) : ∀ i : ι, ε i x ≠ 0 → i ∈ H := by
+theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '' H)) :
+    ∀ i : ι, ε i x ≠ 0 → i ∈ H := by
   intro i hi
   rcases(Finsupp.mem_span_image_iff_total _).mp hmem with ⟨l, supp_l, rfl⟩
   apply not_imp_comm.mp ((Finsupp.mem_supported' _ _).mp supp_l i)
@@ -533,7 +544,8 @@ theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '
 
 theorem coe_dual_basis [Fintype ι] : ⇑h.Basis.dualBasis = ε :=
   funext fun i =>
-    h.Basis.ext fun j => by rw [h.basis.dual_basis_apply_self, h.coe_basis, h.eval, if_congr eq_comm rfl rfl]
+    h.Basis.ext fun j => by
+      rw [h.basis.dual_basis_apply_self, h.coe_basis, h.eval, if_congr eq_comm rfl rfl]
 #align module.dual_bases.coe_dual_basis Module.DualBases.coe_dual_basis
 
 end Module.DualBases
@@ -554,14 +566,15 @@ def dualRestrict (W : Submodule R M) : Module.Dual R M →ₗ[R] Module.Dual R W
 #align submodule.dual_restrict Submodule.dualRestrict
 
 @[simp]
-theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) : W.dualRestrict φ x = φ (x : M) :=
+theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) :
+    W.dualRestrict φ x = φ (x : M) :=
   rfl
 #align submodule.dual_restrict_apply Submodule.dual_restrict_apply
 
 /-- The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
   that `φ w = 0` for all `w ∈ W`. -/
-def dualAnnihilator {R : Type u} {M : Type v} [CommSemiring R] [AddCommMonoid M] [Module R M] (W : Submodule R M) :
-    Submodule R <| Module.Dual R M :=
+def dualAnnihilator {R : Type u} {M : Type v} [CommSemiring R] [AddCommMonoid M] [Module R M]
+    (W : Submodule R M) : Submodule R <| Module.Dual R M :=
   W.dualRestrict.ker
 #align submodule.dual_annihilator Submodule.dualAnnihilator
 
@@ -572,9 +585,11 @@ theorem mem_dual_annihilator (φ : Module.Dual R M) : φ ∈ W.dualAnnihilator �
   exact ⟨fun h w hw => h ⟨w, hw⟩, fun h w => h w.1 w.2⟩
 #align submodule.mem_dual_annihilator Submodule.mem_dual_annihilator
 
-theorem dual_restrict_ker_eq_dual_annihilator (W : Submodule R M) : W.dualRestrict.ker = W.dualAnnihilator :=
+theorem dual_restrict_ker_eq_dual_annihilator (W : Submodule R M) :
+    W.dualRestrict.ker = W.dualAnnihilator :=
   rfl
-#align submodule.dual_restrict_ker_eq_dual_annihilator Submodule.dual_restrict_ker_eq_dual_annihilator
+#align
+  submodule.dual_restrict_ker_eq_dual_annihilator Submodule.dual_restrict_ker_eq_dual_annihilator
 
 /-- The `dual_annihilator` of a submodule of the dual space pulled back along the evaluation map
 `module.dual.eval`. -/
@@ -605,12 +620,13 @@ theorem dual_annihilator_bot : (⊥ : Submodule R M).dualAnnihilator = ⊤ := by
 #align submodule.dual_annihilator_bot Submodule.dual_annihilator_bot
 
 @[simp]
-theorem dual_annihilator_comap_bot : (⊥ : Submodule R (Module.Dual R M)).dualAnnihilatorComap = ⊤ := by
-  rw [dual_annihilator_comap, dual_annihilator_bot, comap_top]
+theorem dual_annihilator_comap_bot : (⊥ : Submodule R (Module.Dual R M)).dualAnnihilatorComap = ⊤ :=
+  by rw [dual_annihilator_comap, dual_annihilator_bot, comap_top]
 #align submodule.dual_annihilator_comap_bot Submodule.dual_annihilator_comap_bot
 
 @[mono]
-theorem dual_annihilator_anti {U V : Submodule R M} (hUV : U ≤ V) : V.dualAnnihilator ≤ U.dualAnnihilator := by
+theorem dual_annihilator_anti {U V : Submodule R M} (hUV : U ≤ V) :
+    V.dualAnnihilator ≤ U.dualAnnihilator := by
   intro φ
   simp_rw [mem_dual_annihilator]
   intro h w hw
@@ -626,13 +642,14 @@ theorem dual_annihilator_comap_anti {U V : Submodule R (Module.Dual R M)} (hUV :
   exact h w (hUV hw)
 #align submodule.dual_annihilator_comap_anti Submodule.dual_annihilator_comap_anti
 
-theorem le_dual_annihilator_dual_annihilator_comap {U : Submodule R M} : U ≤ U.dualAnnihilator.dualAnnihilatorComap :=
-  by
+theorem le_dual_annihilator_dual_annihilator_comap {U : Submodule R M} :
+    U ≤ U.dualAnnihilator.dualAnnihilatorComap := by
   intro v
   simp_rw [mem_dual_annihilator_comap, mem_dual_annihilator]
   intro hv φ h
   exact h _ hv
-#align submodule.le_dual_annihilator_dual_annihilator_comap Submodule.le_dual_annihilator_dual_annihilator_comap
+#align
+  submodule.le_dual_annihilator_dual_annihilator_comap Submodule.le_dual_annihilator_dual_annihilator_comap
 
 theorem le_dual_annihilator_comap_dual_annihilator {U : Submodule R (Module.Dual R M)} :
     U ≤ U.dualAnnihilatorComap.dualAnnihilator := by
@@ -640,7 +657,8 @@ theorem le_dual_annihilator_comap_dual_annihilator {U : Submodule R (Module.Dual
   simp_rw [mem_dual_annihilator, mem_dual_annihilator_comap]
   intro hv φ h
   exact h _ hv
-#align submodule.le_dual_annihilator_comap_dual_annihilator Submodule.le_dual_annihilator_comap_dual_annihilator
+#align
+  submodule.le_dual_annihilator_comap_dual_annihilator Submodule.le_dual_annihilator_comap_dual_annihilator
 
 theorem dual_annihilator_sup_eq (U V : Submodule R M) :
     (U ⊔ V).dualAnnihilator = U.dualAnnihilator ⊓ V.dualAnnihilator := by
@@ -717,11 +735,13 @@ universe u v w
 variable {K : Type u} {V : Type v} [Field K] [AddCommGroup V] [Module K V]
 
 @[simp]
-theorem dual_annihilator_comap_top (W : Subspace K V) : (⊤ : Submodule K (Module.Dual K W)).dualAnnihilatorComap = ⊥ :=
-  by rw [dual_annihilator_comap, dual_annihilator_top, comap_bot, Module.eval_ker]
+theorem dual_annihilator_comap_top (W : Subspace K V) :
+    (⊤ : Submodule K (Module.Dual K W)).dualAnnihilatorComap = ⊥ := by
+  rw [dual_annihilator_comap, dual_annihilator_top, comap_bot, Module.eval_ker]
 #align subspace.dual_annihilator_comap_top Subspace.dual_annihilator_comap_top
 
-theorem dual_annihilator_dual_annihilator_comap_eq {W : Subspace K V} : W.dualAnnihilator.dualAnnihilatorComap = W := by
+theorem dual_annihilator_dual_annihilator_comap_eq {W : Subspace K V} :
+    W.dualAnnihilator.dualAnnihilatorComap = W := by
   refine' le_antisymm _ le_dual_annihilator_dual_annihilator_comap
   intro v
   simp only [mem_dual_annihilator, mem_dual_annihilator_comap]
@@ -739,12 +759,13 @@ theorem dual_annihilator_dual_annihilator_comap_eq {W : Subspace K V} : W.dualAn
   push_neg  at hw'nz
   obtain ⟨φ, hφ⟩ := hw'nz
   exists ((LinearMap.ofIsComplProd hW).comp (LinearMap.inr _ _ _)) φ
-  simp only [coe_comp, coe_inr, Function.comp_apply, of_is_compl_prod_apply, map_add, of_is_compl_left_apply,
-    zero_apply, of_is_compl_right_apply, zero_add, Ne.def]
+  simp only [coe_comp, coe_inr, Function.comp_apply, of_is_compl_prod_apply, map_add,
+    of_is_compl_left_apply, zero_apply, of_is_compl_right_apply, zero_add, Ne.def]
   refine' ⟨_, hφ⟩
   intro v hv
   convert LinearMap.of_is_compl_left_apply hW ⟨v, hv⟩
-#align subspace.dual_annihilator_dual_annihilator_comap_eq Subspace.dual_annihilator_dual_annihilator_comap_eq
+#align
+  subspace.dual_annihilator_dual_annihilator_comap_eq Subspace.dual_annihilator_dual_annihilator_comap_eq
 
 /-- Given a subspace `W` of `V` and an element of its dual `φ`, `dual_lift W φ` is
 the natural extension of `φ` to an element of the dual of `V`.
@@ -762,8 +783,8 @@ theorem dual_lift_of_subtype {φ : Module.Dual K W} (w : W) : W.dualLift φ (w :
   rfl
 #align subspace.dual_lift_of_subtype Subspace.dual_lift_of_subtype
 
-theorem dual_lift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLift φ w = φ ⟨w, hw⟩ := by
-  convert dual_lift_of_subtype ⟨w, hw⟩
+theorem dual_lift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLift φ w = φ ⟨w, hw⟩ :=
+  by convert dual_lift_of_subtype ⟨w, hw⟩
 #align subspace.dual_lift_of_mem Subspace.dual_lift_of_mem
 
 @[simp]
@@ -772,13 +793,15 @@ theorem dual_restrict_comp_dual_lift (W : Subspace K V) : W.dualRestrict.comp W.
   simp
 #align subspace.dual_restrict_comp_dual_lift Subspace.dual_restrict_comp_dual_lift
 
-theorem dual_restrict_left_inverse (W : Subspace K V) : Function.LeftInverse W.dualRestrict W.dualLift := fun x =>
+theorem dual_restrict_left_inverse (W : Subspace K V) :
+    Function.LeftInverse W.dualRestrict W.dualLift := fun x =>
   show W.dualRestrict.comp W.dualLift x = x by
     rw [dual_restrict_comp_dual_lift]
     rfl
 #align subspace.dual_restrict_left_inverse Subspace.dual_restrict_left_inverse
 
-theorem dual_lift_right_inverse (W : Subspace K V) : Function.RightInverse W.dualLift W.dualRestrict :=
+theorem dual_lift_right_inverse (W : Subspace K V) :
+    Function.RightInverse W.dualLift W.dualRestrict :=
   W.dual_restrict_left_inverse
 #align subspace.dual_lift_right_inverse Subspace.dual_lift_right_inverse
 
@@ -803,12 +826,14 @@ noncomputable def dualEquivDual (W : Subspace K V) : Module.Dual K W ≃ₗ[K] W
   LinearEquiv.ofInjective _ dual_lift_injective
 #align subspace.dual_equiv_dual Subspace.dualEquivDual
 
-theorem dual_equiv_dual_def (W : Subspace K V) : W.dualEquivDual.toLinearMap = W.dualLift.range_restrict :=
+theorem dual_equiv_dual_def (W : Subspace K V) :
+    W.dualEquivDual.toLinearMap = W.dualLift.range_restrict :=
   rfl
 #align subspace.dual_equiv_dual_def Subspace.dual_equiv_dual_def
 
 @[simp]
-theorem dual_equiv_dual_apply (φ : Module.Dual K W) : W.dualEquivDual φ = ⟨W.dualLift φ, mem_range.2 ⟨φ, rfl⟩⟩ :=
+theorem dual_equiv_dual_apply (φ : Module.Dual K W) :
+    W.dualEquivDual φ = ⟨W.dualLift φ, mem_range.2 ⟨φ, rfl⟩⟩ :=
   rfl
 #align subspace.dual_equiv_dual_apply Subspace.dual_equiv_dual_apply
 
@@ -855,7 +880,8 @@ theorem finrank_add_finrank_dual_annihilator_comap_eq (W : Subspace K (Module.Du
     finrank K W + finrank K W.dualAnnihilatorComap = finrank K V := by
   rw [finrank_dual_annihilator_comap_eq, W.quot_equiv_annihilator.finrank_eq.symm, add_comm,
     Submodule.finrank_quotient_add_finrank, Subspace.dual_finrank_eq]
-#align subspace.finrank_add_finrank_dual_annihilator_comap_eq Subspace.finrank_add_finrank_dual_annihilator_comap_eq
+#align
+  subspace.finrank_add_finrank_dual_annihilator_comap_eq Subspace.finrank_add_finrank_dual_annihilator_comap_eq
 
 end
 
@@ -876,7 +902,8 @@ def LinearMap.dualMap (f : M₁ →ₗ[R] M₂) : Dual R M₂ →ₗ[R] Dual R M
 #align linear_map.dual_map LinearMap.dualMap
 
 @[simp]
-theorem LinearMap.dual_map_apply (f : M₁ →ₗ[R] M₂) (g : Dual R M₂) (x : M₁) : f.dualMap g x = g (f x) :=
+theorem LinearMap.dual_map_apply (f : M₁ →ₗ[R] M₂) (g : Dual R M₂) (x : M₁) :
+    f.dualMap g x = g (f x) :=
   LinearMap.lcomp_apply f g x
 #align linear_map.dual_map_apply LinearMap.dual_map_apply
 
@@ -886,8 +913,8 @@ theorem LinearMap.dual_map_id : (LinearMap.id : M₁ →ₗ[R] M₁).dualMap = L
   rfl
 #align linear_map.dual_map_id LinearMap.dual_map_id
 
-theorem LinearMap.dual_map_comp_dual_map {M₃ : Type _} [AddCommGroup M₃] [Module R M₃] (f : M₁ →ₗ[R] M₂)
-    (g : M₂ →ₗ[R] M₃) : f.dualMap.comp g.dualMap = (g.comp f).dualMap :=
+theorem LinearMap.dual_map_comp_dual_map {M₃ : Type _} [AddCommGroup M₃] [Module R M₃]
+    (f : M₁ →ₗ[R] M₂) (g : M₂ →ₗ[R] M₃) : f.dualMap.comp g.dualMap = (g.comp f).dualMap :=
   rfl
 #align linear_map.dual_map_comp_dual_map LinearMap.dual_map_comp_dual_map
 
@@ -895,35 +922,36 @@ theorem LinearMap.dual_map_comp_dual_map {M₃ : Type _} [AddCommGroup M₃] [Mo
 def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R M₁ :=
   { f.toLinearMap.dualMap with invFun := f.symm.toLinearMap.dualMap,
     left_inv := by
-      intro φ
-      ext x
+      intro φ; ext x
       simp only [LinearMap.dual_map_apply, LinearEquiv.coe_to_linear_map, LinearMap.to_fun_eq_coe,
         LinearEquiv.apply_symm_apply],
     right_inv := by
-      intro φ
-      ext x
+      intro φ; ext x
       simp only [LinearMap.dual_map_apply, LinearEquiv.coe_to_linear_map, LinearMap.to_fun_eq_coe,
         LinearEquiv.symm_apply_apply] }
 #align linear_equiv.dual_map LinearEquiv.dualMap
 
 @[simp]
-theorem LinearEquiv.dual_map_apply (f : M₁ ≃ₗ[R] M₂) (g : Dual R M₂) (x : M₁) : f.dualMap g x = g (f x) :=
+theorem LinearEquiv.dual_map_apply (f : M₁ ≃ₗ[R] M₂) (g : Dual R M₂) (x : M₁) :
+    f.dualMap g x = g (f x) :=
   LinearMap.lcomp_apply f g x
 #align linear_equiv.dual_map_apply LinearEquiv.dual_map_apply
 
 @[simp]
-theorem LinearEquiv.dual_map_refl : (LinearEquiv.refl R M₁).dualMap = LinearEquiv.refl R (Dual R M₁) := by
+theorem LinearEquiv.dual_map_refl :
+    (LinearEquiv.refl R M₁).dualMap = LinearEquiv.refl R (Dual R M₁) := by
   ext
   rfl
 #align linear_equiv.dual_map_refl LinearEquiv.dual_map_refl
 
 @[simp]
-theorem LinearEquiv.dual_map_symm {f : M₁ ≃ₗ[R] M₂} : (LinearEquiv.dualMap f).symm = LinearEquiv.dualMap f.symm :=
+theorem LinearEquiv.dual_map_symm {f : M₁ ≃ₗ[R] M₂} :
+    (LinearEquiv.dualMap f).symm = LinearEquiv.dualMap f.symm :=
   rfl
 #align linear_equiv.dual_map_symm LinearEquiv.dual_map_symm
 
-theorem LinearEquiv.dual_map_trans {M₃ : Type _} [AddCommGroup M₃] [Module R M₃] (f : M₁ ≃ₗ[R] M₂) (g : M₂ ≃ₗ[R] M₃) :
-    g.dualMap.trans f.dualMap = (f.trans g).dualMap :=
+theorem LinearEquiv.dual_map_trans {M₃ : Type _} [AddCommGroup M₃] [Module R M₃] (f : M₁ ≃ₗ[R] M₂)
+    (g : M₂ ≃ₗ[R] M₃) : g.dualMap.trans f.dualMap = (f.trans g).dualMap :=
   rfl
 #align linear_equiv.dual_map_trans LinearEquiv.dual_map_trans
 
@@ -938,8 +966,7 @@ variable [AddCommMonoid M₁] [Module R M₁] [AddCommMonoid M₂] [Module R M�
 variable (f : M₁ →ₗ[R] M₂)
 
 theorem ker_dual_map_eq_dual_annihilator_range : f.dualMap.ker = f.range.dualAnnihilator := by
-  ext φ
-  constructor <;> intro hφ
+  ext φ; constructor <;> intro hφ
   · rw [mem_ker] at hφ
     rw [Submodule.mem_dual_annihilator]
     rintro y ⟨x, rfl⟩
@@ -950,14 +977,16 @@ theorem ker_dual_map_eq_dual_annihilator_range : f.dualMap.ker = f.range.dualAnn
     rw [Submodule.mem_dual_annihilator] at hφ
     exact hφ (f x) ⟨x, rfl⟩
     
-#align linear_map.ker_dual_map_eq_dual_annihilator_range LinearMap.ker_dual_map_eq_dual_annihilator_range
+#align
+  linear_map.ker_dual_map_eq_dual_annihilator_range LinearMap.ker_dual_map_eq_dual_annihilator_range
 
 theorem range_dual_map_le_dual_annihilator_ker : f.dualMap.range ≤ f.ker.dualAnnihilator := by
   rintro _ ⟨ψ, rfl⟩
   simp_rw [Submodule.mem_dual_annihilator, mem_ker]
   rintro x hx
   rw [dual_map_apply, hx, map_zero]
-#align linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dual_map_le_dual_annihilator_ker
+#align
+  linear_map.range_dual_map_le_dual_annihilator_ker LinearMap.range_dual_map_le_dual_annihilator_ker
 
 section FiniteDimensional
 
@@ -970,14 +999,17 @@ open FiniteDimensional
 variable [FiniteDimensional K V₂]
 
 @[simp]
-theorem finrank_range_dual_map_eq_finrank_range (f : V₁ →ₗ[K] V₂) : finrank K f.dualMap.range = finrank K f.range := by
+theorem finrank_range_dual_map_eq_finrank_range (f : V₁ →ₗ[K] V₂) :
+    finrank K f.dualMap.range = finrank K f.range := by
   have := Submodule.finrank_quotient_add_finrank f.range
-  rw [(Subspace.quotEquivAnnihilator f.range).finrank_eq, ← ker_dual_map_eq_dual_annihilator_range] at this
+  rw [(Subspace.quotEquivAnnihilator f.range).finrank_eq, ←
+    ker_dual_map_eq_dual_annihilator_range] at this
   conv_rhs at this => rw [← Subspace.dual_finrank_eq]
   refine' add_left_injective (finrank K f.dual_map.ker) _
   change _ + _ = _ + _
   rw [finrank_range_add_finrank_ker f.dual_map, add_comm, this]
-#align linear_map.finrank_range_dual_map_eq_finrank_range LinearMap.finrank_range_dual_map_eq_finrank_range
+#align
+  linear_map.finrank_range_dual_map_eq_finrank_range LinearMap.finrank_range_dual_map_eq_finrank_range
 
 theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V₁ →ₗ[K] V₂) :
     f.dualMap.range = f.ker.dualAnnihilator := by
@@ -987,7 +1019,8 @@ theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V
   refine' add_left_injective (finrank K f.ker) _
   simp_rw [this, finrank_range_dual_map_eq_finrank_range]
   exact finrank_range_add_finrank_ker f
-#align linear_map.range_dual_map_eq_dual_annihilator_ker LinearMap.range_dual_map_eq_dual_annihilator_ker
+#align
+  linear_map.range_dual_map_eq_dual_annihilator_ker LinearMap.range_dual_map_eq_dual_annihilator_ker
 
 end FiniteDimensional
 
@@ -1054,8 +1087,8 @@ variable {R M N}
 @[simp]
 theorem dual_distrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
     dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n := by
-  simp only [dual_distrib, coe_comp, Function.comp_apply, hom_tensor_hom_map_apply, comp_right_apply,
-    LinearEquiv.coe_coe, map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
+  simp only [dual_distrib, coe_comp, Function.comp_apply, hom_tensor_hom_map_apply,
+    comp_right_apply, LinearEquiv.coe_coe, map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
 #align tensor_product.dual_distrib_apply TensorProduct.dual_distrib_apply
 
 end
@@ -1072,12 +1105,14 @@ variable [Module R M] [Module R N]
 noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
     Dual R (M ⊗[R] N) →ₗ[R] Dual R M ⊗[R] Dual R N :=
   ∑ (i) (j),
-    (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
+    (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ
+      applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
 #align tensor_product.dual_distrib_inv_of_basis TensorProduct.dualDistribInvOfBasis
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :
+theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N)
+    (f : Dual R (M ⊗[R] N)) :
     dualDistribInvOfBasis b c f = ∑ (i) (j), f (b i ⊗ₜ c j) • b.dualBasis i ⊗ₜ c.dualBasis j := by
   simp [dual_distrib_inv_of_basis]
 #align tensor_product.dual_distrib_inv_of_basis_apply TensorProduct.dual_distrib_inv_of_basis_apply
@@ -1092,13 +1127,15 @@ noncomputable def dualDistribEquivOfBasis (b : Basis ι R M) (c : Basis κ R N) 
   refine' LinearEquiv.ofLinear (dual_distrib R M N) (dual_distrib_inv_of_basis b c) _ _
   · ext (f m n)
     have h : ∀ r s : R, r • s = s • r := IsCommutative.comm
-    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, LinearMap.map_sum,
-      map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ← f.map_smul, ← f.map_sum, ← smul_tmul_smul, ←
-      tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.coord_apply, Basis.sum_repr]
+    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply,
+      LinearMap.map_sum, map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ←
+      f.map_smul, ← f.map_sum, ← smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dual_basis,
+      Basis.coord_apply, Basis.sum_repr]
     
   · ext (f g)
-    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, dual_distrib_apply, ←
-      smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.sum_dual_apply_smul_coord]
+    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply,
+      dual_distrib_apply, ← smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dual_basis,
+      Basis.sum_dual_apply_smul_coord]
     
 #align tensor_product.dual_distrib_equiv_of_basis TensorProduct.dualDistribEquivOfBasis
 
@@ -1110,7 +1147,8 @@ variable [Nontrivial R]
 
 open Classical
 
-/-- A linear equivalence between `dual M ⊗ dual N` and `dual (M ⊗ N)` when `M` and `N` are finite free
+/--
+A linear equivalence between `dual M ⊗ dual N` and `dual (M ⊗ N)` when `M` and `N` are finite free
 modules. It sends `f ⊗ g` to the composition of `tensor_product.map f g` with the natural
 isomorphism `R ⊗ R ≃ R`.
 -/

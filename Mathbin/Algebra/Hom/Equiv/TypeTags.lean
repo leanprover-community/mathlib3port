@@ -14,8 +14,10 @@ import Mathbin.Algebra.Group.TypeTags
 variable {G H : Type _}
 
 /-- Reinterpret `G ≃+ H` as `multiplicative G ≃* multiplicative H`. -/
-def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] : G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
-  toFun f := ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
+def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] :
+    G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
+  toFun f :=
+    ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
   left_inv x := by
     ext
@@ -38,8 +40,10 @@ def MulEquiv.toAdditive [MulOneClass G] [MulOneClass H] : G ≃* H ≃ (Additive
 #align mul_equiv.to_additive MulEquiv.toAdditive
 
 /-- Reinterpret `additive G ≃+ H` as `G ≃* multiplicative H`. -/
-def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] : Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
-  toFun f := ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
+def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] :
+    Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
+  toFun f :=
+    ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
   left_inv x := by
     ext
@@ -50,13 +54,16 @@ def AddEquiv.toMultiplicative' [MulOneClass G] [AddZeroClass H] : Additive G ≃
 #align add_equiv.to_multiplicative' AddEquiv.toMultiplicative'
 
 /-- Reinterpret `G ≃* multiplicative H` as `additive G ≃+ H` as. -/
-def MulEquiv.toAdditive' [MulOneClass G] [AddZeroClass H] : G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
+def MulEquiv.toAdditive' [MulOneClass G] [AddZeroClass H] :
+    G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
   AddEquiv.toMultiplicative'.symm
 #align mul_equiv.to_additive' MulEquiv.toAdditive'
 
 /-- Reinterpret `G ≃+ additive H` as `multiplicative G ≃* H`. -/
-def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] : G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
-  toFun f := ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
+def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] :
+    G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
+  toFun f :=
+    ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
   invFun f := ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
   left_inv x := by
     ext
@@ -67,7 +74,8 @@ def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClass H] : G ≃+ Additi
 #align add_equiv.to_multiplicative'' AddEquiv.toMultiplicative''
 
 /-- Reinterpret `multiplicative G ≃* H` as `G ≃+ additive H` as. -/
-def MulEquiv.toAdditive'' [AddZeroClass G] [MulOneClass H] : Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
+def MulEquiv.toAdditive'' [AddZeroClass G] [MulOneClass H] :
+    Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
   AddEquiv.toMultiplicative''.symm
 #align mul_equiv.to_additive'' MulEquiv.toAdditive''
 

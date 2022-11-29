@@ -65,7 +65,8 @@ instance [Inv α] : Inv (WithOne α) :=
 @[to_additive]
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithOne α) :=
   { WithOne.hasInv with
-    inv_inv := fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a =>
+      (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 @[to_additive]
 instance [Inv α] : InvOneClass (WithOne α) :=
@@ -90,7 +91,8 @@ def recOneCoe {C : WithOne α → Sort _} (h₁ : C 1) (h₂ : ∀ a : α, C a) 
 #align with_one.rec_one_coe WithOne.recOneCoe
 
 /-- Deconstruct a `x : with_one α` to the underlying value in `α`, given a proof that `x ≠ 1`. -/
-@[to_additive unzero "Deconstruct a `x : with_zero α` to the underlying value in `α`, given a proof that `x ≠ 0`."]
+@[to_additive unzero
+      "Deconstruct a `x : with_zero α` to the underlying value in `α`, given a proof that `x ≠ 0`."]
 def unone {x : WithOne α} (hx : x ≠ 1) : α :=
   WithBot.unbot x hx
 #align with_one.unone WithOne.unone
@@ -252,7 +254,7 @@ theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map
 
 /-- A version of `equiv.option_congr` for `with_one`. -/
 @[to_additive "A version of `equiv.option_congr` for `with_zero`.", simps apply]
-def _root_.mul_equiv.with_one_congr (e : α ≃* β) : WithOne α ≃* WithOne β :=
+def MulEquiv.withOneCongr (e : α ≃* β) : WithOne α ≃* WithOne β :=
   { map e.toMulHom with toFun := map e.toMulHom, invFun := map e.symm.toMulHom,
     left_inv := fun x =>
       (map_map _ _ _).trans <| by
@@ -264,23 +266,23 @@ def _root_.mul_equiv.with_one_congr (e : α ≃* β) : WithOne α ≃* WithOne �
         induction x using WithOne.cases_on <;>
           · simp
              }
-#align with_one._root_.mul_equiv.with_one_congr with_one._root_.mul_equiv.with_one_congr
+#align mul_equiv.with_one_congr MulEquiv.withOneCongr
 
 @[simp]
-theorem _root_.mul_equiv.with_one_congr_refl : (MulEquiv.refl α).withOneCongr = MulEquiv.refl _ :=
+theorem MulEquiv.with_one_congr_refl : (MulEquiv.refl α).withOneCongr = MulEquiv.refl _ :=
   MulEquiv.to_monoid_hom_injective map_id
-#align with_one._root_.mul_equiv.with_one_congr_refl with_one._root_.mul_equiv.with_one_congr_refl
+#align mul_equiv.with_one_congr_refl MulEquiv.with_one_congr_refl
 
 @[simp]
-theorem _root_.mul_equiv.with_one_congr_symm (e : α ≃* β) : e.withOneCongr.symm = e.symm.withOneCongr :=
+theorem MulEquiv.with_one_congr_symm (e : α ≃* β) : e.withOneCongr.symm = e.symm.withOneCongr :=
   rfl
-#align with_one._root_.mul_equiv.with_one_congr_symm with_one._root_.mul_equiv.with_one_congr_symm
+#align mul_equiv.with_one_congr_symm MulEquiv.with_one_congr_symm
 
 @[simp]
-theorem _root_.mul_equiv.with_one_congr_trans (e₁ : α ≃* β) (e₂ : β ≃* γ) :
+theorem MulEquiv.with_one_congr_trans (e₁ : α ≃* β) (e₂ : β ≃* γ) :
     e₁.withOneCongr.trans e₂.withOneCongr = (e₁.trans e₂).withOneCongr :=
   MulEquiv.to_monoid_hom_injective (map_comp _ _).symm
-#align with_one._root_.mul_equiv.with_one_congr_trans with_one._root_.mul_equiv.with_one_congr_trans
+#align mul_equiv.with_one_congr_trans MulEquiv.with_one_congr_trans
 
 end Map
 
@@ -307,8 +309,8 @@ theorem coe_one [One α] : ((1 : α) : WithZero α) = 1 :=
 #align with_zero.coe_one WithZero.coe_one
 
 instance [Mul α] : MulZeroClass (WithZero α) :=
-  { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂, zero_mul := fun a => rfl,
-    mul_zero := fun a => by cases a <;> rfl }
+  { WithZero.hasZero with mul := fun o₁ o₂ => o₁.bind fun a => Option.map (fun b => a * b) o₂,
+    zero_mul := fun a => rfl, mul_zero := fun a => by cases a <;> rfl }
 
 @[simp, norm_cast]
 theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α) = a * b :=
@@ -400,7 +402,8 @@ theorem inv_zero [Inv α] : (0 : WithZero α)⁻¹ = 0 :=
 
 instance [HasInvolutiveInv α] : HasInvolutiveInv (WithZero α) :=
   { WithZero.hasInv with
-    inv_inv := fun a => (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
+    inv_inv := fun a =>
+      (Option.map_map _ _ _).trans <| by simp_rw [inv_comp_inv, Option.map_id, id] }
 
 instance [InvOneClass α] : InvOneClass (WithZero α) :=
   { WithZero.hasOne, WithZero.hasInv with inv_one := show ((1⁻¹ : α) : WithZero α) = 1 by simp }
@@ -463,7 +466,8 @@ instance [DivisionMonoid α] : DivisionMonoid (WithZero α) :=
       | none, none => fun _ => rfl
       | none, some b => by contradiction
       | some a, none => by contradiction
-      | some a, some b => fun h => congr_arg some <| inv_eq_of_mul_eq_one_right <| Option.some_injective _ h }
+      | some a, some b => fun h =>
+        congr_arg some <| inv_eq_of_mul_eq_one_right <| Option.some_injective _ h }
 
 instance [DivisionCommMonoid α] : DivisionCommMonoid (WithZero α) :=
   { WithZero.divisionMonoid, WithZero.commSemigroup with }
@@ -490,7 +494,7 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
     nat_cast_zero := rfl,
     nat_cast_succ := fun n => by
       cases n
-      show (((1 : ℕ) : α) : WithZero α) = 0 + 1
+      show (((1 : ℕ) : α) : WithZero α) = 0 + 1;
       · rw [Nat.cast_one, coe_one, zero_add]
         
       show (((n + 2 : ℕ) : α) : WithZero α) = ((n + 1 : ℕ) : α) + 1
@@ -498,9 +502,10 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
          }
 
 instance [Semiring α] : Semiring (WithZero α) :=
-  { WithZero.addMonoidWithOne, WithZero.addCommMonoid, WithZero.mulZeroClass, WithZero.monoidWithZero with
+  { WithZero.addMonoidWithOne, WithZero.addCommMonoid, WithZero.mulZeroClass,
+    WithZero.monoidWithZero with
     left_distrib := fun a b c => by
-      cases' a with a
+      cases' a with a;
       · rfl
         
       cases' b with b <;> cases' c with c <;> try rfl

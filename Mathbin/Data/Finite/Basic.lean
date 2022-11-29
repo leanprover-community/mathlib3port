@@ -66,7 +66,7 @@ instance [Finite α] [Finite β] : Finite (α × β) := by
   infer_instance
 
 instance {α β : Sort _} [Finite α] [Finite β] : Finite (PProd α β) :=
-  of_equiv _ Equiv.pprodEquivProdPlift.symm
+  of_equiv _ Equiv.pprodEquivProdPLift.symm
 
 theorem prod_left (β) [Finite (α × β)] [Nonempty β] : Finite α :=
   of_surjective (Prod.fst : α × β → α) Prod.fst_surjective
@@ -108,10 +108,13 @@ instance Subtype.finite {α : Sort _} [Finite α] {p : α → Prop} : Finite { x
   Finite.of_injective coe Subtype.coe_injective
 #align subtype.finite Subtype.finite
 
-instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite (β a)] : Finite (∀ a, β a) := by
+instance Pi.finite {α : Sort _} {β : α → Sort _} [Finite α] [∀ a, Finite (β a)] :
+    Finite (∀ a, β a) := by
   haveI := Fintype.ofFinite (PLift α)
   haveI := fun a => Fintype.ofFinite (PLift (β a))
-  exact Finite.of_equiv (∀ a : PLift α, PLift (β (Equiv.plift a))) (Equiv.piCongr Equiv.plift fun _ => Equiv.plift)
+  exact
+    Finite.of_equiv (∀ a : PLift α, PLift (β (Equiv.plift a)))
+      (Equiv.piCongr Equiv.plift fun _ => Equiv.plift)
 #align pi.finite Pi.finite
 
 instance Vector.finite {α : Type _} [Finite α] {n : ℕ} : Finite (Vector α n) := by

@@ -138,8 +138,8 @@ def completeBipartiteGraph (V W : Type _) : SimpleGraph (Sum V W) where
 
 namespace SimpleGraph
 
-variable {𝕜 : Type _} {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V) (G' : SimpleGraph W) {a b c u v w : V}
-  {e : Sym2 V}
+variable {𝕜 : Type _} {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V)
+  (G' : SimpleGraph W) {a b c u v w : V} {e : Sym2 V}
 
 @[simp]
 protected theorem irrefl {v : V} : ¬G.Adj v v :=
@@ -172,7 +172,8 @@ protected theorem Adj.ne' {G : SimpleGraph V} {a b : V} (h : G.Adj a b) : b ≠ 
   h.Ne.symm
 #align simple_graph.adj.ne' SimpleGraph.Adj.ne'
 
-theorem ne_of_adj_of_not_adj {v w x : V} (h : G.Adj v x) (hn : ¬G.Adj w x) : v ≠ w := fun h' => hn (h' ▸ h)
+theorem ne_of_adj_of_not_adj {v w x : V} (h : G.Adj v x) (hn : ¬G.Adj w x) : v ≠ w := fun h' =>
+  hn (h' ▸ h)
 #align simple_graph.ne_of_adj_of_not_adj SimpleGraph.ne_of_adj_of_not_adj
 
 section Order
@@ -194,7 +195,8 @@ theorem is_subgraph_eq_le : (IsSubgraph : SimpleGraph V → SimpleGraph V → Pr
 /-- The supremum of two graphs `x ⊔ y` has edges where either `x` or `y` have edges. -/
 instance : HasSup (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj ⊔ y.Adj, symm := fun v w h => by rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm] }⟩
+    { Adj := x.Adj ⊔ y.Adj,
+      symm := fun v w h => by rwa [Pi.sup_apply, Pi.sup_apply, x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
 theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x ⊔ y).Adj v w ↔ x.Adj v w ∨ y.Adj v w :=
@@ -204,7 +206,8 @@ theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x ⊔ y).Adj v w ↔ x.Adj v 
 /-- The infimum of two graphs `x ⊓ y` has edges where both `x` and `y` have edges. -/
 instance : HasInf (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj ⊓ y.Adj, symm := fun v w h => by rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm] }⟩
+    { Adj := x.Adj ⊓ y.Adj,
+      symm := fun v w h => by rwa [Pi.inf_apply, Pi.inf_apply, x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
 theorem inf_adj (x y : SimpleGraph V) (v w : V) : (x ⊓ y).Adj v w ↔ x.Adj v w ∧ y.Adj v w :=
@@ -217,7 +220,8 @@ are adjacent in the complement, and every nonadjacent pair of vertices is adjace
 -/
 instance : HasCompl (SimpleGraph V) :=
   ⟨fun G =>
-    { Adj := fun v w => v ≠ w ∧ ¬G.Adj v w, symm := fun v w ⟨hne, _⟩ => ⟨hne.symm, by rwa [adj_comm]⟩,
+    { Adj := fun v w => v ≠ w ∧ ¬G.Adj v w,
+      symm := fun v w ⟨hne, _⟩ => ⟨hne.symm, by rwa [adj_comm]⟩,
       loopless := fun v ⟨hne, _⟩ => (hne rfl).elim }⟩
 
 @[simp]
@@ -228,7 +232,8 @@ theorem compl_adj (G : SimpleGraph V) (v w : V) : Gᶜ.Adj v w ↔ v ≠ w ∧ �
 /-- The difference of two graphs `x \ y` has the edges of `x` with the edges of `y` removed. -/
 instance : SDiff (SimpleGraph V) :=
   ⟨fun x y =>
-    { Adj := x.Adj \ y.Adj, symm := fun v w h => by change x.adj w v ∧ ¬y.adj w v <;> rwa [x.adj_comm, y.adj_comm] }⟩
+    { Adj := x.Adj \ y.Adj,
+      symm := fun v w h => by change x.adj w v ∧ ¬y.adj w v <;> rwa [x.adj_comm, y.adj_comm] }⟩
 
 @[simp]
 theorem sdiff_adj (x y : SimpleGraph V) (v w : V) : (x \ y).Adj v w ↔ x.Adj v w ∧ ¬y.Adj v w :=
@@ -236,9 +241,10 @@ theorem sdiff_adj (x y : SimpleGraph V) (v w : V) : (x \ y).Adj v w ↔ x.Adj v 
 #align simple_graph.sdiff_adj SimpleGraph.sdiff_adj
 
 instance : BooleanAlgebra (SimpleGraph V) :=
-  { PartialOrder.lift Adj ext with le := (· ≤ ·), sup := (· ⊔ ·), inf := (· ⊓ ·), compl := HasCompl.compl,
-    sdiff := (· \ ·), top := completeGraph V, bot := emptyGraph V, le_top := fun x v w h => x.ne_of_adj h,
-    bot_le := fun x v w h => h.elim, sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h,
+  { PartialOrder.lift Adj ext with le := (· ≤ ·), sup := (· ⊔ ·), inf := (· ⊓ ·),
+    compl := HasCompl.compl, sdiff := (· \ ·), top := completeGraph V, bot := emptyGraph V,
+    le_top := fun x v w h => x.ne_of_adj h, bot_le := fun x v w h => h.elim,
+    sup_le := fun x y z hxy hyz v w h => h.casesOn (fun h => hxy h) fun h => hyz h,
     sdiff_eq := fun x y => by
       ext (v w)
       refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
@@ -247,7 +253,8 @@ instance : BooleanAlgebra (SimpleGraph V) :=
     le_sup_left := fun x y v w h => Or.inl h, le_sup_right := fun x y v w h => Or.inr h,
     le_inf := fun x y z hxy hyz v w h => ⟨hxy h, hyz h⟩,
     le_sup_inf := fun a b c v w h =>
-      Or.dcases_on h.2 Or.inl <| (Or.dcases_on h.1 fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩,
+      Or.dcases_on h.2 Or.inl <|
+        (Or.dcases_on h.1 fun h _ => Or.inl h) fun hb hc => Or.inr ⟨hb, hc⟩,
     inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1,
     top_le_sup_compl := fun a v w ne => by
       by_cases a.adj v w
@@ -325,7 +332,8 @@ def neighborSet (v : V) : Set V :=
   setOf (G.Adj v)
 #align simple_graph.neighbor_set SimpleGraph.neighborSet
 
-instance neighborSet.memDecidable (v : V) [DecidableRel G.Adj] : DecidablePred (· ∈ G.neighborSet v) := by
+instance neighborSet.memDecidable (v : V) [DecidableRel G.Adj] :
+    DecidablePred (· ∈ G.neighborSet v) := by
   unfold neighbor_set
   infer_instance
 #align simple_graph.neighbor_set.mem_decidable SimpleGraph.neighborSet.memDecidable
@@ -463,8 +471,9 @@ theorem Dart.to_prod_injective : Function.Injective (Dart.toProd : G.Dart → V 
 
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
   Fintype.ofEquiv (Σv, G.neighborSet v)
-    { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩, invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩,
-      left_inv := fun s => by ext <;> simp, right_inv := fun d => by ext <;> simp }
+    { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩,
+      invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩, left_inv := fun s => by ext <;> simp,
+      right_inv := fun d => by ext <;> simp }
 #align simple_graph.dart.fintype SimpleGraph.Dart.fintype
 
 /-- The edge associated to the dart. -/
@@ -522,13 +531,15 @@ theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d�
   simp [Sym2.mk_eq_mk_iff]
 #align simple_graph.dart_edge_eq_iff SimpleGraph.dart_edge_eq_iff
 
-theorem dart_edge_eq_mk_iff : ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.swap := by
+theorem dart_edge_eq_mk_iff :
+    ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.swap := by
   rintro ⟨p, h⟩
   apply Sym2.mk_eq_mk_iff
 #align simple_graph.dart_edge_eq_mk_iff SimpleGraph.dart_edge_eq_mk_iff
 
 theorem dart_edge_eq_mk_iff' :
-    ∀ {d : G.Dart} {u v : V}, d.edge = ⟦(u, v)⟧ ↔ d.fst = u ∧ d.snd = v ∨ d.fst = v ∧ d.snd = u := by
+    ∀ {d : G.Dart} {u v : V}, d.edge = ⟦(u, v)⟧ ↔ d.fst = u ∧ d.snd = v ∨ d.fst = v ∧ d.snd = u :=
+  by
   rintro ⟨⟨a, b⟩, h⟩ u v
   rw [dart_edge_eq_mk_iff]
   simp
@@ -550,7 +561,8 @@ def dartOfNeighborSet (v : V) (w : G.neighborSet v) : G.Dart :=
   ⟨(v, w), w.property⟩
 #align simple_graph.dart_of_neighbor_set SimpleGraph.dartOfNeighborSet
 
-theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h =>
+theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) :=
+  fun e₁ e₂ h =>
   Subtype.ext <| by
     injection h with h'
     convert congr_arg Prod.snd h'
@@ -590,18 +602,22 @@ theorem edge_mem_incidence_set_iff {e : G.edgeSet} : ↑e ∈ G.incidenceSet a �
   and_iff_right e.2
 #align simple_graph.edge_mem_incidence_set_iff SimpleGraph.edge_mem_incidence_set_iff
 
-theorem incidence_set_inter_incidence_set_subset (h : a ≠ b) : G.incidenceSet a ∩ G.incidenceSet b ⊆ {⟦(a, b)⟧} :=
-  fun e he => (Sym2.mem_and_mem_iff h).1 ⟨he.1.2, he.2.2⟩
-#align simple_graph.incidence_set_inter_incidence_set_subset SimpleGraph.incidence_set_inter_incidence_set_subset
+theorem incidence_set_inter_incidence_set_subset (h : a ≠ b) :
+    G.incidenceSet a ∩ G.incidenceSet b ⊆ {⟦(a, b)⟧} := fun e he =>
+  (Sym2.mem_and_mem_iff h).1 ⟨he.1.2, he.2.2⟩
+#align
+  simple_graph.incidence_set_inter_incidence_set_subset SimpleGraph.incidence_set_inter_incidence_set_subset
 
-theorem incidence_set_inter_incidence_set_of_adj (h : G.Adj a b) : G.incidenceSet a ∩ G.incidenceSet b = {⟦(a, b)⟧} :=
-  by
+theorem incidence_set_inter_incidence_set_of_adj (h : G.Adj a b) :
+    G.incidenceSet a ∩ G.incidenceSet b = {⟦(a, b)⟧} := by
   refine' (G.incidence_set_inter_incidence_set_subset <| h.ne).antisymm _
   rintro _ (rfl : _ = ⟦(a, b)⟧)
   exact ⟨G.mk_mem_incidence_set_left_iff.2 h, G.mk_mem_incidence_set_right_iff.2 h⟩
-#align simple_graph.incidence_set_inter_incidence_set_of_adj SimpleGraph.incidence_set_inter_incidence_set_of_adj
+#align
+  simple_graph.incidence_set_inter_incidence_set_of_adj SimpleGraph.incidence_set_inter_incidence_set_of_adj
 
-theorem adj_of_mem_incidence_set (h : a ≠ b) (ha : e ∈ G.incidenceSet a) (hb : e ∈ G.incidenceSet b) : G.Adj a b := by
+theorem adj_of_mem_incidence_set (h : a ≠ b) (ha : e ∈ G.incidenceSet a)
+    (hb : e ∈ G.incidenceSet b) : G.Adj a b := by
   rwa [← mk_mem_incidence_set_left_iff, ←
     Set.mem_singleton_iff.1 <| G.incidence_set_inter_incidence_set_subset h ⟨ha, hb⟩]
 #align simple_graph.adj_of_mem_incidence_set SimpleGraph.adj_of_mem_incidence_set
@@ -614,8 +630,8 @@ theorem incidence_set_inter_incidence_set_of_not_adj (h : ¬G.Adj a b) (hn : a �
 #align
   simple_graph.incidence_set_inter_incidence_set_of_not_adj SimpleGraph.incidence_set_inter_incidence_set_of_not_adj
 
-instance decidableMemIncidenceSet [DecidableEq V] [DecidableRel G.Adj] (v : V) : DecidablePred (· ∈ G.incidenceSet v) :=
-  fun e => And.decidable
+instance decidableMemIncidenceSet [DecidableEq V] [DecidableRel G.Adj] (v : V) :
+    DecidablePred (· ∈ G.incidenceSet v) := fun e => And.decidable
 #align simple_graph.decidable_mem_incidence_set SimpleGraph.decidableMemIncidenceSet
 
 /-- The `edge_set` of the graph as a `finset`.
@@ -646,7 +662,8 @@ theorem edge_finset_card [Fintype G.edgeSet] : G.edgeFinset.card = Fintype.card 
 #align simple_graph.edge_finset_card SimpleGraph.edge_finset_card
 
 @[simp]
-theorem edge_set_univ_card [Fintype G.edgeSet] : (univ : Finset G.edgeSet).card = G.edgeFinset.card :=
+theorem edge_set_univ_card [Fintype G.edgeSet] :
+    (univ : Finset G.edgeSet).card = G.edgeFinset.card :=
   Fintype.card_of_subtype G.edgeFinset (mem_edge_finset _)
 #align simple_graph.edge_set_univ_card SimpleGraph.edge_set_univ_card
 
@@ -656,11 +673,12 @@ theorem mem_neighbor_set (v w : V) : w ∈ G.neighborSet v ↔ G.Adj v w :=
 #align simple_graph.mem_neighbor_set SimpleGraph.mem_neighbor_set
 
 @[simp]
-theorem mem_incidence_set (v w : V) : ⟦(v, w)⟧ ∈ G.incidenceSet v ↔ G.Adj v w := by simp [incidence_set]
+theorem mem_incidence_set (v w : V) : ⟦(v, w)⟧ ∈ G.incidenceSet v ↔ G.Adj v w := by
+  simp [incidence_set]
 #align simple_graph.mem_incidence_set SimpleGraph.mem_incidence_set
 
-theorem mem_incidence_iff_neighbor {v w : V} : ⟦(v, w)⟧ ∈ G.incidenceSet v ↔ w ∈ G.neighborSet v := by
-  simp only [mem_incidence_set, mem_neighbor_set]
+theorem mem_incidence_iff_neighbor {v w : V} : ⟦(v, w)⟧ ∈ G.incidenceSet v ↔ w ∈ G.neighborSet v :=
+  by simp only [mem_incidence_set, mem_neighbor_set]
 #align simple_graph.mem_incidence_iff_neighbor SimpleGraph.mem_incidence_iff_neighbor
 
 theorem adj_incidence_set_inter {v : V} {e : Sym2 V} (he : e ∈ G.edgeSet) (h : v ∈ e) :
@@ -676,7 +694,8 @@ theorem adj_incidence_set_inter {v : V} {e : Sym2 V} (he : e ∈ G.edgeSet) (h :
     
 #align simple_graph.adj_incidence_set_inter SimpleGraph.adj_incidence_set_inter
 
-theorem compl_neighbor_set_disjoint (G : SimpleGraph V) (v : V) : Disjoint (G.neighborSet v) (Gᶜ.neighborSet v) := by
+theorem compl_neighbor_set_disjoint (G : SimpleGraph V) (v : V) :
+    Disjoint (G.neighborSet v) (Gᶜ.neighborSet v) := by
   rw [Set.disjoint_iff]
   rintro w ⟨h, h'⟩
   rw [mem_neighbor_set, compl_adj] at h'
@@ -689,17 +708,20 @@ theorem neighbor_set_union_compl_neighbor_set_eq (G : SimpleGraph V) (v : V) :
   have h := @ne_of_adj _ G
   simp_rw [Set.mem_union, mem_neighbor_set, compl_adj, Set.mem_compl_iff, Set.mem_singleton_iff]
   tauto
-#align simple_graph.neighbor_set_union_compl_neighbor_set_eq SimpleGraph.neighbor_set_union_compl_neighbor_set_eq
+#align
+  simple_graph.neighbor_set_union_compl_neighbor_set_eq SimpleGraph.neighbor_set_union_compl_neighbor_set_eq
 
 -- TODO find out why TC inference has `h` failing a defeq check for `to_finset`
 theorem card_neighbor_set_union_compl_neighbor_set [Fintype V] (G : SimpleGraph V) (v : V)
     [h : Fintype (G.neighborSet v ∪ Gᶜ.neighborSet v : Set V)] :
     (@Set.toFinset _ (G.neighborSet v ∪ Gᶜ.neighborSet v) h).card = Fintype.card V - 1 := by
-  classical simp_rw [neighbor_set_union_compl_neighbor_set_eq, Set.to_finset_compl, Finset.card_compl,
-      Set.to_finset_card, Set.card_singleton]
-#align simple_graph.card_neighbor_set_union_compl_neighbor_set SimpleGraph.card_neighbor_set_union_compl_neighbor_set
+  classical simp_rw [neighbor_set_union_compl_neighbor_set_eq, Set.to_finset_compl,
+      Finset.card_compl, Set.to_finset_card, Set.card_singleton]
+#align
+  simple_graph.card_neighbor_set_union_compl_neighbor_set SimpleGraph.card_neighbor_set_union_compl_neighbor_set
 
-theorem neighbor_set_compl (G : SimpleGraph V) (v : V) : Gᶜ.neighborSet v = G.neighborSet vᶜ \ {v} := by
+theorem neighbor_set_compl (G : SimpleGraph V) (v : V) :
+    Gᶜ.neighborSet v = G.neighborSet vᶜ \ {v} := by
   ext w
   simp [and_comm', eq_comm]
 #align simple_graph.neighbor_set_compl SimpleGraph.neighbor_set_compl
@@ -723,25 +745,32 @@ theorem common_neighbors_symm (v w : V) : G.commonNeighbors v w = G.commonNeighb
   Set.inter_comm _ _
 #align simple_graph.common_neighbors_symm SimpleGraph.common_neighbors_symm
 
-theorem not_mem_common_neighbors_left (v w : V) : v ∉ G.commonNeighbors v w := fun h => ne_of_adj G h.1 rfl
+theorem not_mem_common_neighbors_left (v w : V) : v ∉ G.commonNeighbors v w := fun h =>
+  ne_of_adj G h.1 rfl
 #align simple_graph.not_mem_common_neighbors_left SimpleGraph.not_mem_common_neighbors_left
 
-theorem not_mem_common_neighbors_right (v w : V) : w ∉ G.commonNeighbors v w := fun h => ne_of_adj G h.2 rfl
+theorem not_mem_common_neighbors_right (v w : V) : w ∉ G.commonNeighbors v w := fun h =>
+  ne_of_adj G h.2 rfl
 #align simple_graph.not_mem_common_neighbors_right SimpleGraph.not_mem_common_neighbors_right
 
-theorem common_neighbors_subset_neighbor_set_left (v w : V) : G.commonNeighbors v w ⊆ G.neighborSet v :=
+theorem common_neighbors_subset_neighbor_set_left (v w : V) :
+    G.commonNeighbors v w ⊆ G.neighborSet v :=
   Set.inter_subset_left _ _
-#align simple_graph.common_neighbors_subset_neighbor_set_left SimpleGraph.common_neighbors_subset_neighbor_set_left
+#align
+  simple_graph.common_neighbors_subset_neighbor_set_left SimpleGraph.common_neighbors_subset_neighbor_set_left
 
-theorem common_neighbors_subset_neighbor_set_right (v w : V) : G.commonNeighbors v w ⊆ G.neighborSet w :=
+theorem common_neighbors_subset_neighbor_set_right (v w : V) :
+    G.commonNeighbors v w ⊆ G.neighborSet w :=
   Set.inter_subset_right _ _
-#align simple_graph.common_neighbors_subset_neighbor_set_right SimpleGraph.common_neighbors_subset_neighbor_set_right
+#align
+  simple_graph.common_neighbors_subset_neighbor_set_right SimpleGraph.common_neighbors_subset_neighbor_set_right
 
-instance decidableMemCommonNeighbors [DecidableRel G.Adj] (v w : V) : DecidablePred (· ∈ G.commonNeighbors v w) :=
-  fun a => And.decidable
+instance decidableMemCommonNeighbors [DecidableRel G.Adj] (v w : V) :
+    DecidablePred (· ∈ G.commonNeighbors v w) := fun a => And.decidable
 #align simple_graph.decidable_mem_common_neighbors SimpleGraph.decidableMemCommonNeighbors
 
-theorem common_neighbors_top_eq {v w : V} : (⊤ : SimpleGraph V).commonNeighbors v w = Set.univ \ {v, w} := by
+theorem common_neighbors_top_eq {v w : V} :
+    (⊤ : SimpleGraph V).commonNeighbors v w = Set.univ \ {v, w} := by
   ext u
   simp [common_neighbors, eq_comm, not_or_distrib.symm]
 #align simple_graph.common_neighbors_top_eq SimpleGraph.common_neighbors_top_eq
@@ -800,7 +829,8 @@ def deleteEdges (s : Set (Sym2 V)) : SimpleGraph V where
 #align simple_graph.delete_edges SimpleGraph.deleteEdges
 
 @[simp]
-theorem delete_edges_adj (s : Set (Sym2 V)) (v w : V) : (G.deleteEdges s).Adj v w ↔ G.Adj v w ∧ ¬⟦(v, w)⟧ ∈ s :=
+theorem delete_edges_adj (s : Set (Sym2 V)) (v w : V) :
+    (G.deleteEdges s).Adj v w ↔ G.Adj v w ∧ ¬⟦(v, w)⟧ ∈ s :=
   Iff.rfl
 #align simple_graph.delete_edges_adj SimpleGraph.delete_edges_adj
 
@@ -809,10 +839,12 @@ theorem sdiff_eq_delete_edges (G G' : SimpleGraph V) : G \ G' = G.deleteEdges G'
   simp
 #align simple_graph.sdiff_eq_delete_edges SimpleGraph.sdiff_eq_delete_edges
 
-theorem delete_edges_eq_sdiff_from_edge_set (s : Set (Sym2 V)) : G.deleteEdges s = G \ fromEdgeSet s := by
+theorem delete_edges_eq_sdiff_from_edge_set (s : Set (Sym2 V)) :
+    G.deleteEdges s = G \ fromEdgeSet s := by
   ext
   exact ⟨fun h => ⟨h.1, not_and_of_not_left _ h.2⟩, fun h => ⟨h.1, not_and'.mp h.2 h.Ne⟩⟩
-#align simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.delete_edges_eq_sdiff_from_edge_set
+#align
+  simple_graph.delete_edges_eq_sdiff_from_edge_set SimpleGraph.delete_edges_eq_sdiff_from_edge_set
 
 theorem compl_eq_delete_edges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeSet := by
   ext
@@ -820,8 +852,8 @@ theorem compl_eq_delete_edges : Gᶜ = (⊤ : SimpleGraph V).deleteEdges G.edgeS
 #align simple_graph.compl_eq_delete_edges SimpleGraph.compl_eq_delete_edges
 
 @[simp]
-theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') :=
-  by
+theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) :
+    (G.deleteEdges s).deleteEdges s' = G.deleteEdges (s ∪ s') := by
   ext
   simp [and_assoc', not_or]
 #align simple_graph.delete_edges_delete_edges SimpleGraph.delete_edges_delete_edges
@@ -843,17 +875,20 @@ theorem delete_edges_le (s : Set (Sym2 V)) : G.deleteEdges s ≤ G := by
   simp (config := { contextual := true })
 #align simple_graph.delete_edges_le SimpleGraph.delete_edges_le
 
-theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G.deleteEdges s' ≤ G.deleteEdges s := fun v w => by
+theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') :
+    G.deleteEdges s' ≤ G.deleteEdges s := fun v w => by
   simp (config := { contextual := true }) only [delete_edges_adj, and_imp, true_and_iff]
   exact fun ha hn hs => hn (h hs)
 #align simple_graph.delete_edges_le_of_le SimpleGraph.delete_edges_le_of_le
 
-theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) : G.deleteEdges s = G.deleteEdges (s ∩ G.edgeSet) := by
+theorem delete_edges_eq_inter_edge_set (s : Set (Sym2 V)) :
+    G.deleteEdges s = G.deleteEdges (s ∩ G.edgeSet) := by
   ext
   simp (config := { contextual := true }) [imp_false]
 #align simple_graph.delete_edges_eq_inter_edge_set SimpleGraph.delete_edges_eq_inter_edge_set
 
-theorem delete_edges_sdiff_eq_of_le {H : SimpleGraph V} (h : H ≤ G) : G.deleteEdges (G.edgeSet \ H.edgeSet) = H := by
+theorem delete_edges_sdiff_eq_of_le {H : SimpleGraph V} (h : H ≤ G) :
+    G.deleteEdges (G.edgeSet \ H.edgeSet) = H := by
   ext (v w)
   constructor <;> simp (config := { contextual := true }) [@h v w]
 #align simple_graph.delete_edges_sdiff_eq_of_le SimpleGraph.delete_edges_sdiff_eq_of_le
@@ -864,15 +899,17 @@ theorem edge_set_delete_edges (s : Set (Sym2 V)) : (G.deleteEdges s).edgeSet = G
   simp
 #align simple_graph.edge_set_delete_edges SimpleGraph.edge_set_delete_edges
 
-theorem edge_finset_delete_edges [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (s : Finset (Sym2 V))
-    [DecidableRel (G.deleteEdges s).Adj] : (G.deleteEdges s).edgeFinset = G.edgeFinset \ s := by
+theorem edge_finset_delete_edges [Fintype V] [DecidableEq V] [DecidableRel G.Adj]
+    (s : Finset (Sym2 V)) [DecidableRel (G.deleteEdges s).Adj] :
+    (G.deleteEdges s).edgeFinset = G.edgeFinset \ s := by
   ext e
   simp [edge_set_delete_edges]
 #align simple_graph.edge_finset_delete_edges SimpleGraph.edge_finset_delete_edges
 
 section DeleteFar
 
-variable (G) [OrderedRing 𝕜] [Fintype V] [DecidableEq V] [DecidableRel G.Adj] {p : SimpleGraph V → Prop} {r r₁ r₂ : 𝕜}
+variable (G) [OrderedRing 𝕜] [Fintype V] [DecidableEq V] [DecidableRel G.Adj]
+  {p : SimpleGraph V → Prop} {r r₁ r₂ : 𝕜}
 
 /-- A graph is `r`-*delete-far* from a property `p` if we must delete at least `r` edges from it to
 get a graph with the property `p`. -/
@@ -884,21 +921,23 @@ open Classical
 
 variable {G}
 
-theorem delete_far_iff : G.DeleteFar p r ↔ ∀ ⦃H⦄, H ≤ G → p H → r ≤ G.edgeFinset.card - H.edgeFinset.card := by
+theorem delete_far_iff :
+    G.DeleteFar p r ↔ ∀ ⦃H⦄, H ≤ G → p H → r ≤ G.edgeFinset.card - H.edgeFinset.card := by
   refine' ⟨fun h H hHG hH => _, fun h s hs hG => _⟩
   · have := h (sdiff_subset G.edge_finset H.edge_finset)
-    simp only [delete_edges_sdiff_eq_of_le _ hHG, edge_finset_mono hHG, card_sdiff, card_le_of_subset, coe_sdiff,
-      coe_edge_finset, Nat.cast_sub] at this
+    simp only [delete_edges_sdiff_eq_of_le _ hHG, edge_finset_mono hHG, card_sdiff,
+      card_le_of_subset, coe_sdiff, coe_edge_finset, Nat.cast_sub] at this
     exact this hH
     
-  · simpa [card_sdiff hs, edge_finset_delete_edges, -Set.to_finset_card, Nat.cast_sub, card_le_of_subset hs] using
-      h (G.delete_edges_le s) hG
+  · simpa [card_sdiff hs, edge_finset_delete_edges, -Set.to_finset_card, Nat.cast_sub,
+      card_le_of_subset hs] using h (G.delete_edges_le s) hG
     
 #align simple_graph.delete_far_iff SimpleGraph.delete_far_iff
 
 alias delete_far_iff ↔ delete_far.le_card_sub_card _
 
-theorem DeleteFar.mono (h : G.DeleteFar p r₂) (hr : r₁ ≤ r₂) : G.DeleteFar p r₁ := fun s hs hG => hr.trans <| h hs hG
+theorem DeleteFar.mono (h : G.DeleteFar p r₂) (hr : r₁ ≤ r₂) : G.DeleteFar p r₁ := fun s hs hG =>
+  hr.trans <| h hs hG
 #align simple_graph.delete_far.mono SimpleGraph.DeleteFar.mono
 
 end DeleteFar
@@ -910,7 +949,8 @@ end DeleteFar
 the adjacency relation.
 
 This is injective (see `simple_graph.map_injective`). -/
-protected def map (f : V ↪ W) (G : SimpleGraph V) : SimpleGraph W where Adj := Relation.Map G.Adj f f
+protected def map (f : V ↪ W) (G : SimpleGraph V) :
+    SimpleGraph W where Adj := Relation.Map G.Adj f f
 #align simple_graph.map SimpleGraph.map
 
 @[simp]
@@ -930,7 +970,8 @@ This is one of the ways of creating induced graphs. See `simple_graph.induce` fo
 
 This is surjective when `f` is injective (see `simple_graph.comap_surjective`).-/
 @[simps]
-protected def comap (f : V → W) (G : SimpleGraph W) : SimpleGraph V where Adj u v := G.Adj (f u) (f v)
+protected def comap (f : V → W) (G : SimpleGraph W) :
+    SimpleGraph V where Adj u v := G.Adj (f u) (f v)
 #align simple_graph.comap SimpleGraph.comap
 
 theorem comap_monotone (f : V ↪ W) : Monotone (SimpleGraph.comap f) := by
@@ -944,7 +985,8 @@ theorem comap_map_eq (f : V ↪ W) (G : SimpleGraph V) : (G.map f).comap f = G :
   simp
 #align simple_graph.comap_map_eq SimpleGraph.comap_map_eq
 
-theorem left_inverse_comap_map (f : V ↪ W) : Function.LeftInverse (SimpleGraph.comap f) (SimpleGraph.map f) :=
+theorem left_inverse_comap_map (f : V ↪ W) :
+    Function.LeftInverse (SimpleGraph.comap f) (SimpleGraph.map f) :=
   comap_map_eq f
 #align simple_graph.left_inverse_comap_map SimpleGraph.left_inverse_comap_map
 
@@ -956,7 +998,8 @@ theorem comap_surjective (f : V ↪ W) : Function.Surjective (SimpleGraph.comap 
   (left_inverse_comap_map f).Surjective
 #align simple_graph.comap_surjective SimpleGraph.comap_surjective
 
-theorem map_le_iff_le_comap (f : V ↪ W) (G : SimpleGraph V) (G' : SimpleGraph W) : G.map f ≤ G' ↔ G ≤ G'.comap f :=
+theorem map_le_iff_le_comap (f : V ↪ W) (G : SimpleGraph V) (G' : SimpleGraph W) :
+    G.map f ≤ G' ↔ G ≤ G'.comap f :=
   ⟨fun h u v ha => h ⟨_, _, ha, rfl, rfl⟩, by
     rintro h _ _ ⟨u, v, ha, rfl, rfl⟩
     exact h ha⟩
@@ -1036,11 +1079,13 @@ theorem not_mem_neighbor_finset_self : v ∉ G.neighborFinset v :=
 
 theorem neighbor_finset_disjoint_singleton : Disjoint (G.neighborFinset v) {v} :=
   Finset.disjoint_singleton_right.mpr <| not_mem_neighbor_finset_self _ _
-#align simple_graph.neighbor_finset_disjoint_singleton SimpleGraph.neighbor_finset_disjoint_singleton
+#align
+  simple_graph.neighbor_finset_disjoint_singleton SimpleGraph.neighbor_finset_disjoint_singleton
 
 theorem singleton_disjoint_neighbor_finset : Disjoint {v} (G.neighborFinset v) :=
   Finset.disjoint_singleton_left.mpr <| not_mem_neighbor_finset_self _ _
-#align simple_graph.singleton_disjoint_neighbor_finset SimpleGraph.singleton_disjoint_neighbor_finset
+#align
+  simple_graph.singleton_disjoint_neighbor_finset SimpleGraph.singleton_disjoint_neighbor_finset
 
 /-- `G.degree v` is the number of vertices adjacent to `v`.
 -/
@@ -1057,8 +1102,8 @@ theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
   simp only [degree, card_pos, Finset.Nonempty, mem_neighbor_finset]
 #align simple_graph.degree_pos_iff_exists_adj SimpleGraph.degree_pos_iff_exists_adj
 
-theorem degree_compl [Fintype (Gᶜ.neighborSet v)] [Fintype V] : Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
-  classical
+theorem degree_compl [Fintype (Gᶜ.neighborSet v)] [Fintype V] :
+    Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by classical
   rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
   simp [card_disjoint_union (set.to_finset_disjoint_iff.mpr (compl_neighbor_set_disjoint G v))]
 #align simple_graph.degree_compl SimpleGraph.degree_compl
@@ -1074,19 +1119,22 @@ def incidenceFinset [DecidableEq V] : Finset (Sym2 V) :=
 #align simple_graph.incidence_finset SimpleGraph.incidenceFinset
 
 @[simp]
-theorem card_incidence_set_eq_degree [DecidableEq V] : Fintype.card (G.incidenceSet v) = G.degree v := by
+theorem card_incidence_set_eq_degree [DecidableEq V] :
+    Fintype.card (G.incidenceSet v) = G.degree v := by
   rw [Fintype.card_congr (G.incidence_set_equiv_neighbor_set v)]
   simp
 #align simple_graph.card_incidence_set_eq_degree SimpleGraph.card_incidence_set_eq_degree
 
 @[simp]
-theorem card_incidence_finset_eq_degree [DecidableEq V] : (G.incidenceFinset v).card = G.degree v := by
+theorem card_incidence_finset_eq_degree [DecidableEq V] : (G.incidenceFinset v).card = G.degree v :=
+  by
   rw [← G.card_incidence_set_eq_degree]
   apply Set.to_finset_card
 #align simple_graph.card_incidence_finset_eq_degree SimpleGraph.card_incidence_finset_eq_degree
 
 @[simp]
-theorem mem_incidence_finset [DecidableEq V] (e : Sym2 V) : e ∈ G.incidenceFinset v ↔ e ∈ G.incidenceSet v :=
+theorem mem_incidence_finset [DecidableEq V] (e : Sym2 V) :
+    e ∈ G.incidenceFinset v ↔ e ∈ G.incidenceSet v :=
   Set.mem_to_finset
 #align simple_graph.mem_incidence_finset SimpleGraph.mem_incidence_finset
 
@@ -1122,8 +1170,8 @@ theorem IsRegularOfDegree.degree_eq {d : ℕ} (h : G.IsRegularOfDegree d) (v : V
   h v
 #align simple_graph.is_regular_of_degree.degree_eq SimpleGraph.IsRegularOfDegree.degree_eq
 
-theorem IsRegularOfDegree.compl [Fintype V] [DecidableEq V] {G : SimpleGraph V} [DecidableRel G.Adj] {k : ℕ}
-    (h : G.IsRegularOfDegree k) : Gᶜ.IsRegularOfDegree (Fintype.card V - 1 - k) := by
+theorem IsRegularOfDegree.compl [Fintype V] [DecidableEq V] {G : SimpleGraph V} [DecidableRel G.Adj]
+    {k : ℕ} (h : G.IsRegularOfDegree k) : Gᶜ.IsRegularOfDegree (Fintype.card V - 1 - k) := by
   intro v
   rw [degree_compl, h v]
 #align simple_graph.is_regular_of_degree.compl SimpleGraph.IsRegularOfDegree.compl
@@ -1142,18 +1190,21 @@ instance neighborSetFintype [DecidableRel G.Adj] (v : V) : Fintype (G.neighborSe
     _
 #align simple_graph.neighbor_set_fintype SimpleGraph.neighborSetFintype
 
-theorem neighbor_finset_eq_filter {v : V} [DecidableRel G.Adj] : G.neighborFinset v = Finset.univ.filter (G.Adj v) := by
+theorem neighbor_finset_eq_filter {v : V} [DecidableRel G.Adj] :
+    G.neighborFinset v = Finset.univ.filter (G.Adj v) := by
   ext
   simp
 #align simple_graph.neighbor_finset_eq_filter SimpleGraph.neighbor_finset_eq_filter
 
 theorem neighbor_finset_compl [DecidableEq V] [DecidableRel G.Adj] (v : V) :
     Gᶜ.neighborFinset v = G.neighborFinset vᶜ \ {v} := by
-  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_diff, Set.to_finset_compl, Set.to_finset_singleton]
+  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_diff, Set.to_finset_compl,
+    Set.to_finset_singleton]
 #align simple_graph.neighbor_finset_compl SimpleGraph.neighbor_finset_compl
 
 @[simp]
-theorem complete_graph_degree [DecidableEq V] (v : V) : (⊤ : SimpleGraph V).degree v = Fintype.card V - 1 := by
+theorem complete_graph_degree [DecidableEq V] (v : V) :
+    (⊤ : SimpleGraph V).degree v = Fintype.card V - 1 := by
   erw [degree, neighbor_finset_eq_filter, filter_ne, card_erase_of_mem (mem_univ v), card_univ]
 #align simple_graph.complete_graph_degree SimpleGraph.complete_graph_degree
 
@@ -1162,7 +1213,8 @@ theorem bot_degree (v : V) : (⊥ : SimpleGraph V).degree v = 0 := by
   exact Finset.card_empty
 #align simple_graph.bot_degree SimpleGraph.bot_degree
 
-theorem IsRegularOfDegree.top [DecidableEq V] : (⊤ : SimpleGraph V).IsRegularOfDegree (Fintype.card V - 1) := by
+theorem IsRegularOfDegree.top [DecidableEq V] :
+    (⊤ : SimpleGraph V).IsRegularOfDegree (Fintype.card V - 1) := by
   intro v
   simp
 #align simple_graph.is_regular_of_degree.top SimpleGraph.IsRegularOfDegree.top
@@ -1178,7 +1230,8 @@ def minDegree [DecidableRel G.Adj] : ℕ :=
 /-- There exists a vertex of minimal degree. Note the assumption of being nonempty is necessary, as
 the lemma implies there exists a vertex.
 -/
-theorem exists_minimal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, G.minDegree = G.degree v := by
+theorem exists_minimal_degree_vertex [DecidableRel G.Adj] [Nonempty V] :
+    ∃ v, G.minDegree = G.degree v := by
   obtain ⟨t, ht : _ = _⟩ := min_of_nonempty (univ_nonempty.image fun v => G.degree v)
   obtain ⟨v, _, rfl⟩ := mem_image.mp (mem_of_min ht)
   refine' ⟨v, by simp [min_degree, ht]⟩
@@ -1195,8 +1248,8 @@ theorem min_degree_le_degree [DecidableRel G.Adj] (v : V) : G.minDegree ≤ G.de
 degree. Note the assumption that the graph is nonempty is necessary as long as `G.min_degree` is
 defined to be a natural.
 -/
-theorem le_min_degree_of_forall_le_degree [DecidableRel G.Adj] [Nonempty V] (k : ℕ) (h : ∀ v, k ≤ G.degree v) :
-    k ≤ G.minDegree := by
+theorem le_min_degree_of_forall_le_degree [DecidableRel G.Adj] [Nonempty V] (k : ℕ)
+    (h : ∀ v, k ≤ G.degree v) : k ≤ G.minDegree := by
   rcases G.exists_minimal_degree_vertex with ⟨v, hv⟩
   rw [hv]
   apply h
@@ -1213,7 +1266,8 @@ def maxDegree [DecidableRel G.Adj] : ℕ :=
 /-- There exists a vertex of maximal degree. Note the assumption of being nonempty is necessary, as
 the lemma implies there exists a vertex.
 -/
-theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] : ∃ v, G.maxDegree = G.degree v := by
+theorem exists_maximal_degree_vertex [DecidableRel G.Adj] [Nonempty V] :
+    ∃ v, G.maxDegree = G.degree v := by
   obtain ⟨t, ht⟩ := max_of_nonempty (univ_nonempty.image fun v => G.degree v)
   have ht₂ := mem_of_max ht
   simp only [mem_image, mem_univ, exists_prop_of_true] at ht₂
@@ -1233,7 +1287,8 @@ theorem degree_le_max_degree [DecidableRel G.Adj] (v : V) : G.degree v ≤ G.max
 /-- In a graph, if `k` is at least the degree of every vertex, then it is at least the maximum
 degree.
 -/
-theorem max_degree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀ v, G.degree v ≤ k) : G.maxDegree ≤ k := by
+theorem max_degree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀ v, G.degree v ≤ k) :
+    G.maxDegree ≤ k := by
   by_cases hV : (univ : Finset V).Nonempty
   · haveI : Nonempty V := univ_nonempty_iff.mp hV
     obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
@@ -1246,17 +1301,20 @@ theorem max_degree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : �
     
 #align simple_graph.max_degree_le_of_forall_degree_le SimpleGraph.max_degree_le_of_forall_degree_le
 
-theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by classical
+theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by
+  classical
   apply Finset.card_lt_card
   rw [Finset.ssubset_iff]
   exact ⟨v, by simp, Finset.subset_univ _⟩
 #align simple_graph.degree_lt_card_verts SimpleGraph.degree_lt_card_verts
 
-/-- The maximum degree of a nonempty graph is less than the number of vertices. Note that the assumption
+/--
+The maximum degree of a nonempty graph is less than the number of vertices. Note that the assumption
 that `V` is nonempty is necessary, as otherwise this would assert the existence of a
 natural number less than zero.
 -/
-theorem max_degree_lt_card_verts [DecidableRel G.Adj] [Nonempty V] : G.maxDegree < Fintype.card V := by
+theorem max_degree_lt_card_verts [DecidableRel G.Adj] [Nonempty V] : G.maxDegree < Fintype.card V :=
+  by
   cases' G.exists_maximal_degree_vertex with v hv
   rw [hv]
   apply G.degree_lt_card_verts v
@@ -1266,23 +1324,26 @@ theorem card_common_neighbors_le_degree_left [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.commonNeighbors v w) ≤ G.degree v := by
   rw [← card_neighbor_set_eq_degree]
   exact Set.card_le_of_subset (Set.inter_subset_left _ _)
-#align simple_graph.card_common_neighbors_le_degree_left SimpleGraph.card_common_neighbors_le_degree_left
+#align
+  simple_graph.card_common_neighbors_le_degree_left SimpleGraph.card_common_neighbors_le_degree_left
 
 theorem card_common_neighbors_le_degree_right [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.commonNeighbors v w) ≤ G.degree w := by
   simp_rw [common_neighbors_symm _ v w, card_common_neighbors_le_degree_left]
-#align simple_graph.card_common_neighbors_le_degree_right SimpleGraph.card_common_neighbors_le_degree_right
+#align
+  simple_graph.card_common_neighbors_le_degree_right SimpleGraph.card_common_neighbors_le_degree_right
 
 theorem card_common_neighbors_lt_card_verts [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.commonNeighbors v w) < Fintype.card V :=
   Nat.lt_of_le_of_lt (G.card_common_neighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
-#align simple_graph.card_common_neighbors_lt_card_verts SimpleGraph.card_common_neighbors_lt_card_verts
+#align
+  simple_graph.card_common_neighbors_lt_card_verts SimpleGraph.card_common_neighbors_lt_card_verts
 
 /-- If the condition `G.adj v w` fails, then `card_common_neighbors_le_degree` is
 the best we can do in general.
 -/
-theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.Adj] {v w : V} (h : G.Adj v w) :
-    Fintype.card (G.commonNeighbors v w) < G.degree v := by classical
+theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.Adj] {v w : V}
+    (h : G.Adj v w) : Fintype.card (G.commonNeighbors v w) < G.degree v := by classical
   erw [← Set.to_finset_card]
   apply Finset.card_lt_card
   rw [Finset.ssubset_iff]
@@ -1299,7 +1360,8 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
       exact G.common_neighbors_subset_neighbor_set_left _ _
       
     
-#align simple_graph.adj.card_common_neighbors_lt_degree SimpleGraph.Adj.card_common_neighbors_lt_degree
+#align
+  simple_graph.adj.card_common_neighbors_lt_degree SimpleGraph.Adj.card_common_neighbors_lt_degree
 
 theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
     Fintype.card ((⊤ : SimpleGraph V).commonNeighbors v w) = Fintype.card V - 2 := by
@@ -1460,7 +1522,8 @@ theorem map_mem_edge_set_iff {e : Sym2 V} : e.map f ∈ G'.edgeSet ↔ e ∈ G.e
 
 theorem apply_mem_neighbor_set_iff {v w : V} : f w ∈ G'.neighborSet (f v) ↔ w ∈ G.neighborSet v :=
   map_adj_iff f
-#align simple_graph.embedding.apply_mem_neighbor_set_iff SimpleGraph.Embedding.apply_mem_neighbor_set_iff
+#align
+  simple_graph.embedding.apply_mem_neighbor_set_iff SimpleGraph.Embedding.apply_mem_neighbor_set_iff
 
 /-- A graph embedding induces an embedding of edge sets. -/
 @[simps]
@@ -1508,7 +1571,8 @@ protected def spanningCoe {s : Set V} (G : SimpleGraph s) : G ↪g G.spanningCoe
 #align simple_graph.embedding.spanning_coe SimpleGraph.Embedding.spanningCoe
 
 /-- Embeddings of types induce embeddings of complete graphs on those types. -/
-protected def completeGraph {α β : Type _} (f : α ↪ β) : (⊤ : SimpleGraph α) ↪g (⊤ : SimpleGraph β) :=
+protected def completeGraph {α β : Type _} (f : α ↪ β) :
+    (⊤ : SimpleGraph α) ↪g (⊤ : SimpleGraph β) :=
   { f with map_rel_iff' := by simp }
 #align simple_graph.embedding.complete_graph SimpleGraph.Embedding.completeGraph
 
@@ -1569,15 +1633,15 @@ def mapEdgeSet : G.edgeSet ≃ G'.edgeSet where
   invFun := Hom.mapEdgeSet f.symm
   left_inv := by
     rintro ⟨e, h⟩
-    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
-      Subtype.coe_mk, coe_coe]
+    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn,
+      Subtype.mk_eq_mk, Subtype.coe_mk, coe_coe]
     apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.symm_apply_apply _ _
   right_inv := by
     rintro ⟨e, h⟩
-    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
-      Subtype.coe_mk, coe_coe]
+    simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn,
+      Subtype.mk_eq_mk, Subtype.coe_mk, coe_coe]
     apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.apply_symm_apply _ _
@@ -1613,7 +1677,8 @@ protected def map (f : V ≃ W) (G : SimpleGraph V) : G ≃g G.map f.toEmbedding
 #align simple_graph.iso.map SimpleGraph.Iso.map
 
 /-- Equivalences of types induce isomorphisms of complete graphs on those types. -/
-protected def completeGraph {α β : Type _} (f : α ≃ β) : (⊤ : SimpleGraph α) ≃g (⊤ : SimpleGraph β) :=
+protected def completeGraph {α β : Type _} (f : α ≃ β) :
+    (⊤ : SimpleGraph α) ≃g (⊤ : SimpleGraph β) :=
   { f with map_rel_iff' := by simp }
 #align simple_graph.iso.complete_graph SimpleGraph.Iso.completeGraph
 

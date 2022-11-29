@@ -35,7 +35,8 @@ theorem to_mul_bot_zero : toMulBot (0 : WithZero (Multiplicative α)) = Multipli
 #align with_zero.to_mul_bot_zero WithZero.to_mul_bot_zero
 
 @[simp]
-theorem to_mul_bot_coe (x : Multiplicative α) : toMulBot ↑x = Multiplicative.ofAdd (x.toAdd : WithBot α) :=
+theorem to_mul_bot_coe (x : Multiplicative α) :
+    toMulBot ↑x = Multiplicative.ofAdd (x.toAdd : WithBot α) :=
   rfl
 #align with_zero.to_mul_bot_coe WithZero.to_mul_bot_coe
 
@@ -45,7 +46,8 @@ theorem to_mul_bot_symm_bot : toMulBot.symm (Multiplicative.ofAdd (⊥ : WithBot
 #align with_zero.to_mul_bot_symm_bot WithZero.to_mul_bot_symm_bot
 
 @[simp]
-theorem to_mul_bot_coe_of_add (x : α) : toMulBot.symm (Multiplicative.ofAdd (x : WithBot α)) = Multiplicative.ofAdd x :=
+theorem to_mul_bot_coe_of_add (x : α) :
+    toMulBot.symm (Multiplicative.ofAdd (x : WithBot α)) = Multiplicative.ofAdd x :=
   rfl
 #align with_zero.to_mul_bot_coe_of_add WithZero.to_mul_bot_coe_of_add
 

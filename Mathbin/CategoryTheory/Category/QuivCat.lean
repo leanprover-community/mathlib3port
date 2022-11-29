@@ -68,7 +68,8 @@ namespace CatCat
 def free : Quiv.{v, u} ⥤ Cat.{max u v, u} where
   obj V := CatCat.of (Paths V)
   map V W F :=
-    { obj := fun X => F.obj X, map := fun X Y f => F.mapPath f, map_comp' := fun X Y Z f g => F.map_path_comp f g }
+    { obj := fun X => F.obj X, map := fun X Y f => F.mapPath f,
+      map_comp' := fun X Y Z f g => F.map_path_comp f g }
   map_id' V := by
     change (show paths V ⥤ _ from _) = _
     ext
@@ -87,7 +88,8 @@ namespace QuivCat
 
 /-- Any prefunctor into a category lifts to a functor from the path category. -/
 @[simps]
-def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) : Paths V ⥤ C where
+def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunctor V C) :
+    Paths V ⥤ C where
   obj X := F.obj X
   map X Y f := composePath (F.mapPath f)
 #align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
@@ -95,7 +97,8 @@ def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunct
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
 -- but it would require lifting quite a bit of machinery to quivers!
-/-- The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
+/--
+The adjunction between forming the free category on a quiver, and forgetting a category to a quiver.
 -/
 def adj : Cat.free ⊣ Quiv.forget :=
   Adjunction.mkOfHomEquiv

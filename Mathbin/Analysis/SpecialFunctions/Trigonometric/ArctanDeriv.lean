@@ -29,7 +29,8 @@ theorem hasDerivAtTan {x : ℝ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 
   exact_mod_cast (Complex.hasDerivAtTan (by exact_mod_cast h)).realOfComplex
 #align real.has_deriv_at_tan Real.hasDerivAtTan
 
-theorem tendsto_abs_tan_of_cos_eq_zero {x : ℝ} (hx : cos x = 0) : Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
+theorem tendsto_abs_tan_of_cos_eq_zero {x : ℝ} (hx : cos x = 0) :
+    Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
   have hx : Complex.cos x = 0 := by exact_mod_cast hx
   simp only [← Complex.abs_of_real, Complex.of_real_tan]
   refine' (Complex.tendsto_abs_tan_of_cos_eq_zero hx).comp _
@@ -37,13 +38,16 @@ theorem tendsto_abs_tan_of_cos_eq_zero {x : ℝ} (hx : cos x = 0) : Tendsto (fun
   exact tendsto_principal_principal.2 fun y => mt Complex.of_real_inj.1
 #align real.tendsto_abs_tan_of_cos_eq_zero Real.tendsto_abs_tan_of_cos_eq_zero
 
-theorem tendsto_abs_tan_at_top (k : ℤ) : Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
+theorem tendsto_abs_tan_at_top (k : ℤ) :
+    Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
   tendsto_abs_tan_of_cos_eq_zero <| cos_eq_zero_iff.2 ⟨k, rfl⟩
 #align real.tendsto_abs_tan_at_top Real.tendsto_abs_tan_at_top
 
 theorem continuous_at_tan {x : ℝ} : ContinuousAt tan x ↔ cos x ≠ 0 := by
   refine' ⟨fun hc h₀ => _, fun h => (has_deriv_at_tan h).ContinuousAt⟩
-  exact not_tendsto_nhds_of_tendsto_at_top (tendsto_abs_tan_of_cos_eq_zero h₀) _ (hc.norm.tendsto.mono_left inf_le_left)
+  exact
+    not_tendsto_nhds_of_tendsto_at_top (tendsto_abs_tan_of_cos_eq_zero h₀) _
+      (hc.norm.tendsto.mono_left inf_le_left)
 #align real.continuous_at_tan Real.continuous_at_tan
 
 theorem differentiable_at_tan {x : ℝ} : DifferentiableAt ℝ tan x ↔ cos x ≠ 0 :=
@@ -64,11 +68,13 @@ theorem cont_diff_at_tan {n x} : ContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
     (Complex.cont_diff_at_tan.2 <| by exact_mod_cast h).realOfComplex⟩
 #align real.cont_diff_at_tan Real.cont_diff_at_tan
 
-theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) : HasDerivAt tan (1 / cos x ^ 2) x :=
+theorem hasDerivAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) :
+    HasDerivAt tan (1 / cos x ^ 2) x :=
   hasDerivAtTan (cos_pos_of_mem_Ioo h).ne'
 #align real.has_deriv_at_tan_of_mem_Ioo Real.hasDerivAtTanOfMemIoo
 
-theorem differentiableAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) : DifferentiableAt ℝ tan x :=
+theorem differentiableAtTanOfMemIoo {x : ℝ} (h : x ∈ ioo (-(π / 2) : ℝ) (π / 2)) :
+    DifferentiableAt ℝ tan x :=
   (hasDerivAtTanOfMemIoo h).DifferentiableAt
 #align real.differentiable_at_tan_of_mem_Ioo Real.differentiableAtTanOfMemIoo
 
@@ -98,7 +104,8 @@ theorem deriv_arctan : deriv arctan = fun x => 1 / (1 + x ^ 2) :=
 theorem contDiffArctan {n : ℕ∞} : ContDiff ℝ n arctan :=
   cont_diff_iff_cont_diff_at.2 fun x =>
     have : cos (arctan x) ≠ 0 := (cos_arctan_pos x).ne'
-    tanLocalHomeomorph.contDiffAtSymmDeriv (by simpa) trivial (hasDerivAtTan this) (cont_diff_at_tan.2 this)
+    tanLocalHomeomorph.contDiffAtSymmDeriv (by simpa) trivial (hasDerivAtTan this)
+      (cont_diff_at_tan.2 this)
 #align real.cont_diff_arctan Real.contDiffArctan
 
 end Real
@@ -123,7 +130,8 @@ theorem HasStrictDerivAt.arctan (hf : HasStrictDerivAt f f' x) :
   (Real.hasStrictDerivAtArctan (f x)).comp x hf
 #align has_strict_deriv_at.arctan HasStrictDerivAt.arctan
 
-theorem HasDerivAt.arctan (hf : HasDerivAt f f' x) : HasDerivAt (fun x => arctan (f x)) (1 / (1 + f x ^ 2) * f') x :=
+theorem HasDerivAt.arctan (hf : HasDerivAt f f' x) :
+    HasDerivAt (fun x => arctan (f x)) (1 / (1 + f x ^ 2) * f') x :=
   (Real.hasDerivAtArctan (f x)).comp x hf
 #align has_deriv_at.arctan HasDerivAt.arctan
 
@@ -138,7 +146,8 @@ theorem deriv_within_arctan (hf : DifferentiableWithinAt ℝ f s x) (hxs : Uniqu
 #align deriv_within_arctan deriv_within_arctan
 
 @[simp]
-theorem deriv_arctan (hc : DifferentiableAt ℝ f x) : deriv (fun x => arctan (f x)) x = 1 / (1 + f x ^ 2) * deriv f x :=
+theorem deriv_arctan (hc : DifferentiableAt ℝ f x) :
+    deriv (fun x => arctan (f x)) x = 1 / (1 + f x ^ 2) * deriv f x :=
   hc.HasDerivAt.arctan.deriv
 #align deriv_arctan deriv_arctan
 
@@ -146,7 +155,8 @@ end deriv
 
 section fderiv
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E} {n : ℕ∞}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E}
+  {s : Set E} {n : ℕ∞}
 
 theorem HasStrictFderivAt.arctan (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=
@@ -163,7 +173,8 @@ theorem HasFderivWithinAt.arctan (hf : HasFderivWithinAt f f' s x) :
   (hasDerivAtArctan (f x)).compHasFderivWithinAt x hf
 #align has_fderiv_within_at.arctan HasFderivWithinAt.arctan
 
-theorem fderiv_within_arctan (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
+theorem fderiv_within_arctan (hf : DifferentiableWithinAt ℝ f s x)
+    (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => arctan (f x)) s x = (1 / (1 + f x ^ 2)) • fderivWithin ℝ f s x :=
   hf.HasFderivWithinAt.arctan.fderivWithin hxs
 #align fderiv_within_arctan fderiv_within_arctan
@@ -180,17 +191,18 @@ theorem DifferentiableWithinAt.arctan (hf : DifferentiableWithinAt ℝ f s x) :
 #align differentiable_within_at.arctan DifferentiableWithinAt.arctan
 
 @[simp]
-theorem DifferentiableAt.arctan (hc : DifferentiableAt ℝ f x) : DifferentiableAt ℝ (fun x => arctan (f x)) x :=
+theorem DifferentiableAt.arctan (hc : DifferentiableAt ℝ f x) :
+    DifferentiableAt ℝ (fun x => arctan (f x)) x :=
   hc.HasFderivAt.arctan.DifferentiableAt
 #align differentiable_at.arctan DifferentiableAt.arctan
 
-theorem DifferentiableOn.arctan (hc : DifferentiableOn ℝ f s) : DifferentiableOn ℝ (fun x => arctan (f x)) s :=
-  fun x h => (hc x h).arctan
+theorem DifferentiableOn.arctan (hc : DifferentiableOn ℝ f s) :
+    DifferentiableOn ℝ (fun x => arctan (f x)) s := fun x h => (hc x h).arctan
 #align differentiable_on.arctan DifferentiableOn.arctan
 
 @[simp]
-theorem Differentiable.arctan (hc : Differentiable ℝ f) : Differentiable ℝ fun x => arctan (f x) := fun x =>
-  (hc x).arctan
+theorem Differentiable.arctan (hc : Differentiable ℝ f) : Differentiable ℝ fun x => arctan (f x) :=
+  fun x => (hc x).arctan
 #align differentiable.arctan Differentiable.arctan
 
 theorem ContDiffAt.arctan (h : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun x => arctan (f x)) x :=
@@ -201,7 +213,8 @@ theorem ContDiff.arctan (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => arctan 
   contDiffArctan.comp h
 #align cont_diff.arctan ContDiff.arctan
 
-theorem ContDiffWithinAt.arctan (h : ContDiffWithinAt ℝ n f s x) : ContDiffWithinAt ℝ n (fun x => arctan (f x)) s x :=
+theorem ContDiffWithinAt.arctan (h : ContDiffWithinAt ℝ n f s x) :
+    ContDiffWithinAt ℝ n (fun x => arctan (f x)) s x :=
   contDiffArctan.compContDiffWithinAt h
 #align cont_diff_within_at.arctan ContDiffWithinAt.arctan
 

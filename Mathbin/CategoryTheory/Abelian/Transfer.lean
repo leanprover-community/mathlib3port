@@ -61,7 +61,8 @@ theorem has_kernels [PreservesFiniteLimits G] : HasKernels C :=
       rw [← this]
       haveI : has_kernel (G.map (F.map f) ≫ i.hom.app _) := limits.has_kernel_comp_mono _ _
       apply limits.has_kernel_iso_comp }
-#align category_theory.abelian_of_adjunction.has_kernels CategoryTheory.AbelianOfAdjunction.has_kernels
+#align
+  category_theory.abelian_of_adjunction.has_kernels CategoryTheory.AbelianOfAdjunction.has_kernels
 
 include adj
 
@@ -74,7 +75,8 @@ theorem has_cokernels : HasCokernels C :=
       rw [← this]
       haveI : has_cokernel (G.map (F.map f) ≫ i.hom.app _) := limits.has_cokernel_comp_iso _ _
       apply limits.has_cokernel_epi_comp }
-#align category_theory.abelian_of_adjunction.has_cokernels CategoryTheory.AbelianOfAdjunction.has_cokernels
+#align
+  category_theory.abelian_of_adjunction.has_cokernels CategoryTheory.AbelianOfAdjunction.has_cokernels
 
 variable [Limits.HasCokernels C]
 
@@ -84,20 +86,24 @@ def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokerne
   -- as `left_adjoint_preserves_colimits` has universe variables.
   haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
   calc
-    G.obj (cokernel (F.map f)) ≅ cokernel (G.map (F.map f)) := (as_iso (cokernel_comparison _ G)).symm
+    G.obj (cokernel (F.map f)) ≅ cokernel (G.map (F.map f)) :=
+      (as_iso (cokernel_comparison _ G)).symm
     _ ≅ cokernel (_ ≫ f ≫ _) := cokernel_iso_of_eq (nat_iso.naturality_2 i f).symm
     _ ≅ cokernel (f ≫ _) := cokernel_epi_comp _ _
     _ ≅ cokernel f := cokernel_comp_is_iso _ _
     
-#align category_theory.abelian_of_adjunction.cokernel_iso CategoryTheory.AbelianOfAdjunction.cokernelIso
+#align
+  category_theory.abelian_of_adjunction.cokernel_iso CategoryTheory.AbelianOfAdjunction.cokernelIso
 
 variable [Limits.HasKernels C] [PreservesFiniteLimits G]
 
 /-- Auxiliary construction for `coimage_iso_image` -/
-def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) : kernel (G.map (cokernel.π (F.map f))) ≅ kernel (cokernel.π f) := by
+def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) :
+    kernel (G.map (cokernel.π (F.map f))) ≅ kernel (cokernel.π f) := by
   haveI : preserves_colimits G := adj.left_adjoint_preserves_colimits
   calc
-    kernel (G.map (cokernel.π (F.map f))) ≅ kernel (cokernel.π (G.map (F.map f)) ≫ cokernel_comparison (F.map f) G) :=
+    kernel (G.map (cokernel.π (F.map f))) ≅
+        kernel (cokernel.π (G.map (F.map f)) ≫ cokernel_comparison (F.map f) G) :=
       kernel_iso_of_eq (π_comp_cokernel_comparison _ _).symm
     _ ≅ kernel (cokernel.π (G.map (F.map f))) := kernel_comp_mono _ _
     _ ≅ kernel (cokernel.π (_ ≫ f ≫ _) ≫ (cokernel_iso_of_eq _).Hom) :=
@@ -108,11 +114,14 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) : kernel (G.map (cokernel.π (F.m
     _ ≅ kernel (cokernel.π (f ≫ _)) := kernel_comp_mono _ _
     _ ≅ kernel (inv (i.inv.app Y) ≫ cokernel.π f ≫ (cokernel_comp_is_iso f (i.inv.app Y)).inv) :=
       kernel_iso_of_eq
-        (by simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc, nat_iso.inv_inv_app])
+        (by
+          simp only [cokernel.π_desc, cokernel_comp_is_iso_inv, iso.hom_inv_id_app_assoc,
+            nat_iso.inv_inv_app])
     _ ≅ kernel (cokernel.π f ≫ _) := kernel_is_iso_comp _ _
     _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
     
-#align category_theory.abelian_of_adjunction.coimage_iso_image_aux CategoryTheory.AbelianOfAdjunction.coimageIsoImageAux
+#align
+  category_theory.abelian_of_adjunction.coimage_iso_image_aux CategoryTheory.AbelianOfAdjunction.coimageIsoImageAux
 
 variable [Functor.PreservesZeroMorphisms F]
 
@@ -125,7 +134,8 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
   calc
     abelian.coimage f ≅ cokernel (kernel.ι f) := iso.refl _
     _ ≅ G.obj (cokernel (F.map (kernel.ι f))) := (cokernel_iso _ _ i adj _).symm
-    _ ≅ G.obj (cokernel (kernel_comparison f F ≫ kernel.ι (F.map f))) := G.map_iso (cokernel_iso_of_eq (by simp))
+    _ ≅ G.obj (cokernel (kernel_comparison f F ≫ kernel.ι (F.map f))) :=
+      G.map_iso (cokernel_iso_of_eq (by simp))
     _ ≅ G.obj (cokernel (kernel.ι (F.map f))) := G.map_iso (cokernel_epi_comp _ _)
     _ ≅ G.obj (abelian.coimage (F.map f)) := iso.refl _
     _ ≅ G.obj (abelian.image (F.map f)) := G.map_iso (abelian.coimage_iso_image _)
@@ -134,7 +144,8 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
     _ ≅ kernel (cokernel.π f) := coimage_iso_image_aux F G i adj f
     _ ≅ abelian.image f := iso.refl _
     
-#align category_theory.abelian_of_adjunction.coimage_iso_image CategoryTheory.AbelianOfAdjunction.coimageIsoImage
+#align
+  category_theory.abelian_of_adjunction.coimage_iso_image CategoryTheory.AbelianOfAdjunction.coimageIsoImage
 
 attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 
@@ -142,13 +153,15 @@ attribute [local simp] cokernel_iso coimage_iso_image coimage_iso_image_aux
 theorem coimage_iso_image_hom {X Y : C} (f : X ⟶ Y) :
     (coimageIsoImage F G i adj f).Hom = Abelian.coimageImageComparison f := by
   ext
-  simpa only [← G.map_comp_assoc, coimage_iso_image, nat_iso.inv_inv_app, cokernel_iso, coimage_iso_image_aux,
-    iso.trans_symm, iso.symm_symm_eq, iso.refl_trans, iso.trans_refl, iso.trans_hom, iso.symm_hom,
-    cokernel_comp_is_iso_inv, cokernel_epi_comp_inv, as_iso_hom, functor.map_iso_hom, cokernel_epi_comp_hom,
-    preserves_kernel.iso_hom, kernel_comp_mono_hom, kernel_is_iso_comp_hom, cokernel_iso_of_eq_hom_comp_desc_assoc,
-    cokernel.π_desc_assoc, category.assoc, π_comp_cokernel_iso_of_eq_inv_assoc, π_comp_cokernel_comparison_assoc,
-    kernel.lift_ι, kernel.lift_ι_assoc, kernel_iso_of_eq_hom_comp_ι_assoc, kernel_comparison_comp_ι_assoc,
-    abelian.coimage_image_factorisation] using nat_iso.naturality_1 i f
+  simpa only [← G.map_comp_assoc, coimage_iso_image, nat_iso.inv_inv_app, cokernel_iso,
+    coimage_iso_image_aux, iso.trans_symm, iso.symm_symm_eq, iso.refl_trans, iso.trans_refl,
+    iso.trans_hom, iso.symm_hom, cokernel_comp_is_iso_inv, cokernel_epi_comp_inv, as_iso_hom,
+    functor.map_iso_hom, cokernel_epi_comp_hom, preserves_kernel.iso_hom, kernel_comp_mono_hom,
+    kernel_is_iso_comp_hom, cokernel_iso_of_eq_hom_comp_desc_assoc, cokernel.π_desc_assoc,
+    category.assoc, π_comp_cokernel_iso_of_eq_inv_assoc, π_comp_cokernel_comparison_assoc,
+    kernel.lift_ι, kernel.lift_ι_assoc, kernel_iso_of_eq_hom_comp_ι_assoc,
+    kernel_comparison_comp_ι_assoc, abelian.coimage_image_factorisation] using
+    nat_iso.naturality_1 i f
 #align
   category_theory.abelian_of_adjunction.coimage_iso_image_hom CategoryTheory.AbelianOfAdjunction.coimage_iso_image_hom
 
@@ -164,9 +177,10 @@ then `C` is also abelian.
 
 See <https://stacks.math.columbia.edu/tag/03A3>
 -/
-def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFiniteProducts C] {D : Type u₂}
-    [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F] (G : D ⥤ C)
-    [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C) (adj : G ⊣ F) : Abelian C := by
+def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFiniteProducts C]
+    {D : Type u₂} [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F]
+    (G : D ⥤ C) [Functor.PreservesZeroMorphisms G] [PreservesFiniteLimits G] (i : F ⋙ G ≅ 𝟭 C)
+    (adj : G ⊣ F) : Abelian C := by
   haveI := has_kernels F G i
   haveI := has_cokernels F G i adj
   have : ∀ {X Y : C} (f : X ⟶ Y), is_iso (abelian.coimage_image_comparison f) := by
@@ -180,8 +194,9 @@ def abelianOfAdjunction {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFin
 via a functor that preserves zero morphisms,
 then `C` is also abelian.
 -/
-def abelianOfEquivalence {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFiniteProducts C] {D : Type u₂}
-    [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F] [IsEquivalence F] : Abelian C :=
+def abelianOfEquivalence {C : Type u₁} [Category.{v} C] [Preadditive C] [HasFiniteProducts C]
+    {D : Type u₂} [Category.{v} D] [Abelian D] (F : C ⥤ D) [Functor.PreservesZeroMorphisms F]
+    [IsEquivalence F] : Abelian C :=
   abelianOfAdjunction F F.inv F.asEquivalence.unitIso.symm F.asEquivalence.symm.toAdjunction
 #align category_theory.abelian_of_equivalence CategoryTheory.abelianOfEquivalence
 

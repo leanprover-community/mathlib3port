@@ -116,10 +116,12 @@ theorem add_lt_top [PartialOrder α] {a b : WithTop α} : a + b < ⊤ ↔ a < �
   simp_rw [lt_top_iff_ne_top, add_ne_top]
 #align with_top.add_lt_top WithTop.add_lt_top
 
-theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
+theorem add_eq_coe :
+    ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
   | none, b, c => by simp [none_eq_top]
   | some a, none, c => by simp [none_eq_top]
-  | some a, some b, c => by simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_left, exists_eq_left]
+  | some a, some b, c => by
+    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_left, exists_eq_left]
 #align with_top.add_eq_coe WithTop.add_eq_coe
 
 @[simp]
@@ -151,10 +153,10 @@ instance covariant_class_swap_add_le [LE α] [CovariantClass α α (swap (· + �
 instance contravariant_class_add_lt [LT α] [ContravariantClass α α (· + ·) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (· + ·) (· < ·) :=
   ⟨fun a b c h => by
-    induction a using WithTop.recTopCoe
+    induction a using WithTop.recTopCoe;
     · exact (not_none_lt _ h).elim
       
-    induction b using WithTop.recTopCoe
+    induction b using WithTop.recTopCoe;
     · exact (not_none_lt _ h).elim
       
     induction c using WithTop.recTopCoe
@@ -178,18 +180,18 @@ instance contravariant_class_swap_add_lt [LT α] [ContravariantClass α α (swap
 protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤)
     (h : a + b ≤ a + c) : b ≤ c := by
   lift a to α using ha
-  induction c using WithTop.recTopCoe
+  induction c using WithTop.recTopCoe;
   · exact le_top
     
-  induction b using WithTop.recTopCoe
+  induction b using WithTop.recTopCoe;
   · exact (not_top_le_coe _ h).elim
     
   simp only [← coe_add, coe_le_coe] at h⊢
   exact le_of_add_le_add_left h
 #align with_top.le_of_add_le_add_left WithTop.le_of_add_le_add_left
 
-protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤)
-    (h : b + a ≤ c + a) : b ≤ c := by
+protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)]
+    (ha : a ≠ ⊤) (h : b + a ≤ c + a) : b ≤ c := by
   lift a to α using ha
   cases c
   · exact le_top
@@ -201,8 +203,8 @@ protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap
     
 #align with_top.le_of_add_le_add_right WithTop.le_of_add_le_add_right
 
-protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤) (h : b < c) :
-    a + b < a + c := by
+protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤)
+    (h : b < c) : a + b < a + c := by
   lift a to α using ha
   rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
@@ -212,8 +214,8 @@ protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < 
     
 #align with_top.add_lt_add_left WithTop.add_lt_add_left
 
-protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) (h : b < c) :
-    b + a < c + a := by
+protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤)
+    (h : b < c) : b + a < c + a := by
   lift a to α using ha
   rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
@@ -244,12 +246,14 @@ protected theorem add_lt_add_iff_right [LT α] [CovariantClass α α (swap (· +
 #align with_top.add_lt_add_iff_right WithTop.add_lt_add_iff_right
 
 protected theorem add_lt_add_of_le_of_lt [Preorder α] [CovariantClass α α (· + ·) (· < ·)]
-    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
+    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) (hab : a ≤ b) (hcd : c < d) :
+    a + c < b + d :=
   (WithTop.add_lt_add_left ha hcd).trans_le <| add_le_add_right hab _
 #align with_top.add_lt_add_of_le_of_lt WithTop.add_lt_add_of_le_of_lt
 
 protected theorem add_lt_add_of_lt_of_le [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)]
-    [CovariantClass α α (swap (· + ·)) (· < ·)] (hc : c ≠ ⊤) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
+    [CovariantClass α α (swap (· + ·)) (· < ·)] (hc : c ≠ ⊤) (hab : a < b) (hcd : c ≤ d) :
+    a + c < b + d :=
   (WithTop.add_lt_add_right hc hab).trans_le <| add_le_add_left hcd _
 #align with_top.add_lt_add_of_lt_of_le WithTop.add_lt_add_of_lt_of_le
 
@@ -273,11 +277,13 @@ end Add
 
 instance [AddSemigroup α] : AddSemigroup (WithTop α) :=
   { WithTop.hasAdd with
-    add_assoc := by repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_assoc] }
+    add_assoc := by
+      repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_assoc] }
 
 instance [AddCommSemigroup α] : AddCommSemigroup (WithTop α) :=
   { WithTop.addSemigroup with
-    add_comm := by repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_comm] }
+    add_comm := by
+      repeat' refine' WithTop.recTopCoe _ _ <;> try intro <;> simp [← WithTop.coe_add, add_comm] }
 
 instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
   { WithTop.hasZero, WithTop.hasAdd with
@@ -313,10 +319,10 @@ instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithTop α) :=
 instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
   { WithTop.partialOrder, WithTop.addCommMonoid with
     add_le_add_left := by
-      rintro a b h (_ | c)
+      rintro a b h (_ | c);
       · simp [none_eq_top]
         
-      rcases b with (_ | b)
+      rcases b with (_ | b);
       · simp [none_eq_top]
         
       rcases le_coe_iff.1 h with ⟨a, rfl, h⟩
@@ -385,27 +391,28 @@ theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a �
 #align with_top.zero_lt_coe WithTop.zero_lt_coe
 
 /-- A version of `with_top.map` for `one_hom`s. -/
-@[to_additive "A version of `with_top.map` for `zero_hom`s", simps (config := { fullyApplied := false })]
-protected def _root_.one_hom.with_top_map {M N : Type _} [One M] [One N] (f : OneHom M N) :
+@[to_additive "A version of `with_top.map` for `zero_hom`s",
+  simps (config := { fullyApplied := false })]
+protected def OneHom.withTopMap {M N : Type _} [One M] [One N] (f : OneHom M N) :
     OneHom (WithTop M) (WithTop N) where
   toFun := WithTop.map f
   map_one' := by rw [WithTop.map_one, map_one, coe_one]
-#align with_top._root_.one_hom.with_top_map with_top._root_.one_hom.with_top_map
+#align one_hom.with_top_map OneHom.withTopMap
 
 /-- A version of `with_top.map` for `add_hom`s. -/
 @[simps (config := { fullyApplied := false })]
-protected def _root_.add_hom.with_top_map {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
+protected def AddHom.withTopMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
     AddHom (WithTop M) (WithTop N) where
   toFun := WithTop.map f
   map_add' := WithTop.map_add f
-#align with_top._root_.add_hom.with_top_map with_top._root_.add_hom.with_top_map
+#align add_hom.with_top_map AddHom.withTopMap
 
 /-- A version of `with_top.map` for `add_monoid_hom`s. -/
 @[simps (config := { fullyApplied := false })]
-protected def _root_.add_monoid_hom.with_top_map {M N : Type _} [AddZeroClass M] [AddZeroClass N] (f : M →+ N) :
-    WithTop M →+ WithTop N :=
+protected def AddMonoidHom.withTopMap {M N : Type _} [AddZeroClass M] [AddZeroClass N]
+    (f : M →+ N) : WithTop M →+ WithTop N :=
   { f.toZeroHom.with_top_map, f.toAddHom.with_top_map with toFun := WithTop.map f }
-#align with_top._root_.add_monoid_hom.with_top_map with_top._root_.add_monoid_hom.with_top_map
+#align add_monoid_hom.with_top_map AddMonoidHom.withTopMap
 
 end WithTop
 
@@ -545,27 +552,28 @@ protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : With
 #align with_bot.map_add WithBot.map_add
 
 /-- A version of `with_bot.map` for `one_hom`s. -/
-@[to_additive "A version of `with_bot.map` for `zero_hom`s", simps (config := { fullyApplied := false })]
-protected def _root_.one_hom.with_bot_map {M N : Type _} [One M] [One N] (f : OneHom M N) :
+@[to_additive "A version of `with_bot.map` for `zero_hom`s",
+  simps (config := { fullyApplied := false })]
+protected def OneHom.withBotMap {M N : Type _} [One M] [One N] (f : OneHom M N) :
     OneHom (WithBot M) (WithBot N) where
   toFun := WithBot.map f
   map_one' := by rw [WithBot.map_one, map_one, coe_one]
-#align with_bot._root_.one_hom.with_bot_map with_bot._root_.one_hom.with_bot_map
+#align one_hom.with_bot_map OneHom.withBotMap
 
 /-- A version of `with_bot.map` for `add_hom`s. -/
 @[simps (config := { fullyApplied := false })]
-protected def _root_.add_hom.with_bot_map {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
+protected def AddHom.withBotMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
     AddHom (WithBot M) (WithBot N) where
   toFun := WithBot.map f
   map_add' := WithBot.map_add f
-#align with_bot._root_.add_hom.with_bot_map with_bot._root_.add_hom.with_bot_map
+#align add_hom.with_bot_map AddHom.withBotMap
 
 /-- A version of `with_bot.map` for `add_monoid_hom`s. -/
 @[simps (config := { fullyApplied := false })]
-protected def _root_.add_monoid_hom.with_bot_map {M N : Type _} [AddZeroClass M] [AddZeroClass N] (f : M →+ N) :
-    WithBot M →+ WithBot N :=
+protected def AddMonoidHom.withBotMap {M N : Type _} [AddZeroClass M] [AddZeroClass N]
+    (f : M →+ N) : WithBot M →+ WithBot N :=
   { f.toZeroHom.with_bot_map, f.toAddHom.with_bot_map with toFun := WithBot.map f }
-#align with_bot._root_.add_monoid_hom.with_bot_map with_bot._root_.add_monoid_hom.with_bot_map
+#align add_monoid_hom.with_bot_map AddMonoidHom.withBotMap
 
 variable [Preorder α]
 
@@ -589,27 +597,28 @@ instance contravariant_class_swap_add_lt [ContravariantClass α α (swap (· + �
   @OrderDual.contravariant_class_swap_add_lt (WithTop αᵒᵈ) _ _ _
 #align with_bot.contravariant_class_swap_add_lt WithBot.contravariant_class_swap_add_lt
 
-protected theorem le_of_add_le_add_left [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊥) (h : a + b ≤ a + c) :
-    b ≤ c :=
+protected theorem le_of_add_le_add_left [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊥)
+    (h : a + b ≤ a + c) : b ≤ c :=
   @WithTop.le_of_add_le_add_left αᵒᵈ _ _ _ _ _ _ ha h
 #align with_bot.le_of_add_le_add_left WithBot.le_of_add_le_add_left
 
-protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊥)
-    (h : b + a ≤ c + a) : b ≤ c :=
+protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + ·)) (· ≤ ·)]
+    (ha : a ≠ ⊥) (h : b + a ≤ c + a) : b ≤ c :=
   @WithTop.le_of_add_le_add_right αᵒᵈ _ _ _ _ _ _ ha h
 #align with_bot.le_of_add_le_add_right WithBot.le_of_add_le_add_right
 
-protected theorem add_lt_add_left [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊥) (h : b < c) : a + b < a + c :=
+protected theorem add_lt_add_left [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊥) (h : b < c) :
+    a + b < a + c :=
   @WithTop.add_lt_add_left αᵒᵈ _ _ _ _ _ _ ha h
 #align with_bot.add_lt_add_left WithBot.add_lt_add_left
 
-protected theorem add_lt_add_right [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊥) (h : b < c) :
-    b + a < c + a :=
+protected theorem add_lt_add_right [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊥)
+    (h : b < c) : b + a < c + a :=
   @WithTop.add_lt_add_right αᵒᵈ _ _ _ _ _ _ ha h
 #align with_bot.add_lt_add_right WithBot.add_lt_add_right
 
-protected theorem add_le_add_iff_left [CovariantClass α α (· + ·) (· ≤ ·)] [ContravariantClass α α (· + ·) (· ≤ ·)]
-    (ha : a ≠ ⊥) : a + b ≤ a + c ↔ b ≤ c :=
+protected theorem add_le_add_iff_left [CovariantClass α α (· + ·) (· ≤ ·)]
+    [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊥) : a + b ≤ a + c ↔ b ≤ c :=
   ⟨WithBot.le_of_add_le_add_left ha, fun h => add_le_add_left h a⟩
 #align with_bot.add_le_add_iff_left WithBot.add_le_add_iff_left
 
@@ -618,8 +627,8 @@ protected theorem add_le_add_iff_right [CovariantClass α α (swap (· + ·)) (�
   ⟨WithBot.le_of_add_le_add_right ha, fun h => add_le_add_right h a⟩
 #align with_bot.add_le_add_iff_right WithBot.add_le_add_iff_right
 
-protected theorem add_lt_add_iff_left [CovariantClass α α (· + ·) (· < ·)] [ContravariantClass α α (· + ·) (· < ·)]
-    (ha : a ≠ ⊥) : a + b < a + c ↔ b < c :=
+protected theorem add_lt_add_iff_left [CovariantClass α α (· + ·) (· < ·)]
+    [ContravariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊥) : a + b < a + c ↔ b < c :=
   ⟨lt_of_add_lt_add_left, WithBot.add_lt_add_left ha⟩
 #align with_bot.add_lt_add_iff_left WithBot.add_lt_add_iff_left
 
@@ -629,19 +638,22 @@ protected theorem add_lt_add_iff_right [CovariantClass α α (swap (· + ·)) (�
 #align with_bot.add_lt_add_iff_right WithBot.add_lt_add_iff_right
 
 protected theorem add_lt_add_of_le_of_lt [CovariantClass α α (· + ·) (· < ·)]
-    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (hb : b ≠ ⊥) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
+    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (hb : b ≠ ⊥) (hab : a ≤ b) (hcd : c < d) :
+    a + c < b + d :=
   @WithTop.add_lt_add_of_le_of_lt αᵒᵈ _ _ _ _ _ _ _ _ hb hab hcd
 #align with_bot.add_lt_add_of_le_of_lt WithBot.add_lt_add_of_le_of_lt
 
 protected theorem add_lt_add_of_lt_of_le [CovariantClass α α (· + ·) (· ≤ ·)]
-    [CovariantClass α α (swap (· + ·)) (· < ·)] (hd : d ≠ ⊥) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
+    [CovariantClass α α (swap (· + ·)) (· < ·)] (hd : d ≠ ⊥) (hab : a < b) (hcd : c ≤ d) :
+    a + c < b + d :=
   @WithTop.add_lt_add_of_lt_of_le αᵒᵈ _ _ _ _ _ _ _ _ hd hab hcd
 #align with_bot.add_lt_add_of_lt_of_le WithBot.add_lt_add_of_lt_of_le
 
 end Add
 
 instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) :=
-  { WithBot.partialOrder, WithBot.addCommMonoid with add_le_add_left := fun a b h c => add_le_add_left h c }
+  { WithBot.partialOrder, WithBot.addCommMonoid with
+    add_le_add_left := fun a b h c => add_le_add_left h c }
 
 instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
   { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }

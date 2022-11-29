@@ -47,11 +47,12 @@ instance [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] :
 instance [∀ i, NonUnitalSemiring (f i)] [∀ i, StarRing (f i)] : StarRing (∀ i, f i) :=
   { Pi.starAddMonoid, (Pi.starSemigroup : StarSemigroup (∀ i, f i)) with }
 
-instance {R : Type w} [∀ i, HasSmul R (f i)] [HasStar R] [∀ i, HasStar (f i)] [∀ i, StarModule R (f i)] :
+instance {R : Type w} [∀ i, HasSmul R (f i)] [HasStar R] [∀ i, HasStar (f i)]
+    [∀ i, StarModule R (f i)] :
     StarModule R (∀ i, f i) where star_smul r x := funext fun i => star_smul r (x i)
 
-theorem single_star [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] [DecidableEq I] (i : I) (a : f i) :
-    Pi.single i (star a) = star (Pi.single i a) :=
+theorem single_star [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] [DecidableEq I] (i : I)
+    (a : f i) : Pi.single i (star a) = star (Pi.single i a) :=
   single_op (fun i => @star (f i) _) (fun i => star_zero _) i a
 #align pi.single_star Pi.single_star
 

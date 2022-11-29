@@ -59,7 +59,9 @@ noncomputable def normBound : ℤ :=
   let n := Fintype.card ι
   let i : ι := Nonempty.some bS.index_nonempty
   let m : ℤ :=
-    Finset.max' (Finset.univ.image fun ijk : ι × ι × ι => abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
+    Finset.max'
+      (Finset.univ.image fun ijk : ι × ι × ι =>
+        abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
       ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
   Nat.factorial n • (n • m) ^ n
 #align class_group.norm_bound ClassGroup.normBound
@@ -69,7 +71,9 @@ theorem norm_bound_pos : 0 < normBound abv bS := by
     by_contra' h
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
-    apply (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp (Algebra.left_mul_matrix_injective bS)
+    apply
+      (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp
+        (Algebra.left_mul_matrix_injective bS)
     ext (j k)
     simp [h, Dmatrix.zero_apply]
   simp only [norm_bound, Algebra.smul_def, eq_nat_cast]
@@ -85,8 +89,8 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
     abv (Algebra.norm R a) ≤ normBound abv bS * y ^ Fintype.card ι := by
   conv_lhs => rw [← bS.sum_repr a]
   rw [Algebra.norm_apply, ← LinearMap.det_to_matrix bS]
-  simp only [Algebra.norm_apply, AlgHom.map_sum, AlgHom.map_smul, LinearEquiv.map_sum, LinearEquiv.map_smul,
-    Algebra.to_matrix_lmul_eq, norm_bound, smul_mul_assoc, ← mul_pow]
+  simp only [Algebra.norm_apply, AlgHom.map_sum, AlgHom.map_smul, LinearEquiv.map_sum,
+    LinearEquiv.map_smul, Algebra.to_matrix_lmul_eq, norm_bound, smul_mul_assoc, ← mul_pow]
   convert Matrix.det_sum_smul_le Finset.univ _ hy using 3
   · rw [Finset.card_univ, smul_mul_assoc, mul_comm]
     
@@ -98,7 +102,8 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
 
 /-- If the `R`-integral element `a : S` has coordinates `< y` with respect to some basis `b`,
 its norm is strictly less than `norm_bound abv b * y ^ dim S`. -/
-theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, (abv (bS.repr a k) : T) < y) :
+theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T}
+    (hy : ∀ k, (abv (bS.repr a k) : T) < y) :
     (abv (Algebra.norm R a) : T) < normBound abv bS * y ^ Fintype.card ι := by
   obtain ⟨i⟩ := bS.index_nonempty
   have him : (finset.univ.image fun k => abv (bS.repr a k)).Nonempty :=
@@ -108,7 +113,8 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, 
     intro k
     exact Finset.le_max' _ _ (finset.mem_image.mpr ⟨k, Finset.mem_univ _, rfl⟩)
   have : (y' : T) < y := by
-    rw [y'_def, ← Finset.max'_image (show Monotone (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
+    rw [y'_def, ←
+      Finset.max'_image (show Monotone (coe : ℤ → T) from fun x y h => int.cast_le.mpr h)]
     apply (Finset.max'_lt_iff _ (him.image _)).mpr
     simp only [Finset.mem_image, exists_prop]
     rintro _ ⟨x, ⟨k, -, rfl⟩, rfl⟩
@@ -129,10 +135,12 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, 
 
 /-- A nonzero ideal has an element of minimal norm. -/
 theorem exists_min (I : (Ideal S)⁰) :
-    ∃ b ∈ (I : Ideal S), b ≠ 0 ∧ ∀ c ∈ (I : Ideal S), abv (Algebra.norm R c) < abv (Algebra.norm R b) → c = (0 : S) :=
+    ∃ b ∈ (I : Ideal S),
+      b ≠ 0 ∧ ∀ c ∈ (I : Ideal S), abv (Algebra.norm R c) < abv (Algebra.norm R b) → c = (0 : S) :=
   by
   obtain ⟨_, ⟨b, b_mem, b_ne_zero, rfl⟩, min⟩ :=
-    @Int.exists_least_of_bdd (fun a => ∃ b ∈ (I : Ideal S), b ≠ (0 : S) ∧ abv (Algebra.norm R b) = a) _ _
+    @Int.exists_least_of_bdd
+      (fun a => ∃ b ∈ (I : Ideal S), b ≠ (0 : S) ∧ abv (Algebra.norm R b) = a) _ _
   · refine' ⟨b, b_mem, b_ne_zero, _⟩
     intro c hc lt
     contrapose! lt with c_ne_zero
@@ -176,7 +184,8 @@ variable [DecidableEq R]
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
 noncomputable def finsetApprox : Finset R :=
-  (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
+  (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase
+    0
 #align class_group.finset_approx ClassGroup.finsetApprox
 
 theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
@@ -185,7 +194,8 @@ theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
 
 @[simp]
 theorem mem_finset_approx {x : R} :
-    x ∈ finsetApprox bS adm ↔ ∃ i j, i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x := by
+    x ∈ finsetApprox bS adm ↔ ∃ i j, i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x :=
+  by
   simp only [finset_approx, Finset.mem_erase, Finset.mem_image]
   constructor
   · rintro ⟨hx, ⟨i, j⟩, _, rfl⟩
@@ -209,7 +219,8 @@ attribute [-instance] Real.decidableEq
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
     ∃ q : S,
-      ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - b • q)) < abv (Algebra.norm R (algebraMap R S b)) :=
+      ∃ r ∈ finsetApprox bS adm,
+        abv (Algebra.norm R (r • a - b • q)) < abv (Algebra.norm R (algebraMap R S b)) :=
   by
   have dim_pos := fintype.card_pos_iff.mpr bS.index_nonempty
   set ε : ℝ := norm_bound abv bS ^ (-1 / Fintype.card ι : ℝ) with ε_eq
@@ -217,11 +228,9 @@ theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
   have ε_le : (norm_bound abv bS : ℝ) * (abv b • ε) ^ Fintype.card ι ≤ abv b ^ Fintype.card ι := by
     have := norm_bound_pos abv bS
     have := abv.nonneg b
-    rw [ε_eq, Algebra.smul_def, eq_int_cast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel, rpow_neg_one,
-        mul_left_comm, mul_inv_cancel, mul_one, rpow_nat_cast] <;>
-      try
-      norm_cast
-      linarith
+    rw [ε_eq, Algebra.smul_def, eq_int_cast, ← rpow_nat_cast, mul_rpow, ← rpow_mul, div_mul_cancel,
+        rpow_neg_one, mul_left_comm, mul_inv_cancel, mul_one, rpow_nat_cast] <;>
+      try norm_cast; linarith
     · apply rpow_nonneg_of_nonneg
       norm_cast
       linarith
@@ -250,17 +259,17 @@ theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
   · exact ⟨k, j, j_ne_k.symm, rfl⟩
     
   have : r • a - b • q = ∑ x : ι, rs k x • bS x - rs j x • bS x := by
-    simp only [r_eq, sub_smul, μ_mul_a_eq, q_eq, Finset.smul_sum, ← Finset.sum_add_distrib, ← Finset.sum_sub_distrib,
-      smul_sub]
+    simp only [r_eq, sub_smul, μ_mul_a_eq, q_eq, Finset.smul_sum, ← Finset.sum_add_distrib, ←
+      Finset.sum_sub_distrib, smul_sub]
     refine' Finset.sum_congr rfl fun x _ => _
     ring
   rw [this, Algebra.norm_algebra_map_of_basis bS, abv.map_pow]
   refine' int.cast_lt.mp ((norm_lt abv bS _ fun i => lt_of_le_of_lt _ (hjk' i)).trans_le _)
   · apply le_of_eq
     congr
-    simp_rw [LinearEquiv.map_sum, LinearEquiv.map_sub, LinearEquiv.map_smul, Finset.sum_apply', Finsupp.sub_apply,
-      Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+    simp_rw [LinearEquiv.map_sum, LinearEquiv.map_sub, LinearEquiv.map_smul, Finset.sum_apply',
+      Finsupp.sub_apply, Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply,
+      smul_eq_mul, mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
     
   · exact_mod_cast ε_le
     
@@ -270,19 +279,24 @@ include ist iic
 
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} (hb : b ≠ 0) :
-    ∃ q : S, ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - q * b)) < abv (Algebra.norm R b) := by
+    ∃ q : S,
+      ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - q * b)) < abv (Algebra.norm R b) :=
+  by
   have inj : Function.Injective (algebraMap R L) := by
     rw [IsScalarTower.algebra_map_eq R S L]
     exact (IsIntegralClosure.algebra_map_injective S R L).comp bS.algebra_map_injective
   obtain ⟨a', b', hb', h⟩ := IsIntegralClosure.exists_smul_eq_mul h inj a hb
   obtain ⟨q, r, hr, hqr⟩ := exists_mem_finset_approx bS adm a' hb'
   refine' ⟨q, r, hr, _⟩
-  refine' lt_of_mul_lt_mul_left _ (show 0 ≤ abv (Algebra.norm R (algebraMap R S b')) from abv.nonneg _)
+  refine'
+    lt_of_mul_lt_mul_left _ (show 0 ≤ abv (Algebra.norm R (algebraMap R S b')) from abv.nonneg _)
   refine'
     lt_of_le_of_lt (le_of_eq _)
-      (mul_lt_mul hqr le_rfl (abv.pos ((Algebra.norm_ne_zero_iff_of_basis bS).mpr hb)) (abv.nonneg _))
-  rw [← abv.map_mul, ← MonoidHom.map_mul, ← abv.map_mul, ← MonoidHom.map_mul, ← Algebra.smul_def, smul_sub b', sub_mul,
-    smul_comm, h, mul_comm b a', Algebra.smul_mul_assoc r a' b, Algebra.smul_mul_assoc b' q b]
+      (mul_lt_mul hqr le_rfl (abv.pos ((Algebra.norm_ne_zero_iff_of_basis bS).mpr hb))
+        (abv.nonneg _))
+  rw [← abv.map_mul, ← MonoidHom.map_mul, ← abv.map_mul, ← MonoidHom.map_mul, ← Algebra.smul_def,
+    smul_sub b', sub_mul, smul_comm, h, mul_comm b a', Algebra.smul_mul_assoc r a' b,
+    Algebra.smul_mul_assoc b' q b]
 #align class_group.exists_mem_finset_approx' ClassGroup.exists_mem_finset_approx'
 
 end Real
@@ -294,8 +308,8 @@ theorem prod_finset_approx_ne_zero : algebraMap R S (∏ m in finsetApprox bS ad
   exact finset_approx.zero_not_mem bS adm hx
 #align class_group.prod_finset_approx_ne_zero ClassGroup.prod_finset_approx_ne_zero
 
-theorem ne_bot_of_prod_finset_approx_mem (J : Ideal S) (h : algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ J) :
-    J ≠ ⊥ :=
+theorem ne_bot_of_prod_finset_approx_mem (J : Ideal S)
+    (h : algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ J) : J ≠ ⊥ :=
   (Submodule.ne_bot_iff _).mpr ⟨_, h, prod_finset_approx_ne_zero _ _⟩
 #align class_group.ne_bot_of_prod_finset_approx_mem ClassGroup.ne_bot_of_prod_finset_approx_mem
 
@@ -305,7 +319,8 @@ include ist iic
 such that `M := Π m ∈ finset_approx` is in `J`. -/
 theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I : (Ideal S)⁰) :
     ∃ J : (Ideal S)⁰,
-      ClassGroup.mk0 I = ClassGroup.mk0 J ∧ algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ (J : Ideal S) :=
+      ClassGroup.mk0 I = ClassGroup.mk0 J ∧
+        algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ (J : Ideal S) :=
   by
   set M := ∏ m in finset_approx bS adm, m with M_eq
   have hM : algebraMap R S M ≠ 0 := prod_finset_approx_ne_zero bS adm
@@ -336,7 +351,8 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I 
   obtain ⟨q, r, r_mem, lt⟩ := exists_mem_finset_approx' L bS adm h a b_ne_zero
   apply @dvd_of_mul_left_dvd _ _ q
   simp only [Algebra.smul_def] at lt
-  rw [← sub_eq_zero.mp (b_min _ (I.1.sub_mem (I.1.mul_mem_left _ ha) (I.1.mul_mem_left _ b_mem)) lt)]
+  rw [←
+    sub_eq_zero.mp (b_min _ (I.1.sub_mem (I.1.mul_mem_left _ ha) (I.1.mul_mem_left _ b_mem)) lt)]
   refine' mul_dvd_mul_right (dvd_trans (RingHom.map_dvd _ _) hr') _
   exact Multiset.dvd_prod (multiset.mem_map.mpr ⟨_, r_mem, rfl⟩)
 #align class_group.exists_mk0_eq_mk0 ClassGroup.exists_mk0_eq_mk0
@@ -348,7 +364,8 @@ ideals that contain `M := ∏ m in finset_approx L f abs, m`.
 By showing this function is surjective, we prove that the class group is finite. -/
 noncomputable def mkMMem [IsDedekindDomain S]
     (J : { J : Ideal S // algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ J }) : ClassGroup S :=
-  ClassGroup.mk0 ⟨J.1, mem_non_zero_divisors_iff_ne_zero.mpr (ne_bot_of_prod_finset_approx_mem bS adm J.1 J.2)⟩
+  ClassGroup.mk0
+    ⟨J.1, mem_non_zero_divisors_iff_ne_zero.mpr (ne_bot_of_prod_finset_approx_mem bS adm J.1 J.2)⟩
 #align class_group.mk_M_mem ClassGroup.mkMMem
 
 include iic ist
@@ -369,10 +386,11 @@ algebraic extension `L` is finite if there is an admissible absolute value.
 See also `class_group.fintype_of_admissible_of_finite` where `L` is a finite
 extension of `K = Frac(R)`, supplying most of the required assumptions automatically.
 -/
-noncomputable def fintypeOfAdmissibleOfAlgebraic [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) :
-    Fintype (ClassGroup S) :=
+noncomputable def fintypeOfAdmissibleOfAlgebraic [IsDedekindDomain S]
+    (h : Algebra.IsAlgebraic R L) : Fintype (ClassGroup S) :=
   @Fintype.ofSurjective _ _ _
-    (@Fintype.ofEquiv _ { J // J ∣ Ideal.span ({algebraMap R S (∏ m : R in finsetApprox bS adm, m)} : Set S) }
+    (@Fintype.ofEquiv _
+      { J // J ∣ Ideal.span ({algebraMap R S (∏ m : R in finsetApprox bS adm, m)} : Set S) }
       (UniqueFactorizationMonoid.fintypeSubtypeDvd _
         (by
           rw [Ne.def, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
@@ -396,7 +414,8 @@ noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] : Fintype (Cl
   letI := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
   letI := IsIntegralClosure.isDedekindDomain R K L S
   choose s b hb_int using FiniteDimensional.exists_is_basis_integral R K L
-  obtain ⟨n, b⟩ := Submodule.basisOfPidOfLeSpan _ (IsIntegralClosure.range_le_span_dual_basis S b hb_int)
+  obtain ⟨n, b⟩ :=
+    Submodule.basisOfPidOfLeSpan _ (IsIntegralClosure.range_le_span_dual_basis S b hb_int)
   let bS := b.map ((LinearMap.quotKerEquivRange _).symm ≪≫ₗ _)
   refine'
     fintype_of_admissible_of_algebraic L bS adm fun x =>

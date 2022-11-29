@@ -80,7 +80,8 @@ def measure : MeasCat ⥤ MeasCat where
   obj X := ⟨@MeasureTheory.Measure X.1 X.2⟩
   map X Y f := ⟨Measure.map (f : X → Y), Measure.measurableMap f f.2⟩
   map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
-  map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ => Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
+  map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ =>
+    Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
 #align Meas.Measure MeasCat.measure
 
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
@@ -88,7 +89,8 @@ def giry : CategoryTheory.Monad MeasCat where
   toFunctor := measure
   η' :=
     { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurableDirac⟩,
-      naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq <| funext fun a => (Measure.map_dirac hf a).symm }
+      naturality' := fun X Y ⟨f, hf⟩ =>
+        Subtype.eq <| funext fun a => (Measure.map_dirac hf a).symm }
   μ' :=
     { app := fun X => ⟨@Measure.join X.1 X.2, Measure.measurableJoin⟩,
       naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq <| funext fun μ => Measure.join_map_map hf μ }
@@ -97,7 +99,7 @@ def giry : CategoryTheory.Monad MeasCat where
   right_unit' α := Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
 #align Meas.Giry MeasCat.giry
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
 def integral : giry.Algebra where
@@ -110,7 +112,7 @@ def integral : giry.Algebra where
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
           rw [measure.lintegral_join, lintegral_map] <;>
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr measurable_id, \",\", expr measure.measurable_lintegral, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align Meas.Integral MeasCat.integral
 
 end MeasCat
@@ -122,7 +124,7 @@ instance TopCat.hasForgetToMeas : HasForget₂ TopCat.{u} MeasCat.{u} :=
 /- warning: Borel clashes with borel -> borel
 warning: Borel -> borel is a dubious translation:
 lean 3 declaration is
-  CategoryTheory.Functor.{u u succ u succ u} TopCat.{u} TopCat.largeCategory.{u} MeasCat.{u} MeasCat.largeCategory.{u}
+  CategoryTheory.Functor.{u, u, succ u, succ u} TopCat.{u} TopCat.largeCategory.{u} MeasCat.{u} MeasCat.largeCategory.{u}
 but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align Borel borelₓ'. -/

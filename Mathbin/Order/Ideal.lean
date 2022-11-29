@@ -127,7 +127,8 @@ protected theorem is_ideal (s : Ideal P) : IsIdeal (s : Set P) :=
   ⟨s.lower, s.Nonempty, s.Directed⟩
 #align order.ideal.is_ideal Order.Ideal.is_ideal
 
-theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (I : Set P)ᶜ := fun h => mt <| I.lower h
+theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (I : Set P)ᶜ := fun h =>
+  mt <| I.lower h
 #align order.ideal.mem_compl_of_ge Order.Ideal.mem_compl_of_ge
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
@@ -207,9 +208,9 @@ theorem is_proper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
 theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_arg coe h
 #align order.ideal.is_proper.ne_top Order.Ideal.IsProper.ne_top
 
-theorem _root_.is_coatom.is_proper (hI : IsCoatom I) : IsProper I :=
+theorem IsCoatom.is_proper (hI : IsCoatom I) : IsProper I :=
   is_proper_of_ne_top hI.1
-#align order.ideal._root_.is_coatom.is_proper order.ideal._root_.is_coatom.is_proper
+#align is_coatom.is_proper IsCoatom.is_proper
 
 theorem is_proper_iff_ne_top : IsProper I ↔ I ≠ ⊤ :=
   ⟨fun h => h.ne_top, fun h => is_proper_of_ne_top h⟩
@@ -223,9 +224,9 @@ theorem IsMaximal.is_coatom' [IsMaximal I] : IsCoatom I :=
   IsMaximal.is_coatom ‹_›
 #align order.ideal.is_maximal.is_coatom' Order.Ideal.IsMaximal.is_coatom'
 
-theorem _root_.is_coatom.is_maximal (hI : IsCoatom I) : IsMaximal I :=
+theorem IsCoatom.is_maximal (hI : IsCoatom I) : IsMaximal I :=
   { IsCoatom.is_proper ‹_› with maximal_proper := fun _ _ => by simp [hI.2 _ ‹_›] }
-#align order.ideal._root_.is_coatom.is_maximal order.ideal._root_.is_coatom.is_maximal
+#align is_coatom.is_maximal IsCoatom.is_maximal
 
 theorem is_maximal_iff_is_coatom : IsMaximal I ↔ IsCoatom I :=
   ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
@@ -370,8 +371,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∈ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (j «expr ∈ » J) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∈ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (· ⊔ ·),
     le_sup_left := fun I J i (_ : i ∈ I) => by
@@ -382,8 +383,8 @@ instance : Lattice (Ideal P) :=
       exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩,
     sup_le := fun I J K hIK hJK a ⟨i, hi, j, hj, ha⟩ =>
       K.lower ha <| sup_mem (mem_of_mem_of_le hi hIK) (mem_of_mem_of_le hj hJK),
-    inf := (· ⊓ ·), inf_le_left := fun I J => inter_subset_left I J, inf_le_right := fun I J => inter_subset_right I J,
-    le_inf := fun I J K => subset_inter }
+    inf := (· ⊓ ·), inf_le_left := fun I J => inter_subset_left I J,
+    inf_le_right := fun I J => inter_subset_right I J, le_inf := fun I J K => subset_inter }
 
 @[simp]
 theorem coe_sup : ↑(s ⊔ t) = { x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a ⊔ b } :=
@@ -454,7 +455,8 @@ variable [DistribLattice P]
 
 variable {I J : Ideal P}
 
-theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i ⊔ j) : ∃ i' ∈ I, ∃ j' ∈ J, x = i' ⊔ j' := by
+theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i ⊔ j) :
+    ∃ i' ∈ I, ∃ j' ∈ J, x = i' ⊔ j' := by
   refine' ⟨x ⊓ i, I.lower inf_le_right hi, x ⊓ j, J.lower inf_le_right hj, _⟩
   calc
     x = x ⊓ (i ⊔ j) := left_eq_inf.mpr hx
@@ -464,7 +466,8 @@ theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i
 
 theorem coe_sup_eq : ↑(I ⊔ J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j } :=
   Set.ext fun _ =>
-    ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ => ⟨i, ‹_›, j, ‹_›, le_of_eq ‹_›⟩⟩
+    ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ =>
+      ⟨i, ‹_›, j, ‹_›, le_of_eq ‹_›⟩⟩
 #align order.ideal.coe_sup_eq Order.Ideal.coe_sup_eq
 
 end DistribLattice
@@ -549,7 +552,8 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
     
 #align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotone
 
-theorem sequenceOfCofinals.encode_mem (i : ι) : sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i := by
+theorem sequenceOfCofinals.encode_mem (i : ι) :
+    sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i := by
   dsimp only [sequence_of_cofinals]
   rw [Encodable.encodek]
   apply cofinal.above_mem

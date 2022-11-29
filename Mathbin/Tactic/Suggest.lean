@@ -118,7 +118,10 @@ def HeadSymbolMatch.toString : HeadSymbolMatch → String
           match
             ( match_head_symbol a , match_head_symbol b )
             with
-            | ( some ex , some ex ) => some both | ( some ex , _ ) => some mpr | ( _ , some ex ) => some mp | _ => none
+            | ( some ex , some ex ) => some both
+              | ( some ex , _ ) => some mpr
+              | ( _ , some ex ) => some mp
+              | _ => none
       | expr.app f _ => match_head_symbol f
       | expr.const n _ => if hs . contains ( normalize_synonym n ) then some ex else none
       | _ => if hs . contains `_ then some ex else none
@@ -141,7 +144,8 @@ it matches the head symbol `hs` for the current goal.
 -/
 unsafe def process_declaration (hs : name_set) (d : declaration) : Option decl_data :=
   let n := d.to_name
-  if !d.is_trusted || n.is_internal then none else (fun m => ⟨d, n, m, n.length⟩) <$> match_head_symbol hs d.type
+  if !d.is_trusted || n.is_internal then none
+  else (fun m => ⟨d, n, m, n.length⟩) <$> match_head_symbol hs d.type
 #align tactic.suggest.process_declaration tactic.suggest.process_declaration
 
 /-- Retrieve all library definitions with a given head symbol. -/
@@ -156,7 +160,8 @@ unsafe def library_defs (hs : name_set) : tactic (List decl_data) := do
   return defs
 #align tactic.suggest.library_defs tactic.suggest.library_defs
 
-/-- We unpack any element of a list of `decl_data` corresponding to an `↔` statement that could apply
+/--
+We unpack any element of a list of `decl_data` corresponding to an `↔` statement that could apply
 in both directions into two separate elements.
 
 This ensures that both directions can be independently returned by `suggest`,
@@ -186,7 +191,8 @@ use everything in `compulsory_hyps`.
 unsafe def suggest_opt.mk_accept (o : suggest_opt) : opt :=
   { o with
     accept := fun gs =>
-      o.accept gs >> (guard <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
+      o.accept gs >>
+        (guard <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
 #align tactic.suggest.suggest_opt.mk_accept tactic.suggest.suggest_opt.mk_accept
 
 -- Implementation note: as this is used by both `library_search` and `suggest`,
@@ -200,7 +206,8 @@ and there are any goals remaining.
 
 Returns the number of subgoals which were closed using `solve_by_elim`.
 -/
-unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e : expr) : tactic ℕ := do
+unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e : expr) : tactic ℕ :=
+  do
   trace_if_enabled `suggest f! "Trying to apply lemma: {e}"
   apply e opt
   trace_if_enabled `suggest f! "Applied lemma: {e}"
@@ -225,19 +232,22 @@ unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e :
                 guard
                 (opt ≠ []) <|>
               any_goals (success_if_fail independent_goal) >> skip) >>
-            solve_by_elim { opt with backtrack_all_goals := tt } <|>-- and fail unless `close_goals = ff`
+            solve_by_elim
+              { opt with backtrack_all_goals := tt } <|>-- and fail unless `close_goals = ff`
             guard
             ¬close_goals
       let ng' ← num_goals
       return (ng - ng')
 #align tactic.suggest.apply_and_solve tactic.suggest.apply_and_solve
 
-/-- Apply the declaration `d` (or the forward and backward implications separately, if it is an `iff`),
+/--
+Apply the declaration `d` (or the forward and backward implications separately, if it is an `iff`),
 and then attempt to solve the subgoal using `apply_and_solve`.
 
 Returns the number of subgoals successfully closed.
 -/
-unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d : decl_data) : tactic ℕ :=
+unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := {  }) (d : decl_data) :
+    tactic ℕ :=
   let tac := apply_and_solve close_goals opt
   do
   let (e, t) ← decl_mk_const d.d
@@ -274,12 +284,12 @@ initialize
 -- Trace a list of all relevant lemmas
 -- Call `apply_declaration`, then prepare the tactic script and
 -- count the number of local hypotheses used.
-private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt : suggest_opt := {  }) (d : decl_data) :
-    tactic application :=
+private unsafe def apply_declaration_script (g : expr) (hyps : List expr)
+    (opt : suggest_opt := {  }) (d : decl_data) : tactic application :=
   -- (This tactic block is only executed when we evaluate the mllist,
     -- so we need to do the `focus1` here.)
     retrieve <|
-    focus1 <| do
+    focus1 do
       apply_declaration ff opt d
       let g
         ←-- This `instantiate_mvars` is necessary so that we count used hypotheses correctly.
@@ -295,7 +305,8 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt :
 -- implementation note: we produce a `tactic (mllist tactic application)` first,
 -- because it's easier to work in the tactic monad, but in a moment we squash this
 -- down to an `mllist tactic application`.
-private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist tactic application) := do
+private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist tactic application) :=
+  do
   let g :: _ ← get_goals
   let hyps ← local_context
   (-- Check if `solve_by_elim` can solve the goal immediately:
@@ -309,7 +320,8 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
         guard (opt fun h => h g)
         return <|
             mllist.of_list
-              [⟨s, m, none, 0, hyps fun h => h g⟩]) <|>-- Otherwise, let's actually try applying library lemmas.
+              [⟨s, m, none, 0,
+                  hyps fun h => h g⟩]) <|>-- Otherwise, let's actually try applying library lemmas.
     do
       let t
         ←-- Collect all definitions with the correct head symbol
@@ -357,7 +369,8 @@ unsafe def suggest_core (opt : suggest_opt := {  }) : mllist tactic application 
 Returns a list of at most `limit` `application`s,
 sorted by number of goals, and then (reverse) number of hypotheses used.
 -/
-unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List application) := do
+unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) :
+    tactic (List application) := do
   let results := suggest_core opt
   let L
     ←-- Get the first n elements of the successful lemmas
@@ -372,7 +385,8 @@ unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : ta
 `Try this: refine ...`, which make progress on the current goal using a declaration
 from the library.
 -/
-unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List String) := do
+unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) :
+    tactic (List String) := do
   let L ← suggest limit opt
   return <| L application.script
 #align tactic.suggest_scripts tactic.suggest_scripts
@@ -419,9 +433,10 @@ end
 ```
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
-unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat))) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
-    (opt : suggest_opt := {  }) : tactic Unit := do
+unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat)))
+    (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
+    (use : parse <| tk "using" *> many ident_ <|> return []) (opt : suggest_opt := {  }) :
+    tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local
   let L ←
@@ -510,16 +525,19 @@ unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : par
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local
   (tactic.library_search
-          { opt with compulsory_hyps := use, backtrack_all_goals := tt, lemma_thunks := some lemma_thunks, ctx_thunk,
-            md := if semireducible then Tactic.Transparency.semireducible else Tactic.Transparency.reducible } >>=
+          { opt with compulsory_hyps := use, backtrack_all_goals := tt,
+            lemma_thunks := some lemma_thunks, ctx_thunk,
+            md :=
+              if semireducible then Tactic.Transparency.semireducible
+              else Tactic.Transparency.reducible } >>=
         if !opt || is_trace_enabled_for `silence_library_search then fun _ => skip else trace) <|>
       fail
         "`library_search` failed.\nIf you aren't sure what to do next, you can also\ntry `library_search!`, `suggest`, or `hint`.\n\nPossible reasons why `library_search` failed:\n* `library_search` will only apply a single lemma from the library,\n  and then try to fill in its hypotheses from local hypotheses.\n* If you haven't already, try stating the theorem you want in its own lemma.\n* Sometimes the library has one version of a lemma\n  but not a very similar version obtained by permuting arguments.\n  Try replacing `a + b` with `b + a`, or `a - b < c` with `a < b + c`,\n  to see if maybe the lemma exists but isn't stated quite the way you would like.\n* Make sure that you have all the side conditions for your theorem to be true.\n  For example you won't find `a - b + b = a` for natural numbers in the library because it's false!\n  Search for `b ≤ a → a - b + b = a` instead.\n* If a definition you made is in the goal,\n  you won't find any theorems about it in the library.\n  Try unfolding the definition using `unfold my_definition`.\n* If all else fails, ask on https://leanprover.zulipchat.com/,\n  and maybe we can improve the library and/or `library_search` for next time."
 #align tactic.interactive.library_search tactic.interactive.library_search
 
 add_tactic_doc
-  { Name := "library_search", category := DocCategory.tactic, declNames := [`tactic.interactive.library_search],
-    tags := ["search", "Try this"] }
+  { Name := "library_search", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.library_search], tags := ["search", "Try this"] }
 
 end Interactive
 
@@ -552,8 +570,8 @@ unsafe def library_search_hole_cmd : hole_command where
 #align tactic.library_search_hole_cmd tactic.library_search_hole_cmd
 
 add_tactic_doc
-  { Name := "library_search", category := DocCategory.hole_cmd, declNames := [`tactic.library_search_hole_cmd],
-    tags := ["search", "Try this"] }
+  { Name := "library_search", category := DocCategory.hole_cmd,
+    declNames := [`tactic.library_search_hole_cmd], tags := ["search", "Try this"] }
 
 end Tactic
 

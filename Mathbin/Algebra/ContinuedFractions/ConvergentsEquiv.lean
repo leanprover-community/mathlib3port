@@ -105,7 +105,8 @@ def squashSeq (s : Seq <| Pair K) (n : ℕ) : Seq (Pair K) :=
 
 
 /-- If the sequence already terminated at position `n + 1`, nothing gets squashed. -/
-theorem squash_seq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (n + 1)) : squashSeq s n = s := by
+theorem squash_seq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (n + 1)) :
+    squashSeq s n = s := by
   change s.nth (n + 1) = none at terminated_at_succ_n
   cases s_nth_eq : s.nth n <;> simp only [*, squash_seq]
 #align
@@ -125,22 +126,24 @@ theorem squash_seq_nth_of_lt {m : ℕ} (m_lt_n : m < n) : (squashSeq s n).nth m 
   cases s_succ_nth_eq : s.nth (n + 1)
   case none => rw [squash_seq_eq_self_of_terminated s_succ_nth_eq]
   case some =>
-  obtain ⟨gp_n, s_nth_eq⟩ : ∃ gp_n, s.nth n = some gp_n
-  exact s.ge_stable n.le_succ s_succ_nth_eq
-  obtain ⟨gp_m, s_mth_eq⟩ : ∃ gp_m, s.nth m = some gp_m
+  obtain ⟨gp_n, s_nth_eq⟩ : ∃ gp_n, s.nth n = some gp_n; exact s.ge_stable n.le_succ s_succ_nth_eq
+  obtain ⟨gp_m, s_mth_eq⟩ : ∃ gp_m, s.nth m = some gp_m;
   exact s.ge_stable (le_of_lt m_lt_n) s_nth_eq
   simp [*, squash_seq, Seq.zip_with_nth_some (Seq.nats_nth m) s_mth_eq _, ne_of_lt m_lt_n]
-#align generalized_continued_fraction.squash_seq_nth_of_lt GeneralizedContinuedFraction.squash_seq_nth_of_lt
+#align
+  generalized_continued_fraction.squash_seq_nth_of_lt GeneralizedContinuedFraction.squash_seq_nth_of_lt
 
 /-- Squashing at position `n + 1` and taking the tail is the same as squashing the tail of the
 sequence at position `n`. -/
-theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n : (squashSeq s (n + 1)).tail = squashSeq s.tail n := by
+theorem squash_seq_succ_n_tail_eq_squash_seq_tail_n :
+    (squashSeq s (n + 1)).tail = squashSeq s.tail n := by
   cases' s_succ_succ_nth_eq : s.nth (n + 2) with gp_succ_succ_n
   case none =>
   have : squash_seq s (n + 1) = s := squash_seq_eq_self_of_terminated s_succ_succ_nth_eq
-  cases s_succ_nth_eq : s.nth (n + 1) <;> simp only [squash_seq, Seq.nth_tail, s_succ_nth_eq, s_succ_succ_nth_eq]
+  cases s_succ_nth_eq : s.nth (n + 1) <;>
+    simp only [squash_seq, Seq.nth_tail, s_succ_nth_eq, s_succ_succ_nth_eq]
   case some =>
-  obtain ⟨gp_succ_n, s_succ_nth_eq⟩ : ∃ gp_succ_n, s.nth (n + 1) = some gp_succ_n
+  obtain ⟨gp_succ_n, s_succ_nth_eq⟩ : ∃ gp_succ_n, s.nth (n + 1) = some gp_succ_n;
   exact s.ge_stable (n + 1).le_succ s_succ_succ_nth_eq
   -- apply extensionality with `m` and continue by cases `m = n`.
   ext m
@@ -168,7 +171,8 @@ theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq :
     convergents'Aux s (n + 2) = convergents'Aux (squashSeq s n) (n + 1) := by
   cases' s_succ_nth_eq : s.nth <| n + 1 with gp_succ_n
   case none =>
-    rw [squash_seq_eq_self_of_terminated s_succ_nth_eq, convergents'_aux_stable_step_of_terminated s_succ_nth_eq]
+    rw [squash_seq_eq_self_of_terminated s_succ_nth_eq,
+      convergents'_aux_stable_step_of_terminated s_succ_nth_eq]
   case some =>
   induction' n with m IH generalizing s gp_succ_n
   case zero =>
@@ -180,12 +184,15 @@ theorem succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq :
   case succ =>
   obtain ⟨gp_head, s_head_eq⟩ : ∃ gp_head, s.head = some gp_head
   exact s.ge_stable (m + 2).zero_le s_succ_nth_eq
-  suffices gp_head.a / (gp_head.b + convergents'_aux s.tail (m + 2)) = convergents'_aux (squash_seq s (m + 1)) (m + 2)
+  suffices
+    gp_head.a / (gp_head.b + convergents'_aux s.tail (m + 2)) =
+      convergents'_aux (squash_seq s (m + 1)) (m + 2)
     by simpa only [convergents'_aux, s_head_eq]
   have : convergents'_aux s.tail (m + 2) = convergents'_aux (squash_seq s.tail m) (m + 1) := by
     refine' IH gp_succ_n _
     simpa [Seq.nth_tail] using s_succ_nth_eq
-  have : (squash_seq s (m + 1)).head = some gp_head := (squash_seq_nth_of_lt m.succ_pos).trans s_head_eq
+  have : (squash_seq s (m + 1)).head = some gp_head :=
+    (squash_seq_nth_of_lt m.succ_pos).trans s_head_eq
   simp only [*, convergents'_aux, squash_seq_succ_n_tail_eq_squash_seq_tail_n]
 #align
   generalized_continued_fraction.succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq GeneralizedContinuedFraction.succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq
@@ -210,31 +217,33 @@ squashed gcf. -/
 
 
 /-- If the gcf already terminated at position `n`, nothing gets squashed. -/
-theorem squash_gcf_eq_self_of_terminated (terminated_at_n : TerminatedAt g n) : squashGcf g n = g := by
+theorem squash_gcf_eq_self_of_terminated (terminated_at_n : TerminatedAt g n) : squashGcf g n = g :=
+  by
   cases n
   case zero =>
   change g.s.nth 0 = none at terminated_at_n
   simp only [convergents', squash_gcf, convergents'_aux, terminated_at_n]
-  case succ =>
-  cases g
-  simp [squash_seq_eq_self_of_terminated terminated_at_n, squash_gcf]
+  case succ => cases g; simp [squash_seq_eq_self_of_terminated terminated_at_n, squash_gcf]
 #align
   generalized_continued_fraction.squash_gcf_eq_self_of_terminated GeneralizedContinuedFraction.squash_gcf_eq_self_of_terminated
 
 /-- The values before the squashed position stay the same. -/
-theorem squash_gcf_nth_of_lt {m : ℕ} (m_lt_n : m < n) : (squashGcf g (n + 1)).s.nth m = g.s.nth m := by
-  simp only [squash_gcf, squash_seq_nth_of_lt m_lt_n]
-#align generalized_continued_fraction.squash_gcf_nth_of_lt GeneralizedContinuedFraction.squash_gcf_nth_of_lt
+theorem squash_gcf_nth_of_lt {m : ℕ} (m_lt_n : m < n) : (squashGcf g (n + 1)).s.nth m = g.s.nth m :=
+  by simp only [squash_gcf, squash_seq_nth_of_lt m_lt_n]
+#align
+  generalized_continued_fraction.squash_gcf_nth_of_lt GeneralizedContinuedFraction.squash_gcf_nth_of_lt
 
 /-- `convergents'` returns the same value for a gcf and the corresponding squashed gcf at the
 squashed position. -/
-theorem succ_nth_convergent'_eq_squash_gcf_nth_convergent' : g.convergents' (n + 1) = (squashGcf g n).convergents' n :=
-  by
+theorem succ_nth_convergent'_eq_squash_gcf_nth_convergent' :
+    g.convergents' (n + 1) = (squashGcf g n).convergents' n := by
   cases n
   case zero =>
-    cases g_s_head_eq : g.s.nth 0 <;> simp [g_s_head_eq, squash_gcf, convergents', convergents'_aux, Seq.head]
+    cases g_s_head_eq : g.s.nth 0 <;>
+      simp [g_s_head_eq, squash_gcf, convergents', convergents'_aux, Seq.head]
   case succ =>
-    simp only [succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq, convergents', squash_gcf]
+    simp only [succ_succ_nth_convergent'_aux_eq_succ_nth_convergent'_aux_squash_seq, convergents',
+      squash_gcf]
 #align
   generalized_continued_fraction.succ_nth_convergent'_eq_squash_gcf_nth_convergent' GeneralizedContinuedFraction.succ_nth_convergent'_eq_squash_gcf_nth_convergent'
 
@@ -287,7 +296,8 @@ theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
     case zero =>
     suffices (b * g.h + a) / b = g.h + a / b by
       simpa [squash_gcf, s_nth_eq, convergent_eq_conts_a_div_conts_b,
-        continuants_recurrence_aux s_nth_eq zeroth_continuant_aux_eq_one_zero first_continuant_aux_eq_h_one]
+        continuants_recurrence_aux s_nth_eq zeroth_continuant_aux_eq_one_zero
+          first_continuant_aux_eq_h_one]
     calc
       (b * g.h + a) / b = b * g.h / b + a / b := by ring
       -- requires `field`, not `division_ring`
@@ -296,7 +306,8 @@ theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
         by rw [mul_div_cancel_left _ b_ne_zero]
       
     case succ =>
-    obtain ⟨⟨pa, pb⟩, s_n'th_eq⟩ : ∃ gp_n', g.s.nth n' = some gp_n' := g.s.ge_stable n'.le_succ s_nth_eq
+    obtain ⟨⟨pa, pb⟩, s_n'th_eq⟩ : ∃ gp_n', g.s.nth n' = some gp_n' :=
+      g.s.ge_stable n'.le_succ s_nth_eq
     -- Notations
     let g' := squash_gcf g (n' + 1)
     set pred_conts := g.continuants_aux (n' + 1) with succ_n'th_conts_aux_eq
@@ -312,19 +323,27 @@ theorem succ_nth_convergent_eq_squash_gcf_nth_convergent [Field K]
     let ppA' := ppred_conts'.a
     let ppB' := ppred_conts'.b
     -- first compute the convergent of the squashed gcf
-    have : g'.convergents (n' + 1) = ((pb + a / b) * pA' + pa * ppA') / ((pb + a / b) * pB' + pa * ppB') := by
-      have : g'.s.nth n' = some ⟨pa, pb + a / b⟩ := squash_seq_nth_of_not_terminated s_n'th_eq s_nth_eq
+    have :
+      g'.convergents (n' + 1) =
+        ((pb + a / b) * pA' + pa * ppA') / ((pb + a / b) * pB' + pa * ppB') :=
+      by
+      have : g'.s.nth n' = some ⟨pa, pb + a / b⟩ :=
+        squash_seq_nth_of_not_terminated s_n'th_eq s_nth_eq
       rw [convergent_eq_conts_a_div_conts_b,
         continuants_recurrence_aux this n'th_conts_aux_eq'.symm succ_n'th_conts_aux_eq'.symm]
     rw [this]
     -- then compute the convergent of the original gcf by recursively unfolding the continuants
     -- computation twice
-    have : g.convergents (n' + 2) = (b * (pb * pA + pa * ppA) + a * pA) / (b * (pb * pB + pa * ppB) + a * pB) := by
+    have :
+      g.convergents (n' + 2) =
+        (b * (pb * pA + pa * ppA) + a * pA) / (b * (pb * pB + pa * ppB) + a * pB) :=
+      by
       -- use the recurrence once
       have : g.continuants_aux (n' + 2) = ⟨pb * pA + pa * ppA, pb * pB + pa * ppB⟩ :=
         continuants_aux_recurrence s_n'th_eq n'th_conts_aux_eq.symm succ_n'th_conts_aux_eq.symm
       -- and a second time
-      rw [convergent_eq_conts_a_div_conts_b, continuants_recurrence_aux s_nth_eq succ_n'th_conts_aux_eq.symm this]
+      rw [convergent_eq_conts_a_div_conts_b,
+        continuants_recurrence_aux s_nth_eq succ_n'th_conts_aux_eq.symm this]
     rw [this]
     suffices
       ((pb + a / b) * pA + pa * ppA) / ((pb + a / b) * pB + pa * ppB) =
@@ -360,7 +379,8 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
   case succ =>
   let g' := squash_gcf g n
   -- first replace the rhs with the squashed computation
-  suffices g.convergents (n + 1) = g'.convergents' n by rwa [succ_nth_convergent'_eq_squash_gcf_nth_convergent']
+  suffices g.convergents (n + 1) = g'.convergents' n by
+    rwa [succ_nth_convergent'_eq_squash_gcf_nth_convergent']
   cases' Decidable.em (terminated_at g n) with terminated_at_n not_terminated_at_n
   · have g'_eq_g : g' = g := squash_gcf_eq_self_of_terminated terminated_at_n
     rw [convergents_stable_of_terminated n.le_succ terminated_at_n, g'_eq_g, IH _]
@@ -415,12 +435,15 @@ namespace ContinuedFraction
 /-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of a
 (regular) continued fraction coincide. -/
 theorem convergents_eq_convergents' [LinearOrderedField K] {c : ContinuedFraction K} :
-    (↑c : GeneralizedContinuedFraction K).convergents = (↑c : GeneralizedContinuedFraction K).convergents' := by
+    (↑c : GeneralizedContinuedFraction K).convergents =
+      (↑c : GeneralizedContinuedFraction K).convergents' :=
+  by
   ext n
   apply convergents_eq_convergents'
   intro gp m m_lt_n s_nth_eq
   exact
-    ⟨zero_lt_one.trans_le ((c : SimpleContinuedFraction K).property m gp.a (part_num_eq_s_a s_nth_eq)).symm.le,
+    ⟨zero_lt_one.trans_le
+        ((c : SimpleContinuedFraction K).property m gp.a (part_num_eq_s_a s_nth_eq)).symm.le,
       c.property m gp.b <| part_denom_eq_s_b s_nth_eq⟩
 #align continued_fraction.convergents_eq_convergents' ContinuedFraction.convergents_eq_convergents'
 

@@ -79,12 +79,15 @@ namespace ProdPreservesConnectedLimits
 /-- (Impl). The obvious natural transformation from (X × K -) to K. -/
 @[simps]
 def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app Y := Limits.prod.snd
-#align category_theory.prod_preserves_connected_limits.γ₂ CategoryTheory.ProdPreservesConnectedLimits.γ₂
+#align
+  category_theory.prod_preserves_connected_limits.γ₂ CategoryTheory.ProdPreservesConnectedLimits.γ₂
 
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
-def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app Y := Limits.prod.fst
-#align category_theory.prod_preserves_connected_limits.γ₁ CategoryTheory.ProdPreservesConnectedLimits.γ₁
+def γ₁ {K : J ⥤ C} (X : C) :
+    K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X where app Y := Limits.prod.fst
+#align
+  category_theory.prod_preserves_connected_limits.γ₁ CategoryTheory.ProdPreservesConnectedLimits.γ₁
 
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
@@ -109,7 +112,8 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
       (prod.functor.obj
         X) where PreservesLimit K :=
     { preserves := fun c l =>
-        { lift := fun s => prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
+        { lift := fun s =>
+            prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s)),
           fac' := fun s j => by
             apply prod.hom_ext
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]

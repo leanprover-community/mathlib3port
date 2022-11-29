@@ -39,7 +39,8 @@ unsafe def compare (e₀ e₁ : expr) : tactic Unit := do
     else is_def_eq e₀ e₁
 #align tactic.interactive.compare tactic.interactive.compare
 
-unsafe def find_one_difference : List expr → List expr → tactic (List expr × expr × expr × List expr)
+unsafe def find_one_difference :
+    List expr → List expr → tactic (List expr × expr × expr × List expr)
   | x :: xs, y :: ys => do
     let c ← try_core (compare x y)
     if c then Prod.map (cons x) id <$> find_one_difference xs ys
@@ -103,7 +104,9 @@ unsafe def mono_head_candidates : ℕ → List expr → expr → tactic MonoKey
     (do
         let (rel, l, r) ←
           if h.is_arrow then pure (none, h.binding_domain, h.binding_body)
-            else guard h.get_app_fn.is_constant >> Prod.mk (some h.get_app_fn.const_name) <$> lastTwo h.get_app_args
+            else
+              guard h.get_app_fn.is_constant >>
+                Prod.mk (some h.get_app_fn.const_name) <$> lastTwo h.get_app_args
         Prod.mk <$> monotonicity.check_rel l r <*> pure rel) <|>
       match xs with
       | [] => fail f! "oh? {h}"
@@ -135,7 +138,7 @@ unsafe instance : has_to_format MonoSelection :=
     | mono_selection.both => "both"⟩
 
 unsafe def side : lean.parser MonoSelection :=
-  with_desc "expecting 'left', 'right' or 'both' (default)" <| do
+  (with_desc "expecting 'left', 'right' or 'both' (default)") do
     let some n ← optional ident |
       pure MonoSelection.both
     if n = `left then pure <| mono_selection.left
@@ -149,7 +152,8 @@ unsafe def side : lean.parser MonoSelection :=
 open Function
 
 @[user_attribute]
-unsafe def monotonicity.attr : user_attribute (native.rb_lmap MonoKey Name) (Option MonoKey × mono_selection) where
+unsafe def monotonicity.attr :
+    user_attribute (native.rb_lmap MonoKey Name) (Option MonoKey × mono_selection) where
   Name := `mono
   descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)"
   cache_cfg :=
@@ -183,7 +187,8 @@ unsafe def get_monotonicity_lemmas (k : expr) (e : MonoSelection) : tactic (List
         pure (get_operator x₀, some k)
   let ns := ns.find_def [] k'
   let ns' ← filter_instances e ns
-  if e ≠ mono_selection.both then (· ++ ·) ns' <$> filter_instances mono_selection.both ns else pure ns'
+  if e ≠ mono_selection.both then (· ++ ·) ns' <$> filter_instances mono_selection.both ns
+    else pure ns'
 #align tactic.interactive.get_monotonicity_lemmas tactic.interactive.get_monotonicity_lemmas
 
 end Tactic.Interactive

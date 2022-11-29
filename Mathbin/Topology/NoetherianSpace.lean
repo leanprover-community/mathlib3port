@@ -54,7 +54,8 @@ theorem noetherian_space_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, Is
 
 instance (priority := 100) NoetherianSpace.compact_space [h : NoetherianSpace α] : CompactSpace α :=
   is_compact_univ_iff.mp ((noetherian_space_iff_opens α).mp h ⊤)
-#align topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compact_space
+#align
+  topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compact_space
 
 variable {α}
 
@@ -64,7 +65,8 @@ instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianS
   intro p hp
   obtain ⟨⟨_, u, hu, rfl⟩, hu'⟩ := hp
   obtain ⟨U, hU, hU'⟩ :=
-    WellFounded.well_founded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_coe⟩ ⁻¹' p) ⟨⟨u, hu⟩, hu'⟩
+    WellFounded.well_founded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_coe⟩ ⁻¹' p)
+      ⟨⟨u, hu⟩, hu'⟩
   refine' ⟨opens.comap ⟨_, continuous_subtype_coe⟩ U, hU, _⟩
   rintro ⟨_, x, hx, rfl⟩ hx' hx''
   refine' le_antisymm (Set.preimage_mono (_ : (⟨x, hx⟩ : opens α) ≤ U)) hx''
@@ -99,9 +101,18 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
              `WellFounded
              [(Term.fun
                "fun"
-               (Term.basicFun [`s `t] [(Term.typeSpec ":" (Term.app `Closeds [`α]))] "=>" («term_<_» `s "<" `t)))])
+               (Term.basicFun
+                [`s `t]
+                [(Term.typeSpec ":" (Term.app `Closeds [`α]))]
+                "=>"
+                («term_<_» `s "<" `t)))])
             ","
-            (Term.forall "∀" [`s] [(Term.typeSpec ":" (Term.app `Set [`α]))] "," (Term.app `IsCompact [`s]))
+            (Term.forall
+             "∀"
+             [`s]
+             [(Term.typeSpec ":" (Term.app `Set [`α]))]
+             ","
+             (Term.app `IsCompact [`s]))
             ","
             (Term.forall
              "∀"
@@ -138,7 +149,10 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
                  [`s `t]
                  []
                  "=>"
-                 (Term.proj (Term.proj (Term.app `OrderIso.compl [(Term.app `Set [`α])]) "." `lt_iff_lt) "." `symm))))
+                 (Term.proj
+                  (Term.proj (Term.app `OrderIso.compl [(Term.app `Set [`α])]) "." `lt_iff_lt)
+                  "."
+                  `symm))))
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
@@ -153,7 +167,11 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.intro "intro" [`H `s]) [])
              (group
-              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_compact_iff_compact_space)] "]") [])
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_compact_iff_compact_space)] "]")
+               [])
               [])
              (group (Tactic.skip "skip") [])
              (group (Tactic.tacticInfer_instance "infer_instance") [])])
@@ -162,7 +180,11 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s])))) [])])
+            [(group
+              (Tactic.exact
+               "exact"
+               (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))
+              [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -197,7 +219,10 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
                 [`s `t]
                 []
                 "=>"
-                (Term.proj (Term.proj (Term.app `OrderIso.compl [(Term.app `Set [`α])]) "." `lt_iff_lt) "." `symm))))
+                (Term.proj
+                 (Term.proj (Term.app `OrderIso.compl [(Term.app `Set [`α])]) "." `lt_iff_lt)
+                 "."
+                 `symm))))
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "4"))
@@ -212,7 +237,11 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.intro "intro" [`H `s]) [])
             (group
-             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_compact_iff_compact_space)] "]") [])
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `is_compact_iff_compact_space)] "]")
+              [])
              [])
             (group (Tactic.skip "skip") [])
             (group (Tactic.tacticInfer_instance "infer_instance") [])])
@@ -221,7 +250,11 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s])))) [])])
+           [(group
+             (Tactic.exact
+              "exact"
+              (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))
+             [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -231,7 +264,9 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_»
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s])))) [])])
+       [(group
+         (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))
+         [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `s] [] "=>" (Term.app `H [`s]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -242,23 +277,27 @@ example (α : Type _) : Set α ≃o (Set α)ᵒᵈ := by refine' OrderIso.compl 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -293,7 +332,8 @@ theorem
     by
       tfae_have 1 ↔ 2
         ·
-          refine' noetherian_space_iff _ . trans Surjective.well_founded_iff opens.compl_bijective . 2 _
+          refine'
+              noetherian_space_iff _ . trans Surjective.well_founded_iff opens.compl_bijective . 2 _
             exact fun s t => OrderIso.compl Set α . lt_iff_lt . symm
         tfae_have 1 ↔ 4
         · exact noetherian_space_iff_opens α
@@ -307,8 +347,8 @@ theorem
 variable {α β}
 
 instance {α} : NoetherianSpace (CofiniteTopology α) := by
-  simp only [noetherian_space_iff_opens, is_compact_iff_ultrafilter_le_nhds, CofiniteTopology.nhds_eq,
-    Ultrafilter.le_sup_iff]
+  simp only [noetherian_space_iff_opens, is_compact_iff_ultrafilter_le_nhds,
+    CofiniteTopology.nhds_eq, Ultrafilter.le_sup_iff]
   intro s f hs
   rcases f.le_cofinite_or_eq_pure with (hf | ⟨a, rfl⟩)
   · rcases Filter.nonempty_of_mem (Filter.le_principal_iff.1 hs) with ⟨a, ha⟩
@@ -328,20 +368,24 @@ theorem noetherian_space_of_surjective [NoetherianSpace α] (f : α → β) (hf 
   intro s
   obtain ⟨t, e⟩ := set.image_surjective.mpr hf' s
   exact e ▸ (noetherian_space.is_compact t).image hf
-#align topological_space.noetherian_space_of_surjective TopologicalSpace.noetherian_space_of_surjective
+#align
+  topological_space.noetherian_space_of_surjective TopologicalSpace.noetherian_space_of_surjective
 
 theorem noetherian_space_iff_of_homeomorph (f : α ≃ₜ β) : NoetherianSpace α ↔ NoetherianSpace β :=
   ⟨fun h => @noetherian_space_of_surjective _ _ h f f.Continuous f.Surjective, fun h =>
     @noetherian_space_of_surjective _ _ h f.symm f.symm.Continuous f.symm.Surjective⟩
-#align topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherian_space_iff_of_homeomorph
+#align
+  topological_space.noetherian_space_iff_of_homeomorph TopologicalSpace.noetherian_space_iff_of_homeomorph
 
-theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) : NoetherianSpace (Set.range f) :=
-  noetherian_space_of_surjective (Set.codRestrict f _ Set.mem_range_self) (by continuity) fun ⟨a, b, h⟩ =>
-    ⟨b, Subtype.ext h⟩
+theorem NoetherianSpace.range [NoetherianSpace α] (f : α → β) (hf : Continuous f) :
+    NoetherianSpace (Set.range f) :=
+  noetherian_space_of_surjective (Set.codRestrict f _ Set.mem_range_self) (by continuity)
+    fun ⟨a, b, h⟩ => ⟨b, Subtype.ext h⟩
 #align topological_space.noetherian_space.range TopologicalSpace.NoetherianSpace.range
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+theorem noetherian_space_set_iff (s : Set α) : NoetherianSpace s ↔ ∀ (t) (_ : t ⊆ s), IsCompact t :=
+  by
   rw [(noetherian_space_tfae s).out 0 2]
   constructor
   · intro H t ht
@@ -359,8 +403,8 @@ theorem noetherian_univ_iff : NoetherianSpace (Set.univ : Set α) ↔ Noetherian
   noetherian_space_iff_of_homeomorph (Homeomorph.Set.univ α)
 #align topological_space.noetherian_univ_iff TopologicalSpace.noetherian_univ_iff
 
-theorem NoetherianSpace.Union {ι : Type _} (f : ι → Set α) [Finite ι] [hf : ∀ i, NoetherianSpace (f i)] :
-    NoetherianSpace (⋃ i, f i) := by
+theorem NoetherianSpace.Union {ι : Type _} (f : ι → Set α) [Finite ι]
+    [hf : ∀ i, NoetherianSpace (f i)] : NoetherianSpace (⋃ i, f i) := by
   cases nonempty_fintype ι
   simp_rw [noetherian_space_set_iff] at hf⊢
   intro t ht
@@ -377,7 +421,8 @@ attribute [local instance] noetherian_space.discrete
 
 /-- Spaces that are both Noetherian and Hausdorff is finite. -/
 theorem NoetherianSpace.finite [NoetherianSpace α] [T2Space α] : Finite α := by
-  letI : Fintype α := Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.univ).finite_of_discrete
+  letI : Fintype α :=
+    Set.fintypeOfFiniteUniv (noetherian_space.is_compact Set.univ).finite_of_discrete
   infer_instance
 #align topological_space.noetherian_space.finite TopologicalSpace.NoetherianSpace.finite
 
@@ -420,8 +465,8 @@ theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Clos
 #align
   topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
 
-theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] : (irreducibleComponents α).Finite := by
-  classical
+theorem NoetherianSpace.finite_irreducible_components [NoetherianSpace α] :
+    (irreducibleComponents α).Finite := by classical
   obtain ⟨S, hS₁, hS₂⟩ := noetherian_space.exists_finset_irreducible (⊤ : closeds α)
   suffices irreducibleComponents α ⊆ coe '' (S : Set <| closeds α) by
     exact Set.Finite.subset ((Set.Finite.intro inferInstance).image _) this

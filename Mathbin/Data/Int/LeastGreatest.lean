@@ -40,8 +40,8 @@ namespace Int
 /-- A computable version of `exists_least_of_bdd`: given a decidable predicate on the
 integers, with an explicit lower bound and a proof that it is somewhere true, return
 the least value for which the predicate is true. -/
-def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → b ≤ z) (Hinh : ∃ z : ℤ, P z) :
-    { lb : ℤ // P lb ∧ ∀ z : ℤ, P z → lb ≤ z } :=
+def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → b ≤ z)
+    (Hinh : ∃ z : ℤ, P z) : { lb : ℤ // P lb ∧ ∀ z : ℤ, P z → lb ≤ z } :=
   have EX : ∃ n : ℕ, P (b + n) :=
     let ⟨elt, Helt⟩ := Hinh
     match elt, le.dest (Hb _ Helt), Helt with
@@ -73,7 +73,8 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
          [":"
           («term∃_,_»
            "∃"
-           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
            ","
            (Term.forall
             "∀"
@@ -89,7 +90,8 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
          [":"
           («term∃_,_»
            "∃"
-           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
            ","
            (Term.app `P [`z]))]
          []
@@ -98,7 +100,8 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
         ":"
         («term∃_,_»
          "∃"
-         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `lb)] [":" (termℤ "ℤ")]))
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `lb)] [":" (termℤ "ℤ")]))
          ","
          («term_∧_»
           (Term.app `P [`lb])
@@ -122,7 +125,8 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
              "exact"
              (Term.let
               "let"
-              (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
+              (Term.letDecl
+               (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
               []
               (Term.let
                "let"
@@ -152,7 +156,8 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
             "exact"
             (Term.let
              "let"
-             (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
+             (Term.letDecl
+              (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
              []
              (Term.let
               "let"
@@ -213,25 +218,38 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
        (Term.let
         "let"
         (Term.letDecl
-         (Term.letPatDecl (Term.anonymousCtor "⟨" [`lb "," `H] "⟩") [] [] ":=" (Term.app `least_of_bdd [`b `Hb `Hinh])))
+         (Term.letPatDecl
+          (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
+          []
+          []
+          ":="
+          (Term.app `least_of_bdd [`b `Hb `Hinh])))
         []
         (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
        "let"
        (Term.letDecl
-        (Term.letPatDecl (Term.anonymousCtor "⟨" [`lb "," `H] "⟩") [] [] ":=" (Term.app `least_of_bdd [`b `Hb `Hinh])))
+        (Term.letPatDecl
+         (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
+         []
+         []
+         ":="
+         (Term.app `least_of_bdd [`b `Hb `Hinh])))
        []
        (Term.anonymousCtor "⟨" [`lb "," `H] "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `least_of_bdd [`b `Hb `Hinh])
@@ -239,46 +257,57 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Hinh
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `least_of_bdd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Hbdd
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Hb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -303,7 +332,8 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
 #align int.exists_least_of_bdd Int.exists_least_of_bdd
 
 theorem coe_least_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → b ≤ z)
-    (Hb' : ∀ z : ℤ, P z → b' ≤ z) (Hinh : ∃ z : ℤ, P z) : (leastOfBdd b Hb Hinh : ℤ) = leastOfBdd b' Hb' Hinh := by
+    (Hb' : ∀ z : ℤ, P z → b' ≤ z) (Hinh : ∃ z : ℤ, P z) :
+    (leastOfBdd b Hb Hinh : ℤ) = leastOfBdd b' Hb' Hinh := by
   rcases least_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
   rcases least_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymm (h2n _ hn') (h2n' _ hn)
@@ -312,8 +342,8 @@ theorem coe_least_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (H
 /-- A computable version of `exists_greatest_of_bdd`: given a decidable predicate on the
 integers, with an explicit upper bound and a proof that it is somewhere true, return
 the greatest value for which the predicate is true. -/
-def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → z ≤ b) (Hinh : ∃ z : ℤ, P z) :
-    { ub : ℤ // P ub ∧ ∀ z : ℤ, P z → z ≤ ub } :=
+def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ, P z → z ≤ b)
+    (Hinh : ∃ z : ℤ, P z) : { ub : ℤ // P ub ∧ ∀ z : ℤ, P z → z ≤ ub } :=
   have Hbdd' : ∀ z : ℤ, P (-z) → -b ≤ z := fun z h => neg_le.1 (Hb _ h)
   have Hinh' : ∃ z : ℤ, P (-z) :=
     let ⟨elt, Helt⟩ := Hinh
@@ -344,7 +374,8 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
          [":"
           («term∃_,_»
            "∃"
-           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
            ","
            (Term.forall
             "∀"
@@ -360,7 +391,8 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
          [":"
           («term∃_,_»
            "∃"
-           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
+           (Lean.explicitBinders
+            (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
            ","
            (Term.app `P [`z]))]
          []
@@ -369,7 +401,8 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
         ":"
         («term∃_,_»
          "∃"
-         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] [":" (termℤ "ℤ")]))
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] [":" (termℤ "ℤ")]))
          ","
          («term_∧_»
           (Term.app `P [`ub])
@@ -393,7 +426,8 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
              "exact"
              (Term.let
               "let"
-              (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
+              (Term.letDecl
+               (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
               []
               (Term.let
                "let"
@@ -423,7 +457,8 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
             "exact"
             (Term.let
              "let"
-             (Term.letDecl (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
+             (Term.letDecl
+              (Term.letPatDecl (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩") [] [] ":=" `Hbdd))
              []
              (Term.let
               "let"
@@ -508,11 +543,14 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
       (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `greatest_of_bdd [`b `Hb `Hinh])
@@ -520,46 +558,57 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Hinh
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `greatest_of_bdd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`lb "," `H] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `lb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Hbdd
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`b "," `Hb] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Hb
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -580,12 +629,14 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
     exists_greatest_of_bdd
     { P : ℤ → Prop } ( Hbdd : ∃ b : ℤ , ∀ z : ℤ , P z → z ≤ b ) ( Hinh : ∃ z : ℤ , P z )
       : ∃ ub : ℤ , P ub ∧ ∀ z : ℤ , P z → z ≤ ub
-    := by skip <;> exact let ⟨ b , Hb ⟩ := Hbdd let ⟨ lb , H ⟩ := greatest_of_bdd b Hb Hinh ⟨ lb , H ⟩
+    :=
+      by
+        skip <;> exact let ⟨ b , Hb ⟩ := Hbdd let ⟨ lb , H ⟩ := greatest_of_bdd b Hb Hinh ⟨ lb , H ⟩
 #align int.exists_greatest_of_bdd Int.exists_greatest_of_bdd
 
-theorem coe_greatest_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → z ≤ b)
-    (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) : (greatestOfBdd b Hb Hinh : ℤ) = greatestOfBdd b' Hb' Hinh :=
-  by
+theorem coe_greatest_of_bdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ}
+    (Hb : ∀ z : ℤ, P z → z ≤ b) (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) :
+    (greatestOfBdd b Hb Hinh : ℤ) = greatestOfBdd b' Hb' Hinh := by
   rcases greatest_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
   rcases greatest_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymm (h2n' _ hn) (h2n _ hn')

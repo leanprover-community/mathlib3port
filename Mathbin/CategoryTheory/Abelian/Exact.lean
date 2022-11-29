@@ -68,7 +68,8 @@ theorem exact_iff_image_eq_kernel : Exact f g ↔ imageSubobject f = kernelSubob
     
   · apply exact_of_image_eq_kernel
     
-#align category_theory.abelian.exact_iff_image_eq_kernel CategoryTheory.Abelian.exact_iff_image_eq_kernel
+#align
+  category_theory.abelian.exact_iff_image_eq_kernel CategoryTheory.Abelian.exact_iff_image_eq_kernel
 
 theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0 := by
   constructor
@@ -76,10 +77,12 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
     exact ⟨h.1, kernel_comp_cokernel f g h⟩
     
   · refine' fun h => ⟨h.1, _⟩
-    suffices hl : is_limit (kernel_fork.of_ι (image_subobject f).arrow (image_subobject_arrow_comp_eq_zero h.1))
+    suffices hl :
+      is_limit (kernel_fork.of_ι (image_subobject f).arrow (image_subobject_arrow_comp_eq_zero h.1))
     · have :
         imageToKernel f g h.1 =
-          (is_limit.cone_point_unique_up_to_iso hl (limit.is_limit _)).Hom ≫ (kernel_subobject_iso _).inv :=
+          (is_limit.cone_point_unique_up_to_iso hl (limit.is_limit _)).Hom ≫
+            (kernel_subobject_iso _).inv :=
         by
         ext
         simp
@@ -87,7 +90,8 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
       infer_instance
       
     refine' kernel_fork.is_limit.of_ι _ _ _ _ _
-    · refine' fun W u hu => kernel.lift (cokernel.π f) u _ ≫ (image_iso_image f).Hom ≫ (image_subobject_iso _).inv
+    · refine' fun W u hu =>
+        kernel.lift (cokernel.π f) u _ ≫ (image_iso_image f).Hom ≫ (image_subobject_iso _).inv
       rw [← kernel.lift_ι g u hu, category.assoc, h.2, has_zero_morphisms.comp_zero]
       
     · tidy
@@ -99,8 +103,8 @@ theorem exact_iff : Exact f g ↔ f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f 
     
 #align category_theory.abelian.exact_iff CategoryTheory.Abelian.exact_iff
 
-theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f} (hf : IsColimit cf) :
-    Exact f g ↔ f ≫ g = 0 ∧ cg.ι ≫ cf.π = 0 := by
+theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
+    (hf : IsColimit cf) : Exact f g ↔ f ≫ g = 0 ∧ cg.ι ≫ cf.π = 0 := by
   constructor
   · intro h
     exact ⟨h.1, fork_ι_comp_cofork_π f g h cg cf⟩
@@ -130,7 +134,10 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
            [(Term.app `Exact [`f `g])
             ","
             («term_∧_»
-             («term_=_» (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `f " ≫ " `g) "=" (num "0"))
+             («term_=_»
+              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `f " ≫ " `g)
+              "="
+              (num "0"))
              "∧"
              («term_=_»
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
@@ -149,11 +156,13 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
         (Tactic.tacticSeq
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
-           []
-           («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.apply "apply" `exact_iff) [])])
+           ";"
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.apply "apply" `exact_iff) [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
-           []
+           ";"
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
@@ -170,11 +179,13 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
-          []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.apply "apply" `exact_iff) [])])
+          ";"
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.apply "apply" `exact_iff) [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "3"))
-          []
+          ";"
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.apply "apply" `exact_iff_image_eq_kernel) [])])
@@ -192,7 +203,8 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
       (Tactic.apply "apply" `exact_iff_image_eq_kernel)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `exact_iff_image_eq_kernel
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -211,17 +223,30 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   exact_tfae
-  : Tfae [ Exact f g , f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0 , imageSubobject f = kernelSubobject g ]
-  := by tfae_have 1 ↔ 2 · apply exact_iff tfae_have 1 ↔ 3 · apply exact_iff_image_eq_kernel tfae_finish
+  :
+    Tfae
+      [
+        Exact f g , f ≫ g = 0 ∧ kernel.ι g ≫ cokernel.π f = 0 , imageSubobject f = kernelSubobject g
+        ]
+  :=
+    by
+      tfae_have 1 ↔ 2
+        ;
+        · apply exact_iff
+        tfae_have 1 ↔ 3
+        ;
+        · apply exact_iff_image_eq_kernel
+        tfae_finish
 #align category_theory.abelian.exact_tfae CategoryTheory.Abelian.exact_tfae
 
-theorem IsEquivalence.exact_iff {D : Type u₁} [Category.{v₁} D] [Abelian D] (F : C ⥤ D) [IsEquivalence F] :
-    Exact (F.map f) (F.map g) ↔ Exact f g := by
-  simp only [exact_iff, ← F.map_eq_zero_iff, F.map_comp, category.assoc, ← kernel_comparison_comp_ι g F, ←
-    π_comp_cokernel_comparison f F]
+theorem IsEquivalence.exact_iff {D : Type u₁} [Category.{v₁} D] [Abelian D] (F : C ⥤ D)
+    [IsEquivalence F] : Exact (F.map f) (F.map g) ↔ Exact f g := by
+  simp only [exact_iff, ← F.map_eq_zero_iff, F.map_comp, category.assoc, ←
+    kernel_comparison_comp_ι g F, ← π_comp_cokernel_comparison f F]
   rw [is_iso.comp_left_eq_zero (kernel_comparison g F), ← category.assoc,
     is_iso.comp_right_eq_zero _ (cokernel_comparison f F)]
-#align category_theory.abelian.is_equivalence.exact_iff CategoryTheory.Abelian.IsEquivalence.exact_iff
+#align
+  category_theory.abelian.is_equivalence.exact_iff CategoryTheory.Abelian.IsEquivalence.exact_iff
 
 /-- The dual result is true even in non-abelian categories, see
     `category_theory.exact_comp_mono_iff`. -/
@@ -246,13 +271,17 @@ def isLimitImage (h : Exact f g) :
 #align category_theory.abelian.is_limit_image CategoryTheory.Abelian.isLimitImage
 
 /-- If `(f, g)` is exact, then `image.ι f` is a kernel of `g`. -/
-def isLimitImage' (h : Exact f g) : IsLimit (KernelFork.ofι (Limits.image.ι f) (Limits.image_ι_comp_eq_zero h.1)) :=
+def isLimitImage' (h : Exact f g) :
+    IsLimit (KernelFork.ofι (Limits.image.ι f) (Limits.image_ι_comp_eq_zero h.1)) :=
   IsKernel.isoKernel _ _ (isLimitImage f g h) (imageIsoImage f).symm <| IsImage.lift_fac _ _
 #align category_theory.abelian.is_limit_image' CategoryTheory.Abelian.isLimitImage'
 
 /-- If `(f, g)` is exact, then `coimages.coimage.π g` is a cokernel of `f`. -/
 def isColimitCoimage (h : Exact f g) :
-    IsColimit (CokernelCofork.ofπ (Abelian.coimage.π g) (Abelian.comp_coimage_π_eq_zero h.1) : CokernelCofork f) := by
+    IsColimit
+      (CokernelCofork.ofπ (Abelian.coimage.π g) (Abelian.comp_coimage_π_eq_zero h.1) :
+        CokernelCofork f) :=
+  by
   rw [exact_iff] at h
   refine' cokernel_cofork.is_colimit.of_π _ _ _ _ _
   · refine' fun W u hu => cokernel.desc (kernel.ι g) u _
@@ -263,7 +292,8 @@ def isColimitCoimage (h : Exact f g) :
 
 /-- If `(f, g)` is exact, then `factor_thru_image g` is a cokernel of `f`. -/
 def isColimitImage (h : Exact f g) :
-    IsColimit (CokernelCofork.ofπ (Limits.factorThruImage g) (comp_factor_thru_image_eq_zero h.1)) :=
+    IsColimit
+      (CokernelCofork.ofπ (Limits.factorThruImage g) (comp_factor_thru_image_eq_zero h.1)) :=
   IsCokernel.cokernelIso _ _ (isColimitCoimage f g h) (coimageIsoImage' g) <|
     (cancel_mono (Limits.image.ι g)).1 <| by simp
 #align category_theory.abelian.is_colimit_image CategoryTheory.Abelian.isColimitImage
@@ -276,7 +306,8 @@ theorem exact_cokernel : Exact f (cokernel.π f) := by
 instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
   suffices h :
     cokernel.desc f g h.w =
-      (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitImage f g h)).Hom ≫ Limits.image.ι g
+      (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitImage f g h)).Hom ≫
+        Limits.image.ι g
     from by
     rw [h]
     apply mono_comp
@@ -287,35 +318,39 @@ instance (ex : Exact f g) [Epi g] : IsIso (cokernel.desc f g ex.w) :=
   is_iso_of_mono_of_epi (Limits.cokernel.desc f g ex.w)
 
 @[simp, reassoc]
-theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) : g ≫ inv (cokernel.desc _ _ ex.w) = cokernel.π _ := by simp
+theorem Cokernel.Desc.inv [Epi g] (ex : Exact f g) :
+    g ≫ inv (cokernel.desc _ _ ex.w) = cokernel.π _ := by simp
 #align category_theory.abelian.cokernel.desc.inv CategoryTheory.Abelian.Cokernel.Desc.inv
 
 instance (ex : Exact f g) [Mono f] : IsIso (kernel.lift g f ex.w) :=
   is_iso_of_mono_of_epi (Limits.kernel.lift g f ex.w)
 
 @[simp, reassoc]
-theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g := by simp
+theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) ≫ f = kernel.ι g :=
+  by simp
 #align category_theory.abelian.kernel.lift.inv CategoryTheory.Abelian.Kernel.Lift.inv
 
 /-- If `X ⟶ Y ⟶ Z ⟶ 0` is exact, then the second map is a cokernel of the first. -/
 def isColimitOfExactOfEpi [Epi g] (h : Exact f g) : IsColimit (CokernelCofork.ofπ _ h.w) :=
   IsColimit.ofIsoColimit (colimit.isColimit _) <|
     Cocones.ext
-      ⟨cokernel.desc _ _ h.w, epiDesc g (cokernel.π f) ((exact_iff _ _).1 h).2, (cancel_epi (cokernel.π f)).1 (by tidy),
-        (cancel_epi g).1 (by tidy)⟩
+      ⟨cokernel.desc _ _ h.w, epiDesc g (cokernel.π f) ((exact_iff _ _).1 h).2,
+        (cancel_epi (cokernel.π f)).1 (by tidy), (cancel_epi g).1 (by tidy)⟩
       fun j => by cases j <;> simp
-#align category_theory.abelian.is_colimit_of_exact_of_epi CategoryTheory.Abelian.isColimitOfExactOfEpi
+#align
+  category_theory.abelian.is_colimit_of_exact_of_epi CategoryTheory.Abelian.isColimitOfExactOfEpi
 
 /-- If `0 ⟶ X ⟶ Y ⟶ Z` is exact, then the first map is a kernel of the second. -/
 def isLimitOfExactOfMono [Mono f] (h : Exact f g) : IsLimit (KernelFork.ofι _ h.w) :=
   IsLimit.ofIsoLimit (limit.isLimit _) <|
     Cones.ext
-      ⟨monoLift f (kernel.ι g) ((exact_iff _ _).1 h).2, kernel.lift _ _ h.w, (cancel_mono (kernel.ι g)).1 (by tidy),
-        (cancel_mono f).1 (by tidy)⟩
+      ⟨monoLift f (kernel.ι g) ((exact_iff _ _).1 h).2, kernel.lift _ _ h.w,
+        (cancel_mono (kernel.ι g)).1 (by tidy), (cancel_mono f).1 (by tidy)⟩
       fun j => by cases j <;> simp
 #align category_theory.abelian.is_limit_of_exact_of_mono CategoryTheory.Abelian.isLimitOfExactOfMono
 
-theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g := by
+theorem exact_of_is_cokernel (w : f ≫ g = 0) (h : IsColimit (CokernelCofork.ofπ _ w)) : Exact f g :=
+  by
   refine' (exact_iff _ _).2 ⟨w, _⟩
   have := h.fac (cokernel_cofork.of_π _ (cokernel.condition f)) walking_parallel_pair.one
   simp only [cofork.of_π_ι_app] at this
@@ -331,11 +366,13 @@ theorem exact_of_is_kernel (w : f ≫ g = 0) (h : IsLimit (KernelFork.ofι _ w))
 
 theorem exact_iff_exact_image_ι : Exact f g ↔ Exact (Abelian.image.ι f) g := by
   conv_lhs => rw [← abelian.image.fac f] <;> apply exact_epi_comp_iff
-#align category_theory.abelian.exact_iff_exact_image_ι CategoryTheory.Abelian.exact_iff_exact_image_ι
+#align
+  category_theory.abelian.exact_iff_exact_image_ι CategoryTheory.Abelian.exact_iff_exact_image_ι
 
 theorem exact_iff_exact_coimage_π : Exact f g ↔ Exact f (coimage.π g) := by
   conv_lhs => rw [← abelian.coimage.fac g] <;> apply exact_comp_mono_iff
-#align category_theory.abelian.exact_iff_exact_coimage_π CategoryTheory.Abelian.exact_iff_exact_coimage_π
+#align
+  category_theory.abelian.exact_iff_exact_coimage_π CategoryTheory.Abelian.exact_iff_exact_coimage_π
 
 section
 
@@ -361,7 +398,13 @@ variable (Z)
             ","
             (Term.app
              `Exact
-             [(Term.typeAscription "(" (num "0") ":" [(Combinatorics.Quiver.Basic.«term_⟶_» `Z " ⟶ " `X)] ")") `f])]
+             [(Term.typeAscription
+               "("
+               (num "0")
+               ":"
+               [(Combinatorics.Quiver.Basic.«term_⟶_» `Z " ⟶ " `X)]
+               ")")
+              `f])]
            "]")])))
       (Command.declValSimple
        ":="
@@ -373,7 +416,9 @@ variable (Z)
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z])) [])])
+            [(group
+              (Tactic.exact "exact" (Term.app `kernel_ι_eq_zero_of_exact_zero_left [`Z]))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "3"))
            []
@@ -386,7 +431,9 @@ variable (Z)
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])) [])])
+            [(group
+              (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))
+              [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -416,7 +463,9 @@ variable (Z)
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")])) [])])
+           [(group
+             (Tactic.exact "exact" (Term.app `mono_of_kernel_ι_eq_zero [(Term.hole "_")]))
+             [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -435,10 +484,12 @@ variable (Z)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `mono_of_kernel_ι_eq_zero
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -474,7 +525,8 @@ theorem
 -- in any preadditive category with kernels and images.
 theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
   (tfae_mono X f).out 0 1
-#align category_theory.abelian.mono_iff_kernel_ι_eq_zero CategoryTheory.Abelian.mono_iff_kernel_ι_eq_zero
+#align
+  category_theory.abelian.mono_iff_kernel_ι_eq_zero CategoryTheory.Abelian.mono_iff_kernel_ι_eq_zero
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -496,7 +548,13 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
             ","
             (Term.app
              `Exact
-             [`f (Term.typeAscription "(" (num "0") ":" [(Combinatorics.Quiver.Basic.«term_⟶_» `Y " ⟶ " `Z)] ")")])]
+             [`f
+              (Term.typeAscription
+               "("
+               (num "0")
+               ":"
+               [(Combinatorics.Quiver.Basic.«term_⟶_» `Y " ⟶ " `Z)]
+               ")")])]
            "]")])))
       (Command.declValSimple
        ":="
@@ -508,7 +566,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+            [(group
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+              [])
              (group
               (Std.Tactic.rintro
                "rintro"
@@ -531,7 +591,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+            [(group
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+              [])
              (group (Tactic.intro "intro" []) [])
              (group
               (Tactic.exact
@@ -540,13 +602,20 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
                 "⟨"
                 [(Term.byTactic
                   "by"
-                  (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
                  ","
                  (Term.byTactic
                   "by"
                   (Tactic.tacticSeq
                    (Tactic.tacticSeq1Indented
-                    [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"] [])])))]
+                    [(Tactic.simp
+                      "simp"
+                      []
+                      []
+                      []
+                      ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"]
+                      [])])))]
                 "⟩"))
               [])])
            []
@@ -554,7 +623,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])) [])])
+            [(group
+              (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))
+              [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
        [])
@@ -571,7 +642,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+           [(group
+             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+             [])
             (group
              (Std.Tactic.rintro
               "rintro"
@@ -594,7 +667,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") []) [])
+           [(group
+             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `exact_iff)] "]") [])
+             [])
             (group (Tactic.intro "intro" []) [])
             (group
              (Tactic.exact
@@ -603,13 +678,20 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
                "⟨"
                [(Term.byTactic
                  "by"
-                 (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
                 ","
                 (Term.byTactic
                  "by"
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
-                   [(Tactic.simp "simp" [] [] [] ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"] [])])))]
+                   [(Tactic.simp
+                     "simp"
+                     []
+                     []
+                     []
+                     ["[" [(Tactic.simpLemma [] [] `cokernel.π_of_epi)] "]"]
+                     [])])))]
                "⟩"))
              [])])
           []
@@ -617,7 +699,9 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")])) [])])
+           [(group
+             (Tactic.exact "exact" (Term.app `epi_of_cokernel_π_eq_zero [(Term.hole "_")]))
+             [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -636,10 +720,12 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `epi_of_cokernel_π_eq_zero
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -675,7 +761,8 @@ theorem
 -- in any preadditive category with equalizers and images.
 theorem epi_iff_cokernel_π_eq_zero : Epi f ↔ cokernel.π f = 0 :=
   (tfae_epi X f).out 0 1
-#align category_theory.abelian.epi_iff_cokernel_π_eq_zero CategoryTheory.Abelian.epi_iff_cokernel_π_eq_zero
+#align
+  category_theory.abelian.epi_iff_cokernel_π_eq_zero CategoryTheory.Abelian.epi_iff_cokernel_π_eq_zero
 
 end
 
@@ -684,8 +771,8 @@ section Opposite
 theorem Exact.op (h : Exact f g) : Exact g.op f.op := by
   rw [exact_iff]
   refine' ⟨by simp [← op_comp, h.w], Quiver.Hom.unop_inj _⟩
-  simp only [unop_comp, cokernel.π_op, eq_to_hom_refl, kernel.ι_op, category.id_comp, category.assoc,
-    kernel_comp_cokernel_assoc _ _ h, zero_comp, comp_zero, unop_zero]
+  simp only [unop_comp, cokernel.π_op, eq_to_hom_refl, kernel.ι_op, category.id_comp,
+    category.assoc, kernel_comp_cokernel_assoc _ _ h, zero_comp, comp_zero, unop_zero]
 #align category_theory.abelian.exact.op CategoryTheory.Abelian.Exact.op
 
 theorem Exact.op_iff : Exact g.op f.op ↔ Exact f g :=
@@ -750,7 +837,8 @@ variable [PreservesFiniteLimits L] [PreservesFiniteColimits L]
 /-- A functor preserving finite limits and finite colimits preserves exactness. The converse
 result is also true, see `functor.preserves_finite_limits_of_map_exact` and
 `functor.preserves_finite_colimits_of_map_exact`. -/
-theorem map_exact {X Y Z : A} (f : X ⟶ Y) (g : Y ⟶ Z) (e1 : Exact f g) : Exact (L.map f) (L.map g) := by
+theorem map_exact {X Y Z : A} (f : X ⟶ Y) (g : Y ⟶ Z) (e1 : Exact f g) :
+    Exact (L.map f) (L.map g) := by
   let hcoker := is_colimit_of_has_cokernel_of_preserves_colimit L f
   let hker := is_limit_of_has_kernel_of_preserves_limit L g
   refine' (exact_iff' _ _ hker hcoker).2 ⟨by simp [← L.map_comp, e1.1], _⟩
@@ -804,9 +892,12 @@ def preservesKernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
     have hf :=
       (is_limit_map_cone_fork_equiv' L (kernel_fork.condition c)).symm
         (is_limit_of_exact_of_mono (L.map (fork.ι c)) (L.map f)
-          (h (exact_of_is_kernel (fork.ι c) f (kernel_fork.condition c) (ic.of_iso_limit (iso_of_ι _)))))
+          (h
+            (exact_of_is_kernel (fork.ι c) f (kernel_fork.condition c)
+              (ic.of_iso_limit (iso_of_ι _)))))
     exact hf.of_iso_limit ((cones.functoriality _ L).mapIso (iso_of_ι _).symm)
-#align category_theory.functor.preserves_kernels_of_map_exact CategoryTheory.Functor.preservesKernelsOfMapExact
+#align
+  category_theory.functor.preserves_kernels_of_map_exact CategoryTheory.Functor.preservesKernelsOfMapExact
 
 /-- A functor which preserves exactness preserves zero cokernels. -/
 def preservesCokernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
@@ -817,9 +908,12 @@ def preservesCokernelsOfMapExact (X Y : A) (f : X ⟶ Y) :
     have hf :=
       (is_colimit_map_cocone_cofork_equiv' L (cokernel_cofork.condition c)).symm
         (is_colimit_of_exact_of_epi (L.map f) (L.map (cofork.π c))
-          (h (exact_of_is_cokernel f (cofork.π c) (cokernel_cofork.condition c) (ic.of_iso_colimit (iso_of_π _)))))
+          (h
+            (exact_of_is_cokernel f (cofork.π c) (cokernel_cofork.condition c)
+              (ic.of_iso_colimit (iso_of_π _)))))
     exact hf.of_iso_colimit ((cocones.functoriality _ L).mapIso (iso_of_π _).symm)
-#align category_theory.functor.preserves_cokernels_of_map_exact CategoryTheory.Functor.preservesCokernelsOfMapExact
+#align
+  category_theory.functor.preserves_cokernels_of_map_exact CategoryTheory.Functor.preservesCokernelsOfMapExact
 
 /-- A functor which preserves exactness is left exact, i.e. preserves finite limits.
 This is part of the inverse implication to `functor.map_exact`. -/
@@ -844,18 +938,21 @@ end
 section
 
 /-- A functor preserving zero morphisms, monos, and cokernels preserves finite limits. -/
-def preservesFiniteLimitsOfPreservesMonosAndCokernels [PreservesZeroMorphisms L] [PreservesMonomorphisms L]
-    [∀ {X Y} (f : X ⟶ Y), PreservesColimit (parallelPair f 0) L] : PreservesFiniteLimits L := by
+def preservesFiniteLimitsOfPreservesMonosAndCokernels [PreservesZeroMorphisms L]
+    [PreservesMonomorphisms L] [∀ {X Y} (f : X ⟶ Y), PreservesColimit (parallelPair f 0) L] :
+    PreservesFiniteLimits L := by
   apply preserves_finite_limits_of_map_exact
   intro X Y Z f g h
   rw [← abelian.coimage.fac g, L.map_comp, exact_comp_mono_iff]
-  exact exact_of_is_cokernel _ _ _ (is_colimit_cofork_map_of_is_colimit' L _ (is_colimit_coimage f g h))
+  exact
+    exact_of_is_cokernel _ _ _ (is_colimit_cofork_map_of_is_colimit' L _ (is_colimit_coimage f g h))
 #align
   category_theory.functor.preserves_finite_limits_of_preserves_monos_and_cokernels CategoryTheory.Functor.preservesFiniteLimitsOfPreservesMonosAndCokernels
 
 /-- A functor preserving zero morphisms, epis, and kernels preserves finite colimits. -/
-def preservesFiniteColimitsOfPreservesEpisAndKernels [PreservesZeroMorphisms L] [PreservesEpimorphisms L]
-    [∀ {X Y} (f : X ⟶ Y), PreservesLimit (parallelPair f 0) L] : PreservesFiniteColimits L := by
+def preservesFiniteColimitsOfPreservesEpisAndKernels [PreservesZeroMorphisms L]
+    [PreservesEpimorphisms L] [∀ {X Y} (f : X ⟶ Y), PreservesLimit (parallelPair f 0) L] :
+    PreservesFiniteColimits L := by
   apply preserves_finite_colimits_of_map_exact
   intro X Y Z f g h
   rw [← abelian.image.fac f, L.map_comp, exact_epi_comp_iff]

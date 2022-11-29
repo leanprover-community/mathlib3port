@@ -22,7 +22,8 @@ open DirectSum
 
 open Set LinearMap Submodule
 
-variable {R : Type u} {M : Type v} {N : Type w} [Ring R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N]
+variable {R : Type u} {M : Type v} {N : Type w} [Ring R] [AddCommGroup M] [Module R M]
+  [AddCommGroup N] [Module R N]
 
 section TensorProduct
 
@@ -31,22 +32,24 @@ open TensorProduct
 open TensorProduct Classical
 
 /-- The tensor product of ι →₀ M and κ →₀ N is linearly equivalent to (ι × κ) →₀ (M ⊗ N). -/
-def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N] [Module R N] :
-    (ι →₀ M) ⊗[R] (κ →₀ N) ≃ₗ[R] ι × κ →₀ M ⊗[R] N :=
+def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
+    [AddCommGroup N] [Module R N] : (ι →₀ M) ⊗[R] (κ →₀ N) ≃ₗ[R] ι × κ →₀ M ⊗[R] N :=
   TensorProduct.congr (finsuppLequivDirectSum R M ι) (finsuppLequivDirectSum R N κ) ≪≫ₗ
-    ((TensorProduct.directSum R ι κ (fun _ => M) fun _ => N) ≪≫ₗ (finsuppLequivDirectSum R (M ⊗[R] N) (ι × κ)).symm)
+    ((TensorProduct.directSum R ι κ (fun _ => M) fun _ => N) ≪≫ₗ
+      (finsuppLequivDirectSum R (M ⊗[R] N) (ι × κ)).symm)
 #align finsupp_tensor_finsupp finsuppTensorFinsupp
 
 @[simp]
-theorem finsupp_tensor_finsupp_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N]
-    [Module R N] (i : ι) (m : M) (k : κ) (n : N) :
-    finsuppTensorFinsupp R M N ι κ (Finsupp.single i m ⊗ₜ Finsupp.single k n) = Finsupp.single (i, k) (m ⊗ₜ n) := by
-  simp [finsuppTensorFinsupp]
+theorem finsupp_tensor_finsupp_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M]
+    [Module R M] [AddCommGroup N] [Module R N] (i : ι) (m : M) (k : κ) (n : N) :
+    finsuppTensorFinsupp R M N ι κ (Finsupp.single i m ⊗ₜ Finsupp.single k n) =
+      Finsupp.single (i, k) (m ⊗ₜ n) :=
+  by simp [finsuppTensorFinsupp]
 #align finsupp_tensor_finsupp_single finsupp_tensor_finsupp_single
 
 @[simp]
-theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M] [AddCommGroup N]
-    [Module R N] (f : ι →₀ M) (g : κ →₀ N) (i : ι) (k : κ) :
+theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
+    [AddCommGroup N] [Module R N] (f : ι →₀ M) (g : κ →₀ N) (i : ι) (k : κ) :
     finsuppTensorFinsupp R M N ι κ (f ⊗ₜ g) (i, k) = f i ⊗ₜ g k := by
   apply Finsupp.induction_linear f
   · simp
@@ -78,10 +81,12 @@ theorem finsupp_tensor_finsupp_apply (R M N ι κ : Sort _) [CommRing R] [AddCom
 #align finsupp_tensor_finsupp_apply finsupp_tensor_finsupp_apply
 
 @[simp]
-theorem finsupp_tensor_finsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M] [Module R M]
-    [AddCommGroup N] [Module R N] (i : ι × κ) (m : M) (n : N) :
-    (finsuppTensorFinsupp R M N ι κ).symm (Finsupp.single i (m ⊗ₜ n)) = Finsupp.single i.1 m ⊗ₜ Finsupp.single i.2 n :=
-  (Prod.casesOn i) fun i k => (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
+theorem finsupp_tensor_finsupp_symm_single (R M N ι κ : Sort _) [CommRing R] [AddCommGroup M]
+    [Module R M] [AddCommGroup N] [Module R N] (i : ι × κ) (m : M) (n : N) :
+    (finsuppTensorFinsupp R M N ι κ).symm (Finsupp.single i (m ⊗ₜ n)) =
+      Finsupp.single i.1 m ⊗ₜ Finsupp.single i.2 n :=
+  (Prod.casesOn i) fun i k =>
+    (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
 #align finsupp_tensor_finsupp_symm_single finsupp_tensor_finsupp_symm_single
 
 variable (S : Type _) [CommRing S] (α β : Type _)
@@ -99,7 +104,9 @@ theorem finsupp_tensor_finsupp'_apply_apply (f : α →₀ S) (g : β →₀ S) 
 
 @[simp]
 theorem finsupp_tensor_finsupp'_single_tmul_single (a : α) (b : β) (r₁ r₂ : S) :
-    finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) = Finsupp.single (a, b) (r₁ * r₂) := by
+    finsuppTensorFinsupp' S α β (Finsupp.single a r₁ ⊗ₜ[S] Finsupp.single b r₂) =
+      Finsupp.single (a, b) (r₁ * r₂) :=
+  by
   ext ⟨a', b'⟩
   simp [Finsupp.single_apply, ite_and]
 #align finsupp_tensor_finsupp'_single_tmul_single finsupp_tensor_finsupp'_single_tmul_single

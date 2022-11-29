@@ -56,7 +56,8 @@ theorem gameAdd_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
 
 #print Prod.rprod_le_transGen_gameAdd /-
 /-- `prod.rprod` is a subrelation of the transitive closure of `game_add`. -/
-theorem rprod_le_transGen_gameAdd : Prod.RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) := fun _ _ h =>
+theorem rprod_le_transGen_gameAdd : Prod.RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) :=
+  fun _ _ h =>
   h.rec
     (by
       intro _ _ _ _ hα hβ
@@ -70,14 +71,15 @@ variable {rα rβ}
 
 /- warning: acc.prod_game_add -> Acc.prod_gameAdd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u_1} α rα a) -> (Acc.{succ u_2} β rβ b) -> (Acc.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.GameAdd.{u_1 u_2} α β rα rβ) (Prod.mk.{u_1 u_2} α β a b))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u_1} α rα a) -> (Acc.{succ u_2} β rβ b) -> (Acc.{max (succ u_1) (succ u_2)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ) (Prod.mk.{u_1, u_2} α β a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u_1} α rα a) -> (Acc.{succ u_2} β rβ b) -> (Acc.{(max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β) (Prod.GameAdd.{u_1 u_2} α β rα rβ) (Prod.mk.{u_1 u_2} α β a b))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop} {a : α} {b : β}, (Acc.{succ u_1} α rα a) -> (Acc.{succ u_2} β rβ b) -> (Acc.{max (succ u_2) (succ u_1)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ) (Prod.mk.{u_1, u_2} α β a b))
 Case conversion may be inaccurate. Consider using '#align acc.prod_game_add Acc.prod_gameAddₓ'. -/
 /-- If `a` is accessible under `rα` and `b` is accessible under `rβ`, then `(a, b)` is
   accessible under `prod.game_add rα rβ`. Notice that `prod.lex_accessible` requires the
   stronger condition `∀ b, acc rβ b`. -/
-theorem Acc.prod_gameAdd {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.GameAdd rα rβ) (a, b) := by
+theorem Acc.prod_gameAdd {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.GameAdd rα rβ) (a, b) :=
+  by
   induction' ha with a ha iha generalizing b
   induction' hb with b hb ihb
   refine' Acc.intro _ fun h => _
@@ -87,12 +89,13 @@ theorem Acc.prod_gameAdd {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.Gam
 
 /- warning: well_founded.prod_game_add -> WellFounded.prod_gameAdd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u_1} α rα) -> (WellFounded.{succ u_2} β rβ) -> (WellFounded.{(max (succ u_1) (succ u_2))} (Prod.{u_1 u_2} α β) (Prod.GameAdd.{u_1 u_2} α β rα rβ))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u_1} α rα) -> (WellFounded.{succ u_2} β rβ) -> (WellFounded.{max (succ u_1) (succ u_2)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u_1} α rα) -> (WellFounded.{succ u_2} β rβ) -> (WellFounded.{(max (succ u_2) (succ u_1))} (Prod.{u_1 u_2} α β) (Prod.GameAdd.{u_1 u_2} α β rα rβ))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {rα : α -> α -> Prop} {rβ : β -> β -> Prop}, (WellFounded.{succ u_1} α rα) -> (WellFounded.{succ u_2} β rβ) -> (WellFounded.{max (succ u_2) (succ u_1)} (Prod.{u_1, u_2} α β) (Prod.GameAdd.{u_1, u_2} α β rα rβ))
 Case conversion may be inaccurate. Consider using '#align well_founded.prod_game_add WellFounded.prod_gameAddₓ'. -/
 /-- The sum of two well-founded games is well-founded. -/
-theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ) : WellFounded (Prod.GameAdd rα rβ) :=
+theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ) :
+    WellFounded (Prod.GameAdd rα rβ) :=
   ⟨fun ⟨a, b⟩ => (hα.apply a).prod_game_add (hβ.apply b)⟩
 #align well_founded.prod_game_add WellFounded.prod_gameAdd
 

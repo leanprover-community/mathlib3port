@@ -65,7 +65,8 @@ to the linear map itself, is zero.
 See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
 theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
   apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix (choose_basis R M)).toLinearEquiv).1
-  rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ← Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
+  rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ←
+    Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
   exact aeval_self_charpoly _
 #align linear_map.aeval_self_charpoly LinearMap.aeval_self_charpoly
 
@@ -73,8 +74,8 @@ theorem is_integral : IsIntegral R f :=
   ⟨f.charpoly, ⟨charpoly_monic f, aeval_self_charpoly f⟩⟩
 #align linear_map.is_integral LinearMap.is_integral
 
-theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup M] [Module K M] [FiniteDimensional K M]
-    (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
+theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup M] [Module K M]
+    [FiniteDimensional K M] (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly f)
 #align linear_map.minpoly_dvd_charpoly LinearMap.minpoly_dvd_charpoly
 
@@ -92,7 +93,8 @@ theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (X ^ k %ₘ f.char
 
 variable {f}
 
-theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R f).coeff 0 ≠ 0 := by
+theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R f).coeff 0 ≠ 0 :=
+  by
   intro h
   obtain ⟨P, hP⟩ := X_dvd_iff.2 h
   have hdegP : P.degree < (minpoly R f).degree := by
@@ -101,10 +103,12 @@ theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R
     rw [h, mul_zero] at hP
     exact minpoly.ne_zero (IsIntegral f) hP
   have hPmonic : P.monic := by
-    suffices (minpoly R f).Monic by rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
+    suffices (minpoly R f).Monic by
+      rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
     exact minpoly.monic (IsIntegral f)
   have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _
-  simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, AlgHom.map_mul, zero_apply] at hzero
+  simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, AlgHom.map_mul,
+    zero_apply] at hzero
   exact not_le.2 hdegP (minpoly.min _ _ hPmonic (ext hzero))
 #align linear_map.minpoly_coeff_zero_of_injective LinearMap.minpoly_coeff_zero_of_injective
 

@@ -208,10 +208,11 @@ variable [NoZeroDivisors S]
 
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
-  by_cases ha : a = 0
+  by_cases ha : a = 0;
   · simp [ha]
     
-  refine' (mul_self_eq_mul_self_iff.mp (by rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right _
+  refine'
+    (mul_self_eq_mul_self_iff.mp (by rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right _
   exact ((neg_lt_zero.mpr (abv.pos ha)).trans (abv.pos (neg_ne_zero.mpr ha))).ne'
 #align absolute_value.map_neg AbsoluteValue.map_neg
 
@@ -276,13 +277,12 @@ variable {S : Type _} [OrderedSemiring S]
 variable {R : Type _} [Semiring R] (abv : R → S) [IsAbsoluteValue abv]
 
 /-- A bundled absolute value is an absolute value. -/
-instance _root_.absolute_value.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
+instance AbsoluteValue.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv where
   abv_nonneg := abv.Nonneg
   abv_eq_zero _ := abv.eq_zero
   abv_add := abv.add_le
   abv_mul := abv.map_mul
-#align
-  is_absolute_value._root_.absolute_value.is_absolute_value is_absolute_value._root_.absolute_value.is_absolute_value
+#align absolute_value.is_absolute_value AbsoluteValue.is_absolute_value
 
 /-- Convert an unbundled `is_absolute_value` to a bundled `absolute_value`. -/
 @[simps]
@@ -333,7 +333,8 @@ def abvHom [Nontrivial R] : R →*₀ S :=
   (toAbsoluteValue abv).toMonoidWithZeroHom
 #align is_absolute_value.abv_hom IsAbsoluteValue.abvHom
 
-theorem abv_pow [Nontrivial R] (abv : R → S) [IsAbsoluteValue abv] (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
+theorem abv_pow [Nontrivial R] (abv : R → S) [IsAbsoluteValue abv] (a : R) (n : ℕ) :
+    abv (a ^ n) = abv a ^ n :=
   (toAbsoluteValue abv).map_pow a n
 #align is_absolute_value.abv_pow IsAbsoluteValue.abv_pow
 

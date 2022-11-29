@@ -37,7 +37,8 @@ instance limitFunctorial : Functorial fun F : J ⥤ C => limit F :=
 #align category_theory.limits.limit_functorial CategoryTheory.Limits.limitFunctorial
 
 @[simp]
-theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤ C => limit F) α = Limits.lim.map α :=
+theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) :
+    map (fun F : J ⥤ C => limit F) α = Limits.lim.map α :=
   rfl
 #align category_theory.limits.limit_functorial_map CategoryTheory.Limits.limit_functorial_map
 
@@ -59,15 +60,13 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
               dsimp
               simp only [category.id_comp, ← tensor_comp, limit.w] } }
   μ_natural' X Y X' Y' f g := by
-    ext
-    dsimp
-    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map, nat_trans.comp_app,
-      category.assoc, ← tensor_comp, lim_map_π]
+    ext; dsimp
+    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map,
+      nat_trans.comp_app, category.assoc, ← tensor_comp, lim_map_π]
   associativity' X Y Z := by
-    ext
-    dsimp
-    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map, nat_trans.comp_app,
-      category.assoc]
+    ext; dsimp
+    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map,
+      nat_trans.comp_app, category.assoc]
     slice_lhs 2 2 => rw [← tensor_id_comp_id_tensor]
     slice_lhs 1 2 =>
     rw [← comp_tensor_id, limit.lift_π]
@@ -78,11 +77,9 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
     slice_rhs 2 3 =>
     rw [← id_tensor_comp, limit.lift_π]
     dsimp
-    dsimp
-    simp
+    dsimp; simp
   left_unitality' X := by
-    ext
-    dsimp
+    ext; dsimp
     simp
     conv_rhs => rw [← tensor_id_comp_id_tensor (limit.π X j)]
     slice_rhs 1 2 =>
@@ -92,8 +89,7 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F where
     slice_rhs 2 3 => rw [left_unitor_naturality]
     simp
   right_unitality' X := by
-    ext
-    dsimp
+    ext; dsimp
     simp
     conv_rhs => rw [← id_tensor_comp_tensor_id _ (limit.π X j)]
     slice_rhs 1 2 =>
@@ -124,7 +120,8 @@ theorem lim_lax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α 
 #align category_theory.limits.lim_lax_map CategoryTheory.Limits.lim_lax_map
 
 @[simp]
-theorem lim_lax_ε : (@limLax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
+theorem lim_lax_ε :
+    (@limLax J _ C _ _ _).ε = limit.lift _ { x := _, π := { app := fun j => 𝟙 _ } } :=
   rfl
 #align category_theory.limits.lim_lax_ε CategoryTheory.Limits.lim_lax_ε
 

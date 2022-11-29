@@ -78,19 +78,22 @@ def decidableEqNone {o : Option α} : Decidable (o = none) :=
 -/
 
 #print Option.decidableForallMem /-
-instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a ∈ o, p a)
+instance decidableForallMem {p : α → Prop} [DecidablePred p] :
+    ∀ o : Option α, Decidable (∀ a ∈ o, p a)
   | none => isTrue (by simp [false_imp_iff])
-  | some a => if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
+  | some a =>
+    if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
 #align option.decidable_forall_mem Option.decidableForallMem
 -/
 
 /- warning: option.decidable_exists_mem -> Option.decidableExistsMem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) (fun (H : Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) => p a)))
+  forall {α : Type.{u_1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u_1, u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) (fun (H : Membership.Mem.{u_1, u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) => p a)))
 but is expected to have type
-  forall {α : Type.{u_1}} {p : α -> Prop} [inst._@.Mathlib.Data.Option.Defs._hyg.395 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => And (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a o) (p a)))
+  forall {α : Type.{u_1}} {p : α -> Prop} [inst._@.Mathlib.Data.Option.Defs._hyg.395 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => And (Membership.mem.{u_1, u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a o) (p a)))
 Case conversion may be inaccurate. Consider using '#align option.decidable_exists_mem Option.decidableExistsMemₓ'. -/
-instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
+instance decidableExistsMem {p : α → Prop} [DecidablePred p] :
+    ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
   | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 #align option.decidable_exists_mem Option.decidableExistsMem
@@ -140,7 +143,8 @@ def toList : Option α → List α
 
 #print Option.mem_toList /-
 @[simp]
-theorem mem_toList {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by cases o <;> simp [to_list, eq_comm]
+theorem mem_toList {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by
+  cases o <;> simp [to_list, eq_comm]
 #align option.mem_to_list Option.mem_toList
 -/
 
@@ -162,19 +166,22 @@ def liftOrGet (f : α → α → α) : Option α → Option α → Option α
 
 #print Option.liftOrGet_isCommutative /-
 -- lift f
-instance liftOrGet_isCommutative (f : α → α → α) [h : IsCommutative α f] : IsCommutative (Option α) (liftOrGet f) :=
+instance liftOrGet_isCommutative (f : α → α → α) [h : IsCommutative α f] :
+    IsCommutative (Option α) (liftOrGet f) :=
   ⟨fun a b => by cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
 #align option.lift_or_get_comm Option.liftOrGet_isCommutative
 -/
 
 #print Option.liftOrGet_isAssociative /-
-instance liftOrGet_isAssociative (f : α → α → α) [h : IsAssociative α f] : IsAssociative (Option α) (liftOrGet f) :=
+instance liftOrGet_isAssociative (f : α → α → α) [h : IsAssociative α f] :
+    IsAssociative (Option α) (liftOrGet f) :=
   ⟨fun a b c => by cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
 #align option.lift_or_get_assoc Option.liftOrGet_isAssociative
 -/
 
 #print Option.liftOrGet_isIdempotent /-
-instance liftOrGet_isIdempotent (f : α → α → α) [h : IsIdempotent α f] : IsIdempotent (Option α) (liftOrGet f) :=
+instance liftOrGet_isIdempotent (f : α → α → α) [h : IsIdempotent α f] :
+    IsIdempotent (Option α) (liftOrGet f) :=
   ⟨fun a => by cases a <;> simp [lift_or_get, h.idempotent]⟩
 #align option.lift_or_get_idem Option.liftOrGet_isIdempotent
 -/
@@ -194,7 +201,8 @@ instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (lif
 #print Option.Rel /-
 /-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
-inductive Rel (r : α → β → Prop) : Option α → Option β → Prop/-- If `a ~ b`, then `some a ~ some b` -/
+inductive Rel (r : α → β → Prop) : Option α → Option β → Prop/--
+If `a ~ b`, then `some a ~ some b` -/
 
   | some {a b} : r a b → rel (some a) (some b)/-- `none ~ none` -/
 
@@ -253,32 +261,33 @@ def maybe.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α)
 
 /- warning: option.mmap -> Option.mapM is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u} -> Type.{v}} [_inst_1 : Monad.{u v} m] {α : Type.{w}} {β : Type.{u}}, (α -> (m β)) -> (Option.{w} α) -> (m (Option.{u} β))
+  forall {m : Type.{u} -> Type.{v}} [_inst_1 : Monad.{u, v} m] {α : Type.{w}} {β : Type.{u}}, (α -> (m β)) -> (Option.{w} α) -> (m (Option.{u} β))
 but is expected to have type
-  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_3}} {β : Type.{u_1}} [inst._@.Init.Data.Option.Basic._hyg.331 : Monad.{u_1 u_2} m], (α -> (m β)) -> (Option.{u_3} α) -> (m (Option.{u_1} β))
+  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_3}} {β : Type.{u_1}} [inst._@.Init.Data.Option.Basic._hyg.331 : Monad.{u_1, u_2} m], (α -> (m β)) -> (Option.{u_3} α) -> (m (Option.{u_1} β))
 Case conversion may be inaccurate. Consider using '#align option.mmap Option.mapMₓ'. -/
 /-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
-def mapM.{u, v, w} {m : Type u → Type v} [Monad m] {α : Type w} {β : Type u} (f : α → m β) (o : Option α) :
-    m (Option β) :=
+def mapM.{u, v, w} {m : Type u → Type v} [Monad m] {α : Type w} {β : Type u} (f : α → m β)
+    (o : Option α) : m (Option β) :=
   (o.map f).maybe
 #align option.mmap Option.mapM
 
 /- warning: option.melim -> Option.elimM is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_1}} {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Monad.{u_1 u_2} m], (m β) -> (α -> (m β)) -> (m (Option.{u_1} α)) -> (m β)
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Monad.{u_1, u_2} m], (m β) -> (α -> (m β)) -> (m (Option.{u_1} α)) -> (m β)
 but is expected to have type
-  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_1}} {β : Type.{u_1}} [inst._@.Std.Data.Option.Basic._hyg.1097 : Monad.{u_1 u_2} m], (m (Option.{u_1} α)) -> (m β) -> (α -> (m β)) -> (m β)
+  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_1}} {β : Type.{u_1}} [inst._@.Std.Data.Option.Basic._hyg.1097 : Monad.{u_1, u_2} m], (m (Option.{u_1} α)) -> (m β) -> (α -> (m β)) -> (m β)
 Case conversion may be inaccurate. Consider using '#align option.melim Option.elimMₓ'. -/
 /-- A monadic analogue of `option.elim`. -/
-def elimM {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α → m β) (x : m (Option α)) : m β :=
+def elimM {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α → m β)
+    (x : m (Option α)) : m β :=
   x >>= Option.elim' y z
 #align option.melim Option.elimM
 
 /- warning: option.mget_or_else -> Option.getDM is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Monad.{u_1 u_2} m], (m (Option.{u_1} α)) -> (m α) -> (m α)
+  forall {α : Type.{u_1}} {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Monad.{u_1, u_2} m], (m (Option.{u_1} α)) -> (m α) -> (m α)
 but is expected to have type
-  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_1}} [inst._@.Std.Data.Option.Basic._hyg.1153 : Monad.{u_1 u_2} m], (m (Option.{u_1} α)) -> (m α) -> (m α)
+  forall {m : Type.{u_1} -> Type.{u_2}} {α : Type.{u_1}} [inst._@.Std.Data.Option.Basic._hyg.1154 : Monad.{u_1, u_2} m], (m (Option.{u_1} α)) -> (m α) -> (m α)
 Case conversion may be inaccurate. Consider using '#align option.mget_or_else Option.getDMₓ'. -/
 /-- A monadic analogue of `option.get_or_else`. -/
 def getDM {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=

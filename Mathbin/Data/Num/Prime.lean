@@ -34,7 +34,8 @@ evaluated during kernel reduction, so we will only require about `sqrt n` unfold
 `sqrt n` iterations of the loop. -/
 def minFacAux (n : PosNum) : ℕ → PosNum → PosNum
   | 0, _ => n
-  | fuel + 1, k => if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
+  | fuel + 1, k =>
+    if h : n < k.bit1 * k.bit1 then n else if k.bit1 ∣ n then k.bit1 else min_fac_aux fuel k.succ
 #align pos_num.min_fac_aux PosNum.minFacAux
 
 theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + k.bit1) :
@@ -43,11 +44,11 @@ theorem min_fac_aux_to_nat {fuel : ℕ} {n k : PosNum} (h : Nat.sqrt n < fuel + 
   · rw [if_pos]
     rwa [zero_add, Nat.sqrt_lt] at h
     
-  rw [← mul_to_nat]
-  simp only [cast_lt, dvd_to_nat, ite_cast]
+  rw [← mul_to_nat]; simp only [cast_lt, dvd_to_nat, ite_cast]
   congr 2
   rw [ih] <;> [congr , convert Nat.lt_succ_of_lt h using 1] <;>
-    simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assoc, add_left_comm]
+    simp only [_root_.bit1, _root_.bit0, cast_bit1, cast_succ, Nat.succ_eq_add_one, add_assoc,
+      add_left_comm]
 #align pos_num.min_fac_aux_to_nat PosNum.min_fac_aux_to_nat
 
 /-- Returns the smallest prime factor of `n ≠ 1`. -/
@@ -59,7 +60,7 @@ def minFac : PosNum → PosNum
 
 @[simp]
 theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
-  cases n
+  cases n;
   · rfl
     
   · rw [min_fac, Nat.min_fac_eq, if_neg]
@@ -104,8 +105,7 @@ instance decidablePrime : DecidablePred PosNum.Prime
         refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans _)
         · exact Nat.bit0_le_bit1_iff.2 (to_nat_pos _)
           
-        rw [← min_fac_to_nat, to_nat_inj]
-        rfl)
+        rw [← min_fac_to_nat, to_nat_inj]; rfl)
 #align pos_num.decidable_prime PosNum.decidablePrime
 
 end PosNum

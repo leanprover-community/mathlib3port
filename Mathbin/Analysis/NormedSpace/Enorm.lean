@@ -74,7 +74,7 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 @[simp]
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
   le_antisymm (e.map_smul_le' c x) <| by
-    by_cases hc : c = 0
+    by_cases hc : c = 0;
     · simp [hc]
       
     calc
@@ -84,7 +84,9 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
       
     · exact Ennreal.mul_le_mul le_rfl (e.map_smul_le' _ _)
       
-    · rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top, one_mul] <;> simp [hc]
+    · rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
+          one_mul] <;>
+        simp [hc]
       
 #align enorm.map_smul Enorm.map_smul
 
@@ -160,7 +162,8 @@ noncomputable instance : OrderTop (Enorm 𝕜 V) where
 noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
   { Enorm.partialOrder with le := (· ≤ ·), lt := (· < ·),
     sup := fun e₁ e₂ =>
-      { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
+      { toFun := fun x => max (e₁ x) (e₂ x),
+        eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
         map_add_le' := fun x y =>
           max_le (le_trans (e₁.map_add_le _ _) <| add_le_add (le_max_left _ _) (le_max_left _ _))
             (le_trans (e₂.map_add_le _ _) <| add_le_add (le_max_right _ _) (le_max_right _ _)),
@@ -231,7 +234,9 @@ theorem finite_norm_eq (x : e.finiteSubspace) : ‖x‖ = (e x).toReal :=
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance :
-    NormedSpace 𝕜 e.finiteSubspace where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
+    NormedSpace 𝕜
+      e.finiteSubspace where norm_smul_le c x :=
+    le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
 
 end Enorm
 

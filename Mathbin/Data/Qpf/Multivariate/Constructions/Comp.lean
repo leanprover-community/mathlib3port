@@ -20,8 +20,8 @@ namespace Mvqpf
 
 open Mvfunctor
 
-variable {n m : ℕ} (F : Typevec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F] (G : Fin2 n → Typevec.{u} m → Type u)
-  [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
+variable {n m : ℕ} (F : Typevec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F]
+  (G : Fin2 n → Typevec.{u} m → Type u) [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]
 
 /-- Composition of an `n`-ary functor with `n` `m`-ary
 functors gives us one `m`-ary functor -/
@@ -73,11 +73,13 @@ protected def map : (Comp F G) α → (Comp F G) β :=
 
 instance : Mvfunctor (Comp F G) where map α β := Comp.map
 
-theorem map_mk (x : F fun i => G i α) : f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
+theorem map_mk (x : F fun i => G i α) :
+    f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
   rfl
 #align mvqpf.comp.map_mk Mvqpf.Comp.map_mk
 
-theorem get_map (x : Comp F G α) : Comp.get (f <$$> x) = (fun i (x : G i α) => f <$$> x) <$$> Comp.get x :=
+theorem get_map (x : Comp F G α) :
+    Comp.get (f <$$> x) = (fun i (x : G i α) => f <$$> x) <$$> Comp.get x :=
   rfl
 #align mvqpf.comp.get_map Mvqpf.Comp.get_map
 
@@ -86,7 +88,9 @@ include q q'
 instance : Mvqpf (Comp F G) where
   p := Mvpfunctor.comp (p F) fun i => P <| G i
   abs α := comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
-  repr α := Mvpfunctor.comp.mk ∘ repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
+  repr α :=
+    Mvpfunctor.comp.mk ∘
+      repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
   abs_repr := by
     intros
     simp [(· ∘ ·), Mvfunctor.map_map, (· ⊚ ·), abs_repr]
@@ -94,7 +98,8 @@ instance : Mvqpf (Comp F G) where
     intros
     simp [(· ∘ ·)]
     rw [← abs_map]
-    simp [Mvfunctor.id_map, (· ⊚ ·), map_mk, Mvpfunctor.comp.get_map, abs_map, Mvfunctor.map_map, abs_repr]
+    simp [Mvfunctor.id_map, (· ⊚ ·), map_mk, Mvpfunctor.comp.get_map, abs_map, Mvfunctor.map_map,
+      abs_repr]
 
 end Comp
 

@@ -17,8 +17,9 @@ extended to the localization `S⁻¹A`.
 -/
 
 
-variable {A : Type _} [CommRing A] {Γ : Type _} [LinearOrderedCommGroupWithZero Γ] (v : Valuation A Γ) {S : Submonoid A}
-  (hS : S ≤ v.supp.primeCompl) (B : Type _) [CommRing B] [Algebra A B] [IsLocalization S B]
+variable {A : Type _} [CommRing A] {Γ : Type _} [LinearOrderedCommGroupWithZero Γ]
+  (v : Valuation A Γ) {S : Submonoid A} (hS : S ≤ v.supp.primeCompl) (B : Type _) [CommRing B]
+  [Algebra A B] [IsLocalization S B]
 
 /-- We can extend a valuation `v` on a ring to a localization at a submonoid of
 the complement of `v.supp`. -/
@@ -49,5 +50,6 @@ noncomputable def Valuation.extendToLocalization : Valuation B Γ :=
 theorem Valuation.extend_to_localization_apply_map_apply (a : A) :
     v.extendToLocalization hS B (algebraMap A B a) = v a :=
   Submonoid.LocalizationMap.lift_eq _ _ a
-#align valuation.extend_to_localization_apply_map_apply Valuation.extend_to_localization_apply_map_apply
+#align
+  valuation.extend_to_localization_apply_map_apply Valuation.extend_to_localization_apply_map_apply
 

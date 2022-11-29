@@ -74,7 +74,8 @@ theorem principal_le_nhds_set : 𝓟 s ≤ 𝓝ˢ s := fun s hs =>
 
 @[simp]
 theorem nhds_set_eq_principal_iff : 𝓝ˢ s = 𝓟 s ↔ IsOpen s := by
-  rw [← principal_le_nhds_set.le_iff_eq, le_principal_iff, mem_nhds_set_iff_forall, is_open_iff_mem_nhds]
+  rw [← principal_le_nhds_set.le_iff_eq, le_principal_iff, mem_nhds_set_iff_forall,
+    is_open_iff_mem_nhds]
 #align nhds_set_eq_principal_iff nhds_set_eq_principal_iff
 
 alias nhds_set_eq_principal_iff ↔ _ IsOpen.nhds_set_eq
@@ -118,7 +119,8 @@ theorem nhds_le_nhds_set (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
 #align nhds_le_nhds_set nhds_le_nhds_set
 
 @[simp]
-theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by simp only [nhdsSet, image_union, Sup_union]
+theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
+  simp only [nhdsSet, image_union, Sup_union]
 #align nhds_set_union nhds_set_union
 
 theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
@@ -128,8 +130,8 @@ theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ
 
 /-- Preimage of a set neighborhood of `t` under a continuous map `f` is a set neighborhood of `s`
 provided that `f` maps `s` to `t`.  -/
-theorem Continuous.tendsto_nhds_set {f : α → β} {t : Set β} (hf : Continuous f) (hst : MapsTo f s t) :
-    Tendsto f (𝓝ˢ s) (𝓝ˢ t) :=
+theorem Continuous.tendsto_nhds_set {f : α → β} {t : Set β} (hf : Continuous f)
+    (hst : MapsTo f s t) : Tendsto f (𝓝ˢ s) (𝓝ˢ t) :=
   ((has_basis_nhds_set s).tendsto_iff (has_basis_nhds_set t)).mpr fun U hU =>
     ⟨f ⁻¹' U, ⟨hU.1.Preimage hf, hst.mono Subset.rfl hU.2⟩, fun x => id⟩
 #align continuous.tendsto_nhds_set Continuous.tendsto_nhds_set

@@ -42,7 +42,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [IsDomain A] [Field K]
 
 open nonZeroDivisors Polynomial
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal[ideal] A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal[ideal] A)) -/
 /-- A Dedekind domain is an integral domain that is Noetherian, and the
 localization at every nonzero prime is a discrete valuation ring.
 
@@ -51,6 +51,7 @@ TODO: prove the equivalence.
 -/
 structure IsDedekindDomainDvr : Prop where
   IsNoetherianRing : IsNoetherianRing A
-  is_dvr_at_nonzero_prime : ∀ (P) (_ : P ≠ (⊥ : Ideal A)), P.IsPrime → DiscreteValuationRing (Localization.AtPrime P)
+  is_dvr_at_nonzero_prime :
+    ∀ (P) (_ : P ≠ (⊥ : Ideal A)), P.IsPrime → DiscreteValuationRing (Localization.AtPrime P)
 #align is_dedekind_domain_dvr IsDedekindDomainDvr
 

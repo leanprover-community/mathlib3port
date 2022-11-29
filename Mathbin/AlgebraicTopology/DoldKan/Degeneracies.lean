@@ -23,7 +23,8 @@ statement vanishing statement `σ_comp_P_eq_zero` for the `P q`.
 -/
 
 
-open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive Opposite
+open
+  CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Preadditive Opposite
 
 open Simplicial DoldKan
 
@@ -35,18 +36,22 @@ variable {C : Type _} [Category C] [Preadditive C]
 
 theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ} {φ : Y ⟶ X _[n + 1]}
     (v : HigherFacesVanish q φ) (hnbq : n + 1 = b + q) :
-    HigherFacesVanish q (φ ≫ X.σ ⟨b, by simpa only [hnbq, Nat.lt_succ_iff, le_add_iff_nonneg_right] using zero_le q⟩) :=
+    HigherFacesVanish q
+      (φ ≫
+        X.σ ⟨b, by simpa only [hnbq, Nat.lt_succ_iff, le_add_iff_nonneg_right] using zero_le q⟩) :=
   fun j hj => by
-  rw [assoc, simplicial_object.δ_comp_σ_of_gt', Fin.pred_succ, v.comp_δ_eq_zero_assoc _ _ hj, zero_comp]
+  rw [assoc, simplicial_object.δ_comp_σ_of_gt', Fin.pred_succ, v.comp_δ_eq_zero_assoc _ _ hj,
+    zero_comp]
   · intro hj'
-    simpa only [hj', hnbq, Fin.coe_zero, zero_add, add_comm b, add_assoc, false_and_iff, add_le_iff_nonpos_right,
-      le_zero_iff, add_eq_zero_iff, Nat.one_ne_zero] using hj
+    simpa only [hj', hnbq, Fin.coe_zero, zero_add, add_comm b, add_assoc, false_and_iff,
+      add_le_iff_nonpos_right, le_zero_iff, add_eq_zero_iff, Nat.one_ne_zero] using hj
     
   · simp only [Fin.lt_iff_coe_lt_coe, Nat.lt_iff_add_one_le, Fin.succ_mk, Fin.coe_mk, Fin.coe_succ,
       add_le_add_iff_right]
     linarith
     
-#align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
+#align
+  algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
 
 theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
     X.σ i ≫ (p q).f (n + 1) = 0 := by
@@ -70,23 +75,27 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
         rw [show q = 0 by linarith]
         unfold P
         simp only [id_comp, HomologicalComplex.add_f_apply, comp_add, HomologicalComplex.id_f, Hσ,
-          Homotopy.null_homotopic_map'_f (c_mk 2 1 rfl) (c_mk 1 0 rfl), alternating_face_map_complex.obj_d_eq]
-        erw [hσ'_eq' (zero_add 0).symm, hσ'_eq' (add_zero 1).symm, comp_id, Fin.sum_univ_two, Fin.sum_univ_succ,
-          Fin.sum_univ_two]
-        simp only [pow_zero, pow_one, pow_two, Fin.coe_zero, Fin.coe_one, Fin.coe_two, one_zsmul, neg_zsmul,
-          Fin.mk_zero, Fin.mk_one, Fin.coe_succ, pow_add, one_mul, neg_mul, neg_neg, Fin.succ_zero_eq_one,
-          Fin.succ_one_eq_two, comp_neg, neg_comp, add_comp, comp_add]
-        erw [simplicial_object.δ_comp_σ_self, simplicial_object.δ_comp_σ_self_assoc, simplicial_object.δ_comp_σ_succ,
-          comp_id, simplicial_object.δ_comp_σ_of_le X (show (0 : Fin 2) ≤ Fin.castSucc 0 by rw [Fin.cast_succ_zero]),
+          Homotopy.null_homotopic_map'_f (c_mk 2 1 rfl) (c_mk 1 0 rfl),
+          alternating_face_map_complex.obj_d_eq]
+        erw [hσ'_eq' (zero_add 0).symm, hσ'_eq' (add_zero 1).symm, comp_id, Fin.sum_univ_two,
+          Fin.sum_univ_succ, Fin.sum_univ_two]
+        simp only [pow_zero, pow_one, pow_two, Fin.coe_zero, Fin.coe_one, Fin.coe_two, one_zsmul,
+          neg_zsmul, Fin.mk_zero, Fin.mk_one, Fin.coe_succ, pow_add, one_mul, neg_mul, neg_neg,
+          Fin.succ_zero_eq_one, Fin.succ_one_eq_two, comp_neg, neg_comp, add_comp, comp_add]
+        erw [simplicial_object.δ_comp_σ_self, simplicial_object.δ_comp_σ_self_assoc,
+          simplicial_object.δ_comp_σ_succ, comp_id,
+          simplicial_object.δ_comp_σ_of_le X
+            (show (0 : Fin 2) ≤ Fin.castSucc 0 by rw [Fin.cast_succ_zero]),
           simplicial_object.δ_comp_σ_self_assoc, simplicial_object.δ_comp_σ_succ_assoc]
         abel
         
       · rw [← id_comp (X.σ i), ← (P_add_Q_f q n.succ : _ = 𝟙 (X.obj _)), add_comp, add_comp]
-        have v : higher_faces_vanish q ((P q).f n.succ ≫ X.σ i) := (higher_faces_vanish.of_P q n).comp_σ hi'
+        have v : higher_faces_vanish q ((P q).f n.succ ≫ X.σ i) :=
+          (higher_faces_vanish.of_P q n).comp_σ hi'
         unfold P
-        erw [← assoc, v.comp_P_eq_self, HomologicalComplex.add_f_apply, preadditive.comp_add, comp_id, v.comp_Hσ_eq hi',
-          assoc, simplicial_object.δ_comp_σ_succ'_assoc, Fin.eta, decomposition_Q n q, sum_comp, sum_comp,
-          Finset.sum_eq_zero, add_zero, add_neg_eq_zero]
+        erw [← assoc, v.comp_P_eq_self, HomologicalComplex.add_f_apply, preadditive.comp_add,
+          comp_id, v.comp_Hσ_eq hi', assoc, simplicial_object.δ_comp_σ_succ'_assoc, Fin.eta,
+          decomposition_Q n q, sum_comp, sum_comp, Finset.sum_eq_zero, add_zero, add_neg_eq_zero]
         swap
         · ext
           simp only [Fin.coe_mk, Fin.coe_succ]
@@ -104,8 +113,9 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
               (by
                 simp only [← hk, Fin.rev_eq j hk.symm, Nat.succ_eq_add_one, Fin.succ_mk, Fin.coe_mk]
                 linarith)
-          rw [HomologicalComplex.comp_f, assoc, assoc, assoc, hi'', simplicial_object.σ_comp_σ_assoc, reassoc_of Eq,
-            zero_comp, comp_zero, comp_zero, comp_zero]
+          rw [HomologicalComplex.comp_f, assoc, assoc, assoc, hi'',
+            simplicial_object.σ_comp_σ_assoc, reassoc_of Eq, zero_comp, comp_zero, comp_zero,
+            comp_zero]
           simp only [Fin.rev_eq j hk.symm, Fin.le_iff_coe_le_coe, Fin.coe_mk]
           linarith
           
@@ -115,14 +125,15 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
 #align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zero
 
 @[simp, reassoc]
-theorem σ_comp_P_infty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) : X.σ i ≫ pInfty.f (n + 1) = 0 := by
+theorem σ_comp_P_infty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
+    X.σ i ≫ pInfty.f (n + 1) = 0 := by
   rw [P_infty_f, σ_comp_P_eq_zero X i]
   simp only [le_add_iff_nonneg_left, zero_le]
 #align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_P_infty
 
 @[reassoc]
-theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory} (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) :
-    X.map θ.op ≫ pInfty.f n = 0 := by
+theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
+    (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ pInfty.f n = 0 := by
   rw [SimplexCategory.mono_iff_injective] at hθ
   cases n
   · exfalso
@@ -132,9 +143,11 @@ theorem degeneracy_comp_P_infty (X : SimplicialObject C) (n : ℕ) {Δ' : Simple
     fin_cases y
     
   · obtain ⟨i, α, h⟩ := SimplexCategory.eq_σ_comp_of_not_injective θ hθ
-    rw [h, op_comp, X.map_comp, assoc, show X.map (SimplexCategory.σ i).op = X.σ i by rfl, σ_comp_P_infty, comp_zero]
+    rw [h, op_comp, X.map_comp, assoc, show X.map (SimplexCategory.σ i).op = X.σ i by rfl,
+      σ_comp_P_infty, comp_zero]
     
-#align algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_P_infty
+#align
+  algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_P_infty
 
 end DoldKan
 

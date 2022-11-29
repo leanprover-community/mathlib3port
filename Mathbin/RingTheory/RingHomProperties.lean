@@ -45,27 +45,29 @@ def RespectsIso : Prop :=
 
 variable {P}
 
-theorem RespectsIso.cancel_left_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) [IsIso f] :
-    P (f ≫ g) ↔ P g :=
+theorem RespectsIso.cancel_left_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
+    (g : S ⟶ T) [IsIso f] : P (f ≫ g) ↔ P g :=
   ⟨fun H => by
     convert hP.2 (f ≫ g) (as_iso f).symm.commRingIsoToRingEquiv H
     exact (is_iso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_left_is_iso RingHom.RespectsIso.cancel_left_is_iso
 
-theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) [IsIso g] :
-    P (f ≫ g) ↔ P f :=
+theorem RespectsIso.cancel_right_is_iso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
+    (g : S ⟶ T) [IsIso g] : P (f ≫ g) ↔ P f :=
   ⟨fun H => by
     convert hP.1 (f ≫ g) (as_iso g).symm.commRingIsoToRingEquiv H
     change f = f ≫ g ≫ inv g
     simp, hP.1 f (asIso g).commRingIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_right_is_iso RingHom.RespectsIso.cancel_right_is_iso
 
-theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _} (R' S' : Type _) [CommRing R]
-    [CommRing S] [CommRing R'] [CommRing S'] [Algebra R R'] [Algebra S S'] (f : R →+* S) (r : R)
-    [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] :
+theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _}
+    (R' S' : Type _) [CommRing R] [CommRing S] [CommRing R'] [CommRing S'] [Algebra R R']
+    [Algebra S S'] (f : R →+* S) (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] :
     P (Localization.awayMap f r) ↔ P (IsLocalization.Away.map R' S' f r) := by
-  let e₁ : R' ≃+* Localization.Away r := (IsLocalization.algEquiv (Submonoid.powers r) _ _).toRingEquiv
-  let e₂ : Localization.Away (f r) ≃+* S' := (IsLocalization.algEquiv (Submonoid.powers (f r)) _ _).toRingEquiv
+  let e₁ : R' ≃+* Localization.Away r :=
+    (IsLocalization.algEquiv (Submonoid.powers r) _ _).toRingEquiv
+  let e₂ : Localization.Away (f r) ≃+* S' :=
+    (IsLocalization.algEquiv (Submonoid.powers (f r)) _ _).toRingEquiv
   refine' (hP.cancel_left_is_iso e₁.to_CommRing_iso.hom (CommRingCat.ofHom _)).symm.trans _
   refine' (hP.cancel_right_is_iso (CommRingCat.ofHom _) e₂.to_CommRing_iso.hom).symm.trans _
   rw [← eq_iff_iff]
@@ -87,13 +89,15 @@ section StableUnderComposition
 /-- A property is `stable_under_composition` if the composition of two such morphisms
 still falls in the class. -/
 def StableUnderComposition : Prop :=
-  ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T], ∀ (f : R →+* S) (g : S →+* T) (hf : P f) (hg : P g), P (g.comp f)
+  ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T],
+    ∀ (f : R →+* S) (g : S →+* T) (hf : P f) (hg : P g), P (g.comp f)
 #align ring_hom.stable_under_composition RingHom.StableUnderComposition
 
 variable {P}
 
 theorem StableUnderComposition.respects_iso (hP : RingHom.StableUnderComposition @P)
-    (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) : RingHom.RespectsIso @P := by
+    (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) :
+    RingHom.RespectsIso @P := by
   constructor
   · introv H
     skip
@@ -116,14 +120,17 @@ section StableUnderBaseChange
 def StableUnderBaseChange : Prop :=
   ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T],
     ∀ [Algebra R S] [Algebra R T],
-      P (algebraMap R T) → P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)
+      P (algebraMap R T) →
+        P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)
 #align ring_hom.stable_under_base_change RingHom.StableUnderBaseChange
 
-theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P) (hP' : RingHom.RespectsIso @P)
-    {R S T : CommRingCat} (f : R ⟶ S) (g : R ⟶ T) (H : P g) : P (pushout.inl : S ⟶ pushout f g) := by
+theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P)
+    (hP' : RingHom.RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S) (g : R ⟶ T) (H : P g) :
+    P (pushout.inl : S ⟶ pushout f g) := by
   rw [←
     show _ = pushout.inl from
-      colimit.iso_colimit_cocone_ι_inv ⟨_, CommRingCat.pushoutCoconeIsColimit f g⟩ walking_span.left,
+      colimit.iso_colimit_cocone_ι_inv ⟨_, CommRingCat.pushoutCoconeIsColimit f g⟩
+        walking_span.left,
     hP'.cancel_right_is_iso]
   apply hP
   exact H

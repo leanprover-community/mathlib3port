@@ -56,7 +56,8 @@ theorem card_eq_of_bijective (f : α → β) (hf : Function.Bijective f) : Nat.c
   card_congr (Equiv.ofBijective f hf)
 #align nat.card_eq_of_bijective Nat.card_eq_of_bijective
 
-theorem card_eq_of_equiv_fin {α : Type _} {n : ℕ} (f : α ≃ Fin n) : Nat.card α = n := by simpa using card_congr f
+theorem card_eq_of_equiv_fin {α : Type _} {n : ℕ} (f : α ≃ Fin n) : Nat.card α = n := by
+  simpa using card_congr f
 #align nat.card_eq_of_equiv_fin Nat.card_eq_of_equiv_fin
 
 /-- If the cardinality is positive, that means it is a finite type, so there is

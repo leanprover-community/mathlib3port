@@ -26,7 +26,8 @@ identifier `W` in the root namespace.
 -/
 
 
-/-- Given `β : α → Type*`, `W_type β` is the type of finitely branching trees where nodes are labeled by
+/--
+Given `β : α → Type*`, `W_type β` is the type of finitely branching trees where nodes are labeled by
 elements of `α` and the children of a node labeled `a` are indexed by elements of `β a`.
 -/
 inductive WType {α : Type _} (β : α → Type _)
@@ -78,17 +79,17 @@ variable {β}
 
 /- warning: W_type.elim -> WType.elim is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (γ : Type.{u_3}), ((Sigma.{u_1 (max u_2 u_3)} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u_1 u_2} α β) -> γ
+  forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (γ : Type.{u_3}), ((Sigma.{u_1, max u_2 u_3} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u_1, u_2} α β) -> γ
 but is expected to have type
-  forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (γ : Type.{_aux_param_0}), ((Sigma.{u_1 (max u_2 _aux_param_0)} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u_1 u_2} α β) -> γ
+  forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (γ : Type.{_aux_param_0}), ((Sigma.{u_1, max u_2 _aux_param_0} α (fun (a : α) => (β a) -> γ)) -> γ) -> (WType.{u_1, u_2} α β) -> γ
 Case conversion may be inaccurate. Consider using '#align W_type.elim WType.elimₓ'. -/
 /-- The canonical map from `W_type β` into any type `γ` given a map `(Σ a : α, β a → γ) → γ`. -/
 def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ
   | ⟨a, f⟩ => fγ ⟨a, fun b => elim (f b)⟩
 #align W_type.elim WType.elim
 
-theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ_injective : Function.Injective fγ) :
-    Function.Injective (elim γ fγ)
+theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ)
+    (fγ_injective : Function.Injective fγ) : Function.Injective (elim γ fγ)
   | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h => by
     obtain ⟨rfl, h⟩ := Sigma.mk.inj (fγ_injective h)
     congr with x
@@ -98,13 +99,16 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ
 instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
 
-theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] : Infinite (WType β) :=
+theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] :
+    Infinite (WType β) :=
   ⟨by
     intro hf
     have hba : b ≠ a := fun h => ha.elim (IsEmpty.elim' (show IsEmpty (β a) from h ▸ he))
     refine'
       not_injective_infinite_finite
-        (fun n : ℕ => show WType β from Nat.recOn n ⟨b, IsEmpty.elim' he⟩ fun n ih => ⟨a, fun _ => ih⟩) _
+        (fun n : ℕ =>
+          show WType β from Nat.recOn n ⟨b, IsEmpty.elim' he⟩ fun n ih => ⟨a, fun _ => ih⟩)
+        _
     intro n m h
     induction' n with n ih generalizing m h
     · cases' m with m <;> simp_all
@@ -143,7 +147,8 @@ induction on `n` that these are all encodable. These auxiliary constructions are
 and of themselves, so we mark them as `private`.
 -/
 @[reducible]
-private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
+private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)]
+    [∀ a : α, Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
 #align W_type.W_type' W_type.W_type'
 

@@ -60,8 +60,8 @@ attribute [monad_norm] seq_eq_bind_map
 universe u v
 
 @[monad_norm]
-theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monad m] [LawfulMonad m] {α β : Type u} (f : α → β) (x : m α) :
-    f <$> x = x >>= pure ∘ f := by rw [bind_pure_comp_eq_map]
+theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monad m] [LawfulMonad m] {α β : Type u}
+    (f : α → β) (x : m α) : f <$> x = x >>= pure ∘ f := by rw [bind_pure_comp_eq_map]
 #align map_eq_bind_pure_comp map_eq_bind_pure_comp
 
 /-- run a `state_t` program and discard the final state -/
@@ -73,8 +73,9 @@ universe u₀ u₁ v₀ v₁
 
 /-- reduce the equivalence between two state monads to the equivalence between
 their respective function spaces -/
-def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀} {α₂ σ₂ : Type u₁}
-    (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) : StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂ where
+def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀}
+    {α₂ σ₂ : Type u₁} (F : (σ₁ → m₁ (α₁ × σ₁)) ≃ (σ₂ → m₂ (α₂ × σ₂))) :
+    StateT σ₁ m₁ α₁ ≃ StateT σ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
@@ -83,8 +84,8 @@ def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
 
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
-def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀} {α₂ ρ₂ : Type u₁}
-    (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂ where
+def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀}
+    {α₂ ρ₂ : Type u₁} (F : (ρ₁ → m₁ α₁) ≃ (ρ₂ → m₂ α₂)) : ReaderT ρ₁ m₁ α₁ ≃ ReaderT ρ₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _

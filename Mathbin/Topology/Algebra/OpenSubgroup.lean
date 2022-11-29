@@ -170,20 +170,23 @@ variable {H : Type _} [Group H] [TopologicalSpace H]
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
-  { (U : Subgroup G).Prod (V : Subgroup H) with carrier := U ×ˢ V, is_open' := U.IsOpen.Prod V.IsOpen }
+  { (U : Subgroup G).Prod (V : Subgroup H) with carrier := U ×ˢ V,
+    is_open' := U.IsOpen.Prod V.IsOpen }
 #align open_subgroup.prod OpenSubgroup.prod
 
 end
 
 @[to_additive]
 instance : PartialOrder (OpenSubgroup G) :=
-  { PartialOrder.lift (coe : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
+  { PartialOrder.lift (coe : OpenSubgroup G → Set G) coe_injective with
+    le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
 
 @[to_additive]
 instance : SemilatticeInf (OpenSubgroup G) :=
   { OpenSubgroup.partialOrder with
     inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.IsOpen V.IsOpen },
-    inf_le_left := fun U V => Set.inter_subset_left _ _, inf_le_right := fun U V => Set.inter_subset_right _ _,
+    inf_le_left := fun U V => Set.inter_subset_left _ _,
+    inf_le_right := fun U V => Set.inter_subset_right _ _,
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
 
 @[to_additive]
@@ -217,18 +220,21 @@ def comap (f : G →* N) (hf : Continuous f) (H : OpenSubgroup N) : OpenSubgroup
 #align open_subgroup.comap OpenSubgroup.comap
 
 @[simp, to_additive]
-theorem coe_comap (H : OpenSubgroup N) (f : G →* N) (hf : Continuous f) : (H.comap f hf : Set G) = f ⁻¹' H :=
+theorem coe_comap (H : OpenSubgroup N) (f : G →* N) (hf : Continuous f) :
+    (H.comap f hf : Set G) = f ⁻¹' H :=
   rfl
 #align open_subgroup.coe_comap OpenSubgroup.coe_comap
 
 @[simp, to_additive]
-theorem mem_comap {H : OpenSubgroup N} {f : G →* N} {hf : Continuous f} {x : G} : x ∈ H.comap f hf ↔ f x ∈ H :=
+theorem mem_comap {H : OpenSubgroup N} {f : G →* N} {hf : Continuous f} {x : G} :
+    x ∈ H.comap f hf ↔ f x ∈ H :=
   Iff.rfl
 #align open_subgroup.mem_comap OpenSubgroup.mem_comap
 
 @[to_additive]
-theorem comap_comap {P : Type _} [Group P] [TopologicalSpace P] (K : OpenSubgroup P) (f₂ : N →* P) (hf₂ : Continuous f₂)
-    (f₁ : G →* N) (hf₁ : Continuous f₁) : (K.comap f₂ hf₂).comap f₁ hf₁ = K.comap (f₂.comp f₁) (hf₂.comp hf₁) :=
+theorem comap_comap {P : Type _} [Group P] [TopologicalSpace P] (K : OpenSubgroup P) (f₂ : N →* P)
+    (hf₂ : Continuous f₂) (f₁ : G →* N) (hf₁ : Continuous f₁) :
+    (K.comap f₂ hf₂).comap f₁ hf₁ = K.comap (f₂.comp f₁) (hf₂.comp hf₁) :=
   rfl
 #align open_subgroup.comap_comap OpenSubgroup.comap_comap
 
@@ -257,22 +263,25 @@ theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (
 #align subgroup.is_open_of_open_subgroup Subgroup.is_open_of_open_subgroup
 
 /-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
-@[to_additive "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
-theorem is_open_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G] {H : Subgroup G}
-    (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) := by
+@[to_additive
+      "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
+theorem is_open_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [TopologicalGroup G]
+    {H : Subgroup G} (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) := by
   have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
     nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
   rw [is_open_iff_nhds]
   intro g hg
   rw [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by simp]
   convert Filter.map_mono h
-  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left, Filter.principal_eq_iff_eq]
+  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left,
+    Filter.principal_eq_iff_eq]
   ext
   simp [H.mul_mem_cancel_left (H.inv_mem hg)]
 #align subgroup.is_open_of_one_mem_interior Subgroup.is_open_of_one_mem_interior
 
 @[to_additive]
-theorem is_open_mono {H₁ H₂ : Subgroup G} (h : H₁ ≤ H₂) (h₁ : IsOpen (H₁ : Set G)) : IsOpen (H₂ : Set G) :=
+theorem is_open_mono {H₁ H₂ : Subgroup G} (h : H₁ ≤ H₂) (h₁ : IsOpen (H₁ : Set G)) :
+    IsOpen (H₂ : Set G) :=
   @is_open_of_open_subgroup _ _ _ _ H₂ { H₁ with is_open' := h₁ } h
 #align subgroup.is_open_mono Subgroup.is_open_mono
 
@@ -288,8 +297,10 @@ instance : SemilatticeSup (OpenSubgroup G) :=
     sup := fun U V =>
       { (U : Subgroup G) ⊔ V with
         is_open' :=
-          show IsOpen (((U : Subgroup G) ⊔ V : Subgroup G) : Set G) from Subgroup.is_open_mono le_sup_left U.IsOpen },
-    le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left, le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right,
+          show IsOpen (((U : Subgroup G) ⊔ V : Subgroup G) : Set G) from
+            Subgroup.is_open_mono le_sup_left U.IsOpen },
+    le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left,
+    le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right,
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }
 
 @[to_additive]
@@ -306,7 +317,8 @@ variable {R : Type _} {M : Type _} [CommRing R]
 
 variable [AddCommGroup M] [TopologicalSpace M] [TopologicalAddGroup M] [Module R M]
 
-theorem is_open_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) : IsOpen (P : Set M) :=
+theorem is_open_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) :
+    IsOpen (P : Set M) :=
   @AddSubgroup.is_open_mono M _ _ _ U.toAddSubgroup P.toAddSubgroup h hU
 #align submodule.is_open_mono Submodule.is_open_mono
 
@@ -318,7 +330,8 @@ variable {R : Type _} [CommRing R]
 
 variable [TopologicalSpace R] [TopologicalRing R]
 
-theorem is_open_of_open_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) : IsOpen (I : Set R) :=
+theorem is_open_of_open_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) :
+    IsOpen (I : Set R) :=
   Submodule.is_open_mono h hU
 #align ideal.is_open_of_open_subideal Ideal.is_open_of_open_subideal
 

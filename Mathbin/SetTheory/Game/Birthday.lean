@@ -36,24 +36,29 @@ namespace Pgame
 birthdays of its left and right games. It may be thought as the "step" in which a certain game is
 constructed. -/
 noncomputable def birthday : Pgame.{u} → Ordinal.{u}
-  | ⟨xl, xr, xL, xR⟩ => max (lsub.{u, u} fun i => birthday (xL i)) (lsub.{u, u} fun i => birthday (xR i))
+  | ⟨xl, xr, xL, xR⟩ =>
+    max (lsub.{u, u} fun i => birthday (xL i)) (lsub.{u, u} fun i => birthday (xR i))
 #align pgame.birthday Pgame.birthday
 
 theorem birthday_def (x : Pgame) :
-    birthday x = max (lsub.{u, u} fun i => birthday (x.moveLeft i)) (lsub.{u, u} fun i => birthday (x.moveRight i)) :=
+    birthday x =
+      max (lsub.{u, u} fun i => birthday (x.moveLeft i))
+        (lsub.{u, u} fun i => birthday (x.moveRight i)) :=
   by
   cases x
   rw [birthday]
   rfl
 #align pgame.birthday_def Pgame.birthday_def
 
-theorem birthday_move_left_lt {x : Pgame} (i : x.LeftMoves) : (x.moveLeft i).birthday < x.birthday := by
+theorem birthday_move_left_lt {x : Pgame} (i : x.LeftMoves) :
+    (x.moveLeft i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_left (lt_lsub _ i)
 #align pgame.birthday_move_left_lt Pgame.birthday_move_left_lt
 
-theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) : (x.moveRight i).birthday < x.birthday := by
+theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) :
+    (x.moveRight i).birthday < x.birthday := by
   cases x
   rw [birthday]
   exact lt_max_of_lt_right (lt_lsub _ i)
@@ -61,7 +66,8 @@ theorem birthday_move_right_lt {x : Pgame} (i : x.RightMoves) : (x.moveRight i).
 
 theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     o < x.birthday ↔
-      (∃ i : x.LeftMoves, o ≤ (x.moveLeft i).birthday) ∨ ∃ i : x.RightMoves, o ≤ (x.moveRight i).birthday :=
+      (∃ i : x.LeftMoves, o ≤ (x.moveLeft i).birthday) ∨
+        ∃ i : x.RightMoves, o ≤ (x.moveRight i).birthday :=
   by
   constructor
   · rw [birthday_def]
@@ -88,8 +94,7 @@ theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthda
     congr 1
     all_goals
     apply lsub_eq_of_range_eq.{u, u, u}
-    ext i
-    constructor
+    ext i; constructor
     all_goals rintro ⟨j, rfl⟩
     · exact ⟨_, (r.move_left j).birthday_congr.symm⟩
       
@@ -103,7 +108,8 @@ theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthda
 #align pgame.relabelling.birthday_congr Pgame.Relabelling.birthday_congr
 
 @[simp]
-theorem birthday_eq_zero {x : Pgame} : birthday x = 0 ↔ IsEmpty x.LeftMoves ∧ IsEmpty x.RightMoves := by
+theorem birthday_eq_zero {x : Pgame} :
+    birthday x = 0 ↔ IsEmpty x.LeftMoves ∧ IsEmpty x.RightMoves := by
   rw [birthday_def, max_eq_zero, lsub_eq_zero_iff, lsub_eq_zero_iff]
 #align pgame.birthday_eq_zero Pgame.birthday_eq_zero
 
@@ -143,20 +149,23 @@ theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
 theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
   | ⟨xl, _, xL, _⟩ =>
     le_def.2
-      ⟨fun i => Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by simp [le_birthday (xL i)]⟩, isEmptyElim⟩
+      ⟨fun i =>
+        Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_move_left_lt i⟩, by simp [le_birthday (xL i)]⟩,
+        isEmptyElim⟩
 #align pgame.le_birthday Pgame.le_birthday
 
 variable (a b x : Pgame.{u})
 
-theorem neg_birthday_le : -x.birthday.toPgame ≤ x := by simpa only [neg_birthday, ← neg_le_iff] using le_birthday (-x)
+theorem neg_birthday_le : -x.birthday.toPgame ≤ x := by
+  simpa only [neg_birthday, ← neg_le_iff] using le_birthday (-x)
 #align pgame.neg_birthday_le Pgame.neg_birthday_le
 
 @[simp]
 theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.birthday
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
     rw [birthday_def, nadd_def]
-    simp only [birthday_add, lsub_sum, mk_add_move_left_inl, move_left_mk, mk_add_move_left_inr, mk_add_move_right_inl,
-      move_right_mk, mk_add_move_right_inr]
+    simp only [birthday_add, lsub_sum, mk_add_move_left_inl, move_left_mk, mk_add_move_left_inr,
+      mk_add_move_right_inl, move_right_mk, mk_add_move_right_inr]
     rw [max_max_max_comm]
     congr <;> apply le_antisymm
     any_goals

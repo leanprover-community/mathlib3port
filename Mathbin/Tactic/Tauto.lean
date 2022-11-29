@@ -29,8 +29,7 @@ open Tactic.Interactive (casesm constructor_matching)
                 =>
                 all_goals'
                   <|
-                  iterate_at_most' 3
-                    <|
+                  ( iterate_at_most' 3 )
                     do
                       let h ← get_local h
                         let e ← infer_type h
@@ -49,14 +48,22 @@ open Tactic.Interactive (casesm constructor_matching)
                             | q( ¬ ( _ ∨ _ ) ) => replace h ` `( not_or . mp $ ( h ) )
                             | q( ¬ _ ≠ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
                             | q( ¬ ¬ _ ) => replace h ` `( Decidable.of_not_not $ ( h ) )
-                            | q( ¬ ( _ → ( _ : Prop ) ) ) => replace h ` `( Decidable.not_imp . mp $ ( h ) )
+                            |
+                              q( ¬ ( _ → ( _ : Prop ) ) )
+                              =>
+                              replace h ` `( Decidable.not_imp . mp $ ( h ) )
                             | q( ¬ ( _ ↔ _ ) ) => replace h ` `( Decidable.not_iff . mp $ ( h ) )
                             |
                               q( _ ↔ _ )
                               =>
                               replace h ` `( Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) )
                                 <|>
-                                replace h ` `( Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) . symm )
+                                replace
+                                    h
+                                      `
+                                        `(
+                                          Decidable.iff_iff_and_or_not_and_not . mp $ ( h ) . symm
+                                          )
                                   <|>
                                   ( ) <$ tactic.cases h
                             | q( _ → _ ) => replace h ` `( Decidable.not_or_of_imp $ ( h ) )
@@ -108,7 +115,12 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
                   let
                     ( _ , p )
                       ←
-                      solve_aux iff_t ( andthen ( andthen ( applyc `iff.to_eq ) ( ( ) <$ split ) ) ( applyc symm ) )
+                      solve_aux
+                        iff_t
+                          (
+                            andthen
+                              ( andthen ( applyc `iff.to_eq ) ( ( ) <$ split ) ) ( applyc symm )
+                            )
                   let e' ← instantiate_mvars e'
                   let m ← read_ref r
                   write_ref r <| ( m e ( e' , p ) ) . insert e' none
@@ -221,7 +233,9 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
                                     to_expr
                                       `
                                         `(
-                                          Eq.trans ( congr ( congr_arg Iff $ ( p₀ ) ) $ ( p₁ ) ) ( Iff.to_eq Iff.comm )
+                                          Eq.trans
+                                            ( congr ( congr_arg Iff $ ( p₀ ) ) $ ( p₁ ) )
+                                              ( Iff.to_eq Iff.comm )
                                           )
                                 add_edge r a' b' p'
                                 return p'
@@ -242,7 +256,11 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
                         |
                           ( _ , _ )
                           =>
-                          do guard <| a' ∧ a' = b' let ( a'' , pa' ) ← add_symm_proof r a' guard <| a'' == b' pure pa'
+                          do
+                            guard <| a' ∧ a' = b'
+                              let ( a'' , pa' ) ← add_symm_proof r a'
+                              guard <| a'' == b'
+                              pure pa'
                 let p' ← mk_eq_trans pa p
                 add_edge r a' b' p'
                 mk_eq_symm pb >>= mk_eq_trans p'
@@ -315,7 +333,8 @@ unsafe structure tauto_cfg where
 unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
   focus1 <|
     let basic_tauto_tacs : List (tactic Unit) :=
-      [reflexivity, solve_by_elim, constructor_matching none [``(_ ∧ _), ``(_ ↔ _), ``(Exists _), ``(True)]]
+      [reflexivity, solve_by_elim,
+        constructor_matching none [``(_ ∧ _), ``(_ ↔ _), ``(Exists _), ``(True)]]
     let tauto_core (r : tauto_state) : tactic Unit := do
       andthen (andthen (try (contradiction_with r)) (try (assumption_with r)))
           (repeat do
@@ -338,7 +357,8 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
             guard (gs ≠ gs'))
     do
     when cfg (classical tt)
-    andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg
+    andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs)))
+        cfg
     done
 #align tactic.tautology tactic.tautology
 
@@ -397,7 +417,8 @@ that it is unable to solve before failing.
 -/
 add_tactic_doc
   { Name := "tautology", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.tautology, `tactic.interactive.tauto], tags := ["logic", "decision procedure"] }
+    declNames := [`tactic.interactive.tautology, `tactic.interactive.tauto],
+    tags := ["logic", "decision procedure"] }
 
 end Interactive
 

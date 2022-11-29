@@ -97,7 +97,8 @@ def toTensorAux : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (G →₀ k) ⊗[k] (
 /-- The `k`-linear map from `k[G] ⊗ₖ k[Gⁿ]` to `k[Gⁿ⁺¹]` sending `g ⊗ (g₁, ..., gₙ)` to
 `(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
 def ofTensorAux : (G →₀ k) ⊗[k] ((Fin n → G) →₀ k) →ₗ[k] (Fin (n + 1) → G) →₀ k :=
-  TensorProduct.lift ((Finsupp.lift _ _ _) fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
+  TensorProduct.lift
+    ((Finsupp.lift _ _ _) fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
 #align group_cohomology.resolution.of_tensor_aux GroupCohomology.Resolution.ofTensorAux
 
 variable {k G n}
@@ -107,18 +108,22 @@ theorem to_tensor_aux_single (f : Gⁿ⁺¹) (m : k) :
   simp only [to_tensor_aux, lift_apply, sum_single_index, TensorProduct.smul_tmul']
   · simp
     
-#align group_cohomology.resolution.to_tensor_aux_single GroupCohomology.Resolution.to_tensor_aux_single
+#align
+  group_cohomology.resolution.to_tensor_aux_single GroupCohomology.Resolution.to_tensor_aux_single
 
 theorem to_tensor_aux_of_mul_action (g : G) (x : Gⁿ⁺¹) :
     toTensorAux k G n (ofMulAction k G Gⁿ⁺¹ g (single x 1)) =
       TensorProduct.map (ofMulAction k G G g) 1 (toTensorAux k G n (single x 1)) :=
   by simp [of_mul_action_def, to_tensor_aux_single, mul_assoc, inv_mul_cancel_left]
-#align group_cohomology.resolution.to_tensor_aux_of_mul_action GroupCohomology.Resolution.to_tensor_aux_of_mul_action
+#align
+  group_cohomology.resolution.to_tensor_aux_of_mul_action GroupCohomology.Resolution.to_tensor_aux_of_mul_action
 
 theorem of_tensor_aux_single (g : G) (m : k) (x : Gⁿ →₀ k) :
-    ofTensorAux k G n (single g m ⊗ₜ x) = Finsupp.lift (Gⁿ⁺¹ →₀ k) k Gⁿ (fun f => single (g • partialProd f) m) x := by
-  simp [of_tensor_aux, sum_single_index, smul_sum, mul_comm m]
-#align group_cohomology.resolution.of_tensor_aux_single GroupCohomology.Resolution.of_tensor_aux_single
+    ofTensorAux k G n (single g m ⊗ₜ x) =
+      Finsupp.lift (Gⁿ⁺¹ →₀ k) k Gⁿ (fun f => single (g • partialProd f) m) x :=
+  by simp [of_tensor_aux, sum_single_index, smul_sum, mul_comm m]
+#align
+  group_cohomology.resolution.of_tensor_aux_single GroupCohomology.Resolution.of_tensor_aux_single
 
 theorem of_tensor_aux_comm_of_mul_action (g h : G) (x : Gⁿ) :
     ofTensorAux k G n
@@ -132,30 +137,34 @@ theorem of_tensor_aux_comm_of_mul_action (g h : G) (x : Gⁿ) :
 theorem to_tensor_aux_left_inv (x : Gⁿ⁺¹ →₀ k) : ofTensorAux _ _ _ (toTensorAux _ _ _ x) = x := by
   refine'
     LinearMap.ext_iff.1
-      (@Finsupp.lhom_ext _ _ _ k _ _ _ _ _ (LinearMap.comp (of_tensor_aux _ _ _) (to_tensor_aux _ _ _)) LinearMap.id
-        fun x y => _)
+      (@Finsupp.lhom_ext _ _ _ k _ _ _ _ _
+        (LinearMap.comp (of_tensor_aux _ _ _) (to_tensor_aux _ _ _)) LinearMap.id fun x y => _)
       x
   dsimp
-  rw [to_tensor_aux_single x y, of_tensor_aux_single, Finsupp.lift_apply, Finsupp.sum_single_index, one_smul,
-    Fin.partial_prod_left_inv]
+  rw [to_tensor_aux_single x y, of_tensor_aux_single, Finsupp.lift_apply, Finsupp.sum_single_index,
+    one_smul, Fin.partial_prod_left_inv]
   · rw [zero_smul]
     
-#align group_cohomology.resolution.to_tensor_aux_left_inv GroupCohomology.Resolution.to_tensor_aux_left_inv
+#align
+  group_cohomology.resolution.to_tensor_aux_left_inv GroupCohomology.Resolution.to_tensor_aux_left_inv
 
-theorem to_tensor_aux_right_inv (x : (G →₀ k) ⊗[k] (Gⁿ →₀ k)) : toTensorAux _ _ _ (ofTensorAux _ _ _ x) = x := by
+theorem to_tensor_aux_right_inv (x : (G →₀ k) ⊗[k] (Gⁿ →₀ k)) :
+    toTensorAux _ _ _ (ofTensorAux _ _ _ x) = x := by
   refine' TensorProduct.induction_on x (by simp) (fun y z => _) fun z w hz hw => by simp [hz, hw]
   rw [← Finsupp.sum_single y, Finsupp.sum, TensorProduct.sum_tmul]
   simp only [Finset.smul_sum, LinearMap.map_sum]
   refine' Finset.sum_congr rfl fun f hf => _
-  simp only [of_tensor_aux_single, Finsupp.lift_apply, Finsupp.smul_single', LinearMap.map_finsupp_sum,
-    to_tensor_aux_single, Fin.partial_prod_right_inv]
+  simp only [of_tensor_aux_single, Finsupp.lift_apply, Finsupp.smul_single',
+    LinearMap.map_finsupp_sum, to_tensor_aux_single, Fin.partial_prod_right_inv]
   dsimp
   simp only [Fin.partial_prod_zero, mul_one]
   conv_rhs => rw [← Finsupp.sum_single z, Finsupp.sum, TensorProduct.tmul_sum]
   exact
     Finset.sum_congr rfl fun g hg =>
-      show _ ⊗ₜ _ = _ by rw [← Finsupp.smul_single', TensorProduct.smul_tmul, Finsupp.smul_single_one]
-#align group_cohomology.resolution.to_tensor_aux_right_inv GroupCohomology.Resolution.to_tensor_aux_right_inv
+      show _ ⊗ₜ _ = _ by
+        rw [← Finsupp.smul_single', TensorProduct.smul_tmul, Finsupp.smul_single_one]
+#align
+  group_cohomology.resolution.to_tensor_aux_right_inv GroupCohomology.Resolution.to_tensor_aux_right_inv
 
 variable (k G n)
 
@@ -164,7 +173,9 @@ by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) sending `(g₀, ..., gₙ)` to
 `g₀ ⊗ (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ)`. -/
 def toTensor :
     RepCat.ofMulAction k G (Fin (n + 1) → G) ⟶
-      RepCat.of ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k))) where
+      RepCat.of
+        ((Representation.ofMulAction k G G).tprod
+          (1 : G →* Module.EndCat k ((Fin n → G) →₀ k))) where
   hom := toTensorAux k G n
   comm' g := by ext <;> exact to_tensor_aux_of_mul_action _ _
 #align group_cohomology.resolution.to_tensor GroupCohomology.Resolution.toTensor
@@ -173,7 +184,8 @@ def toTensor :
 by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) to `k[Gⁿ⁺¹]` sending `g ⊗ (g₁, ..., gₙ)` to
 `(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
 def ofTensor :
-    RepCat.of ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k))) ⟶
+    RepCat.of
+        ((Representation.ofMulAction k G G).tprod (1 : G →* Module.EndCat k ((Fin n → G) →₀ k))) ⟶
       RepCat.ofMulAction k G (Fin (n + 1) → G) where
   hom := ofTensorAux k G n
   comm' g := by
@@ -198,8 +210,9 @@ theorem of_tensor_single (g : G) (m : k) (x : Gⁿ →₀ k) :
 #align group_cohomology.resolution.of_tensor_single GroupCohomology.Resolution.of_tensor_single
 
 theorem of_tensor_single' (g : G →₀ k) (x : Gⁿ) (m : k) :
-    (ofTensor k G n).hom (g ⊗ₜ single x m) = Finsupp.lift _ k G (fun a => single (a • partialProd x) m) g := by
-  simp [of_tensor, of_tensor_aux]
+    (ofTensor k G n).hom (g ⊗ₜ single x m) =
+      Finsupp.lift _ k G (fun a => single (a • partialProd x) m) g :=
+  by simp [of_tensor, of_tensor_aux]
 #align group_cohomology.resolution.of_tensor_single' GroupCohomology.Resolution.of_tensor_single'
 
 variable (k G n)
@@ -209,7 +222,8 @@ which `G` acts by `ρ(g₁)(g₂ ⊗ x) = (g₁ * g₂) ⊗ x`) sending `(g₀, 
 `g₀ ⊗ (g₀⁻¹g₁, g₁⁻¹g₂, ..., gₙ₋₁⁻¹gₙ)`. -/
 def equivTensor :
     RepCat.ofMulAction k G (Fin (n + 1) → G) ≅
-      RepCat.of ((Representation.ofMulAction k G G).tprod (1 : Representation k G ((Fin n → G) →₀ k))) :=
+      RepCat.of
+        ((Representation.ofMulAction k G G).tprod (1 : Representation k G ((Fin n → G) →₀ k))) :=
   ActionCat.mkIso
     (LinearEquiv.toModuleIso
       { toTensorAux k G n with invFun := ofTensorAux k G n, left_inv := to_tensor_aux_left_inv,
@@ -225,14 +239,16 @@ theorem equiv_tensor_def : (equivTensor k G n).hom = toTensor k G n :=
 @[simp]
 theorem equiv_tensor_inv_def : (equivTensor k G n).inv = ofTensor k G n :=
   rfl
-#align group_cohomology.resolution.equiv_tensor_inv_def GroupCohomology.Resolution.equiv_tensor_inv_def
+#align
+  group_cohomology.resolution.equiv_tensor_inv_def GroupCohomology.Resolution.equiv_tensor_inv_def
 
 /-- The `k[G]`-linear isomorphism `k[G] ⊗ₖ k[Gⁿ] ≃ k[Gⁿ⁺¹]`, where the `k[G]`-module structure on
 the lefthand side is `tensor_product.left_module`, whilst that of the righthand side comes from
 `representation.as_module`. Allows us to use `basis.algebra_tensor_product` to get a `k[G]`-basis
 of the righthand side. -/
 def ofMulActionBasisAux :
-    MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k) ≃ₗ[MonoidAlgebra k G] (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
+    MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k) ≃ₗ[MonoidAlgebra k G]
+      (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
   { (RepCat.equivalenceModuleMonoidAlgebra.1.mapIso (equivTensor k G n).symm).toLinearEquiv with
     map_smul' := fun r x => by
       rw [RingHom.id_apply, LinearEquiv.to_fun_eq_coe, ← LinearEquiv.map_smul]
@@ -246,17 +262,21 @@ def ofMulActionBasisAux :
         
       · rw [smul_add, hz, hy, smul_add]
          }
-#align group_cohomology.resolution.of_mul_action_basis_aux GroupCohomology.Resolution.ofMulActionBasisAux
+#align
+  group_cohomology.resolution.of_mul_action_basis_aux GroupCohomology.Resolution.ofMulActionBasisAux
 
 /-- A `k[G]`-basis of `k[Gⁿ⁺¹]`, coming from the `k[G]`-linear isomorphism
 `k[G] ⊗ₖ k[Gⁿ] ≃ k[Gⁿ⁺¹].` -/
-def ofMulActionBasis : Basis (Fin n → G) (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
+def ofMulActionBasis :
+    Basis (Fin n → G) (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
   @Basis.map _ (MonoidAlgebra k G) (MonoidAlgebra k G ⊗[k] ((Fin n → G) →₀ k)) _ _ _ _ _ _
-    (@Algebra.TensorProduct.basis k _ (MonoidAlgebra k G) _ _ ((Fin n → G) →₀ k) _ _ (Fin n → G) ⟨LinearEquiv.refl k _⟩)
+    (@Algebra.TensorProduct.basis k _ (MonoidAlgebra k G) _ _ ((Fin n → G) →₀ k) _ _ (Fin n → G)
+      ⟨LinearEquiv.refl k _⟩)
     (ofMulActionBasisAux k G n)
 #align group_cohomology.resolution.of_mul_action_basis GroupCohomology.Resolution.ofMulActionBasis
 
-theorem ofMulActionFree : Module.Free (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
+theorem ofMulActionFree :
+    Module.Free (MonoidAlgebra k G) (ofMulAction k G (Fin (n + 1) → G)).AsModule :=
   Module.Free.ofBasis (ofMulActionBasis k G n)
 #align group_cohomology.resolution.of_mul_action_free GroupCohomology.Resolution.ofMulActionFree
 
@@ -267,7 +287,8 @@ end GroupCohomology.resolution
 variable (G)
 
 /-- The simplicial `G`-set sending `[n]` to `Gⁿ⁺¹` equipped with the diagonal action of `G`. -/
-def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (ActionCat (Type u) <| MonCat.of G) where
+def classifyingSpaceUniversalCover [Monoid G] :
+    SimplicialObject (ActionCat (Type u) <| MonCat.of G) where
   obj n := ActionCat.ofMulAction G (Fin (n.unop.len + 1) → G)
   map m n f := { hom := fun x => x ∘ f.unop.toOrderHom, comm' := fun g => rfl }
   map_id' n := rfl
@@ -282,8 +303,10 @@ variable [Monoid G]
 
 /-- When the category is `G`-Set, `cech_nerve_terminal_from` of `G` with the left regular action is
 isomorphic to `EG`, the universal cover of the classifying space of `G` as a simplicial `G`-set. -/
-def cechNerveTerminalFromIso : cechNerveTerminalFrom (ActionCat.ofMulAction G G) ≅ classifyingSpaceUniversalCover G :=
-  (NatIso.ofComponents fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _)) fun m n f => by
+def cechNerveTerminalFromIso :
+    cechNerveTerminalFrom (ActionCat.ofMulAction G G) ≅ classifyingSpaceUniversalCover G :=
+  (NatIso.ofComponents fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _))
+    fun m n f => by
     refine' is_limit.hom_ext (ActionCat.ofMulActionLimitCone.{u, 0} _ _).2 fun j => _
     dsimp only [cech_nerve_terminal_from, pi.lift]
     dsimp
@@ -294,8 +317,10 @@ def cechNerveTerminalFromIso : cechNerveTerminalFrom (ActionCat.ofMulAction G G)
 
 /-- As a simplicial set, `cech_nerve_terminal_from` of a monoid `G` is isomorphic to the universal
 cover of the classifying space of `G` as a simplicial set. -/
-def cechNerveTerminalFromIsoCompForget : cechNerveTerminalFrom G ≅ classifyingSpaceUniversalCover G ⋙ forget _ :=
-  (NatIso.ofComponents fun n => Types.productIso _) fun m n f => Matrix.ext fun i j => Types.Limit.lift_π_apply _ _ _ _
+def cechNerveTerminalFromIsoCompForget :
+    cechNerveTerminalFrom G ≅ classifyingSpaceUniversalCover G ⋙ forget _ :=
+  (NatIso.ofComponents fun n => Types.productIso _) fun m n f =>
+    Matrix.ext fun i j => Types.Limit.lift_π_apply _ _ _ _
 #align
   classifying_space_universal_cover.cech_nerve_terminal_from_iso_comp_forget classifyingSpaceUniversalCover.cechNerveTerminalFromIsoCompForget
 
@@ -306,15 +331,19 @@ open AlgebraicTopology SimplicialObject.Augmented SimplicialObject CategoryTheor
 /-- The universal cover of the classifying space of `G` as a simplicial set, augmented by the map
 from `fin 1 → G` to the terminal object in `Type u`. -/
 def compForgetAugmented : SimplicialObject.Augmented (Type u) :=
-  (SimplicialObject.augment (classifyingSpaceUniversalCover G ⋙ forget _) (terminal _) (terminal.from _)) fun i g h =>
-    Subsingleton.elim _ _
-#align classifying_space_universal_cover.comp_forget_augmented classifyingSpaceUniversalCover.compForgetAugmented
+  (SimplicialObject.augment (classifyingSpaceUniversalCover G ⋙ forget _) (terminal _)
+      (terminal.from _))
+    fun i g h => Subsingleton.elim _ _
+#align
+  classifying_space_universal_cover.comp_forget_augmented classifyingSpaceUniversalCover.compForgetAugmented
 
 /-- The augmented Čech nerve of the map from `fin 1 → G` to the terminal object in `Type u` has an
 extra degeneracy. -/
-def extraDegeneracyAugmentedCechNerve : ExtraDegeneracy (arrow.mk <| terminal.from G).augmentedCechNerve :=
+def extraDegeneracyAugmentedCechNerve :
+    ExtraDegeneracy (arrow.mk <| terminal.from G).augmentedCechNerve :=
   augmentedCechNerve.extraDegeneracy (arrow.mk <| terminal.from G)
-    ⟨fun x => (1 : G), @Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _⟩
+    ⟨fun x => (1 : G),
+      @Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _⟩
 #align
   classifying_space_universal_cover.extra_degeneracy_augmented_cech_nerve classifyingSpaceUniversalCover.extraDegeneracyAugmentedCechNerve
 
@@ -325,8 +354,8 @@ def extraDegeneracyCompForgetAugmented : ExtraDegeneracy (compForgetAugmented G)
     extra_degeneracy.of_iso (_ : (arrow.mk <| terminal.from G).augmentedCechNerve ≅ _)
       (extra_degeneracy_augmented_cech_nerve G)
   exact
-    comma.iso_mk (cech_nerve_terminal_from.iso G ≪≫ cech_nerve_terminal_from_iso_comp_forget G) (iso.refl _)
-      (by ext : 2 <;> apply is_terminal.hom_ext terminal_is_terminal)
+    comma.iso_mk (cech_nerve_terminal_from.iso G ≪≫ cech_nerve_terminal_from_iso_comp_forget G)
+      (iso.refl _) (by ext : 2 <;> apply is_terminal.hom_ext terminal_is_terminal)
 #align
   classifying_space_universal_cover.extra_degeneracy_comp_forget_augmented classifyingSpaceUniversalCover.extraDegeneracyCompForgetAugmented
 
@@ -341,7 +370,8 @@ def compForgetAugmented.toModule : SimplicialObject.Augmented (ModuleCat.{u} k) 
 /-- If we augment the universal cover of the classifying space of `G` as a simplicial set by the
 map from `fin 1 → G` to the terminal object in `Type u`, then apply the free functor
 `Type u ⥤ Module.{u} k`, the resulting augmented simplicial `k`-module has an extra degeneracy. -/
-def extraDegeneracyCompForgetAugmentedToModule : ExtraDegeneracy (compForgetAugmented.toModule k G) :=
+def extraDegeneracyCompForgetAugmentedToModule :
+    ExtraDegeneracy (compForgetAugmented.toModule k G) :=
   ExtraDegeneracy.map (extraDegeneracyCompForgetAugmented G) (ModuleCat.free k)
 #align
   classifying_space_universal_cover.extra_degeneracy_comp_forget_augmented_to_Module classifyingSpaceUniversalCover.extraDegeneracyCompForgetAugmentedToModule
@@ -367,7 +397,8 @@ variable (k G) [Monoid G]
 `k`-linear `G`-representation. It sends `(g₀, ..., gₙ) ↦ ∑ (-1)ⁱ • (g₀, ..., ĝᵢ, ..., gₙ)`. -/
 def d (G : Type u) (n : ℕ) : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (Fin n → G) →₀ k :=
   Finsupp.lift ((Fin n → G) →₀ k) k (Fin (n + 1) → G) fun g =>
-    (@Finset.univ (Fin (n + 1)) _).Sum fun p => Finsupp.single (g ∘ p.succAbove) ((-1 : k) ^ (p : ℕ))
+    (@Finset.univ (Fin (n + 1)) _).Sum fun p =>
+      Finsupp.single (g ∘ p.succAbove) ((-1 : k) ^ (p : ℕ))
 #align group_cohomology.resolution.d GroupCohomology.resolution.d
 
 variable {k G}
@@ -375,7 +406,8 @@ variable {k G}
 @[simp]
 theorem d_of {G : Type u} {n : ℕ} (c : Fin (n + 1) → G) :
     d k G n (Finsupp.single c 1) =
-      Finset.univ.Sum fun p : Fin (n + 1) => Finsupp.single (c ∘ p.succAbove) ((-1 : k) ^ (p : ℕ)) :=
+      Finset.univ.Sum fun p : Fin (n + 1) =>
+        Finsupp.single (c ∘ p.succAbove) ((-1 : k) ^ (p : ℕ)) :=
   by simp [d]
 #align group_cohomology.resolution.d_of GroupCohomology.resolution.d_of
 
@@ -383,15 +415,17 @@ variable (k G)
 
 /-- The `n`th object of the standard resolution of `k` is definitionally isomorphic to `k[Gⁿ⁺¹]`
 equipped with the representation induced by the diagonal action of `G`. -/
-def xIso (n : ℕ) : (GroupCohomology.resolution k G).x n ≅ RepCat.ofMulAction k G (Fin (n + 1) → G) :=
+def xIso (n : ℕ) :
+    (GroupCohomology.resolution k G).x n ≅ RepCat.ofMulAction k G (Fin (n + 1) → G) :=
   Iso.refl _
 #align group_cohomology.resolution.X_iso GroupCohomology.resolution.xIso
 
-theorem X_projective (G : Type u) [Group G] (n : ℕ) : Projective ((GroupCohomology.resolution k G).x n) :=
+theorem X_projective (G : Type u) [Group G] (n : ℕ) :
+    Projective ((GroupCohomology.resolution k G).x n) :=
   RepCat.equivalenceModuleMonoidAlgebra.toAdjunction.projective_of_map_projective _ <|
     @ModuleCat.projective_of_free.{u} _ _
-      (ModuleCat.of (MonoidAlgebra k G) (Representation.ofMulAction k G (Fin (n + 1) → G)).AsModule) _
-      (ofMulActionBasis k G n)
+      (ModuleCat.of (MonoidAlgebra k G) (Representation.ofMulAction k G (Fin (n + 1) → G)).AsModule)
+      _ (ofMulActionBasis k G n)
 #align group_cohomology.resolution.X_projective GroupCohomology.resolution.X_projective
 
 /-- Simpler expression for the differential in the standard resolution of `k` as a
@@ -406,7 +440,8 @@ section Exactness
 
 /-- The standard resolution of `k` as a trivial representation as a complex of `k`-modules. -/
 def forget₂ToModule :=
-  ((forget₂ (RepCat k G) (ModuleCat.{u} k)).mapHomologicalComplex _).obj (GroupCohomology.resolution k G)
+  ((forget₂ (RepCat k G) (ModuleCat.{u} k)).mapHomologicalComplex _).obj
+    (GroupCohomology.resolution k G)
 #align group_cohomology.resolution.forget₂_to_Module GroupCohomology.resolution.forget₂ToModule
 
 /-- If we apply the free functor `Type u ⥤ Module.{u} k` to the universal cover of the classifying
@@ -414,23 +449,29 @@ space of `G` as a simplicial set, then take the alternating face map complex, th
 isomorphic to the standard resolution of the trivial `G`-representation `k` as a complex of
 `k`-modules. -/
 def compForgetAugmentedIso :
-    AlternatingFaceMapComplex.obj (SimplicialObject.Augmented.drop.obj (compForgetAugmented.toModule k G)) ≅
+    AlternatingFaceMapComplex.obj
+        (SimplicialObject.Augmented.drop.obj (compForgetAugmented.toModule k G)) ≅
       GroupCohomology.resolution.forget₂ToModule k G :=
   eqToIso
-    (Functor.congr_obj (map_alternating_face_map_complex (forget₂ (RepCat k G) (ModuleCat.{u} k))).symm
+    (Functor.congr_obj
+      (map_alternating_face_map_complex (forget₂ (RepCat k G) (ModuleCat.{u} k))).symm
       (classifyingSpaceUniversalCover G ⋙ (RepCat.linearization k G).1.1))
-#align group_cohomology.resolution.comp_forget_augmented_iso GroupCohomology.resolution.compForgetAugmentedIso
+#align
+  group_cohomology.resolution.comp_forget_augmented_iso GroupCohomology.resolution.compForgetAugmentedIso
 
 /-- As a complex of `k`-modules, the standard resolution of the trivial `G`-representation `k` is
 homotopy equivalent to the complex which is `k` at 0 and 0 elsewhere. -/
 def forget₂ToModuleHomotopyEquiv :
     HomotopyEquiv (GroupCohomology.resolution.forget₂ToModule k G)
-      ((ChainComplex.single₀ (ModuleCat k)).obj ((forget₂ (RepCat k G) _).obj <| RepCat.of Representation.trivial)) :=
+      ((ChainComplex.single₀ (ModuleCat k)).obj
+        ((forget₂ (RepCat k G) _).obj <| RepCat.of Representation.trivial)) :=
   (HomotopyEquiv.ofIso (compForgetAugmentedIso k G).symm).trans <|
-    (SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv (extraDegeneracyCompForgetAugmentedToModule k G)).trans
+    (SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv
+          (extraDegeneracyCompForgetAugmentedToModule k G)).trans
       (HomotopyEquiv.ofIso <|
         (ChainComplex.single₀ (ModuleCat.{u} k)).mapIso
-          (@Finsupp.LinearEquiv.finsuppUnique k k _ _ _ (⊤_ Type u) Types.terminalIso.toEquiv.unique).toModuleIso)
+          (@Finsupp.LinearEquiv.finsuppUnique k k _ _ _ (⊤_ Type u)
+              Types.terminalIso.toEquiv.unique).toModuleIso)
 #align
   group_cohomology.resolution.forget₂_to_Module_homotopy_equiv GroupCohomology.resolution.forget₂ToModuleHomotopyEquiv
 
@@ -458,9 +499,11 @@ theorem forget₂_to_Module_homotopy_equiv_f_0_eq :
     
   trans (Finsupp.total _ _ _ fun f => (1 : k)).comp ((ModuleCat.free k).map (terminal.from _))
   · dsimp
-    rw [@Finsupp.lmap_domain_total (Fin 1 → G) k k _ _ _ (⊤_ Type u) k _ _ (fun i => (1 : k)) (fun i => (1 : k))
-        (terminal.from ((classifyingSpaceUniversalCover G).obj (Opposite.op (SimplexCategory.mk 0))).V) LinearMap.id
-        fun i => rfl,
+    rw [@Finsupp.lmap_domain_total (Fin 1 → G) k k _ _ _ (⊤_ Type u) k _ _ (fun i => (1 : k))
+        (fun i => (1 : k))
+        (terminal.from
+          ((classifyingSpaceUniversalCover G).obj (Opposite.op (SimplexCategory.mk 0))).V)
+        LinearMap.id fun i => rfl,
       LinearMap.id_comp]
     rfl
     
@@ -479,15 +522,19 @@ theorem forget₂_to_Module_homotopy_equiv_f_0_eq :
 theorem d_comp_ε : (GroupCohomology.resolution k G).d 1 0 ≫ ε k G = 0 := by
   ext1
   refine' LinearMap.ext fun x => _
-  have : (forget₂_to_Module k G).d 1 0 ≫ (forget₂ (RepCat k G) (ModuleCat.{u} k)).map (ε k G) = 0 := by
-    rw [← forget₂_to_Module_homotopy_equiv_f_0_eq, ← (forget₂_to_Module_homotopy_equiv k G).1.2 1 0 rfl] <;>
+  have : (forget₂_to_Module k G).d 1 0 ≫ (forget₂ (RepCat k G) (ModuleCat.{u} k)).map (ε k G) = 0 :=
+    by
+    rw [← forget₂_to_Module_homotopy_equiv_f_0_eq, ←
+        (forget₂_to_Module_homotopy_equiv k G).1.2 1 0 rfl] <;>
       exact comp_zero
   exact LinearMap.ext_iff.1 this _
 #align group_cohomology.resolution.d_comp_ε GroupCohomology.resolution.d_comp_ε
 
 /-- The chain map from the standard resolution of `k` to `k[0]` given by `∑ nᵢgᵢ ↦ ∑ nᵢ` in
 degree zero. -/
-def εToSingle₀ : GroupCohomology.resolution k G ⟶ (ChainComplex.single₀ _).obj (RepCat.of Representation.trivial) :=
+def εToSingle₀ :
+    GroupCohomology.resolution k G ⟶
+      (ChainComplex.single₀ _).obj (RepCat.of Representation.trivial) :=
   ((GroupCohomology.resolution k G).toSingle₀Equiv _).symm ⟨ε k G, d_comp_ε k G⟩
 #align group_cohomology.resolution.ε_to_single₀ GroupCohomology.resolution.εToSingle₀
 
@@ -500,7 +547,8 @@ theorem ε_to_single₀_comp_eq :
   dsimp
   rw [category.comp_id]
   exact (forget₂_to_Module_homotopy_equiv_f_0_eq k G).symm
-#align group_cohomology.resolution.ε_to_single₀_comp_eq GroupCohomology.resolution.ε_to_single₀_comp_eq
+#align
+  group_cohomology.resolution.ε_to_single₀_comp_eq GroupCohomology.resolution.ε_to_single₀_comp_eq
 
 theorem quasi_iso_of_forget₂_ε_to_single₀ :
     QuasiIso (((forget₂ _ (ModuleCat.{u} k)).mapHomologicalComplex _).map (εToSingle₀ k G)) := by
@@ -523,12 +571,14 @@ open GroupCohomology.resolution
 variable [Group G]
 
 /-- The standard projective resolution of `k` as a trivial `k`-linear `G`-representation. -/
-def GroupCohomology.projectiveResolution : ProjectiveResolutionCat (RepCat.of (@Representation.trivial k G _ _)) :=
+def GroupCohomology.projectiveResolution :
+    ProjectiveResolutionCat (RepCat.of (@Representation.trivial k G _ _)) :=
   (εToSingle₀ k G).toSingle₀ProjectiveResolution (X_projective k G)
 #align group_cohomology.ProjectiveResolution GroupCohomology.projectiveResolution
 
 instance : EnoughProjectives (RepCat k G) :=
-  RepCat.equivalenceModuleMonoidAlgebra.enough_projectives_iff.2 ModuleCat.Module_enough_projectives.{u}
+  RepCat.equivalenceModuleMonoidAlgebra.enough_projectives_iff.2
+    ModuleCat.Module_enough_projectives.{u}
 
 /-- Given a `k`-linear `G`-representation `V`, `Extⁿ(k, V)` (where `k` is a trivial `k`-linear
 `G`-representation) is isomorphic to the `n`th cohomology group of `Hom(P, V)`, where `P` is the

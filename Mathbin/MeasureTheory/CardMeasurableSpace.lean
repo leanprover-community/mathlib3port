@@ -51,27 +51,33 @@ def generateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
   exact j.2
 #align measurable_space.generate_measurable_rec MeasurableSpace.generateMeasurableRec
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : s ⊆ generateMeasurableRec s i := by
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) :
+    s ⊆ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr subset_union_of_subset_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr subset_union_of_subset_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   exact subset_rfl
-#align measurable_space.self_subset_generate_measurable_rec MeasurableSpace.self_subset_generate_measurable_rec
+#align
+  measurable_space.self_subset_generate_measurable_rec MeasurableSpace.self_subset_generate_measurable_rec
 
-theorem empty_mem_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : ∅ ∈ generateMeasurableRec s i := by
+theorem empty_mem_generate_measurable_rec (s : Set (Set α)) (i : ω₁) :
+    ∅ ∈ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   exact mem_union_left _ (mem_union_left _ (mem_union_right _ (mem_singleton ∅)))
-#align measurable_space.empty_mem_generate_measurable_rec MeasurableSpace.empty_mem_generate_measurable_rec
+#align
+  measurable_space.empty_mem_generate_measurable_rec MeasurableSpace.empty_mem_generate_measurable_rec
 
 theorem compl_mem_generate_measurable_rec {s : Set (Set α)} {i j : ω₁} (h : j < i) {t : Set α}
     (ht : t ∈ generateMeasurableRec s j) : tᶜ ∈ generateMeasurableRec s i := by
   unfold generate_measurable_rec
   exact mem_union_left _ (mem_union_right _ ⟨t, mem_Union.2 ⟨⟨j, h⟩, ht⟩, rfl⟩)
-#align measurable_space.compl_mem_generate_measurable_rec MeasurableSpace.compl_mem_generate_measurable_rec
+#align
+  measurable_space.compl_mem_generate_measurable_rec MeasurableSpace.compl_mem_generate_measurable_rec
 
 theorem Union_mem_generate_measurable_rec {s : Set (Set α)} {i : ω₁} {f : ℕ → Set α}
-    (hf : ∀ n, ∃ j < i, f n ∈ generateMeasurableRec s j) : (⋃ n, f n) ∈ generateMeasurableRec s i := by
+    (hf : ∀ n, ∃ j < i, f n ∈ generateMeasurableRec s j) : (⋃ n, f n) ∈ generateMeasurableRec s i :=
+  by
   unfold generate_measurable_rec
   exact
     mem_union_right _
@@ -80,7 +86,8 @@ theorem Union_mem_generate_measurable_rec {s : Set (Set α)} {i : ω₁} {f : �
           let ⟨j, hj, hf⟩ := hf n
           mem_Union.2 ⟨⟨j, hj⟩, hf⟩⟩,
         rfl⟩
-#align measurable_space.Union_mem_generate_measurable_rec MeasurableSpace.Union_mem_generate_measurable_rec
+#align
+  measurable_space.Union_mem_generate_measurable_rec MeasurableSpace.Union_mem_generate_measurable_rec
 
 theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i ≤ j) :
     generateMeasurableRec s i ⊆ generateMeasurableRec s j := fun x hx => by
@@ -90,9 +97,10 @@ theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i �
   · convert Union_mem_generate_measurable_rec fun n => ⟨i, h, hx⟩
     exact (Union_const x).symm
     
-#align measurable_space.generate_measurable_rec_subset MeasurableSpace.generate_measurable_rec_subset
+#align
+  measurable_space.generate_measurable_rec_subset MeasurableSpace.generate_measurable_rec_subset
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr (mk_union_le _ _).trans, ",", expr add_le_of_le C, ",", expr mk_image_le.trans, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr (mk_union_le _ _).trans, ",", expr add_le_of_le C, ",", expr mk_image_le.trans, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- At each step of the inductive construction, the cardinality bound `≤ (max (#s) 2) ^ ℵ₀` holds.
 -/
 theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
@@ -100,7 +108,8 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
   apply (aleph 1).ord.out.wo.wf.induction i
   intro i IH
   have A := aleph_0_le_aleph 1
-  have B : aleph 1 ≤ max (#s) 2 ^ aleph_0.{u} := aleph_one_le_continuum.trans (power_le_power_right (le_max_right _ _))
+  have B : aleph 1 ≤ max (#s) 2 ^ aleph_0.{u} :=
+    aleph_one_le_continuum.trans (power_le_power_right (le_max_right _ _))
   have C : ℵ₀ ≤ max (#s) 2 ^ aleph_0.{u} := A.trans B
   have J : (#⋃ j : Iio i, generate_measurable_rec s j.1) ≤ max (#s) 2 ^ aleph_0.{u} := by
     apply (mk_Union_le _).trans
@@ -110,7 +119,7 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
     exact max_le B le_rfl
   rw [generate_measurable_rec]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr (mk_union_le _ _).trans, \",\", expr add_le_of_le C, \",\", expr mk_image_le.trans, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr (mk_union_le _ _).trans, \",\", expr add_le_of_le C, \",\", expr mk_image_le.trans, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   · exact (le_max_left _ _).trans (self_le_power _ one_lt_aleph_0.le)
     
   · rw [mk_singleton]
@@ -121,13 +130,13 @@ theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
     have := @power_le_power_right _ _ ℵ₀ J
     rwa [← power_mul, aleph_0_mul_aleph_0] at this
     
-#align measurable_space.cardinal_generate_measurable_rec_le MeasurableSpace.cardinal_generate_measurable_rec_le
+#align
+  measurable_space.cardinal_generate_measurable_rec_le MeasurableSpace.cardinal_generate_measurable_rec_le
 
 /-- `generate_measurable_rec s` generates precisely the smallest sigma-algebra containing `s`. -/
 theorem generate_measurable_eq_rec (s : Set (Set α)) :
     { t | GenerateMeasurable s t } = ⋃ i, generateMeasurableRec s i := by
-  ext t
-  refine' ⟨fun ht => _, fun ht => _⟩
+  ext t; refine' ⟨fun ht => _, fun ht => _⟩
   · inhabit ω₁
     induction' ht with u hu u hu IH f hf IH
     · exact mem_Union.2 ⟨default, self_subset_generate_measurable_rec s _ hu⟩
@@ -180,11 +189,16 @@ theorem cardinal_generate_measurable_le (s : Set (Set α)) :
   rw [generate_measurable_eq_rec]
   apply (mk_Union_le _).trans
   rw [(aleph 1).mk_ord_out]
-  refine' le_trans (mul_le_mul' aleph_one_le_continuum (csupr_le' fun i => cardinal_generate_measurable_rec_le s i)) _
+  refine'
+    le_trans
+      (mul_le_mul' aleph_one_le_continuum
+        (csupr_le' fun i => cardinal_generate_measurable_rec_le s i))
+      _
   have := power_le_power_right (le_max_right (#s) 2)
   rw [mul_eq_max aleph_0_le_continuum (aleph_0_le_continuum.trans this)]
   exact max_le this le_rfl
-#align measurable_space.cardinal_generate_measurable_le MeasurableSpace.cardinal_generate_measurable_le
+#align
+  measurable_space.cardinal_generate_measurable_le MeasurableSpace.cardinal_generate_measurable_le
 
 /-- If a sigma-algebra is generated by a set of sets `s`, then the sigma
 algebra has cardinality at most `(max (#s) 2) ^ ℵ₀`. -/
@@ -209,7 +223,8 @@ then the sigma algebra has the same cardinality bound. -/
 theorem cardinal_measurable_set_le_continuum {s : Set (Set α)} :
     (#s) ≤ 𝔠 → (#{ t | @MeasurableSet α (generateFrom s) t }) ≤ 𝔠 :=
   cardinal_generate_measurable_le_continuum
-#align measurable_space.cardinal_measurable_set_le_continuum MeasurableSpace.cardinal_measurable_set_le_continuum
+#align
+  measurable_space.cardinal_measurable_set_le_continuum MeasurableSpace.cardinal_measurable_set_le_continuum
 
 end MeasurableSpace
 

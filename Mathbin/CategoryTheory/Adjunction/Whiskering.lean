@@ -25,17 +25,20 @@ variable (C : Type _) {D E : Type _} [Category C] [Category D] [Category E] {F :
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_right C _ _).obj F ⊣ (whiskering_right C _ _).obj G`. -/
 @[simps unit_app_app counit_app_app]
-protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (whiskeringRight C E D).obj G :=
+protected def whiskerRight (adj : F ⊣ G) :
+    (whiskeringRight C D E).obj F ⊣ (whiskeringRight C E D).obj G :=
   mkOfUnitCounit
     { Unit :=
-        { app := fun X => (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.Unit ≫ (Functor.associator _ _ _).inv,
+        { app := fun X =>
+            (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.Unit ≫ (Functor.associator _ _ _).inv,
           naturality' := by
             intros
             ext
             dsimp
             simp },
       counit :=
-        { app := fun X => (Functor.associator _ _ _).Hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).Hom,
+        { app := fun X =>
+            (Functor.associator _ _ _).Hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).Hom,
           naturality' := by
             intros
             ext
@@ -55,17 +58,20 @@ protected def whiskerRight (adj : F ⊣ G) : (whiskeringRight C D E).obj F ⊣ (
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_left _ _ C).obj G ⊣ (whiskering_left _ _ C).obj F`. -/
 @[simps unit_app_app counit_app_app]
-protected def whiskerLeft (adj : F ⊣ G) : (whiskeringLeft E D C).obj G ⊣ (whiskeringLeft D E C).obj F :=
+protected def whiskerLeft (adj : F ⊣ G) :
+    (whiskeringLeft E D C).obj G ⊣ (whiskeringLeft D E C).obj F :=
   mkOfUnitCounit
     { Unit :=
-        { app := fun X => (Functor.leftUnitor _).inv ≫ whiskerRight adj.Unit X ≫ (Functor.associator _ _ _).Hom,
+        { app := fun X =>
+            (Functor.leftUnitor _).inv ≫ whiskerRight adj.Unit X ≫ (Functor.associator _ _ _).Hom,
           naturality' := by
             intros
             ext
             dsimp
             simp },
       counit :=
-        { app := fun X => (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).Hom,
+        { app := fun X =>
+            (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).Hom,
           naturality' := by
             intros
             ext

@@ -34,7 +34,8 @@ universe v₁ v₂ u₁ u₂
 namespace CategoryTheory
 
 /-- A functor `F` is additive provided `F.map` is an additive homomorphism. -/
-class Functor.Additive {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) : Prop where
+class Functor.Additive {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
+  (F : C ⥤ D) : Prop where
   map_add' : ∀ {X Y : C} {f g : X ⟶ Y}, F.map (f + g) = F.map f + F.map g := by obviously
 #align category_theory.functor.additive CategoryTheory.Functor.Additive
 
@@ -44,7 +45,8 @@ namespace Functor
 
 section
 
-variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D) [Functor.Additive F]
+variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
+  [Functor.Additive F]
 
 @[simp]
 theorem map_add {X Y : C} {f g : X ⟶ Y} : F.map (f + g) = F.map f + F.map g :=
@@ -68,7 +70,8 @@ instance (priority := 100) preserves_zero_morphisms_of_additive :
 
 instance : Additive (𝟭 C) where
 
-instance {E : Type _} [Category E] [Preadditive E] (G : D ⥤ E) [Functor.Additive G] : Additive (F ⋙ G) where
+instance {E : Type _} [Category E] [Preadditive E] (G : D ⥤ E) [Functor.Additive G] :
+    Additive (F ⋙ G) where
 
 @[simp]
 theorem map_neg {X Y : C} {f : X ⟶ Y} : F.map (-f) = -F.map f :=
@@ -104,12 +107,13 @@ section InducedCategory
 variable {C : Type _} {D : Type _} [Category D] [Preadditive D] (F : C → D)
 
 instance induced_functor_additive : Functor.Additive (inducedFunctor F) where
-#align category_theory.functor.induced_functor_additive CategoryTheory.Functor.induced_functor_additive
+#align
+  category_theory.functor.induced_functor_additive CategoryTheory.Functor.induced_functor_additive
 
 end InducedCategory
 
-instance full_subcategory_inclusion_additive {C : Type _} [Category C] [Preadditive C] (Z : C → Prop) :
-    (fullSubcategoryInclusion Z).Additive where
+instance full_subcategory_inclusion_additive {C : Type _} [Category C] [Preadditive C]
+    (Z : C → Prop) : (fullSubcategoryInclusion Z).Additive where
 #align
   category_theory.functor.full_subcategory_inclusion_additive CategoryTheory.Functor.full_subcategory_inclusion_additive
 
@@ -118,7 +122,8 @@ section
 -- To talk about preservation of biproducts we need to specify universes explicitly.
 noncomputable section
 
-variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₂} D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
+variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₂} D] [Preadditive C]
+  [Preadditive D] (F : C ⥤ D)
 
 open CategoryTheory.Limits
 
@@ -135,8 +140,7 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
                 dsimp only [map_bicone_X]
                 simp_rw [← F.map_id]
                 refine' congr_arg _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
-                cases j
-                cases j'
+                cases j; cases j'
                 dsimp only [limits.bicone.to_cone_π_app]
                 simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp]) } }
 #align
@@ -145,8 +149,9 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
 theorem additive_of_preserves_binary_biproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]
     [PreservesBinaryBiproducts F] : Additive F :=
   { map_add' := fun X Y f g => by
-      rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_map_biprod, ← biprod.map_biprod_hom_desc,
-        category.assoc, iso.inv_hom_id_assoc, F.map_id, biprod.add_eq_lift_id_desc] }
+      rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_map_biprod, ←
+        biprod.map_biprod_hom_desc, category.assoc, iso.inv_hom_id_assoc, F.map_id,
+        biprod.add_eq_lift_id_desc] }
 #align
   category_theory.functor.additive_of_preserves_binary_biproducts CategoryTheory.Functor.additive_of_preserves_binary_biproducts
 
@@ -210,7 +215,8 @@ theorem AdditiveFunctorCat.forget_obj_of (F : C ⥤ D) [F.Additive] :
 #align category_theory.AdditiveFunctor.forget_obj_of CategoryTheory.AdditiveFunctorCat.forget_obj_of
 
 @[simp]
-theorem AdditiveFunctorCat.forget_map (F G : C ⥤+ D) (α : F ⟶ G) : (AdditiveFunctorCat.forget C D).map α = α :=
+theorem AdditiveFunctorCat.forget_map (F G : C ⥤+ D) (α : F ⟶ G) :
+    (AdditiveFunctorCat.forget C D).map α = α :=
   rfl
 #align category_theory.AdditiveFunctor.forget_map CategoryTheory.AdditiveFunctorCat.forget_map
 
@@ -267,32 +273,40 @@ variable {C D}
 theorem AdditiveFunctorCat.of_left_exact_obj_fst (F : C ⥤ₗ D) :
     ((AdditiveFunctorCat.ofLeftExact C D).obj F).obj = F.obj :=
   rfl
-#align category_theory.AdditiveFunctor.of_left_exact_obj_fst CategoryTheory.AdditiveFunctorCat.of_left_exact_obj_fst
+#align
+  category_theory.AdditiveFunctor.of_left_exact_obj_fst CategoryTheory.AdditiveFunctorCat.of_left_exact_obj_fst
 
 @[simp]
 theorem AdditiveFunctorCat.of_right_exact_obj_fst (F : C ⥤ᵣ D) :
     ((AdditiveFunctorCat.ofRightExact C D).obj F).obj = F.obj :=
   rfl
-#align category_theory.AdditiveFunctor.of_right_exact_obj_fst CategoryTheory.AdditiveFunctorCat.of_right_exact_obj_fst
+#align
+  category_theory.AdditiveFunctor.of_right_exact_obj_fst CategoryTheory.AdditiveFunctorCat.of_right_exact_obj_fst
 
 @[simp]
-theorem AdditiveFunctorCat.of_exact_obj_fst (F : C ⥤ₑ D) : ((AdditiveFunctorCat.ofExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctorCat.of_exact_obj_fst (F : C ⥤ₑ D) :
+    ((AdditiveFunctorCat.ofExact C D).obj F).obj = F.obj :=
   rfl
-#align category_theory.AdditiveFunctor.of_exact_obj_fst CategoryTheory.AdditiveFunctorCat.of_exact_obj_fst
+#align
+  category_theory.AdditiveFunctor.of_exact_obj_fst CategoryTheory.AdditiveFunctorCat.of_exact_obj_fst
 
 @[simp]
-theorem AdditiveFunctor.of_left_exact_map {F G : C ⥤ₗ D} (α : F ⟶ G) : (AdditiveFunctorCat.ofLeftExact C D).map α = α :=
+theorem AdditiveFunctor.of_left_exact_map {F G : C ⥤ₗ D} (α : F ⟶ G) :
+    (AdditiveFunctorCat.ofLeftExact C D).map α = α :=
   rfl
-#align category_theory.Additive_Functor.of_left_exact_map CategoryTheory.AdditiveFunctor.of_left_exact_map
+#align
+  category_theory.Additive_Functor.of_left_exact_map CategoryTheory.AdditiveFunctor.of_left_exact_map
 
 @[simp]
 theorem AdditiveFunctor.of_right_exact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) :
     (AdditiveFunctorCat.ofRightExact C D).map α = α :=
   rfl
-#align category_theory.Additive_Functor.of_right_exact_map CategoryTheory.AdditiveFunctor.of_right_exact_map
+#align
+  category_theory.Additive_Functor.of_right_exact_map CategoryTheory.AdditiveFunctor.of_right_exact_map
 
 @[simp]
-theorem AdditiveFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) : (AdditiveFunctorCat.ofExact C D).map α = α :=
+theorem AdditiveFunctor.of_exact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
+    (AdditiveFunctorCat.ofExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_exact_map CategoryTheory.AdditiveFunctor.of_exact_map
 

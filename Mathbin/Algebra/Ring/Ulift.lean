@@ -32,8 +32,10 @@ instance distrib [Distrib α] : Distrib (ULift α) := by
   refine_struct { add := (· + ·), mul := (· * ·).. } <;> pi_instance_derive_field
 #align ulift.distrib ULift.distrib
 
-instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring α] : NonUnitalNonAssocSemiring (ULift α) := by
-  refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul } <;>
+instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring α] :
+    NonUnitalNonAssocSemiring (ULift α) := by
+  refine_struct
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_non_assoc_semiring ULift.nonUnitalNonAssocSemiring
 
@@ -45,7 +47,8 @@ instance nonAssocSemiring [NonAssocSemiring α] : NonAssocSemiring (ULift α) :=
 #align ulift.non_assoc_semiring ULift.nonAssocSemiring
 
 instance nonUnitalSemiring [NonUnitalSemiring α] : NonUnitalSemiring (ULift α) := by
-  refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul } <;>
+  refine_struct
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_semiring ULift.nonUnitalSemiring
 
@@ -68,53 +71,56 @@ def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α where
 #align ulift.ring_equiv ULift.ringEquiv
 
 instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemiring (ULift α) := by
-  refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul } <;>
+  refine_struct
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_comm_semiring ULift.nonUnitalCommSemiring
 
 instance commSemiring [CommSemiring α] : CommSemiring (ULift α) := by
   refine_struct
-      { ULift.semiring with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoid.nsmul,
-        npow := Monoid.npow } <;>
+      { ULift.semiring with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·),
+        nsmul := AddMonoid.nsmul, npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align ulift.comm_semiring ULift.commSemiring
 
 instance nonUnitalNonAssocRing [NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoid.nsmul,
-        zsmul := SubNegMonoid.zsmul } <;>
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+        nsmul := AddMonoid.nsmul, zsmul := SubNegMonoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_non_assoc_ring ULift.nonUnitalNonAssocRing
 
 instance nonUnitalRing [NonUnitalRing α] : NonUnitalRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoid.nsmul,
-        zsmul := SubNegMonoid.zsmul } <;>
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+        nsmul := AddMonoid.nsmul, zsmul := SubNegMonoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_ring ULift.nonUnitalRing
 
 instance nonAssocRing [NonAssocRing α] : NonAssocRing (ULift α) := by
   refine_struct
-      { ULift.addGroupWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub,
-        neg := Neg.neg, nsmul := AddMonoid.nsmul, zsmul := SubNegMonoid.zsmul } <;>
+      { ULift.addGroupWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·),
+        sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoid.nsmul, zsmul := SubNegMonoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_assoc_ring ULift.nonAssocRing
 
 instance ring [Ring α] : Ring (ULift α) := by
   refine_struct
-      { ULift.semiring, ULift.addGroupWithOne with zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·),
-        sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoid.nsmul, npow := Monoid.npow, zsmul := SubNegMonoid.zsmul } <;>
+      { ULift.semiring, ULift.addGroupWithOne with zero := (0 : ULift α), one := 1, add := (· + ·),
+        mul := (· * ·), sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoid.nsmul,
+        npow := Monoid.npow, zsmul := SubNegMonoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.ring ULift.ring
 
 instance nonUnitalCommRing [NonUnitalCommRing α] : NonUnitalCommRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg, nsmul := AddMonoid.nsmul,
-        zsmul := SubNegMonoid.zsmul } <;>
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+        nsmul := AddMonoid.nsmul, zsmul := SubNegMonoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_comm_ring ULift.nonUnitalCommRing
 
-instance commRing [CommRing α] : CommRing (ULift α) := by refine_struct { ULift.ring with } <;> pi_instance_derive_field
+instance commRing [CommRing α] : CommRing (ULift α) := by
+  refine_struct { ULift.ring with } <;> pi_instance_derive_field
 #align ulift.comm_ring ULift.commRing
 
 instance [HasRatCast α] : HasRatCast (ULift α) :=
@@ -132,8 +138,9 @@ instance field [Field α] : Field (ULift α) := by
     rw [rat_cast_down, mul_down, inv_down, nat_cast_down, int_cast_down]
     exact Field.rat_cast_mk a b h1 h2
   refine_struct
-      { @ULift.nontrivial α _, ULift.commRing with zero := (0 : ULift α), inv := Inv.inv, div := Div.div,
-        zpow := fun n a => ULift.up (a.down ^ n), ratCast := coe, rat_cast_mk := of_rat_mk, qsmul := (· • ·) } <;>
+      { @ULift.nontrivial α _, ULift.commRing with zero := (0 : ULift α), inv := Inv.inv,
+        div := Div.div, zpow := fun n a => ULift.up (a.down ^ n), ratCast := coe,
+        rat_cast_mk := of_rat_mk, qsmul := (· • ·) } <;>
     pi_instance_derive_field
   -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.
   cases a

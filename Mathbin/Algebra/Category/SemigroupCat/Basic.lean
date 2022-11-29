@@ -136,7 +136,8 @@ def ofHom {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) : of X �
 add_decl_doc AddSemigroupCat.ofHom
 
 @[simp, to_additive]
-theorem of_hom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
+theorem of_hom_apply {X Y : Type u} [Semigroup X] [Semigroup Y] (f : X →ₙ* Y) (x : X) :
+    ofHom f x = f x :=
   rfl
 #align Semigroup.of_hom_apply SemigroupCat.of_hom_apply
 
@@ -195,7 +196,8 @@ end
 namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Magma`. -/
-@[to_additive AddMagma_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddMagma`."]
+@[to_additive AddMagma_iso_to_add_equiv
+      "Build an `add_equiv` from an isomorphism in the category\n`AddMagma`."]
 def magmaIsoToMulEquiv {X Y : MagmaCat} (i : X ≅ Y) : X ≃* Y where
   toFun := i.Hom
   invFun := i.inv
@@ -220,7 +222,8 @@ end CategoryTheory.Iso
 in `Magma` -/
 @[to_additive addEquivIsoAddMagmaIso
       "additive equivalences between `has_add`s are the same\nas (isomorphic to) isomorphisms in `AddMagma`"]
-def mulEquivIsoMagmaIso {X Y : Type u} [Mul X] [Mul Y] : X ≃* Y ≅ MagmaCat.of X ≅ MagmaCat.of Y where
+def mulEquivIsoMagmaIso {X Y : Type u} [Mul X] [Mul Y] :
+    X ≃* Y ≅ MagmaCat.of X ≅ MagmaCat.of Y where
   Hom e := e.toMagmaIso
   inv i := i.magmaIsoToMulEquiv
 #align mul_equiv_iso_Magma_iso mulEquivIsoMagmaIso

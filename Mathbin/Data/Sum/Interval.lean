@@ -64,14 +64,16 @@ theorem mem_sum_lift₂ :
     
 #align finset.mem_sum_lift₂ Finset.mem_sum_lift₂
 
-theorem inl_mem_sum_lift₂ {c₁ : γ₁} : inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
+theorem inl_mem_sum_lift₂ {c₁ : γ₁} :
+    inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
   rw [mem_sum_lift₂, or_iff_left]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
 #align finset.inl_mem_sum_lift₂ Finset.inl_mem_sum_lift₂
 
-theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
+theorem inr_mem_sum_lift₂ {c₂ : γ₂} :
+    inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
   rw [mem_sum_lift₂, or_iff_right]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
@@ -80,7 +82,8 @@ theorem inr_mem_sum_lift₂ {c₂ : γ₂} : inr c₂ ∈ sumLift₂ f g a b ↔
 
 theorem sum_lift₂_eq_empty :
     sumLift₂ f g a b = ∅ ↔
-      (∀ a₁ b₁, a = inl a₁ → b = inl b₁ → f a₁ b₁ = ∅) ∧ ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → g a₂ b₂ = ∅ :=
+      (∀ a₁ b₁, a = inl a₁ → b = inl b₁ → f a₁ b₁ = ∅) ∧
+        ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → g a₂ b₂ = ∅ :=
   by
   refine' ⟨fun h => _, fun h => _⟩
   · constructor <;>
@@ -101,7 +104,8 @@ theorem sum_lift₂_eq_empty :
 
 theorem sum_lift₂_nonempty :
     (sumLift₂ f g a b).Nonempty ↔
-      (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
+      (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨
+        ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
   by simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_or]
 #align finset.sum_lift₂_nonempty Finset.sum_lift₂_nonempty
 

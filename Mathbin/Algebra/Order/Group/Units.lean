@@ -15,7 +15,8 @@ import Mathbin.Algebra.Order.Monoid.Units
 variable {α : Type _}
 
 /-- The units of an ordered commutative monoid form an ordered commutative group. -/
-@[to_additive "The units of an ordered commutative additive monoid form an ordered commutative\nadditive group."]
+@[to_additive
+      "The units of an ordered commutative additive monoid form an ordered commutative\nadditive group."]
 instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :=
   { Units.partialOrder, Units.commGroup with
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }

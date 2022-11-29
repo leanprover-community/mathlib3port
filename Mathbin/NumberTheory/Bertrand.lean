@@ -47,8 +47,8 @@ namespace Bertrand
 /-- A reified version of the `bertrand.main_inequality` below.
 This is not best possible: it actually holds for 464 ≤ x.
 -/
-theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) : x * (2 * x) ^ sqrt (2 * x) * 4 ^ (2 * x / 3) ≤ 4 ^ x :=
-  by
+theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
+    x * (2 * x) ^ sqrt (2 * x) * 4 ^ (2 * x / 3) ≤ 4 ^ x := by
   let f : ℝ → ℝ := fun x => log x + sqrt (2 * x) * log (2 * x) - log 4 / 3 * x
   have hf' : ∀ x, 0 < x → 0 < x * (2 * x) ^ sqrt (2 * x) / 4 ^ (x / 3) := fun x h =>
     div_pos (mul_pos h (rpow_pos_of_pos (mul_pos two_pos h) _)) (rpow_pos_of_pos four_pos _)
@@ -56,17 +56,19 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) : x * (2 * 
     intro x h5
     have h6 := mul_pos two_pos h5
     have h7 := rpow_pos_of_pos h6 (sqrt (2 * x))
-    rw [log_div (mul_pos h5 h7).ne' (rpow_pos_of_pos four_pos _).ne', log_mul h5.ne' h7.ne', log_rpow h6,
-      log_rpow zero_lt_four, ← mul_div_right_comm, ← mul_div, mul_comm x]
+    rw [log_div (mul_pos h5 h7).ne' (rpow_pos_of_pos four_pos _).ne', log_mul h5.ne' h7.ne',
+      log_rpow h6, log_rpow zero_lt_four, ← mul_div_right_comm, ← mul_div, mul_comm x]
   have h5 : 0 < x := lt_of_lt_of_le (by norm_num1) n_large
-  rw [← div_le_one (rpow_pos_of_pos four_pos x), ← div_div_eq_mul_div, ← rpow_sub four_pos, ← mul_div 2 x,
-    mul_div_left_comm, ← mul_one_sub, (by norm_num1 : (1 : ℝ) - 2 / 3 = 1 / 3), mul_one_div, ←
-    log_nonpos_iff (hf' x h5), ← hf x h5]
+  rw [← div_le_one (rpow_pos_of_pos four_pos x), ← div_div_eq_mul_div, ← rpow_sub four_pos, ←
+    mul_div 2 x, mul_div_left_comm, ← mul_one_sub, (by norm_num1 : (1 : ℝ) - 2 / 3 = 1 / 3),
+    mul_one_div, ← log_nonpos_iff (hf' x h5), ← hf x h5]
   have h : ConcaveOn ℝ (Set.ioi 0.5) f := by
     refine'
         ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
-              ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map ((2 : ℝ) • LinearMap.id)).Subset
-                (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha)) (convex_Ioi 0.5))).sub
+              ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map
+                    ((2 : ℝ) • LinearMap.id)).Subset
+                (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha))
+                (convex_Ioi 0.5))).sub
           ((convex_on_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
   suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
@@ -93,8 +95,8 @@ open Nat
 
 /-- The inequality which contradicts Bertrand's postulate, for large enough `n`.
 -/
-theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) : n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n :=
-  by
+theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
+    n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n := by
   rw [← @cast_le ℝ]
   simp only [cast_bit0, cast_add, cast_one, cast_mul, cast_pow, ← Real.rpow_nat_cast]
   have n_pos : 0 < n := (by decide : 0 < 512).trans_le n_large
@@ -116,7 +118,8 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) : n * (2 * n) ^
 /-- A lemma that tells us that, in the case where Bertrand's postulate does not hold, the prime
 factorization of the central binomial coefficent only has factors at most `2 * n / 3 + 1`.
 -/
-theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n) (no_prime : ¬∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) :
+theorem central_binom_factorization_small (n : ℕ) (n_large : 2 < n)
+    (no_prime : ¬∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) :
     centralBinom n = ∏ p in Finset.range (2 * n / 3 + 1), p ^ (centralBinom n).factorization p := by
   refine' (Eq.trans _ n.prod_pow_factorization_central_binom).symm
   apply Finset.prod_subset
@@ -181,37 +184,41 @@ namespace Nat
 
 /-- Proves that Bertrand's postulate holds for all sufficiently large `n`.
 -/
-theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) : ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
+theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) :
+    ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
   -- Assume there is no prime in the range.
   by_contra no_prime
   -- Then we have the above sub-exponential bound on the size of this central binomial coefficient.
   -- We now couple this bound with an exponential lower bound on the central binomial coefficient,
   -- yielding an inequality which we have seen is false for large enough n.
   have H1 : n * (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) ≤ 4 ^ n := bertrand_main_inequality n_big
-  have H2 : 4 ^ n < n * n.central_binom := Nat.four_pow_lt_mul_central_binom n (le_trans (by norm_num1) n_big)
+  have H2 : 4 ^ n < n * n.central_binom :=
+    Nat.four_pow_lt_mul_central_binom n (le_trans (by norm_num1) n_big)
   have H3 : n.central_binom ≤ (2 * n) ^ sqrt (2 * n) * 4 ^ (2 * n / 3) :=
     central_binom_le_of_no_bertrand_prime n (lt_of_lt_of_le (by norm_num1) n_big) no_prime
-  rw [mul_assoc] at H1
-  exact not_le.2 H2 ((mul_le_mul_left' H3 n).trans H1)
+  rw [mul_assoc] at H1; exact not_le.2 H2 ((mul_le_mul_left' H3 n).trans H1)
 #align nat.exists_prime_lt_and_le_two_mul_eventually Nat.exists_prime_lt_and_le_two_mul_eventually
 
 /-- Proves that Bertrand's postulate holds over all positive naturals less than n by identifying a
 descending list of primes, each no more than twice the next, such that the list contains a witness
 for each number ≤ n.
 -/
-theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Prime p) (covering : p ≤ 2 * q)
-    (H : n < q → ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) (hn : n < p) : ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
-  by_cases p ≤ 2 * n
+theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Prime p)
+    (covering : p ≤ 2 * q) (H : n < q → ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n) (hn : n < p) :
+    ∃ p : ℕ, p.Prime ∧ n < p ∧ p ≤ 2 * n := by
+  by_cases p ≤ 2 * n;
   · exact ⟨p, prime_p, hn, h⟩
     
   exact H (lt_of_mul_lt_mul_left' (lt_of_lt_of_le (not_le.1 h) covering))
 #align nat.exists_prime_lt_and_le_two_mul_succ Nat.exists_prime_lt_and_le_two_mul_succ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/-- **Bertrand's Postulate**: For any positive natural number, there is a prime which is greater than
+/--
+**Bertrand's Postulate**: For any positive natural number, there is a prime which is greater than
 it, but no more than twice as large.
 -/
-theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) : ∃ p, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n := by
+theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) :
+    ∃ p, Nat.Prime p ∧ n < p ∧ p ≤ 2 * n := by
   -- Split into cases whether `n` is large or small
   cases lt_or_le 511 n
   -- If `n` is large, apply the lemma derived from the inequalities on the central binomial

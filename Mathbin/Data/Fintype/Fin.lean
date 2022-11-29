@@ -41,7 +41,8 @@ theorem Ioi_zero_eq_map : ioi (0 : Fin n.succ) = univ.map (Fin.succEmbedding _).
 @[simp]
 theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).toEmbedding := by
   ext i
-  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coe_fn_mk, exists_true_left]
+  simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coe_fn_mk,
+    exists_true_left]
   constructor
   · refine' cases _ _ i
     · rintro ⟨⟨⟩⟩
@@ -62,7 +63,8 @@ theorem card_filter_univ_succ' (p : Fin (n + 1) → Prop) [DecidablePred p] :
 #align fin.card_filter_univ_succ' Fin.card_filter_univ_succ'
 
 theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
-    (univ.filter p).card = if p 0 then (univ.filter (p ∘ Fin.succ)).card + 1 else (univ.filter (p ∘ Fin.succ)).card :=
+    (univ.filter p).card =
+      if p 0 then (univ.filter (p ∘ Fin.succ)).card + 1 else (univ.filter (p ∘ Fin.succ)).card :=
   (card_filter_univ_succ' p).trans (by split_ifs <;> simp [add_comm 1])
 #align fin.card_filter_univ_succ Fin.card_filter_univ_succ
 
@@ -71,8 +73,8 @@ theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : V
   induction' v using Vector.inductionOn with n x xs hxs
   · simp
     
-  · simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp, Vector.nth_cons_succ,
-      hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
+  · simp_rw [card_filter_univ_succ', Vector.nth_cons_zero, Vector.to_list_cons, Function.comp,
+      Vector.nth_cons_succ, hxs, List.count_cons', add_comm (ite (a = x) 1 0)]
     
 #align fin.card_filter_univ_eq_vector_nth_eq_count Fin.card_filter_univ_eq_vector_nth_eq_count
 

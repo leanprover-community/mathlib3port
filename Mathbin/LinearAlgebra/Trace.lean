@@ -55,7 +55,8 @@ def traceAux : (M →ₗ[R] M) →ₗ[R] R :=
 #align linear_map.trace_aux LinearMap.traceAux
 
 -- Can't be `simp` because it would cause a loop.
-theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) : traceAux R b f = Matrix.trace (LinearMap.toMatrix b b f) :=
+theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) :
+    traceAux R b f = Matrix.trace (LinearMap.toMatrix b b f) :=
   rfl
 #align linear_map.trace_aux_def LinearMap.trace_aux_def
 
@@ -67,11 +68,13 @@ theorem trace_aux_eq : traceAux R b = traceAux R c :=
         by rw [LinearMap.id_comp, LinearMap.comp_id]
       _ =
           Matrix.trace
-            (LinearMap.toMatrix c b LinearMap.id ⬝ LinearMap.toMatrix c c f ⬝ LinearMap.toMatrix b c LinearMap.id) :=
+            (LinearMap.toMatrix c b LinearMap.id ⬝ LinearMap.toMatrix c c f ⬝
+              LinearMap.toMatrix b c LinearMap.id) :=
         by rw [LinearMap.to_matrix_comp _ c, LinearMap.to_matrix_comp _ c]
       _ =
           Matrix.trace
-            (LinearMap.toMatrix c c f ⬝ LinearMap.toMatrix b c LinearMap.id ⬝ LinearMap.toMatrix c b LinearMap.id) :=
+            (LinearMap.toMatrix c c f ⬝ LinearMap.toMatrix b c LinearMap.id ⬝
+              LinearMap.toMatrix c b LinearMap.id) :=
         by rw [Matrix.mul_assoc, Matrix.trace_mul_comm]
       _ = Matrix.trace (LinearMap.toMatrix c c ((f.comp LinearMap.id).comp LinearMap.id)) := by
         rw [LinearMap.to_matrix_comp _ b, LinearMap.to_matrix_comp _ c]
@@ -99,8 +102,10 @@ theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M 
   apply trace_aux_eq
 #align linear_map.trace_eq_matrix_trace_of_finset LinearMap.trace_eq_matrix_trace_of_finset
 
-theorem trace_eq_matrix_trace (f : M →ₗ[R] M) : trace R M f = Matrix.trace (LinearMap.toMatrix b b f) := by
-  rw [trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ← trace_aux_def, ← trace_aux_def, trace_aux_eq R b]
+theorem trace_eq_matrix_trace (f : M →ₗ[R] M) :
+    trace R M f = Matrix.trace (LinearMap.toMatrix b b f) := by
+  rw [trace_eq_matrix_trace_of_finset R b.reindex_finset_range, ← trace_aux_def, ← trace_aux_def,
+    trace_aux_eq R b]
 #align linear_map.trace_eq_matrix_trace LinearMap.trace_eq_matrix_trace
 
 theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f * g) = trace R M (g * f) :=
@@ -113,7 +118,8 @@ theorem trace_mul_comm (f g : M →ₗ[R] M) : trace R M (f * g) = trace R M (g 
 
 /-- The trace of an endomorphism is invariant under conjugation -/
 @[simp]
-theorem trace_conj (g : M →ₗ[R] M) (f : (M →ₗ[R] M)ˣ) : trace R M (↑f * g * ↑f⁻¹) = trace R M g := by
+theorem trace_conj (g : M →ₗ[R] M) (f : (M →ₗ[R] M)ˣ) : trace R M (↑f * g * ↑f⁻¹) = trace R M g :=
+  by
   rw [trace_mul_comm]
   simp
 #align linear_map.trace_conj LinearMap.trace_conj
@@ -165,14 +171,16 @@ theorem trace_eq_contract : LinearMap.trace R M ∘ₗ dualTensorHom R M M = con
 
 @[simp]
 theorem trace_eq_contract_apply (x : Module.Dual R M ⊗[R] M) :
-    (LinearMap.trace R M) ((dualTensorHom R M M) x) = contractLeft R M x := by rw [← comp_apply, trace_eq_contract]
+    (LinearMap.trace R M) ((dualTensorHom R M M) x) = contractLeft R M x := by
+  rw [← comp_apply, trace_eq_contract]
 #align linear_map.trace_eq_contract_apply LinearMap.trace_eq_contract_apply
 
 open Classical
 
 /-- When `M` is finite free, the trace of a linear map correspond to the contraction pairing under
 the isomorphism `End(M) ≃ M* ⊗ M`-/
-theorem trace_eq_contract' : LinearMap.trace R M = contractLeft R M ∘ₗ (dualTensorHomEquiv R M M).symm.toLinearMap :=
+theorem trace_eq_contract' :
+    LinearMap.trace R M = contractLeft R M ∘ₗ (dualTensorHomEquiv R M M).symm.toLinearMap :=
   trace_eq_contract_of_basis' (Module.Free.chooseBasis R M)
 #align linear_map.trace_eq_contract' LinearMap.trace_eq_contract'
 
@@ -194,37 +202,40 @@ theorem trace_transpose : trace R (Module.Dual R M) ∘ₗ Module.Dual.transpose
   let e := dualTensorHomEquiv R M M
   have h : Function.Surjective e.to_linear_map := e.surjective
   refine' (cancel_right h).1 _
-  ext (f m)
-  simp [e]
+  ext (f m); simp [e]
 #align linear_map.trace_transpose LinearMap.trace_transpose
 
 theorem trace_prod_map :
-    trace R (M × N) ∘ₗ prodMapLinear R M N M N R = (coprod id id : R × R →ₗ[R] R) ∘ₗ prodMap (trace R M) (trace R N) :=
+    trace R (M × N) ∘ₗ prodMapLinear R M N M N R =
+      (coprod id id : R × R →ₗ[R] R) ∘ₗ prodMap (trace R M) (trace R N) :=
   by
   let e := (dualTensorHomEquiv R M M).Prod (dualTensorHomEquiv R N N)
   have h : Function.Surjective e.to_linear_map := e.surjective
   refine' (cancel_right h).1 _
   ext
   · simp only [dualTensorHomEquiv, TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
-      TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp, LinearEquiv.coe_to_linear_map, coe_inl,
-      Function.comp_apply, LinearEquiv.prod_apply, dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply,
-      coprod_apply, id_coe, id.def, add_zero, prod_map_linear_apply, dual_tensor_hom_prod_map_zero,
-      trace_eq_contract_apply, contract_left_apply, fst_apply]
+      TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp,
+      LinearEquiv.coe_to_linear_map, coe_inl, Function.comp_apply, LinearEquiv.prod_apply,
+      dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply, coprod_apply, id_coe, id.def,
+      add_zero, prod_map_linear_apply, dual_tensor_hom_prod_map_zero, trace_eq_contract_apply,
+      contract_left_apply, fst_apply]
     
   · simp only [dualTensorHomEquiv, TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
-      TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp, LinearEquiv.coe_to_linear_map, coe_inr,
-      Function.comp_apply, LinearEquiv.prod_apply, dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply,
-      coprod_apply, id_coe, id.def, zero_add, prod_map_linear_apply, zero_prod_map_dual_tensor_hom,
-      trace_eq_contract_apply, contract_left_apply, snd_apply]
+      TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp,
+      LinearEquiv.coe_to_linear_map, coe_inr, Function.comp_apply, LinearEquiv.prod_apply,
+      dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply, coprod_apply, id_coe, id.def,
+      zero_add, prod_map_linear_apply, zero_prod_map_dual_tensor_hom, trace_eq_contract_apply,
+      contract_left_apply, snd_apply]
     
 #align linear_map.trace_prod_map LinearMap.trace_prod_map
 
 variable {R M N}
 
-theorem trace_prod_map' (f : M →ₗ[R] M) (g : N →ₗ[R] N) : trace R (M × N) (prodMap f g) = trace R M f + trace R N g :=
-  by
+theorem trace_prod_map' (f : M →ₗ[R] M) (g : N →ₗ[R] N) :
+    trace R (M × N) (prodMap f g) = trace R M f + trace R N g := by
   have h := ext_iff.1 (trace_prod_map R M N) (f, g)
-  simp only [coe_comp, Function.comp_apply, prod_map_apply, coprod_apply, id_coe, id.def, prod_map_linear_apply] at h
+  simp only [coe_comp, Function.comp_apply, prod_map_apply, coprod_apply, id_coe, id.def,
+    prod_map_linear_apply] at h
   exact h
 #align linear_map.trace_prod_map' LinearMap.trace_prod_map'
 
@@ -240,19 +251,22 @@ theorem trace_tensor_product :
     (compl₁₂_inj (show surjective (dualTensorHom R M M) from (dualTensorHomEquiv R M M).Surjective)
         (show surjective (dualTensorHom R N N) from (dualTensorHomEquiv R N N).Surjective)).1
   ext (f m g n)
-  simp only [algebra_tensor_module.curry_apply, to_fun_eq_coe, TensorProduct.curry_apply, coe_restrict_scalars_eq_coe,
-    compl₁₂_apply, compr₂_apply, map_bilinear_apply, trace_eq_contract_apply, contract_left_apply, lsmul_apply,
-    Algebra.id.smul_eq_mul, map_dual_tensor_hom, dual_distrib_apply]
+  simp only [algebra_tensor_module.curry_apply, to_fun_eq_coe, TensorProduct.curry_apply,
+    coe_restrict_scalars_eq_coe, compl₁₂_apply, compr₂_apply, map_bilinear_apply,
+    trace_eq_contract_apply, contract_left_apply, lsmul_apply, Algebra.id.smul_eq_mul,
+    map_dual_tensor_hom, dual_distrib_apply]
 #align linear_map.trace_tensor_product LinearMap.trace_tensor_product
 
-theorem trace_comp_comm : compr₂ (llcomp R M N M) (trace R M) = compr₂ (llcomp R N M N).flip (trace R N) := by
+theorem trace_comp_comm :
+    compr₂ (llcomp R M N M) (trace R M) = compr₂ (llcomp R N M N).flip (trace R N) := by
   apply
     (compl₁₂_inj (show surjective (dualTensorHom R N M) from (dualTensorHomEquiv R N M).Surjective)
         (show surjective (dualTensorHom R M N) from (dualTensorHomEquiv R M N).Surjective)).1
   ext (g m f n)
-  simp only [TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe, LinearEquiv.coe_to_linear_map,
-    TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, compl₁₂_apply, compr₂_apply, flip_apply, llcomp_apply',
-    comp_dual_tensor_hom, map_smul, trace_eq_contract_apply, contract_left_apply, smul_eq_mul, mul_comm]
+  simp only [TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
+    LinearEquiv.coe_to_linear_map, TensorProduct.curry_apply, coe_restrict_scalars_eq_coe,
+    compl₁₂_apply, compr₂_apply, flip_apply, llcomp_apply', comp_dual_tensor_hom, map_smul,
+    trace_eq_contract_apply, contract_left_apply, smul_eq_mul, mul_comm]
 #align linear_map.trace_comp_comm LinearMap.trace_comp_comm
 
 variable {R M N}
@@ -262,14 +276,16 @@ theorem trace_transpose' (f : M →ₗ[R] M) : trace R _ (Module.Dual.transpose 
   rw [← comp_apply, trace_transpose]
 #align linear_map.trace_transpose' LinearMap.trace_transpose'
 
-theorem trace_tensor_product' (f : M →ₗ[R] M) (g : N →ₗ[R] N) : trace R (M ⊗ N) (map f g) = trace R M f * trace R N g :=
-  by
+theorem trace_tensor_product' (f : M →ₗ[R] M) (g : N →ₗ[R] N) :
+    trace R (M ⊗ N) (map f g) = trace R M f * trace R N g := by
   have h := ext_iff.1 (ext_iff.1 (trace_tensor_product R M N) f) g
-  simp only [compr₂_apply, map_bilinear_apply, compl₁₂_apply, lsmul_apply, Algebra.id.smul_eq_mul] at h
+  simp only [compr₂_apply, map_bilinear_apply, compl₁₂_apply, lsmul_apply,
+    Algebra.id.smul_eq_mul] at h
   exact h
 #align linear_map.trace_tensor_product' LinearMap.trace_tensor_product'
 
-theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) : trace R M (g ∘ₗ f) = trace R N (f ∘ₗ g) := by
+theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) :
+    trace R M (g ∘ₗ f) = trace R N (f ∘ₗ g) := by
   have h := ext_iff.1 (ext_iff.1 (trace_comp_comm R M N) g) f
   simp only [llcomp_apply', compr₂_apply, flip_apply] at h
   exact h
@@ -277,12 +293,13 @@ theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) : trace R M (g 
 
 @[simp]
 theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj f) = trace R M f := by
-  rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe, LinearEquiv.self_trans_symm,
-    LinearEquiv.refl_to_linear_map, id_comp]
+  rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe,
+    LinearEquiv.self_trans_symm, LinearEquiv.refl_to_linear_map, id_comp]
 #align linear_map.trace_conj' LinearMap.trace_conj'
 
-theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p] [Module.Finite R p]
-    [Module.Free R f.ker] [Module.Finite R f.ker] : trace R M f = (finrank R p : R) := by
+theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p]
+    [Module.Finite R p] [Module.Free R f.ker] [Module.Finite R f.ker] :
+    trace R M f = (finrank R p : R) := by
   rw [h.eq_conj_prod_map, trace_conj', trace_prod_map', trace_id, map_zero, add_zero]
 #align linear_map.is_proj.trace LinearMap.IsProj.trace
 

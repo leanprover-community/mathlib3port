@@ -76,7 +76,9 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
         (0 : ℝ) =
         ∑' i : ℕ, 0 :=
       tsum_zero.symm
-    _ < liouvilleNumberTail m k :=-- to show that a series with non-negative terms has strictly positive sum it suffices
+    _ <
+        liouvilleNumberTail m
+          k :=-- to show that a series with non-negative terms has strictly positive sum it suffices
           -- to prove that
           -- 1. the terms of the zero series are indeed non-negative
           -- 2. the terms of our series are non-negative
@@ -98,7 +100,8 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
 theorem liouville_number_eq_initial_terms_add_tail {m : ℝ} (hm : 1 < m) (k : ℕ) :
     liouvilleNumber m = liouvilleNumberInitialTerms m k + liouvilleNumberTail m k :=
   (sum_add_tsum_nat_add _ (summable_one_div_pow_of_le hm fun i => i.self_le_factorial)).symm
-#align liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouville_number_eq_initial_terms_add_tail
+#align
+  liouville.liouville_number_eq_initial_terms_add_tail Liouville.liouville_number_eq_initial_terms_add_tail
 
 /-! We now prove two useful inequalities, before collecting everything together. -/
 
@@ -111,15 +114,20 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
       0 <
       m :=
     zero_lt_one.trans m1
-  have mi : |1 / m| < 1 := (le_of_eq (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
+  have mi : |1 / m| < 1 :=
+    (le_of_eq (abs_of_pos (one_div_pos.mpr m0))).trans_lt ((div_lt_one m0).mpr m1)
   calc
     (∑' i, 1 / m ^ (i + (n + 1))!) <
-        ∑' i, 1 / m ^ (i + (n + 1)!) :=-- to show the strict inequality between these series, we prove that:
+        ∑' i,
+          1 /
+            m ^
+              (i + (n + 1)!) :=-- to show the strict inequality between these series, we prove that:
         tsum_lt_tsum_of_nonneg
         (-- 1. the first series has non-negative terms
         fun b => one_div_nonneg.mpr (pow_nonneg m0.le _))
         (-- 2. the second series dominates the first
-        fun b => one_div_pow_le_one_div_pow_of_le m1.le (b.add_factorial_succ_le_factorial_add_succ n))
+        fun b =>
+          one_div_pow_le_one_div_pow_of_le m1.le (b.add_factorial_succ_le_factorial_add_succ n))
         (-- 3. the term with index `i = 2` of the first series is strictly smaller than
           -- the corresponding term of the second series
           one_div_pow_strict_anti
@@ -142,9 +150,11 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
     
 #align liouville.tsum_one_div_pow_factorial_lt Liouville.tsum_one_div_pow_factorial_lt
 
-theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
+theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
+    (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
   calc
-    (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 2 * (1 / m ^ (n + 1)!) :=-- the second factors coincide (and are non-negative),
+    (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤
+        2 * (1 / m ^ (n + 1)!) :=-- the second factors coincide (and are non-negative),
         -- the first factors, satisfy the inequality `sub_one_div_inv_le_two`
         mul_le_mul_of_nonneg_right
         (sub_one_div_inv_le_two hm) (by positivity)
@@ -181,8 +191,9 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
     unfold liouville_number_initial_terms at h_k⊢
     rw [sum_range_succ, h_k, div_add_div, div_eq_div_iff, add_mul]
     · norm_cast
-      rw [add_mul, one_mul, Nat.factorial_succ, show k.succ * k ! - k ! = (k.succ - 1) * k ! by rw [tsub_mul, one_mul],
-        Nat.succ_sub_one, add_mul, one_mul, pow_add]
+      rw [add_mul, one_mul, Nat.factorial_succ,
+        show k.succ * k ! - k ! = (k.succ - 1) * k ! by rw [tsub_mul, one_mul], Nat.succ_sub_one,
+        add_mul, one_mul, pow_add]
       simp [mul_assoc]
       
     refine' mul_ne_zero_iff.mpr ⟨_, _⟩
@@ -208,7 +219,8 @@ theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
     abs_of_nonneg (liouville_number_tail_pos m1 _).le]
   exact
     ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).Ne.symm,
-      (tsum_one_div_pow_factorial_lt n m1).trans_le (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩
+      (tsum_one_div_pow_factorial_lt n m1).trans_le
+        (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩
 #align liouville.is_liouville Liouville.is_liouville
 
 /- Placing this lemma outside of the `open/closed liouville`-namespace would allow to remove

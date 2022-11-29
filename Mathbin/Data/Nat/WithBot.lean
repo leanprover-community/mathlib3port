@@ -31,7 +31,8 @@ theorem add_eq_one_iff {n m : WithBot ℕ} : n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n
   exact add_eq_one_iff
 #align nat.with_bot.add_eq_one_iff Nat.WithBot.add_eq_one_iff
 
-theorem add_eq_two_iff {n m : WithBot ℕ} : n + m = 2 ↔ n = 0 ∧ m = 2 ∨ n = 1 ∧ m = 1 ∨ n = 2 ∧ m = 0 := by
+theorem add_eq_two_iff {n m : WithBot ℕ} :
+    n + m = 2 ↔ n = 0 ∧ m = 2 ∨ n = 1 ∧ m = 1 ∨ n = 2 ∧ m = 0 := by
   rcases n, m with ⟨_ | _, _ | _⟩
   any_goals tauto
   repeat' erw [WithBot.coe_eq_coe]
@@ -54,7 +55,8 @@ theorem coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
 
 @[simp]
 theorem lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
-  (Option.casesOn n (by decide)) fun n => iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
+  (Option.casesOn n (by decide)) fun n =>
+    iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
 #align nat.with_bot.lt_zero_iff Nat.WithBot.lt_zero_iff
 
 theorem one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by

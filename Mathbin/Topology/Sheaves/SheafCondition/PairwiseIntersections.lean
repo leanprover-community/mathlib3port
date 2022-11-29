@@ -111,7 +111,8 @@ of open sets below some `U i`.
 def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U where
   obj := pairwiseToOpensLeCoverObj U
   map V W i := pairwiseToOpensLeCoverMap U i
-#align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover
+#align
+  Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover
 
 instance (V : OpensLeCover U) : Nonempty (StructuredArrow V (pairwiseToOpensLeCover U)) :=
   ⟨{ right := single V.index, Hom := V.homToIndex }⟩
@@ -124,7 +125,8 @@ of all opens contained in some `U i`.
 instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
     is_connected_of_zigzag fun A B => by
-      rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp at *
+      rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;>
+        dsimp at *
       · refine' ⟨[{ left := ⟨⟨⟩⟩, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
@@ -141,7 +143,9 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
         
       · refine'
           ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
-              { left := ⟨⟨⟩⟩, right := pair i i', Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom }, _],
+              { left := ⟨⟨⟩⟩, right := pair i i',
+                Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom },
+              _],
             _, rfl⟩
         exact
           List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
@@ -164,12 +168,15 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
 /-- The diagram in `opens X` indexed by pairwise intersections from `U` is isomorphic
 (in fact, equal) to the diagram factored through `opens_le_cover U`.
 -/
-def pairwiseDiagramIso : Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ fullSubcategoryInclusion _ where
+def pairwiseDiagramIso :
+    Pairwise.diagram U ≅ pairwiseToOpensLeCover U ⋙ fullSubcategoryInclusion _ where
   Hom := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
   inv := { app := by rintro (i | ⟨i, j⟩) <;> exact 𝟙 _ }
-#align Top.presheaf.sheaf_condition.pairwise_diagram_iso TopCat.Presheaf.SheafCondition.pairwiseDiagramIso
+#align
+  Top.presheaf.sheaf_condition.pairwise_diagram_iso TopCat.Presheaf.SheafCondition.pairwiseDiagramIso
 
-/-- The cocone `pairwise.cocone U` with cocone point `supr U` over `pairwise.diagram U` is isomorphic
+/--
+The cocone `pairwise.cocone U` with cocone point `supr U` over `pairwise.diagram U` is isomorphic
 to the cocone `opens_le_cover_cocone U` (with the same cocone point)
 after appropriate whiskering and postcomposition.
 -/
@@ -178,7 +185,8 @@ def pairwiseCoconeIso :
       (Cones.postcomposeEquivalence (NatIso.op (pairwiseDiagramIso U : _) : _)).Functor.obj
         ((opensLeCoverCocone U).op.whisker (pairwiseToOpensLeCover U).op) :=
   Cones.ext (Iso.refl _) (by tidy)
-#align Top.presheaf.sheaf_condition.pairwise_cocone_iso TopCat.Presheaf.SheafCondition.pairwiseCoconeIso
+#align
+  Top.presheaf.sheaf_condition.pairwise_cocone_iso TopCat.Presheaf.SheafCondition.pairwiseCoconeIso
 
 end SheafCondition
 
@@ -221,8 +229,10 @@ theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections :
 /-- The sheaf condition in terms of an equalizer diagram is equivalent
 to the reformulation in terms of a limit diagram over `U i` and `U i ⊓ U j`.
 -/
-theorem is_sheaf_iff_is_sheaf_pairwise_intersections : F.IsSheaf ↔ F.IsSheafPairwiseIntersections := by
-  rw [is_sheaf_iff_is_sheaf_opens_le_cover, is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections]
+theorem is_sheaf_iff_is_sheaf_pairwise_intersections : F.IsSheaf ↔ F.IsSheafPairwiseIntersections :=
+  by
+  rw [is_sheaf_iff_is_sheaf_opens_le_cover,
+    is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections]
 #align
   Top.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections
 
@@ -255,7 +265,8 @@ open CategoryTheory.Limits
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`.
 This is the pullback cone. -/
 def interUnionPullbackCone :
-    PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op) :=
+    PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op)
+      (F.1.map (homOfLe inf_le_right).op) :=
   PullbackCone.mk (F.1.map (homOfLe le_sup_left).op) (F.1.map (homOfLe le_sup_right).op)
     (by
       rw [← F.1.map_comp, ← F.1.map_comp]
@@ -268,16 +279,20 @@ theorem inter_union_pullback_cone_X : (interUnionPullbackCone F U V).x = F.1.obj
 #align Top.sheaf.inter_union_pullback_cone_X TopCat.Sheaf.inter_union_pullback_cone_X
 
 @[simp]
-theorem inter_union_pullback_cone_fst : (interUnionPullbackCone F U V).fst = F.1.map (homOfLe le_sup_left).op :=
+theorem inter_union_pullback_cone_fst :
+    (interUnionPullbackCone F U V).fst = F.1.map (homOfLe le_sup_left).op :=
   rfl
 #align Top.sheaf.inter_union_pullback_cone_fst TopCat.Sheaf.inter_union_pullback_cone_fst
 
 @[simp]
-theorem inter_union_pullback_cone_snd : (interUnionPullbackCone F U V).snd = F.1.map (homOfLe le_sup_right).op :=
+theorem inter_union_pullback_cone_snd :
+    (interUnionPullbackCone F U V).snd = F.1.map (homOfLe le_sup_right).op :=
   rfl
 #align Top.sheaf.inter_union_pullback_cone_snd TopCat.Sheaf.inter_union_pullback_cone_snd
 
-variable (s : PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op))
+variable
+  (s :
+    PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op))
 
 /-- (Implementation).
 Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through `F(U ⊔ V)`.
@@ -295,11 +310,13 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
       exacts[Or.inl h, Or.inr h]
       
   refine'
-    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift ⟨s.X, { app := _, naturality' := _ }⟩ ≫
+    (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 ι).some.lift
+        ⟨s.X, { app := _, naturality' := _ }⟩ ≫
       F.1.map (eq_to_hom hι).op
   · apply Opposite.rec
     rintro ((_ | _) | (_ | _))
-    exacts[s.fst, s.snd, s.fst ≫ F.1.map (hom_of_le inf_le_left).op, s.snd ≫ F.1.map (hom_of_le inf_le_left).op]
+    exacts[s.fst, s.snd, s.fst ≫ F.1.map (hom_of_le inf_le_left).op,
+      s.snd ≫ F.1.map (hom_of_le inf_le_left).op]
     
   rintro i j f
   induction i using Opposite.rec
@@ -308,11 +325,12 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) := by
   have : f = g.op := rfl
   clear_value g
   subst this
-  rcases i with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;>
-    rcases j with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;>
-      rcases g with ⟨⟩ <;>
-        dsimp <;> simp only [category.id_comp, s.condition, CategoryTheory.Functor.map_id, category.comp_id]
-  · rw [← cancel_mono (F.1.map (eq_to_hom <| inf_comm : U ⊓ V ⟶ _).op), category.assoc, category.assoc]
+  rcases i with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;> rcases j with (⟨⟨_ | _⟩⟩ | ⟨⟨_ | _⟩, ⟨_⟩⟩) <;>
+        rcases g with ⟨⟩ <;>
+      dsimp <;>
+    simp only [category.id_comp, s.condition, CategoryTheory.Functor.map_id, category.comp_id]
+  · rw [← cancel_mono (F.1.map (eq_to_hom <| inf_comm : U ⊓ V ⟶ _).op), category.assoc,
+      category.assoc]
     erw [← F.1.map_comp, ← F.1.map_comp]
     convert s.condition.symm
     
@@ -324,7 +342,8 @@ theorem inter_union_pullback_cone_lift_left :
   exact
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.left))
-#align Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.inter_union_pullback_cone_lift_left
+#align
+  Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.inter_union_pullback_cone_lift_left
 
 theorem inter_union_pullback_cone_lift_right :
     interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_right).op = s.snd := by
@@ -332,7 +351,8 @@ theorem inter_union_pullback_cone_lift_right :
   exact
     (F.presheaf.is_sheaf_iff_is_sheaf_pairwise_intersections.mp F.2 _).some.fac _
       (op <| pairwise.single (ULift.up walking_pair.right))
-#align Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.inter_union_pullback_cone_lift_right
+#align
+  Top.sheaf.inter_union_pullback_cone_lift_right TopCat.Sheaf.inter_union_pullback_cone_lift_right
 
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`. -/
 def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
@@ -369,8 +389,8 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
       apply inter_union_pullback_cone_lift_right
       
     all_goals
-    dsimp only [functor.op, pairwise.cocone_ι_app, functor.map_cone_π_app, cocone.op, pairwise.cocone_ι_app_2, unop_op,
-      op_comp, nat_trans.op]
+    dsimp only [functor.op, pairwise.cocone_ι_app, functor.map_cone_π_app, cocone.op,
+      pairwise.cocone_ι_app_2, unop_op, op_comp, nat_trans.op]
     simp_rw [F.1.map_comp, ← category.assoc]
     congr 1
     simp_rw [category.assoc, ← F.1.map_comp]
@@ -386,7 +406,8 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
 /-- If `U, V` are disjoint, then `F(U ⊔ V) = F(U) × F(V)`. -/
 def isProductOfDisjoint (h : U ⊓ V = ⊥) :
     IsLimit
-      (BinaryFan.mk (F.1.map (homOfLe le_sup_left : _ ⟶ U ⊔ V).op) (F.1.map (homOfLe le_sup_right : _ ⟶ U ⊔ V).op)) :=
+      (BinaryFan.mk (F.1.map (homOfLe le_sup_left : _ ⟶ U ⊔ V).op)
+        (F.1.map (homOfLe le_sup_right : _ ⟶ U ⊔ V).op)) :=
   isProductOfIsTerminalIsPullback _ _ _ _ (F.isTerminalOfEqEmpty h) (isLimitPullbackCone F U V)
 #align Top.sheaf.is_product_of_disjoint TopCat.Sheaf.isProductOfDisjoint
 
@@ -396,35 +417,35 @@ def objSupIsoProdEqLocus {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) 
   (F.isLimitPullbackCone U V).conePointUniqueUpToIso (CommRingCat.pullbackConeIsLimit _ _)
 #align Top.sheaf.obj_sup_iso_prod_eq_locus TopCat.Sheaf.objSupIsoProdEqLocus
 
-theorem obj_sup_iso_prod_eq_locus_hom_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    ((F.objSupIsoProdEqLocus U V).Hom x).1.fst = F.1.map (homOfLe le_sup_left).op x :=
+theorem obj_sup_iso_prod_eq_locus_hom_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X)
+    (x) : ((F.objSupIsoProdEqLocus U V).Hom x).1.fst = F.1.map (homOfLe le_sup_left).op x :=
   ConcreteCategory.congr_hom
-    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_hom_comp (CommRingCat.pullbackConeIsLimit _ _)
-      WalkingCospan.left)
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_hom_comp
+      (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.left)
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_fst TopCat.Sheaf.obj_sup_iso_prod_eq_locus_hom_fst
 
-theorem obj_sup_iso_prod_eq_locus_hom_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    ((F.objSupIsoProdEqLocus U V).Hom x).1.snd = F.1.map (homOfLe le_sup_right).op x :=
+theorem obj_sup_iso_prod_eq_locus_hom_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X)
+    (x) : ((F.objSupIsoProdEqLocus U V).Hom x).1.snd = F.1.map (homOfLe le_sup_right).op x :=
   ConcreteCategory.congr_hom
-    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_hom_comp (CommRingCat.pullbackConeIsLimit _ _)
-      WalkingCospan.right)
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_hom_comp
+      (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.right)
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_snd TopCat.Sheaf.obj_sup_iso_prod_eq_locus_hom_snd
 
-theorem obj_sup_iso_prod_eq_locus_inv_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    F.1.map (homOfLe le_sup_left).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.1 :=
+theorem obj_sup_iso_prod_eq_locus_inv_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X)
+    (x) : F.1.map (homOfLe le_sup_left).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.1 :=
   ConcreteCategory.congr_hom
-    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_inv_comp (CommRingCat.pullbackConeIsLimit _ _)
-      WalkingCospan.left)
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_inv_comp
+      (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.left)
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_inv_fst TopCat.Sheaf.obj_sup_iso_prod_eq_locus_inv_fst
 
-theorem obj_sup_iso_prod_eq_locus_inv_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    F.1.map (homOfLe le_sup_right).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.2 :=
+theorem obj_sup_iso_prod_eq_locus_inv_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X)
+    (x) : F.1.map (homOfLe le_sup_right).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.2 :=
   ConcreteCategory.congr_hom
-    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_inv_comp (CommRingCat.pullbackConeIsLimit _ _)
-      WalkingCospan.right)
+    ((F.isLimitPullbackCone U V).cone_point_unique_up_to_iso_inv_comp
+      (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.right)
     x
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_inv_snd TopCat.Sheaf.obj_sup_iso_prod_eq_locus_inv_snd
 

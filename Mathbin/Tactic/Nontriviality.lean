@@ -18,13 +18,15 @@ namespace Tactic
 attempting to discharge the subsingleton branch using lemmas with `@[nontriviality]` attribute,
 including `subsingleton.le` and `eq_iff_true_of_subsingleton`.
 -/
-unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_list) : tactic Unit := do
+unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_list) :
+    tactic Unit := do
   let alternative ← to_expr ``(subsingleton_or_nontrivial $(α))
   let n ← get_unused_name "_inst"
   tactic.cases Alternative [n, n]
-  (solve1 <| do
+  (solve1 do
         reset_instance_cache
-        apply_instance <|> interactive.simp none none ff lems [`nontriviality] (Interactive.Loc.ns [none])) <|>
+        apply_instance <|>
+            interactive.simp none none ff lems [`nontriviality] (Interactive.Loc.ns [none])) <|>
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 #align tactic.nontriviality_by_elim tactic.nontriviality_by_elim
@@ -97,8 +99,8 @@ begin
 end
 ```
 -/
-unsafe def nontriviality (t : parse texpr ?) (lems : parse (tk "using" *> simp_arg_list <|> pure [])) : tactic Unit :=
-  do
+unsafe def nontriviality (t : parse texpr ?)
+    (lems : parse (tk "using" *> simp_arg_list <|> pure [])) : tactic Unit := do
   let α ←
     match t with
       | some α => to_expr α
@@ -129,8 +131,8 @@ unsafe def nontriviality (t : parse texpr ?) (lems : parse (tk "using" *> simp_a
 #align tactic.interactive.nontriviality tactic.interactive.nontriviality
 
 add_tactic_doc
-  { Name := "nontriviality", category := DocCategory.tactic, declNames := [`tactic.interactive.nontriviality],
-    tags := ["logic", "type class"] }
+  { Name := "nontriviality", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.nontriviality], tags := ["logic", "type class"] }
 
 end Tactic.Interactive
 

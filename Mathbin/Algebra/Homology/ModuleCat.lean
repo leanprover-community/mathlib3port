@@ -32,7 +32,8 @@ namespace ModuleCat
 /-- To prove that two maps out of a homology group are equal,
 it suffices to check they are equal on the images of cycles.
 -/
-theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f ≫ g = 0) {h k : homology f g w ⟶ K}
+theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f ≫ g = 0)
+    {h k : homology f g w ⟶ K}
     (w :
       ∀ x : LinearMap.ker g,
         h (cokernel.π (imageToKernel _ _ w) (toKernelSubobject x)) =
@@ -45,7 +46,8 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
 #align Module.homology_ext ModuleCat.homology_ext
 
 /-- Bundle an element `C.X i` such that `C.d_from i x = 0` as a term of `C.cycles i`. -/
-abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} (x : LinearMap.ker (C.dFrom i)) : C.cycles i :=
+abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
+    (x : LinearMap.ker (C.dFrom i)) : C.cycles i :=
   toKernelSubobject x
 #align Module.to_cycles ModuleCat.toCycles
 
@@ -66,7 +68,8 @@ theorem cycles_map_to_cycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom 
 #align Module.cycles_map_to_cycles ModuleCat.cycles_map_to_cycles
 
 /-- Build a term of `C.homology i` from an element `C.X i` such that `C.d_from i x = 0`. -/
-abbrev toHomology {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} (x : LinearMap.ker (C.dFrom i)) : C.homology i :=
+abbrev toHomology {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
+    (x : LinearMap.ker (C.dFrom i)) : C.homology i :=
   homology.π (C.dTo i) (C.dFrom i) _ (toCycles x)
 #align Module.to_homology ModuleCat.toHomology
 
@@ -80,20 +83,21 @@ theorem homology_ext' {M : ModuleCat R} (i : ι) {h k : C.homology i ⟶ M}
 specialized to the setting of `V = Module R`,
 to demonstrate the use of extensionality lemmas for homology in `Module R`. -/
 example (f g : C ⟶ D) (h : Homotopy f g) (i : ι) :
-    (homologyFunctor (ModuleCat.{u} R) c i).map f = (homologyFunctor (ModuleCat.{u} R) c i).map g := by
+    (homologyFunctor (ModuleCat.{u} R) c i).map f = (homologyFunctor (ModuleCat.{u} R) c i).map g :=
+  by
   -- To check that two morphisms out of a homology group agree, it suffices to check on cycles:
   ext
   simp only [homology_functor_map, homology.π_map_apply]
   -- To check that two elements are equal mod boundaries, it suffices to exhibit a boundary:
   ext1
-  swap
-  exact (toPrev i h.hom) x.1
+  swap; exact (toPrev i h.hom) x.1
   -- Moreover, to check that two cycles are equal, it suffices to check their underlying elements:
   ext1
   simp only [map_add, image_to_kernel_arrow_apply, HomologicalComplex.Hom.sq_from_left,
     ModuleCat.to_kernel_subobject_arrow, CategoryTheory.Limits.kernel_subobject_map_arrow_apply,
-    d_next_eq_d_from_from_next, Function.comp_apply, zero_add, ModuleCat.coe_comp, LinearMap.add_apply, map_zero,
-    Subtype.val_eq_coe, CategoryTheory.Limits.image_subobject_arrow_comp_apply, LinearMap.map_coe_ker,
+    d_next_eq_d_from_from_next, Function.comp_apply, zero_add, ModuleCat.coe_comp,
+    LinearMap.add_apply, map_zero, Subtype.val_eq_coe,
+    CategoryTheory.Limits.image_subobject_arrow_comp_apply, LinearMap.map_coe_ker,
     prev_d_eq_to_prev_d_to, h.comm i, x.2]
   abel
 

@@ -42,8 +42,8 @@ variable [∀ {X Y Z : A} (f : X ⟶ Y) (g : X ⟶ Z), PreservesColimit (span f 
 @[simps]
 def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
   let aux1 : StrongEpiMonoFactorisation (L.map f) :=
-    { i := L.obj (Limits.image f), m := L.map <| Limits.image.ι _, m_mono := preserves_mono_of_preserves_limit _ _,
-      e := L.map <| factorThruImage _,
+    { i := L.obj (Limits.image f), m := L.map <| Limits.image.ι _,
+      m_mono := preserves_mono_of_preserves_limit _ _, e := L.map <| factorThruImage _,
       e_strong_epi := @strong_epi_of_epi _ _ _ <| preserves_epi_of_preserves_colimit L _,
       fac' := by rw [← L.map_comp, limits.image.fac] }
   IsImage.isoExt (Image.isImage (L.map f)) aux1.toMonoIsImage
@@ -56,12 +56,16 @@ theorem factor_thru_image_comp_hom {X Y : A} (f : X ⟶ Y) :
   category_theory.preserves_image.factor_thru_image_comp_hom CategoryTheory.PreservesImage.factor_thru_image_comp_hom
 
 @[reassoc]
-theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) : (iso L f).Hom ≫ L.map (image.ι f) = image.ι (L.map f) := by simp
-#align category_theory.preserves_image.hom_comp_map_image_ι CategoryTheory.PreservesImage.hom_comp_map_image_ι
+theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) :
+    (iso L f).Hom ≫ L.map (image.ι f) = image.ι (L.map f) := by simp
+#align
+  category_theory.preserves_image.hom_comp_map_image_ι CategoryTheory.PreservesImage.hom_comp_map_image_ι
 
 @[reassoc]
-theorem inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) : (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) := by simp
-#align category_theory.preserves_image.inv_comp_image_ι_map CategoryTheory.PreservesImage.inv_comp_image_ι_map
+theorem inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) :
+    (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) := by simp
+#align
+  category_theory.preserves_image.inv_comp_image_ι_map CategoryTheory.PreservesImage.inv_comp_image_ι_map
 
 end PreservesImage
 

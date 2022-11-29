@@ -90,7 +90,8 @@ theorem eq_of_test_bit_eq {n m : ℕ} (h : ∀ i, testBit n i = testBit m i) : n
   exact hn fun i => by convert h (i + 1) using 1 <;> rw [test_bit_succ]
 #align nat.eq_of_test_bit_eq Nat.eq_of_test_bit_eq
 
-theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) : ∃ i, testBit n i = tt ∧ ∀ j, i < j → testBit n j = ff := by
+theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) :
+    ∃ i, testBit n i = tt ∧ ∀ j, i < j → testBit n j = ff := by
   induction' n using Nat.binaryRec with b n hn
   · exact False.elim (h rfl)
     
@@ -123,14 +124,18 @@ theorem lt_of_test_bit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testB
   by_cases hi : i = 0
   · subst hi
     simp only [test_bit_zero] at hn hm
-    have : n = m := eq_of_test_bit_eq fun i => by convert hnm (i + 1) (by decide) using 1 <;> rw [test_bit_succ]
+    have : n = m :=
+      eq_of_test_bit_eq fun i => by convert hnm (i + 1) (by decide) using 1 <;> rw [test_bit_succ]
     rw [hn, hm, this, bit_ff, bit_tt, bit0_val, bit1_val]
     exact lt_add_one _
     
   · obtain ⟨i', rfl⟩ := exists_eq_succ_of_ne_zero hi
     simp only [test_bit_succ] at hn hm
-    have := hn' _ hn hm fun j hj => by convert hnm j.succ (succ_lt_succ hj) using 1 <;> rw [test_bit_succ]
-    cases b <;> cases b' <;> simp only [bit_ff, bit_tt, bit0_val n, bit1_val n, bit0_val m, bit1_val m] <;> linarith
+    have :=
+      hn' _ hn hm fun j hj => by convert hnm j.succ (succ_lt_succ hj) using 1 <;> rw [test_bit_succ]
+    cases b <;> cases b' <;>
+        simp only [bit_ff, bit_tt, bit0_val n, bit1_val n, bit0_val m, bit1_val m] <;>
+      linarith
     
 #align nat.lt_of_test_bit Nat.lt_of_test_bit
 
@@ -162,8 +167,8 @@ theorem test_bit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) := by
 
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
     commutative. -/
-theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b) (hf' : f false false = ff) (n m : ℕ) :
-    bitwise f n m = bitwise f m n :=
+theorem bitwise_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b)
+    (hf' : f false false = ff) (n m : ℕ) : bitwise f n m = bitwise f m n :=
   suffices bitwise f = swap (bitwise f) by conv_lhs => rw [this]
   calc
     bitwise f = bitwise (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
@@ -214,19 +219,19 @@ unsafe def bitwise_assoc_tac : tactic Unit :=
   sorry
 #align nat.bitwise_assoc_tac nat.bitwise_assoc_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem lxor_assoc (n m k : ℕ) : lxor (lxor n m) k = lxor n (lxor m k) := by
   run_tac
     bitwise_assoc_tac
 #align nat.lxor_assoc Nat.lxor_assoc
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem land_assoc (n m k : ℕ) : land (land n m) k = land n (land m k) := by
   run_tac
     bitwise_assoc_tac
 #align nat.land_assoc Nat.land_assoc
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic nat.bitwise_assoc_tac -/
 theorem lor_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
   run_tac
     bitwise_assoc_tac
@@ -238,17 +243,20 @@ theorem lxor_self (n : ℕ) : lxor n n = 0 :=
 #align nat.lxor_self Nat.lxor_self
 
 -- These lemmas match `mul_inv_cancel_right` and `mul_inv_cancel_left`.
-theorem lxor_cancel_right (n m : ℕ) : lxor (lxor m n) n = m := by rw [lxor_assoc, lxor_self, lxor_zero]
+theorem lxor_cancel_right (n m : ℕ) : lxor (lxor m n) n = m := by
+  rw [lxor_assoc, lxor_self, lxor_zero]
 #align nat.lxor_cancel_right Nat.lxor_cancel_right
 
-theorem lxor_cancel_left (n m : ℕ) : lxor n (lxor n m) = m := by rw [← lxor_assoc, lxor_self, zero_lxor]
+theorem lxor_cancel_left (n m : ℕ) : lxor n (lxor n m) = m := by
+  rw [← lxor_assoc, lxor_self, zero_lxor]
 #align nat.lxor_cancel_left Nat.lxor_cancel_left
 
 theorem lxor_right_injective {n : ℕ} : Function.Injective (lxor n) := fun m m' h => by
   rw [← lxor_cancel_left n m, ← lxor_cancel_left n m', h]
 #align nat.lxor_right_injective Nat.lxor_right_injective
 
-theorem lxor_left_injective {n : ℕ} : Function.Injective fun m => lxor m n := fun m m' (h : lxor m n = lxor m' n) => by
+theorem lxor_left_injective {n : ℕ} : Function.Injective fun m => lxor m n :=
+  fun m m' (h : lxor m n = lxor m' n) => by
   rw [← lxor_cancel_right n m, ← lxor_cancel_right n m', h]
 #align nat.lxor_left_injective Nat.lxor_left_injective
 
@@ -263,14 +271,16 @@ theorem lxor_left_inj {n m m' : ℕ} : lxor m n = lxor m' n ↔ m = m' :=
 #align nat.lxor_left_inj Nat.lxor_left_inj
 
 @[simp]
-theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m := by rw [← lxor_self n, lxor_right_inj, eq_comm]
+theorem lxor_eq_zero {n m : ℕ} : lxor n m = 0 ↔ n = m := by
+  rw [← lxor_self n, lxor_right_inj, eq_comm]
 #align nat.lxor_eq_zero Nat.lxor_eq_zero
 
 theorem lxor_ne_zero {n m : ℕ} : lxor n m ≠ 0 ↔ n ≠ m :=
   lxor_eq_zero.Not
 #align nat.lxor_ne_zero Nat.lxor_ne_zero
 
-theorem lxor_trichotomy {a b c : ℕ} (h : a ≠ lxor b c) : lxor b c < a ∨ lxor a c < b ∨ lxor a b < c := by
+theorem lxor_trichotomy {a b c : ℕ} (h : a ≠ lxor b c) :
+    lxor b c < a ∨ lxor a c < b ∨ lxor a b < c := by
   set v := lxor a (lxor b c) with hv
   -- The xor of any two of `a`, `b`, `c` is the xor of `v` and the third.
   have hab : lxor a b = lxor c v := by

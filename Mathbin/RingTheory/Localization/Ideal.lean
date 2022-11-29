@@ -41,7 +41,8 @@ private def map_ideal (I : Ideal R) : Ideal S where
     use ⟨a'.2 * b'.1 + b'.2 * a'.1, I.add_mem (I.mul_mem_left _ b'.1.2) (I.mul_mem_left _ a'.1.2)⟩
     use a'.2 * b'.2
     simp only [RingHom.map_add, Submodule.coe_mk, Submonoid.coe_mul, RingHom.map_mul]
-    rw [add_mul, ← mul_assoc a, ha, mul_comm (algebraMap R S a'.2) (algebraMap R S b'.2), ← mul_assoc b, hb]
+    rw [add_mul, ← mul_assoc a, ha, mul_comm (algebraMap R S a'.2) (algebraMap R S b'.2), ←
+      mul_assoc b, hb]
     ring
   smul_mem' := by
     rintro c x ⟨x', hx⟩
@@ -53,7 +54,8 @@ private def map_ideal (I : Ideal R) : Ideal S where
 #align is_localization.map_ideal is_localization.map_ideal
 
 theorem mem_map_algebra_map_iff {I : Ideal R} {z} :
-    z ∈ Ideal.map (algebraMap R S) I ↔ ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 := by
+    z ∈ Ideal.map (algebraMap R S) I ↔ ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 :=
+  by
   constructor
   · change _ → z ∈ map_ideal M S I
     refine' fun h => Ideal.mem_Inf.1 h fun z hz => _
@@ -73,10 +75,12 @@ theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algeb
     exact
       Ideal.mul_mem_right _ _
         (Ideal.mem_map_of_mem _
-          (show (algebraMap R S) r ∈ J from mk'_spec S r s ▸ J.mul_mem_right ((algebraMap R S) s) hJ))
+          (show (algebraMap R S) r ∈ J from
+            mk'_spec S r s ▸ J.mul_mem_right ((algebraMap R S) s) hJ))
 #align is_localization.map_comap IsLocalization.map_comap
 
-theorem comap_map_of_is_prime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjoint (M : Set R) I) :
+theorem comap_map_of_is_prime_disjoint (I : Ideal R) (hI : I.IsPrime)
+    (hM : Disjoint (M : Set R) I) :
     Ideal.comap (algebraMap R S) (Ideal.map (algebraMap R S) I) = I := by
   refine' le_antisymm (fun a ha => _) Ideal.le_comap_map
   obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebra_map_iff M S).1 (Ideal.mem_comap.1 ha)
@@ -93,7 +97,8 @@ embedded in the ordering of ideals of `R`. -/
 def orderEmbedding : Ideal S ↪o Ideal R where
   toFun J := Ideal.comap (algebraMap R S) J
   inj' := Function.LeftInverse.injective (map_comap M S)
-  map_rel_iff' J₁ J₂ := ⟨fun hJ => (map_comap M S) J₁ ▸ (map_comap M S) J₂ ▸ Ideal.map_mono hJ, Ideal.comap_mono⟩
+  map_rel_iff' J₁ J₂ :=
+    ⟨fun hJ => (map_comap M S) J₁ ▸ (map_comap M S) J₂ ▸ Ideal.map_mono hJ, Ideal.comap_mono⟩
 #align is_localization.order_embedding IsLocalization.orderEmbedding
 
 /-- If `R` is a ring, then prime ideals in the localization at `M`
@@ -101,11 +106,15 @@ correspond to prime ideals in the original ring `R` that are disjoint from `M`.
 This lemma gives the particular case for an ideal and its comap,
 see `le_rel_iso_of_prime` for the more general relation isomorphism -/
 theorem is_prime_iff_is_prime_disjoint (J : Ideal S) :
-    J.IsPrime ↔ (Ideal.comap (algebraMap R S) J).IsPrime ∧ Disjoint (M : Set R) ↑(Ideal.comap (algebraMap R S) J) := by
+    J.IsPrime ↔
+      (Ideal.comap (algebraMap R S) J).IsPrime ∧
+        Disjoint (M : Set R) ↑(Ideal.comap (algebraMap R S) J) :=
+  by
   constructor
   · refine' fun h =>
       ⟨⟨_, _⟩,
-        set.disjoint_left.mpr fun m hm1 hm2 => h.ne_top (Ideal.eq_top_of_is_unit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
+        set.disjoint_left.mpr fun m hm1 hm2 =>
+          h.ne_top (Ideal.eq_top_of_is_unit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
     · refine' fun hJ => h.ne_top _
       rw [eq_top_iff, ← (OrderEmbedding M S).le_iff_le]
       exact le_of_eq hJ.symm
@@ -134,22 +143,24 @@ theorem is_prime_iff_is_prime_disjoint (J : Ideal S) :
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
 This lemma gives the particular case for an ideal and its map,
 see `le_rel_iso_of_prime` for the more general relation isomorphism, and the reverse implication -/
-theorem is_prime_of_is_prime_disjoint (I : Ideal R) (hp : I.IsPrime) (hd : Disjoint (M : Set R) ↑I) :
-    (Ideal.map (algebraMap R S) I).IsPrime := by
+theorem is_prime_of_is_prime_disjoint (I : Ideal R) (hp : I.IsPrime)
+    (hd : Disjoint (M : Set R) ↑I) : (Ideal.map (algebraMap R S) I).IsPrime := by
   rw [is_prime_iff_is_prime_disjoint M S, comap_map_of_is_prime_disjoint M S I hp hd]
   exact ⟨hp, hd⟩
 #align is_localization.is_prime_of_is_prime_disjoint IsLocalization.is_prime_of_is_prime_disjoint
 
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M` -/
-def orderIsoOfPrime : { p : Ideal S // p.IsPrime } ≃o { p : Ideal R // p.IsPrime ∧ Disjoint (M : Set R) ↑p } where
+def orderIsoOfPrime :
+    { p : Ideal S // p.IsPrime } ≃o { p : Ideal R // p.IsPrime ∧ Disjoint (M : Set R) ↑p } where
   toFun p := ⟨Ideal.comap (algebraMap R S) p.1, (is_prime_iff_is_prime_disjoint M S p.1).1 p.2⟩
   invFun p := ⟨Ideal.map (algebraMap R S) p.1, is_prime_of_is_prime_disjoint M S p.1 p.2.1 p.2.2⟩
   left_inv J := Subtype.eq (map_comap M S J)
   right_inv I := Subtype.eq (comap_map_of_is_prime_disjoint M S I.1 I.2.1 I.2.2)
   map_rel_iff' I I' :=
-    ⟨fun h => show I.val ≤ I'.val from map_comap M S I.val ▸ map_comap M S I'.val ▸ Ideal.map_mono h, fun h x hx =>
-      h hx⟩
+    ⟨fun h =>
+      show I.val ≤ I'.val from map_comap M S I.val ▸ map_comap M S I'.val ▸ Ideal.map_mono h,
+      fun h x hx => h hx⟩
 #align is_localization.order_iso_of_prime IsLocalization.orderIsoOfPrime
 
 end CommSemiring
@@ -193,7 +204,10 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
     exact
       Or.inl
         (mul_left_cancel₀
-          (fun hn => hM (Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
+          (fun hn =>
+            hM
+              (Ideal.Quotient.eq_zero_iff_mem.2
+                (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
           (trans hn (by rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
     
 #align

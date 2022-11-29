@@ -101,7 +101,8 @@ add_hint_tactic omega
 initialize
   registerTraceClass.1 `omega
 
-/-- `omega` attempts to discharge goals in the quantifier-free fragment of linear integer and natural
+/--
+`omega` attempts to discharge goals in the quantifier-free fragment of linear integer and natural
 number arithmetic using the Omega test. In other words, the core procedure of `omega` works with
 goals of the form
 ```lean

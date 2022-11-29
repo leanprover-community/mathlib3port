@@ -54,7 +54,9 @@ where `f g : X ⟶ Y` for some objects `X Y : V` with `[S : category V]`,
 extract the expression for `S`.
 -/
 unsafe def extract_category : expr → tactic expr
-  | q(@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ $(S))) _ _) _ _) => pure S
+  |
+  q(@Eq (@Quiver.Hom _ (@CategoryStruct.toQuiver _ (@Category.toCategoryStruct _ $(S))) _ _) _ _) =>
+    pure S
   | _ => failed
 #align tactic.extract_category tactic.extract_category
 
@@ -88,7 +90,8 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
     ←-- This is need to fill in universe levels fixed by `mk_instance`:
         instantiate_mvars
         CC_type
-  let x_type ← to_expr ``(@coeSort $(C) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort $(C) $(S) $(CC)) $(X))
+  let x_type ←
+    to_expr ``(@coeSort $(C) _ (@CategoryTheory.ConcreteCategory.hasCoeToSort $(C) $(S) $(CC)) $(X))
   let x ← mk_local_def `x x_type
   let t' ←
     to_expr
@@ -230,8 +233,8 @@ begin
 end
 ```
 -/
-theorem CategoryTheory.elementwise_of {α} (hh : α) {β} (x : Tactic.CalculatedProp β hh := by derive_elementwise_proof) :
-    β :=
+theorem CategoryTheory.elementwise_of {α} (hh : α) {β}
+    (x : Tactic.CalculatedProp β hh := by derive_elementwise_proof) : β :=
   x
 #align category_theory.elementwise_of CategoryTheory.elementwise_of
 

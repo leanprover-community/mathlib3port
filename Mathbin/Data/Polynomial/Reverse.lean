@@ -78,7 +78,8 @@ theorem rev_at_le {N i : ℕ} (H : i ≤ N) : revAt N i = N - i :=
   if_pos H
 #align polynomial.rev_at_le Polynomial.rev_at_le
 
-theorem rev_at_add {N O n o : ℕ} (hn : n ≤ N) (ho : o ≤ O) : revAt (N + O) (n + o) = revAt N n + revAt O o := by
+theorem rev_at_add {N O n o : ℕ} (hn : n ≤ N) (ho : o ≤ O) :
+    revAt (N + O) (n + o) = revAt N n + revAt O o := by
   rcases Nat.le.dest hn with ⟨n', rfl⟩
   rcases Nat.le.dest ho with ⟨o', rfl⟩
   repeat' rw [rev_at_le (le_add_right rfl.le)]
@@ -100,7 +101,8 @@ noncomputable def reflect (N : ℕ) : R[X] → R[X]
   | ⟨f⟩ => ⟨Finsupp.embDomain (revAt N) f⟩
 #align polynomial.reflect Polynomial.reflect
 
-theorem reflect_support (N : ℕ) (f : R[X]) : (reflect N f).support = Finset.image (revAt N) f.support := by
+theorem reflect_support (N : ℕ) (f : R[X]) :
+    (reflect N f).support = Finset.image (revAt N) f.support := by
   rcases f with ⟨⟩
   ext1
   simp only [reflect, support_of_finsupp, support_emb_domain, Finset.mem_map, Finset.mem_image]
@@ -111,7 +113,8 @@ theorem coeff_reflect (N : ℕ) (f : R[X]) (i : ℕ) : coeff (reflect N f) i = f
   rcases f with ⟨⟩
   simp only [reflect, coeff]
   calc
-    Finsupp.embDomain (rev_at N) f i = Finsupp.embDomain (rev_at N) f (rev_at N (rev_at N i)) := by rw [rev_at_invol]
+    Finsupp.embDomain (rev_at N) f i = Finsupp.embDomain (rev_at N) f (rev_at N (rev_at N i)) := by
+      rw [rev_at_invol]
     _ = f (rev_at N i) := Finsupp.emb_domain_apply _ _ _
     
 #align polynomial.coeff_reflect Polynomial.coeff_reflect
@@ -169,7 +172,8 @@ theorem reflect_mul_induction (cf cg : ℕ) :
       ∀ f g : R[X],
         f.support.card ≤ cf.succ →
           g.support.card ≤ cg.succ →
-            f.natDegree ≤ N → g.natDegree ≤ O → reflect (N + O) (f * g) = reflect N f * reflect O g :=
+            f.natDegree ≤ N →
+              g.natDegree ≤ O → reflect (N + O) (f * g) = reflect N f * reflect O g :=
   by
   induction' cf with cf hcf
   --first induction (left): base case
@@ -177,15 +181,17 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     -- second induction (right): base case
     · intro N O f g Cf Cg Nf Og
       rw [← C_mul_X_pow_eq_self Cf, ← C_mul_X_pow_eq_self Cg]
-      simp_rw [mul_assoc, X_pow_mul, mul_assoc, ← pow_add (X : R[X]), reflect_C_mul, reflect_monomial, add_comm,
-        rev_at_add Nf Og, mul_assoc, X_pow_mul, mul_assoc, ← pow_add (X : R[X]), add_comm]
+      simp_rw [mul_assoc, X_pow_mul, mul_assoc, ← pow_add (X : R[X]), reflect_C_mul,
+        reflect_monomial, add_comm, rev_at_add Nf Og, mul_assoc, X_pow_mul, mul_assoc, ←
+        pow_add (X : R[X]), add_comm]
       
     -- second induction (right): induction step
     · intro N O f g Cf Cg Nf Og
       by_cases g0 : g = 0
       · rw [g0, reflect_zero, mul_zero, mul_zero, reflect_zero]
         
-      rw [← erase_lead_add_C_mul_X_pow g, mul_add, reflect_add, reflect_add, mul_add, hcg, hcg] <;> try assumption
+      rw [← erase_lead_add_C_mul_X_pow g, mul_add, reflect_add, reflect_add, mul_add, hcg, hcg] <;>
+        try assumption
       · exact le_add_left card_support_C_mul_X_pow_le_one
         
       · exact le_trans (nat_degree_C_mul_X_pow_le g.leading_coeff g.nat_degree) Og
@@ -201,7 +207,8 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     by_cases f0 : f = 0
     · rw [f0, reflect_zero, zero_mul, zero_mul, reflect_zero]
       
-    rw [← erase_lead_add_C_mul_X_pow f, add_mul, reflect_add, reflect_add, add_mul, hcf, hcf] <;> try assumption
+    rw [← erase_lead_add_C_mul_X_pow f, add_mul, reflect_add, reflect_add, add_mul, hcf, hcf] <;>
+      try assumption
     · exact le_add_left card_support_C_mul_X_pow_le_one
       
     · exact le_trans (nat_degree_C_mul_X_pow_le f.leading_coeff f.nat_degree) Nf
@@ -223,9 +230,11 @@ section Eval₂
 
 variable {S : Type _} [CommSemiring S]
 
-theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X]) (hf : f.natDegree ≤ N) :
-    eval₂ i (⅟ x) (reflect N f) * x ^ N = eval₂ i x f := by
-  refine' induction_with_nat_degree_le (fun f => eval₂ i (⅟ x) (reflect N f) * x ^ N = eval₂ i x f) _ _ _ _ f hf
+theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X])
+    (hf : f.natDegree ≤ N) : eval₂ i (⅟ x) (reflect N f) * x ^ N = eval₂ i x f := by
+  refine'
+    induction_with_nat_degree_le (fun f => eval₂ i (⅟ x) (reflect N f) * x ^ N = eval₂ i x f) _ _ _
+      _ f hf
   · simp
     
   · intro n r hr0 hnN
@@ -238,15 +247,16 @@ theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ)
     
 #align polynomial.eval₂_reflect_mul_pow Polynomial.eval₂_reflect_mul_pow
 
-theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X]) (hf : f.natDegree ≤ N) :
-    eval₂ i (⅟ x) (reflect N f) = 0 ↔ eval₂ i x f = 0 := by
+theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X])
+    (hf : f.natDegree ≤ N) : eval₂ i (⅟ x) (reflect N f) = 0 ↔ eval₂ i x f = 0 := by
   conv_rhs => rw [← eval₂_reflect_mul_pow i x N f hf]
   constructor
   · intro h
     rw [h, zero_mul]
     
   · intro h
-    rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_inv_of_self x, mul_pow, ← mul_assoc, h, zero_mul]
+    rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_inv_of_self x, mul_pow, ← mul_assoc, h,
+      zero_mul]
     
 #align polynomial.eval₂_reflect_eq_zero_iff Polynomial.eval₂_reflect_eq_zero_iff
 
@@ -280,7 +290,8 @@ theorem reverse_nat_degree_le (f : R[X]) : f.reverse.natDegree ≤ f.natDegree :
   rw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero]
   intro n hn
   rw [WithBot.coe_lt_coe] at hn
-  rw [coeff_reverse, rev_at, Function.Embedding.coe_fn_mk, if_neg (not_le_of_gt hn), coeff_eq_zero_of_nat_degree_lt hn]
+  rw [coeff_reverse, rev_at, Function.Embedding.coe_fn_mk, if_neg (not_le_of_gt hn),
+    coeff_eq_zero_of_nat_degree_lt hn]
 #align polynomial.reverse_nat_degree_le Polynomial.reverse_nat_degree_le
 
 theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree (f : R[X]) :
@@ -302,13 +313,13 @@ theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree (f : R[X]) :
 #align
   polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree Polynomial.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree
 
-theorem reverse_nat_degree (f : R[X]) : f.reverse.natDegree = f.natDegree - f.natTrailingDegree := by
-  rw [f.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree, add_tsub_cancel_right]
+theorem reverse_nat_degree (f : R[X]) : f.reverse.natDegree = f.natDegree - f.natTrailingDegree :=
+  by rw [f.nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree, add_tsub_cancel_right]
 #align polynomial.reverse_nat_degree Polynomial.reverse_nat_degree
 
 theorem reverse_leading_coeff (f : R[X]) : f.reverse.leadingCoeff = f.trailingCoeff := by
-  rw [leading_coeff, reverse_nat_degree, ← rev_at_le f.nat_trailing_degree_le_nat_degree, coeff_reverse, rev_at_invol,
-    trailing_coeff]
+  rw [leading_coeff, reverse_nat_degree, ← rev_at_le f.nat_trailing_degree_le_nat_degree,
+    coeff_reverse, rev_at_invol, trailing_coeff]
 #align polynomial.reverse_leading_coeff Polynomial.reverse_leading_coeff
 
 theorem reverse_nat_trailing_degree (f : R[X]) : f.reverse.natTrailingDegree = 0 := by
@@ -326,8 +337,8 @@ theorem reverse_trailing_coeff (f : R[X]) : f.reverse.trailingCoeff = f.leadingC
   rw [trailing_coeff, reverse_nat_trailing_degree, coeff_zero_reverse]
 #align polynomial.reverse_trailing_coeff Polynomial.reverse_trailing_coeff
 
-theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) : reverse (f * g) = reverse f * reverse g :=
-  by
+theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) :
+    reverse (f * g) = reverse f * reverse g := by
   unfold reverse
   rw [nat_degree_mul' fg, reflect_mul f g rfl.le rfl.le]
 #align polynomial.reverse_mul Polynomial.reverse_mul
@@ -346,7 +357,8 @@ theorem reverse_mul_of_domain {R : Type _} [Ring R] [NoZeroDivisors R] (f g : R[
 
 theorem trailing_coeff_mul {R : Type _} [Ring R] [NoZeroDivisors R] (p q : R[X]) :
     (p * q).trailingCoeff = p.trailingCoeff * q.trailingCoeff := by
-  rw [← reverse_leading_coeff, reverse_mul_of_domain, leading_coeff_mul, reverse_leading_coeff, reverse_leading_coeff]
+  rw [← reverse_leading_coeff, reverse_mul_of_domain, leading_coeff_mul, reverse_leading_coeff,
+    reverse_leading_coeff]
 #align polynomial.trailing_coeff_mul Polynomial.trailing_coeff_mul
 
 @[simp]
@@ -395,7 +407,8 @@ theorem reflect_sub (f g : R[X]) (N : ℕ) : reflect N (f - g) = reflect N f - r
 #align polynomial.reflect_sub Polynomial.reflect_sub
 
 @[simp]
-theorem reverse_neg (f : R[X]) : reverse (-f) = -reverse f := by rw [reverse, reverse, reflect_neg, nat_degree_neg]
+theorem reverse_neg (f : R[X]) : reverse (-f) = -reverse f := by
+  rw [reverse, reverse, reflect_neg, nat_degree_neg]
 #align polynomial.reverse_neg Polynomial.reverse_neg
 
 end Ring

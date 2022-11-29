@@ -66,24 +66,27 @@ def restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →
 #align category_theory.Module.restrict_scalars CategoryTheory.ModuleCat.restrictScalars
 
 @[simp]
-theorem restrictScalars.map_apply {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) {M M' : ModuleCat.{v} S}
-    (g : M ⟶ M') (x) : (restrictScalars f).map g x = g x :=
+theorem restrictScalars.map_apply {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
+    {M M' : ModuleCat.{v} S} (g : M ⟶ M') (x) : (restrictScalars f).map g x = g x :=
   rfl
-#align category_theory.Module.restrict_scalars.map_apply CategoryTheory.ModuleCat.restrictScalars.map_apply
+#align
+  category_theory.Module.restrict_scalars.map_apply CategoryTheory.ModuleCat.restrictScalars.map_apply
 
 @[simp]
-theorem restrictScalars.smul_def {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) {M : ModuleCat.{v} S}
-    (r : R) (m : (restrictScalars f).obj M) : r • m = (f r • m : M) :=
+theorem restrictScalars.smul_def {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
+    {M : ModuleCat.{v} S} (r : R) (m : (restrictScalars f).obj M) : r • m = (f r • m : M) :=
   rfl
-#align category_theory.Module.restrict_scalars.smul_def CategoryTheory.ModuleCat.restrictScalars.smul_def
+#align
+  category_theory.Module.restrict_scalars.smul_def CategoryTheory.ModuleCat.restrictScalars.smul_def
 
-theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) {M : ModuleCat.{v} S}
-    (r : R) (m : M) : (r • m : (restrictScalars f).obj M) = (f r • m : M) :=
+theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
+    {M : ModuleCat.{v} S} (r : R) (m : M) : (r • m : (restrictScalars f).obj M) = (f r • m : M) :=
   rfl
-#align category_theory.Module.restrict_scalars.smul_def' CategoryTheory.ModuleCat.restrictScalars.smul_def'
+#align
+  category_theory.Module.restrict_scalars.smul_def' CategoryTheory.ModuleCat.restrictScalars.smul_def'
 
-instance (priority := 100) smul_comm_class_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S] (f : R →+* S)
-    (M : Type v) [AddCommGroup M] [Module S M] :
+instance (priority := 100) smul_comm_class_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
+    (f : R →+* S) (M : Type v) [AddCommGroup M] [Module S M] :
     @SmulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul
       _ where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
 #align category_theory.Module.smul_comm_class_mk CategoryTheory.ModuleCat.smul_comm_class_mk
@@ -101,7 +104,8 @@ variable (M : Type v) [AddCommMonoid M] [Module R M]
 -- mathport name: «expr ⊗ₜ[ , ] »
 -- This notation is necessary because we need to reason about `s ⊗ₜ m` where `s : S` and `m : M`;
 -- without this notation, one need to work with `s : (restrict_scalars f).obj ⟨S⟩`.
-scoped[ChangeOfRings] notation s "⊗ₜ[" R "," f "]" m => @TensorProduct.tmul R _ _ _ _ _ (Module.compHom _ f) _ s m
+scoped[ChangeOfRings]
+  notation s "⊗ₜ[" R "," f "]" m => @TensorProduct.tmul R _ _ _ _ _ (Module.compHom _ f) _ s m
 
 end Unbundled
 
@@ -146,7 +150,8 @@ theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (
       
     · simp only [map_add, ihx, ihy]
       
-#align category_theory.Module.extend_scalars.map'_comp CategoryTheory.ModuleCat.ExtendScalars.map'_comp
+#align
+  category_theory.Module.extend_scalars.map'_comp CategoryTheory.ModuleCat.ExtendScalars.map'_comp
 
 end ExtendScalars
 
@@ -171,13 +176,15 @@ variable {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* 
 protected theorem smul_tmul {M : ModuleCat.{v} R} (s s' : S) (m : M) :
     s • (s'⊗ₜ[R,f]m : (extendScalars f).obj M) = (s * s')⊗ₜ[R,f]m :=
   rfl
-#align category_theory.Module.extend_scalars.smul_tmul CategoryTheory.ModuleCat.extendScalars.smul_tmul
+#align
+  category_theory.Module.extend_scalars.smul_tmul CategoryTheory.ModuleCat.extendScalars.smul_tmul
 
 @[simp]
 theorem map_tmul {M M' : ModuleCat.{v} R} (g : M ⟶ M') (s : S) (m : M) :
     (extendScalars f).map g (s⊗ₜ[R,f]m) = s⊗ₜ[R,f]g m :=
   rfl
-#align category_theory.Module.extend_scalars.map_tmul CategoryTheory.ModuleCat.extendScalars.map_tmul
+#align
+  category_theory.Module.extend_scalars.map_tmul CategoryTheory.ModuleCat.extendScalars.map_tmul
 
 end ExtendScalars
 

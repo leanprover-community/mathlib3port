@@ -82,25 +82,29 @@ include q
 attribute [simp] i_mul_i j_mul_j i_mul_j j_mul_i
 
 @[simp]
-theorem i_mul_k : q.i * q.k = c₁ • q.j := by rw [← i_mul_j, ← mul_assoc, i_mul_i, smul_mul_assoc, one_mul]
+theorem i_mul_k : q.i * q.k = c₁ • q.j := by
+  rw [← i_mul_j, ← mul_assoc, i_mul_i, smul_mul_assoc, one_mul]
 #align quaternion_algebra.basis.i_mul_k QuaternionAlgebra.Basis.i_mul_k
 
 @[simp]
-theorem k_mul_i : q.k * q.i = -c₁ • q.j := by rw [← i_mul_j, mul_assoc, j_mul_i, mul_neg, i_mul_k, neg_smul]
+theorem k_mul_i : q.k * q.i = -c₁ • q.j := by
+  rw [← i_mul_j, mul_assoc, j_mul_i, mul_neg, i_mul_k, neg_smul]
 #align quaternion_algebra.basis.k_mul_i QuaternionAlgebra.Basis.k_mul_i
 
 @[simp]
-theorem k_mul_j : q.k * q.j = c₂ • q.i := by rw [← i_mul_j, mul_assoc, j_mul_j, mul_smul_comm, mul_one]
+theorem k_mul_j : q.k * q.j = c₂ • q.i := by
+  rw [← i_mul_j, mul_assoc, j_mul_j, mul_smul_comm, mul_one]
 #align quaternion_algebra.basis.k_mul_j QuaternionAlgebra.Basis.k_mul_j
 
 @[simp]
-theorem j_mul_k : q.j * q.k = -c₂ • q.i := by rw [← i_mul_j, ← mul_assoc, j_mul_i, neg_mul, k_mul_j, neg_smul]
+theorem j_mul_k : q.j * q.k = -c₂ • q.i := by
+  rw [← i_mul_j, ← mul_assoc, j_mul_i, neg_mul, k_mul_j, neg_smul]
 #align quaternion_algebra.basis.j_mul_k QuaternionAlgebra.Basis.j_mul_k
 
 @[simp]
 theorem k_mul_k : q.k * q.k = -((c₁ * c₂) • 1) := by
-  rw [← i_mul_j, mul_assoc, ← mul_assoc q.j _ _, j_mul_i, ← i_mul_j, ← mul_assoc, mul_neg, ← mul_assoc, i_mul_i,
-    smul_mul_assoc, one_mul, neg_mul, smul_mul_assoc, j_mul_j, smul_smul]
+  rw [← i_mul_j, mul_assoc, ← mul_assoc q.j _ _, j_mul_i, ← i_mul_j, ← mul_assoc, mul_neg, ←
+    mul_assoc, i_mul_i, smul_mul_assoc, one_mul, neg_mul, smul_mul_assoc, j_mul_j, smul_smul]
 #align quaternion_algebra.basis.k_mul_k QuaternionAlgebra.Basis.k_mul_k
 
 /-- Intermediate result used to define `quaternion_algebra.basis.lift_hom`. -/
@@ -122,7 +126,8 @@ theorem lift_add (x y : ℍ[R,c₁,c₂]) : q.lift (x + y) = q.lift x + q.lift y
 theorem lift_mul (x y : ℍ[R,c₁,c₂]) : q.lift (x * y) = q.lift x * q.lift y := by
   simp only [lift, Algebra.algebra_map_eq_smul_one]
   simp only [add_mul]
-  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one, ← Algebra.smul_def, smul_add, smul_smul]
+  simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm, one_mul, mul_one, ← Algebra.smul_def,
+    smul_add, smul_smul]
   simp only [i_mul_i, j_mul_j, i_mul_j, j_mul_i, i_mul_k, k_mul_i, k_mul_j, j_mul_k, k_mul_k]
   simp only [smul_smul, smul_neg, sub_eq_add_neg, add_smul, ← add_assoc, mul_neg, neg_smul]
   simp only [mul_right_comm _ _ (c₁ * c₂), mul_comm _ (c₁ * c₂)]
@@ -170,7 +175,8 @@ def lift : Basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A) where
     ext
     dsimp [basis.lift]
     rw [← F.commutes]
-    simp only [← F.commutes, ← F.map_smul, ← F.map_add, mk_add_mk, smul_mk, smul_zero, algebra_map_eq]
+    simp only [← F.commutes, ← F.map_smul, ← F.map_add, mk_add_mk, smul_mk, smul_zero,
+      algebra_map_eq]
     congr
     simp
 #align quaternion_algebra.lift QuaternionAlgebra.lift

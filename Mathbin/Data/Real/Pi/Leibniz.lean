@@ -48,7 +48,8 @@ theorem tendsto_sum_pi_div_four :
   let u := fun k : ℕ => (k : Nnreal) ^ (-1 / (2 * (k : ℝ) + 1))
   have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) := by
     convert
-      (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add tendsto_inv_at_top_zero).comp
+      (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add
+            tendsto_inv_at_top_zero).comp
         tendsto_coe_nat_at_top_at_top
     · ext k
       simp only [Nnreal.coe_nat_cast, Function.comp_apply, Nnreal.coe_rpow]
@@ -98,13 +99,15 @@ theorem tendsto_sum_pi_div_four :
     intro x
     have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) ((-x ^ 2) ^ i) x := by
       intro i hi
-      convert HasDerivAt.constMul ((-1 : ℝ) ^ i / (2 * i + 1)) (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (hasDerivAtId x))
+      convert
+        HasDerivAt.constMul ((-1 : ℝ) ^ i / (2 * i + 1))
+          (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (hasDerivAtId x))
       · ext y
         simp only [b, id.def]
         ring
         
-      · simp only [Nat.add_succ_sub_one, add_zero, mul_one, id.def, Nat.cast_bit0, Nat.cast_add, Nat.cast_one,
-          Nat.cast_mul]
+      · simp only [Nat.add_succ_sub_one, add_zero, mul_one, id.def, Nat.cast_bit0, Nat.cast_add,
+          Nat.cast_one, Nat.cast_mul]
         rw [← mul_assoc,
           @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _
             (by
@@ -114,7 +117,8 @@ theorem tendsto_sum_pi_div_four :
         ring_nf
         
     convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
-    have g_sum := @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
+    have g_sum :=
+      @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
     simp only [f'] at g_sum⊢
     rw [g_sum, ← neg_add' (x ^ 2) 1, add_comm (x ^ 2) 1, sub_eq_add_neg, neg_div', neg_div_neg_eq]
     ring
@@ -125,7 +129,8 @@ theorem tendsto_sum_pi_div_four :
   -- (5) We prove a general bound for `f'` and then more precise bounds on each of two subintervals
   have f'_bound : ∀ x ∈ Icc (-1 : ℝ) 1, |f' x| ≤ |x| ^ (2 * k) := by
     intro x hx
-    rw [abs_div, IsAbsoluteValue.abv_pow abs (-x ^ 2) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ← pow_mul]
+    rw [abs_div, IsAbsoluteValue.abv_pow abs (-x ^ 2) k, abs_neg, IsAbsoluteValue.abv_pow abs x 2, ←
+      pow_mul]
     refine' div_le_of_nonneg_of_le_mul (abs_nonneg _) (pow_nonneg (abs_nonneg _) _) _
     refine' le_mul_of_one_le_right (pow_nonneg (abs_nonneg _) _) _
     rw [abs_of_nonneg (add_nonneg zero_le_one (sq_nonneg x) : (0 : ℝ) ≤ _)]
@@ -148,7 +153,8 @@ theorem tendsto_sum_pi_div_four :
   -- The following algebra is enough to complete the proof
   calc
     |f 1 - f 0| = |f 1 - f U + (f U - f 0)| := by ring_nf
-    _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) := le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)
+    _ ≤ 1 * (1 - U) + U ^ (2 * k) * (U - 0) :=
+      le_trans (abs_add (f 1 - f U) (f U - f 0)) (add_le_add mvt1 mvt2)
     _ = 1 - U + U ^ (2 * k) * U := by ring
     _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by
       rw [← pow_succ' (U : ℝ) (2 * k)]

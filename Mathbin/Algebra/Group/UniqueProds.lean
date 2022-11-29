@@ -54,19 +54,21 @@ theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
     Subsingleton { ab : G × G // ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } :=
   ⟨fun ⟨⟨a, b⟩, ha, hb, ab⟩ ⟨⟨a', b'⟩, ha', hb', ab'⟩ =>
     Subtype.ext <|
-      Prod.ext ((h ha hb ab).1.trans (h ha' hb' ab').1.symm) <| (h ha hb ab).2.trans (h ha' hb' ab').2.symm⟩
+      Prod.ext ((h ha hb ab).1.trans (h ha' hb' ab').1.symm) <|
+        (h ha hb ab).2.trans (h ha' hb' ab').2.symm⟩
 #align unique_mul.subsingleton UniqueMul.subsingleton
 
 @[to_additive]
 theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
     Set.Subsingleton { ab : G × G | ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } := by
-  rintro ⟨x1, y1⟩ (hx : x1 ∈ A ∧ y1 ∈ B ∧ x1 * y1 = a0 * b0) ⟨x2, y2⟩ (hy : x2 ∈ A ∧ y2 ∈ B ∧ x2 * y2 = a0 * b0)
+  rintro ⟨x1, y1⟩ (hx : x1 ∈ A ∧ y1 ∈ B ∧ x1 * y1 = a0 * b0) ⟨x2, y2⟩
+    (hy : x2 ∈ A ∧ y2 ∈ B ∧ x2 * y2 = a0 * b0)
   rcases h hx.1 hx.2.1 hx.2.2 with ⟨rfl, rfl⟩
   rcases h hy.1 hy.2.1 hy.2.2 with ⟨rfl, rfl⟩
   rfl
 #align unique_mul.set_subsingleton UniqueMul.set_subsingleton
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
@@ -79,11 +81,12 @@ theorem iff_exists_unique (aA : a0 ∈ A) (bB : b0 ∈ B) :
         exact prod.mk.inj_iff.mp (J (x, y) (Finset.mk_mem_product hx hy) l))⟩
 #align unique_mul.iff_exists_unique UniqueMul.iff_exists_unique
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem exists_iff_exists_exists_unique :
-    (∃ a0 b0 : G, a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔ ∃ g : G, ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = g :=
+    (∃ a0 b0 : G, a0 ∈ A ∧ b0 ∈ B ∧ UniqueMul A B a0 b0) ↔
+      ∃ g : G, ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = g :=
   ⟨fun ⟨a0, b0, hA, hB, h⟩ => ⟨_, (iff_exists_unique hA hB).mp h⟩, fun ⟨g, h⟩ => by
     have h' := h
     rcases h' with ⟨⟨a, b⟩, ⟨hab, rfl, -⟩, -⟩
@@ -95,7 +98,9 @@ theorem exists_iff_exists_exists_unique :
 @[to_additive "`unique_add` is preserved by inverse images under injective, additive maps."]
 theorem mul_hom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G) {A B : Finset H}
     (u : UniqueMul A B (f a0) (f b0)) :
-    UniqueMul (A.Preimage f (Set.inj_on_of_injective hf _)) (B.Preimage f (Set.inj_on_of_injective hf _)) a0 b0 := by
+    UniqueMul (A.Preimage f (Set.inj_on_of_injective hf _))
+      (B.Preimage f (Set.inj_on_of_injective hf _)) a0 b0 :=
+  by
   intro a b ha hb ab
   rw [← hf.eq_iff, ← hf.eq_iff]
   rw [← hf.eq_iff, map_mul, map_mul] at ab
@@ -180,9 +185,10 @@ instance {M} [Mul M] [UniqueProds M] :
 end Additive
 
 @[to_additive]
-theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A] [CovariantClass A A (· * ·) (· ≤ ·)]
-    [CovariantClass A A (Function.swap (· * ·)) (· < ·)] [ContravariantClass A A (· * ·) (· ≤ ·)] {a b a0 b0 : A}
-    (ha : a0 ≤ a) (hb : b0 ≤ b) (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 := by
+theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
+    [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
+    [ContravariantClass A A (· * ·) (· ≤ ·)] {a b a0 b0 : A} (ha : a0 ≤ a) (hb : b0 ≤ b)
+    (ab : a * b ≤ a0 * b0) : a = a0 ∧ b = b0 := by
   haveI := Mul.to_covariant_class_right A
   have ha' : ¬a0 * b0 < a * b → ¬a0 < a := mt fun h => mul_lt_mul_of_lt_of_le h hb
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
@@ -195,8 +201,9 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A] [CovariantCl
 is 'very monotone', then `A` also has `unique_prods`. -/
 @[to_additive
       "This instance asserts that if `A` has an addition, a linear order, and addition\nis 'very monotone', then `A` also has `unique_sums`."]
-instance (priority := 100) Covariants.to_unique_prods {A} [Mul A] [LinearOrder A] [CovariantClass A A (· * ·) (· ≤ ·)]
-    [CovariantClass A A (Function.swap (· * ·)) (· < ·)] [ContravariantClass A A (· * ·) (· ≤ ·)] :
+instance (priority := 100) Covariants.to_unique_prods {A} [Mul A] [LinearOrder A]
+    [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
+    [ContravariantClass A A (· * ·) (· ≤ ·)] :
     UniqueProds
       A where unique_mul_of_nonempty A B hA hB :=
     ⟨_, A.min'_mem ‹_›, _, B.min'_mem ‹_›, fun a b ha hb ab =>

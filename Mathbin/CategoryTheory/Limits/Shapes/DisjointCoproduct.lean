@@ -44,8 +44,9 @@ are mono.
 -/
 class CoproductDisjoint (X₁ X₂ : C) where
   isInitialOfIsPullbackOfIsCoproduct :
-    ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂} (cX : IsColimit (BinaryCofan.mk pX₁ pX₂))
-      {comm : f ≫ pX₁ = g ≫ pX₂}, IsLimit (PullbackCone.mk _ _ comm) → IsInitial Z
+    ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂}
+      (cX : IsColimit (BinaryCofan.mk pX₁ pX₂)) {comm : f ≫ pX₁ = g ≫ pX₂},
+      IsLimit (PullbackCone.mk _ _ comm) → IsInitial Z
   mono_inl : ∀ (X) (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : IsColimit (BinaryCofan.mk X₁ X₂)), Mono X₁
   mono_inr : ∀ (X) (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : IsColimit (BinaryCofan.mk X₁ X₂)), Mono X₂
 #align category_theory.limits.coproduct_disjoint CategoryTheory.Limits.CoproductDisjoint
@@ -58,9 +59,9 @@ X₂ ⟶  X
 
 where `X₁ ⟶ X ← X₂` is a coproduct, then `Z` is initial.
 -/
-def isInitialOfIsPullbackOfIsCoproduct {Z X₁ X₂ X : C} [CoproductDisjoint X₁ X₂] {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X}
-    (cX : IsColimit (BinaryCofan.mk pX₁ pX₂)) {f : Z ⟶ X₁} {g : Z ⟶ X₂} {comm : f ≫ pX₁ = g ≫ pX₂}
-    (cZ : IsLimit (PullbackCone.mk _ _ comm)) : IsInitial Z :=
+def isInitialOfIsPullbackOfIsCoproduct {Z X₁ X₂ X : C} [CoproductDisjoint X₁ X₂] {pX₁ : X₁ ⟶ X}
+    {pX₂ : X₂ ⟶ X} (cX : IsColimit (BinaryCofan.mk pX₁ pX₂)) {f : Z ⟶ X₁} {g : Z ⟶ X₂}
+    {comm : f ≫ pX₁ = g ≫ pX₂} (cZ : IsLimit (PullbackCone.mk _ _ comm)) : IsInitial Z :=
   CoproductDisjoint.isInitialOfIsPullbackOfIsCoproduct cX cZ
 #align
   category_theory.limits.is_initial_of_is_pullback_of_is_coproduct CategoryTheory.Limits.isInitialOfIsPullbackOfIsCoproduct
@@ -73,8 +74,9 @@ X₂ ⟶  X₁ ⨿ X₂
 
 `Z` is initial.
 -/
-noncomputable def isInitialOfIsPullbackOfCoproduct {Z X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂]
-    {f : Z ⟶ X₁} {g : Z ⟶ X₂} {comm : f ≫ (coprod.inl : X₁ ⟶ _ ⨿ X₂) = g ≫ coprod.inr}
+noncomputable def isInitialOfIsPullbackOfCoproduct {Z X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂]
+    [CoproductDisjoint X₁ X₂] {f : Z ⟶ X₁} {g : Z ⟶ X₂}
+    {comm : f ≫ (coprod.inl : X₁ ⟶ _ ⨿ X₂) = g ≫ coprod.inr}
     (cZ : IsLimit (PullbackCone.mk _ _ comm)) : IsInitial Z :=
   CoproductDisjoint.isInitialOfIsPullbackOfIsCoproduct (coprodIsCoprod _ _) cZ
 #align
@@ -87,8 +89,9 @@ pullback is an initial object:
         ↓
 X₂ ⟶  X
 -/
-noncomputable def isInitialOfPullbackOfIsCoproduct {X X₁ X₂ : C} [CoproductDisjoint X₁ X₂] {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X}
-    [HasPullback pX₁ pX₂] (cX : IsColimit (BinaryCofan.mk pX₁ pX₂)) : IsInitial (pullback pX₁ pX₂) :=
+noncomputable def isInitialOfPullbackOfIsCoproduct {X X₁ X₂ : C} [CoproductDisjoint X₁ X₂]
+    {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} [HasPullback pX₁ pX₂] (cX : IsColimit (BinaryCofan.mk pX₁ pX₂)) :
+    IsInitial (pullback pX₁ pX₂) :=
   CoproductDisjoint.isInitialOfIsPullbackOfIsCoproduct cX (pullbackIsPullback _ _)
 #align
   category_theory.limits.is_initial_of_pullback_of_is_coproduct CategoryTheory.Limits.isInitialOfPullbackOfIsCoproduct
@@ -96,15 +99,19 @@ noncomputable def isInitialOfPullbackOfIsCoproduct {X X₁ X₂ : C} [CoproductD
 /-- If the coproduct of `X₁` and `X₂` is disjoint, the pullback of `X₁ ⟶ X₁ ⨿ X₂` and `X₂ ⟶ X₁ ⨿ X₂`
 is initial.
 -/
-noncomputable def isInitialOfPullbackOfCoproduct {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂]
-    [HasPullback (coprod.inl : X₁ ⟶ _ ⨿ X₂) coprod.inr] : IsInitial (pullback (coprod.inl : X₁ ⟶ _ ⨿ X₂) coprod.inr) :=
+noncomputable def isInitialOfPullbackOfCoproduct {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂]
+    [CoproductDisjoint X₁ X₂] [HasPullback (coprod.inl : X₁ ⟶ _ ⨿ X₂) coprod.inr] :
+    IsInitial (pullback (coprod.inl : X₁ ⟶ _ ⨿ X₂) coprod.inr) :=
   isInitialOfIsPullbackOfCoproduct (pullbackIsPullback _ _)
-#align category_theory.limits.is_initial_of_pullback_of_coproduct CategoryTheory.Limits.isInitialOfPullbackOfCoproduct
+#align
+  category_theory.limits.is_initial_of_pullback_of_coproduct CategoryTheory.Limits.isInitialOfPullbackOfCoproduct
 
-instance {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂] : Mono (coprod.inl : X₁ ⟶ X₁ ⨿ X₂) :=
+instance {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂] :
+    Mono (coprod.inl : X₁ ⟶ X₁ ⨿ X₂) :=
   CoproductDisjoint.mono_inl _ _ _ (coprodIsCoprod _ _)
 
-instance {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂] : Mono (coprod.inr : X₂ ⟶ X₁ ⨿ X₂) :=
+instance {X₁ X₂ : C} [HasBinaryCoproduct X₁ X₂] [CoproductDisjoint X₁ X₂] :
+    Mono (coprod.inr : X₂ ⟶ X₁ ⨿ X₂) :=
   CoproductDisjoint.mono_inr _ _ _ (coprodIsCoprod _ _)
 
 /-- `C` has disjoint coproducts if every coproduct is disjoint. -/
@@ -121,8 +128,10 @@ theorem initial_mono_class_of_disjoint_coproducts [CoproductsDisjoint C] : Initi
   { is_initial_mono_from := fun I X hI =>
       CoproductDisjoint.mono_inl _ _ (𝟙 X)
         { desc := fun s : BinaryCofan _ _ => s.inr,
-          fac' := fun s j => Discrete.casesOn j fun j => WalkingPair.casesOn j (hI.hom_ext _ _) (id_comp _),
-          uniq' := fun (s : BinaryCofan _ _) m w => (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
+          fac' := fun s j =>
+            Discrete.casesOn j fun j => WalkingPair.casesOn j (hI.hom_ext _ _) (id_comp _),
+          uniq' := fun (s : BinaryCofan _ _) m w =>
+            (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
 #align
   category_theory.limits.initial_mono_class_of_disjoint_coproducts CategoryTheory.Limits.initial_mono_class_of_disjoint_coproducts
 

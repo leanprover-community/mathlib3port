@@ -91,7 +91,8 @@ def ofEquiv (α) {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
 #align denumerable.of_equiv Denumerable.ofEquiv
 
 @[simp]
-theorem of_equiv_of_nat (α) {β} [Denumerable α] (e : β ≃ α) (n) : @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
+theorem of_equiv_of_nat (α) {β} [Denumerable α] (e : β ≃ α) (n) :
+    @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
   apply of_nat_of_decode <;> show Option.map _ _ = _ <;> simp
 #align denumerable.of_equiv_of_nat Denumerable.of_equiv_of_nat
 
@@ -139,7 +140,8 @@ instance sigma : Denumerable (Sigma γ) :=
 #align denumerable.sigma Denumerable.sigma
 
 @[simp]
-theorem sigma_of_nat_val (n : ℕ) : ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
+theorem sigma_of_nat_val (n : ℕ) :
+    ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
   Option.some.inj <| by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
 #align denumerable.sigma_of_nat_val Denumerable.sigma_of_nat_val
 
@@ -151,7 +153,8 @@ instance prod : Denumerable (α × β) :=
 #align denumerable.prod Denumerable.prod
 
 @[simp]
-theorem prod_of_nat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) := by simp <;> rfl
+theorem prod_of_nat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) :=
+  by simp <;> rfl
 #align denumerable.prod_of_nat_val Denumerable.prod_of_nat_val
 
 @[simp]
@@ -203,7 +206,8 @@ theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
     have : ∀ (a : ℕ) (ha : a ∈ s), a < succ x := fun a ha =>
       lt_of_not_ge fun hax => h ⟨a - (x + 1), by rwa [add_right_comm, add_tsub_cancel_of_le hax]⟩
     Fintype.false
-      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
+      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap
+            (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
             (by simp [-Multiset.range_succ])).toFinset,
         by simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
 #align nat.subtype.exists_succ Nat.Subtype.exists_succ
@@ -222,7 +226,8 @@ theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
   have hx : ∃ m, ↑y + m + 1 ∈ s := exists_succ _
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_lt h
   have : Nat.find hx ≤ k := Nat.find_min' _ (hk ▸ x.2)
-  show (y : ℕ) + Nat.find hx + 1 ≤ x by rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
+  show (y : ℕ) + Nat.find hx + 1 ≤ x by
+    rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
 #align nat.subtype.succ_le_of_lt Nat.Subtype.succ_le_of_lt
 
 theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z < x, z ≤ y) : x ≤ succ y :=
@@ -244,7 +249,8 @@ theorem lt_succ_self (x : s) : x < succ x :=
 #align nat.subtype.lt_succ_self Nat.Subtype.lt_succ_self
 
 theorem lt_succ_iff_le {x y : s} : x < succ y ↔ x ≤ y :=
-  ⟨fun h => le_of_not_gt fun h' => not_le_of_gt h (succ_le_of_lt h'), fun h => lt_of_le_of_lt h (lt_succ_self _)⟩
+  ⟨fun h => le_of_not_gt fun h' => not_le_of_gt h (succ_le_of_lt h'), fun h =>
+    lt_of_le_of_lt h (lt_succ_self _)⟩
 #align nat.subtype.lt_succ_iff_le Nat.Subtype.lt_succ_iff_le
 
 /-- Returns the `n`-th element of a set, according to the usual ordering of `ℕ`. -/
@@ -255,14 +261,18 @@ def ofNat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
 
 theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = ⟨x, hx⟩
   | x => fun hx => by
-    let t : List s := ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
-    have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by simp [List.mem_filter, Subtype.ext_iff_val, t] <;> intros <;> rfl
-    have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by simpa [hmt] using List.maximum_mem hmax
+    let t : List s :=
+      ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
+    have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
+      simp [List.mem_filter, Subtype.ext_iff_val, t] <;> intros <;> rfl
+    have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
+      simpa [hmt] using List.maximum_mem hmax
     cases' hmax : List.maximum t with m
     · exact
         ⟨0,
           le_antisymm bot_le
-            (le_of_not_gt fun h => List.not_mem_nil (⊥ : s) <| by rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
+            (le_of_not_gt fun h =>
+              List.not_mem_nil (⊥ : s) <| by rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
       
     cases' of_nat_surjective_aux m.2 with a ha
     exact
@@ -307,13 +317,18 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
   | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
     have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by simp
-    have h₂ : (range (succ (ofNat s n))).filter (· ∈ s) = insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) := by
+    have h₂ :
+      (range (succ (ofNat s n))).filter (· ∈ s) =
+        insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) :=
+      by
       simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
         ⟨fun h => by
-          simp only [h.2, and_true_iff] <;> exact Or.symm (lt_or_eq_of_le ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
+          simp only [h.2, and_true_iff] <;>
+            exact Or.symm (lt_or_eq_of_le ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
           fun h =>
-          h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h => ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
+          h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h =>
+            ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
     simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
     conv =>
     rhs

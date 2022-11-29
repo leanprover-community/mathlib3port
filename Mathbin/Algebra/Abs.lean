@@ -35,7 +35,8 @@ absolute
 
 
 #print Abs /-
-/-- Absolute value is a unary operator with properties similar to the absolute value of a real number.
+/--
+Absolute value is a unary operator with properties similar to the absolute value of a real number.
 -/
 class Abs (α : Type _) where
   abs : α → α

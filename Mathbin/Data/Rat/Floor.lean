@@ -84,7 +84,8 @@ theorem round_cast (x : ℚ) : round (x : α) = round x := by
 #align rat.round_cast Rat.round_cast
 
 @[simp, norm_cast]
-theorem cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by simp only [fract, cast_sub, cast_coe_int, floor_cast]
+theorem cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by
+  simp only [fract, cast_sub, cast_coe_int, floor_cast]
 #align rat.cast_fract Rat.cast_fract
 
 end Rat
@@ -134,7 +135,8 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   set q_inv := (q.denom : ℚ) / q.num with q_inv_def
   have q_inv_eq : q⁻¹ = q_inv := Rat.inv_def'
   suffices (q_inv - ⌊q_inv⌋).num < q.num by rwa [q_inv_eq]
-  suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by field_simp [this, ne_of_gt q_num_pos]
+  suffices ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num < q.num by
+    field_simp [this, ne_of_gt q_num_pos]
   suffices (q.denom : ℤ) - q.num * ⌊q_inv⌋ < q.num by
     -- use that `q.num` and `q.denom` are coprime to show that the numerator stays unreduced
     have : ((q.denom - q.num * ⌊q_inv⌋ : ℚ) / q.num).num = q.denom - q.num * ⌊q_inv⌋ := by

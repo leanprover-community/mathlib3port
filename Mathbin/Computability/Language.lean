@@ -83,7 +83,8 @@ def star (l : Language α) : Language α :=
   { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l }
 #align language.star Language.star
 
-theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l } :=
+theorem star_def (l : Language α) :
+    l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l } :=
   rfl
 #align language.star_def Language.star_def
 
@@ -164,7 +165,8 @@ theorem map_id (l : Language α) : map id l = l := by simp [map]
 #align language.map_id Language.map_id
 
 @[simp]
-theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f l) = map (g ∘ f) l := by simp [map, image_image]
+theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f l) = map (g ∘ f) l := by
+  simp [map, image_image]
 #align language.map_map Language.map_map
 
 theorem star_def_nonempty (l : Language α) :
@@ -199,19 +201,23 @@ theorem mem_supr {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ �
   mem_Union
 #align language.mem_supr Language.mem_supr
 
-theorem supr_mul {ι : Sort v} (l : ι → Language α) (m : Language α) : (⨆ i, l i) * m = ⨆ i, l i * m :=
+theorem supr_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
+    (⨆ i, l i) * m = ⨆ i, l i * m :=
   image2_Union_left _ _ _
 #align language.supr_mul Language.supr_mul
 
-theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) : (m * ⨆ i, l i) = ⨆ i, m * l i :=
+theorem mul_supr {ι : Sort v} (l : ι → Language α) (m : Language α) :
+    (m * ⨆ i, l i) = ⨆ i, m * l i :=
   image2_Union_right _ _ _
 #align language.mul_supr Language.mul_supr
 
-theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) : (⨆ i, l i) + m = ⨆ i, l i + m :=
+theorem supr_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
+    (⨆ i, l i) + m = ⨆ i, l i + m :=
   supr_sup
 #align language.supr_add Language.supr_add
 
-theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) : (m + ⨆ i, l i) = ⨆ i, m + l i :=
+theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
+    (m + ⨆ i, l i) = ⨆ i, m + l i :=
   sup_supr
 #align language.add_supr Language.add_supr
 

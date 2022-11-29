@@ -153,21 +153,24 @@ def twoTorsionPolynomial : Cubic A :=
   ⟨4, algebraMap R A E.b₂, 2 * algebraMap R A E.b₄, algebraMap R A E.b₆⟩
 #align EllipticCurve.two_torsion_polynomial EllipticCurveCat.twoTorsionPolynomial
 
-theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * algebraMap R A E.Δ := by
-  simp only [two_torsion_polynomial, Cubic.disc, coe_Δ, b₂, b₄, b₆, b₈, map_neg, map_add, map_sub, map_mul, map_pow,
-    map_one, map_bit0, map_bit1]
+theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * algebraMap R A E.Δ :=
+  by
+  simp only [two_torsion_polynomial, Cubic.disc, coe_Δ, b₂, b₄, b₆, b₈, map_neg, map_add, map_sub,
+    map_mul, map_pow, map_one, map_bit0, map_bit1]
   ring1
 #align EllipticCurve.two_torsion_polynomial.disc_eq EllipticCurveCat.twoTorsionPolynomial.disc_eq
 
-theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)] (E : EllipticCurveCat K)
-    (A : Type v) [CommRing A] [Nontrivial A] [Algebra K A] : (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
+theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)]
+    (E : EllipticCurveCat K) (A : Type v) [CommRing A] [Nontrivial A] [Algebra K A] :
+    (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
   E.Δ.NeZero <|
     mul_left_cancel₀ (pow_ne_zero 4 <| nonzero_of_invertible (2 : K)) <|
       (algebraMap K A).Injective
         (by
           simp only [map_mul, map_pow, map_bit0, map_one, map_zero]
           linear_combination hdisc - two_torsion_polynomial.disc_eq E A)
-#align EllipticCurve.two_torsion_polynomial.disc_ne_zero EllipticCurveCat.twoTorsionPolynomial.disc_ne_zero
+#align
+  EllipticCurve.two_torsion_polynomial.disc_ne_zero EllipticCurveCat.twoTorsionPolynomial.disc_ne_zero
 
 end TorsionPolynomial
 
@@ -235,14 +238,17 @@ theorem b₄_eq : (E.changeOfVariable u r s t).b₄ = ↑u⁻¹ ^ 4 * (E.b₄ + 
 #align EllipticCurve.change_of_variable.b₄_eq EllipticCurveCat.changeOfVariable.b₄_eq
 
 @[simp]
-theorem b₆_eq : (E.changeOfVariable u r s t).b₆ = ↑u⁻¹ ^ 6 * (E.b₆ + 2 * r * E.b₄ + r ^ 2 * E.b₂ + 4 * r ^ 3) := by
+theorem b₆_eq :
+    (E.changeOfVariable u r s t).b₆ = ↑u⁻¹ ^ 6 * (E.b₆ + 2 * r * E.b₄ + r ^ 2 * E.b₂ + 4 * r ^ 3) :=
+  by
   simp [change_of_variable]
   ring1
 #align EllipticCurve.change_of_variable.b₆_eq EllipticCurveCat.changeOfVariable.b₆_eq
 
 @[simp]
 theorem b₈_eq :
-    (E.changeOfVariable u r s t).b₈ = ↑u⁻¹ ^ 8 * (E.b₈ + 3 * r * E.b₆ + 3 * r ^ 2 * E.b₄ + r ^ 3 * E.b₂ + 3 * r ^ 4) :=
+    (E.changeOfVariable u r s t).b₈ =
+      ↑u⁻¹ ^ 8 * (E.b₈ + 3 * r * E.b₆ + 3 * r ^ 2 * E.b₄ + r ^ 3 * E.b₂ + 3 * r ^ 4) :=
   by
   simp [change_of_variable]
   ring1
@@ -267,7 +273,8 @@ theorem Δ_eq : (E.changeOfVariable u r s t).Δ = u⁻¹ ^ 12 * E.Δ :=
 
 @[simp]
 theorem j_eq : (E.changeOfVariable u r s t).j = E.j := by
-  simp only [j, c₄, Δ_eq, inv_pow, mul_inv_rev, inv_inv, Units.coe_mul, Units.coe_pow, c₄_eq, b₂, b₄]
+  simp only [j, c₄, Δ_eq, inv_pow, mul_inv_rev, inv_inv, Units.val_mul, Units.coe_pow, c₄_eq, b₂,
+    b₄]
   have hu : (u * ↑u⁻¹ : R) ^ 12 = 1 := by rw [u.mul_inv, one_pow]
   linear_combination ↑E.Δ⁻¹ * ((E.a₁ ^ 2 + 4 * E.a₂) ^ 2 - 24 * (2 * E.a₄ + E.a₁ * E.a₃)) ^ 3 * hu
 #align EllipticCurve.change_of_variable.j_eq EllipticCurveCat.changeOfVariable.j_eq

@@ -124,7 +124,8 @@ instance (M : ActionCat V G) : Inhabited (ActionCat.Hom M M) :=
 /-- The composition of two `Action V G` homomorphisms is the composition of the underlying maps.
 -/
 @[simps]
-def comp {M N K : ActionCat V G} (p : ActionCat.Hom M N) (q : ActionCat.Hom N K) : ActionCat.Hom M K where
+def comp {M N K : ActionCat V G} (p : ActionCat.Hom M N) (q : ActionCat.Hom N K) :
+    ActionCat.Hom M K where
   Hom := p.Hom ≫ q.Hom
   comm' g := by rw [← category.assoc, p.comm, category.assoc, q.comm, ← category.assoc]
 #align Action.hom.comp ActionCat.Hom.comp
@@ -142,7 +143,8 @@ theorem id_hom (M : ActionCat V G) : (𝟙 M : Hom M M).Hom = 𝟙 M.V :=
 #align Action.id_hom ActionCat.id_hom
 
 @[simp]
-theorem comp_hom {M N K : ActionCat V G} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
+theorem comp_hom {M N K : ActionCat V G} (f : M ⟶ N) (g : N ⟶ K) :
+    (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
   rfl
 #align Action.comp_hom ActionCat.comp_hom
 
@@ -150,7 +152,8 @@ theorem comp_hom {M N K : ActionCat V G} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g 
 from an isomorphism of the the underlying objects,
 where the forward direction commutes with the group action. -/
 @[simps]
-def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.Hom = f.Hom ≫ N.ρ g) : M ≅ N where
+def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.Hom = f.Hom ≫ N.ρ g) :
+    M ≅ N where
   Hom := { Hom := f.Hom, comm' := comm }
   inv :=
     { Hom := f.inv,
@@ -160,13 +163,15 @@ def mkIso {M N : ActionCat V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ 
         simp [w] }
 #align Action.mk_iso ActionCat.mkIso
 
-instance (priority := 100) is_iso_of_hom_is_iso {M N : ActionCat V G} (f : M ⟶ N) [IsIso f.Hom] : IsIso f := by
+instance (priority := 100) is_iso_of_hom_is_iso {M N : ActionCat V G} (f : M ⟶ N) [IsIso f.Hom] :
+    IsIso f := by
   convert is_iso.of_iso (mk_iso (as_iso f.hom) f.comm)
   ext
   rfl
 #align Action.is_iso_of_hom_is_iso ActionCat.is_iso_of_hom_is_iso
 
-instance is_iso_hom_mk {M N : ActionCat V G} (f : M.V ⟶ N.V) [IsIso f] (w) : @IsIso _ _ M N ⟨f, w⟩ :=
+instance is_iso_hom_mk {M N : ActionCat V G} (f : M.V ⟶ N.V) [IsIso f] (w) :
+    @IsIso _ _ M N ⟨f, w⟩ :=
   IsIso.of_iso (mkIso (asIso f) w)
 #align Action.is_iso_hom_mk ActionCat.is_iso_hom_mk
 
@@ -186,7 +191,9 @@ def functor : ActionCat V G ⥤ SingleObj G ⥤ V where
 def inverse : (SingleObj G ⥤ V) ⥤ ActionCat V G where
   obj F :=
     { V := F.obj PUnit.unit,
-      ρ := { toFun := fun g => F.map g, map_one' := F.map_id PUnit.unit, map_mul' := fun g h => F.map_comp h g } }
+      ρ :=
+        { toFun := fun g => F.map g, map_one' := F.map_id PUnit.unit,
+          map_mul' := fun g h => F.map_comp h g } }
   map M N f := { Hom := f.app PUnit.unit, comm' := fun g => f.naturality g }
 #align Action.functor_category_equivalence.inverse ActionCat.FunctorCategoryEquivalence.inverse
 
@@ -259,9 +266,11 @@ def forget : ActionCat V G ⥤ V where
 
 instance : Faithful (forget V G) where map_injective' X Y f g w := Hom.ext _ _ w
 
-instance [ConcreteCategory V] : ConcreteCategory (ActionCat V G) where forget := forget V G ⋙ ConcreteCategory.forget V
+instance [ConcreteCategory V] :
+    ConcreteCategory (ActionCat V G) where forget := forget V G ⋙ ConcreteCategory.forget V
 
-instance hasForgetToV [ConcreteCategory V] : HasForget₂ (ActionCat V G) V where forget₂ := forget V G
+instance hasForgetToV [ConcreteCategory V] :
+    HasForget₂ (ActionCat V G) V where forget₂ := forget V G
 #align Action.has_forget_to_V ActionCat.hasForgetToV
 
 /-- The forgetful functor is intertwined by `functor_category_equivalence` with
@@ -269,7 +278,8 @@ evaluation at `punit.star`. -/
 def functorCategoryEquivalenceCompEvaluation :
     (functorCategoryEquivalence V G).Functor ⋙ (evaluation _ _).obj PUnit.unit ≅ forget V G :=
   Iso.refl _
-#align Action.functor_category_equivalence_comp_evaluation ActionCat.functorCategoryEquivalenceCompEvaluation
+#align
+  Action.functor_category_equivalence_comp_evaluation ActionCat.functorCategoryEquivalenceCompEvaluation
 
 noncomputable instance [HasLimits V] : Limits.PreservesLimits (forget V G) :=
   Limits.preservesLimitsOfNatIso (ActionCat.functorCategoryEquivalenceCompEvaluation V G)
@@ -280,7 +290,8 @@ noncomputable instance [HasColimits V] : PreservesColimits (forget V G) :=
 -- TODO construct categorical images?
 end Forget
 
-theorem Iso.conj_ρ {M N : ActionCat V G} (f : M ≅ N) (g : G) : N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) := by
+theorem Iso.conj_ρ {M N : ActionCat V G} (f : M ≅ N) (g : G) :
+    N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) := by
   rw [iso.conj_apply, iso.eq_inv_comp]
   simp [f.hom.comm']
 #align Action.iso.conj_ρ ActionCat.Iso.conj_ρ
@@ -358,7 +369,8 @@ instance forget_additive : Functor.Additive (forget V G) where
 instance forget₂_additive [ConcreteCategory V] : Functor.Additive (forget₂ (ActionCat V G) V) where
 #align Action.forget₂_additive ActionCat.forget₂_additive
 
-instance functor_category_equivalence_additive : Functor.Additive (functorCategoryEquivalence V G).Functor where
+instance functor_category_equivalence_additive :
+    Functor.Additive (functorCategoryEquivalence V G).Functor where
 #align Action.functor_category_equivalence_additive ActionCat.functor_category_equivalence_additive
 
 @[simp]
@@ -430,7 +442,8 @@ instance forget_linear : Functor.Linear R (forget V G) where
 instance forget₂_linear [ConcreteCategory V] : Functor.Linear R (forget₂ (ActionCat V G) V) where
 #align Action.forget₂_linear ActionCat.forget₂_linear
 
-instance functor_category_equivalence_linear : Functor.Linear R (functorCategoryEquivalence V G).Functor where
+instance functor_category_equivalence_linear :
+    Functor.Linear R (functorCategoryEquivalence V G).Functor where
 #align Action.functor_category_equivalence_linear ActionCat.functor_category_equivalence_linear
 
 @[simp]
@@ -486,18 +499,21 @@ theorem tensor_rho {X Y : ActionCat V G} {g : G} : (X ⊗ Y).ρ g = X.ρ g ⊗ Y
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem tensor_hom {W X Y Z : ActionCat V G} (f : W ⟶ X) (g : Y ⟶ Z) : (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
+theorem tensor_hom {W X Y Z : ActionCat V G} (f : W ⟶ X) (g : Y ⟶ Z) :
+    (f ⊗ g).Hom = f.Hom ⊗ g.Hom :=
   rfl
 #align Action.tensor_hom ActionCat.tensor_hom
 
 @[simp]
-theorem associator_hom_hom {X Y Z : ActionCat V G} : Hom.hom (α_ X Y Z).Hom = (α_ X.V Y.V Z.V).Hom := by
+theorem associator_hom_hom {X Y Z : ActionCat V G} :
+    Hom.hom (α_ X Y Z).Hom = (α_ X.V Y.V Z.V).Hom := by
   dsimp [monoidal.transport_associator]
   simp
 #align Action.associator_hom_hom ActionCat.associator_hom_hom
 
 @[simp]
-theorem associator_inv_hom {X Y Z : ActionCat V G} : Hom.hom (α_ X Y Z).inv = (α_ X.V Y.V Z.V).inv := by
+theorem associator_inv_hom {X Y Z : ActionCat V G} :
+    Hom.hom (α_ X Y Z).inv = (α_ X.V Y.V Z.V).inv := by
   dsimp [monoidal.transport_associator]
   simp
 #align Action.associator_inv_hom ActionCat.associator_inv_hom
@@ -653,7 +669,8 @@ end Monoidal
 def actionPunitEquivalence : ActionCat V (MonCat.of PUnit) ≌ V where
   Functor := forget V _
   inverse := { obj := fun X => ⟨X, 1⟩, map := fun X Y f => ⟨f, fun ⟨⟩ => by simp⟩ }
-  unitIso := NatIso.ofComponents (fun X => mkIso (Iso.refl _) fun ⟨⟩ => by simpa using ρ_one X) (by tidy)
+  unitIso :=
+    NatIso.ofComponents (fun X => mkIso (Iso.refl _) fun ⟨⟩ => by simpa using ρ_one X) (by tidy)
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 #align Action.Action_punit_equivalence ActionCat.actionPunitEquivalence
 
@@ -712,18 +729,20 @@ theorem of_mul_action_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x
   rfl
 #align Action.of_mul_action_apply ActionCat.of_mul_action_apply
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[] -/
 /-- Given a family `F` of types with `G`-actions, this is the limit cone demonstrating that the
 product of `F` as types is a product in the category of `G`-sets. -/
 def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι → Type max v u)
-    [∀ i : ι, MulAction G (F i)] : LimitCone (Discrete.functor fun i : ι => ActionCat.ofMulAction G (F i)) where
+    [∀ i : ι, MulAction G (F i)] :
+    LimitCone (Discrete.functor fun i : ι => ActionCat.ofMulAction G (F i)) where
   Cone :=
     { x := ActionCat.ofMulAction G (∀ i : ι, F i),
       π :=
         { app := fun i => ⟨fun x => x i.as, fun g => by ext <;> rfl⟩,
           naturality' := fun i j x => by
             ext
-            trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `discrete_cases #[]"
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `discrete_cases #[]"
             cases x
             congr } }
   IsLimit :=
@@ -758,7 +777,8 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) : ActionCat V G ⥤ ActionCat W G w
   obj M :=
     { V := F.obj M.V,
       ρ :=
-        { toFun := fun g => F.map (M.ρ g), map_one' := by simp only [End.one_def, ActionCat.ρ_one, F.map_id],
+        { toFun := fun g => F.map (M.ρ g),
+          map_one' := by simp only [End.one_def, ActionCat.ρ_one, F.map_id],
           map_mul' := fun g h => by simp only [End.mul_def, F.map_comp, map_mul] } }
   map M N f :=
     { Hom := F.map f.Hom,
@@ -794,7 +814,8 @@ variable {V} {W : Type (u + 1)} [LargeCategory W] [MonoidalCategory V] [Monoidal
 /-- A monoidal functor induces a monoidal functor between
 the categories of `G`-actions within those categories. -/
 @[simps]
-def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) : MonoidalFunctor (ActionCat V G) (ActionCat W G) :=
+def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) :
+    MonoidalFunctor (ActionCat V G) (ActionCat W G) :=
   { -- See note [dsimp, simp].
           F.toFunctor.mapAction
       G with
@@ -803,7 +824,8 @@ def mapAction (F : MonoidalFunctor V W) (G : MonCat.{u}) : MonoidalFunctor (Acti
         comm' := fun g => by
           dsimp
           erw [category.id_comp, CategoryTheory.Functor.map_id, category.comp_id] },
-    μ := fun X Y => { Hom := F.μ X.V Y.V, comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) },
+    μ := fun X Y =>
+      { Hom := F.μ X.V Y.V, comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) },
     ε_is_iso := by infer_instance, μ_is_iso := by infer_instance,
     μ_natural' := by
       intros

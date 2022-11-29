@@ -41,7 +41,8 @@ instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (ball (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : ball (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
 @[simp, norm_cast]
-theorem coe_mul_unit_ball [NonUnitalSemiNormedRing 𝕜] (x y : ball (0 : 𝕜) 1) : ↑(x * y) = (x * y : 𝕜) :=
+theorem coe_mul_unit_ball [NonUnitalSemiNormedRing 𝕜] (x y : ball (0 : 𝕜) 1) :
+    ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_ball coe_mul_unit_ball
 
@@ -63,13 +64,15 @@ instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (closedBall (0 : 𝕜
   (Subsemigroup.unitClosedBall 𝕜).HasContinuousMul
 
 @[simp, norm_cast]
-theorem coe_mul_unit_closed_ball [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) : ↑(x * y) = (x * y : 𝕜) :=
+theorem coe_mul_unit_closed_ball [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
+    ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_closed_ball coe_mul_unit_closed_ball
 
 /-- Closed unit ball in a semi normed ring as a bundled `submonoid`. -/
 def Submonoid.unitClosedBall (𝕜 : Type _) [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Submonoid 𝕜 :=
-  { Subsemigroup.unitClosedBall 𝕜 with carrier := closedBall 0 1, one_mem' := mem_closed_ball_zero_iff.2 norm_one.le }
+  { Subsemigroup.unitClosedBall 𝕜 with carrier := closedBall 0 1,
+    one_mem' := mem_closed_ball_zero_iff.2 norm_one.le }
 #align submonoid.unit_closed_ball Submonoid.unitClosedBall
 
 instance [SemiNormedRing 𝕜] [NormOneClass 𝕜] : Monoid (closedBall (0 : 𝕜) 1) :=
@@ -79,13 +82,14 @@ instance [SemiNormedCommRing 𝕜] [NormOneClass 𝕜] : CommMonoid (closedBall 
   SubmonoidClass.toCommMonoid (Submonoid.unitClosedBall 𝕜)
 
 @[simp, norm_cast]
-theorem coe_one_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] : ((1 : closedBall (0 : 𝕜) 1) : 𝕜) = 1 :=
+theorem coe_one_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] :
+    ((1 : closedBall (0 : 𝕜) 1) : 𝕜) = 1 :=
   rfl
 #align coe_one_unit_closed_ball coe_one_unit_closed_ball
 
 @[simp, norm_cast]
-theorem coe_pow_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1) (n : ℕ) :
-    ↑(x ^ n) = (x ^ n : 𝕜) :=
+theorem coe_pow_unit_closed_ball [SemiNormedRing 𝕜] [NormOneClass 𝕜] (x : closedBall (0 : 𝕜) 1)
+    (n : ℕ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
   rfl
 #align coe_pow_unit_closed_ball coe_pow_unit_closed_ball
 
@@ -99,7 +103,10 @@ def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid �
 #align submonoid.unit_sphere Submonoid.unitSphere
 
 instance [NormedDivisionRing 𝕜] : Inv (sphere (0 : 𝕜) 1) :=
-  ⟨fun x => ⟨x⁻¹, mem_sphere_zero_iff_norm.2 <| by rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
+  ⟨fun x =>
+    ⟨x⁻¹,
+      mem_sphere_zero_iff_norm.2 <| by
+        rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
 
 @[simp, norm_cast]
 theorem coe_inv_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) : ↑x⁻¹ = (x⁻¹ : 𝕜) :=
@@ -110,18 +117,23 @@ instance [NormedDivisionRing 𝕜] : Div (sphere (0 : 𝕜) 1) :=
   ⟨fun x y =>
     ⟨x / y,
       mem_sphere_zero_iff_norm.2 <| by
-        rw [norm_div, mem_sphere_zero_iff_norm.1 x.coe_prop, mem_sphere_zero_iff_norm.1 y.coe_prop, div_one]⟩⟩
+        rw [norm_div, mem_sphere_zero_iff_norm.1 x.coe_prop, mem_sphere_zero_iff_norm.1 y.coe_prop,
+          div_one]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_div_unit_sphere [NormedDivisionRing 𝕜] (x y : sphere (0 : 𝕜) 1) : ↑(x / y) = (x / y : 𝕜) :=
+theorem coe_div_unit_sphere [NormedDivisionRing 𝕜] (x y : sphere (0 : 𝕜) 1) :
+    ↑(x / y) = (x / y : 𝕜) :=
   rfl
 #align coe_div_unit_sphere coe_div_unit_sphere
 
 instance [NormedDivisionRing 𝕜] : Pow (sphere (0 : 𝕜) 1) ℤ :=
-  ⟨fun x n => ⟨x ^ n, by rw [mem_sphere_zero_iff_norm, norm_zpow, mem_sphere_zero_iff_norm.1 x.coe_prop, one_zpow]⟩⟩
+  ⟨fun x n =>
+    ⟨x ^ n, by
+      rw [mem_sphere_zero_iff_norm, norm_zpow, mem_sphere_zero_iff_norm.1 x.coe_prop, one_zpow]⟩⟩
 
 @[simp, norm_cast]
-theorem coe_zpow_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) (n : ℤ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
+theorem coe_zpow_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) (n : ℤ) :
+    ↑(x ^ n) = (x ^ n : 𝕜) :=
   rfl
 #align coe_zpow_unit_sphere coe_zpow_unit_sphere
 
@@ -134,18 +146,21 @@ theorem coe_one_unit_sphere [NormedDivisionRing 𝕜] : ((1 : sphere (0 : 𝕜) 
 #align coe_one_unit_sphere coe_one_unit_sphere
 
 @[simp, norm_cast]
-theorem coe_mul_unit_sphere [NormedDivisionRing 𝕜] (x y : sphere (0 : 𝕜) 1) : ↑(x * y) = (x * y : 𝕜) :=
+theorem coe_mul_unit_sphere [NormedDivisionRing 𝕜] (x y : sphere (0 : 𝕜) 1) :
+    ↑(x * y) = (x * y : 𝕜) :=
   rfl
 #align coe_mul_unit_sphere coe_mul_unit_sphere
 
 @[simp, norm_cast]
-theorem coe_pow_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) (n : ℕ) : ↑(x ^ n) = (x ^ n : 𝕜) :=
+theorem coe_pow_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) (n : ℕ) :
+    ↑(x ^ n) = (x ^ n : 𝕜) :=
   rfl
 #align coe_pow_unit_sphere coe_pow_unit_sphere
 
 /-- Monoid homomorphism from the unit sphere to the group of units. -/
 def unitSphereToUnits (𝕜 : Type _) [NormedDivisionRing 𝕜] : sphere (0 : 𝕜) 1 →* Units 𝕜 :=
-  Units.liftRight (Submonoid.unitSphere 𝕜).Subtype (fun x => Units.mk0 x <| ne_zero_of_mem_unit_sphere _) fun x => rfl
+  Units.liftRight (Submonoid.unitSphere 𝕜).Subtype
+    (fun x => Units.mk0 x <| ne_zero_of_mem_unit_sphere _) fun x => rfl
 #align unit_sphere_to_units unitSphereToUnits
 
 @[simp]
@@ -154,13 +169,14 @@ theorem unit_sphere_to_units_apply_coe [NormedDivisionRing 𝕜] (x : sphere (0 
   rfl
 #align unit_sphere_to_units_apply_coe unit_sphere_to_units_apply_coe
 
-theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] : Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
+theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] :
+    Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
   Subtype.eq <| by convert congr_arg Units.val h
 #align unit_sphere_to_units_injective unit_sphere_to_units_injective
 
 instance [NormedDivisionRing 𝕜] : Group (sphere (0 : 𝕜) 1) :=
-  unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)
-    (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
+  unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl)
+    (fun x y => Units.ext rfl) (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
     (fun x n => Units.ext (Units.coe_pow (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
     Units.ext (Units.coe_zpow (unitSphereToUnits 𝕜 x) n).symm
 

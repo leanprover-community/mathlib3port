@@ -57,7 +57,8 @@ theorem logb_abs (x : ℝ) : logb b (|x|) = logb b x := by rw [logb, logb, log_a
 #align real.logb_abs Real.logb_abs
 
 @[simp]
-theorem logb_neg_eq_logb (x : ℝ) : logb b (-x) = logb b x := by rw [← logb_abs x, ← logb_abs (-x), abs_neg]
+theorem logb_neg_eq_logb (x : ℝ) : logb b (-x) = logb b x := by
+  rw [← logb_abs x, ← logb_abs (-x), abs_neg]
 #align real.logb_neg_eq_logb Real.logb_neg_eq_logb
 
 theorem logb_mul (hx : x ≠ 0) (hy : y ≠ 0) : logb b (x * y) = logb b x + logb b y := by
@@ -81,10 +82,8 @@ variable (b_ne_one : b ≠ 1)
 include b_pos b_ne_one
 
 private theorem log_b_ne_zero : log b ≠ 0 := by
-  have b_ne_zero : b ≠ 0
-  linarith
-  have b_ne_minus_one : b ≠ -1
-  linarith
+  have b_ne_zero : b ≠ 0; linarith
+  have b_ne_minus_one : b ≠ -1; linarith
   simp [b_ne_one, b_ne_zero, b_ne_minus_one]
 #align real.log_b_ne_zero real.log_b_ne_zero
 
@@ -202,14 +201,16 @@ theorem logb_neg (h0 : 0 < x) (h1 : x < 1) : logb b x < 0 :=
   (logb_neg_iff hb h0).2 h1
 #align real.logb_neg Real.logb_neg
 
-theorem logb_nonneg_iff (hx : 0 < x) : 0 ≤ logb b x ↔ 1 ≤ x := by rw [← not_lt, logb_neg_iff hb hx, not_lt]
+theorem logb_nonneg_iff (hx : 0 < x) : 0 ≤ logb b x ↔ 1 ≤ x := by
+  rw [← not_lt, logb_neg_iff hb hx, not_lt]
 #align real.logb_nonneg_iff Real.logb_nonneg_iff
 
 theorem logb_nonneg (hx : 1 ≤ x) : 0 ≤ logb b x :=
   (logb_nonneg_iff hb (zero_lt_one.trans_le hx)).2 hx
 #align real.logb_nonneg Real.logb_nonneg
 
-theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by rw [← not_lt, logb_pos_iff hb hx, not_lt]
+theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by
+  rw [← not_lt, logb_pos_iff hb hx, not_lt]
 #align real.logb_nonpos_iff Real.logb_nonpos_iff
 
 theorem logb_nonpos_iff' (hx : 0 ≤ x) : logb b x ≤ 0 ↔ x ≤ 1 := by
@@ -223,7 +224,8 @@ theorem logb_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : logb b x ≤ 0 :=
   (logb_nonpos_iff' hb hx).2 h'x
 #align real.logb_nonpos Real.logb_nonpos
 
-theorem strict_mono_on_logb : StrictMonoOn (logb b) (Set.ioi 0) := fun x hx y hy hxy => logb_lt_logb hb hx hxy
+theorem strict_mono_on_logb : StrictMonoOn (logb b) (Set.ioi 0) := fun x hx y hy hxy =>
+  logb_lt_logb hb hx hxy
 #align real.strict_mono_on_logb Real.strict_mono_on_logb
 
 theorem strict_anti_on_logb : StrictAntiOn (logb b) (Set.iio 0) := by
@@ -275,7 +277,8 @@ theorem logb_lt_logb_of_base_lt_one (hx : 0 < x) (hxy : x < y) : logb b y < logb
 #align real.logb_lt_logb_of_base_lt_one Real.logb_lt_logb_of_base_lt_one
 
 @[simp]
-theorem logb_lt_logb_iff_of_base_lt_one (hx : 0 < x) (hy : 0 < y) : logb b x < logb b y ↔ y < x := by
+theorem logb_lt_logb_iff_of_base_lt_one (hx : 0 < x) (hy : 0 < y) : logb b x < logb b y ↔ y < x :=
+  by
   rw [logb, logb, div_lt_div_right_of_neg (log_neg b_pos b_lt_one)]
   exact log_lt_log_iff hy hx
 #align real.logb_lt_logb_iff_of_base_lt_one Real.logb_lt_logb_iff_of_base_lt_one
@@ -326,8 +329,8 @@ theorem logb_nonpos_iff_of_base_lt_one (hx : 0 < x) : logb b x ≤ 0 ↔ 1 ≤ x
   rw [← not_lt, logb_pos_iff_of_base_lt_one b_pos b_lt_one hx, not_lt]
 #align real.logb_nonpos_iff_of_base_lt_one Real.logb_nonpos_iff_of_base_lt_one
 
-theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.ioi 0) := fun x hx y hy hxy =>
-  logb_lt_logb_of_base_lt_one b_pos b_lt_one hx hxy
+theorem strict_anti_on_logb_of_base_lt_one : StrictAntiOn (logb b) (Set.ioi 0) :=
+  fun x hx y hy hxy => logb_lt_logb_of_base_lt_one b_pos b_lt_one hx hxy
 #align real.strict_anti_on_logb_of_base_lt_one Real.strict_anti_on_logb_of_base_lt_one
 
 theorem strict_mono_on_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.iio 0) := by
@@ -344,11 +347,13 @@ theorem logb_inj_on_pos_of_base_lt_one : Set.InjOn (logb b) (Set.ioi 0) :=
 theorem eq_one_of_pos_of_logb_eq_zero_of_base_lt_one (h₁ : 0 < x) (h₂ : logb b x = 0) : x = 1 :=
   logb_inj_on_pos_of_base_lt_one b_pos b_lt_one (Set.mem_Ioi.2 h₁) (Set.mem_Ioi.2 zero_lt_one)
     (h₂.trans Real.logb_one.symm)
-#align real.eq_one_of_pos_of_logb_eq_zero_of_base_lt_one Real.eq_one_of_pos_of_logb_eq_zero_of_base_lt_one
+#align
+  real.eq_one_of_pos_of_logb_eq_zero_of_base_lt_one Real.eq_one_of_pos_of_logb_eq_zero_of_base_lt_one
 
 theorem logb_ne_zero_of_pos_of_ne_one_of_base_lt_one (hx_pos : 0 < x) (hx : x ≠ 1) : logb b x ≠ 0 :=
   mt (eq_one_of_pos_of_logb_eq_zero_of_base_lt_one b_pos b_lt_one hx_pos) hx
-#align real.logb_ne_zero_of_pos_of_ne_one_of_base_lt_one Real.logb_ne_zero_of_pos_of_ne_one_of_base_lt_one
+#align
+  real.logb_ne_zero_of_pos_of_ne_one_of_base_lt_one Real.logb_ne_zero_of_pos_of_ne_one_of_base_lt_one
 
 theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot := by
   rw [tendsto_at_top_at_bot]
@@ -364,7 +369,8 @@ theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot := by
 
 end BPosAndBLtOne
 
-theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌊logb b r⌋ = Int.log b r := by
+theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌊logb b r⌋ = Int.log b r :=
+  by
   obtain rfl | hr := hr.eq_or_lt
   · rw [logb_zero, Int.log_zero_right, Int.floor_zero]
     
@@ -379,7 +385,8 @@ theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : �
     
 #align real.floor_logb_nat_cast Real.floor_logb_nat_cast
 
-theorem ceil_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈logb b r⌉ = Int.clog b r := by
+theorem ceil_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈logb b r⌉ = Int.clog b r :=
+  by
   obtain rfl | hr := hr.eq_or_lt
   · rw [logb_zero, Int.clog_zero_right, Int.ceil_zero]
     

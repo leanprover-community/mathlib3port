@@ -77,14 +77,16 @@ instance : Inhabited StieltjesFunction :=
 
 /-- If a function `f : ℝ → ℝ` is monotone, then the function mapping `x` to the right limit of `f`
 at `x` is a Stieltjes function, i.e., it is monotone and right-continuous. -/
-noncomputable def _root_.monotone.stieltjes_function {f : ℝ → ℝ} (hf : Monotone f) : StieltjesFunction where
+noncomputable def Monotone.stieltjesFunction {f : ℝ → ℝ} (hf : Monotone f) : StieltjesFunction where
   toFun := rightLim f
   mono' x y hxy := hf.rightLim hxy
   right_continuous' := by
     intro x s hs
-    obtain ⟨l, u, hlu, lus⟩ : ∃ l u : ℝ, right_lim f x ∈ Ioo l u ∧ Ioo l u ⊆ s := mem_nhds_iff_exists_Ioo_subset.1 hs
+    obtain ⟨l, u, hlu, lus⟩ : ∃ l u : ℝ, right_lim f x ∈ Ioo l u ∧ Ioo l u ⊆ s :=
+      mem_nhds_iff_exists_Ioo_subset.1 hs
     obtain ⟨y, xy, h'y⟩ : ∃ (y : ℝ)(H : x < y), Ioc x y ⊆ f ⁻¹' Ioo l u :=
-      mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 (hf.tendsto_right_lim x (Ioo_mem_nhds hlu.1 hlu.2))
+      mem_nhds_within_Ioi_iff_exists_Ioc_subset.1
+        (hf.tendsto_right_lim x (Ioo_mem_nhds hlu.1 hlu.2))
     change ∀ᶠ y in 𝓝[≥] x, right_lim f y ∈ s
     filter_upwards [Ico_mem_nhds_within_Ici ⟨le_refl x, xy⟩] with z hz
     apply lus
@@ -94,14 +96,15 @@ noncomputable def _root_.monotone.stieltjes_function {f : ℝ → ℝ} (hf : Mon
       right_lim f z ≤ f a := hf.right_lim_le za
       _ < u := (h'y ⟨hz.1.trans_lt za, ay.le⟩).2
       
-#align stieltjes_function._root_.monotone.stieltjes_function stieltjes_function._root_.monotone.stieltjes_function
+#align monotone.stieltjes_function Monotone.stieltjesFunction
 
-theorem _root_.monotone.stieltjes_function_eq {f : ℝ → ℝ} (hf : Monotone f) (x : ℝ) :
+theorem Monotone.stieltjes_function_eq {f : ℝ → ℝ} (hf : Monotone f) (x : ℝ) :
     hf.StieltjesFunction x = rightLim f x :=
   rfl
-#align stieltjes_function._root_.monotone.stieltjes_function_eq stieltjes_function._root_.monotone.stieltjes_function_eq
+#align monotone.stieltjes_function_eq Monotone.stieltjes_function_eq
 
-theorem countable_left_lim_ne (f : StieltjesFunction) : Set.Countable { x | leftLim f x ≠ f x } := by
+theorem countable_left_lim_ne (f : StieltjesFunction) : Set.Countable { x | leftLim f x ≠ f x } :=
+  by
   apply countable.mono _ f.mono.countable_not_continuous_at
   intro x hx h'x
   apply hx
@@ -161,8 +164,8 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : icc a b
     ∀ (s : Finset ℕ) (b) (cv : Icc a b ⊆ ⋃ i ∈ (↑s : Set ℕ), Ioo (c i) (d i)),
       (of_real (f b - f a) : ℝ≥0∞) ≤ ∑ i in s, of_real (f (d i) - f (c i))
     by
-    rcases is_compact_Icc.elim_finite_subcover_image (fun (i : ℕ) (_ : i ∈ univ) => @is_open_Ioo _ _ _ _ (c i) (d i))
-        (by simpa using ss) with
+    rcases is_compact_Icc.elim_finite_subcover_image
+        (fun (i : ℕ) (_ : i ∈ univ) => @is_open_Ioo _ _ _ _ (c i) (d i)) (by simpa using ss) with
       ⟨s, su, hf, hs⟩
     have e : (⋃ i ∈ (↑hf.to_finset : Set ℕ), Ioo (c i) (d i)) = ⋃ i ∈ s, Ioo (c i) (d i) := by
       simp only [ext_iff, exists_prop, Finset.set_bUnion_coe, mem_Union, forall_const, iff_self_iff,
@@ -220,9 +223,13 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) := by
       exact (f.right_continuous a).mono Ioi_subset_Ici_self
     have B : f a - f a < δ := by rwa [sub_self, Nnreal.coe_pos, ← Ennreal.coe_pos]
     exact (((tendsto_order.1 A).2 _ B).And self_mem_nhds_within).exists
-  have : ∀ i, ∃ p : ℝ × ℝ, s i ⊆ Ioo p.1 p.2 ∧ (of_real (f p.2 - f p.1) : ℝ≥0∞) < f.length (s i) + ε' i := by
+  have :
+    ∀ i,
+      ∃ p : ℝ × ℝ, s i ⊆ Ioo p.1 p.2 ∧ (of_real (f p.2 - f p.1) : ℝ≥0∞) < f.length (s i) + ε' i :=
+    by
     intro i
-    have := Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_ne_zero.2 (ε'0 i).ne')
+    have :=
+      Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_ne_zero.2 (ε'0 i).ne')
     conv at this =>
     lhs
     rw [length]
@@ -247,7 +254,8 @@ theorem outer_Ioc (a b : ℝ) : f.outer (ioc a b) = ofReal (f b - f a) := by
     _ ≤ (∑' i, of_real (f (g i).2 - f (g i).1)) + of_real δ :=
       add_le_add (f.length_subadditive_Icc_Ioo I_subset) (Ennreal.of_real_le_of_real ha'.le)
     _ ≤ (∑' i, f.length (s i) + ε' i) + δ :=
-      add_le_add (Ennreal.tsum_le_tsum fun i => (hg i).2.le) (by simp only [Ennreal.of_real_coe_nnreal, le_rfl])
+      add_le_add (Ennreal.tsum_le_tsum fun i => (hg i).2.le)
+        (by simp only [Ennreal.of_real_coe_nnreal, le_rfl])
     _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by rw [Ennreal.tsum_add]
     _ ≤ (∑' i, f.length (s i)) + δ + δ := add_le_add (add_le_add le_rfl hε.le) le_rfl
     _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, Ennreal.add_halves]
@@ -258,19 +266,23 @@ theorem measurableSetIoi {c : ℝ} : measurable_set[f.outer.caratheodory] (ioi c
   apply outer_measure.of_function_caratheodory fun t => _
   refine' le_infi fun a => le_infi fun b => le_infi fun h => _
   refine'
-    le_trans (add_le_add (f.length_mono <| inter_subset_inter_left _ h) (f.length_mono <| diff_subset_diff_left h)) _
+    le_trans
+      (add_le_add (f.length_mono <| inter_subset_inter_left _ h)
+        (f.length_mono <| diff_subset_diff_left h))
+      _
   cases' le_total a c with hac hac <;> cases' le_total b c with hbc hbc
-  · simp only [Ioc_inter_Ioi, f.length_Ioc, hac, sup_eq_max, hbc, le_refl, Ioc_eq_empty, max_eq_right, min_eq_left,
-      Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
+  · simp only [Ioc_inter_Ioi, f.length_Ioc, hac, sup_eq_max, hbc, le_refl, Ioc_eq_empty,
+      max_eq_right, min_eq_left, Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
     
-  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, ← Ennreal.of_real_add,
-      f.mono hac, f.mono hbc, sub_nonneg, sub_add_sub_cancel, le_refl, max_eq_right]
+  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, ←
+      Ennreal.of_real_add, f.mono hac, f.mono hbc, sub_nonneg, sub_add_sub_cancel, le_refl,
+      max_eq_right]
     
-  · simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty, zero_add,
-      or_true_iff, le_sup_iff, f.length_Ioc, not_lt]
+  · simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty,
+      zero_add, or_true_iff, le_sup_iff, f.length_Ioc, not_lt]
     
-  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, le_refl, Ioc_eq_empty,
-      add_zero, max_eq_left, f.length_empty, not_lt]
+  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max,
+      le_refl, Ioc_eq_empty, add_zero, max_eq_left, f.length_empty, not_lt]
     
 #align stieltjes_function.measurable_set_Ioi StieltjesFunction.measurableSetIoi
 
@@ -284,7 +296,8 @@ theorem outer_trim : f.outer.trim = f.outer := by
   choose g hg using
     show ∀ i, ∃ s, t i ⊆ s ∧ MeasurableSet s ∧ f.outer s ≤ f.length (t i) + of_real (ε' i) by
       intro i
-      have := Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_pos.2 (ε'0 i)).ne'
+      have :=
+        Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_pos.2 (ε'0 i)).ne'
       conv at this =>
       lhs
       rw [length]
@@ -324,7 +337,8 @@ theorem measure_Ioc (a b : ℝ) : f.Measure (ioc a b) = ofReal (f b - f a) := by
 
 @[simp]
 theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a) := by
-  obtain ⟨u, u_mono, u_lt_a, u_lim⟩ : ∃ u : ℕ → ℝ, StrictMono u ∧ (∀ n : ℕ, u n < a) ∧ tendsto u at_top (𝓝 a) :=
+  obtain ⟨u, u_mono, u_lt_a, u_lim⟩ :
+    ∃ u : ℕ → ℝ, StrictMono u ∧ (∀ n : ℕ, u n < a) ∧ tendsto u at_top (𝓝 a) :=
     exists_seq_strict_mono_tendsto a
   have A : {a} = ⋂ n, Ioc (u n) a := by
     refine' subset.antisymm (fun x hx => by simp [mem_singleton_iff.1 hx, u_lt_a]) fun x hx => _
@@ -338,11 +352,14 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
       
     · exact ⟨0, by simpa only [measure_Ioc] using Ennreal.of_real_ne_top⟩
       
-  have L2 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (of_real (f a - left_lim f a))) := by
+  have L2 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (of_real (f a - left_lim f a))) :=
+    by
     simp only [measure_Ioc]
     have : tendsto (fun n => f (u n)) at_top (𝓝 (left_lim f a)) := by
       apply (f.mono.tendsto_left_lim a).comp
-      exact tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ u_lim (eventually_of_forall fun n => u_lt_a n)
+      exact
+        tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ u_lim
+          (eventually_of_forall fun n => u_lt_a n)
     exact ennreal.continuous_of_real.continuous_at.tendsto.comp (tendsto_const_nhds.sub this)
   exact tendsto_nhds_unique L1 L2
 #align stieltjes_function.measure_singleton StieltjesFunction.measure_singleton
@@ -351,8 +368,8 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
 theorem measure_Icc (a b : ℝ) : f.Measure (icc a b) = ofReal (f b - leftLim f a) := by
   rcases le_or_lt a b with (hab | hab)
   · have A : Disjoint {a} (Ioc a b) := by simp
-    simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← Ennreal.of_real_add, f.mono.left_lim_le,
-      measure_union A measurableSetIoc, f.mono hab]
+    simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← Ennreal.of_real_add,
+      f.mono.left_lim_le, measure_union A measurableSetIoc, f.mono hab]
     
   · simp only [hab, measure_empty, Icc_eq_empty, not_le]
     symm
@@ -370,8 +387,8 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (ioo a b) = ofReal (leftLim f b - f 
   · have A : Disjoint (Ioo a b) {b} := by simp
     have D : f b - f a = f b - left_lim f b + (left_lim f b - f a) := by abel
     have := f.measure_Ioc a b
-    simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton, measure_union A (measurable_set_singleton b),
-      Icc_self] at this
+    simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,
+      measure_union A (measurable_set_singleton b), Icc_self] at this
     rw [D, Ennreal.of_real_add, add_comm] at this
     · simpa only [Ennreal.add_right_inj Ennreal.of_real_ne_top]
       

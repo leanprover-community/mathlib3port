@@ -86,14 +86,15 @@ respectively, the homomorphism induced from `S` to `P`. -/
 noncomputable def awayToAwayRight (y : R) [Algebra R P] [IsLocalization.Away (x * y) P] : S →+* P :=
   lift x <|
     show IsUnit ((algebraMap R P) x) from
-      is_unit_of_mul_eq_one ((algebraMap R P) x) (mk' P y ⟨x * y, Submonoid.mem_powers _⟩) <| by
+      isUnit_of_mul_eq_one ((algebraMap R P) x) (mk' P y ⟨x * y, Submonoid.mem_powers _⟩) <| by
         rw [mul_mk'_eq_mk'_of_mul, mk'_self]
 #align is_localization.away.away_to_away_right IsLocalization.Away.awayToAwayRight
 
 variable (S) (Q : Type _) [CommSemiring Q] [Algebra P Q]
 
 /-- Given a map `f : R →+* S` and an element `r : R`, we may construct a map `Rᵣ →+* Sᵣ`. -/
-noncomputable def map (f : R →+* P) (r : R) [IsLocalization.Away r S] [IsLocalization.Away (f r) Q] : S →+* Q :=
+noncomputable def map (f : R →+* P) (r : R) [IsLocalization.Away r S]
+    [IsLocalization.Away (f r) Q] : S →+* Q :=
   IsLocalization.map Q f
     (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f by
       rintro x ⟨n, rfl⟩
@@ -134,18 +135,19 @@ noncomputable def atUnit (x : R) (e : IsUnit x) [IsLocalization.Away x S] : R �
   apply at_units R (Submonoid.powers x)
   rintro ⟨xn, n, hxn⟩
   obtain ⟨u, hu⟩ := e
-  rw [is_unit_iff_exists_inv]
+  rw [isUnit_iff_exists_inv]
   use u.inv ^ n
   simp [← hxn, ← hu, ← mul_pow]
 #align is_localization.at_unit IsLocalization.atUnit
 
 /-- The localization at one is isomorphic to the ring. -/
 noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
-  @atUnit R _ S _ _ (1 : R) is_unit_one _
+  @atUnit R _ S _ _ (1 : R) isUnit_one _
 #align is_localization.at_one IsLocalization.atOne
 
-theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S] [Algebra R S] {r : R}
-    (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) : IsLocalization.Away r S :=
+theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
+    [Algebra R S] {r : R} (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) :
+    IsLocalization.Away r S :=
   { map_units := by
       rintro ⟨_, n, rfl⟩
       exact (algebraMap R S).is_unit_map (hr.pow _),
@@ -175,12 +177,14 @@ variable {M}
 
 /-- Given a map `f : R →+* S` and an element `r : R`, such that `f r` is invertible,
   we may construct a map `Rᵣ →+* S`. -/
-noncomputable abbrev awayLift (f : R →+* P) (r : R) (hr : IsUnit (f r)) : Localization.Away r →+* P :=
+noncomputable abbrev awayLift (f : R →+* P) (r : R) (hr : IsUnit (f r)) :
+    Localization.Away r →+* P :=
   IsLocalization.Away.lift r hr
 #align localization.away_lift Localization.awayLift
 
 /-- Given a map `f : R →+* S` and an element `r : R`, we may construct a map `Rᵣ →+* Sᵣ`. -/
-noncomputable abbrev awayMap (f : R →+* P) (r : R) : Localization.Away r →+* Localization.Away (f r) :=
+noncomputable abbrev awayMap (f : R →+* P) (r : R) :
+    Localization.Away r →+* Localization.Away (f r) :=
   IsLocalization.Away.map _ _ f r
 #align localization.away_map Localization.awayMap
 
@@ -199,9 +203,11 @@ attribute [local instance] IsLocalization.alg_hom_subsingleton AdjoinRoot.alg_ho
 noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (c r * X - 1) :=
   AlgEquiv.ofAlgHom
     { awayLift _ r _ with
-      commutes' := IsLocalization.Away.AwayMap.lift_eq r (is_unit_of_mul_eq_one _ _ <| root_is_inv r) }
+      commutes' :=
+        IsLocalization.Away.AwayMap.lift_eq r (isUnit_of_mul_eq_one _ _ <| root_is_inv r) }
     (liftHom _ (IsLocalization.Away.invSelf r) <| by
-      simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_inv_self, aeval_one, sub_self])
+      simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_inv_self, aeval_one,
+        sub_self])
     (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align localization.away_equiv_adjoin Localization.awayEquivAdjoin
 
@@ -209,8 +215,8 @@ theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <|
   IsLocalization.is_localization_of_alg_equiv _ (Localization.awayEquivAdjoin r)
 #align is_localization.adjoin_inv IsLocalization.adjoin_inv
 
-theorem IsLocalization.Away.finite_presentation (r : R) {S} [CommRing S] [Algebra R S] [IsLocalization.Away r S] :
-    Algebra.FinitePresentation R S :=
+theorem IsLocalization.Away.finite_presentation (r : R) {S} [CommRing S] [Algebra R S]
+    [IsLocalization.Away r S] : Algebra.FinitePresentation R S :=
   (AdjoinRoot.finite_presentation _).Equiv <|
     (Localization.awayEquivAdjoin r).symm.trans <| IsLocalization.algEquiv (Submonoid.powers r) _ _
 #align is_localization.away.finite_presentation IsLocalization.Away.finite_presentation

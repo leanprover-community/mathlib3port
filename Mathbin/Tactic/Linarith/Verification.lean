@@ -32,7 +32,10 @@ open Ineq Tactic Native
       When elaborated, the coefficient will be a native numeral of the same type as `e`.
       -/
     unsafe
-  def mul_expr ( n : ℕ ) ( e : expr ) : pexpr := if n = 1 then ` `( $ ( e ) ) else ` `( $ ( nat.to_pexpr n ) * $ ( e ) )
+  def
+    mul_expr
+    ( n : ℕ ) ( e : expr ) : pexpr
+    := if n = 1 then ` `( $ ( e ) ) else ` `( $ ( nat.to_pexpr n ) * $ ( e ) )
 #align linarith.mul_expr linarith.mul_expr
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -40,7 +43,9 @@ private unsafe
   def
     add_exprs_aux
     : pexpr → List pexpr → pexpr
-    | p , [ ] => p | p , [ a ] => ` `( $ ( p ) + $ ( a ) ) | p , h :: t => add_exprs_aux ` `( $ ( p ) + $ ( h ) ) t
+    | p , [ ] => p
+      | p , [ a ] => ` `( $ ( p ) + $ ( a ) )
+      | p , h :: t => add_exprs_aux ` `( $ ( p ) + $ ( h ) ) t
 #align linarith.add_exprs_aux linarith.add_exprs_aux
 
 /-- `add_exprs l` creates a `pexpr` representing the sum of the elements of `l`, associated left.
@@ -67,7 +72,8 @@ unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
   | lt, lt => (`left.add_neg, lt)
 #align linarith.ineq_const_nm linarith.ineq_const_nm
 
-/-- `mk_lt_zero_pf_aux c pf npf coeff` assumes that `pf` is a proof of `t1 R1 0` and `npf` is a proof
+/--
+`mk_lt_zero_pf_aux c pf npf coeff` assumes that `pf` is a proof of `t1 R1 0` and `npf` is a proof
 of `t2 R2 0`. It uses `mk_single_comp_zero_pf` to prove `t1 + coeff*t2 R 0`, and returns `R`
 along with this proof.
 -/

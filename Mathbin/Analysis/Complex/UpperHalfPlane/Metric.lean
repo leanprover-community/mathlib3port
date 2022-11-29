@@ -40,23 +40,26 @@ theorem dist_eq (z w : ℍ) : dist z w = 2 * arsinh (dist (z : ℂ) w / (2 * sqr
   rfl
 #align upper_half_plane.dist_eq UpperHalfPlane.dist_eq
 
-theorem sinh_half_dist (z w : ℍ) : sinh (dist z w / 2) = dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) := by
+theorem sinh_half_dist (z w : ℍ) :
+    sinh (dist z w / 2) = dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) := by
   rw [dist_eq, mul_div_cancel_left (arsinh _) two_ne_zero, sinh_arsinh]
 #align upper_half_plane.sinh_half_dist UpperHalfPlane.sinh_half_dist
 
-theorem cosh_half_dist (z w : ℍ) : cosh (dist z w / 2) = dist (z : ℂ) (conj (w : ℂ)) / (2 * sqrt (z.im * w.im)) := by
+theorem cosh_half_dist (z w : ℍ) :
+    cosh (dist z w / 2) = dist (z : ℂ) (conj (w : ℂ)) / (2 * sqrt (z.im * w.im)) := by
   have H₁ : (2 ^ 2 : ℝ) = 4 := by norm_num1
   have H₂ : 0 < z.im * w.im := mul_pos z.im_pos w.im_pos
   have H₃ : 0 < 2 * sqrt (z.im * w.im) := mul_pos two_pos (sqrt_pos.2 H₂)
-  rw [← sq_eq_sq (cosh_pos _).le (div_nonneg dist_nonneg H₃.le), cosh_sq', sinh_half_dist, div_pow, div_pow,
-    one_add_div (pow_ne_zero 2 H₃.ne'), mul_pow, sq_sqrt H₂.le, H₁]
+  rw [← sq_eq_sq (cosh_pos _).le (div_nonneg dist_nonneg H₃.le), cosh_sq', sinh_half_dist, div_pow,
+    div_pow, one_add_div (pow_ne_zero 2 H₃.ne'), mul_pow, sq_sqrt H₂.le, H₁]
   congr 1
-  simp only [Complex.dist_eq, Complex.sq_abs, Complex.norm_sq_sub, Complex.norm_sq_conj, Complex.conj_conj,
-    Complex.mul_re, Complex.conj_re, Complex.conj_im, coe_im]
+  simp only [Complex.dist_eq, Complex.sq_abs, Complex.norm_sq_sub, Complex.norm_sq_conj,
+    Complex.conj_conj, Complex.mul_re, Complex.conj_re, Complex.conj_im, coe_im]
   ring
 #align upper_half_plane.cosh_half_dist UpperHalfPlane.cosh_half_dist
 
-theorem tanh_half_dist (z w : ℍ) : tanh (dist z w / 2) = dist (z : ℂ) w / dist (z : ℂ) (conj ↑w) := by
+theorem tanh_half_dist (z w : ℍ) : tanh (dist z w / 2) = dist (z : ℂ) w / dist (z : ℂ) (conj ↑w) :=
+  by
   rw [tanh_eq_sinh_div_cosh, sinh_half_dist, cosh_half_dist, div_div_div_comm, div_self, div_one]
   exact (mul_pos two_pos (sqrt_pos.2 <| mul_pos z.im_pos w.im_pos)).ne'
 #align upper_half_plane.tanh_half_dist UpperHalfPlane.tanh_half_dist
@@ -78,21 +81,25 @@ theorem sinh_half_dist_add_dist (a b c : ℍ) :
         (2 * sqrt (a.im * c.im) * dist (b : ℂ) (conj ↑b)) :=
   by
   simp only [add_div _ _ (2 : ℝ), sinh_add, sinh_half_dist, cosh_half_dist, div_mul_div_comm]
-  rw [← add_div, Complex.dist_self_conj, coe_im, abs_of_pos b.im_pos, mul_comm (dist ↑b _), dist_comm (b : ℂ),
-    Complex.dist_conj_comm, mul_mul_mul_comm, mul_mul_mul_comm _ _ _ b.im]
+  rw [← add_div, Complex.dist_self_conj, coe_im, abs_of_pos b.im_pos, mul_comm (dist ↑b _),
+    dist_comm (b : ℂ), Complex.dist_conj_comm, mul_mul_mul_comm, mul_mul_mul_comm _ _ _ b.im]
   congr 2
-  rw [sqrt_mul, sqrt_mul, sqrt_mul, mul_comm (sqrt a.im), mul_mul_mul_comm, mul_self_sqrt, mul_comm] <;>
+  rw [sqrt_mul, sqrt_mul, sqrt_mul, mul_comm (sqrt a.im), mul_mul_mul_comm, mul_self_sqrt,
+      mul_comm] <;>
     exact (im_pos _).le
 #align upper_half_plane.sinh_half_dist_add_dist UpperHalfPlane.sinh_half_dist_add_dist
 
-protected theorem dist_comm (z w : ℍ) : dist z w = dist w z := by simp only [dist_eq, dist_comm (z : ℂ), mul_comm]
+protected theorem dist_comm (z w : ℍ) : dist z w = dist w z := by
+  simp only [dist_eq, dist_comm (z : ℂ), mul_comm]
 #align upper_half_plane.dist_comm UpperHalfPlane.dist_comm
 
-theorem dist_le_iff_le_sinh : dist z w ≤ r ↔ dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) ≤ sinh (r / 2) := by
+theorem dist_le_iff_le_sinh :
+    dist z w ≤ r ↔ dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) ≤ sinh (r / 2) := by
   rw [← div_le_div_right (@two_pos ℝ _ _), ← sinh_le_sinh, sinh_half_dist]
 #align upper_half_plane.dist_le_iff_le_sinh UpperHalfPlane.dist_le_iff_le_sinh
 
-theorem dist_eq_iff_eq_sinh : dist z w = r ↔ dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) = sinh (r / 2) := by
+theorem dist_eq_iff_eq_sinh :
+    dist z w = r ↔ dist (z : ℂ) w / (2 * sqrt (z.im * w.im)) = sinh (r / 2) := by
   rw [← div_left_inj' (two_ne_zero' ℝ), ← sinh_inj, sinh_half_dist]
 #align upper_half_plane.dist_eq_iff_eq_sinh UpperHalfPlane.dist_eq_iff_eq_sinh
 
@@ -110,7 +117,8 @@ theorem dist_eq_iff_eq_sq_sinh (hr : 0 ≤ r) :
 #align upper_half_plane.dist_eq_iff_eq_sq_sinh UpperHalfPlane.dist_eq_iff_eq_sq_sinh
 
 protected theorem dist_triangle (a b c : ℍ) : dist a c ≤ dist a b + dist b c := by
-  rw [dist_le_iff_le_sinh, sinh_half_dist_add_dist, div_mul_eq_div_div _ _ (dist _ _), le_div_iff, div_mul_eq_mul_div]
+  rw [dist_le_iff_le_sinh, sinh_half_dist_add_dist, div_mul_eq_div_div _ _ (dist _ _), le_div_iff,
+    div_mul_eq_mul_div]
   · exact
       div_le_div_of_le (mul_nonneg zero_le_two (sqrt_nonneg _))
         (EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist (a : ℂ) b c (conj ↑b))
@@ -138,8 +146,8 @@ def metricSpaceAux : MetricSpace ℍ where
 
 open Complex
 
-theorem cosh_dist' (z w : ℍ) : Real.cosh (dist z w) = ((z.re - w.re) ^ 2 + z.im ^ 2 + w.im ^ 2) / (2 * z.im * w.im) :=
-  by
+theorem cosh_dist' (z w : ℍ) :
+    Real.cosh (dist z w) = ((z.re - w.re) ^ 2 + z.im ^ 2 + w.im ^ 2) / (2 * z.im * w.im) := by
   have H : 0 < 2 * z.im * w.im := mul_pos (mul_pos two_pos z.im_pos) w.im_pos
   field_simp [cosh_dist, Complex.dist_eq, Complex.sq_abs, norm_sq_apply, H, H.ne']
   ring
@@ -165,20 +173,24 @@ theorem center_zero (z : ℍ) : center z 0 = z :=
   Subtype.ext <| ext rfl <| by rw [coe_im, coe_im, center_im, Real.cosh_zero, mul_one]
 #align upper_half_plane.center_zero UpperHalfPlane.center_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
-    dist (z : ℂ) (w.center r) ^ 2 = 2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 := by
+    dist (z : ℂ) (w.center r) ^ 2 =
+      2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 :=
+  by
   have H : 2 * z.im * w.im ≠ 0 := by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-  simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im, cosh_dist',
-    mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ← sq]
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im,
+    cosh_dist', mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
+    sq]
   ring
 #align upper_half_plane.dist_coe_center_sq UpperHalfPlane.dist_coe_center_sq
 
 theorem dist_coe_center (z w : ℍ) (r : ℝ) :
-    dist (z : ℂ) (w.center r) = sqrt (2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2) := by
-  rw [← sqrt_sq dist_nonneg, dist_coe_center_sq]
+    dist (z : ℂ) (w.center r) =
+      sqrt (2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2) :=
+  by rw [← sqrt_sq dist_nonneg, dist_coe_center_sq]
 #align upper_half_plane.dist_coe_center UpperHalfPlane.dist_coe_center
 
 theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
@@ -194,7 +206,8 @@ theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
   simp only [← cosh_strict_mono_on.cmp_map_eq dist_nonneg hr₀, ←
     (@strict_mono_on_pow ℝ _ _ two_pos).cmp_map_eq dist_nonneg hr₀', dist_coe_center_sq]
   rw [← cmp_mul_pos_left hzw₀, ← cmp_sub_zero, ← mul_sub, ← cmp_add_right, zero_add]
-#align upper_half_plane.cmp_dist_eq_cmp_dist_coe_center UpperHalfPlane.cmp_dist_eq_cmp_dist_coe_center
+#align
+  upper_half_plane.cmp_dist_eq_cmp_dist_coe_center UpperHalfPlane.cmp_dist_eq_cmp_dist_coe_center
 
 theorem dist_eq_iff_dist_coe_center_eq : dist z w = r ↔ dist (z : ℂ) (w.center r) = w.im * sinh r :=
   eq_iff_eq_of_cmp_eq_cmp (cmp_dist_eq_cmp_dist_coe_center z w r)
@@ -231,8 +244,8 @@ theorem le_dist_iff_le_dist_coe_center : r < dist z w ↔ w.im * sinh r < dist (
 logarithms of their imaginary parts. -/
 theorem dist_of_re_eq (h : z.re = w.re) : dist z w = dist (log z.im) (log w.im) := by
   have h₀ : 0 < z.im / w.im := div_pos z.im_pos w.im_pos
-  rw [dist_eq_iff_dist_coe_center_eq, Real.dist_eq, ← abs_sinh, ← log_div z.im_ne_zero w.im_ne_zero, sinh_log h₀,
-      dist_of_re_eq, coe_im, coe_im, center_im, cosh_abs, cosh_log h₀, inv_div] <;>
+  rw [dist_eq_iff_dist_coe_center_eq, Real.dist_eq, ← abs_sinh, ← log_div z.im_ne_zero w.im_ne_zero,
+      sinh_log h₀, dist_of_re_eq, coe_im, coe_im, center_im, cosh_abs, cosh_log h₀, inv_div] <;>
     [skip, exact h]
   nth_rw 3 [← abs_of_pos w.im_pos]
   simp only [← _root_.abs_mul, coe_im, Real.dist_eq]
@@ -280,14 +293,16 @@ theorem dist_coe_le (z w : ℍ) : dist (z : ℂ) w ≤ w.im * (exp (dist z w) - 
 and the imaginary part of one of the points. -/
 theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ) w :=
   calc
-    w.im * (1 - exp (-dist z w)) = dist (z : ℂ) (w.center (dist z w)) - dist (w : ℂ) (w.center (dist z w)) := by
+    w.im * (1 - exp (-dist z w)) =
+        dist (z : ℂ) (w.center (dist z w)) - dist (w : ℂ) (w.center (dist z w)) :=
+      by
       rw [dist_center_dist, dist_self_center, ← Real.cosh_sub_sinh]
       ring
     _ ≤ dist (z : ℂ) w := sub_le_iff_le_add.2 <| dist_triangle _ _ _
     
 #align upper_half_plane.le_dist_coe UpperHalfPlane.le_dist_coe
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.div, ",", expr continuous.mul, ",", expr continuous_const, ",", expr continuous.arsinh, ",", expr continuous.dist, ",", expr continuous_coe.comp, ",", expr continuous_fst, ",", expr continuous_snd, ",", expr real.continuous_sqrt.comp, ",", expr continuous_im.comp, "]"],
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr continuous.div, ",", expr continuous.mul, ",", expr continuous_const, ",", expr continuous.arsinh, ",", expr continuous.dist, ",", expr continuous_coe.comp, ",", expr continuous_fst, ",", expr continuous_snd, ",", expr real.continuous_sqrt.comp, ",", expr continuous_im.comp, "]"],
   []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The hyperbolic metric on the upper half plane. We ensure that the projection to
 `topological_space` is definitionally equal to the subtype topology. -/
@@ -298,7 +313,7 @@ instance : MetricSpace ℍ :=
       have : ∀ x : ℍ × ℍ, 2 * Real.sqrt (x.1.im * x.2.im) ≠ 0 := fun x =>
         mul_ne_zero two_ne_zero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
       trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
       
     · letI : MetricSpace ℍ := metric_space_aux
       refine' le_of_nhds_le_nhds fun z => _
@@ -311,7 +326,8 @@ instance : MetricSpace ℍ :=
       rwa [← lt_div_iff' z.im_pos, sub_lt_iff_lt_add, ← Real.lt_log_iff_exp_lt h₀]
       
 
-theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (center z r) ≤ z.im * sinh r) : 0 < w.im :=
+theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (center z r) ≤ z.im * sinh r) :
+    0 < w.im :=
   calc
     0 < z.im * (cosh r - sinh r) := mul_pos z.im_pos (sub_pos.2 <| sinh_lt_cosh _)
     _ = (z.center r).im - z.im * sinh r := mul_sub _ _ _
@@ -322,8 +338,7 @@ theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (cent
 
 theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
     (coe : ℍ → ℂ) '' closedBall z r = closedBall (z.center r) (z.im * sinh r) := by
-  ext w
-  constructor
+  ext w; constructor
   · rintro ⟨w, hw, rfl⟩
     exact dist_le_iff_dist_coe_center_le.1 hw
     
@@ -333,9 +348,9 @@ theorem image_coe_closed_ball (z : ℍ) (r : ℝ) :
     
 #align upper_half_plane.image_coe_closed_ball UpperHalfPlane.image_coe_closed_ball
 
-theorem image_coe_ball (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' ball z r = ball (z.center r) (z.im * sinh r) := by
-  ext w
-  constructor
+theorem image_coe_ball (z : ℍ) (r : ℝ) :
+    (coe : ℍ → ℂ) '' ball z r = ball (z.center r) (z.im * sinh r) := by
+  ext w; constructor
   · rintro ⟨w, hw, rfl⟩
     exact dist_lt_iff_dist_coe_center_lt.1 hw
     
@@ -345,9 +360,9 @@ theorem image_coe_ball (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' ball z r = b
     
 #align upper_half_plane.image_coe_ball UpperHalfPlane.image_coe_ball
 
-theorem image_coe_sphere (z : ℍ) (r : ℝ) : (coe : ℍ → ℂ) '' sphere z r = sphere (z.center r) (z.im * sinh r) := by
-  ext w
-  constructor
+theorem image_coe_sphere (z : ℍ) (r : ℝ) :
+    (coe : ℍ → ℂ) '' sphere z r = sphere (z.center r) (z.im * sinh r) := by
+  ext w; constructor
   · rintro ⟨w, hw, rfl⟩
     exact dist_eq_iff_dist_coe_center_eq.1 hw
     
@@ -374,10 +389,9 @@ theorem isometryRealVadd (a : ℝ) : Isometry ((· +ᵥ ·) a : ℍ → ℍ) :=
 
 theorem isometryPosMul (a : { x : ℝ // 0 < x }) : Isometry ((· • ·) a : ℍ → ℍ) := by
   refine' Isometry.ofDistEq fun y₁ y₂ => _
-  simp only [dist_eq, coe_pos_real_smul, pos_real_im]
-  congr 2
-  rw [dist_smul, mul_mul_mul_comm, Real.sqrt_mul (mul_self_nonneg _), Real.sqrt_mul_self_eq_abs, Real.norm_eq_abs,
-    mul_left_comm]
+  simp only [dist_eq, coe_pos_real_smul, pos_real_im]; congr 2
+  rw [dist_smul, mul_mul_mul_comm, Real.sqrt_mul (mul_self_nonneg _), Real.sqrt_mul_self_eq_abs,
+    Real.norm_eq_abs, mul_left_comm]
   exact mul_div_mul_left _ _ (mt _root_.abs_eq_zero.1 a.2.ne')
 #align upper_half_plane.isometry_pos_mul UpperHalfPlane.isometryPosMul
 

@@ -84,7 +84,8 @@ theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) :
 
 /-- Copy of an `ssyt μ` with a new `entry` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : Ssyt μ where
+protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) :
+    Ssyt μ where
   entry := entry'
   row_weak' _ _ _ := h.symm ▸ T.row_weak'
   col_strict' _ _ _ := h.symm ▸ T.col_strict'
@@ -92,20 +93,23 @@ protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → �
 #align ssyt.copy Ssyt.copy
 
 @[simp]
-theorem coe_copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : ⇑(T.copy entry' h) = entry' :=
+theorem coe_copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) :
+    ⇑(T.copy entry' h) = entry' :=
   rfl
 #align ssyt.coe_copy Ssyt.coe_copy
 
-theorem copy_eq {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : T.copy entry' h = T :=
+theorem copy_eq {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) :
+    T.copy entry' h = T :=
   FunLike.ext' h
 #align ssyt.copy_eq Ssyt.copy_eq
 
-theorem row_weak {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 < j2) (hcell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 :=
+theorem row_weak {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 < j2)
+    (hcell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 :=
   T.row_weak' hj hcell
 #align ssyt.row_weak Ssyt.row_weak
 
-theorem col_strict {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 < i2) (hcell : (i2, j) ∈ μ) :
-    T i1 j < T i2 j :=
+theorem col_strict {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 < i2)
+    (hcell : (i2, j) ∈ μ) : T i1 j < T i2 j :=
   T.col_strict' hi hcell
 #align ssyt.col_strict Ssyt.col_strict
 
@@ -113,15 +117,15 @@ theorem zeros {μ : YoungDiagram} (T : Ssyt μ) {i j : ℕ} (not_cell : (i, j) �
   T.zeros' not_cell
 #align ssyt.zeros Ssyt.zeros
 
-theorem row_weak_of_le {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 ≤ j2) (cell : (i, j2) ∈ μ) :
-    T i j1 ≤ T i j2 := by
+theorem row_weak_of_le {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 ≤ j2)
+    (cell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 := by
   cases eq_or_lt_of_le hj
   subst h
   exact T.row_weak h cell
 #align ssyt.row_weak_of_le Ssyt.row_weak_of_le
 
-theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ i2) (cell : (i2, j) ∈ μ) : T i1 j ≤ T i2 j :=
-  by
+theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ i2) (cell : (i2, j) ∈ μ) :
+    T i1 j ≤ T i2 j := by
   cases eq_or_lt_of_le hi
   subst h
   exact le_of_lt (T.col_strict h cell)
@@ -130,13 +134,16 @@ theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ 
 /-- The "highest weight" SSYT of a given shape is has all i's in row i, for each i. -/
 def highestWeight (μ : YoungDiagram) : Ssyt μ where
   entry i j := if (i, j) ∈ μ then i else 0
-  row_weak' i j1 j2 hj hcell := by rw [if_pos hcell, if_pos (μ.up_left_mem (by rfl) (le_of_lt hj) hcell)]
-  col_strict' i1 i2 j hi hcell := by rwa [if_pos hcell, if_pos (μ.up_left_mem (le_of_lt hi) (by rfl) hcell)]
+  row_weak' i j1 j2 hj hcell := by
+    rw [if_pos hcell, if_pos (μ.up_left_mem (by rfl) (le_of_lt hj) hcell)]
+  col_strict' i1 i2 j hi hcell := by
+    rwa [if_pos hcell, if_pos (μ.up_left_mem (le_of_lt hi) (by rfl) hcell)]
   zeros' i j not_cell := if_neg not_cell
 #align ssyt.highest_weight Ssyt.highestWeight
 
 @[simp]
-theorem highest_weight_apply {μ : YoungDiagram} {i j : ℕ} : highestWeight μ i j = if (i, j) ∈ μ then i else 0 :=
+theorem highest_weight_apply {μ : YoungDiagram} {i j : ℕ} :
+    highestWeight μ i j = if (i, j) ∈ μ then i else 0 :=
   rfl
 #align ssyt.highest_weight_apply Ssyt.highest_weight_apply
 

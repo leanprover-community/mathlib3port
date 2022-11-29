@@ -54,9 +54,12 @@ theorem id : IsSemiringHom (@id α) := by refine' { .. } <;> intros <;> rfl
 #align is_semiring_hom.id IsSemiringHom.id
 
 /-- The composition of two semiring homomorphisms is a semiring homomorphism. -/
-theorem comp (hf : IsSemiringHom f) {γ} [Semiring γ] {g : β → γ} (hg : IsSemiringHom g) : IsSemiringHom (g ∘ f) :=
-  { map_zero := by simpa [map_zero hf] using map_zero hg, map_one := by simpa [map_one hf] using map_one hg,
-    map_add := fun x y => by simp [map_add hf, map_add hg], map_mul := fun x y => by simp [map_mul hf, map_mul hg] }
+theorem comp (hf : IsSemiringHom f) {γ} [Semiring γ] {g : β → γ} (hg : IsSemiringHom g) :
+    IsSemiringHom (g ∘ f) :=
+  { map_zero := by simpa [map_zero hf] using map_zero hg,
+    map_one := by simpa [map_one hf] using map_one hg,
+    map_add := fun x y => by simp [map_add hf, map_add hg],
+    map_mul := fun x y => by simp [map_mul hf, map_mul hg] }
 #align is_semiring_hom.comp IsSemiringHom.comp
 
 /-- A semiring homomorphism is an additive monoid homomorphism. -/
@@ -109,7 +112,8 @@ theorem map_neg (hf : IsRingHom f) : f (-x) = -f x :=
 #align is_ring_hom.map_neg IsRingHom.map_neg
 
 /-- Ring homomorphisms preserve subtraction. -/
-theorem map_sub (hf : IsRingHom f) : f (x - y) = f x - f y := by simp [sub_eq_add_neg, hf.map_add, hf.map_neg]
+theorem map_sub (hf : IsRingHom f) : f (x - y) = f x - f y := by
+  simp [sub_eq_add_neg, hf.map_add, hf.map_neg]
 #align is_ring_hom.map_sub IsRingHom.map_sub
 
 /-- The identity map is a ring homomorphism. -/

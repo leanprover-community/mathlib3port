@@ -51,7 +51,8 @@ theorem extend_from_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx
 #align extend_from_eq extend_from_eq
 
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
-    ∀ x ∈ A, extendFrom A f x = f x := fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
+    ∀ x ∈ A, extendFrom A f x = f x := fun x x_in =>
+  extend_from_eq (subset_closure x_in) (hf x x_in)
 #align extend_from_extends extend_from_extends
 
 /-- If `f` is a function to a T₃ space `Y` which has a limit within `A` at any

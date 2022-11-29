@@ -20,7 +20,7 @@ open Emetric Set
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (r «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (r «expr ≠ » 0) -/
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -56,11 +56,13 @@ protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
   Set.disjoint_left.mpr fun x hx1 hx2 => r0 <| by simpa using hr x hx1 x hx2
 #align is_metric_separated.disjoint IsMetricSeparated.disjoint
 
-theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht => h.Disjoint.le_bot ⟨hs, ht⟩
+theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht =>
+  h.Disjoint.le_bot ⟨hs, ht⟩
 #align is_metric_separated.subset_compl_right IsMetricSeparated.subset_compl_right
 
 @[mono]
-theorem mono {s' t'} (hs : s ⊆ s') (ht : t ⊆ t') : IsMetricSeparated s' t' → IsMetricSeparated s t := fun ⟨r, r0, hr⟩ =>
+theorem mono {s' t'} (hs : s ⊆ s') (ht : t ⊆ t') :
+    IsMetricSeparated s' t' → IsMetricSeparated s t := fun ⟨r, r0, hr⟩ =>
   ⟨r, r0, fun x hx y hy => hr x (hs hx) y (ht hy)⟩
 #align is_metric_separated.mono IsMetricSeparated.mono
 
@@ -72,7 +74,8 @@ theorem monoRight {t'} (h' : IsMetricSeparated s t') (ht : t ⊆ t') : IsMetricS
   h'.mono Subset.rfl ht
 #align is_metric_separated.mono_right IsMetricSeparated.monoRight
 
-theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) : IsMetricSeparated (s ∪ s') t := by
+theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t) :
+    IsMetricSeparated (s ∪ s') t := by
   rcases h, h' with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩
   refine' ⟨min r r', _, fun x hx y hy => hx.elim _ _⟩
   · rw [← pos_iff_ne_zero] at r0 r0'⊢
@@ -85,16 +88,20 @@ theorem unionLeft {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t)
 #align is_metric_separated.union_left IsMetricSeparated.unionLeft
 
 @[simp]
-theorem union_left_iff {s'} : IsMetricSeparated (s ∪ s') t ↔ IsMetricSeparated s t ∧ IsMetricSeparated s' t :=
-  ⟨fun h => ⟨h.mono_left (subset_union_left _ _), h.mono_left (subset_union_right _ _)⟩, fun h => h.1.union_left h.2⟩
+theorem union_left_iff {s'} :
+    IsMetricSeparated (s ∪ s') t ↔ IsMetricSeparated s t ∧ IsMetricSeparated s' t :=
+  ⟨fun h => ⟨h.mono_left (subset_union_left _ _), h.mono_left (subset_union_right _ _)⟩, fun h =>
+    h.1.union_left h.2⟩
 #align is_metric_separated.union_left_iff IsMetricSeparated.union_left_iff
 
-theorem unionRight {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t') : IsMetricSeparated s (t ∪ t') :=
+theorem unionRight {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t') :
+    IsMetricSeparated s (t ∪ t') :=
   (h.symm.union_left h'.symm).symm
 #align is_metric_separated.union_right IsMetricSeparated.unionRight
 
 @[simp]
-theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
+theorem union_right_iff {t'} :
+    IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
   comm.trans <| union_left_iff.trans <| and_congr comm comm
 #align is_metric_separated.union_right_iff IsMetricSeparated.union_right_iff
 
@@ -106,8 +113,8 @@ theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι
 
 alias finite_Union_left_iff ↔ _ finite_Union_left
 
-theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : Set X} {t : ι → Set X} :
-    IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, IsMetricSeparated s (t i) := by
+theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : Set X}
+    {t : ι → Set X} : IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, IsMetricSeparated s (t i) := by
   simpa only [@comm _ _ s] using finite_Union_left_iff hI
 #align is_metric_separated.finite_Union_right_iff IsMetricSeparated.finite_Union_right_iff
 

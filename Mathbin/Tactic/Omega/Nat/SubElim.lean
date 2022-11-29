@@ -35,17 +35,16 @@ def subSubst (t s : Preterm) (k : Nat) : Preterm → Preterm
 #align omega.nat.preterm.sub_subst Omega.Nat.Preterm.subSubst
 
 theorem val_sub_subst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
-    ∀ {t : Preterm}, t.freshIndex ≤ k → (subSubst x y k t).val (update k (x.val v - y.val v) v) = t.val v
+    ∀ {t : Preterm},
+      t.freshIndex ≤ k → (subSubst x y k t).val (update k (x.val v - y.val v) v) = t.val v
   | &m, h1 => rfl
   | m ** n, h1 => by
     have h2 : n ≠ k := ne_of_lt h1
     simp only [sub_subst, preterm.val]
     rw [update_eq_of_ne _ h2]
   | t +* s, h1 => by
-    simp only [sub_subst, val_add]
-    apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
-    apply le_max_left
-    apply le_max_right
+    simp only [sub_subst, val_add]; apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
+    apply le_max_left; apply le_max_right
   | t -* s, h1 => by
     simp only [sub_subst, val_sub]
     by_cases h2 : t = x ∧ s = y
@@ -92,9 +91,11 @@ def isDiff (t s : Preterm) (k : Nat) : Preform :=
   (t =* s +* 1 ** k) ∨* (t ≤* s) ∧* (1 ** k) =* &0
 #align omega.nat.is_diff Omega.Nat.isDiff
 
-theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} : v k = t.val v - s.val v → (isDiff t s k).Holds v := by
+theorem holds_is_diff {t s : Preterm} {k : Nat} {v : Nat → Nat} :
+    v k = t.val v - s.val v → (isDiff t s k).Holds v := by
   intro h1
-  simp only [preform.holds, is_diff, if_pos (Eq.refl 1), preterm.val_add, preterm.val_var, preterm.val_const]
+  simp only [preform.holds, is_diff, if_pos (Eq.refl 1), preterm.val_add, preterm.val_var,
+    preterm.val_const]
   cases' le_total (t.val v) (s.val v) with h2 h2
   · right
     refine' ⟨h2, _⟩
@@ -123,35 +124,32 @@ def subElim (t s : Preterm) (p : Preform) : Preform :=
 #align omega.nat.sub_elim Omega.Nat.subElim
 
 theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
-    ∀ p : Preform, p.freshIndex ≤ k → ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
+    ∀ p : Preform,
+      p.freshIndex ≤ k →
+        ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
   | t =* s, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_trans _ h1)
-    apply le_max_left
-    apply le_max_right
+    apply le_max_left; apply le_max_right
   | t ≤* s, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply preterm.val_sub_subst (le_trans _ h1)
-    apply le_max_left
-    apply le_max_right
+    apply le_max_left; apply le_max_right
   | ¬* p, h1 => by
     apply not_congr
     apply sub_subst_equiv p h1
   | p ∨* q, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
-    apply le_max_left
-    apply le_max_right
+    apply le_max_left; apply le_max_right
   | p ∧* q, h1 => by
     simp only [preform.holds, preform.sub_subst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
-    apply le_max_left
-    apply le_max_right
+    apply le_max_left; apply le_max_right
 #align omega.nat.sub_subst_equiv Omega.Nat.sub_subst_equiv
 
 theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat := by
-  intro h1
-  simp only [sub_elim, sub_elim_core]
+  intro h1; simp only [sub_elim, sub_elim_core]
   cases' h1 with v h1
   refine' ⟨update (sub_fresh_index t s p) (t.val v - s.val v) v, _⟩
   constructor
@@ -160,11 +158,10 @@ theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).S
     
   · apply holds_is_diff
     rw [update_eq]
-    apply fun_mono_2 <;>
-      apply preterm.val_constant <;>
-        intro x h2 <;>
+    apply fun_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
           rw [update_eq_of_ne _ (Ne.symm (ne_of_gt _))] <;>
-            apply lt_of_lt_of_le h2 <;> apply le_trans _ (le_max_right _ _)
+        apply lt_of_lt_of_le h2 <;>
+      apply le_trans _ (le_max_right _ _)
     apply le_max_left
     apply le_max_right
     

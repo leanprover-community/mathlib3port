@@ -68,15 +68,14 @@ theorem sub_self : μ - μ = 0 :=
 
 /-- This application lemma only works in special circumstances. Given knowledge of
 when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be written. -/
-theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s := by
+theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s :=
+  by
   -- We begin by defining `measure_sub`, which will be equal to `(μ - ν)`.
   let measure_sub : Measure α :=
-    @MeasureTheory.Measure.ofMeasurable α _ (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t)
-      (by simp)
+    @MeasureTheory.Measure.ofMeasurable α _
+      (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t) (by simp)
       (by
-        intro g h_meas h_disj
-        simp only
-        rw [Ennreal.tsum_sub]
+        intro g h_meas h_disj; simp only; rw [Ennreal.tsum_sub]
         repeat' rw [← MeasureTheory.measure_Union h_disj h_meas]
         exacts[MeasureTheory.measure_ne_top _ _, fun i => h₂ _ (h_meas _)])
   -- Now, we demonstrate `μ - ν = measure_sub`, and apply it.
@@ -122,10 +121,12 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
       refine' add_le_add _ _
       · rw [add_apply, add_apply]
         apply le_add_right _
-        rw [← restrict_eq_self μ (inter_subset_right _ _), ← restrict_eq_self ν (inter_subset_right _ _)]
+        rw [← restrict_eq_self μ (inter_subset_right _ _), ←
+          restrict_eq_self ν (inter_subset_right _ _)]
         apply h_ν'_in _ (h_meas_t.inter h_meas_s)
         
-      · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ← add_apply]
+      · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ←
+          add_apply]
         have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by simp only [add_top, le_top]
         exact measure.le_iff'.1 h_mu_le_add_top _
         
@@ -142,8 +143,8 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
 #align
   measure_theory.measure.restrict_sub_eq_restrict_sub_restrict MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict
 
-theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.restrict s) (h_meas_s : MeasurableSet s) :
-    (μ - ν) s = 0 := by
+theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.restrict s)
+    (h_meas_s : MeasurableSet s) : (μ - ν) s = 0 := by
   rw [← restrict_apply_self, restrict_sub_eq_restrict_sub_restrict, sub_eq_zero_of_le] <;> simp [*]
 #align
   measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict

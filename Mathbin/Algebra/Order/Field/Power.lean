@@ -29,7 +29,8 @@ theorem zpow_le_of_le (ha : 1 ≤ a) (h : m ≤ n) : a ^ m ≤ a ^ n := by
   lift n - m to ℕ using sub_nonneg.2 h with k hk
   calc
     a ^ m = a ^ m * 1 := (mul_one _).symm
-    _ ≤ a ^ m * a ^ k := mul_le_mul_of_nonneg_left (one_le_pow_of_one_le ha _) (zpow_nonneg ha₀.le _)
+    _ ≤ a ^ m * a ^ k :=
+      mul_le_mul_of_nonneg_left (one_le_pow_of_one_le ha _) (zpow_nonneg ha₀.le _)
     _ = a ^ n := by rw [← zpow_coe_nat, ← zpow_add₀ ha₀.ne', hk, add_sub_cancel'_right]
     
 #align zpow_le_of_le zpow_le_of_le
@@ -108,8 +109,9 @@ theorem zpow_le_max_of_min_le {x : α} (hx : 1 ≤ x) {a b c : ℤ} (h : min a b
   (this h).trans_eq this.map_min
 #align zpow_le_max_of_min_le zpow_le_max_of_min_le
 
-theorem zpow_le_max_iff_min_le {x : α} (hx : 1 < x) {a b c : ℤ} : x ^ (-c) ≤ max (x ^ (-a)) (x ^ (-b)) ↔ min a b ≤ c :=
-  by simp_rw [le_max_iff, min_le_iff, zpow_le_iff_le hx, neg_le_neg_iff]
+theorem zpow_le_max_iff_min_le {x : α} (hx : 1 < x) {a b c : ℤ} :
+    x ^ (-c) ≤ max (x ^ (-a)) (x ^ (-b)) ↔ min a b ≤ c := by
+  simp_rw [le_max_iff, min_le_iff, zpow_le_iff_le hx, neg_le_neg_iff]
 #align zpow_le_max_iff_min_le zpow_le_max_iff_min_le
 
 end LinearOrderedSemifield
@@ -217,7 +219,8 @@ theorem Nat.cast_le_pow_sub_div_sub (H : 1 < a) (n : ℕ) : (n : α) ≤ (a ^ n 
 /-- For any `a > 1` and a natural `n` we have `n ≤ a ^ n / (a - 1)`. See also
 `nat.cast_le_pow_sub_div_sub` for a stronger inequality with `a ^ n - 1` in the numerator. -/
 theorem Nat.cast_le_pow_div_sub (H : 1 < a) (n : ℕ) : (n : α) ≤ a ^ n / (a - 1) :=
-  (n.cast_le_pow_sub_div_sub H).trans <| div_le_div_of_le (sub_nonneg.2 H.le) (sub_le_self _ zero_le_one)
+  (n.cast_le_pow_sub_div_sub H).trans <|
+    div_le_div_of_le (sub_nonneg.2 H.le) (sub_le_self _ zero_le_one)
 #align nat.cast_le_pow_div_sub Nat.cast_le_pow_div_sub
 
 end LinearOrderedField

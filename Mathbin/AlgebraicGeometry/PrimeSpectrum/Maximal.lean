@@ -60,8 +60,8 @@ theorem to_prime_spectrum_injective : (@toPrimeSpectrum R _).Injective := fun �
 
 open PrimeSpectrum Set
 
-theorem to_prime_spectrum_range : Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
-  by
+theorem to_prime_spectrum_range :
+    Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } := by
   simp only [is_closed_singleton_iff_is_maximal]
   ext ⟨x, _⟩
   exact ⟨fun ⟨y, hy⟩ => hy ▸ y.IsMaximal, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
@@ -88,7 +88,10 @@ variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R
 /-- An integral domain is equal to the intersection of its localizations at all its maximal ideals
 viewed as subalgebras of its field of fractions. -/
 theorem infi_localization_eq_bot :
-    (⨅ v : MaximalSpectrum R, Localization.subalgebra.ofField K _ v.asIdeal.prime_compl_le_non_zero_divisors) = ⊥ := by
+    (⨅ v : MaximalSpectrum R,
+        Localization.subalgebra.ofField K _ v.asIdeal.prime_compl_le_non_zero_divisors) =
+      ⊥ :=
+  by
   ext x
   rw [Algebra.mem_bot, Algebra.mem_infi]
   constructor
@@ -111,7 +114,8 @@ theorem infi_localization_eq_bot :
           rw [Algebra.smul_def, mul_one, map_mul, smul_comm, Algebra.smul_def, Algebra.smul_def,
             mul_comm <| algebraMap R K d,
             inv_mul_cancel_right₀ <|
-              (map_ne_zero_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K).mpr fun h => (h ▸ hd) max.zero_mem]⟩
+              (map_ne_zero_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K).mpr fun h =>
+                (h ▸ hd) max.zero_mem]⟩
     
   · rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
@@ -127,7 +131,10 @@ variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R
 /-- An integral domain is equal to the intersection of its localizations at all its prime ideals
 viewed as subalgebras of its field of fractions. -/
 theorem infi_localization_eq_bot :
-    (⨅ v : PrimeSpectrum R, Localization.subalgebra.ofField K _ <| v.asIdeal.prime_compl_le_non_zero_divisors) = ⊥ := by
+    (⨅ v : PrimeSpectrum R,
+        Localization.subalgebra.ofField K _ <| v.asIdeal.prime_compl_le_non_zero_divisors) =
+      ⊥ :=
+  by
   ext x
   rw [Algebra.mem_infi]
   constructor

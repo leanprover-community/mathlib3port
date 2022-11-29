@@ -31,7 +31,8 @@ add_decl_doc positive_cone.to_positive_cone
 
 /-- A total positive cone in a nontrivial ring induces a linear order. -/
 @[nolint has_nonempty_instance]
-structure TotalPositiveCone (α : Type _) [Ring α] extends PositiveCone α, AddCommGroup.TotalPositiveCone α
+structure TotalPositiveCone (α : Type _) [Ring α] extends PositiveCone α,
+  AddCommGroup.TotalPositiveCone α
 #align ring.total_positive_cone Ring.TotalPositiveCone
 
 /-- Forget that a `total_positive_cone` in a ring is total. -/

@@ -51,7 +51,8 @@ def tensorObj (M N : ModuleCat R) : ModuleCat R :=
 #align Module.monoidal_category.tensor_obj ModuleCat.MonoidalCategory.tensorObj
 
 /-- (implementation) tensor product of morphisms R-modules -/
-def tensorHom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') : tensorObj M M' ⟶ tensorObj N N' :=
+def tensorHom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') :
+    tensorObj M M' ⟶ tensorObj N N' :=
   TensorProduct.map f g
 #align Module.monoidal_category.tensor_hom ModuleCat.MonoidalCategory.tensorHom
 
@@ -60,8 +61,8 @@ theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (Modu
   rfl
 #align Module.monoidal_category.tensor_id ModuleCat.MonoidalCategory.tensor_id
 
-theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁) (g₂ : Y₂ ⟶ Z₂) :
-    tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ := by
+theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁)
+    (g₂ : Y₂ ⟶ Z₂) : tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ := by
   ext1
   rfl
 #align Module.monoidal_category.tensor_comp ModuleCat.MonoidalCategory.tensor_comp
@@ -82,20 +83,23 @@ We give them some help by expressing the lemmas first non-categorically, then us
 
 open TensorProduct (assoc map)
 
-private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMonoid X₁] [AddCommMonoid X₂] [AddCommMonoid X₃]
-    [Module R X₁] [Module R X₂] [Module R X₃] {Y₁ Y₂ Y₃ : Type _} [AddCommMonoid Y₁] [AddCommMonoid Y₂]
-    [AddCommMonoid Y₃] [Module R Y₁] [Module R Y₂] [Module R Y₃] (f₁ : X₁ →ₗ[R] Y₁) (f₂ : X₂ →ₗ[R] Y₂)
-    (f₃ : X₃ →ₗ[R] Y₃) : ↑(assoc R Y₁ Y₂ Y₃) ∘ₗ map (map f₁ f₂) f₃ = map f₁ (map f₂ f₃) ∘ₗ ↑(assoc R X₁ X₂ X₃) := by
+private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMonoid X₁] [AddCommMonoid X₂]
+    [AddCommMonoid X₃] [Module R X₁] [Module R X₂] [Module R X₃] {Y₁ Y₂ Y₃ : Type _}
+    [AddCommMonoid Y₁] [AddCommMonoid Y₂] [AddCommMonoid Y₃] [Module R Y₁] [Module R Y₂]
+    [Module R Y₃] (f₁ : X₁ →ₗ[R] Y₁) (f₂ : X₂ →ₗ[R] Y₂) (f₃ : X₃ →ₗ[R] Y₃) :
+    ↑(assoc R Y₁ Y₂ Y₃) ∘ₗ map (map f₁ f₂) f₃ = map f₁ (map f₂ f₃) ∘ₗ ↑(assoc R X₁ X₂ X₃) := by
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
-#align Module.monoidal_category.associator_naturality_aux Module.monoidal_category.associator_naturality_aux
+#align
+  Module.monoidal_category.associator_naturality_aux Module.monoidal_category.associator_naturality_aux
 
 variable (R)
 
-private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid X] [AddCommMonoid Y] [AddCommMonoid Z]
-    [Module R W] [Module R X] [Module R Y] [Module R Z] :
-    ((map (1 : W →ₗ[R] W) (assoc R X Y Z).toLinearMap).comp (assoc R W (X ⊗[R] Y) Z).toLinearMap).comp
+private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid X]
+    [AddCommMonoid Y] [AddCommMonoid Z] [Module R W] [Module R X] [Module R Y] [Module R Z] :
+    ((map (1 : W →ₗ[R] W) (assoc R X Y Z).toLinearMap).comp
+            (assoc R W (X ⊗[R] Y) Z).toLinearMap).comp
         (map ↑(assoc R W X Y) (1 : Z →ₗ[R] Z)) =
       (assoc R W X (Y ⊗[R] Z)).toLinearMap.comp (assoc R (W ⊗[R] X) Y Z).toLinearMap :=
   by
@@ -106,11 +110,13 @@ private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid
 
 end
 
-theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (f₃ : X₃ ⟶ Y₃) :
+theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂)
+    (f₃ : X₃ ⟶ Y₃) :
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).Hom =
       (associator X₁ X₂ X₃).Hom ≫ tensorHom f₁ (tensorHom f₂ f₃) :=
   by convert associator_naturality_aux f₁ f₂ f₃ using 1
-#align Module.monoidal_category.associator_naturality ModuleCat.MonoidalCategory.associator_naturality
+#align
+  Module.monoidal_category.associator_naturality ModuleCat.MonoidalCategory.associator_naturality
 
 theorem pentagon (W X Y Z : ModuleCat R) :
     tensorHom (associator W X Y).Hom (𝟙 Z) ≫
@@ -126,12 +132,12 @@ def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
 
 theorem left_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom (𝟙 (ModuleCat.of R R)) f ≫ (leftUnitor N).Hom = (leftUnitor M).Hom ≫ f := by
-  ext (x y)
-  dsimp
+  ext (x y); dsimp
   erw [TensorProduct.lid_tmul, TensorProduct.lid_tmul]
   rw [LinearMap.map_smul]
   rfl
-#align Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.left_unitor_naturality
+#align
+  Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.left_unitor_naturality
 
 /-- (implementation) the right unitor for R-modules -/
 def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
@@ -140,12 +146,12 @@ def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
 
 theorem right_unitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
     tensorHom f (𝟙 (ModuleCat.of R R)) ≫ (rightUnitor N).Hom = (rightUnitor M).Hom ≫ f := by
-  ext (x y)
-  dsimp
+  ext (x y); dsimp
   erw [TensorProduct.rid_tmul, TensorProduct.rid_tmul]
   rw [LinearMap.map_smul]
   rfl
-#align Module.monoidal_category.right_unitor_naturality ModuleCat.MonoidalCategory.right_unitor_naturality
+#align
+  Module.monoidal_category.right_unitor_naturality ModuleCat.MonoidalCategory.right_unitor_naturality
 
 theorem triangle (M N : ModuleCat.{u} R) :
     (associator M (ModuleCat.of R R) N).Hom ≫ tensorHom (𝟙 M) (leftUnitor N).Hom =
@@ -189,7 +195,8 @@ namespace MonoidalCategory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K) (m : M) : (f ⊗ g) (k ⊗ₜ m) = f k ⊗ₜ g m :=
+theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K) (m : M) :
+    (f ⊗ g) (k ⊗ₜ m) = f k ⊗ₜ g m :=
   rfl
 #align Module.monoidal_category.hom_apply ModuleCat.monoidalCategory.hom_apply
 
@@ -198,28 +205,32 @@ theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K
 theorem left_unitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
     ((λ_ M).Hom : 𝟙_ (ModuleCat R) ⊗ M ⟶ M) (r ⊗ₜ[R] m) = r • m :=
   TensorProduct.lid_tmul m r
-#align Module.monoidal_category.left_unitor_hom_apply ModuleCat.monoidalCategory.left_unitor_hom_apply
+#align
+  Module.monoidal_category.left_unitor_hom_apply ModuleCat.monoidalCategory.left_unitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_unitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((λ_ M).inv : M ⟶ 𝟙_ (ModuleCat.{u} R) ⊗ M) m = 1 ⊗ₜ[R] m :=
   TensorProduct.lid_symm_apply m
-#align Module.monoidal_category.left_unitor_inv_apply ModuleCat.monoidalCategory.left_unitor_inv_apply
+#align
+  Module.monoidal_category.left_unitor_inv_apply ModuleCat.monoidalCategory.left_unitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
     ((ρ_ M).Hom : M ⊗ 𝟙_ (ModuleCat R) ⟶ M) (m ⊗ₜ r) = r • m :=
   TensorProduct.rid_tmul m r
-#align Module.monoidal_category.right_unitor_hom_apply ModuleCat.monoidalCategory.right_unitor_hom_apply
+#align
+  Module.monoidal_category.right_unitor_hom_apply ModuleCat.monoidalCategory.right_unitor_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_unitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((ρ_ M).inv : M ⟶ M ⊗ 𝟙_ (ModuleCat.{u} R)) m = m ⊗ₜ[R] 1 :=
   TensorProduct.rid_symm_apply m
-#align Module.monoidal_category.right_unitor_inv_apply ModuleCat.monoidalCategory.right_unitor_inv_apply
+#align
+  Module.monoidal_category.right_unitor_inv_apply ModuleCat.monoidalCategory.right_unitor_inv_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -298,14 +309,16 @@ namespace MonoidalCategory
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) : ((β_ M N).Hom : M ⊗ N ⟶ N ⊗ M) (m ⊗ₜ n) = n ⊗ₜ m :=
+theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
+    ((β_ M N).Hom : M ⊗ N ⟶ N ⊗ M) (m ⊗ₜ n) = n ⊗ₜ m :=
   rfl
 #align Module.monoidal_category.braiding_hom_apply ModuleCat.monoidalCategory.braiding_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem braiding_inv_apply {M N : ModuleCat.{u} R} (m : M) (n : N) : ((β_ M N).inv : N ⊗ M ⟶ M ⊗ N) (n ⊗ₜ m) = m ⊗ₜ n :=
+theorem braiding_inv_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
+    ((β_ M N).inv : N ⊗ M ⟶ M ⊗ N) (n ⊗ₜ m) = m ⊗ₜ n :=
   rfl
 #align Module.monoidal_category.braiding_inv_apply ModuleCat.monoidalCategory.braiding_inv_apply
 
@@ -314,34 +327,31 @@ end MonoidalCategory
 open Opposite
 
 instance : MonoidalPreadditive (ModuleCat.{u} R) := by
-  refine' ⟨_, _, _, _⟩ <;>
-    dsimp only [autoParam] <;>
-      intros <;>
-        refine' TensorProduct.ext (LinearMap.ext fun x => LinearMap.ext fun y => _) <;>
-          simp only [LinearMap.compr₂_apply, TensorProduct.mk_apply, monoidal_category.hom_apply, LinearMap.zero_apply,
-            TensorProduct.tmul_zero, TensorProduct.zero_tmul, LinearMap.add_apply, TensorProduct.tmul_add,
-            TensorProduct.add_tmul]
+  refine' ⟨_, _, _, _⟩ <;> dsimp only [autoParam] <;> intros <;>
+      refine' TensorProduct.ext (LinearMap.ext fun x => LinearMap.ext fun y => _) <;>
+    simp only [LinearMap.compr₂_apply, TensorProduct.mk_apply, monoidal_category.hom_apply,
+      LinearMap.zero_apply, TensorProduct.tmul_zero, TensorProduct.zero_tmul, LinearMap.add_apply,
+      TensorProduct.tmul_add, TensorProduct.add_tmul]
 
 instance : MonoidalLinear R (ModuleCat.{u} R) := by
-  refine' ⟨_, _⟩ <;>
-    dsimp only [autoParam] <;>
-      intros <;>
-        refine' TensorProduct.ext (LinearMap.ext fun x => LinearMap.ext fun y => _) <;>
-          simp only [LinearMap.compr₂_apply, TensorProduct.mk_apply, monoidal_category.hom_apply, LinearMap.smul_apply,
-            TensorProduct.tmul_smul, TensorProduct.smul_tmul]
+  refine' ⟨_, _⟩ <;> dsimp only [autoParam] <;> intros <;>
+      refine' TensorProduct.ext (LinearMap.ext fun x => LinearMap.ext fun y => _) <;>
+    simp only [LinearMap.compr₂_apply, TensorProduct.mk_apply, monoidal_category.hom_apply,
+      LinearMap.smul_apply, TensorProduct.tmul_smul, TensorProduct.smul_tmul]
 
 /-- Auxiliary definition for the `monoidal_closed` instance on `Module R`.
 (This is only a separate definition in order to speed up typechecking. )
 -/
 @[simps]
 def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
-    ((MonoidalCategory.tensorLeft M).obj N ⟶ P) ≃ (N ⟶ ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj P) where
+    ((MonoidalCategory.tensorLeft M).obj N ⟶ P) ≃
+      (N ⟶ ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj P) where
   toFun f := LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).Hom ≫ f)
   invFun f := (β_ M N).Hom ≫ TensorProduct.lift f
   left_inv f := by
     ext (m n)
-    simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply, Function.comp_apply, coe_comp,
-      monoidal_category.braiding_hom_apply]
+    simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
+      Function.comp_apply, coe_comp, monoidal_category.braiding_hom_apply]
   right_inv f := by
     ext (m n)
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
@@ -360,13 +370,15 @@ instance :
 -- I can't seem to express the function coercion here without writing `@coe_fn`.
 @[simp]
 theorem monoidal_closed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x : M) (y : N) :
-    @coeFn _ _ LinearMap.hasCoeToFun ((MonoidalClosed.curry f : N →ₗ[R] M →ₗ[R] P) y) x = f (x ⊗ₜ[R] y) :=
+    @coeFn _ _ LinearMap.hasCoeToFun ((MonoidalClosed.curry f : N →ₗ[R] M →ₗ[R] P) y) x =
+      f (x ⊗ₜ[R] y) :=
   rfl
 #align Module.monoidal_closed_curry ModuleCat.monoidal_closed_curry
 
 @[simp]
-theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M) (y : N) :
-    MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x := by
+theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M)
+    (y : N) : MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x :=
+  by
   simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
   simp
 #align Module.monoidal_closed_uncurry ModuleCat.monoidal_closed_uncurry

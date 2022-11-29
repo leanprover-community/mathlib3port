@@ -57,7 +57,8 @@ So `equ : @eq.{u} lhs_type lhs rhs` or `equ : @heq.{u} lhs_type lhs rhs_type rhs
 -/
 @[reducible]
 unsafe def unification_step : Type :=
-  ∀ (equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr) (u : level), tactic unification_step_result
+  ∀ (equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr) (u : level),
+    tactic unification_step_result
 #align tactic.unify_equations.unification_step tactic.unify_equations.unification_step
 
 /-- For `equ : t == u` with `t : T` and `u : U`, if `T` and `U` are defeq,
@@ -92,7 +93,9 @@ unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_w
       let lhs_is_local := lhs_whnf.is_local_constant
       let rhs_is_local := rhs_whnf.is_local_constant
       guard <| lhs_is_local ∨ rhs_is_local
-      let t := if lhs_is_local then (const `eq [u]) type lhs_whnf rhs else (const `eq [u]) type lhs rhs_whnf
+      let t :=
+        if lhs_is_local then (const `eq [u]) type lhs_whnf rhs
+        else (const `eq [u]) type lhs rhs_whnf
       change_core t (some equ)
       let equ ← get_local equ.local_pp_name
       subst_core equ
@@ -179,7 +182,8 @@ unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ 
           | none => goal_solved
           | some next => simplified <| next expr.local_pp_name) <|>
     pure not_simplified
-#align tactic.unify_equations.unify_constructor_headed tactic.unify_equations.unify_constructor_headed
+#align
+  tactic.unify_equations.unify_constructor_headed tactic.unify_equations.unify_constructor_headed
 
 /-- For `type = I x₁ ... xₙ`, where `I` is an inductive type, `get_sizeof type`
 returns the constant `I.sizeof`. Fails if `type` is not of this form or if no
@@ -234,7 +238,9 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
                   "equal at transparency {md}."
                 )
           let common := lhs_e
-          guard ( lhs_n ≠ rhs_n ) <|> fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
+          guard ( lhs_n ≠ rhs_n )
+            <|>
+            fail "contradict_n_eq_n_plus_m:\nexpected {lhs_n} and {rhs_n} to be different."
           let
             ⟨ equ , lhs_n , rhs_n ⟩
               ←
@@ -249,7 +255,8 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
           let n ← to_expr ` `( $ ( common ) + $ ( rhs_n_expr ) )
           let m := reflect ( diff - 1 )
           pure q( add_add_one_ne $ ( n ) $ ( m ) $ ( equ ) )
-#align tactic.unify_equations.contradict_n_eq_n_plus_m tactic.unify_equations.contradict_n_eq_n_plus_m
+#align
+  tactic.unify_equations.contradict_n_eq_n_plus_m tactic.unify_equations.contradict_n_eq_n_plus_m
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
@@ -274,7 +281,16 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
                     hyp_proof
                       ←
                       to_expr
-                        ` `( @ congr_arg $ ( type ) ℕ $ ( lhs_whnf ) $ ( rhs_whnf ) $ ( SizeOf.sizeOf ) $ ( equ ) )
+                        `
+                          `(
+                            @ congr_arg
+                              $ ( type )
+                                ℕ
+                                $ ( lhs_whnf )
+                                $ ( rhs_whnf )
+                                $ ( SizeOf.sizeOf )
+                                $ ( equ )
+                            )
                   let hyp_name ← mk_fresh_name
                   let hyp ← note hyp_name hyp_type hyp_proof
                   let falso ← contradict_n_eq_n_plus_m semireducible hyp hyp_lhs hyp_rhs
@@ -411,8 +427,8 @@ unsafe def unify_equations (eqs : interactive.parse (many ident)) : tactic Unit 
 #align tactic.interactive.unify_equations tactic.interactive.unify_equations
 
 add_tactic_doc
-  { Name := "unify_equations", category := DocCategory.tactic, declNames := [`tactic.interactive.unify_equations],
-    tags := ["simplification"] }
+  { Name := "unify_equations", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.unify_equations], tags := ["simplification"] }
 
 end Interactive
 

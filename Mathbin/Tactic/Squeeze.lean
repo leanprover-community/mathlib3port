@@ -44,7 +44,7 @@ open List
 
 /-- parse structure instance of the shape `{ field1 := value1, .. , field2 := value2 }` -/
 unsafe def struct_inst : lean.parser pexpr :=
-  with_desc "cfg" <| do
+  (with_desc "cfg") do
     tk "{"
     let ls ←
       sep_by (skip_info (tk ","))
@@ -52,7 +52,9 @@ unsafe def struct_inst : lean.parser pexpr :=
     tk "}"
     let (srcs, fields) := partitionMap id ls
     let (names, values) := unzip fields
-    pure <| pexpr.mk_structure_instance { field_names := names, field_values := values, sources := srcs }
+    pure <|
+        pexpr.mk_structure_instance
+          { field_names := names, field_values := values, sources := srcs }
 #align tactic.struct_inst tactic.struct_inst
 
 /-- pretty print structure instance -/
@@ -101,12 +103,15 @@ the suggestions emitted through `mk_suggestion` will be aggregated so that
 every tactic that makes a suggestion can consider multiple execution of the
 same invocation.
 If `at_pos` is true, make the suggestion at `p` instead of the current position. -/
-unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_type) (at_pos := false) : tactic Unit := do
+unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_type)
+    (at_pos := false) : tactic Unit := do
   let xs ← squeeze_loc_attr.get_param `` squeeze_loc_attr_carrier
   match xs with
     | none => do
       let args := render_simp_arg_list args
-      if at_pos then (@scopeTrace _ p p) fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
+      if at_pos then
+          (@scopeTrace _ p p) fun _ =>
+            _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
         else trace s! "{pre }{args }{post}"
     | some xs => do
       squeeze_loc_attr `` squeeze_loc_attr_carrier ((p, pre, args, post) :: xs) ff
@@ -140,9 +145,10 @@ unsafe def same_result (pr : proof_state) (tac : tactic Unit) : tactic Bool := d
 /-- Consumes the first list of `simp` arguments, accumulating required arguments
 on the second one and unnecessary arguments on the third one.
 -/
-private unsafe def filter_simp_set_aux (tac : Bool → List simp_arg_type → tactic Unit) (args : List simp_arg_type)
-    (pr : proof_state) :
-    List simp_arg_type → List simp_arg_type → List simp_arg_type → tactic (List simp_arg_type × List simp_arg_type)
+private unsafe def filter_simp_set_aux (tac : Bool → List simp_arg_type → tactic Unit)
+    (args : List simp_arg_type) (pr : proof_state) :
+    List simp_arg_type →
+      List simp_arg_type → List simp_arg_type → tactic (List simp_arg_type × List simp_arg_type)
   | [], ys, ds => pure (ys, ds)
   | x :: xs, ys, ds => do
     let b ← same_result pr (tac true (args ++ xs ++ ys))
@@ -157,8 +163,8 @@ initialize
 state as if we had called `call_simp ff (user_args ++ simp_args)` and removing any one
 element of `args'` changes the resulting proof.
 -/
-unsafe def filter_simp_set (tac : Bool → List simp_arg_type → tactic Unit) (user_args simp_args : List simp_arg_type) :
-    tactic (List simp_arg_type) := do
+unsafe def filter_simp_set (tac : Bool → List simp_arg_type → tactic Unit)
+    (user_args simp_args : List simp_arg_type) : tactic (List simp_arg_type) := do
   let some s ← get_proof_state_after (tac false (user_args ++ simp_args))
   let (simp_args', _) ← filter_simp_set_aux tac user_args s simp_args [] []
   let (user_args', ds) ← filter_simp_set_aux tac simp_args' s user_args [] []
@@ -204,7 +210,7 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
         pure <| args ++ simp_set
       else pure args
   let g ←
-    retrieve <| do
+    retrieve do
         let g ← main_goal
         tac no_dflt args
         instantiate_mvars g
@@ -247,7 +253,7 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
   let none ← squeeze_loc_attr.get_param `` squeeze_loc_attr_carrier |
     pure ()
   squeeze_loc_attr `` squeeze_loc_attr_carrier (some []) ff
-  finally tac <| do
+  (finally tac) do
       let some xs ← squeeze_loc_attr `` squeeze_loc_attr_carrier |
         fail "invalid state"
       let m := native.rb_lmap.of_list xs
@@ -317,14 +323,17 @@ Known limitation(s):
     `squeeze_simp?`
 -/
 unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
-    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (locat : parse location) (cfg : parse (parser.optional struct_inst)) :
-    tactic Unit := do
+    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag)
+    (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (locat : parse location)
+    (cfg : parse (parser.optional struct_inst)) : tactic Unit := do
   let (cfg', c) ← parse_config cfg
   squeeze_simp_core slow_and_accurate no_dflt hs
-      (fun l_no_dft l_args => simp use_iota_eqn none l_no_dft l_args attr_names locat cfg') fun args =>
+      (fun l_no_dft l_args => simp use_iota_eqn none l_no_dft l_args attr_names locat cfg')
+      fun args =>
       let use_iota_eqn := if use_iota_eqn then "!" else ""
-      let attrs := if attr_names then "" else String.join (List.intersperse " " (" with" :: attr_names toString))
+      let attrs :=
+        if attr_names then ""
+        else String.join (List.intersperse " " (" with" :: attr_names toString))
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: simp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 #align tactic.interactive.squeeze_simp tactic.interactive.squeeze_simp
@@ -334,9 +343,11 @@ unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse (parser
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- see `squeeze_simp` -/
-unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
-    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (tgt : parse (parser.optional (tk "using" *> texpr)))
+unsafe def squeeze_simpa (key : parse cur_pos)
+    (slow_and_accurate : parse (parser.optional (tk "?")))
+    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag)
+    (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
+    (tgt : parse (parser.optional (tk "using" *> texpr)))
     (cfg : parse (parser.optional struct_inst)) : tactic Unit := do
   let (cfg', c) ← parse_config cfg
   let tgt' ←
@@ -346,9 +357,12 @@ unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (parse
           pure f! " using {t}")
         tgt
   squeeze_simp_core slow_and_accurate no_dflt hs
-      (fun l_no_dft l_args => simpa use_iota_eqn none l_no_dft l_args attr_names tgt cfg') fun args =>
+      (fun l_no_dft l_args => simpa use_iota_eqn none l_no_dft l_args attr_names tgt cfg')
+      fun args =>
       let use_iota_eqn := if use_iota_eqn then "!" else ""
-      let attrs := if attr_names then "" else String.join (List.intersperse " " (" with" :: attr_names toString))
+      let attrs :=
+        if attr_names then ""
+        else String.join (List.intersperse " " (" with" :: attr_names toString))
       let tgt' := tgt' ""
       mk_suggestion (key 1) (s! "Try this: simpa{use_iota_eqn} only") (s! "{attrs }{tgt' }{c}") args
 #align tactic.interactive.squeeze_simpa tactic.interactive.squeeze_simpa
@@ -360,15 +374,18 @@ unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse (parse
 and prints a `dsimp only` invocation to skip the search through the
 `simp` lemma list. See the doc string of `squeeze_simp` for examples.
  -/
-unsafe def squeeze_dsimp (key : parse cur_pos) (slow_and_accurate : parse (parser.optional (tk "?")))
-    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (locat : parse location) (cfg : parse (parser.optional struct_inst)) :
-    tactic Unit := do
+unsafe def squeeze_dsimp (key : parse cur_pos)
+    (slow_and_accurate : parse (parser.optional (tk "?")))
+    (use_iota_eqn : parse (parser.optional (tk "!"))) (no_dflt : parse only_flag)
+    (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (locat : parse location)
+    (cfg : parse (parser.optional struct_inst)) : tactic Unit := do
   let (cfg', c) ← parse_dsimp_config cfg
-  squeeze_simp_core slow_and_accurate no_dflt hs (fun l_no_dft l_args => dsimp l_no_dft l_args attr_names locat cfg')
-      fun args =>
+  squeeze_simp_core slow_and_accurate no_dflt hs
+      (fun l_no_dft l_args => dsimp l_no_dft l_args attr_names locat cfg') fun args =>
       let use_iota_eqn := if use_iota_eqn then "!" else ""
-      let attrs := if attr_names then "" else String.join (List.intersperse " " (" with" :: attr_names toString))
+      let attrs :=
+        if attr_names then ""
+        else String.join (List.intersperse " " (" with" :: attr_names toString))
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: dsimp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 #align tactic.interactive.squeeze_dsimp tactic.interactive.squeeze_dsimp
@@ -380,7 +397,8 @@ end Tactic
 open Tactic.Interactive
 
 add_tactic_doc
-  { Name := "squeeze_simp / squeeze_simpa / squeeze_dsimp / squeeze_scope", category := DocCategory.tactic,
+  { Name := "squeeze_simp / squeeze_simpa / squeeze_dsimp / squeeze_scope",
+    category := DocCategory.tactic,
     declNames := [`` squeeze_simp, `` squeeze_dsimp, `` squeeze_simpa, `` squeeze_scope],
     tags := ["simplification", "Try this"], inheritDescriptionFrom := `` squeeze_simp }
 

@@ -93,8 +93,9 @@ instance ofFixedField (G : Type _) [Group G] [Finite G] [MulSemiringAction G E] 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F E] {α : E} (hα : IsIntegral F α)
-    (h_sep : (minpoly F α).Separable) (h_splits : (minpoly F α).Splits (algebraMap F F⟮⟯)) :
+theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F E] {α : E}
+    (hα : IsIntegral F α) (h_sep : (minpoly F α).Separable)
+    (h_splits : (minpoly F α).Splits (algebraMap F F⟮⟯)) :
     Fintype.card (F⟮⟯ ≃ₐ[F] F⟮⟯) = finrank F F⟮⟯ := by
   letI : Fintype (F⟮⟯ →ₐ[F] F⟮⟯) := IntermediateField.fintypeOfAlgHomAdjoinIntegral F hα
   rw [IntermediateField.adjoin.finrank hα]
@@ -106,7 +107,8 @@ theorem IntermediateField.AdjoinSimple.card_aut_eq_finrank [FiniteDimensional F 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.card (E ≃ₐ[F] E) = finrank F E := by
+theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
+    Fintype.card (E ≃ₐ[F] E) = finrank F E := by
   cases' Field.exists_primitive_element F E with α hα
   let iso : F⟮⟯ ≃ₐ[F] E :=
     { toFun := fun e => e.val,
@@ -117,7 +119,8 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.car
       left_inv := fun _ => by
         ext
         rfl,
-      right_inv := fun _ => rfl, map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl, commutes' := fun _ => rfl }
+      right_inv := fun _ => rfl, map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl,
+      commutes' := fun _ => rfl }
   have H : IsIntegral F α := IsGalois.integral F α
   have h_sep : (minpoly F α).Separable := IsGalois.separable F α
   have h_splits : (minpoly F α).Splits (algebraMap F E) := IsGalois.splits F α
@@ -125,7 +128,8 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] : Fintype.car
   · have p : iso.symm.to_alg_hom.to_ring_hom.comp (algebraMap F E) = algebraMap F ↥F⟮⟯ := by
       ext
       simp
-    simpa [p] using Polynomial.splitsCompOfSplits (algebraMap F E) iso.symm.to_alg_hom.to_ring_hom h_splits
+    simpa [p] using
+      Polynomial.splitsCompOfSplits (algebraMap F E) iso.symm.to_alg_hom.to_ring_hom h_splits
     
   rw [← LinearEquiv.finrank_eq iso.to_linear_equiv]
   rw [← intermediate_field.adjoin_simple.card_aut_eq_finrank F E H h_sep h_splits]
@@ -152,14 +156,15 @@ variable (F K E : Type _) [Field F] [Field K] [Field E] {E' : Type _} [Field E']
 variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem IsGalois.towerTopOfIsGalois [IsGalois F E] : IsGalois K E :=
-  { to_is_separable := is_separable_tower_top_of_is_separable F K E, toNormal := Normal.towerTopOfNormal F K E }
+  { to_is_separable := is_separable_tower_top_of_is_separable F K E,
+    toNormal := Normal.towerTopOfNormal F K E }
 #align is_galois.tower_top_of_is_galois IsGalois.towerTopOfIsGalois
 
 variable {F E}
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsGalois.towerTopIntermediateField (K : IntermediateField F E) [h : IsGalois F E] :
-    IsGalois K E :=
+instance (priority := 100) IsGalois.towerTopIntermediateField (K : IntermediateField F E)
+    [h : IsGalois F E] : IsGalois K E :=
   IsGalois.towerTopOfIsGalois F K E
 #align is_galois.tower_top_intermediate_field IsGalois.towerTopIntermediateField
 
@@ -199,8 +204,8 @@ variable (H : Subgroup (E ≃ₐ[F] E)) (K : IntermediateField F E)
 
 /-- The intermediate field of fixed points fixed by a monoid action that commutes with the
 `F`-action on `E`. -/
-def FixedPoints.intermediateField (M : Type _) [Monoid M] [MulSemiringAction M E] [SmulCommClass M F E] :
-    IntermediateField F E :=
+def FixedPoints.intermediateField (M : Type _) [Monoid M] [MulSemiringAction M E]
+    [SmulCommClass M F E] : IntermediateField F E :=
   { FixedPoints.subfield M E with carrier := MulAction.fixedPoints M E,
     algebra_map_mem' := fun a g => by rw [Algebra.algebra_map_eq_smul_one, smul_comm, smul_one] }
 #align fixed_points.intermediate_field FixedPoints.intermediateField
@@ -241,7 +246,8 @@ def fixingSubgroupEquiv : fixingSubgroup K ≃* E ≃ₐ[K] E where
     rfl
 #align intermediate_field.fixing_subgroup_equiv IntermediateField.fixingSubgroupEquiv
 
-theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H := by
+theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fixedField H) = H :=
+  by
   have H_le : H ≤ fixingSubgroup (fixed_field H) := (le_iff_le _ _).mp le_rfl
   classical
   suffices Fintype.card H = Fintype.card (fixingSubgroup (fixed_field H)) by
@@ -258,7 +264,8 @@ theorem fixing_subgroup_fixed_field [FiniteDimensional F E] : fixingSubgroup (fi
 
 instance fixedField.algebra : Algebra K (fixedField (fixingSubgroup K)) where
   smul x y :=
-    ⟨x * y, fun ϕ => by rw [smul_mul', show ϕ • ↑x = ↑x from Subtype.mem ϕ x, show ϕ • ↑y = ↑y from Subtype.mem y ϕ]⟩
+    ⟨x * y, fun ϕ => by
+      rw [smul_mul', show ϕ • ↑x = ↑x from Subtype.mem ϕ x, show ϕ • ↑y = ↑y from Subtype.mem y ϕ]⟩
   toFun x := ⟨x, fun ϕ => Subtype.mem ϕ x⟩
   map_zero' := rfl
   map_add' _ _ := rfl
@@ -280,7 +287,8 @@ theorem fixed_field_fixing_subgroup [FiniteDimensional F E] [h : IsGalois F E] :
     IntermediateField.fixedField (IntermediateField.fixingSubgroup K) = K := by
   have K_le : K ≤ IntermediateField.fixedField (IntermediateField.fixingSubgroup K) :=
     (IntermediateField.le_iff_le _ _).mpr le_rfl
-  suffices finrank K E = finrank (IntermediateField.fixedField (IntermediateField.fixingSubgroup K)) E by
+  suffices
+    finrank K E = finrank (IntermediateField.fixedField (IntermediateField.fixingSubgroup K)) E by
     exact (IntermediateField.eq_of_le_of_finrank_eq' K_le this).symm
   classical
   rw [IntermediateField.finrank_fixed_field_eq_card,
@@ -288,8 +296,9 @@ theorem fixed_field_fixing_subgroup [FiniteDimensional F E] [h : IsGalois F E] :
   exact (card_aut_eq_finrank K E).symm
 #align is_galois.fixed_field_fixing_subgroup IsGalois.fixed_field_fixing_subgroup
 
-theorem card_fixing_subgroup_eq_finrank [DecidablePred (· ∈ IntermediateField.fixingSubgroup K)] [FiniteDimensional F E]
-    [IsGalois F E] : Fintype.card (IntermediateField.fixingSubgroup K) = finrank K E := by conv =>
+theorem card_fixing_subgroup_eq_finrank [DecidablePred (· ∈ IntermediateField.fixingSubgroup K)]
+    [FiniteDimensional F E] [IsGalois F E] :
+    Fintype.card (IntermediateField.fixingSubgroup K) = finrank K E := by conv =>
   rhs
   rw [← fixed_field_fixing_subgroup K, IntermediateField.finrank_fixed_field_eq_card]
 #align is_galois.card_fixing_subgroup_eq_finrank IsGalois.card_fixing_subgroup_eq_finrank
@@ -309,24 +318,30 @@ def intermediateFieldEquivSubgroup [FiniteDimensional F E] [IsGalois F E] :
 /-- The Galois correspondence as a galois_insertion -/
 def galoisInsertionIntermediateFieldSubgroup [FiniteDimensional F E] :
     GaloisInsertion
-      (OrderDual.toDual ∘ (IntermediateField.fixingSubgroup : IntermediateField F E → Subgroup (E ≃ₐ[F] E)))
-      ((IntermediateField.fixedField : Subgroup (E ≃ₐ[F] E) → IntermediateField F E) ∘ OrderDual.toDual) where
+      (OrderDual.toDual ∘
+        (IntermediateField.fixingSubgroup : IntermediateField F E → Subgroup (E ≃ₐ[F] E)))
+      ((IntermediateField.fixedField : Subgroup (E ≃ₐ[F] E) → IntermediateField F E) ∘
+        OrderDual.toDual) where
   choice K _ := IntermediateField.fixingSubgroup K
   gc K H := (IntermediateField.le_iff_le H K).symm
   le_l_u H := le_of_eq (IntermediateField.fixing_subgroup_fixed_field H).symm
   choice_eq K _ := rfl
-#align is_galois.galois_insertion_intermediate_field_subgroup IsGalois.galoisInsertionIntermediateFieldSubgroup
+#align
+  is_galois.galois_insertion_intermediate_field_subgroup IsGalois.galoisInsertionIntermediateFieldSubgroup
 
 /-- The Galois correspondence as a galois_coinsertion -/
 def galoisCoinsertionIntermediateFieldSubgroup [FiniteDimensional F E] [IsGalois F E] :
     GaloisCoinsertion
-      (OrderDual.toDual ∘ (IntermediateField.fixingSubgroup : IntermediateField F E → Subgroup (E ≃ₐ[F] E)))
-      ((IntermediateField.fixedField : Subgroup (E ≃ₐ[F] E) → IntermediateField F E) ∘ OrderDual.toDual) where
+      (OrderDual.toDual ∘
+        (IntermediateField.fixingSubgroup : IntermediateField F E → Subgroup (E ≃ₐ[F] E)))
+      ((IntermediateField.fixedField : Subgroup (E ≃ₐ[F] E) → IntermediateField F E) ∘
+        OrderDual.toDual) where
   choice H _ := IntermediateField.fixedField H
   gc K H := (IntermediateField.le_iff_le H K).symm
   u_l_le K := le_of_eq (fixed_field_fixing_subgroup K)
   choice_eq H _ := rfl
-#align is_galois.galois_coinsertion_intermediate_field_subgroup IsGalois.galoisCoinsertionIntermediateFieldSubgroup
+#align
+  is_galois.galois_coinsertion_intermediate_field_subgroup IsGalois.galoisCoinsertionIntermediateFieldSubgroup
 
 end IsGalois
 
@@ -354,18 +369,19 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
     
 #align is_galois.is_separable_splitting_field IsGalois.is_separable_splitting_field
 
-theorem ofFixedFieldEqBot [FiniteDimensional F E] (h : IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥) :
-    IsGalois F E := by
+theorem ofFixedFieldEqBot [FiniteDimensional F E]
+    (h : IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E)) = ⊥) : IsGalois F E := by
   rw [← is_galois_iff_is_galois_bot, ← h]
   classical exact IsGalois.ofFixedField E (⊤ : Subgroup (E ≃ₐ[F] E))
 #align is_galois.of_fixed_field_eq_bot IsGalois.ofFixedFieldEqBot
 
-theorem ofCardAutEqFinrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) : IsGalois F E := by
+theorem ofCardAutEqFinrank [FiniteDimensional F E] (h : Fintype.card (E ≃ₐ[F] E) = finrank F E) :
+    IsGalois F E := by
   apply of_fixed_field_eq_bot
   have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos
   classical
-  rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm, finrank_mul_finrank, ← h, one_mul,
-    IntermediateField.finrank_fixed_field_eq_card]
+  rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm,
+    finrank_mul_finrank, ← h, one_mul, IntermediateField.finrank_fixed_field_eq_card]
   apply Fintype.card_congr
   exact
     { toFun := fun g => ⟨g, Subgroup.mem_top g⟩, invFun := coe, left_inv := fun g => rfl,
@@ -383,20 +399,25 @@ variable {F} {E} {p : F[X]}
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
-theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.IsSplittingField F E] (hp : p.Separable)
-    (K : Type _) [Field K] [Algebra F K] [Algebra K E] [IsScalarTower F K E] {x : E}
-    (hx : x ∈ (p.map (algebraMap F E)).roots)
+theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.IsSplittingField F E]
+    (hp : p.Separable) (K : Type _) [Field K] [Algebra F K] [Algebra K E] [IsScalarTower F K E]
+    {x : E} (hx : x ∈ (p.map (algebraMap F E)).roots)
     -- these are both implied by `hFE`, but as they carry data this makes the lemma more general
     [Fintype (K →ₐ[F] E)]
     [Fintype (K⟮⟯.restrictScalars F →ₐ[F] E)] :
     Fintype.card (K⟮⟯.restrictScalars F →ₐ[F] E) = Fintype.card (K →ₐ[F] E) * finrank K K⟮⟯ := by
-  have h : IsIntegral K x := is_integral_of_is_scalar_tower (is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
+  have h : IsIntegral K x :=
+    is_integral_of_is_scalar_tower (is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
   have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx
   have h2 : minpoly K x ∣ p.map (algebraMap F K) := by
     apply minpoly.dvd
-    rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map, ← IsScalarTower.algebra_map_eq]
+    rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map, ←
+      IsScalarTower.algebra_map_eq]
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
-  let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
+  let key_equiv :
+    (K⟮⟯.restrictScalars F →ₐ[F] E) ≃
+      Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) :=
+    by
     change (K⟮⟯ →ₐ[F] E) ≃ Σf : K →ₐ[F] E, _
     exact algHomEquivSigma
   haveI : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f => by
@@ -417,7 +438,8 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     
 #align is_galois.of_separable_splitting_field_aux IsGalois.of_separable_splitting_field_aux
 
-theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E := by
+theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E :=
+  by
   haveI hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finiteDimensional E p
   letI := Classical.decEq E
   let s := (p.map (algebraMap F E)).roots.toFinset
@@ -432,9 +454,12 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
     rw [← Eq.trans this (LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv)]
     exact
       Fintype.card_congr
-        ((algEquivEquivAlgHom F E).toEquiv.trans (intermediate_field.top_equiv.symm.arrow_congr AlgEquiv.refl))
+        ((algEquivEquivAlgHom F E).toEquiv.trans
+          (intermediate_field.top_equiv.symm.arrow_congr AlgEquiv.refl))
   apply IntermediateField.inductionOnAdjoinFinset s P
-  · have key := IntermediateField.card_alg_hom_adjoin_integral F (show IsIntegral F (0 : E) from is_integral_zero)
+  · have key :=
+      IntermediateField.card_alg_hom_adjoin_integral F
+        (show IsIntegral F (0 : E) from is_integral_zero)
     rw [minpoly.zero, Polynomial.nat_degree_X] at key
     specialize key Polynomial.separable_X (Polynomial.splitsX (algebraMap F E))
     rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_to_subalgebra] at key
@@ -453,7 +478,9 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
-      [(Command.docComment "/--" "Equivalent characterizations of a Galois extension of finite degree-/")]
+      [(Command.docComment
+        "/--"
+        "Equivalent characterizations of a Galois extension of finite degree-/")]
       []
       []
       []
@@ -496,7 +523,10 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
                [(Lean.binderIdent `p)]
                [":" (Polynomial.Data.Polynomial.Basic.polynomial `F "[X]")]))
              ","
-             («term_∧_» (Term.proj `p "." `Separable) "∧" (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
+             («term_∧_»
+              (Term.proj `p "." `Separable)
+              "∧"
+              (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -679,7 +709,9 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
           [(Std.Tactic.RCases.rintroPat.one
             (Std.Tactic.RCases.rcasesPat.tuple
              "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)]) [])
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+               [])
               ","
               (Std.Tactic.RCases.rcasesPatLo
                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)])
@@ -700,10 +732,12 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hp1
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `of_separable_splitting_field
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -712,9 +746,13 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
        [(Std.Tactic.RCases.rintroPat.one
          (Std.Tactic.RCases.rcasesPat.tuple
           "⟨"
-          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)]) [])
+          [(Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `h)])
+            [])
            ","
-           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)]) [])
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hp1)])
+            [])
            ","
            (Std.Tactic.RCases.rcasesPatLo
             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])

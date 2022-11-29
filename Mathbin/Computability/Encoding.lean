@@ -76,8 +76,8 @@ def sectionΓ'Bool : Γ' → Bool
   | _ => Inhabited.default Bool
 #align computability.section_Γ'_bool Computability.sectionΓ'Bool
 
-theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inclusionBoolΓ' := fun x =>
-  Bool.casesOn x rfl rfl
+theorem left_inverse_section_inclusion : Function.LeftInverse sectionΓ'Bool inclusionBoolΓ' :=
+  fun x => Bool.casesOn x rfl rfl
 #align computability.left_inverse_section_inclusion Computability.left_inverse_section_inclusion
 
 theorem inclusion_bool_Γ'_injective : Function.Injective inclusionBoolΓ' :=
@@ -122,7 +122,8 @@ def decodeNat : List Bool → Nat := fun l => decodeNum l
 #align computability.decode_nat Computability.decodeNat
 
 theorem encode_pos_num_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
-  PosNum.casesOn n (List.cons_ne_nil _ _) (fun m => List.cons_ne_nil _ _) fun m => List.cons_ne_nil _ _
+  PosNum.casesOn n (List.cons_ne_nil _ _) (fun m => List.cons_ne_nil _ _) fun m =>
+    List.cons_ne_nil _ _
 #align computability.encode_pos_num_nonempty Computability.encode_pos_num_nonempty
 
 theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n := by
@@ -171,7 +172,9 @@ def encodingNatΓ' : Encoding ℕ where
   Γ := Γ'
   encode x := List.map inclusionBoolΓ' (encodeNat x)
   decode x := some (decodeNat (List.map sectionΓ'Bool x))
-  decode_encode x := congr_arg _ <| by rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
+  decode_encode x :=
+    congr_arg _ <| by
+      rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 #align computability.encoding_nat_Γ' Computability.encodingNatΓ'
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
@@ -241,7 +244,8 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
   Cardinal.lift_mk_le'.2 ⟨⟨e.encode, e.encode_injective⟩⟩
 #align computability.encoding.card_le_card_list Computability.Encoding.card_le_card_list
 
-theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : (#α) ≤ ℵ₀ := by
+theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : (#α) ≤ ℵ₀ :=
+  by
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
   simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
   cases' isEmpty_or_nonempty e.Γ with h h

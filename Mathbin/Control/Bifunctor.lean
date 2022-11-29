@@ -79,23 +79,23 @@ theorem id_snd : ∀ {α β} (x : F α β), snd id x = x :=
 #align bifunctor.id_snd Bifunctor.id_snd
 
 @[higher_order fst_comp_fst]
-theorem comp_fst {α₀ α₁ α₂ β} (f : α₀ → α₁) (f' : α₁ → α₂) (x : F α₀ β) : fst f' (fst f x) = fst (f' ∘ f) x := by
-  simp [fst, bimap_bimap]
+theorem comp_fst {α₀ α₁ α₂ β} (f : α₀ → α₁) (f' : α₁ → α₂) (x : F α₀ β) :
+    fst f' (fst f x) = fst (f' ∘ f) x := by simp [fst, bimap_bimap]
 #align bifunctor.comp_fst Bifunctor.comp_fst
 
 @[higher_order fst_comp_snd]
-theorem fst_snd {α₀ α₁ β₀ β₁} (f : α₀ → α₁) (f' : β₀ → β₁) (x : F α₀ β₀) : fst f (snd f' x) = bimap f f' x := by
-  simp [fst, bimap_bimap]
+theorem fst_snd {α₀ α₁ β₀ β₁} (f : α₀ → α₁) (f' : β₀ → β₁) (x : F α₀ β₀) :
+    fst f (snd f' x) = bimap f f' x := by simp [fst, bimap_bimap]
 #align bifunctor.fst_snd Bifunctor.fst_snd
 
 @[higher_order snd_comp_fst]
-theorem snd_fst {α₀ α₁ β₀ β₁} (f : α₀ → α₁) (f' : β₀ → β₁) (x : F α₀ β₀) : snd f' (fst f x) = bimap f f' x := by
-  simp [snd, bimap_bimap]
+theorem snd_fst {α₀ α₁ β₀ β₁} (f : α₀ → α₁) (f' : β₀ → β₁) (x : F α₀ β₀) :
+    snd f' (fst f x) = bimap f f' x := by simp [snd, bimap_bimap]
 #align bifunctor.snd_fst Bifunctor.snd_fst
 
 @[higher_order snd_comp_snd]
-theorem comp_snd {α β₀ β₁ β₂} (g : β₀ → β₁) (g' : β₁ → β₂) (x : F α β₀) : snd g' (snd g x) = snd (g' ∘ g) x := by
-  simp [snd, bimap_bimap]
+theorem comp_snd {α β₀ β₁ β₂} (g : β₀ → β₁) (g' : β₁ → β₂) (x : F α β₀) :
+    snd g' (snd g x) = snd (g' ∘ g) x := by simp [snd, bimap_bimap]
 #align bifunctor.comp_snd Bifunctor.comp_snd
 
 attribute [functor_norm]
@@ -115,7 +115,8 @@ instance Bifunctor.const : Bifunctor Const where bimap α α' β β f _ := f
 instance IsLawfulBifunctor.const : IsLawfulBifunctor Const := by refine' { .. } <;> intros <;> rfl
 #align is_lawful_bifunctor.const IsLawfulBifunctor.const
 
-instance Bifunctor.flip : Bifunctor (flip F) where bimap α α' β β' f f' x := (bimap f' f x : F β' α')
+instance Bifunctor.flip :
+    Bifunctor (flip F) where bimap α α' β β' f f' x := (bimap f' f x : F β' α')
 #align bifunctor.flip Bifunctor.flip
 
 instance IsLawfulBifunctor.flip [IsLawfulBifunctor F] : IsLawfulBifunctor (flip F) := by
@@ -131,17 +132,20 @@ open Bifunctor Functor
 instance (priority := 10) Bifunctor.functor {α} : Functor (F α) where map _ _ := snd
 #align bifunctor.functor Bifunctor.functor
 
-instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} : IsLawfulFunctor (F α) := by
-  refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
+instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} :
+    IsLawfulFunctor (F α) := by refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
 #align bifunctor.is_lawful_functor Bifunctor.is_lawful_functor
 
 section Bicompl
 
 variable (G : Type _ → Type u₀) (H : Type _ → Type u₁) [Functor G] [Functor H]
 
-instance : Bifunctor (bicompl F G H) where bimap α α' β β' f f' x := (bimap (map f) (map f') x : F (G α') (H β'))
+instance :
+    Bifunctor
+      (bicompl F G H) where bimap α α' β β' f f' x := (bimap (map f) (map f') x : F (G α') (H β'))
 
-instance [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompl F G H) := by
+instance [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] :
+    IsLawfulBifunctor (bicompl F G H) := by
   constructor <;> intros <;> simp [bimap, map_id, map_comp_map, functor_norm]
 
 end Bicompl
@@ -150,7 +154,8 @@ section Bicompr
 
 variable (G : Type u₂ → Type _) [Functor G]
 
-instance : Bifunctor (bicompr G F) where bimap α α' β β' f f' x := (map (bimap f f') x : G (F α' β'))
+instance :
+    Bifunctor (bicompr G F) where bimap α α' β β' f f' x := (map (bimap f f') x : G (F α' β'))
 
 instance [IsLawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) := by
   constructor <;> intros <;> simp [bimap, functor_norm]

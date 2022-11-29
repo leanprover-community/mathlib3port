@@ -30,8 +30,8 @@ open Function
 variable {M : Type _} {N : Type _} {G : Type _} {H : Type _}
 
 /-- An auxiliary lemma that can be used to prove `⇑(f ^ n) = (⇑f^[n])`. -/
-theorem hom_coe_pow {F : Type _} [Monoid F] (c : F → M → M) (h1 : c 1 = id) (hmul : ∀ f g, c (f * g) = c f ∘ c g)
-    (f : F) : ∀ n, c (f ^ n) = c f^[n]
+theorem hom_coe_pow {F : Type _} [Monoid F] (c : F → M → M) (h1 : c 1 = id)
+    (hmul : ∀ f g, c (f * g) = c f ∘ c g) (f : F) : ∀ n, c (f ^ n) = c f^[n]
   | 0 => by
     rw [pow_zero, h1]
     rfl
@@ -105,7 +105,8 @@ attribute [to_additive, to_additive_reorder 5] MonoidHom.iterate_map_zpow
 
 end AddMonoidHom
 
-theorem AddMonoid.EndCat.coe_pow {A} [AddMonoid A] (f : AddMonoid.EndCat A) (n : ℕ) : ⇑(f ^ n) = f^[n] :=
+theorem AddMonoid.EndCat.coe_pow {A} [AddMonoid A] (f : AddMonoid.EndCat A) (n : ℕ) :
+    ⇑(f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) _ _
 #align add_monoid.End.coe_pow AddMonoid.EndCat.coe_pow
 
@@ -199,11 +200,13 @@ variable [Semigroup G] {a b c : G}
 
 @[to_additive]
 theorem SemiconjBy.function_semiconj_mul_left (h : SemiconjBy a b c) :
-    Function.Semiconj ((· * ·) a) ((· * ·) b) ((· * ·) c) := fun j => by rw [← mul_assoc, h.eq, mul_assoc]
+    Function.Semiconj ((· * ·) a) ((· * ·) b) ((· * ·) c) := fun j => by
+  rw [← mul_assoc, h.eq, mul_assoc]
 #align semiconj_by.function_semiconj_mul_left SemiconjBy.function_semiconj_mul_left
 
 @[to_additive]
-theorem Commute.function_commute_mul_left (h : Commute a b) : Function.Commute ((· * ·) a) ((· * ·) b) :=
+theorem Commute.function_commute_mul_left (h : Commute a b) :
+    Function.Commute ((· * ·) a) ((· * ·) b) :=
   SemiconjBy.function_semiconj_mul_left h
 #align commute.function_commute_mul_left Commute.function_commute_mul_left
 

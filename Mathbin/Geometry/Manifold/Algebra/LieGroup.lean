@@ -43,9 +43,9 @@ open Manifold
 -- See note [Design choices about smooth algebraic structures]
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/
-class LieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
-  [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [AddGroup G] [TopologicalSpace G]
-  [ChartedSpace H G] extends HasSmoothAdd I G : Prop where
+class LieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
+  {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
+  [AddGroup G] [TopologicalSpace G] [ChartedSpace H G] extends HasSmoothAdd I G : Prop where
   smoothNeg : Smooth I I fun a : G => -a
 #align lie_add_group LieAddGroup
 
@@ -53,21 +53,22 @@ class LieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [T
 /-- A Lie group is a group and a smooth manifold at the same time in which
 the multiplication and inverse operations are smooth. -/
 @[to_additive]
-class LieGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
-  [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Group G] [TopologicalSpace G]
-  [ChartedSpace H G] extends HasSmoothMul I G : Prop where
+class LieGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
+  {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
+  [Group G] [TopologicalSpace G] [ChartedSpace H G] extends HasSmoothMul I G : Prop where
   smoothInv : Smooth I I fun a : G => a⁻¹
 #align lie_group LieGroup
 
 section LieGroup
 
-variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
-  {J : ModelWithCorners 𝕜 F F} {G : Type _} [TopologicalSpace G] [ChartedSpace H G] [Group G] [LieGroup I G]
-  {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-  {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M] {E'' : Type _}
-  [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''}
-  {M' : Type _} [TopologicalSpace M'] [ChartedSpace H'' M']
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {J : ModelWithCorners 𝕜 F F} {G : Type _}
+  [TopologicalSpace G] [ChartedSpace H G] [Group G] [LieGroup I G] {E' : Type _}
+  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M]
+  {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
+  {I'' : ModelWithCorners 𝕜 E'' H''} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H'' M']
 
 section
 
@@ -94,12 +95,14 @@ theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f 
 #align smooth.inv Smooth.inv
 
 @[to_additive]
-theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) : SmoothOn I' I (fun x => (f x)⁻¹) s :=
+theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) :
+    SmoothOn I' I (fun x => (f x)⁻¹) s :=
   (smoothInv I).compSmoothOn hf
 #align smooth_on.inv SmoothOn.inv
 
 @[to_additive]
-theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) := by
+theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
+  by
   rw [div_eq_mul_inv]
   exact ((smoothMul I).comp (hf.prod_mk hg.inv) : _)
 #align smooth.div Smooth.div
@@ -117,11 +120,12 @@ section ProdLieGroup
 
 -- Instance of product group
 @[to_additive]
-instance {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
-    [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [TopologicalSpace G] [ChartedSpace H G] [Group G]
-    [LieGroup I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-    {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [TopologicalSpace G'] [ChartedSpace H' G'] [Group G']
-    [LieGroup I' G'] : LieGroup (I.Prod I') (G × G') :=
+instance {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+    [NormedAddCommGroup E] [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _}
+    [TopologicalSpace G] [ChartedSpace H G] [Group G] [LieGroup I G] {E' : Type _}
+    [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+    {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [TopologicalSpace G'] [ChartedSpace H' G']
+    [Group G'] [LieGroup I' G'] : LieGroup (I.Prod I') (G × G') :=
   { HasSmoothMul.prod _ _ _ _ with smoothInv := smoothFst.inv.prod_mk smoothSnd.inv }
 
 end ProdLieGroup
@@ -129,9 +133,10 @@ end ProdLieGroup
 /-! ### Normed spaces are Lie groups -/
 
 
-instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
-    [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
-  { modelSpaceSmooth with smoothAdd := smooth_iff.2 ⟨continuous_add, fun x y => contDiffAdd.ContDiffOn⟩,
+instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _}
+    [NormedAddCommGroup E] [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
+  { modelSpaceSmooth with
+    smoothAdd := smooth_iff.2 ⟨continuous_add, fun x y => contDiffAdd.ContDiffOn⟩,
     smoothNeg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiffNeg.ContDiffOn⟩ }
 #align normed_space_lie_add_group normedSpaceLieAddGroup
 

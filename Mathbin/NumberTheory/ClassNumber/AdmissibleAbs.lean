@@ -26,7 +26,8 @@ open Int
 /-- We can partition a finite family into `partition_card ε` sets, such that the remainders
 in each set are close together. -/
 theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb : b ≠ 0) (A : Fin n → ℤ) :
-    ∃ t : Fin n → Fin ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑(abs (A i₁ % b - A i₀ % b)) < abs b • ε := by
+    ∃ t : Fin n → Fin ⌈1 / ε⌉₊, ∀ i₀ i₁, t i₀ = t i₁ → ↑(abs (A i₁ % b - A i₀ % b)) < abs b • ε :=
+  by
   have hb' : (0 : ℝ) < ↑(abs b) := int.cast_pos.mpr (abs_pos.mpr hb)
   have hbε : 0 < abs b • ε := by
     rw [Algebra.smul_def]
@@ -37,7 +38,8 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
   refine' ⟨fun i => ⟨nat_abs (floor ((A i % b : ℤ) / abs b • ε : ℝ)), _⟩, _⟩
   · rw [← coe_nat_lt, nat_abs_of_nonneg (hfloor i), floor_lt]
     apply lt_of_lt_of_le _ (Nat.le_ceil _)
-    rw [Algebra.smul_def, eq_int_cast, ← div_div, div_lt_div_right hε, div_lt_iff hb', one_mul, cast_lt]
+    rw [Algebra.smul_def, eq_int_cast, ← div_div, div_lt_div_right hε, div_lt_iff hb', one_mul,
+      cast_lt]
     exact Int.mod_lt _ hb
     
   intro i₀ i₁ hi

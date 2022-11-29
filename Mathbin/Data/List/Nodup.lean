@@ -39,7 +39,8 @@ theorem nodup_cons {a : α} {l : List α} : Nodup (a :: l) ↔ a ∉ l ∧ Nodup
   simp only [nodup, pairwise_cons, forall_mem_ne]
 #align list.nodup_cons List.nodup_cons
 
-protected theorem Pairwise.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwise r l) : Nodup l :=
+protected theorem Pairwise.nodup {l : List α} {r : α → α → Prop} [IsIrrefl α r] (h : Pairwise r l) :
+    Nodup l :=
   h.imp fun a b => ne_of_irrefl
 #align list.pairwise.nodup List.Pairwise.nodup
 
@@ -79,25 +80,30 @@ theorem not_nodup_pair (a : α) : ¬Nodup [a, a] :=
 
 theorem nodup_iff_sublist {l : List α} : Nodup l ↔ ∀ a, ¬[a, a] <+ l :=
   ⟨fun d a h => not_nodup_pair a (d.Sublist h), by
-    induction' l with a l IH <;> intro h
+    induction' l with a l IH <;> intro h;
     · exact nodup_nil
       
-    exact (IH fun a s => h a <| sublist_cons_of_sublist _ s).cons fun al => h a <| (singleton_sublist.2 al).cons_cons _⟩
+    exact
+      (IH fun a s => h a <| sublist_cons_of_sublist _ s).cons fun al =>
+        h a <| (singleton_sublist.2 al).cons_cons _⟩
 #align list.nodup_iff_sublist List.nodup_iff_sublist
 
-theorem nodup_iff_nth_le_inj {l : List α} : Nodup l ↔ ∀ i j h₁ h₂, nthLe l i h₁ = nthLe l j h₂ → i = j :=
+theorem nodup_iff_nth_le_inj {l : List α} :
+    Nodup l ↔ ∀ i j h₁ h₂, nthLe l i h₁ = nthLe l j h₂ → i = j :=
   pairwise_iff_nth_le.trans
     ⟨fun H i j h₁ h₂ h =>
-      ((lt_trichotomy _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
+      ((lt_trichotomy _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' =>
+        H _ _ h₁ h' h.symm,
       fun H i j h₁ h₂ h => ne_of_lt h₂ (H _ _ _ _ h)⟩
 #align list.nodup_iff_nth_le_inj List.nodup_iff_nth_le_inj
 
-theorem Nodup.nth_le_inj_iff {l : List α} (h : Nodup l) {i j : ℕ} (hi : i < l.length) (hj : j < l.length) :
-    l.nthLe i hi = l.nthLe j hj ↔ i = j :=
+theorem Nodup.nth_le_inj_iff {l : List α} (h : Nodup l) {i j : ℕ} (hi : i < l.length)
+    (hj : j < l.length) : l.nthLe i hi = l.nthLe j hj ↔ i = j :=
   ⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by simp (config := { contextual := true })⟩
 #align list.nodup.nth_le_inj_iff List.Nodup.nth_le_inj_iff
 
-theorem nodup_iff_nth_ne_nth {l : List α} : l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j := by
+theorem nodup_iff_nth_ne_nth {l : List α} :
+    l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j := by
   rw [nodup_iff_nth_le_inj]
   simp only [nth_le_eq_iff, some_nth_le_eq]
   constructor <;> rintro h i j h₁ h₂
@@ -113,7 +119,8 @@ theorem nodup_iff_nth_ne_nth {l : List α} : l.Nodup ↔ ∀ i j : ℕ, i < j �
     
 #align list.nodup_iff_nth_ne_nth List.nodup_iff_nth_ne_nth
 
-theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
+theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
+    l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
   induction' l with hd tl hl
   · simp
     
@@ -133,15 +140,16 @@ theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) : l ≠ [x] 
     
 #align list.nodup.ne_singleton_iff List.Nodup.ne_singleton_iff
 
-theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length) (hm : m < xs.length)
-    (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs := by
+theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length)
+    (hm : m < xs.length) (h : xs.nthLe n hn = xs.nthLe m hm) (hne : n ≠ m) : ¬Nodup xs := by
   rw [nodup_iff_nth_le_inj]
   simp only [exists_prop, exists_and_right, not_forall]
   exact ⟨n, m, ⟨hn, hm, h⟩, hne⟩
 #align list.nth_le_eq_of_ne_imp_not_nodup List.nth_le_eq_of_ne_imp_not_nodup
 
 @[simp]
-theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) : indexOf (nthLe l n h) l = n :=
+theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) :
+    indexOf (nthLe l n h) l = n :=
   nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| index_of_lt_length.2 <| nth_le_mem _ _ _
 #align list.nth_le_index_of List.nth_le_index_of
 
@@ -156,16 +164,19 @@ theorem nodup_repeat (a : α) : ∀ {n : ℕ}, Nodup (repeat a n) ↔ n ≤ 1
   | 0 => by simp [Nat.zero_le]
   | 1 => by simp
   | n + 2 =>
-    iff_of_false (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_left 2 n)))
+    iff_of_false
+      (fun H => nodup_iff_sublist.1 H a ((repeat_sublist_repeat _).2 (Nat.le_add_left 2 n)))
       (not_le_of_lt <| Nat.le_add_left 2 n)
 #align list.nodup_repeat List.nodup_repeat
 
 @[simp]
-theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : Nodup l) (h : a ∈ l) : count a l = 1 :=
+theorem count_eq_one_of_mem [DecidableEq α] {a : α} {l : List α} (d : Nodup l) (h : a ∈ l) :
+    count a l = 1 :=
   le_antisymm (nodup_iff_count_le_one.1 d a) (count_pos.2 h)
 #align list.count_eq_one_of_mem List.count_eq_one_of_mem
 
-theorem count_eq_of_nodup [DecidableEq α] {a : α} {l : List α} (d : Nodup l) : count a l = if a ∈ l then 1 else 0 := by
+theorem count_eq_of_nodup [DecidableEq α] {a : α} {l : List α} (d : Nodup l) :
+    count a l = if a ∈ l then 1 else 0 := by
   split_ifs with h
   · exact count_eq_one_of_mem d h
     
@@ -181,8 +192,8 @@ theorem Nodup.of_append_right : Nodup (l₁ ++ l₂) → Nodup l₂ :=
   Nodup.sublist (sublist_append_right l₁ l₂)
 #align list.nodup.of_append_right List.Nodup.of_append_right
 
-theorem nodup_append {l₁ l₂ : List α} : Nodup (l₁ ++ l₂) ↔ Nodup l₁ ∧ Nodup l₂ ∧ Disjoint l₁ l₂ := by
-  simp only [nodup, pairwise_append, disjoint_iff_ne]
+theorem nodup_append {l₁ l₂ : List α} : Nodup (l₁ ++ l₂) ↔ Nodup l₁ ∧ Nodup l₂ ∧ Disjoint l₁ l₂ :=
+  by simp only [nodup, pairwise_append, disjoint_iff_ne]
 #align list.nodup_append List.nodup_append
 
 theorem disjoint_of_nodup_append {l₁ l₂ : List α} (d : Nodup (l₁ ++ l₂)) : Disjoint l₁ l₂ :=
@@ -197,15 +208,17 @@ theorem nodup_append_comm {l₁ l₂ : List α} : Nodup (l₁ ++ l₂) ↔ Nodup
   simp only [nodup_append, and_left_comm, disjoint_comm]
 #align list.nodup_append_comm List.nodup_append_comm
 
-theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodup (l₁ ++ a :: l₂) ↔ Nodup (a :: (l₁ ++ l₂)) := by
-  simp only [nodup_append, not_or, and_left_comm, and_assoc', nodup_cons, mem_append, disjoint_cons_right]
+theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodup (l₁ ++ a :: l₂) ↔ Nodup (a :: (l₁ ++ l₂)) :=
+  by
+  simp only [nodup_append, not_or, and_left_comm, and_assoc', nodup_cons, mem_append,
+    disjoint_cons_right]
 #align list.nodup_middle List.nodup_middle
 
 /- warning: list.nodup.of_map -> List.Nodup.of_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) {l : List.{u} α}, (List.Nodup.{v} β (List.map.{u v} α β f l)) -> (List.Nodup.{u} α l)
+  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) {l : List.{u} α}, (List.Nodup.{v} β (List.map.{u, v} α β f l)) -> (List.Nodup.{u} α l)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (f : α -> β) {l : List.{u_1} α}, (List.Nodup.{u_2} β (List.map.{u_1 u_2} α β f l)) -> (List.Nodup.{u_1} α l)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (f : α -> β) {l : List.{u_1} α}, (List.Nodup.{u_2} β (List.map.{u_1, u_2} α β f l)) -> (List.Nodup.{u_1} α l)
 Case conversion may be inaccurate. Consider using '#align list.nodup.of_map List.Nodup.of_mapₓ'. -/
 theorem Nodup.of_map (f : α → β) {l : List α} : Nodup (map f l) → Nodup l :=
   (Pairwise.of_map f) fun a b => mt <| congr_arg f
@@ -213,11 +226,12 @@ theorem Nodup.of_map (f : α → β) {l : List α} : Nodup (map f l) → Nodup l
 
 /- warning: list.nodup.map_on -> List.Nodup.map_on is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {l : List.{u} α} {f : α -> β}, (forall (x : α), (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) x l) -> (forall (y : α), (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) y l) -> (Eq.{succ v} β (f x) (f y)) -> (Eq.{succ u} α x y))) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.map.{u v} α β f l))
+  forall {α : Type.{u}} {β : Type.{v}} {l : List.{u} α} {f : α -> β}, (forall (x : α), (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) x l) -> (forall (y : α), (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) y l) -> (Eq.{succ v} β (f x) (f y)) -> (Eq.{succ u} α x y))) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.map.{u, v} α β f l))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {l : List.{u_1} α} {f : α -> β}, (forall (x : α), (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) x l) -> (forall (y : α), (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) y l) -> (Eq.{succ u_2} β (f x) (f y)) -> (Eq.{succ u_1} α x y))) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.map.{u_1 u_2} α β f l))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {l : List.{u_1} α} {f : α -> β}, (forall (x : α), (Membership.mem.{u_1, u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) x l) -> (forall (y : α), (Membership.mem.{u_1, u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) y l) -> (Eq.{succ u_2} β (f x) (f y)) -> (Eq.{succ u_1} α x y))) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.map.{u_1, u_2} α β f l))
 Case conversion may be inaccurate. Consider using '#align list.nodup.map_on List.Nodup.map_onₓ'. -/
-theorem Nodup.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y) (d : Nodup l) : (map f l).Nodup :=
+theorem Nodup.map_on {f : α → β} (H : ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y) (d : Nodup l) :
+    (map f l).Nodup :=
   Pairwise.map _ (fun a b ⟨ma, mb, n⟩ e => n (H a ma b mb e)) (Pairwise.and_mem.1 d)
 #align list.nodup.map_on List.Nodup.map_on
 
@@ -246,9 +260,9 @@ theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : Nodup l) :
 
 /- warning: list.nodup.map -> List.Nodup.map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {l : List.{u} α} {f : α -> β}, (Function.Injective.{succ u succ v} α β f) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.map.{u v} α β f l))
+  forall {α : Type.{u}} {β : Type.{v}} {l : List.{u} α} {f : α -> β}, (Function.Injective.{succ u, succ v} α β f) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.map.{u, v} α β f l))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {l : List.{u_1} α} {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.map.{u_1 u_2} α β f l))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {l : List.{u_1} α} {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.map.{u_1, u_2} α β f l))
 Case conversion may be inaccurate. Consider using '#align list.nodup.map List.Nodup.mapₓ'. -/
 protected theorem Nodup.map {f : α → β} (hf : Injective f) : Nodup l → Nodup (map f l) :=
   Nodup.map_on fun x _ y _ h => hf h
@@ -272,13 +286,14 @@ attribute [protected] nodup.attach
 
 /- warning: list.nodup.pmap -> List.Nodup.pmap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u} α} {H : forall (a : α), (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ v} β (f a ha) (f b hb)) -> (Eq.{succ u} α a b)) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.pmap.{u v} α β (fun (a : α) => p a) f l H))
+  forall {α : Type.{u}} {β : Type.{v}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u} α} {H : forall (a : α), (Membership.Mem.{u, u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ v} β (f a ha) (f b hb)) -> (Eq.{succ u} α a b)) -> (List.Nodup.{u} α l) -> (List.Nodup.{v} β (List.pmap.{u, v} α β (fun (a : α) => p a) f l H))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u_1} α} {H : forall (a : α), (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u_2} β (f a ha) (f b hb)) -> (Eq.{succ u_1} α a b)) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.pmap.{u_1 u_2} α β (fun (a : α) => p a) f l H))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {l : List.{u_1} α} {H : forall (a : α), (Membership.mem.{u_1, u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (p a)}, (forall (a : α) (ha : p a) (b : α) (hb : p b), (Eq.{succ u_2} β (f a ha) (f b hb)) -> (Eq.{succ u_1} α a b)) -> (List.Nodup.{u_1} α l) -> (List.Nodup.{u_2} β (List.pmap.{u_1, u_2} α β (fun (a : α) => p a) f l H))
 Case conversion may be inaccurate. Consider using '#align list.nodup.pmap List.Nodup.pmapₓ'. -/
-theorem Nodup.pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H} (hf : ∀ a ha b hb, f a ha = f b hb → a = b)
-    (h : Nodup l) : Nodup (pmap f l H) := by
-  rw [pmap_eq_map_attach] <;> exact h.attach.map fun ⟨a, ha⟩ ⟨b, hb⟩ h => by congr <;> exact hf a (H _ ha) b (H _ hb) h
+theorem Nodup.pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H}
+    (hf : ∀ a ha b hb, f a ha = f b hb → a = b) (h : Nodup l) : Nodup (pmap f l H) := by
+  rw [pmap_eq_map_attach] <;>
+    exact h.attach.map fun ⟨a, ha⟩ ⟨b, hb⟩ h => by congr <;> exact hf a (H _ ha) b (H _ hb) h
 #align list.nodup.pmap List.Nodup.pmap
 
 theorem Nodup.filter (p : α → Prop) [DecidablePred p] {l} : Nodup l → Nodup (filter p l) :=
@@ -290,8 +305,9 @@ theorem nodup_reverse {l : List α} : Nodup (reverse l) ↔ Nodup l :=
   pairwise_reverse.trans <| by simp only [nodup, Ne.def, eq_comm]
 #align list.nodup_reverse List.nodup_reverse
 
-theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) : l.erase a = filter (· ≠ a) l := by
-  induction' d with b l m d IH
+theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
+    l.erase a = filter (· ≠ a) l := by
+  induction' d with b l m d IH;
   · rfl
     
   by_cases b = a
@@ -319,21 +335,27 @@ theorem Nodup.mem_erase_iff [DecidableEq α] (d : Nodup l) : a ∈ l.erase b ↔
   rw [d.erase_eq_filter, mem_filter, and_comm']
 #align list.nodup.mem_erase_iff List.Nodup.mem_erase_iff
 
-theorem Nodup.not_mem_erase [DecidableEq α] (h : Nodup l) : a ∉ l.erase a := fun H => (h.mem_erase_iff.1 H).1 rfl
+theorem Nodup.not_mem_erase [DecidableEq α] (h : Nodup l) : a ∉ l.erase a := fun H =>
+  (h.mem_erase_iff.1 H).1 rfl
 #align list.nodup.not_mem_erase List.Nodup.not_mem_erase
 
-theorem nodup_join {L : List (List α)} : Nodup (join L) ↔ (∀ l ∈ L, Nodup l) ∧ Pairwise Disjoint L := by
+theorem nodup_join {L : List (List α)} :
+    Nodup (join L) ↔ (∀ l ∈ L, Nodup l) ∧ Pairwise Disjoint L := by
   simp only [nodup, pairwise_join, disjoint_left.symm, forall_mem_ne]
 #align list.nodup_join List.nodup_join
 
 theorem nodup_bind {l₁ : List α} {f : α → List β} :
-    Nodup (l₁.bind f) ↔ (∀ x ∈ l₁, Nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ := by
-  simp only [List.bind, nodup_join, pairwise_map, and_comm', and_left_comm, mem_map, exists_imp, and_imp] <;>
-    rw [show (∀ (l : List β) (x : α), f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
-        forall_swap.trans <| forall_congr' fun _ => forall_eq']
+    Nodup (l₁.bind f) ↔
+      (∀ x ∈ l₁, Nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ :=
+  by
+  simp only [List.bind, nodup_join, pairwise_map, and_comm', and_left_comm, mem_map, exists_imp,
+      and_imp] <;>
+    rw [show (∀ (l : List β) (x : α), f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x)
+        from forall_swap.trans <| forall_congr' fun _ => forall_eq']
 #align list.nodup_bind List.nodup_bind
 
-protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l₂.Nodup) : (l₁.product l₂).Nodup :=
+protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l₂.Nodup) :
+    (l₁.product l₂).Nodup :=
   nodup_bind.2
     ⟨fun a ma => d₂.map <| left_inverse.injective fun b => (rfl : (a, b).2 = b),
       d₁.imp fun a₁ a₂ n x h₁ h₂ => by
@@ -349,8 +371,16 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
       "theorem"
       (Command.declId `Nodup.sigma [])
       (Command.declSig
-       [(Term.implicitBinder "{" [`σ] [":" (Term.arrow `α "→" (Term.type "Type" [(Level.hole "_")]))] "}")
-        (Term.implicitBinder "{" [`l₂] [":" (Term.forall "∀" [`a] [] "," (Term.app `List [(Term.app `σ [`a])]))] "}")
+       [(Term.implicitBinder
+         "{"
+         [`σ]
+         [":" (Term.arrow `α "→" (Term.type "Type" [(Level.hole "_")]))]
+         "}")
+        (Term.implicitBinder
+         "{"
+         [`l₂]
+         [":" (Term.forall "∀" [`a] [] "," (Term.app `List [(Term.app `σ [`a])]))]
+         "}")
         (Term.explicitBinder "(" [`d₁] [":" (Term.app `Nodup [`l₁])] [] ")")
         (Term.explicitBinder
          "("
@@ -402,7 +432,9 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                  (Tactic.tacticSeq1Indented
                   [(Std.Tactic.rcases
                     "rcases"
-                    [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+                    [(Tactic.casesTarget
+                      []
+                      (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
                     ["with"
                      (Std.Tactic.RCases.rcasesPatLo
                       (Std.Tactic.RCases.rcasesPatMed
@@ -424,7 +456,9 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                    []
                    (Std.Tactic.rcases
                     "rcases"
-                    [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+                    [(Tactic.casesTarget
+                      []
+                      (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
                     ["with"
                      (Std.Tactic.RCases.rcasesPatLo
                       (Std.Tactic.RCases.rcasesPatMed
@@ -439,7 +473,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                            [])
                           ","
                           (Std.Tactic.RCases.rcasesPatLo
-                           (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                           (Std.Tactic.RCases.rcasesPatMed
+                            [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
                            [])]
                          "⟩")])
                       [])])
@@ -493,7 +528,9 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                 (Tactic.tacticSeq1Indented
                  [(Std.Tactic.rcases
                    "rcases"
-                   [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
+                   [(Tactic.casesTarget
+                     []
+                     (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₁]))]
                    ["with"
                     (Std.Tactic.RCases.rcasesPatLo
                      (Std.Tactic.RCases.rcasesPatMed
@@ -515,7 +552,9 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                   []
                   (Std.Tactic.rcases
                    "rcases"
-                   [(Tactic.casesTarget [] (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
+                   [(Tactic.casesTarget
+                     []
+                     (Term.app (Term.proj `mem_map "." (fieldIdx "1")) [`h₂]))]
                    ["with"
                     (Std.Tactic.RCases.rcasesPatLo
                      (Std.Tactic.RCases.rcasesPatMed
@@ -530,7 +569,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                           [])
                          ","
                          (Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                          (Std.Tactic.RCases.rcasesPatMed
+                           [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
                           [])]
                         "⟩")])
                      [])])
@@ -616,7 +656,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                         [])
                        ","
                        (Std.Tactic.RCases.rcasesPatLo
-                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                        (Std.Tactic.RCases.rcasesPatMed
+                         [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
                         [])]
                       "⟩")])
                    [])])
@@ -675,7 +716,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                       [])
                      ","
                      (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                      (Std.Tactic.RCases.rcasesPatMed
+                       [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
                       [])]
                     "⟩")])
                  [])])
@@ -733,7 +775,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
                     [])
                    ","
                    (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
+                    (Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple "⟨" [] "⟩")])
                     [])]
                   "⟩")])
                [])])
@@ -798,10 +841,12 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -813,7 +858,9 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
          (Std.Tactic.RCases.rcasesPatMed
           [(Std.Tactic.RCases.rcasesPat.tuple
             "⟨"
-            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)]) [])
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₂)])
+              [])
              ","
              (Std.Tactic.RCases.rcasesPatLo
               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₂)])
@@ -830,13 +877,15 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h₂
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `mem_map "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `mem_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -848,7 +897,9 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
          (Std.Tactic.RCases.rcasesPatMed
           [(Std.Tactic.RCases.rcasesPat.tuple
             "⟨"
-            [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)]) [])
+            [(Std.Tactic.RCases.rcasesPatLo
+              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b₁)])
+              [])
              ","
              (Std.Tactic.RCases.rcasesPatLo
               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `mb₁)])
@@ -865,13 +916,15 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h₁
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `mem_map "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `mem_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -880,44 +933,51 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `d₁ "." `imp)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `d₁
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -999,12 +1059,14 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eq_of_heq
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Tactic.injection "injection" `h ["with" ["_" `h]])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
@@ -1022,7 +1084,8 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   Nodup.sigma
-  { σ : α → Type _ } { l₂ : ∀ a , List σ a } ( d₁ : Nodup l₁ ) ( d₂ : ∀ a , Nodup l₂ a ) : l₁ . Sigma l₂ . Nodup
+  { σ : α → Type _ } { l₂ : ∀ a , List σ a } ( d₁ : Nodup l₁ ) ( d₂ : ∀ a , Nodup l₂ a )
+    : l₁ . Sigma l₂ . Nodup
   :=
     nodup_bind . 2
       ⟨
@@ -1065,7 +1128,8 @@ theorem Nodup.inter [DecidableEq α] (l₂ : List α) : Nodup l₁ → Nodup (l�
   Nodup.filter _
 #align list.nodup.inter List.Nodup.inter
 
-theorem Nodup.diff_eq_filter [DecidableEq α] : ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
+theorem Nodup.diff_eq_filter [DecidableEq α] :
+    ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
   | l₁, [], hl₁ => by simp
   | l₁, a :: l₂, hl₁ => by
     rw [diff_cons, (hl₁.erase _).diff_eq_filter, hl₁.erase_eq_filter, filter_filter]
@@ -1076,18 +1140,23 @@ theorem Nodup.mem_diff_iff [DecidableEq α] (hl₁ : l₁.Nodup) : a ∈ l₁.di
   rw [hl₁.diff_eq_filter, mem_filter]
 #align list.nodup.mem_diff_iff List.Nodup.mem_diff_iff
 
-protected theorem Nodup.update_nth : ∀ {l : List α} {n : ℕ} {a : α} (hl : l.Nodup) (ha : a ∉ l), (l.updateNth n a).Nodup
+protected theorem Nodup.update_nth :
+    ∀ {l : List α} {n : ℕ} {a : α} (hl : l.Nodup) (ha : a ∉ l), (l.updateNth n a).Nodup
   | [], n, a, hl, ha => nodup_nil
   | b :: l, 0, a, hl, ha => nodup_cons.2 ⟨mt (mem_cons_of_mem _) ha, (nodup_cons.1 hl).2⟩
   | b :: l, n + 1, a, hl, ha =>
     nodup_cons.2
-      ⟨fun h => (mem_or_eq_of_mem_update_nth h).elim (nodup_cons.1 hl).1 fun hba => ha (hba ▸ mem_cons_self _ _),
+      ⟨fun h =>
+        (mem_or_eq_of_mem_update_nth h).elim (nodup_cons.1 hl).1 fun hba =>
+          ha (hba ▸ mem_cons_self _ _),
         hl.of_cons.updateNth (mt (mem_cons_of_mem _) ha)⟩
 #align list.nodup.update_nth List.Nodup.update_nth
 
 theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
-    l.map (Function.update f x y) = if x ∈ l then (l.map f).updateNth (l.indexOf x) y else l.map f := by
-  induction' l with hd tl ihl
+    l.map (Function.update f x y) =
+      if x ∈ l then (l.map f).updateNth (l.indexOf x) y else l.map f :=
+  by
+  induction' l with hd tl ihl;
   · simp
     
   rw [nodup_cons] at hl
@@ -1108,19 +1177,22 @@ theorem Nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl :
   exact absurd (hl x) hx.not_le
 #align list.nodup.pairwise_of_forall_ne List.Nodup.pairwise_of_forall_ne
 
-theorem Nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (hl : l.Nodup) (h : { x | x ∈ l }.Pairwise r) :
-    l.Pairwise r :=
+theorem Nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (hl : l.Nodup)
+    (h : { x | x ∈ l }.Pairwise r) : l.Pairwise r :=
   hl.pairwise_of_forall_ne h
 #align list.nodup.pairwise_of_set_pairwise List.Nodup.pairwise_of_set_pairwise
 
 @[simp]
-theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : { a | a ∈ l }.Pairwise r ↔ l.Pairwise r := by
+theorem Nodup.pairwise_coe [IsSymm α r] (hl : l.Nodup) : { a | a ∈ l }.Pairwise r ↔ l.Pairwise r :=
+  by
   induction' l with a l ih
   · simp
     
   rw [List.nodup_cons] at hl
-  have : ∀ b ∈ l, ¬a = b → r a b ↔ r a b := fun b hb => imp_iff_right (ne_of_mem_of_not_mem hb hl.1).symm
-  simp [Set.set_of_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm', forall₂_congr this]
+  have : ∀ b ∈ l, ¬a = b → r a b ↔ r a b := fun b hb =>
+    imp_iff_right (ne_of_mem_of_not_mem hb hl.1).symm
+  simp [Set.set_of_or, Set.pairwise_insert_of_symmetric (@symm_of _ r _), ih hl.2, and_comm',
+    forall₂_congr this]
 #align list.nodup.pairwise_coe List.Nodup.pairwise_coe
 
 end List

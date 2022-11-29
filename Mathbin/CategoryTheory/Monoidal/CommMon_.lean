@@ -35,10 +35,7 @@ namespace CommMon_
 -/
 @[simps]
 def trivial : CommMon_ C :=
-  { Mon_.trivial C with
-    mul_comm' := by
-      dsimp
-      rw [braiding_left_unitor, unitors_equal] }
+  { Mon_.trivial C with mul_comm' := by dsimp; rw [braiding_left_unitor, unitors_equal] }
 #align CommMon_.trivial CommMon_.trivial
 
 instance : Inhabited (CommMon_ C) :=
@@ -55,7 +52,8 @@ theorem id_hom (A : CommMon_ C) : Mon_.Hom.hom (𝟙 A) = 𝟙 A.x :=
 #align CommMon_.id_hom CommMon_.id_hom
 
 @[simp]
-theorem comp_hom {R S T : CommMon_ C} (f : R ⟶ S) (g : S ⟶ T) : Mon_.Hom.hom (f ≫ g) = f.Hom ≫ g.Hom :=
+theorem comp_hom {R S T : CommMon_ C} (f : R ⟶ S) (g : S ⟶ T) :
+    Mon_.Hom.hom (f ≫ g) = f.Hom ≫ g.Hom :=
   rfl
 #align CommMon_.comp_hom CommMon_.comp_hom
 
@@ -122,7 +120,8 @@ variable (C) (D)
 def mapCommMonFunctor : LaxBraidedFunctor C D ⥤ CommMon_ C ⥤ CommMon_ D where
   obj := mapCommMon
   map F G α := { app := fun A => { Hom := α.app A.x } }
-#align category_theory.lax_braided_functor.map_CommMon_functor CategoryTheory.LaxBraidedFunctor.mapCommMonFunctor
+#align
+  category_theory.lax_braided_functor.map_CommMon_functor CategoryTheory.LaxBraidedFunctor.mapCommMonFunctor
 
 end CategoryTheory.LaxBraidedFunctor
 
@@ -144,8 +143,8 @@ def laxBraidedToCommMon : LaxBraidedFunctor (Discrete PUnit.{u + 1}) C ⥤ CommM
 @[simps]
 def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 1}) C where
   obj A :=
-    { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul, map_id' := fun _ => rfl,
-      map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
+    { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul,
+      map_id' := fun _ => rfl, map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
   map A B f :=
     { app := fun _ => f.Hom,
       naturality' := fun _ _ _ => by
@@ -161,20 +160,25 @@ attribute [local simp] eq_to_iso_map
 
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
-def unitIso : 𝟭 (LaxBraidedFunctor (Discrete PUnit.{u + 1}) C) ≅ laxBraidedToCommMon C ⋙ commMonToLaxBraided C :=
+def unitIso :
+    𝟭 (LaxBraidedFunctor (Discrete PUnit.{u + 1}) C) ≅
+      laxBraidedToCommMon C ⋙ commMonToLaxBraided C :=
   NatIso.ofComponents
     (fun F =>
       LaxBraidedFunctor.mkIso
-        (MonoidalNatIso.ofComponents (fun _ => F.toLaxMonoidalFunctor.toFunctor.mapIso (eqToIso (by ext))) (by tidy)
-          (by tidy) (by tidy)))
+        (MonoidalNatIso.ofComponents
+          (fun _ => F.toLaxMonoidalFunctor.toFunctor.mapIso (eqToIso (by ext))) (by tidy) (by tidy)
+          (by tidy)))
     (by tidy)
-#align CommMon_.equiv_lax_braided_functor_punit.unit_iso CommMon_.EquivLaxBraidedFunctorPunit.unitIso
+#align
+  CommMon_.equiv_lax_braided_functor_punit.unit_iso CommMon_.EquivLaxBraidedFunctorPunit.unitIso
 
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
 def counitIso : commMonToLaxBraided C ⋙ laxBraidedToCommMon C ≅ 𝟭 (CommMon_ C) :=
   NatIso.ofComponents (fun F => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
-#align CommMon_.equiv_lax_braided_functor_punit.counit_iso CommMon_.EquivLaxBraidedFunctorPunit.counitIso
+#align
+  CommMon_.equiv_lax_braided_functor_punit.counit_iso CommMon_.EquivLaxBraidedFunctorPunit.counitIso
 
 end EquivLaxBraidedFunctorPunit
 

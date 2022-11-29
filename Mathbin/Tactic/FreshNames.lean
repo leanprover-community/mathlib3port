@@ -22,8 +22,8 @@ namespace Tactic
 
 -- This implementation is a bit of a hack, but probably fine in practice since
 -- we're unlikely to need more than two or three iterations of the loop.
-private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set) : Option Nat → tactic Name :=
-  fun suffix => do
+private unsafe def get_unused_name_reserved_aux (n : Name) (reserved : name_set) :
+    Option Nat → tactic Name := fun suffix => do
   let n ← get_unused_name n suffix
   if ¬reserved n then pure n
     else do
@@ -97,7 +97,8 @@ order of introductions matters:
 hypotheses `n` and `n_1` (assuming that these names are otherwise unused and not
 reserved).
 -/
-unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved : name_set) : tactic (List expr) :=
+unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved : name_set) :
+    tactic (List expr) :=
   ns.mmap fun spec =>
     match spec with
     | Sum.inl n => intro n

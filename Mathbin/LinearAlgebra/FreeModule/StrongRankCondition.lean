@@ -37,7 +37,8 @@ open Polynomial Function Fin LinearMap
 
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
 instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition R := by
-  suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬injective f by rwa [strong_rank_condition_iff_succ R]
+  suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬injective f by
+    rwa [strong_rank_condition_iff_succ R]
   intro n f
   by_contra hf
   -- Lean is unable to find these instances without help, either via this `letI`, or via duplicate

@@ -45,7 +45,8 @@ protected theorem IsRegular.eq : IsRegular a → aᶜᶜ = a :=
   id
 #align heyting.is_regular.eq Heyting.IsRegular.eq
 
-instance IsRegular.decidablePred [DecidableEq α] : @DecidablePred α IsRegular := fun _ => ‹DecidableEq α› _ _
+instance IsRegular.decidablePred [DecidableEq α] : @DecidablePred α IsRegular := fun _ =>
+  ‹DecidableEq α› _ _
 #align heyting.is_regular.decidable_pred Heyting.IsRegular.decidablePred
 
 end HasCompl
@@ -72,24 +73,26 @@ theorem is_regular_compl (a : α) : IsRegular (aᶜ) :=
   compl_compl_compl _
 #align heyting.is_regular_compl Heyting.is_regular_compl
 
-protected theorem IsRegular.disjoint_compl_left_iff (ha : IsRegular a) : Disjoint (aᶜ) b ↔ b ≤ a := by
-  rw [← le_compl_iff_disjoint_left, ha.eq]
+protected theorem IsRegular.disjoint_compl_left_iff (ha : IsRegular a) : Disjoint (aᶜ) b ↔ b ≤ a :=
+  by rw [← le_compl_iff_disjoint_left, ha.eq]
 #align heyting.is_regular.disjoint_compl_left_iff Heyting.IsRegular.disjoint_compl_left_iff
 
-protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoint a (bᶜ) ↔ a ≤ b := by
-  rw [← le_compl_iff_disjoint_right, hb.eq]
+protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoint a (bᶜ) ↔ a ≤ b :=
+  by rw [← le_compl_iff_disjoint_right, hb.eq]
 #align heyting.is_regular.disjoint_compl_right_iff Heyting.IsRegular.disjoint_compl_right_iff
 
 -- See note [reducible non-instances]
 /-- A Heyting algebra with regular excluded middle is a boolean algebra. -/
 @[reducible]
-def _root_.boolean_algebra.of_regular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanAlgebra α :=
+def BooleanAlgebra.ofRegular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanAlgebra α :=
   have : ∀ a : α, IsCompl a (aᶜ) := fun a =>
-    ⟨disjoint_compl_right, codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
+    ⟨disjoint_compl_right,
+      codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
   { ‹HeytingAlgebra α›, GeneralizedHeytingAlgebra.toDistribLattice with
-    himp_eq := fun a b => eq_of_forall_le_iff fun c => le_himp_iff.trans (this _).le_sup_right_iff_inf_left_le.symm,
+    himp_eq := fun a b =>
+      eq_of_forall_le_iff fun c => le_himp_iff.trans (this _).le_sup_right_iff_inf_left_le.symm,
     inf_compl_le_bot := fun a => (this _).1.le_bot, top_le_sup_compl := fun a => (this _).2.top_le }
-#align heyting._root_.boolean_algebra.of_regular heyting._root_.boolean_algebra.of_regular
+#align boolean_algebra.of_regular BooleanAlgebra.ofRegular
 
 variable (α)
 
@@ -175,7 +178,8 @@ theorem coe_lt_coe {a b : Regular α} : (a : α) < b ↔ a < b :=
 
 /-- **Regularization** of `a`. The smallest regular element greater than `a`. -/
 def toRegular : α →o Regular α :=
-  ⟨fun a => ⟨aᶜᶜ, is_regular_compl _⟩, fun a b h => coe_le_coe.1 <| compl_le_compl <| compl_le_compl h⟩
+  ⟨fun a => ⟨aᶜᶜ, is_regular_compl _⟩, fun a b h =>
+    coe_le_coe.1 <| compl_le_compl <| compl_le_compl h⟩
 #align heyting.regular.to_regular Heyting.Regular.toRegular
 
 @[simp, norm_cast]
@@ -191,7 +195,9 @@ theorem to_regular_coe (a : Regular α) : toRegular (a : α) = a :=
 /-- The Galois insertion between `regular.to_regular` and `coe`. -/
 def gi : GaloisInsertion toRegular (coe : Regular α → α) where
   choice a ha := ⟨a, ha.antisymm le_compl_compl⟩
-  gc a b := coe_le_coe.symm.trans <| ⟨le_compl_compl.trans, fun h => (compl_anti <| compl_anti h).trans_eq b.2⟩
+  gc a b :=
+    coe_le_coe.symm.trans <|
+      ⟨le_compl_compl.trans, fun h => (compl_anti <| compl_anti h).trans_eq b.2⟩
   le_l_u _ := le_compl_compl
   choice_eq a ha := coe_injective <| le_compl_compl.antisymm ha
 #align heyting.regular.gi Heyting.Regular.gi

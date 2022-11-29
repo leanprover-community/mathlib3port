@@ -33,7 +33,8 @@ notation:50 x " ≡ " y " [SMOD " N "]" => Smodeq N x y
 
 variable {U U₁ U₂}
 
-protected theorem Smodeq.def : x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y :=
+protected theorem Smodeq.def :
+    x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : M ⧸ U) = Submodule.Quotient.mk y :=
   Iff.rfl
 #align smodeq.def Smodeq.def
 
@@ -97,7 +98,8 @@ theorem map (hxy : x ≡ y [SMOD U]) (f : M →ₗ[R] N) : f x ≡ f y [SMOD U.m
 #align smodeq.map Smodeq.map
 
 theorem comap {f : M →ₗ[R] N} (hxy : f x ≡ f y [SMOD V]) : x ≡ y [SMOD V.comap f] :=
-  (Submodule.Quotient.eq _).2 <| show f (x - y) ∈ V from (f.map_sub x y).symm ▸ (Submodule.Quotient.eq _).1 hxy
+  (Submodule.Quotient.eq _).2 <|
+    show f (x - y) ∈ V from (f.map_sub x y).symm ▸ (Submodule.Quotient.eq _).1 hxy
 #align smodeq.comap Smodeq.comap
 
 theorem eval {R : Type _} [CommRing R] {I : Ideal R} {x y : R} (h : x ≡ y [SMOD I]) (f : R[X]) :

@@ -15,8 +15,8 @@ meaning is defined incrementally through attributes.
 
 namespace Tactic
 
-unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ (β) [reflected _ β], expr → tactic β) :
-    List Name → tactic α
+unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name)
+    (eval : ∀ (β) [reflected _ β], expr → tactic β) : List Name → tactic α
   | [] => fail ("no implementation defined for " ++ toString ntac)
   | n :: ns => do
     let d ← get_decl n
@@ -35,7 +35,8 @@ unsafe def replacer_core {α : Type} [reflected _ α] (ntac : Name) (eval : ∀ 
 
 unsafe def replacer (ntac : Name) {α : Type} [reflected _ α] (F : Type → Type)
     (eF : ∀ β, reflected _ β → reflected _ (F β)) (R : ∀ β, F β → β) : tactic α :=
-  attribute.get_instances ntac >>= replacer_core ntac fun β eβ e => R β <$> @eval_expr' (F β) (eF β eβ) e
+  attribute.get_instances ntac >>=
+    replacer_core ntac fun β eβ e => R β <$> @eval_expr' (F β) (eF β eβ) e
 #align tactic.replacer tactic.replacer
 
 unsafe def mk_replacer₁ : expr → Nat → expr × expr
@@ -56,7 +57,8 @@ unsafe def mk_replacer₂ (ntac : Name) (v : expr × expr) : expr → Nat → Op
           expr.lam `γ BinderInfo.default q(Type) <|
             expr.lam `eγ BinderInfo.inst_implicit ((q(reflected Type) : expr) β) v.2,
           expr.lam `γ BinderInfo.default q(Type) <|
-            expr.lam `f BinderInfo.default v.1 <| (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
+            expr.lam `f BinderInfo.default v.1 <|
+              (List.range i).foldr (fun i e' => e' (expr.var (i + 2))) (expr.var 0)]
   | _, i => none
 #align tactic.mk_replacer₂ tactic.mk_replacer₂
 
@@ -67,7 +69,8 @@ unsafe def mk_replacer (ntac : Name) (e : expr) : tactic expr :=
 unsafe def valid_types : expr → List expr
   | expr.pi n bi d b => expr.pi n bi d <$> valid_types b
   | q(tactic $(β)) =>
-    [q(tactic.{0} $(β)), q(tactic.{0} $(β) → tactic.{0} $(β)), q(Option (tactic.{0} $(β)) → tactic.{0} $(β))]
+    [q(tactic.{0} $(β)), q(tactic.{0} $(β) → tactic.{0} $(β)),
+      q(Option (tactic.{0} $(β)) → tactic.{0} $(β))]
   | _ => []
 #align tactic.valid_types tactic.valid_types
 
@@ -138,7 +141,8 @@ add_tactic_doc
 unsafe def unprime : Name → tactic Name
   | nn@(Name.mk_string s n) =>
     let s' := (s.splitOn ''').head
-    if s'.length < s.length then pure (Name.mk_string s' n) else fail f! "expecting primed name: {nn}"
+    if s'.length < s.length then pure (Name.mk_string s' n)
+    else fail f! "expecting primed name: {nn}"
   | n => fail f! "invalid name: {n}"
 #align tactic.unprime tactic.unprime
 

@@ -77,8 +77,9 @@ theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a
   | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
   | -[0+1] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
   | -[n + 1+1] => by
-    rw [Int.negSucc_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.ofNat_succ, zpow_coe_nat, zpow_coe_nat,
-      pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_one]
+    rw [Int.negSucc_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.ofNat_succ,
+      zpow_coe_nat, zpow_coe_nat, pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha,
+      mul_one]
 #align zpow_add_one₀ zpow_add_one₀
 
 theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
@@ -97,26 +98,30 @@ theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m 
     
 #align zpow_add₀ zpow_add₀
 
-theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) : a ^ (m + n) = a ^ m * a ^ n := by
-  by_cases hm : m = 0
+theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) :
+    a ^ (m + n) = a ^ m * a ^ n := by
+  by_cases hm : m = 0;
   · simp [hm]
     
-  by_cases hn : n = 0
+  by_cases hn : n = 0;
   · simp [hn]
     
   by_cases ha : a = 0
   · subst a
-    simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff, or_false_iff] at h
+    simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff,
+      or_false_iff] at h
     rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
     
   · exact zpow_add₀ ha m n
     
 #align zpow_add' zpow_add'
 
-theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by rw [zpow_add₀ h, zpow_one]
+theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by
+  rw [zpow_add₀ h, zpow_one]
 #align zpow_one_add₀ zpow_one_add₀
 
-theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
+theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) :
+    ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by simp [h.pow_right n]
   | -[n+1] => by simp [(h.pow_right (n + 1)).inv_right₀]
 #align semiconj_by.zpow_right₀ SemiconjBy.zpow_right₀
@@ -147,8 +152,7 @@ theorem Commute.zpow_zpow_self₀ (a : G₀) (m n : ℤ) : Commute (a ^ m) (a ^ 
 
 theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
   rw [← zpow_bit0, bit1, zpow_add', zpow_one]
-  right
-  left
+  right; left
   apply bit1_ne_zero
 #align zpow_bit1₀ zpow_bit1₀
 
@@ -165,7 +169,8 @@ theorem zpow_sub₀ {a : G₀} (ha : a ≠ 0) (z1 z2 : ℤ) : a ^ (z1 - z2) = a 
   rw [sub_eq_add_neg, zpow_add₀ ha, zpow_neg, div_eq_mul_inv]
 #align zpow_sub₀ zpow_sub₀
 
-theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by rw [zpow_bit1₀, (Commute.refl a).mul_zpow]
+theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
+  rw [zpow_bit1₀, (Commute.refl a).mul_zpow]
 #align zpow_bit1' zpow_bit1'
 
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
@@ -203,8 +208,8 @@ end
 /-- If a monoid homomorphism `f` between two `group_with_zero`s maps `0` to `0`, then it maps `x^n`,
 `n : ℤ`, to `(f x)^n`. -/
 @[simp]
-theorem map_zpow₀ {F G₀ G₀' : Type _} [GroupWithZero G₀] [GroupWithZero G₀'] [MonoidWithZeroHomClass F G₀ G₀'] (f : F)
-    (x : G₀) (n : ℤ) : f (x ^ n) = f x ^ n :=
+theorem map_zpow₀ {F G₀ G₀' : Type _} [GroupWithZero G₀] [GroupWithZero G₀']
+    [MonoidWithZeroHomClass F G₀ G₀'] (f : F) (x : G₀) (n : ℤ) : f (x ^ n) = f x ^ n :=
   map_zpow' f (map_inv₀ f) x n
 #align map_zpow₀ map_zpow₀
 

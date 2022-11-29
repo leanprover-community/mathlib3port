@@ -24,7 +24,8 @@ namespace Pi
 
 section LocallyFinite
 
-variable [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFiniteOrder (α i)]
+variable [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrder (α i)]
+  [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (∀ i, α i) :=
   LocallyFiniteOrder.ofIcc _ (fun a b => pi_finset fun i => icc (a i) (b i)) fun a b x => by
@@ -40,13 +41,16 @@ theorem card_Icc : (icc a b).card = ∏ i, (icc (a i) (b i)).card :=
   card_pi_finset _
 #align pi.card_Icc Pi.card_Icc
 
-theorem card_Ico : (ico a b).card = (∏ i, (icc (a i) (b i)).card) - 1 := by rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
+theorem card_Ico : (ico a b).card = (∏ i, (icc (a i) (b i)).card) - 1 := by
+  rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 #align pi.card_Ico Pi.card_Ico
 
-theorem card_Ioc : (ioc a b).card = (∏ i, (icc (a i) (b i)).card) - 1 := by rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
+theorem card_Ioc : (ioc a b).card = (∏ i, (icc (a i) (b i)).card) - 1 := by
+  rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 #align pi.card_Ioc Pi.card_Ioc
 
-theorem card_Ioo : (ioo a b).card = (∏ i, (icc (a i) (b i)).card) - 2 := by rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
+theorem card_Ioo : (ioo a b).card = (∏ i, (icc (a i) (b i)).card) - 2 := by
+  rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 #align pi.card_Ioo Pi.card_Ioo
 
 end LocallyFinite
@@ -67,7 +71,8 @@ theorem card_Iic : (iic b).card = ∏ i, (iic (b i)).card :=
   card_pi_finset _
 #align pi.card_Iic Pi.card_Iic
 
-theorem card_Iio : (iio b).card = (∏ i, (iic (b i)).card) - 1 := by rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
+theorem card_Iio : (iio b).card = (∏ i, (iic (b i)).card) - 1 := by
+  rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
 #align pi.card_Iio Pi.card_Iio
 
 end Bot
@@ -84,7 +89,8 @@ theorem card_Ici : (ici a).card = ∏ i, (ici (a i)).card :=
   card_pi_finset _
 #align pi.card_Ici Pi.card_Ici
 
-theorem card_Ioi : (ioi a).card = (∏ i, (ici (a i)).card) - 1 := by rw [card_Ioi_eq_card_Ici_sub_one, card_Ici]
+theorem card_Ioi : (ioi a).card = (∏ i, (ici (a i)).card) - 1 := by
+  rw [card_Ioi_eq_card_Ici_sub_one, card_Ici]
 #align pi.card_Ioi Pi.card_Ioi
 
 end Top

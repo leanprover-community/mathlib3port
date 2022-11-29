@@ -61,8 +61,8 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
     μ_natural' := fun X Y X' Y' f g => by
       ext Z
       dsimp
-      simp only [← id_tensor_comp_tensor_id g f, id_tensor_comp, ← tensor_id, category.assoc, associator_naturality,
-        associator_naturality_assoc],
+      simp only [← id_tensor_comp_tensor_id g f, id_tensor_comp, ← tensor_id, category.assoc,
+        associator_naturality, associator_naturality_assoc],
     associativity' := fun X Y Z => by
       ext W
       dsimp
@@ -73,10 +73,9 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
       rw [category.id_comp, triangle, ← tensor_comp]
       simp,
     right_unitality' := fun X => by
-      ext Y
-      dsimp
-      rw [tensor_id, category.comp_id, right_unitor_tensor_inv, category.assoc, iso.inv_hom_id_assoc, ← id_tensor_comp,
-        iso.inv_hom_id, tensor_id],
+      ext Y; dsimp
+      rw [tensor_id, category.comp_id, right_unitor_tensor_inv, category.assoc,
+        iso.inv_hom_id_assoc, ← id_tensor_comp, iso.inv_hom_id, tensor_id],
     ε_is_iso := by infer_instance,
     μ_is_iso := fun X Y =>
       ⟨⟨{ app := fun Z => (α_ Z X Y).inv,
@@ -117,7 +116,8 @@ theorem ε_naturality {X Y : C} (f : X ⟶ Y) : F.ε.app X ≫ (F.obj (𝟙_ M))
 #align category_theory.ε_naturality CategoryTheory.ε_naturality
 
 @[simp, reassoc]
-theorem ε_inv_naturality {X Y : C} (f : X ⟶ Y) : (F.obj (𝟙_ M)).map f ≫ F.εIso.inv.app Y = F.εIso.inv.app X ≫ f :=
+theorem ε_inv_naturality {X Y : C} (f : X ⟶ Y) :
+    (F.obj (𝟙_ M)).map f ≫ F.εIso.inv.app Y = F.εIso.inv.app X ≫ f :=
   F.εIso.inv.naturality f
 #align category_theory.ε_inv_naturality CategoryTheory.ε_inv_naturality
 
@@ -130,7 +130,8 @@ theorem μ_naturality {m n : M} {X Y : C} (f : X ⟶ Y) :
 -- This is a simp lemma in the reverse direction via `nat_trans.naturality`.
 @[reassoc]
 theorem μ_inv_naturality {m n : M} {X Y : C} (f : X ⟶ Y) :
-    (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.obj m).map f) = (F.obj _).map f ≫ (F.μIso m n).inv.app Y :=
+    (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.obj m).map f) =
+      (F.obj _).map f ≫ (F.μIso m n).inv.app Y :=
   ((F.μIso m n).inv.naturality f).symm
 #align category_theory.μ_inv_naturality CategoryTheory.μ_inv_naturality
 
@@ -149,7 +150,9 @@ theorem μ_naturality₂ {m n m' n' : M} (f : m ⟶ m') (g : n ⟶ n') (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem μ_naturalityₗ {m n m' : M} (f : m ⟶ m') (X : C) :
-    (F.obj n).map ((F.map f).app X) ≫ (F.μ m' n).app X = (F.μ m n).app X ≫ (F.map (f ⊗ 𝟙 n)).app X := by
+    (F.obj n).map ((F.map f).app X) ≫ (F.μ m' n).app X =
+      (F.μ m n).app X ≫ (F.map (f ⊗ 𝟙 n)).app X :=
+  by
   rw [← μ_naturality₂ F f (𝟙 n) X]
   simp
 #align category_theory.μ_naturalityₗ CategoryTheory.μ_naturalityₗ
@@ -157,7 +160,9 @@ theorem μ_naturalityₗ {m n m' : M} (f : m ⟶ m') (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem μ_naturalityᵣ {m n n' : M} (g : n ⟶ n') (X : C) :
-    (F.map g).app ((F.obj m).obj X) ≫ (F.μ m n').app X = (F.μ m n).app X ≫ (F.map (𝟙 m ⊗ g)).app X := by
+    (F.map g).app ((F.obj m).obj X) ≫ (F.μ m n').app X =
+      (F.μ m n).app X ≫ (F.map (𝟙 m ⊗ g)).app X :=
+  by
   rw [← μ_naturality₂ F (𝟙 m) g X]
   simp
 #align category_theory.μ_naturalityᵣ CategoryTheory.μ_naturalityᵣ
@@ -165,7 +170,9 @@ theorem μ_naturalityᵣ {m n n' : M} (g : n ⟶ n') (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem μ_inv_naturalityₗ {m n m' : M} (f : m ⟶ m') (X : C) :
-    (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.map f).app X) = (F.map (f ⊗ 𝟙 n)).app X ≫ (F.μIso m' n).inv.app X := by
+    (F.μIso m n).inv.app X ≫ (F.obj n).map ((F.map f).app X) =
+      (F.map (f ⊗ 𝟙 n)).app X ≫ (F.μIso m' n).inv.app X :=
+  by
   rw [← is_iso.comp_inv_eq, category.assoc, ← is_iso.eq_inv_comp]
   simp
 #align category_theory.μ_inv_naturalityₗ CategoryTheory.μ_inv_naturalityₗ
@@ -173,7 +180,9 @@ theorem μ_inv_naturalityₗ {m n m' : M} (f : m ⟶ m') (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem μ_inv_naturalityᵣ {m n n' : M} (g : n ⟶ n') (X : C) :
-    (F.μIso m n).inv.app X ≫ (F.map g).app ((F.obj m).obj X) = (F.map (𝟙 m ⊗ g)).app X ≫ (F.μIso m n').inv.app X := by
+    (F.μIso m n).inv.app X ≫ (F.map g).app ((F.obj m).obj X) =
+      (F.map (𝟙 m ⊗ g)).app X ≫ (F.μIso m n').inv.app X :=
+  by
   rw [← is_iso.comp_inv_eq, category.assoc, ← is_iso.eq_inv_comp]
   simp
 #align category_theory.μ_inv_naturalityᵣ CategoryTheory.μ_inv_naturalityᵣ
@@ -238,7 +247,8 @@ theorem ε_inv_app_obj (n : M) (X : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc]
 theorem associativity_app (m₁ m₂ m₃ : M) (X : C) :
-    (F.obj m₃).map ((F.μ m₁ m₂).app X) ≫ (F.μ (m₁ ⊗ m₂) m₃).app X ≫ (F.map (α_ m₁ m₂ m₃).Hom).app X =
+    (F.obj m₃).map ((F.μ m₁ m₂).app X) ≫
+        (F.μ (m₁ ⊗ m₂) m₃).app X ≫ (F.map (α_ m₁ m₂ m₃).Hom).app X =
       (F.μ m₂ m₃).app ((F.obj m₁).obj X) ≫ (F.μ m₁ (m₂ ⊗ m₃)).app X :=
   by
   have := congr_app (F.to_lax_monoidal_functor.associativity m₁ m₂ m₃) X
@@ -252,7 +262,8 @@ theorem associativity_app (m₁ m₂ m₃ : M) (X : C) :
 theorem obj_μ_app (m₁ m₂ m₃ : M) (X : C) :
     (F.obj m₃).map ((F.μ m₁ m₂).app X) =
       (F.μ m₂ m₃).app ((F.obj m₁).obj X) ≫
-        (F.μ m₁ (m₂ ⊗ m₃)).app X ≫ (F.map (α_ m₁ m₂ m₃).inv).app X ≫ (F.μIso (m₁ ⊗ m₂) m₃).inv.app X :=
+        (F.μ m₁ (m₂ ⊗ m₃)).app X ≫
+          (F.map (α_ m₁ m₂ m₃).inv).app X ≫ (F.μIso (m₁ ⊗ m₂) m₃).inv.app X :=
   by
   rw [← associativity_app_assoc]
   dsimp
@@ -267,7 +278,8 @@ theorem obj_μ_app (m₁ m₂ m₃ : M) (X : C) :
 theorem obj_μ_inv_app (m₁ m₂ m₃ : M) (X : C) :
     (F.obj m₃).map ((F.μIso m₁ m₂).inv.app X) =
       (F.μ (m₁ ⊗ m₂) m₃).app X ≫
-        (F.map (α_ m₁ m₂ m₃).Hom).app X ≫ (F.μIso m₁ (m₂ ⊗ m₃)).inv.app X ≫ (F.μIso m₂ m₃).inv.app ((F.obj m₁).obj X) :=
+        (F.map (α_ m₁ m₂ m₃).Hom).app X ≫
+          (F.μIso m₁ (m₂ ⊗ m₃)).inv.app X ≫ (F.μIso m₂ m₃).inv.app ((F.obj m₁).obj X) :=
   by
   rw [← is_iso.inv_eq_inv]
   convert obj_μ_app F m₁ m₂ m₃ X using 1
@@ -288,7 +300,8 @@ theorem obj_μ_inv_app (m₁ m₂ m₃ : M) (X : C) :
 
 @[simp, reassoc]
 theorem obj_zero_map_μ_app {m : M} {X Y : C} (f : X ⟶ (F.obj m).obj Y) :
-    (F.obj (𝟙_ M)).map f ≫ (F.μ m (𝟙_ M)).app _ = F.εIso.inv.app _ ≫ f ≫ (F.map (ρ_ m).inv).app _ := by
+    (F.obj (𝟙_ M)).map f ≫ (F.μ m (𝟙_ M)).app _ = F.εIso.inv.app _ ≫ f ≫ (F.map (ρ_ m).inv).app _ :=
+  by
   rw [← is_iso.inv_comp_eq, ← is_iso.comp_inv_eq]
   simp
 #align category_theory.obj_zero_map_μ_app CategoryTheory.obj_zero_map_μ_app
@@ -300,8 +313,7 @@ theorem obj_μ_zero_app (m₁ m₂ : M) (X : C) :
         (F.map (λ_ m₂).Hom).app ((F.obj m₁).obj X) ≫ (F.obj m₂).map ((F.map (ρ_ m₁).inv).app X) :=
   by
   rw [← obj_ε_inv_app_assoc, ← functor.map_comp]
-  congr
-  simp
+  congr ; simp
 #align category_theory.obj_μ_zero_app CategoryTheory.obj_μ_zero_app
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -327,8 +339,9 @@ noncomputable def equivOfTensorIsoUnit (m n : M) (h₁ : m ⊗ n ≅ 𝟙_ M) (h
   functor_unit_iso_comp' := by
     intro X
     dsimp
-    simp only [μ_naturalityᵣ_assoc, μ_naturalityₗ_assoc, ε_inv_app_obj, category.assoc, obj_μ_inv_app, functor.map_comp,
-      μ_inv_hom_app_assoc, obj_ε_app, unit_of_tensor_iso_unit_inv_app]
+    simp only [μ_naturalityᵣ_assoc, μ_naturalityₗ_assoc, ε_inv_app_obj, category.assoc,
+      obj_μ_inv_app, functor.map_comp, μ_inv_hom_app_assoc, obj_ε_app,
+      unit_of_tensor_iso_unit_inv_app]
     simp [← nat_trans.comp_app, ← F.to_functor.map_comp, ← H, -functor.map_comp]
 #align category_theory.equiv_of_tensor_iso_unit CategoryTheory.equivOfTensorIsoUnit
 

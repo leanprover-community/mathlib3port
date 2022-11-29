@@ -48,16 +48,14 @@ theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
 
 instance cocompactInfNhdsNeBot : NeBot (cocompact ℚ ⊓ 𝓝 p) := by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
-  rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩
-  rw [inter_comm]
+  rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩; rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
 #align rat.cocompact_inf_nhds_ne_bot Rat.cocompactInfNhdsNeBot
 
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) := by
   intro H
   rcases exists_seq_tendsto (cocompact ℚ ⊓ 𝓝 0) with ⟨x, hx⟩
-  rw [tendsto_inf] at hx
-  rcases hx with ⟨hxc, hx0⟩
+  rw [tendsto_inf] at hx; rcases hx with ⟨hxc, hx0⟩
   obtain ⟨n, hn⟩ : ∃ n : ℕ, x n ∉ insert (0 : ℚ) (range x)
   exact (hxc.eventually hx0.is_compact_insert_range.compl_mem_cocompact).exists
   exact hn (Or.inr ⟨n, rfl⟩)
@@ -68,7 +66,8 @@ theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated 
   have : is_countably_generated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
   rw [Alexandroff.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
   exact not_countably_generated_cocompact this
-#align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
+#align
+  rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
 
 theorem not_first_countable_topology_alexandroff : ¬FirstCountableTopology ℚ∞ := by
   intro
@@ -81,8 +80,7 @@ theorem not_second_countable_topology_alexandroff : ¬SecondCountableTopology �
 #align rat.not_second_countable_topology_alexandroff Rat.not_second_countable_topology_alexandroff
 
 instance : TotallyDisconnectedSpace ℚ := by
-  refine' ⟨fun s hsu hs x hx y hy => _⟩
-  clear hsu
+  refine' ⟨fun s hsu hs x hx y hy => _⟩; clear hsu
   by_contra' H : x ≠ y
   wlog hlt : x < y := H.lt_or_lt using x y, y x
   rcases exists_irrational_btwn (Rat.cast_lt.2 hlt) with ⟨z, hz, hxz, hzy⟩

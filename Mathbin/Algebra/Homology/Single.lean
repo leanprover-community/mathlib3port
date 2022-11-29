@@ -90,7 +90,8 @@ def singleObjXSelf (j : ι) (A : V) : ((single V c j).obj A).x j ≅ A :=
 
 @[simp]
 theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
-    ((single V c j).map f).f j = (singleObjXSelf V c j A).Hom ≫ f ≫ (singleObjXSelf V c j B).inv := by
+    ((single V c j).map f).f j = (singleObjXSelf V c j A).Hom ≫ f ≫ (singleObjXSelf V c j B).inv :=
+  by
   simp
   rfl
 #align homological_complex.single_map_f_self HomologicalComplex.single_map_f_self
@@ -100,8 +101,9 @@ instance (j : ι) :
     have := congr_hom w j
     dsimp at this
     simp only [dif_pos] at this
-    rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp, ←
-      is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] at this
+    rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl,
+      category.id_comp, ← is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans,
+      eq_to_hom_refl, category.comp_id] at this
     exact this
 
 instance (j : ι) : Full (single V c j) where
@@ -210,7 +212,8 @@ variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 is the same as doing nothing.
 -/
 noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
-  NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero) fun X Y f => by
+  NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero)
+    fun X Y f => by
     ext
     dsimp [homologyFunctor]
     simp
@@ -219,9 +222,12 @@ noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V 
 /-- Sending objects to chain complexes supported at `0` then taking `(n+1)`-st homology
 is the same as the zero functor.
 -/
-noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
+noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) :
+    single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
   NatIso.ofComponents
-    (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
+    (fun X =>
+      homology.congr _ _ (by simp) (by simp) ≪≫
+        homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
     fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
 #align chain_complex.homology_functor_succ_single₀ ChainComplex.homologyFunctorSuccSingle₀
 
@@ -234,7 +240,8 @@ to a single object chain complex with `X` concentrated in degree 0
 are the same as morphisms `f : C.X 0 ⟶ X` such that `C.d 1 0 ≫ f = 0`.
 -/
 @[simps]
-def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj X) ≃ { f : C.x 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
+def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
+    (C ⟶ (single₀ V).obj X) ≃ { f : C.x 0 ⟶ X // C.d 1 0 ≫ f = 0 } where
   toFun f :=
     ⟨f.f 0, by
       rw [← f.comm 1 0]
@@ -245,7 +252,8 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
         | 0 => f.1
         | n + 1 => 0,
       comm' := fun i j h => by
-        rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;> simp only [comp_zero, zero_comp, single₀_obj_X_d]
+        rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;>
+          simp only [comp_zero, zero_comp, single₀_obj_X_d]
         · rw [C.shape, zero_comp]
           simp
           
@@ -265,7 +273,8 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).obj
 #align chain_complex.to_single₀_equiv ChainComplex.toSingle₀Equiv
 
 @[ext.1]
-theorem to_single₀_ext {C : ChainComplex V ℕ} {X : V} (f g : C ⟶ (single₀ V).obj X) (h : f.f 0 = g.f 0) : f = g :=
+theorem to_single₀_ext {C : ChainComplex V ℕ} {X : V} (f g : C ⟶ (single₀ V).obj X)
+    (h : f.f 0 = g.f 0) : f = g :=
   (toSingle₀Equiv C X).Injective
     (by
       ext
@@ -284,11 +293,9 @@ def fromSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : ((single₀ V).obj X �
         | 0 => f
         | n + 1 => 0,
       comm' := fun i j h => by
-        cases i <;>
-          cases j <;>
-            unfold_aux <;>
-              simp only [shape, ComplexShape.down_rel, Nat.one_ne_zero, not_false_iff, comp_zero, zero_comp,
-                Nat.succ_ne_zero, single₀_obj_X_d] }
+        cases i <;> cases j <;> unfold_aux <;>
+          simp only [shape, ComplexShape.down_rel, Nat.one_ne_zero, not_false_iff, comp_zero,
+            zero_comp, Nat.succ_ne_zero, single₀_obj_X_d] }
   left_inv f := by
     ext i
     cases i
@@ -420,7 +427,8 @@ variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 is the same as doing nothing.
 -/
 noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V _ 0 ≅ 𝟭 V :=
-  NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero) fun X Y f => by
+  NatIso.ofComponents (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero)
+    fun X Y f => by
     ext
     dsimp [homologyFunctor]
     simp
@@ -429,9 +437,12 @@ noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V 
 /-- Sending objects to cochain complexes supported at `0` then taking `(n+1)`-st homology
 is the same as the zero functor.
 -/
-noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
+noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) :
+    single₀ V ⋙ homologyFunctor V _ (n + 1) ≅ 0 :=
   NatIso.ofComponents
-    (fun X => homology.congr _ _ (by simp) (by simp) ≪≫ homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
+    (fun X =>
+      homology.congr _ _ (by simp) (by simp) ≪≫
+        homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
     fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
 #align cochain_complex.homology_functor_succ_single₀ CochainComplex.homologyFunctorSuccSingle₀
 
@@ -455,7 +466,8 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
         | 0 => f.1
         | n + 1 => 0,
       comm' := fun i j h => by
-        rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;> simp only [comp_zero, zero_comp, single₀_obj_X_d]
+        rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;>
+          simp only [comp_zero, zero_comp, single₀_obj_X_d]
         · convert comp_zero
           rw [C.shape]
           simp

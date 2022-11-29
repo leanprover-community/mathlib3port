@@ -44,7 +44,8 @@ open IsNoetherian
 
 section DivisionRing
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
+variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
+  [Module K V₂]
 
 /-- The rank of a module as a natural number.
 
@@ -91,15 +92,17 @@ theorem dim_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.ran
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
 basis. -/
-theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) : finrank K V = Fintype.card ι :=
+theorem finrank_eq_card_basis {ι : Type w} [Fintype ι] (h : Basis ι K V) :
+    finrank K V = Fintype.card ι :=
   finrank_eq_of_dim_eq (dim_eq_card_basis h)
 #align finite_dimensional.finrank_eq_card_basis FiniteDimensional.finrank_eq_card_basis
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
 basis. This lemma uses a `finset` instead of indexed types. -/
-theorem finrank_eq_card_finset_basis {ι : Type w} {b : Finset ι} (h : Basis.{w} b K V) : finrank K V = Finset.card b :=
-  by rw [finrank_eq_card_basis h, Fintype.card_coe]
-#align finite_dimensional.finrank_eq_card_finset_basis FiniteDimensional.finrank_eq_card_finset_basis
+theorem finrank_eq_card_finset_basis {ι : Type w} {b : Finset ι} (h : Basis.{w} b K V) :
+    finrank K V = Finset.card b := by rw [finrank_eq_card_basis h, Fintype.card_coe]
+#align
+  finite_dimensional.finrank_eq_card_finset_basis FiniteDimensional.finrank_eq_card_finset_basis
 
 /-- A finite dimensional space is nontrivial if it has positive `finrank`. -/
 theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
@@ -110,16 +113,19 @@ theorem nontrivial_of_finrank_pos (h : 0 < finrank K V) : Nontrivial V :=
 natural number. -/
 theorem nontrivial_of_finrank_eq_succ {n : ℕ} (hn : finrank K V = n.succ) : Nontrivial V :=
   nontrivial_of_finrank_pos (by rw [hn] <;> exact n.succ_pos)
-#align finite_dimensional.nontrivial_of_finrank_eq_succ FiniteDimensional.nontrivial_of_finrank_eq_succ
+#align
+  finite_dimensional.nontrivial_of_finrank_eq_succ FiniteDimensional.nontrivial_of_finrank_eq_succ
 
 /-- A (finite dimensional) space that is a subsingleton has zero `finrank`. -/
 theorem finrank_zero_of_subsingleton [h : Subsingleton V] : finrank K V = 0 := by
   by_contra h0
   obtain ⟨x, y, hxy⟩ := nontrivial_of_finrank_pos (Nat.pos_of_ne_zero h0)
   exact hxy (Subsingleton.elim _ _)
-#align finite_dimensional.finrank_zero_of_subsingleton FiniteDimensional.finrank_zero_of_subsingleton
+#align
+  finite_dimensional.finrank_zero_of_subsingleton FiniteDimensional.finrank_zero_of_subsingleton
 
-theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) : s ⊆ hs.extend (Set.subset_univ _) :=
+theorem Basis.subset_extend {s : Set V} (hs : LinearIndependent K (coe : s → V)) :
+    s ⊆ hs.extend (Set.subset_univ _) :=
   hs.subset_extend _
 #align finite_dimensional.basis.subset_extend FiniteDimensional.Basis.subset_extend
 
@@ -154,12 +160,14 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 open FiniteDimensional
 
-theorem finrank_eq_zero_of_basis_imp_not_finite (h : ∀ s : Set V, Basis.{v} (s : Set V) K V → ¬s.Finite) :
-    finrank K V = 0 :=
-  dif_neg fun dim_lt => h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_dim_lt_aleph_0 dim_lt)
+theorem finrank_eq_zero_of_basis_imp_not_finite
+    (h : ∀ s : Set V, Basis.{v} (s : Set V) K V → ¬s.Finite) : finrank K V = 0 :=
+  dif_neg fun dim_lt =>
+    h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_dim_lt_aleph_0 dim_lt)
 #align finrank_eq_zero_of_basis_imp_not_finite finrank_eq_zero_of_basis_imp_not_finite
 
-theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) : finrank K V = 0 :=
+theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) :
+    finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_not_finite fun s b hs =>
     h hs.toFinset
       (by
@@ -167,16 +175,18 @@ theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s :
         simp)
 #align finrank_eq_zero_of_basis_imp_false finrank_eq_zero_of_basis_imp_false
 
-theorem finrank_eq_zero_of_not_exists_basis (h : ¬∃ s : Finset V, Nonempty (Basis (s : Set V) K V)) : finrank K V = 0 :=
+theorem finrank_eq_zero_of_not_exists_basis
+    (h : ¬∃ s : Finset V, Nonempty (Basis (s : Set V) K V)) : finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_false fun s b => h ⟨s, ⟨b⟩⟩
 #align finrank_eq_zero_of_not_exists_basis finrank_eq_zero_of_not_exists_basis
 
-theorem finrank_eq_zero_of_not_exists_basis_finite (h : ¬∃ (s : Set V)(b : Basis.{v} (s : Set V) K V), s.Finite) :
-    finrank K V = 0 :=
+theorem finrank_eq_zero_of_not_exists_basis_finite
+    (h : ¬∃ (s : Set V)(b : Basis.{v} (s : Set V) K V), s.Finite) : finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_not_finite fun s b hs => h ⟨s, b, hs⟩
 #align finrank_eq_zero_of_not_exists_basis_finite finrank_eq_zero_of_not_exists_basis_finite
 
-theorem finrank_eq_zero_of_not_exists_basis_finset (h : ¬∃ s : Finset V, Nonempty (Basis s K V)) : finrank K V = 0 :=
+theorem finrank_eq_zero_of_not_exists_basis_finset (h : ¬∃ s : Finset V, Nonempty (Basis s K V)) :
+    finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_false fun s b => h ⟨s, ⟨b⟩⟩
 #align finrank_eq_zero_of_not_exists_basis_finset finrank_eq_zero_of_not_exists_basis_finset
 
@@ -193,7 +203,8 @@ namespace LinearEquiv
 
 open FiniteDimensional
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
+variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
+  [Module K V₂]
 
 variable {R M M₂ : Type _} [Ring R] [AddCommGroup M] [AddCommGroup M₂]
 
@@ -206,7 +217,8 @@ theorem finrank_eq (f : M ≃ₗ[R] M₂) : finrank R M = finrank R M₂ := by
 #align linear_equiv.finrank_eq LinearEquiv.finrank_eq
 
 /-- Pushforwards of finite-dimensional submodules along a `linear_equiv` have the same finrank. -/
-theorem finrank_map_eq (f : M ≃ₗ[R] M₂) (p : Submodule R M) : finrank R (p.map (f : M →ₗ[R] M₂)) = finrank R p :=
+theorem finrank_map_eq (f : M ≃ₗ[R] M₂) (p : Submodule R M) :
+    finrank R (p.map (f : M →ₗ[R] M₂)) = finrank R p :=
   (f.submoduleMap p).finrank_eq.symm
 #align linear_equiv.finrank_map_eq LinearEquiv.finrank_map_eq
 
@@ -218,11 +230,12 @@ open FiniteDimensional
 
 section DivisionRing
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
+variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
+  [Module K V₂]
 
 /-- The dimensions of the domain and range of an injective linear map are equal. -/
-theorem finrank_range_of_inj {f : V →ₗ[K] V₂} (hf : Function.Injective f) : finrank K f.range = finrank K V := by
-  rw [(LinearEquiv.ofInjective f hf).finrank_eq]
+theorem finrank_range_of_inj {f : V →ₗ[K] V₂} (hf : Function.Injective f) :
+    finrank K f.range = finrank K V := by rw [(LinearEquiv.ofInjective f hf).finrank_eq]
 #align linear_map.finrank_range_of_inj LinearMap.finrank_range_of_inj
 
 end DivisionRing
@@ -247,13 +260,16 @@ namespace Submodule
 
 section DivisionRing
 
-variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂] [Module K V₂]
+variable [DivisionRing K] [AddCommGroup V] [Module K V] {V₂ : Type v'} [AddCommGroup V₂]
+  [Module K V₂]
 
-theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t) (lt : finrank K s < finrank K t) : s < t :=
+theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t)
+    (lt : finrank K s < finrank K t) : s < t :=
   lt_of_le_of_ne le fun h => ne_of_lt lt (by rw [h])
 #align submodule.lt_of_le_of_finrank_lt_finrank Submodule.lt_of_le_of_finrank_lt_finrank
 
-theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ := by
+theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ :=
+  by
   rw [← @finrank_top K V] at lt
   exact lt_of_le_of_finrank_lt_finrank le_top lt
 #align submodule.lt_top_of_finrank_lt_finrank Submodule.lt_top_of_finrank_lt_finrank
@@ -290,7 +306,8 @@ theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s
     
 #align finrank_span_finset_le_card finrank_span_finset_le_card
 
-theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} : (Set.range b).finrank K ≤ Fintype.card ι :=
+theorem finrank_range_le_card {ι : Type _} [Fintype ι] {b : ι → V} :
+    (Set.range b).finrank K ≤ Fintype.card ι :=
   (finrank_span_le_card _).trans <| by
     rw [Set.to_finset_range]
     exact Finset.card_image_le
@@ -301,8 +318,8 @@ theorem finrank_span_eq_card {ι : Type _} [Fintype ι] {b : ι → V} (hb : Lin
   finrank_eq_of_dim_eq
     (by
       have : Module.rank K (span K (Set.range b)) = (#Set.range b) := dim_span hb
-      rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast, lift_eq_nat_iff] at
-        this)
+      rwa [← lift_inj, mk_range_eq_of_injective hb.injective, Cardinal.mk_fintype, lift_nat_cast,
+        lift_eq_nat_iff] at this)
 #align finrank_span_eq_card finrank_span_eq_card
 
 theorem finrank_span_set_eq_card (s : Set V) [Fintype s] (hs : LinearIndependent K (coe : s → V)) :
@@ -320,13 +337,14 @@ theorem finrank_span_finset_eq_card (s : Finset V) (hs : LinearIndependent K (co
   simp
 #align finrank_span_finset_eq_card finrank_span_finset_eq_card
 
-theorem span_lt_of_subset_of_card_lt_finrank {s : Set V} [Fintype s] {t : Submodule K V} (subset : s ⊆ t)
-    (card_lt : s.toFinset.card < finrank K t) : span K s < t :=
-  lt_of_le_of_finrank_lt_finrank (span_le.mpr subset) (lt_of_le_of_lt (finrank_span_le_card _) card_lt)
+theorem span_lt_of_subset_of_card_lt_finrank {s : Set V} [Fintype s] {t : Submodule K V}
+    (subset : s ⊆ t) (card_lt : s.toFinset.card < finrank K t) : span K s < t :=
+  lt_of_le_of_finrank_lt_finrank (span_le.mpr subset)
+    (lt_of_le_of_lt (finrank_span_le_card _) card_lt)
 #align span_lt_of_subset_of_card_lt_finrank span_lt_of_subset_of_card_lt_finrank
 
-theorem span_lt_top_of_card_lt_finrank {s : Set V} [Fintype s] (card_lt : s.toFinset.card < finrank K V) :
-    span K s < ⊤ :=
+theorem span_lt_top_of_card_lt_finrank {s : Set V} [Fintype s]
+    (card_lt : s.toFinset.card < finrank K V) : span K s < ⊤ :=
   lt_top_of_finrank_lt_finrank (lt_of_le_of_lt (finrank_span_le_card _) card_lt)
 #align span_lt_top_of_card_lt_finrank span_lt_top_of_card_lt_finrank
 
@@ -341,13 +359,17 @@ section DivisionRing
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fintype ι] {b : ι → V}
-    (spans : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) : LinearIndependent K b :=
+    (spans : ⊤ ≤ span K (Set.range b)) (card_eq : Fintype.card ι = finrank K V) :
+    LinearIndependent K b :=
   linear_independent_iff'.mpr fun s g dependent i i_mem_s => by
     by_contra gx_ne_zero
     -- We'll derive a contradiction by showing `b '' (univ \ {i})` of cardinality `n - 1`
     -- spans a vector space of dimension `n`.
     refine'
-      not_le_of_gt (span_lt_top_of_card_lt_finrank (show (b '' (Set.univ \ {i})).toFinset.card < finrank K V from _)) _
+      not_le_of_gt
+        (span_lt_top_of_card_lt_finrank
+          (show (b '' (Set.univ \ {i})).toFinset.card < finrank K V from _))
+        _
     · calc
         (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
           rw [Set.to_finset_card, Fintype.card_of_finset]
@@ -387,7 +409,8 @@ theorem linear_independent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fint
       
     -- And then it's just a bit of manipulation with finite sums.
     rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent
-#align linear_independent_of_top_le_span_of_card_eq_finrank linear_independent_of_top_le_span_of_card_eq_finrank
+#align
+  linear_independent_of_top_le_span_of_card_eq_finrank linear_independent_of_top_le_span_of_card_eq_finrank
 
 /-- A finite family of vectors is linearly independent if and only if
 its cardinality equals the dimension of its span. -/
@@ -399,7 +422,8 @@ theorem linear_independent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {
     
   · intro hc
     let f := Submodule.subtype (span K (Set.range b))
-    let b' : ι → span K (Set.range b) := fun i => ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
+    let b' : ι → span K (Set.range b) := fun i =>
+      ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
     have hs : ⊤ ≤ span K (Set.range b') := by
       intro x
       have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
@@ -438,16 +462,17 @@ theorem coe_basis_of_top_le_span_of_card_eq_finrank {ι : Type _} [Fintype ι] (
 
 /-- A finset of `finrank K V` vectors forms a basis if they span the whole space. -/
 @[simps]
-noncomputable def finsetBasisOfTopLeSpanOfCardEqFinrank {s : Finset V} (le_span : ⊤ ≤ span K (s : Set V))
-    (card_eq : s.card = finrank K V) : Basis (s : Set V) K V :=
-  basisOfTopLeSpanOfCardEqFinrank (coe : (s : Set V) → V) ((@Subtype.range_coe_subtype _ fun x => x ∈ s).symm ▸ le_span)
+noncomputable def finsetBasisOfTopLeSpanOfCardEqFinrank {s : Finset V}
+    (le_span : ⊤ ≤ span K (s : Set V)) (card_eq : s.card = finrank K V) : Basis (s : Set V) K V :=
+  basisOfTopLeSpanOfCardEqFinrank (coe : (s : Set V) → V)
+    ((@Subtype.range_coe_subtype _ fun x => x ∈ s).symm ▸ le_span)
     (trans (Fintype.card_coe _) card_eq)
 #align finset_basis_of_top_le_span_of_card_eq_finrank finsetBasisOfTopLeSpanOfCardEqFinrank
 
 /-- A set of `finrank K V` vectors forms a basis if they span the whole space. -/
 @[simps]
-noncomputable def setBasisOfTopLeSpanOfCardEqFinrank {s : Set V} [Fintype s] (le_span : ⊤ ≤ span K s)
-    (card_eq : s.toFinset.card = finrank K V) : Basis s K V :=
+noncomputable def setBasisOfTopLeSpanOfCardEqFinrank {s : Set V} [Fintype s]
+    (le_span : ⊤ ≤ span K s) (card_eq : s.toFinset.card = finrank K V) : Basis s K V :=
   basisOfTopLeSpanOfCardEqFinrank (coe : s → V) ((@Subtype.range_coe_subtype _ s).symm ▸ le_span)
     (trans s.to_finset_card.symm card_eq)
 #align set_basis_of_top_le_span_of_card_eq_finrank setBasisOfTopLeSpanOfCardEqFinrank
@@ -505,12 +530,14 @@ theorem Subalgebra.dim_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E)
 #align subalgebra.dim_bot Subalgebra.dim_bot
 
 @[simp]
-theorem Subalgebra.dim_to_submodule (S : Subalgebra F E) : Module.rank F S.toSubmodule = Module.rank F S :=
+theorem Subalgebra.dim_to_submodule (S : Subalgebra F E) :
+    Module.rank F S.toSubmodule = Module.rank F S :=
   rfl
 #align subalgebra.dim_to_submodule Subalgebra.dim_to_submodule
 
 @[simp]
-theorem Subalgebra.finrank_to_submodule (S : Subalgebra F E) : finrank F S.toSubmodule = finrank F S :=
+theorem Subalgebra.finrank_to_submodule (S : Subalgebra F E) :
+    finrank F S.toSubmodule = finrank F S :=
   rfl
 #align subalgebra.finrank_to_submodule Subalgebra.finrank_to_submodule
 
@@ -524,7 +551,8 @@ theorem subalgebra_top_finrank_eq_submodule_top_finrank :
     finrank F (⊤ : Subalgebra F E) = finrank F (⊤ : Submodule F E) := by
   rw [← Algebra.top_to_submodule]
   rfl
-#align subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrank
+#align
+  subalgebra_top_finrank_eq_submodule_top_finrank subalgebra_top_finrank_eq_submodule_top_finrank
 
 theorem Subalgebra.dim_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank F E := by
   rw [subalgebra_top_dim_eq_submodule_top_dim]

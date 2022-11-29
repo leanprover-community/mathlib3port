@@ -39,7 +39,8 @@ instance [Monoid α] [LinearOrder α] : LinearOrder αˣ :=
   LinearOrder.lift' coe Units.ext
 
 /-- `coe : αˣ → α` as an order embedding. -/
-@[to_additive "`coe : add_units α → α` as an order embedding.", simps (config := { fullyApplied := false })]
+@[to_additive "`coe : add_units α → α` as an order embedding.",
+  simps (config := { fullyApplied := false })]
 def orderEmbeddingCoe [Monoid α] [LinearOrder α] : αˣ ↪o α :=
   ⟨⟨coe, ext⟩, fun _ _ => Iff.rfl⟩
 #align units.order_embedding_coe Units.orderEmbeddingCoe

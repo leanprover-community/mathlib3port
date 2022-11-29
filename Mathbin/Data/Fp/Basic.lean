@@ -50,7 +50,8 @@ def ValidFinite (e : ℤ) (m : ℕ) : Prop :=
   emin ≤ e + prec - 1 ∧ e + prec - 1 ≤ emax ∧ e = max (e + m.size - prec) emin
 #align fp.valid_finite Fp.ValidFinite
 
-instance decValidFinite (e m) : Decidable (ValidFinite e m) := by unfold valid_finite <;> infer_instance
+instance decValidFinite (e m) : Decidable (ValidFinite e m) := by
+  unfold valid_finite <;> infer_instance
 #align fp.dec_valid_finite Fp.decValidFinite
 
 inductive Float
@@ -145,7 +146,8 @@ unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool := by
 
 unsafe def next_up_pos (e m) (v : ValidFinite e m) : Float :=
   let m' := m.succ
-  if ss : m'.size = m.size then Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
+  if ss : m'.size = m.size then
+    Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
   else if h : e = emax then Float.inf false else Float.finite false e.succ (Nat.div2 m') undefined
 #align fp.next_up_pos fp.next_up_pos
 
@@ -153,8 +155,11 @@ unsafe def next_dn_pos (e m) (v : ValidFinite e m) : Float :=
   match m with
   | 0 => next_up_pos _ _ Float.Zero.valid
   | Nat.succ m' =>
-    if ss : m'.size = m.size then Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
-    else if h : e = emin then Float.finite false emin m' undefined else Float.finite false e.pred (bit1 m') undefined
+    if ss : m'.size = m.size then
+      Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
+    else
+      if h : e = emin then Float.finite false emin m' undefined
+      else Float.finite false e.pred (bit1 m') undefined
 #align fp.next_dn_pos fp.next_dn_pos
 
 unsafe def next_up : Float → Float

@@ -88,9 +88,9 @@ theorem eq_zero_of_mul_self_eq_zero (h : a * a = 0) : a = 0 :=
 
 /- warning: mul_ne_zero -> mul_ne_zero is a dubious translation:
 lean 3 declaration is
-  forall {M₀ : Type.{u_2}} [_inst_1 : Mul.{u_2} M₀] [_inst_2 : Zero.{u_2} M₀] [_inst_3 : NoZeroDivisors.{u_2} M₀ _inst_1 _inst_2] {a : M₀} {b : M₀}, (Ne.{succ u_2} M₀ a (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ b (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ (HMul.hMul.{u_2 u_2 u_2} M₀ M₀ M₀ (instHMul.{u_2} M₀ _inst_1) a b) (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2))))
+  forall {M₀ : Type.{u_2}} [_inst_1 : Mul.{u_2} M₀] [_inst_2 : Zero.{u_2} M₀] [_inst_3 : NoZeroDivisors.{u_2} M₀ _inst_1 _inst_2] {a : M₀} {b : M₀}, (Ne.{succ u_2} M₀ a (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ b (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ (HMul.hMul.{u_2, u_2, u_2} M₀ M₀ M₀ (instHMul.{u_2} M₀ _inst_1) a b) (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2))))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329 : Zero.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.332 : Mul.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.335 : NoZeroDivisors.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.332 inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329] {a : α} {b : α}, (Ne.{succ u_1} α a (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329))) -> (Ne.{succ u_1} α b (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329))) -> (Ne.{succ u_1} α (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.332) a b) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329)))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.918 : Zero.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.921 : Mul.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.924 : NoZeroDivisors.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.921 inst._@.Mathlib.Tactic.Positivity.Basic._hyg.918] {a : α} {b : α}, (Ne.{succ u_1} α a (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.918))) -> (Ne.{succ u_1} α b (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.918))) -> (Ne.{succ u_1} α (HMul.hMul.{u_1, u_1, u_1} α α α (instHMul.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.921) a b) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.918)))
 Case conversion may be inaccurate. Consider using '#align mul_ne_zero mul_ne_zeroₓ'. -/
 @[field_simps]
 theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
@@ -101,7 +101,8 @@ end Mul
 
 namespace NeZero
 
-instance mul [Zero M₀] [Mul M₀] [NoZeroDivisors M₀] {x y : M₀} [NeZero x] [NeZero y] : NeZero (x * y) :=
+instance mul [Zero M₀] [Mul M₀] [NoZeroDivisors M₀] {x y : M₀} [NeZero x] [NeZero y] :
+    NeZero (x * y) :=
   ⟨mul_ne_zero out out⟩
 #align ne_zero.mul NeZero.mul
 
@@ -114,7 +115,8 @@ section
 variable [MulZeroOneClass M₀]
 
 /-- In a monoid with zero, if zero equals one, then zero is the only element. -/
-theorem eq_zero_of_zero_eq_one (h : (0 : M₀) = 1) (a : M₀) : a = 0 := by rw [← mul_one a, ← h, mul_zero]
+theorem eq_zero_of_zero_eq_one (h : (0 : M₀) = 1) (a : M₀) : a = 0 := by
+  rw [← mul_one a, ← h, mul_zero]
 #align eq_zero_of_zero_eq_one eq_zero_of_zero_eq_one
 
 /-- In a monoid with zero, if zero equals one, then zero is the unique element.
@@ -253,11 +255,13 @@ theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
     
 #align inv_mul_cancel inv_mul_cancel
 
-theorem GroupWithZero.mul_left_injective (h : x ≠ 0) : Function.Injective fun y => x * y := fun y y' w => by
+theorem GroupWithZero.mul_left_injective (h : x ≠ 0) : Function.Injective fun y => x * y :=
+  fun y y' w => by
   simpa only [← mul_assoc, inv_mul_cancel h, one_mul] using congr_arg (fun y => x⁻¹ * y) w
 #align group_with_zero.mul_left_injective GroupWithZero.mul_left_injective
 
-theorem GroupWithZero.mul_right_injective (h : x ≠ 0) : Function.Injective fun y => y * x := fun y y' w => by
+theorem GroupWithZero.mul_right_injective (h : x ≠ 0) : Function.Injective fun y => y * x :=
+  fun y y' w => by
   simpa only [mul_assoc, mul_inv_cancel h, mul_one] using congr_arg (fun y => y * x⁻¹) w
 #align group_with_zero.mul_right_injective GroupWithZero.mul_right_injective
 
@@ -291,10 +295,10 @@ instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ 
       · exact left_inv_eq_right_inv (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
         ,
     mul_inv_rev := fun a b => by
-      by_cases ha : a = 0
+      by_cases ha : a = 0;
       · simp [ha]
         
-      by_cases hb : b = 0
+      by_cases hb : b = 0;
       · simp [hb]
         
       refine' inv_eq_of_mul _
@@ -371,7 +375,8 @@ theorem div_self_mul_self' (a : G₀) : a / (a * a) = a⁻¹ :=
     
 #align div_self_mul_self' div_self_mul_self'
 
-theorem one_div_ne_zero {a : G₀} (h : a ≠ 0) : 1 / a ≠ 0 := by simpa only [one_div] using inv_ne_zero h
+theorem one_div_ne_zero {a : G₀} (h : a ≠ 0) : 1 / a ≠ 0 := by
+  simpa only [one_div] using inv_ne_zero h
 #align one_div_ne_zero one_div_ne_zero
 
 @[simp]
@@ -392,8 +397,7 @@ theorem div_div_self (a : G₀) : a / (a / a) = a := by
 #align div_div_self div_div_self
 
 theorem ne_zero_of_one_div_ne_zero {a : G₀} (h : 1 / a ≠ 0) : a ≠ 0 := fun ha : a = 0 => by
-  rw [ha, div_zero] at h
-  contradiction
+  rw [ha, div_zero] at h; contradiction
 #align ne_zero_of_one_div_ne_zero ne_zero_of_one_div_ne_zero
 
 theorem eq_zero_of_one_div_eq_zero {a : G₀} (h : 1 / a = 0) : a = 0 :=
@@ -414,7 +418,8 @@ section CommGroupWithZero
 
 variable [CommGroupWithZero G₀] {a b c d : G₀}
 
-theorem div_mul_eq_mul_div₀ (a b c : G₀) : a / c * b = a * b / c := by simp_rw [div_eq_mul_inv, mul_assoc, mul_comm c⁻¹]
+theorem div_mul_eq_mul_div₀ (a b c : G₀) : a / c * b = a * b / c := by
+  simp_rw [div_eq_mul_inv, mul_assoc, mul_comm c⁻¹]
 #align div_mul_eq_mul_div₀ div_mul_eq_mul_div₀
 
 end CommGroupWithZero

@@ -309,13 +309,11 @@ attribute [local simp] Nat.zero_add Nat.add_zero Nat.one_mul Nat.mul_one Nat.zer
 theorem to_nat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) := by
   cases' xs with xs P
-  simp [bits_to_nat_to_list]
-  clear P
+  simp [bits_to_nat_to_list]; clear P
   unfold bits_to_nat List.foldl
   -- generalize the accumulator of foldl
-  generalize h : 0 = x
-  conv in add_lsb x b => rw [← h]
-  clear h
+  generalize h : 0 = x;
+  conv in add_lsb x b => rw [← h]; clear h
   simp
   induction' xs with x xs generalizing x
   · simp
@@ -333,7 +331,8 @@ theorem bits_to_nat_to_bool (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ n
   simp [cond_to_bool_mod_two]
 #align bitvec.bits_to_nat_to_bool Bitvec.bits_to_nat_to_bool
 
-theorem of_nat_succ {k n : ℕ} : Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
+theorem of_nat_succ {k n : ℕ} :
+    Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
   rfl
 #align bitvec.of_nat_succ Bitvec.of_nat_succ
 
@@ -349,7 +348,9 @@ theorem to_nat_of_nat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k 
 /-- Return the integer encoded by the input bitvector -/
 protected def toInt : ∀ {n : Nat}, Bitvec n → Int
   | 0, _ => 0
-  | succ n, v => cond (head v) (Int.negSucc <| Bitvec.toNat <| Not <| tail v) (Int.ofNat <| Bitvec.toNat <| tail v)
+  | succ n, v =>
+    cond (head v) (Int.negSucc <| Bitvec.toNat <| Not <| tail v)
+      (Int.ofNat <| Bitvec.toNat <| tail v)
 #align bitvec.to_int Bitvec.toInt
 
 end Conversion

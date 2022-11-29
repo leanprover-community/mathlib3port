@@ -25,7 +25,8 @@ namespace Encodable
 
 variable {α : Type _} {β : Type _} [Encodable β]
 
-theorem supr_decode₂ [CompleteLattice α] (f : β → α) : (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by
+theorem supr_decode₂ [CompleteLattice α] (f : β → α) :
+    (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by
   rw [supr_comm]
   simp [mem_decode₂]
 #align encodable.supr_decode₂ Encodable.supr_decode₂

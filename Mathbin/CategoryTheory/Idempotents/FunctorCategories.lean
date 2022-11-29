@@ -32,7 +32,8 @@ namespace Idempotents
 
 variable (J C : Type _) [Category J] [Category C]
 
-instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsIdempotentComplete (J ⥤ C) := by
+instance functor_category_is_idempotent_complete [IsIdempotentComplete C] :
+    IsIdempotentComplete (J ⥤ C) := by
   refine' ⟨_⟩
   intro F p hp
   have hC := (is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent C).mp inferInstance
@@ -50,7 +51,8 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsId
       map_comp' := fun j j' j'' φ φ' => by
         ext
         simp only [assoc, functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
-  let i : Y ⟶ F := { app := fun j => equalizer.ι _ _, naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
+  let i : Y ⟶ F :=
+    { app := fun j => equalizer.ι _ _, naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
   let e : F ⟶ Y :=
     { app := fun j =>
         equalizer.lift (p.app j)
@@ -62,7 +64,8 @@ instance functor_category_is_idempotent_complete [IsIdempotentComplete C] : IsId
         simp only [assoc, equalizer.lift_ι, nat_trans.naturality, equalizer.lift_ι_assoc] }
   use Y, i, e
   constructor <;> ext j
-  · simp only [nat_trans.comp_app, assoc, equalizer.lift_ι, nat_trans.id_app, id_comp, ← equalizer.condition, comp_id]
+  · simp only [nat_trans.comp_app, assoc, equalizer.lift_ι, nat_trans.id_app, id_comp, ←
+      equalizer.condition, comp_id]
     
   · simp only [nat_trans.comp_app, equalizer.lift_ι]
     
@@ -156,7 +159,8 @@ instance :
 equals the functor `(J ⥤ C) ⥤ (J ⥤ karoubi C)` given by the composition with
 `to_karoubi C : C ⥤ karoubi C`. -/
 theorem to_karoubi_comp_karoubi_functor_category_embedding :
-    toKaroubi _ ⋙ karoubiFunctorCategoryEmbedding J C = (whiskeringRight J _ _).obj (toKaroubi C) := by
+    toKaroubi _ ⋙ karoubiFunctorCategoryEmbedding J C = (whiskeringRight J _ _).obj (toKaroubi C) :=
+  by
   apply Functor.ext
   · intro X Y f
     ext j

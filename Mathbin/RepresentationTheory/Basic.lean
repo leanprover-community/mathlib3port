@@ -155,8 +155,8 @@ We remedy this below in `of_module`
 (with the tradeoff that the representation is defined
 only on a type synonym of the original module.)
 -/
-noncomputable def ofModule' (M : Type _) [AddCommMonoid M] [Module k M] [Module (MonoidAlgebra k G) M]
-    [IsScalarTower k (MonoidAlgebra k G) M] : Representation k G M :=
+noncomputable def ofModule' (M : Type _) [AddCommMonoid M] [Module k M]
+    [Module (MonoidAlgebra k G) M] [IsScalarTower k (MonoidAlgebra k G) M] : Representation k G M :=
   (MonoidAlgebra.lift k G (M →ₗ[k] M)).symm (Algebra.lsmul k M)
 #align representation.of_module' Representation.ofModule'
 
@@ -170,7 +170,9 @@ Note that the representation is built on `restrict_scalars k (monoid_algebra k G
 rather than on `M` itself.
 -/
 noncomputable def ofModule : Representation k G (RestrictScalars k (MonoidAlgebra k G) M) :=
-  (MonoidAlgebra.lift k G (RestrictScalars k (MonoidAlgebra k G) M →ₗ[k] RestrictScalars k (MonoidAlgebra k G) M)).symm
+  (MonoidAlgebra.lift k G
+        (RestrictScalars k (MonoidAlgebra k G) M →ₗ[k]
+          RestrictScalars k (MonoidAlgebra k G) M)).symm
     (RestrictScalars.lsmul k (MonoidAlgebra k G) M)
 #align representation.of_module Representation.ofModule
 
@@ -193,22 +195,26 @@ we have `module (monoid_algebra k G) (restrict_scalars k (monoid_algebra k G) M)
 
 
 @[simp]
-theorem of_module_as_algebra_hom_apply_apply (r : MonoidAlgebra k G) (m : RestrictScalars k (MonoidAlgebra k G) M) :
+theorem of_module_as_algebra_hom_apply_apply (r : MonoidAlgebra k G)
+    (m : RestrictScalars k (MonoidAlgebra k G) M) :
     ((ofModule k G M).asAlgebraHom r) m =
       (RestrictScalars.addEquiv _ _ _).symm (r • RestrictScalars.addEquiv _ _ _ m) :=
   by
   apply MonoidAlgebra.induction_on r
   · intro g
-    simp only [one_smul, MonoidAlgebra.lift_symm_apply, MonoidAlgebra.of_apply, Representation.as_algebra_hom_single,
-      Representation.ofModule, AddEquiv.apply_eq_iff_eq, RestrictScalars.lsmul_apply_apply]
+    simp only [one_smul, MonoidAlgebra.lift_symm_apply, MonoidAlgebra.of_apply,
+      Representation.as_algebra_hom_single, Representation.ofModule, AddEquiv.apply_eq_iff_eq,
+      RestrictScalars.lsmul_apply_apply]
     
   · intro f g fw gw
     simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
     
   · intro r f w
-    simp only [w, AlgHom.map_smul, LinearMap.smul_apply, RestrictScalars.add_equiv_symm_map_smul_smul]
+    simp only [w, AlgHom.map_smul, LinearMap.smul_apply,
+      RestrictScalars.add_equiv_symm_map_smul_smul]
     
-#align representation.of_module_as_algebra_hom_apply_apply Representation.of_module_as_algebra_hom_apply_apply
+#align
+  representation.of_module_as_algebra_hom_apply_apply Representation.of_module_as_algebra_hom_apply_apply
 
 @[simp]
 theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G) ρ.AsModule) :
@@ -216,7 +222,8 @@ theorem of_module_as_module_act (g : G) (x : RestrictScalars k (MonoidAlgebra k 
       (RestrictScalars.addEquiv _ _ _).symm
         (ρ.asModuleEquiv.symm (ρ g (ρ.asModuleEquiv (RestrictScalars.addEquiv _ _ _ x)))) :=
   by
-  apply_fun RestrictScalars.addEquiv _ _ ρ.as_module using (RestrictScalars.addEquiv _ _ _).Injective
+  apply_fun RestrictScalars.addEquiv _ _ ρ.as_module using
+    (RestrictScalars.addEquiv _ _ _).Injective
   dsimp [of_module, RestrictScalars.lsmul_apply_apply]
   simp
 #align representation.of_module_as_module_act Representation.of_module_as_module_act
@@ -297,7 +304,8 @@ theorem of_mul_action_self_smul_eq_mul (x : MonoidAlgebra k G) (y : (ofMulAction
 `G` on itself, the resulting object is isomorphic as a `k[G]`-module to `k[G]` with its natural
 `k[G]`-module structure. -/
 @[simps]
-noncomputable def ofMulActionSelfAsModuleEquiv : (ofMulAction k G G).AsModule ≃ₗ[MonoidAlgebra k G] MonoidAlgebra k G :=
+noncomputable def ofMulActionSelfAsModuleEquiv :
+    (ofMulAction k G G).AsModule ≃ₗ[MonoidAlgebra k G] MonoidAlgebra k G :=
   { asModuleEquiv _ with map_smul' := of_mul_action_self_smul_eq_mul }
 #align representation.of_mul_action_self_as_module_equiv Representation.ofMulActionSelfAsModuleEquiv
 
@@ -308,7 +316,8 @@ def asGroupHom : G →* Units (V →ₗ[k] V) :=
   MonoidHom.toHomUnits ρ
 #align representation.as_group_hom Representation.asGroupHom
 
-theorem as_group_hom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by simp only [as_group_hom, MonoidHom.coe_to_hom_units]
+theorem as_group_hom_apply (g : G) : ↑(asGroupHom ρ g) = ρ g := by
+  simp only [as_group_hom, MonoidHom.coe_to_hom_units]
 #align representation.as_group_hom_apply Representation.as_group_hom_apply
 
 end Group
@@ -372,12 +381,15 @@ module `V →ₗ[k] W`, where `G` acts by conjugation.
 -/
 def linHom : Representation k G (V →ₗ[k] W) where
   toFun g :=
-    { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹, map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add],
+    { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹,
+      map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add],
       map_smul' := fun r f => by simp_rw [RingHom.id_apply, smul_comp, comp_smul] }
-  map_one' := LinearMap.ext fun x => by simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
+  map_one' :=
+    LinearMap.ext fun x => by
+      simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
   map_mul' g h :=
     LinearMap.ext fun x => by
-      simp_rw [LinearMap.coe_mul, coe_mk, Function.comp_apply, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
+      simp_rw [coe_mul, coe_mk, Function.comp_apply, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
 #align representation.lin_hom Representation.linHom
 
 @[simp]
@@ -408,9 +420,9 @@ theorem dual_apply (g : G) : (dual ρV) g = Module.Dual.transpose (ρV g⁻¹) :
 #align representation.dual_apply Representation.dual_apply
 
 theorem dual_tensor_hom_comm (g : G) :
-    dualTensorHom k V W ∘ₗ TensorProduct.map (ρV.dual g) (ρW g) = (linHom ρV ρW) g ∘ₗ dualTensorHom k V W := by
-  ext
-  simp [Module.Dual.transpose_apply]
+    dualTensorHom k V W ∘ₗ TensorProduct.map (ρV.dual g) (ρW g) =
+      (linHom ρV ρW) g ∘ₗ dualTensorHom k V W :=
+  by ext; simp [Module.Dual.transpose_apply]
 #align representation.dual_tensor_hom_comm Representation.dual_tensor_hom_comm
 
 end LinearHom

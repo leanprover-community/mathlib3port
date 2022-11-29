@@ -63,16 +63,21 @@ open Expr Polynomial
       |
         q( $ ( a ) + $ ( b ) )
         =>
-        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
+        do
+          let [ da , db ] ← [ a , b ] . mmap guess_degree
+            pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) - $ ( b ) )
         =>
-        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
+        do
+          let [ da , db ] ← [ a , b ] . mmap guess_degree
+            pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) * $ ( b ) )
         =>
         do
-          let [ da , db ] ← [ a , b ] . mmap guess_degree pure <| expr.mk_app q( ( ( · + · ) : ℕ → ℕ → ℕ ) ) [ da , db ]
+          let [ da , db ] ← [ a , b ] . mmap guess_degree
+            pure <| expr.mk_app q( ( ( · + · ) : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) ^ $ ( b ) )
         =>
@@ -116,7 +121,10 @@ open Expr Polynomial
           match
             tl
             with
-            | q( $ ( tl1 ) + $ ( tl2 ) ) => refine ` `( ( nat_degree_add_le_iff_left _ _ _ ) . mpr _ )
+            |
+                q( $ ( tl1 ) + $ ( tl2 ) )
+                =>
+                refine ` `( ( nat_degree_add_le_iff_left _ _ _ ) . mpr _ )
               | q( $ ( tl1 ) - $ ( tl2 ) ) => refine ` `( ( nat_degree_sub_le_iff_left _ ) . mpr _ )
               |
                 q( $ ( tl1 ) * $ ( tl2 ) )
@@ -126,7 +134,9 @@ open Expr Polynomial
                     refine
                       `
                         `(
-                          nat_degree_mul_le . trans <| ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
+                          nat_degree_mul_le . trans
+                            <|
+                            ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
                           )
               | q( - $ ( f ) ) => refine ` `( ( nat_degree_neg _ ) . le . trans _ )
               | q( X ^ $ ( n ) ) => refine ` `( ( nat_degree_X_pow_le $ ( n ) ) . trans _ )
@@ -134,7 +144,10 @@ open Expr Polynomial
                 app q( ⇑ ( @ monomial $ ( R ) $ ( inst ) $ ( n ) ) ) x
                 =>
                 refine ` `( ( nat_degree_monomial_le $ ( x ) ) . trans _ )
-              | app q( ⇑ C ) x => refine ` `( ( nat_degree_C $ ( x ) ) . le . trans ( Nat.zero_le $ ( tr ) ) )
+              |
+                app q( ⇑ C ) x
+                =>
+                refine ` `( ( nat_degree_C $ ( x ) ) . le . trans ( Nat.zero_le $ ( tr ) ) )
               | q( x ) => refine ` `( nat_degree_X_le . trans _ )
               | q( Zero.zero ) => refine ` `( nat_degree_zero . le . trans ( Nat.zero_le _ ) )
               | q( One.one ) => refine ` `( nat_degree_one . le . trans ( Nat.zero_le _ ) )
@@ -146,7 +159,13 @@ open Expr Polynomial
                 do
                   refine ` `( nat_degree_pow_le . trans _ )
                     refine
-                      ` `( dite ( $ ( n ) = 0 ) ( fun n0 : $ ( n ) = 0 => by simp only [ n0 , zero_mul , zero_le ] ) _ )
+                      `
+                        `(
+                          dite
+                            ( $ ( n ) = 0 )
+                              ( fun n0 : $ ( n ) = 0 => by simp only [ n0 , zero_mul , zero_le ] )
+                              _
+                          )
                     let n0 ← get_unused_name "n0" >>= intro
                     refine
                       `
@@ -154,9 +173,17 @@ open Expr Polynomial
                           ( mul_comm _ _ ) . le . trans
                             ( ( Nat.le_div_iff_mul_le' ( Nat.pos_of_ne_zero $ ( n0 ) ) ) . mp _ )
                           )
-                    let lem1 ← to_expr ` `( Nat.mul_div_cancel _ ( Nat.pos_of_ne_zero $ ( n0 ) ) ) tt ff
+                    let
+                      lem1
+                        ←
+                        to_expr ` `( Nat.mul_div_cancel _ ( Nat.pos_of_ne_zero $ ( n0 ) ) ) tt ff
                     let lem2 ← to_expr ` `( Nat.div_self ( Nat.pos_of_ne_zero $ ( n0 ) ) ) tt ff
-                    focus1 ( refine ` `( ( $ ( n0 ) rfl ) . elim ) <|> rewrite_target lem1 <|> rewrite_target lem2 )
+                    focus1
+                        (
+                          refine ` `( ( $ ( n0 ) rfl ) . elim )
+                            <|>
+                            rewrite_target lem1 <|> rewrite_target lem2
+                          )
                       <|>
                       skip
               | e => throwError "'{ ← e }' is not supported"
@@ -241,14 +268,14 @@ by compute_degree_le
 ```
 -/
 unsafe def compute_degree_le : tactic Unit :=
-  focus1 <| do
+  focus1 do
     check_target_changes compute_degree_le_aux
     try <| any_goals' norm_assum
 #align tactic.interactive.compute_degree_le tactic.interactive.compute_degree_le
 
 add_tactic_doc
-  { Name := "compute_degree_le", category := DocCategory.tactic, declNames := [`tactic.interactive.compute_degree_le],
-    tags := ["arithmetic", "finishing"] }
+  { Name := "compute_degree_le", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.compute_degree_le], tags := ["arithmetic", "finishing"] }
 
 end Interactive
 

@@ -37,8 +37,8 @@ When possible, instead of parametrizing results over `(f : C₀(α, β))`,
 you should parametrize over `(F : Type*) [zero_at_infty_continuous_map_class F α β] (f : F)`.
 
 When you extend this structure, make sure to extend `zero_at_infty_continuous_map_class`. -/
-structure ZeroAtInftyContinuousMap (α : Type u) (β : Type v) [TopologicalSpace α] [Zero β] [TopologicalSpace β] extends
-  ContinuousMap α β : Type max u v where
+structure ZeroAtInftyContinuousMap (α : Type u) (β : Type v) [TopologicalSpace α] [Zero β]
+  [TopologicalSpace β] extends ContinuousMap α β : Type max u v where
   zero_at_infty' : Tendsto to_fun (cocompact α) (𝓝 0)
 #align zero_at_infty_continuous_map ZeroAtInftyContinuousMap
 
@@ -54,8 +54,8 @@ section
 vanish at infinity.
 
 You should also extend this typeclass when you extend `zero_at_infty_continuous_map`. -/
-class ZeroAtInftyContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Zero β]
-  [TopologicalSpace β] extends ContinuousMapClass F α β where
+class ZeroAtInftyContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
+  [Zero β] [TopologicalSpace β] extends ContinuousMapClass F α β where
   zero_at_infty (f : F) : Tendsto f (cocompact α) (𝓝 0)
 #align zero_at_infty_continuous_map_class ZeroAtInftyContinuousMapClass
 
@@ -84,12 +84,14 @@ instance : CoeFun C₀(α, β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
 instance : CoeTC F C₀(α, β) :=
-  ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f, zero_at_infty' := zero_at_infty f }⟩
+  ⟨fun f =>
+    { toFun := f, continuous_to_fun := map_continuous f, zero_at_infty' := zero_at_infty f }⟩
 
 @[simp]
 theorem coe_to_continuous_fun (f : C₀(α, β)) : (f.toContinuousMap : α → β) = f :=
   rfl
-#align zero_at_infty_continuous_map.coe_to_continuous_fun ZeroAtInftyContinuousMap.coe_to_continuous_fun
+#align
+  zero_at_infty_continuous_map.coe_to_continuous_fun ZeroAtInftyContinuousMap.coe_to_continuous_fun
 
 @[ext.1]
 theorem ext {f g : C₀(α, β)} (h : ∀ x, f x = g x) : f = g :=
@@ -139,8 +141,8 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β)
 /-- A continuous function on a compact space is automatically a continuous function vanishing at
 infinity. This is not an instance to avoid type class loops. -/
 @[simps]
-def zeroAtInftyContinuousMapClass.ofCompact {G : Type _} [ContinuousMapClass G α β] [CompactSpace α] :
-    ZeroAtInftyContinuousMapClass G α β where
+def zeroAtInftyContinuousMapClass.ofCompact {G : Type _} [ContinuousMapClass G α β]
+    [CompactSpace α] : ZeroAtInftyContinuousMapClass G α β where
   coe g := g
   coe_injective' f g h := FunLike.coe_fn_eq.mp h
   map_continuous := map_continuous
@@ -276,38 +278,42 @@ instance : AddGroup C₀(α, β) :=
 end AddGroup
 
 instance [AddCommGroup β] [TopologicalAddGroup β] : AddCommGroup C₀(α, β) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
+    rfl
 
-instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] : HasSmul R C₀(α, β) :=
+instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] :
+    HasSmul R C₀(α, β) :=
   ⟨fun r f => ⟨r • f, by simpa [smul_zero] using (zero_at_infty f).const_smul r⟩⟩
 
 @[simp]
-theorem coe_smul [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] (r : R) (f : C₀(α, β)) :
-    ⇑(r • f) = r • f :=
+theorem coe_smul [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β]
+    (r : R) (f : C₀(α, β)) : ⇑(r • f) = r • f :=
   rfl
 #align zero_at_infty_continuous_map.coe_smul ZeroAtInftyContinuousMap.coe_smul
 
-theorem smul_apply [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] (r : R) (f : C₀(α, β))
-    (x : α) : (r • f) x = r • f x :=
+theorem smul_apply [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β]
+    (r : R) (f : C₀(α, β)) (x : α) : (r • f) x = r • f x :=
   rfl
 #align zero_at_infty_continuous_map.smul_apply ZeroAtInftyContinuousMap.smul_apply
 
-instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [SmulWithZero Rᵐᵒᵖ β] [HasContinuousConstSmul R β]
-    [IsCentralScalar R β] : IsCentralScalar R C₀(α, β) :=
+instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [SmulWithZero Rᵐᵒᵖ β]
+    [HasContinuousConstSmul R β] [IsCentralScalar R β] : IsCentralScalar R C₀(α, β) :=
   ⟨fun r f => ext fun x => op_smul_eq_smul _ _⟩
 
-instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] : SmulWithZero R C₀(α, β) :=
+instance [Zero β] {R : Type _} [Zero R] [SmulWithZero R β] [HasContinuousConstSmul R β] :
+    SmulWithZero R C₀(α, β) :=
   Function.Injective.smulWithZero ⟨_, coe_zero⟩ FunLike.coe_injective coe_smul
 
-instance [Zero β] {R : Type _} [MonoidWithZero R] [MulActionWithZero R β] [HasContinuousConstSmul R β] :
-    MulActionWithZero R C₀(α, β) :=
+instance [Zero β] {R : Type _} [MonoidWithZero R] [MulActionWithZero R β]
+    [HasContinuousConstSmul R β] : MulActionWithZero R C₀(α, β) :=
   Function.Injective.mulActionWithZero ⟨_, coe_zero⟩ FunLike.coe_injective coe_smul
 
-instance [AddCommMonoid β] [HasContinuousAdd β] {R : Type _} [Semiring R] [Module R β] [HasContinuousConstSmul R β] :
-    Module R C₀(α, β) :=
+instance [AddCommMonoid β] [HasContinuousAdd β] {R : Type _} [Semiring R] [Module R β]
+    [HasContinuousConstSmul R β] : Module R C₀(α, β) :=
   Function.Injective.module R ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
 
-instance [NonUnitalNonAssocSemiring β] [TopologicalSemiring β] : NonUnitalNonAssocSemiring C₀(α, β) :=
+instance [NonUnitalNonAssocSemiring β] [TopologicalSemiring β] :
+    NonUnitalNonAssocSemiring C₀(α, β) :=
   FunLike.coe_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalSemiring β] [TopologicalSemiring β] : NonUnitalSemiring C₀(α, β) :=
@@ -317,23 +323,26 @@ instance [NonUnitalCommSemiring β] [TopologicalSemiring β] : NonUnitalCommSemi
   FunLike.coe_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalNonAssocRing β] [TopologicalRing β] : NonUnitalNonAssocRing C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+    (fun _ _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalRing β] [TopologicalRing β] : NonUnitalRing C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
+    fun _ _ => rfl
 
 instance [NonUnitalCommRing β] [TopologicalRing β] : NonUnitalCommRing C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+    (fun _ _ => rfl) fun _ _ => rfl
 
-instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β] [Module R β]
-    [HasContinuousConstSmul R β] [IsScalarTower R β β] :
+instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β]
+    [Module R β] [HasContinuousConstSmul R β] [IsScalarTower R β β] :
     IsScalarTower R C₀(α, β) C₀(α, β) where smul_assoc r f g := by
     ext
     simp only [smul_eq_mul, coe_mul, coe_smul, Pi.mul_apply, Pi.smul_apply]
     rw [← smul_eq_mul, ← smul_eq_mul, smul_assoc]
 
-instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β] [Module R β]
-    [HasContinuousConstSmul R β] [SmulCommClass R β β] :
+instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β]
+    [Module R β] [HasContinuousConstSmul R β] [SmulCommClass R β β] :
     SmulCommClass R C₀(α, β) C₀(α, β) where smul_comm r f g := by
     ext
     simp only [smul_eq_mul, coe_smul, coe_mul, Pi.smul_apply, Pi.mul_apply]
@@ -358,7 +367,8 @@ variable [MetricSpace β] [Zero β] [ZeroAtInftyContinuousMapClass F α β]
 
 protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x) (f y) ≤ C := by
   obtain ⟨K : Set α, hK₁, hK₂⟩ :=
-    mem_cocompact.mp (tendsto_def.mp (zero_at_infty (f : F)) _ (closed_ball_mem_nhds (0 : β) zero_lt_one))
+    mem_cocompact.mp
+      (tendsto_def.mp (zero_at_infty (f : F)) _ (closed_ball_mem_nhds (0 : β) zero_lt_one))
   obtain ⟨C, hC⟩ := (hK₁.image (map_continuous f)).Bounded.subset_ball (0 : β)
   refine' ⟨max C 1 + max C 1, fun x y => _⟩
   have : ∀ x, f x ∈ closed_ball (0 : β) (max C 1) := by
@@ -368,7 +378,9 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
       
     · exact (mem_closed_ball.mp <| mem_preimage.mp (hK₂ hx)).trans (le_max_right _ _)
       
-  exact (dist_triangle (f x) 0 (f y)).trans (add_le_add (mem_closed_ball.mp <| this x) (mem_closed_ball'.mp <| this y))
+  exact
+    (dist_triangle (f x) 0 (f y)).trans
+      (add_le_add (mem_closed_ball.mp <| this x) (mem_closed_ball'.mp <| this y))
 #align zero_at_infty_continuous_map.bounded ZeroAtInftyContinuousMap.bounded
 
 theorem boundedRange (f : C₀(α, β)) : Bounded (range f) :=
@@ -380,7 +392,8 @@ theorem boundedImage (f : C₀(α, β)) (s : Set α) : Bounded (f '' s) :=
 #align zero_at_infty_continuous_map.bounded_image ZeroAtInftyContinuousMap.boundedImage
 
 instance (priority := 100) : BoundedContinuousMapClass F α β :=
-  { ‹ZeroAtInftyContinuousMapClass F α β› with map_bounded := fun f => ZeroAtInftyContinuousMap.bounded f }
+  { ‹ZeroAtInftyContinuousMapClass F α β› with
+    map_bounded := fun f => ZeroAtInftyContinuousMap.bounded f }
 
 /-- Construct a bounded continuous function from a continuous function vanishing at infinity. -/
 @[simps]
@@ -414,11 +427,13 @@ theorem dist_to_bcf_eq_dist {f g : C₀(α, β)} : dist f.toBcf g.toBcf = dist f
 open BoundedContinuousFunction
 
 /-- Convergence in the metric on `C₀(α, β)` is uniform convergence. -/
-theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f : C₀(α, β)} {l : Filter ι} :
-    Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l := by
+theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → C₀(α, β)} {f : C₀(α, β)}
+    {l : Filter ι} : Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l := by
   simpa only [Metric.tendsto_nhds] using
-    @BoundedContinuousFunction.tendsto_iff_tendsto_uniformly _ _ _ _ _ (fun i => (F i).toBcf) f.to_bcf l
-#align zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendsto_uniformly
+    @BoundedContinuousFunction.tendsto_iff_tendsto_uniformly _ _ _ _ _ (fun i => (F i).toBcf)
+      f.to_bcf l
+#align
+  zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendsto_uniformly
 
 theorem isometryToBcf : Isometry (toBcf : C₀(α, β) → α →ᵇ β) := by tauto
 #align zero_at_infty_continuous_map.isometry_to_bcf ZeroAtInftyContinuousMap.isometryToBcf
@@ -429,7 +444,9 @@ theorem closedRangeToBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ �
   have : tendsto f (cocompact α) (𝓝 0) := by
     refine' metric.tendsto_nhds.mpr fun ε hε => _
     obtain ⟨_, hg, g, rfl⟩ := hf (ball f (ε / 2)) (ball_mem_nhds f <| half_pos hε)
-    refine' (metric.tendsto_nhds.mp (zero_at_infty g) (ε / 2) (half_pos hε)).mp (eventually_of_forall fun x hx => _)
+    refine'
+      (metric.tendsto_nhds.mp (zero_at_infty g) (ε / 2) (half_pos hε)).mp
+        (eventually_of_forall fun x hx => _)
     calc
       dist (f x) 0 ≤ dist (g.to_bcf x) (f x) + dist (g x) 0 := dist_triangle_left _ _ _
       _ < dist g.to_bcf f + ε / 2 := add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx
@@ -444,7 +461,8 @@ theorem closedRangeToBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ �
 /-- Continuous functions vanishing at infinity taking values in a complete space form a
 complete space. -/
 instance [CompleteSpace β] : CompleteSpace C₀(α, β) :=
-  (complete_space_iff_is_complete_range isometryToBcf.UniformInducing).mpr closedRangeToBcf.IsComplete
+  (complete_space_iff_is_complete_range isometryToBcf.UniformInducing).mpr
+    closedRangeToBcf.IsComplete
 
 end Metric
 
@@ -507,7 +525,8 @@ instance :
       C₀(α,
         β) where star f :=
     { toFun := fun x => star (f x), continuous_to_fun := (map_continuous f).star,
-      zero_at_infty' := by simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
+      zero_at_infty' := by
+        simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
 
 @[simp]
 theorem coe_star (f : C₀(α, β)) : ⇑(star f) = star f :=
@@ -534,8 +553,8 @@ end NormedStar
 
 section StarModule
 
-variable {𝕜 : Type _} [Zero 𝕜] [HasStar 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β] [HasContinuousStar β]
-  [SmulWithZero 𝕜 β] [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
+variable {𝕜 : Type _} [Zero 𝕜] [HasStar 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β]
+  [HasContinuousStar β] [SmulWithZero 𝕜 β] [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarModule 𝕜 C₀(α, β) where star_smul k f := ext fun x => star_smul k (f x)
 
@@ -543,10 +562,12 @@ end StarModule
 
 section StarRing
 
-variable [NonUnitalSemiring β] [StarRing β] [TopologicalSpace β] [HasContinuousStar β] [TopologicalSemiring β]
+variable [NonUnitalSemiring β] [StarRing β] [TopologicalSpace β] [HasContinuousStar β]
+  [TopologicalSemiring β]
 
 instance : StarRing C₀(α, β) :=
-  { ZeroAtInftyContinuousMap.starAddMonoid with star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
+  { ZeroAtInftyContinuousMap.starAddMonoid with
+    star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
 
 end StarRing
 
@@ -581,9 +602,11 @@ def comp (f : C₀(γ, δ)) (g : β →co γ) : C₀(β, δ) where
 #align zero_at_infty_continuous_map.comp ZeroAtInftyContinuousMap.comp
 
 @[simp]
-theorem coe_comp_to_continuous_fun (f : C₀(γ, δ)) (g : β →co γ) : ((f.comp g).toContinuousMap : β → δ) = f ∘ g :=
+theorem coe_comp_to_continuous_fun (f : C₀(γ, δ)) (g : β →co γ) :
+    ((f.comp g).toContinuousMap : β → δ) = f ∘ g :=
   rfl
-#align zero_at_infty_continuous_map.coe_comp_to_continuous_fun ZeroAtInftyContinuousMap.coe_comp_to_continuous_fun
+#align
+  zero_at_infty_continuous_map.coe_comp_to_continuous_fun ZeroAtInftyContinuousMap.coe_comp_to_continuous_fun
 
 @[simp]
 theorem comp_id (f : C₀(γ, δ)) : f.comp (CocompactMap.id γ) = f :=
@@ -591,7 +614,8 @@ theorem comp_id (f : C₀(γ, δ)) : f.comp (CocompactMap.id γ) = f :=
 #align zero_at_infty_continuous_map.comp_id ZeroAtInftyContinuousMap.comp_id
 
 @[simp]
-theorem comp_assoc (f : C₀(γ, δ)) (g : β →co γ) (h : α →co β) : (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : C₀(γ, δ)) (g : β →co γ) (h : α →co β) :
+    (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align zero_at_infty_continuous_map.comp_assoc ZeroAtInftyContinuousMap.comp_assoc
 
@@ -624,14 +648,16 @@ def compLinearMap [AddCommMonoid δ] [HasContinuousAdd δ] {R : Type _} [Semirin
 #align zero_at_infty_continuous_map.comp_linear_map ZeroAtInftyContinuousMap.compLinearMap
 
 /-- Composition as a non-unital algebra homomorphism. -/
-def compNonUnitalAlgHom {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring δ] [TopologicalSemiring δ] [Module R δ]
-    [HasContinuousConstSmul R δ] (g : β →co γ) : C₀(γ, δ) →ₙₐ[R] C₀(β, δ) where
+def compNonUnitalAlgHom {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring δ]
+    [TopologicalSemiring δ] [Module R δ] [HasContinuousConstSmul R δ] (g : β →co γ) :
+    C₀(γ, δ) →ₙₐ[R] C₀(β, δ) where
   toFun f := f.comp g
   map_smul' r f := rfl
   map_zero' := rfl
   map_add' f₁ f₂ := rfl
   map_mul' f₁ f₂ := rfl
-#align zero_at_infty_continuous_map.comp_non_unital_alg_hom ZeroAtInftyContinuousMap.compNonUnitalAlgHom
+#align
+  zero_at_infty_continuous_map.comp_non_unital_alg_hom ZeroAtInftyContinuousMap.compNonUnitalAlgHom
 
 end ZeroAtInftyContinuousMap
 

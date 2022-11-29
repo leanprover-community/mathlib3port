@@ -34,23 +34,28 @@ theorem Unbounded.mono (hst : s ⊆ t) (hs : Unbounded r s) : Unbounded r t := f
 /-! ### Alternate characterizations of unboundedness on orders -/
 
 
-theorem unbounded_le_of_forall_exists_lt [Preorder α] (h : ∀ a, ∃ b ∈ s, a < b) : Unbounded (· ≤ ·) s := fun a =>
+theorem unbounded_le_of_forall_exists_lt [Preorder α] (h : ∀ a, ∃ b ∈ s, a < b) :
+    Unbounded (· ≤ ·) s := fun a =>
   let ⟨b, hb, hb'⟩ := h a
   ⟨b, hb, fun hba => hba.not_lt hb'⟩
 #align set.unbounded_le_of_forall_exists_lt Set.unbounded_le_of_forall_exists_lt
 
-theorem unbounded_le_iff [LinearOrder α] : Unbounded (· ≤ ·) s ↔ ∀ a, ∃ b ∈ s, a < b := by simp only [unbounded, not_le]
+theorem unbounded_le_iff [LinearOrder α] : Unbounded (· ≤ ·) s ↔ ∀ a, ∃ b ∈ s, a < b := by
+  simp only [unbounded, not_le]
 #align set.unbounded_le_iff Set.unbounded_le_iff
 
-theorem unbounded_lt_of_forall_exists_le [Preorder α] (h : ∀ a, ∃ b ∈ s, a ≤ b) : Unbounded (· < ·) s := fun a =>
+theorem unbounded_lt_of_forall_exists_le [Preorder α] (h : ∀ a, ∃ b ∈ s, a ≤ b) :
+    Unbounded (· < ·) s := fun a =>
   let ⟨b, hb, hb'⟩ := h a
   ⟨b, hb, fun hba => hba.not_le hb'⟩
 #align set.unbounded_lt_of_forall_exists_le Set.unbounded_lt_of_forall_exists_le
 
-theorem unbounded_lt_iff [LinearOrder α] : Unbounded (· < ·) s ↔ ∀ a, ∃ b ∈ s, a ≤ b := by simp only [unbounded, not_lt]
+theorem unbounded_lt_iff [LinearOrder α] : Unbounded (· < ·) s ↔ ∀ a, ∃ b ∈ s, a ≤ b := by
+  simp only [unbounded, not_lt]
 #align set.unbounded_lt_iff Set.unbounded_lt_iff
 
-theorem unbounded_ge_of_forall_exists_gt [Preorder α] (h : ∀ a, ∃ b ∈ s, b < a) : Unbounded (· ≥ ·) s :=
+theorem unbounded_ge_of_forall_exists_gt [Preorder α] (h : ∀ a, ∃ b ∈ s, b < a) :
+    Unbounded (· ≥ ·) s :=
   @unbounded_le_of_forall_exists_lt αᵒᵈ _ _ h
 #align set.unbounded_ge_of_forall_exists_gt Set.unbounded_ge_of_forall_exists_gt
 
@@ -61,7 +66,8 @@ theorem unbounded_ge_iff [LinearOrder α] : Unbounded (· ≥ ·) s ↔ ∀ a, �
     unbounded_ge_of_forall_exists_gt⟩
 #align set.unbounded_ge_iff Set.unbounded_ge_iff
 
-theorem unbounded_gt_of_forall_exists_ge [Preorder α] (h : ∀ a, ∃ b ∈ s, b ≤ a) : Unbounded (· > ·) s := fun a =>
+theorem unbounded_gt_of_forall_exists_ge [Preorder α] (h : ∀ a, ∃ b ∈ s, b ≤ a) :
+    Unbounded (· > ·) s := fun a =>
   let ⟨b, hb, hb'⟩ := h a
   ⟨b, hb, fun hba => not_le_of_gt hba hb'⟩
 #align set.unbounded_gt_of_forall_exists_ge Set.unbounded_gt_of_forall_exists_ge
@@ -88,7 +94,8 @@ theorem bounded_le_of_bounded_lt [Preorder α] (h : Bounded (· < ·) s) : Bound
   h.rel_mono fun _ _ => le_of_lt
 #align set.bounded_le_of_bounded_lt Set.bounded_le_of_bounded_lt
 
-theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unbounded r s) : Unbounded r' s := fun a =>
+theorem Unbounded.rel_mono {r' : α → α → Prop} (hr : r' ≤ r) (h : Unbounded r s) : Unbounded r' s :=
+  fun a =>
   let ⟨b, hb, hba⟩ := h a
   ⟨b, hb, fun hba' => hba (hr b a hba')⟩
 #align set.unbounded.rel_mono Set.Unbounded.rel_mono
@@ -97,14 +104,16 @@ theorem unbounded_lt_of_unbounded_le [Preorder α] (h : Unbounded (· ≤ ·) s)
   h.rel_mono fun _ _ => le_of_lt
 #align set.unbounded_lt_of_unbounded_le Set.unbounded_lt_of_unbounded_le
 
-theorem bounded_le_iff_bounded_lt [Preorder α] [NoMaxOrder α] : Bounded (· ≤ ·) s ↔ Bounded (· < ·) s := by
+theorem bounded_le_iff_bounded_lt [Preorder α] [NoMaxOrder α] :
+    Bounded (· ≤ ·) s ↔ Bounded (· < ·) s := by
   refine' ⟨fun h => _, bounded_le_of_bounded_lt⟩
   cases' h with a ha
   cases' exists_gt a with b hb
   exact ⟨b, fun c hc => lt_of_le_of_lt (ha c hc) hb⟩
 #align set.bounded_le_iff_bounded_lt Set.bounded_le_iff_bounded_lt
 
-theorem unbounded_lt_iff_unbounded_le [Preorder α] [NoMaxOrder α] : Unbounded (· < ·) s ↔ Unbounded (· ≤ ·) s := by
+theorem unbounded_lt_iff_unbounded_le [Preorder α] [NoMaxOrder α] :
+    Unbounded (· < ·) s ↔ Unbounded (· ≤ ·) s := by
   simp_rw [← not_bounded_iff, bounded_le_iff_bounded_lt]
 #align set.unbounded_lt_iff_unbounded_le Set.unbounded_lt_iff_unbounded_le
 
@@ -116,16 +125,19 @@ theorem bounded_ge_of_bounded_gt [Preorder α] (h : Bounded (· > ·) s) : Bound
   ⟨a, fun b hb => le_of_lt (ha b hb)⟩
 #align set.bounded_ge_of_bounded_gt Set.bounded_ge_of_bounded_gt
 
-theorem unbounded_gt_of_unbounded_ge [Preorder α] (h : Unbounded (· ≥ ·) s) : Unbounded (· > ·) s := fun a =>
+theorem unbounded_gt_of_unbounded_ge [Preorder α] (h : Unbounded (· ≥ ·) s) : Unbounded (· > ·) s :=
+  fun a =>
   let ⟨b, hb, hba⟩ := h a
   ⟨b, hb, fun hba' => hba (le_of_lt hba')⟩
 #align set.unbounded_gt_of_unbounded_ge Set.unbounded_gt_of_unbounded_ge
 
-theorem bounded_ge_iff_bounded_gt [Preorder α] [NoMinOrder α] : Bounded (· ≥ ·) s ↔ Bounded (· > ·) s :=
+theorem bounded_ge_iff_bounded_gt [Preorder α] [NoMinOrder α] :
+    Bounded (· ≥ ·) s ↔ Bounded (· > ·) s :=
   @bounded_le_iff_bounded_lt αᵒᵈ _ _ _
 #align set.bounded_ge_iff_bounded_gt Set.bounded_ge_iff_bounded_gt
 
-theorem unbounded_gt_iff_unbounded_ge [Preorder α] [NoMinOrder α] : Unbounded (· > ·) s ↔ Unbounded (· ≥ ·) s :=
+theorem unbounded_gt_iff_unbounded_ge [Preorder α] [NoMinOrder α] :
+    Unbounded (· > ·) s ↔ Unbounded (· ≥ ·) s :=
   @unbounded_lt_iff_unbounded_le αᵒᵈ _ _ _
 #align set.unbounded_gt_iff_unbounded_ge Set.unbounded_gt_iff_unbounded_ge
 
@@ -262,16 +274,19 @@ theorem bounded_ge_Icc [Preorder α] (a b : α) : Bounded (· ≥ ·) (Set.icc a
 /-! #### Unbounded intervals -/
 
 
-theorem unbounded_le_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) : Unbounded (· ≤ ·) (Set.ioi a) := fun b =>
+theorem unbounded_le_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) :
+    Unbounded (· ≤ ·) (Set.ioi a) := fun b =>
   let ⟨c, hc⟩ := exists_gt (a ⊔ b)
   ⟨c, le_sup_left.trans_lt hc, (le_sup_right.trans_lt hc).not_le⟩
 #align set.unbounded_le_Ioi Set.unbounded_le_Ioi
 
-theorem unbounded_le_Ici [SemilatticeSup α] [NoMaxOrder α] (a : α) : Unbounded (· ≤ ·) (Set.ici a) :=
+theorem unbounded_le_Ici [SemilatticeSup α] [NoMaxOrder α] (a : α) :
+    Unbounded (· ≤ ·) (Set.ici a) :=
   (unbounded_le_Ioi a).mono Set.Ioi_subset_Ici_self
 #align set.unbounded_le_Ici Set.unbounded_le_Ici
 
-theorem unbounded_lt_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) : Unbounded (· < ·) (Set.ioi a) :=
+theorem unbounded_lt_Ioi [SemilatticeSup α] [NoMaxOrder α] (a : α) :
+    Unbounded (· < ·) (Set.ioi a) :=
   unbounded_lt_of_unbounded_le (unbounded_le_Ioi a)
 #align set.unbounded_lt_Ioi Set.unbounded_lt_Ioi
 
@@ -291,13 +306,15 @@ theorem bounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c m)
 #align set.bounded_inter_not Set.bounded_inter_not
 
 theorem unbounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c m) (a : α) :
-    Unbounded r (s ∩ { b | ¬r b a }) ↔ Unbounded r s := by simp_rw [← not_bounded_iff, bounded_inter_not H]
+    Unbounded r (s ∩ { b | ¬r b a }) ↔ Unbounded r s := by
+  simp_rw [← not_bounded_iff, bounded_inter_not H]
 #align set.unbounded_inter_not Set.unbounded_inter_not
 
 /-! #### Less or equal -/
 
 
-theorem bounded_le_inter_not_le [SemilatticeSup α] (a : α) : Bounded (· ≤ ·) (s ∩ { b | ¬b ≤ a }) ↔ Bounded (· ≤ ·) s :=
+theorem bounded_le_inter_not_le [SemilatticeSup α] (a : α) :
+    Bounded (· ≤ ·) (s ∩ { b | ¬b ≤ a }) ↔ Bounded (· ≤ ·) s :=
   bounded_inter_not (fun x y => ⟨x ⊔ y, fun z h => h.elim le_sup_of_le_left le_sup_of_le_right⟩) a
 #align set.bounded_le_inter_not_le Set.bounded_le_inter_not_le
 
@@ -307,25 +324,27 @@ theorem unbounded_le_inter_not_le [SemilatticeSup α] (a : α) :
   exact bounded_le_inter_not_le a
 #align set.unbounded_le_inter_not_le Set.unbounded_le_inter_not_le
 
-theorem bounded_le_inter_lt [LinearOrder α] (a : α) : Bounded (· ≤ ·) (s ∩ { b | a < b }) ↔ Bounded (· ≤ ·) s := by
+theorem bounded_le_inter_lt [LinearOrder α] (a : α) :
+    Bounded (· ≤ ·) (s ∩ { b | a < b }) ↔ Bounded (· ≤ ·) s := by
   simp_rw [← not_le, bounded_le_inter_not_le]
 #align set.bounded_le_inter_lt Set.bounded_le_inter_lt
 
-theorem unbounded_le_inter_lt [LinearOrder α] (a : α) : Unbounded (· ≤ ·) (s ∩ { b | a < b }) ↔ Unbounded (· ≤ ·) s :=
-  by
+theorem unbounded_le_inter_lt [LinearOrder α] (a : α) :
+    Unbounded (· ≤ ·) (s ∩ { b | a < b }) ↔ Unbounded (· ≤ ·) s := by
   convert unbounded_le_inter_not_le a
   ext
   exact lt_iff_not_le
 #align set.unbounded_le_inter_lt Set.unbounded_le_inter_lt
 
-theorem bounded_le_inter_le [LinearOrder α] (a : α) : Bounded (· ≤ ·) (s ∩ { b | a ≤ b }) ↔ Bounded (· ≤ ·) s := by
+theorem bounded_le_inter_le [LinearOrder α] (a : α) :
+    Bounded (· ≤ ·) (s ∩ { b | a ≤ b }) ↔ Bounded (· ≤ ·) s := by
   refine' ⟨_, bounded.mono (Set.inter_subset_left s _)⟩
   rw [← @bounded_le_inter_lt _ s _ a]
   exact bounded.mono fun x ⟨hx, hx'⟩ => ⟨hx, le_of_lt hx'⟩
 #align set.bounded_le_inter_le Set.bounded_le_inter_le
 
-theorem unbounded_le_inter_le [LinearOrder α] (a : α) : Unbounded (· ≤ ·) (s ∩ { b | a ≤ b }) ↔ Unbounded (· ≤ ·) s :=
-  by
+theorem unbounded_le_inter_le [LinearOrder α] (a : α) :
+    Unbounded (· ≤ ·) (s ∩ { b | a ≤ b }) ↔ Unbounded (· ≤ ·) s := by
   rw [← not_bounded_iff, ← not_bounded_iff, not_iff_not]
   exact bounded_le_inter_le a
 #align set.unbounded_le_inter_le Set.unbounded_le_inter_le
@@ -333,7 +352,8 @@ theorem unbounded_le_inter_le [LinearOrder α] (a : α) : Unbounded (· ≤ ·) 
 /-! #### Less than -/
 
 
-theorem bounded_lt_inter_not_lt [SemilatticeSup α] (a : α) : Bounded (· < ·) (s ∩ { b | ¬b < a }) ↔ Bounded (· < ·) s :=
+theorem bounded_lt_inter_not_lt [SemilatticeSup α] (a : α) :
+    Bounded (· < ·) (s ∩ { b | ¬b < a }) ↔ Bounded (· < ·) s :=
   bounded_inter_not (fun x y => ⟨x ⊔ y, fun z h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩) a
 #align set.bounded_lt_inter_not_lt Set.bounded_lt_inter_not_lt
 
@@ -343,14 +363,15 @@ theorem unbounded_lt_inter_not_lt [SemilatticeSup α] (a : α) :
   exact bounded_lt_inter_not_lt a
 #align set.unbounded_lt_inter_not_lt Set.unbounded_lt_inter_not_lt
 
-theorem bounded_lt_inter_le [LinearOrder α] (a : α) : Bounded (· < ·) (s ∩ { b | a ≤ b }) ↔ Bounded (· < ·) s := by
+theorem bounded_lt_inter_le [LinearOrder α] (a : α) :
+    Bounded (· < ·) (s ∩ { b | a ≤ b }) ↔ Bounded (· < ·) s := by
   convert bounded_lt_inter_not_lt a
   ext
   exact not_lt.symm
 #align set.bounded_lt_inter_le Set.bounded_lt_inter_le
 
-theorem unbounded_lt_inter_le [LinearOrder α] (a : α) : Unbounded (· < ·) (s ∩ { b | a ≤ b }) ↔ Unbounded (· < ·) s :=
-  by
+theorem unbounded_lt_inter_le [LinearOrder α] (a : α) :
+    Unbounded (· < ·) (s ∩ { b | a ≤ b }) ↔ Unbounded (· < ·) s := by
   convert unbounded_lt_inter_not_lt a
   ext
   exact not_lt.symm
@@ -371,7 +392,8 @@ theorem unbounded_lt_inter_lt [LinearOrder α] [NoMaxOrder α] (a : α) :
 /-! #### Greater or equal -/
 
 
-theorem bounded_ge_inter_not_ge [SemilatticeInf α] (a : α) : Bounded (· ≥ ·) (s ∩ { b | ¬a ≤ b }) ↔ Bounded (· ≥ ·) s :=
+theorem bounded_ge_inter_not_ge [SemilatticeInf α] (a : α) :
+    Bounded (· ≥ ·) (s ∩ { b | ¬a ≤ b }) ↔ Bounded (· ≥ ·) s :=
   @bounded_le_inter_not_le αᵒᵈ s _ a
 #align set.bounded_ge_inter_not_ge Set.bounded_ge_inter_not_ge
 
@@ -380,15 +402,18 @@ theorem unbounded_ge_inter_not_ge [SemilatticeInf α] (a : α) :
   @unbounded_le_inter_not_le αᵒᵈ s _ a
 #align set.unbounded_ge_inter_not_ge Set.unbounded_ge_inter_not_ge
 
-theorem bounded_ge_inter_gt [LinearOrder α] (a : α) : Bounded (· ≥ ·) (s ∩ { b | b < a }) ↔ Bounded (· ≥ ·) s :=
+theorem bounded_ge_inter_gt [LinearOrder α] (a : α) :
+    Bounded (· ≥ ·) (s ∩ { b | b < a }) ↔ Bounded (· ≥ ·) s :=
   @bounded_le_inter_lt αᵒᵈ s _ a
 #align set.bounded_ge_inter_gt Set.bounded_ge_inter_gt
 
-theorem unbounded_ge_inter_gt [LinearOrder α] (a : α) : Unbounded (· ≥ ·) (s ∩ { b | b < a }) ↔ Unbounded (· ≥ ·) s :=
+theorem unbounded_ge_inter_gt [LinearOrder α] (a : α) :
+    Unbounded (· ≥ ·) (s ∩ { b | b < a }) ↔ Unbounded (· ≥ ·) s :=
   @unbounded_le_inter_lt αᵒᵈ s _ a
 #align set.unbounded_ge_inter_gt Set.unbounded_ge_inter_gt
 
-theorem bounded_ge_inter_ge [LinearOrder α] (a : α) : Bounded (· ≥ ·) (s ∩ { b | b ≤ a }) ↔ Bounded (· ≥ ·) s :=
+theorem bounded_ge_inter_ge [LinearOrder α] (a : α) :
+    Bounded (· ≥ ·) (s ∩ { b | b ≤ a }) ↔ Bounded (· ≥ ·) s :=
   @bounded_le_inter_le αᵒᵈ s _ a
 #align set.bounded_ge_inter_ge Set.bounded_ge_inter_ge
 
@@ -400,7 +425,8 @@ theorem unbounded_ge_iff_unbounded_inter_ge [LinearOrder α] (a : α) :
 /-! #### Greater than -/
 
 
-theorem bounded_gt_inter_not_gt [SemilatticeInf α] (a : α) : Bounded (· > ·) (s ∩ { b | ¬a < b }) ↔ Bounded (· > ·) s :=
+theorem bounded_gt_inter_not_gt [SemilatticeInf α] (a : α) :
+    Bounded (· > ·) (s ∩ { b | ¬a < b }) ↔ Bounded (· > ·) s :=
   @bounded_lt_inter_not_lt αᵒᵈ s _ a
 #align set.bounded_gt_inter_not_gt Set.bounded_gt_inter_not_gt
 
@@ -409,11 +435,13 @@ theorem unbounded_gt_inter_not_gt [SemilatticeInf α] (a : α) :
   @unbounded_lt_inter_not_lt αᵒᵈ s _ a
 #align set.unbounded_gt_inter_not_gt Set.unbounded_gt_inter_not_gt
 
-theorem bounded_gt_inter_ge [LinearOrder α] (a : α) : Bounded (· > ·) (s ∩ { b | b ≤ a }) ↔ Bounded (· > ·) s :=
+theorem bounded_gt_inter_ge [LinearOrder α] (a : α) :
+    Bounded (· > ·) (s ∩ { b | b ≤ a }) ↔ Bounded (· > ·) s :=
   @bounded_lt_inter_le αᵒᵈ s _ a
 #align set.bounded_gt_inter_ge Set.bounded_gt_inter_ge
 
-theorem unbounded_inter_ge [LinearOrder α] (a : α) : Unbounded (· > ·) (s ∩ { b | b ≤ a }) ↔ Unbounded (· > ·) s :=
+theorem unbounded_inter_ge [LinearOrder α] (a : α) :
+    Unbounded (· > ·) (s ∩ { b | b ≤ a }) ↔ Unbounded (· > ·) s :=
   @unbounded_lt_inter_le αᵒᵈ s _ a
 #align set.unbounded_inter_ge Set.unbounded_inter_ge
 

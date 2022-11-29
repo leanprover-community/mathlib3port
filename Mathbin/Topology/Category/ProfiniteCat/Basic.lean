@@ -55,7 +55,8 @@ namespace ProfiniteCat
 /-- Construct a term of `Profinite` from a type endowed with the structure of a
 compact, Hausdorff and totally disconnected topological space.
 -/
-def of (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] [TotallyDisconnectedSpace X] : ProfiniteCat :=
+def of (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] [TotallyDisconnectedSpace X] :
+    ProfiniteCat :=
   ⟨⟨⟨X⟩⟩⟩
 #align Profinite.of ProfiniteCat.of
 
@@ -118,7 +119,8 @@ def ProfiniteCat.toTop : ProfiniteCat ⥤ TopCat :=
 #align Profinite.to_Top ProfiniteCat.toTop
 
 @[simp]
-theorem ProfiniteCat.to_CompHaus_to_Top : profiniteToCompHaus ⋙ compHausToTop = ProfiniteCat.toTop :=
+theorem ProfiniteCat.to_CompHaus_to_Top :
+    profiniteToCompHaus ⋙ compHausToTop = ProfiniteCat.toTop :=
   rfl
 #align Profinite.to_CompHaus_to_Top ProfiniteCat.to_CompHaus_to_Top
 
@@ -126,7 +128,8 @@ section ProfiniteCat
 
 -- Without explicit universe annotations here, Lean introduces two universe variables and
 -- unhelpfully defines a function `CompHaus.{max u₁ u₂} → Profinite.{max u₁ u₂}`.
-/-- (Implementation) The object part of the connected_components functor from compact Hausdorff spaces
+/--
+(Implementation) The object part of the connected_components functor from compact Hausdorff spaces
 to Profinite spaces, given by quotienting a space by its connected components.
 See: https://stacks.math.columbia.edu/tag/0900
 -/
@@ -157,7 +160,8 @@ def CompHausCat.toProfinite : CompHausCat ⥤ ProfiniteCat :=
   Adjunction.leftAdjointOfEquiv ProfiniteCat.toCompHausEquivalence fun _ _ _ _ _ => rfl
 #align CompHaus.to_Profinite CompHausCat.toProfinite
 
-theorem CompHausCat.to_Profinite_obj' (X : CompHausCat) : ↥(CompHausCat.toProfinite.obj X) = ConnectedComponents X :=
+theorem CompHausCat.to_Profinite_obj' (X : CompHausCat) :
+    ↥(CompHausCat.toProfinite.obj X) = ConnectedComponents X :=
   rfl
 #align CompHaus.to_Profinite_obj' CompHausCat.to_Profinite_obj'
 
@@ -198,8 +202,11 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) : Limi
 #align Profinite.limit_cone ProfiniteCat.limitCone
 
 /-- The limit cone `Profinite.limit_cone F` is indeed a limit cone. -/
-def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) : Limits.IsLimit (limitCone F) where
-  lift S := (CompHausCat.limitConeIsLimit.{u, u} (F ⋙ profiniteToCompHaus)).lift (profiniteToCompHaus.mapCone S)
+def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ ProfiniteCat.{u}) :
+    Limits.IsLimit (limitCone F) where
+  lift S :=
+    (CompHausCat.limitConeIsLimit.{u, u} (F ⋙ profiniteToCompHaus)).lift
+      (profiniteToCompHaus.mapCone S)
   uniq' S m h := (CompHausCat.limitConeIsLimit.{u, u} _).uniq (profiniteToCompHaus.mapCone S) _ h
 #align Profinite.limit_cone_is_limit ProfiniteCat.limitConeIsLimit
 
@@ -211,7 +218,8 @@ def toProfiniteAdjToCompHaus : CompHausCat.toProfinite ⊣ profiniteToCompHaus :
 /-- The category of profinite sets is reflective in the category of compact hausdroff spaces -/
 instance toCompHaus.reflective :
     Reflective
-      profiniteToCompHaus where toIsRightAdjoint := ⟨CompHausCat.toProfinite, ProfiniteCat.toProfiniteAdjToCompHaus⟩
+      profiniteToCompHaus where toIsRightAdjoint :=
+    ⟨CompHausCat.toProfinite, ProfiniteCat.toProfiniteAdjToCompHaus⟩
 #align Profinite.to_CompHaus.reflective ProfiniteCat.toCompHaus.reflective
 
 noncomputable instance toCompHaus.createsLimits : CreatesLimits profiniteToCompHaus :=
@@ -303,7 +311,8 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
     rfl
 #align Profinite.iso_equiv_homeo ProfiniteCat.isoEquivHomeo
 
-theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
+theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
+  by
   constructor
   · contrapose!
     rintro ⟨y, hy⟩ hf
@@ -341,7 +350,8 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
     
 #align Profinite.epi_iff_surjective ProfiniteCat.epi_iff_surjective
 
-theorem mono_iff_injective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
+theorem mono_iff_injective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
+  by
   constructor
   · intro h
     haveI : limits.preserves_limits profiniteToCompHaus := inferInstance

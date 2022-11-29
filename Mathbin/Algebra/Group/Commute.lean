@@ -97,9 +97,9 @@ variable {S : Type _} [Semigroup S] {a b c : S}
 
 /- warning: commute.mul_right -> Commute.mul_right is a dubious translation:
 lean 3 declaration is
-  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {a : S} {b : S} {c : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a b) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a c) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) b c))
+  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {a : S} {b : S} {c : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a b) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a c) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) b c))
 but is expected to have type
-  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.141 : Semigroup.{u_1} S] {a : S} {b : S} {c : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141) a b) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141) a c) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141) a (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141)) b c))
+  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.141 : Semigroup.{u_1} S] {a : S} {b : S} {c : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141) a b) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141) a c) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141) a (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.141)) b c))
 Case conversion may be inaccurate. Consider using '#align commute.mul_right Commute.mul_rightₓ'. -/
 /-- If `a` commutes with both `b` and `c`, then it commutes with their product. -/
 @[simp, to_additive "If `a` commutes with both `b` and `c`, then it commutes with their sum."]
@@ -109,9 +109,9 @@ theorem mul_right (hab : Commute a b) (hac : Commute a c) : Commute a (b * c) :=
 
 /- warning: commute.mul_left -> Commute.mul_left is a dubious translation:
 lean 3 declaration is
-  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {a : S} {b : S} {c : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a c) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) b c) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a b) c)
+  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {a : S} {b : S} {c : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a c) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) b c) -> (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a b) c)
 but is expected to have type
-  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.168 : Semigroup.{u_1} S] {a : S} {b : S} {c : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168) a c) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168) b c) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168) (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168)) a b) c)
+  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.168 : Semigroup.{u_1} S] {a : S} {b : S} {c : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168) a c) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168) b c) -> (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168) (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.168)) a b) c)
 Case conversion may be inaccurate. Consider using '#align commute.mul_left Commute.mul_leftₓ'. -/
 /-- If both `a` and `b` commute with `c`, then their product commutes with `c`. -/
 @[simp, to_additive "If both `a` and `b` commute with `c`, then their product commutes with `c`."]
@@ -121,22 +121,24 @@ theorem mul_left (hac : Commute a c) (hbc : Commute b c) : Commute (a * b) c :=
 
 /- warning: commute.right_comm -> Commute.right_comm is a dubious translation:
 lean 3 declaration is
-  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {b : S} {c : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) b c) -> (forall (a : S), Eq.{succ u_2} S (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a b) c) (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a c) b))
+  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {b : S} {c : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) b c) -> (forall (a : S), Eq.{succ u_2} S (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a b) c) (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a c) b))
 but is expected to have type
-  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.195 : Semigroup.{u_1} S] {b : S} {c : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195) b c) -> (forall (a : S), Eq.{succ u_1} S (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) a b) c) (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) a c) b))
+  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.195 : Semigroup.{u_1} S] {b : S} {c : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195) b c) -> (forall (a : S), Eq.{succ u_1} S (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) a b) c) (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.195)) a c) b))
 Case conversion may be inaccurate. Consider using '#align commute.right_comm Commute.right_commₓ'. -/
 @[to_additive]
-protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b := by simp only [mul_assoc, h.eq]
+protected theorem right_comm (h : Commute b c) (a : S) : a * b * c = a * c * b := by
+  simp only [mul_assoc, h.eq]
 #align commute.right_comm Commute.right_comm
 
 /- warning: commute.left_comm -> Commute.left_comm is a dubious translation:
 lean 3 declaration is
-  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {a : S} {b : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a b) -> (forall (c : S), Eq.{succ u_2} S (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) b c)) (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) b (HMul.hMul.{u_2 u_2 u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a c)))
+  forall {S : Type.{u_2}} [_inst_1 : Semigroup.{u_2} S] {a : S} {b : S}, (Commute.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1) a b) -> (forall (c : S), Eq.{succ u_2} S (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) b c)) (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) b (HMul.hMul.{u_2, u_2, u_2} S S S (instHMul.{u_2} S (Semigroup.toHasMul.{u_2} S _inst_1)) a c)))
 but is expected to have type
-  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.226 : Semigroup.{u_1} S] {a : S} {b : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226) a b) -> (forall (c : S), Eq.{succ u_1} S (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) a (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) b c)) (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) b (HMul.hMul.{u_1 u_1 u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) a c)))
+  forall {S : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.226 : Semigroup.{u_1} S] {a : S} {b : S}, (Commute.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226) a b) -> (forall (c : S), Eq.{succ u_1} S (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) a (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) b c)) (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) b (HMul.hMul.{u_1, u_1, u_1} S S S (instHMul.{u_1} S (Semigroup.toMul.{u_1} S inst._@.Mathlib.Algebra.Group.Commute._hyg.226)) a c)))
 Case conversion may be inaccurate. Consider using '#align commute.left_comm Commute.left_commₓ'. -/
 @[to_additive]
-protected theorem left_comm (h : Commute a b) (c) : a * (b * c) = b * (a * c) := by simp only [← mul_assoc, h.eq]
+protected theorem left_comm (h : Commute a b) (c) : a * (b * c) = b * (a * c) := by
+  simp only [← mul_assoc, h.eq]
 #align commute.left_comm Commute.left_comm
 
 end Semigroup
@@ -186,9 +188,9 @@ variable {M : Type _} [Monoid M] {a b : M} {u u₁ u₂ : Mˣ}
 
 /- warning: commute.pow_right -> Commute.pow_right is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] {a : M} {b : M}, (Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a b) -> (forall (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) b n))
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] {a : M} {b : M}, (Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a b) -> (forall (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) b n))
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.319 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.319)) a b) -> (forall (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.319)) a (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.319)) b n))
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.319 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.319)) a b) -> (forall (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.319)) a (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.319)) b n))
 Case conversion may be inaccurate. Consider using '#align commute.pow_right Commute.pow_rightₓ'. -/
 @[simp, to_additive]
 theorem pow_right (h : Commute a b) (n : ℕ) : Commute a (b ^ n) :=
@@ -197,9 +199,9 @@ theorem pow_right (h : Commute a b) (n : ℕ) : Commute a (b ^ n) :=
 
 /- warning: commute.pow_left -> Commute.pow_left is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] {a : M} {b : M}, (Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a b) -> (forall (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n) b)
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] {a : M} {b : M}, (Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a b) -> (forall (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n) b)
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.345 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.345)) a b) -> (forall (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.345)) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.345)) a n) b)
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.345 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.345)) a b) -> (forall (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.345)) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.345)) a n) b)
 Case conversion may be inaccurate. Consider using '#align commute.pow_left Commute.pow_leftₓ'. -/
 @[simp, to_additive]
 theorem pow_left (h : Commute a b) (n : ℕ) : Commute (a ^ n) b :=
@@ -208,9 +210,9 @@ theorem pow_left (h : Commute a b) (n : ℕ) : Commute (a ^ n) b :=
 
 /- warning: commute.pow_pow -> Commute.pow_pow is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] {a : M} {b : M}, (Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a b) -> (forall (m : Nat) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a m) (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) b n))
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] {a : M} {b : M}, (Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a b) -> (forall (m : Nat) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a m) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) b n))
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.373 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) a b) -> (forall (m : Nat) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) a m) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) b n))
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.373 : Monoid.{u_1} M] {a : M} {b : M}, (Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) a b) -> (forall (m : Nat) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) a m) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.373)) b n))
 Case conversion may be inaccurate. Consider using '#align commute.pow_pow Commute.pow_powₓ'. -/
 @[simp, to_additive]
 theorem pow_pow (h : Commute a b) (m n : ℕ) : Commute (a ^ m) (b ^ n) :=
@@ -219,9 +221,9 @@ theorem pow_pow (h : Commute a b) (m n : ℕ) : Commute (a ^ m) (b ^ n) :=
 
 /- warning: commute.self_pow -> Commute.self_pow is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n)
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) a (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n)
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.411 : Monoid.{u_1} M] (a : M) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.411)) a (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.411)) a n)
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.411 : Monoid.{u_1} M] (a : M) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.411)) a (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.411)) a n)
 Case conversion may be inaccurate. Consider using '#align commute.self_pow Commute.self_powₓ'. -/
 @[simp, to_additive]
 theorem self_pow (a : M) (n : ℕ) : Commute a (a ^ n) :=
@@ -230,9 +232,9 @@ theorem self_pow (a : M) (n : ℕ) : Commute a (a ^ n) :=
 
 /- warning: commute.pow_self -> Commute.pow_self is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n) a
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n) a
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.438 : Monoid.{u_1} M] (a : M) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.438)) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.438)) a n) a
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.438 : Monoid.{u_1} M] (a : M) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.438)) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.438)) a n) a
 Case conversion may be inaccurate. Consider using '#align commute.pow_self Commute.pow_selfₓ'. -/
 @[simp, to_additive]
 theorem pow_self (a : M) (n : ℕ) : Commute (a ^ n) a :=
@@ -241,19 +243,25 @@ theorem pow_self (a : M) (n : ℕ) : Commute (a ^ n) a :=
 
 /- warning: commute.pow_pow_self -> Commute.pow_pow_self is a dubious translation:
 lean 3 declaration is
-  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (m : Nat) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a m) (HPow.hPow.{u_2 0 u_2} M Nat M (instHPow.{u_2 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n)
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (m : Nat) (n : Nat), Commute.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1)) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a m) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n)
 but is expected to have type
-  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.465 : Monoid.{u_1} M] (a : M) (m : Nat) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.465)) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.465)) a m) (HPow.hPow.{u_1 0 u_1} M Nat M (instHPow.{u_1 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.465)) a n)
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.465 : Monoid.{u_1} M] (a : M) (m : Nat) (n : Nat), Commute.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.465)) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.465)) a m) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.465)) a n)
 Case conversion may be inaccurate. Consider using '#align commute.pow_pow_self Commute.pow_pow_selfₓ'. -/
 @[simp, to_additive]
 theorem pow_pow_self (a : M) (m n : ℕ) : Commute (a ^ m) (a ^ n) :=
   (Commute.refl a).pow_pow m n
 #align commute.pow_pow_self Commute.pow_pow_self
 
+/- warning: pow_succ' -> pow_succ' is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u_2}} [_inst_1 : Monoid.{u_2} M] (a : M) (n : Nat), Eq.{succ u_2} M (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (HMul.hMul.{u_2, u_2, u_2} M M M (instHMul.{u_2} M (MulOneClass.toHasMul.{u_2} M (Monoid.toMulOneClass.{u_2} M _inst_1))) (HPow.hPow.{u_2, 0, u_2} M Nat M (instHPow.{u_2, 0} M Nat (Monoid.hasPow.{u_2} M _inst_1)) a n) a)
+but is expected to have type
+  forall {M : Type.{u_1}} [inst._@.Mathlib.Algebra.Group.Commute._hyg.502 : Monoid.{u_1} M] (a : M) (n : Nat), Eq.{succ u_1} M (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.502)) a (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (HMul.hMul.{u_1, u_1, u_1} M M M (instHMul.{u_1} M (MulOneClass.toMul.{u_1} M (Monoid.toMulOneClass.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.502))) (HPow.hPow.{u_1, 0, u_1} M Nat M (instHPow.{u_1, 0} M Nat (Monoid.Pow.{u_1} M inst._@.Mathlib.Algebra.Group.Commute._hyg.502)) a n) a)
+Case conversion may be inaccurate. Consider using '#align pow_succ' pow_succ'ₓ'. -/
 @[to_additive succ_nsmul']
-theorem _root_.pow_succ' (a : M) (n : ℕ) : a ^ (n + 1) = a ^ n * a :=
+theorem pow_succ' (a : M) (n : ℕ) : a ^ (n + 1) = a ^ n * a :=
   (pow_succ a n).trans (self_pow _ _)
-#align commute._root_.pow_succ' commute._root_.pow_succ'
+#align pow_succ' pow_succ'
 
 @[to_additive]
 theorem units_inv_right : Commute a u → Commute a ↑u⁻¹ :=
@@ -291,31 +299,34 @@ theorem units_coe_iff : Commute (u₁ : M) u₂ ↔ Commute u₁ u₂ :=
 #align commute.units_coe_iff Commute.units_coe_iff
 
 /-- If the product of two commuting elements is a unit, then the left multiplier is a unit. -/
-@[to_additive "If the sum of two commuting elements is an additive unit, then the left summand is an\nadditive unit."]
-def _root_.units.left_of_mul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ where
+@[to_additive
+      "If the sum of two commuting elements is an additive unit, then the left summand is an\nadditive unit."]
+def Units.leftOfMul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ where
   val := a
   inv := b * ↑u⁻¹
   val_inv := by rw [← mul_assoc, hu, u.mul_inv]
   inv_val := by
     have : Commute a u := hu ▸ (Commute.refl _).mul_right hc
     rw [← this.units_inv_right.right_comm, ← hc.eq, hu, u.mul_inv]
-#align commute._root_.units.left_of_mul commute._root_.units.left_of_mul
+#align units.left_of_mul Units.leftOfMul
 
 /-- If the product of two commuting elements is a unit, then the right multiplier is a unit. -/
-@[to_additive "If the sum of two commuting elements is an additive unit, then the right summand is\nan additive unit."]
-def _root_.units.right_of_mul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ :=
+@[to_additive
+      "If the sum of two commuting elements is an additive unit, then the right summand is\nan additive unit."]
+def Units.rightOfMul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ :=
   u.leftOfMul b a (hc.Eq ▸ hu) hc.symm
-#align commute._root_.units.right_of_mul commute._root_.units.right_of_mul
+#align units.right_of_mul Units.rightOfMul
 
 @[to_additive]
 theorem is_unit_mul_iff (h : Commute a b) : IsUnit (a * b) ↔ IsUnit a ∧ IsUnit b :=
-  ⟨fun ⟨u, hu⟩ => ⟨(u.leftOfMul a b hu.symm h).IsUnit, (u.rightOfMul a b hu.symm h).IsUnit⟩, fun H => H.1.mul H.2⟩
+  ⟨fun ⟨u, hu⟩ => ⟨(u.leftOfMul a b hu.symm h).IsUnit, (u.rightOfMul a b hu.symm h).IsUnit⟩,
+    fun H => H.1.mul H.2⟩
 #align commute.is_unit_mul_iff Commute.is_unit_mul_iff
 
 @[simp, to_additive]
-theorem _root_.is_unit_mul_self_iff : IsUnit (a * a) ↔ IsUnit a :=
+theorem is_unit_mul_self_iff : IsUnit (a * a) ↔ IsUnit a :=
   (Commute.refl a).is_unit_mul_iff.trans (and_self_iff _)
-#align commute._root_.is_unit_mul_self_iff commute._root_.is_unit_mul_self_iff
+#align is_unit_mul_self_iff is_unit_mul_self_iff
 
 end Monoid
 
@@ -360,19 +371,23 @@ theorem inv_left_iff : Commute a⁻¹ b ↔ Commute a b :=
 #align commute.inv_left_iff Commute.inv_left_iff
 
 @[to_additive]
-protected theorem inv_mul_cancel (h : Commute a b) : a⁻¹ * b * a = b := by rw [h.inv_left.eq, inv_mul_cancel_right]
+protected theorem inv_mul_cancel (h : Commute a b) : a⁻¹ * b * a = b := by
+  rw [h.inv_left.eq, inv_mul_cancel_right]
 #align commute.inv_mul_cancel Commute.inv_mul_cancel
 
 @[to_additive]
-theorem inv_mul_cancel_assoc (h : Commute a b) : a⁻¹ * (b * a) = b := by rw [← mul_assoc, h.inv_mul_cancel]
+theorem inv_mul_cancel_assoc (h : Commute a b) : a⁻¹ * (b * a) = b := by
+  rw [← mul_assoc, h.inv_mul_cancel]
 #align commute.inv_mul_cancel_assoc Commute.inv_mul_cancel_assoc
 
 @[to_additive]
-protected theorem mul_inv_cancel (h : Commute a b) : a * b * a⁻¹ = b := by rw [h.eq, mul_inv_cancel_right]
+protected theorem mul_inv_cancel (h : Commute a b) : a * b * a⁻¹ = b := by
+  rw [h.eq, mul_inv_cancel_right]
 #align commute.mul_inv_cancel Commute.mul_inv_cancel
 
 @[to_additive]
-theorem mul_inv_cancel_assoc (h : Commute a b) : a * (b * a⁻¹) = b := by rw [← mul_assoc, h.mul_inv_cancel]
+theorem mul_inv_cancel_assoc (h : Commute a b) : a * (b * a⁻¹) = b := by
+  rw [← mul_assoc, h.mul_inv_cancel]
 #align commute.mul_inv_cancel_assoc Commute.mul_inv_cancel_assoc
 
 end Group

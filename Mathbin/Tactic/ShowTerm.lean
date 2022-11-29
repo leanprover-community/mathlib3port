@@ -36,7 +36,8 @@ unsafe def show_term (t : itactic) : itactic := do
 #align tactic.interactive.show_term tactic.interactive.show_term
 
 add_tactic_doc
-  { Name := "show_term", category := DocCategory.tactic, declNames := [`` show_term], tags := ["debugging"] }
+  { Name := "show_term", category := DocCategory.tactic, declNames := [`` show_term],
+    tags := ["debugging"] }
 
 end Tactic.Interactive
 

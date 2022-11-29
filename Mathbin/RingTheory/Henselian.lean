@@ -62,12 +62,12 @@ open BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
-theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R) (h : I ≤ Ideal.jacobson ⊥) :
-    IsLocalRingHom (Ideal.Quotient.mk I) := by
+theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R)
+    (h : I ≤ Ideal.jacobson ⊥) : IsLocalRingHom (Ideal.Quotient.mk I) := by
   constructor
   intro a h
   have : IsUnit (Ideal.Quotient.mk (Ideal.jacobson ⊥) a) := by
-    rw [is_unit_iff_exists_inv] at *
+    rw [isUnit_iff_exists_inv] at *
     obtain ⟨b, hb⟩ := h
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b
     use Ideal.Quotient.mk _ b
@@ -75,8 +75,8 @@ theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Idea
     exact h hb
   obtain ⟨⟨x, y, h1, h2⟩, rfl : x = _⟩ := this
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
-  rw [← (Ideal.Quotient.mk _).map_mul, ← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq, Ideal.mem_jacobson_bot] at
-    h1 h2
+  rw [← (Ideal.Quotient.mk _).map_mul, ← (Ideal.Quotient.mk _).map_one, Ideal.Quotient.eq,
+    Ideal.mem_jacobson_bot] at h1 h2
   specialize h1 1
   simp at h1
   exact h1.1
@@ -107,8 +107,8 @@ In other words, `R` is local Henselian if it is Henselian at the ideal `I`,
 in the sense of `henselian_ring`. -/
 class HenselianLocalRing (R : Type _) [CommRing R] extends LocalRing R : Prop where
   is_henselian :
-    ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ maximalIdeal R) (h₂ : IsUnit (f.derivative.eval a₀)),
-      ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
+    ∀ (f : R[X]) (hf : f.Monic) (a₀ : R) (h₁ : f.eval a₀ ∈ maximalIdeal R)
+      (h₂ : IsUnit (f.derivative.eval a₀)), ∃ a : R, f.IsRoot a ∧ a - a₀ ∈ maximalIdeal R
 #align henselian_local_ring HenselianLocalRing
 
 -- see Note [lower instance priority]
@@ -138,21 +138,33 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`f] [":" (Polynomial.Data.Polynomial.Basic.polynomial `R "[X]")] [] ")")
+             [(Term.explicitBinder
+               "("
+               [`f]
+               [":" (Polynomial.Data.Polynomial.Basic.polynomial `R "[X]")]
+               []
+               ")")
               (Term.explicitBinder "(" [`hf] [":" (Term.proj `f "." `Monic)] [] ")")
               (Term.explicitBinder "(" [`a₀] [":" (Term.app `ResidueField [`R])] [] ")")
-              (Term.explicitBinder "(" [`h₁] [":" («term_=_» (Term.app `aeval [`a₀ `f]) "=" (num "0"))] [] ")")
+              (Term.explicitBinder
+               "("
+               [`h₁]
+               [":" («term_=_» (Term.app `aeval [`a₀ `f]) "=" (num "0"))]
+               []
+               ")")
               (Term.explicitBinder
                "("
                [`h₂]
-               [":" («term_≠_» (Term.app `aeval [`a₀ (Term.proj `f "." `derivative)]) "≠" (num "0"))]
+               [":"
+                («term_≠_» (Term.app `aeval [`a₀ (Term.proj `f "." `derivative)]) "≠" (num "0"))]
                []
                ")")]
              []
              ","
              («term∃_,_»
               "∃"
-              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] [":" `R]))
+              (Lean.explicitBinders
+               (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] [":" `R]))
               ","
               («term_∧_»
                (Term.app (Term.proj `f "." `IsRoot) [`a])
@@ -167,9 +179,19 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
              ","
              (Term.forall
               "∀"
-              [(Term.explicitBinder "(" [`φ] [":" (Algebra.Hom.Ring.«term_→+*_» `R " →+* " `K)] [] ")")
+              [(Term.explicitBinder
+                "("
+                [`φ]
+                [":" (Algebra.Hom.Ring.«term_→+*_» `R " →+* " `K)]
+                []
+                ")")
                (Term.explicitBinder "(" [`hφ] [":" (Term.app `surjective [`φ])] [] ")")
-               (Term.explicitBinder "(" [`f] [":" (Polynomial.Data.Polynomial.Basic.polynomial `R "[X]")] [] ")")
+               (Term.explicitBinder
+                "("
+                [`f]
+                [":" (Polynomial.Data.Polynomial.Basic.polynomial `R "[X]")]
+                []
+                ")")
                (Term.explicitBinder "(" [`hf] [":" (Term.proj `f "." `Monic)] [] ")")
                (Term.explicitBinder "(" [`a₀] [":" `K] [] ")")
                (Term.explicitBinder
@@ -188,9 +210,13 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               ","
               («term∃_,_»
                "∃"
-               (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] [":" `R]))
+               (Lean.explicitBinders
+                (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] [":" `R]))
                ","
-               («term_∧_» (Term.app (Term.proj `f "." `IsRoot) [`a]) "∧" («term_=_» (Term.app `φ [`a]) "=" `a₀)))))]
+               («term_∧_»
+                (Term.app (Term.proj `f "." `IsRoot) [`a])
+                "∧"
+                («term_=_» (Term.app `φ [`a]) "=" `a₀)))))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -199,11 +225,15 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
         (Tactic.tacticSeq
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [`_3_2 ":"] (num "3") "→" (num "2"))
-           []
+           ";"
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.intro "intro" [`H]) [])
-             (group (Tactic.exact "exact" (Term.app `H [(Term.app `residue [`R]) `Ideal.Quotient.mk_surjective])) [])])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.app `H [(Term.app `residue [`R]) `Ideal.Quotient.mk_surjective]))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [`_2_1 ":"] (num "2") "→" (num "1"))
            []
@@ -212,11 +242,14 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
             [(group (Tactic.intro "intro" [`H]) [])
              (group (Tactic.constructor "constructor") [])
              (group (Tactic.intro "intro" [`f `hf `a₀ `h₁ `h₂]) [])
-             (group (Tactic.specialize "specialize" (Term.app `H [`f `hf (Term.app `residue [`R `a₀])])) [])
+             (group
+              (Tactic.specialize "specialize" (Term.app `H [`f `hf (Term.app `residue [`R `a₀])]))
+              [])
              (group
               (Tactic.tacticHave_
                "have"
-               (Term.haveDecl (Term.haveIdDecl [`aux []] [] ":=" (Term.app `flip [`mem_nonunits_iff.mp `h₂]))))
+               (Term.haveDecl
+                (Term.haveIdDecl [`aux []] [] ":=" (Term.app `flip [`mem_nonunits_iff.mp `h₂]))))
               [])
              (group
               (Tactic.simp
@@ -231,9 +264,15 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                  ","
                  (Tactic.simpLemma [] [] `eval₂_at_apply)
                  ","
-                 (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `Ideal.Quotient.eq_zero_iff_mem)
+                 (Tactic.simpLemma
+                  []
+                  [(patternIgnore (token.«← » "←"))]
+                  `Ideal.Quotient.eq_zero_iff_mem)
                  ","
-                 (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)]
+                 (Tactic.simpLemma
+                  []
+                  [(patternIgnore (token.«← » "←"))]
+                  `LocalRing.mem_maximal_ideal)]
                 "]"]
                [(Tactic.location "at" (Tactic.locationHyp [`H `h₁ `aux] []))])
               [])
@@ -258,7 +297,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                []
                [":=" [(Term.app `H [`h₁ `aux])]])
               [])
-             (group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
+             (group
+              (Tactic.refine'
+               "refine'"
+               (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
+              [])
              (group
               (Tactic.rwSeq
                "rw"
@@ -307,7 +350,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               (Tactic.tacticHave_
                "have"
                (Term.haveDecl
-                (Term.haveIdDecl [`H []] [] ":=" (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
+                (Term.haveIdDecl
+                 [`H []]
+                 []
+                 ":="
+                 (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
               [])
              (group
               (Tactic.simp
@@ -316,7 +363,10 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                []
                ["only"]
                ["["
-                [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
+                [(Tactic.simpLemma
+                  []
+                  [(patternIgnore (token.«← » "←"))]
+                  (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
                  ","
                  (Tactic.simpLemma [] [] `eval₂_at_apply)
                  ","
@@ -348,11 +398,18 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
              (group
               («tactic___;_»
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
+               [(group
+                 (Tactic.refine'
+                  "refine'"
+                  (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
+                 [])
                 (group
                  (Std.Tactic.tacticRwa__
                   "rwa"
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)]
+                   "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
                  [])])
               [])
@@ -391,11 +448,15 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [`_3_2 ":"] (num "3") "→" (num "2"))
-          []
+          ";"
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.intro "intro" [`H]) [])
-            (group (Tactic.exact "exact" (Term.app `H [(Term.app `residue [`R]) `Ideal.Quotient.mk_surjective])) [])])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.app `H [(Term.app `residue [`R]) `Ideal.Quotient.mk_surjective]))
+             [])])
           []
           (Tactic.tfaeHave "tfae_have" [`_2_1 ":"] (num "2") "→" (num "1"))
           []
@@ -404,11 +465,14 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
            [(group (Tactic.intro "intro" [`H]) [])
             (group (Tactic.constructor "constructor") [])
             (group (Tactic.intro "intro" [`f `hf `a₀ `h₁ `h₂]) [])
-            (group (Tactic.specialize "specialize" (Term.app `H [`f `hf (Term.app `residue [`R `a₀])])) [])
+            (group
+             (Tactic.specialize "specialize" (Term.app `H [`f `hf (Term.app `residue [`R `a₀])]))
+             [])
             (group
              (Tactic.tacticHave_
               "have"
-              (Term.haveDecl (Term.haveIdDecl [`aux []] [] ":=" (Term.app `flip [`mem_nonunits_iff.mp `h₂]))))
+              (Term.haveDecl
+               (Term.haveIdDecl [`aux []] [] ":=" (Term.app `flip [`mem_nonunits_iff.mp `h₂]))))
              [])
             (group
              (Tactic.simp
@@ -423,9 +487,15 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                 ","
                 (Tactic.simpLemma [] [] `eval₂_at_apply)
                 ","
-                (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `Ideal.Quotient.eq_zero_iff_mem)
+                (Tactic.simpLemma
+                 []
+                 [(patternIgnore (token.«← » "←"))]
+                 `Ideal.Quotient.eq_zero_iff_mem)
                 ","
-                (Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)]
+                (Tactic.simpLemma
+                 []
+                 [(patternIgnore (token.«← » "←"))]
+                 `LocalRing.mem_maximal_ideal)]
                "]"]
               [(Tactic.location "at" (Tactic.locationHyp [`H `h₁ `aux] []))])
              [])
@@ -450,7 +520,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               []
               [":=" [(Term.app `H [`h₁ `aux])]])
              [])
-            (group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
+            (group
+             (Tactic.refine'
+              "refine'"
+              (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
+             [])
             (group
              (Tactic.rwSeq
               "rw"
@@ -499,7 +573,11 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
              (Tactic.tacticHave_
               "have"
               (Term.haveDecl
-               (Term.haveIdDecl [`H []] [] ":=" (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
+               (Term.haveIdDecl
+                [`H []]
+                []
+                ":="
+                (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
              [])
             (group
              (Tactic.simp
@@ -508,7 +586,10 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               []
               ["only"]
               ["["
-               [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
+               [(Tactic.simpLemma
+                 []
+                 [(patternIgnore (token.«← » "←"))]
+                 (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
                 ","
                 (Tactic.simpLemma [] [] `eval₂_at_apply)
                 ","
@@ -540,11 +621,18 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
             (group
              («tactic___;_»
               (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
+              [(group
+                (Tactic.refine'
+                 "refine'"
+                 (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
+                [])
                (group
                 (Std.Tactic.tacticRwa__
                  "rwa"
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)]
+                  "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
                 [])])
              [])
@@ -600,7 +688,12 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
         (group
          (Tactic.tacticHave_
           "have"
-          (Term.haveDecl (Term.haveIdDecl [`H []] [] ":=" (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
+          (Term.haveDecl
+           (Term.haveIdDecl
+            [`H []]
+            []
+            ":="
+            (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
          [])
         (group
          (Tactic.simp
@@ -609,7 +702,10 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
           []
           ["only"]
           ["["
-           [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
+           [(Tactic.simpLemma
+             []
+             [(patternIgnore (token.«← » "←"))]
+             (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
             ","
             (Tactic.simpLemma [] [] `eval₂_at_apply)
             ","
@@ -641,11 +737,18 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
         (group
          («tactic___;_»
           (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
+          [(group
+            (Tactic.refine'
+             "refine'"
+             (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
+            [])
            (group
             (Std.Tactic.tacticRwa__
              "rwa"
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)]
+              "]")
              [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
             [])])
          [])
@@ -662,7 +765,9 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                ","
                (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
                ","
-               (Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+               (Tactic.rwRule
+                [(patternIgnore (token.«← » "←"))]
+                (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
                ","
                (Tactic.rwRule [] `φ.mem_ker)]
               "]")
@@ -682,7 +787,9 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
             ","
             (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
             ","
-            (Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+            (Tactic.rwRule
+             [(patternIgnore (token.«← » "←"))]
+             (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
             ","
             (Tactic.rwRule [] `φ.mem_ker)]
            "]")
@@ -697,7 +804,9 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
          ","
          (Tactic.rwRule [(patternIgnore (token.«← » "←"))] `LocalRing.mem_maximal_ideal)
          ","
-         (Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
+         (Tactic.rwRule
+          [(patternIgnore (token.«← » "←"))]
+          (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ]))
          ","
          (Tactic.rwRule [] `φ.mem_ker)]
         "]")
@@ -705,32 +814,39 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `φ.mem_ker
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `LocalRing.ker_eq_maximal_ideal [`φ `hφ])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hφ
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `φ
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `LocalRing.ker_eq_maximal_ideal
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `LocalRing.mem_maximal_ideal
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_nonunits_iff
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Mathlib.Tactic.Contrapose.contrapose! "contrapose!" [`h₂ []])
@@ -739,28 +855,39 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       («tactic___;_»
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
+       [(group
+         (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
+         [])
         (group
          (Std.Tactic.tacticRwa__
           "rwa"
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)]
+           "]")
           [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.tacticRwa__
        "rwa"
-       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
+       (Tactic.rwRuleSeq
+        "["
+        [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)]
+        "]")
        [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `sub_eq_zero
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `φ.map_sub
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩"))
@@ -768,14 +895,18 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
       (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -784,9 +915,13 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
        [(Std.Tactic.RCases.rcasesPatMed
          [(Std.Tactic.RCases.rcasesPat.tuple
            "⟨"
-           [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)]) [])
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a)])
+             [])
             ","
-            (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₁)]) [])
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₁)])
+             [])
             ","
             (Std.Tactic.RCases.rcasesPatLo
              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha₂)])
@@ -800,15 +935,18 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `h₁
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -818,7 +956,10 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
        []
        ["only"]
        ["["
-        [(Tactic.simpLemma [] [(patternIgnore (token.«← » "←"))] (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
+        [(Tactic.simpLemma
+          []
+          [(patternIgnore (token.«← » "←"))]
+          (Term.app `ker_eq_maximal_ideal [`φ `hφ]))
          ","
          (Tactic.simpLemma [] [] `eval₂_at_apply)
          ","
@@ -828,23 +969,28 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `φ.mem_ker
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `eval₂_at_apply
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -853,41 +999,49 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hφ
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `φ
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ker_eq_maximal_ideal
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.tacticHave_
        "have"
-       (Term.haveDecl (Term.haveIdDecl [`H []] [] ":=" (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
+       (Term.haveDecl
+        (Term.haveIdDecl [`H []] [] ":=" (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `HenselianLocalRing.is_henselian [`f `hf `a₀])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₀
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hf
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `HenselianLocalRing.is_henselian
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -896,7 +1050,9 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
        [(Std.Tactic.RCases.rcasesPatMed
          [(Std.Tactic.RCases.rcasesPat.tuple
            "⟨"
-           [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a₀)]) [])
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `a₀)])
+             [])
             ","
             (Std.Tactic.RCases.rcasesPatLo
              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
@@ -910,44 +1066,56 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a₀
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hφ
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`hR `K `_K `φ `hφ `f `hf `a₀ `h₁ `h₂])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h₁
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a₀
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hf
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hφ
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `φ
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `_K
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `K
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hR
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -998,6 +1166,7 @@ theorem
   :=
     by
       tfae_have _3_2 : 3 → 2
+        ;
         · intro H exact H residue R Ideal.Quotient.mk_surjective
         tfae_have _2_1 : 2 → 1
         ·
@@ -1048,7 +1217,8 @@ theorem
         tfae_finish
 #align henselian_local_ring.tfae HenselianLocalRing.tfae
 
-instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R) where
+instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] :
+    HenselianRing R (maximalIdeal R) where
   jac := by
     rw [Ideal.jacobson, le_Inf_iff]
     rintro I ⟨-, hI⟩
@@ -1063,8 +1233,8 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
 
 -- see Note [lower instance priority]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
-instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
-    HenselianRing R I where
+instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing R] (I : Ideal R)
+    [IsAdicComplete I R] : HenselianRing R I where
   jac := IsAdicComplete.le_jacobson_bot _
   is_henselian := by
     intro f hf a₀ h₁ h₂
@@ -1114,8 +1284,8 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing 
         rw [zero_mul]
         
       refine' Ideal.add_mem _ _ _
-      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_one, pow_one, taylor_coeff_zero, mul_neg,
-          Finset.sum_singleton, Finset.range_one, pow_zero]
+      · simp only [Finset.sum_range_succ, taylor_coeff_one, mul_one, pow_one, taylor_coeff_zero,
+          mul_neg, Finset.sum_singleton, Finset.range_one, pow_zero]
         rw [mul_left_comm, Ring.mul_inverse_cancel _ (hf'c n), mul_one, add_neg_self]
         exact Ideal.zero_mem _
         

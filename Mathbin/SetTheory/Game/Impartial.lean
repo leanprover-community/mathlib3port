@@ -24,12 +24,15 @@ namespace Pgame
 
 /-- The definition for a impartial game, defined using Conway induction. -/
 def ImpartialAux : Pgame → Prop
-  | G => (G ≈ -G) ∧ (∀ i, impartial_aux (G.moveLeft i)) ∧ ∀ j, impartial_aux (G.moveRight j)decreasing_by pgame_wf_tac
+  | G =>
+    (G ≈ -G) ∧ (∀ i, impartial_aux (G.moveLeft i)) ∧ ∀ j, impartial_aux (G.moveRight j)decreasing_by
+  pgame_wf_tac
 #align pgame.impartial_aux Pgame.ImpartialAux
 
 theorem impartial_aux_def {G : Pgame} :
-    G.ImpartialAux ↔ (G ≈ -G) ∧ (∀ i, ImpartialAux (G.moveLeft i)) ∧ ∀ j, ImpartialAux (G.moveRight j) := by
-  rw [impartial_aux]
+    G.ImpartialAux ↔
+      (G ≈ -G) ∧ (∀ i, ImpartialAux (G.moveLeft i)) ∧ ∀ j, ImpartialAux (G.moveRight j) :=
+  by rw [impartial_aux]
 #align pgame.impartial_aux_def Pgame.impartial_aux_def
 
 /-- A typeclass on impartial games. -/
@@ -68,11 +71,13 @@ theorem mk_neg_equiv_self (G : Pgame) [h : G.Impartial] : -⟦G⟧ = ⟦G⟧ :=
   Quot.sound (neg_equiv_self G).symm
 #align pgame.impartial.mk_neg_equiv_self Pgame.Impartial.mk_neg_equiv_self
 
-instance move_left_impartial {G : Pgame} [h : G.Impartial] (i : G.LeftMoves) : (G.moveLeft i).Impartial :=
+instance move_left_impartial {G : Pgame} [h : G.Impartial] (i : G.LeftMoves) :
+    (G.moveLeft i).Impartial :=
   (impartial_def.1 h).2.1 i
 #align pgame.impartial.move_left_impartial Pgame.Impartial.move_left_impartial
 
-instance move_right_impartial {G : Pgame} [h : G.Impartial] (j : G.RightMoves) : (G.moveRight j).Impartial :=
+instance move_right_impartial {G : Pgame} [h : G.Impartial] (j : G.RightMoves) :
+    (G.moveRight j).Impartial :=
   (impartial_def.1 h).2.2 j
 #align pgame.impartial.move_right_impartial Pgame.Impartial.move_right_impartial
 
@@ -82,7 +87,8 @@ theorem impartial_congr : ∀ {G H : Pgame} (e : G ≡r H) [G.Impartial], H.Impa
     exact
       impartial_def.2
         ⟨e.symm.equiv.trans ((neg_equiv_self G).trans (neg_equiv_neg_iff.2 e.equiv)), fun i =>
-          impartial_congr (e.move_left_symm i), fun j => impartial_congr (e.move_right_symm j)⟩decreasing_by
+          impartial_congr (e.move_left_symm i), fun j =>
+          impartial_congr (e.move_right_symm j)⟩decreasing_by
   pgame_wf_tac
 #align pgame.impartial.impartial_congr Pgame.Impartial.impartial_congr
 
@@ -91,18 +97,16 @@ instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).
     intro hG hH
     rw [impartial_def]
     refine'
-      ⟨(add_congr (neg_equiv_self _) (neg_equiv_self _)).trans (neg_add_relabelling _ _).Equiv.symm, fun k => _,
-        fun k => _⟩
+      ⟨(add_congr (neg_equiv_self _) (neg_equiv_self _)).trans (neg_add_relabelling _ _).Equiv.symm,
+        fun k => _, fun k => _⟩
     · apply left_moves_add_cases k
       all_goals
-      intro i
-      simp only [add_move_left_inl, add_move_left_inr]
+      intro i; simp only [add_move_left_inl, add_move_left_inr]
       apply impartial_add
       
     · apply right_moves_add_cases k
       all_goals
-      intro i
-      simp only [add_move_right_inl, add_move_right_inr]
+      intro i; simp only [add_move_right_inl, add_move_right_inr]
       apply impartial_add
       decreasing_by
   pgame_wf_tac
@@ -215,7 +219,8 @@ theorem forall_left_moves_fuzzy_iff_equiv_zero : (∀ i, G.moveLeft i ‖ 0) ↔
   · rw [fuzzy_zero_iff_lf]
     exact hp.1.move_left_lf i
     
-#align pgame.impartial.forall_left_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_left_moves_fuzzy_iff_equiv_zero
+#align
+  pgame.impartial.forall_left_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_left_moves_fuzzy_iff_equiv_zero
 
 theorem forall_right_moves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) ↔ (G ≈ 0) := by
   refine' ⟨fun hb => _, fun hp i => _⟩
@@ -225,21 +230,24 @@ theorem forall_right_moves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) �
   · rw [fuzzy_zero_iff_gf]
     exact hp.2.lf_move_right i
     
-#align pgame.impartial.forall_right_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_right_moves_fuzzy_iff_equiv_zero
+#align
+  pgame.impartial.forall_right_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_right_moves_fuzzy_iff_equiv_zero
 
 theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ G ‖ 0 := by
   refine' ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_gf G).2 (lf_of_le_move_left hi.2), fun hn => _⟩
   rw [fuzzy_zero_iff_gf G, zero_lf_le] at hn
   cases' hn with i hi
   exact ⟨i, (equiv_zero_iff_ge _).2 hi⟩
-#align pgame.impartial.exists_left_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_left_move_equiv_iff_fuzzy_zero
+#align
+  pgame.impartial.exists_left_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_left_move_equiv_iff_fuzzy_zero
 
 theorem exists_right_move_equiv_iff_fuzzy_zero : (∃ j, G.moveRight j ≈ 0) ↔ G ‖ 0 := by
   refine' ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_lf G).2 (lf_of_move_right_le hi.1), fun hn => _⟩
   rw [fuzzy_zero_iff_lf G, lf_zero_le] at hn
   cases' hn with i hi
   exact ⟨i, (equiv_zero_iff_le _).2 hi⟩
-#align pgame.impartial.exists_right_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_right_move_equiv_iff_fuzzy_zero
+#align
+  pgame.impartial.exists_right_move_equiv_iff_fuzzy_zero Pgame.Impartial.exists_right_move_equiv_iff_fuzzy_zero
 
 end Impartial
 

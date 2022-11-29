@@ -68,7 +68,8 @@ section OrderedSemiring
 
 variable [OrderedSemiring β]
 
-theorem Subsingleton.equitable_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f := fun i j hi hj => by
+theorem Subsingleton.equitable_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
+  fun i j hi hj => by
   rw [hs hi hj]
   exact le_add_of_nonneg_right zero_le_one
 #align set.subsingleton.equitable_on Set.Subsingleton.equitable_on
@@ -88,7 +89,9 @@ namespace Finset
 variable {s : Finset α} {f : α → ℕ} {a : α}
 
 theorem equitable_on_iff_le_le_add_one :
-    EquitableOn (s : Set α) f ↔ ∀ a ∈ s, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ (∑ i in s, f i) / s.card + 1 := by
+    EquitableOn (s : Set α) f ↔
+      ∀ a ∈ s, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ (∑ i in s, f i) / s.card + 1 :=
+  by
   rw [Set.equitable_on_iff_exists_le_le_add_one]
   refine' ⟨_, fun h => ⟨_, h⟩⟩
   rintro ⟨b, hb⟩
@@ -111,17 +114,20 @@ theorem equitable_on_iff_le_le_add_one :
   exact fun _ _ => rfl
 #align finset.equitable_on_iff_le_le_add_one Finset.equitable_on_iff_le_le_add_one
 
-theorem EquitableOn.le (h : EquitableOn (s : Set α) f) (ha : a ∈ s) : (∑ i in s, f i) / s.card ≤ f a :=
+theorem EquitableOn.le (h : EquitableOn (s : Set α) f) (ha : a ∈ s) :
+    (∑ i in s, f i) / s.card ≤ f a :=
   (equitable_on_iff_le_le_add_one.1 h a ha).1
 #align finset.equitable_on.le Finset.EquitableOn.le
 
-theorem EquitableOn.le_add_one (h : EquitableOn (s : Set α) f) (ha : a ∈ s) : f a ≤ (∑ i in s, f i) / s.card + 1 :=
+theorem EquitableOn.le_add_one (h : EquitableOn (s : Set α) f) (ha : a ∈ s) :
+    f a ≤ (∑ i in s, f i) / s.card + 1 :=
   (equitable_on_iff_le_le_add_one.1 h a ha).2
 #align finset.equitable_on.le_add_one Finset.EquitableOn.le_add_one
 
 theorem equitable_on_iff :
-    EquitableOn (s : Set α) f ↔ ∀ a ∈ s, f a = (∑ i in s, f i) / s.card ∨ f a = (∑ i in s, f i) / s.card + 1 := by
-  simp_rw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
+    EquitableOn (s : Set α) f ↔
+      ∀ a ∈ s, f a = (∑ i in s, f i) / s.card ∨ f a = (∑ i in s, f i) / s.card + 1 :=
+  by simp_rw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
 #align finset.equitable_on_iff Finset.equitable_on_iff
 
 end Finset

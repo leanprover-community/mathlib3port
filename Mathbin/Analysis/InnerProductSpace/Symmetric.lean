@@ -69,12 +69,13 @@ theorem is_symmetric_iff_sesq_form (T : E →ₗ[𝕜] E) :
 
 end Real
 
-theorem IsSymmetric.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) (x y : E) : conj ⟪T x, y⟫ = ⟪T y, x⟫ := by
-  rw [hT x y, inner_conj_sym]
+theorem IsSymmetric.conj_inner_sym {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) (x y : E) :
+    conj ⟪T x, y⟫ = ⟪T y, x⟫ := by rw [hT x y, inner_conj_sym]
 #align linear_map.is_symmetric.conj_inner_sym LinearMap.IsSymmetric.conj_inner_sym
 
 @[simp]
-theorem IsSymmetric.apply_clm {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x y : E) : ⟪T x, y⟫ = ⟪x, T y⟫ :=
+theorem IsSymmetric.apply_clm {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x y : E) :
+    ⟪T x, y⟫ = ⟪x, T y⟫ :=
   hT x y
 #align linear_map.is_symmetric.apply_clm LinearMap.IsSymmetric.apply_clm
 
@@ -85,7 +86,8 @@ theorem isSymmetricZero : (0 : E →ₗ[𝕜] E).IsSymmetric := fun x y =>
 theorem isSymmetricId : (LinearMap.id : E →ₗ[𝕜] E).IsSymmetric := fun x y => rfl
 #align linear_map.is_symmetric_id LinearMap.isSymmetricId
 
-theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) : (T + S).IsSymmetric := by
+theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) :
+    (T + S).IsSymmetric := by
   intro x y
   rw [LinearMap.add_apply, inner_add_left, hT x y, hS x y, ← inner_add_right]
   rfl
@@ -93,7 +95,8 @@ theorem IsSymmetric.add {T S : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.Is
 
 /-- The **Hellinger--Toeplitz theorem**: if a symmetric operator is defined on a complete space,
   then it is automatically continuous. -/
-theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) : Continuous T := by
+theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) :
+    Continuous T := by
   -- We prove it by using the closed graph theorem
   refine' T.continuous_of_seq_closed_graph fun u x y hu hTu => _
   rw [← sub_eq_zero, ← inner_self_eq_zero]
@@ -110,19 +113,20 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
 
 /-- For a symmetric operator `T`, the function `λ x, ⟪T x, x⟫` is real-valued. -/
 @[simp]
-theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E)) (x : E) :
-    (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
+theorem IsSymmetric.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E))
+    (x : E) : (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
   rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ⟪T x, x⟫ = r
   · simp [hr, T.re_apply_inner_self_apply]
     
   rw [← eq_conj_iff_real]
   exact hT.conj_inner_sym x x
-#align linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_re_apply_inner_self_apply
+#align
+  linear_map.is_symmetric.coe_re_apply_inner_self_apply LinearMap.IsSymmetric.coe_re_apply_inner_self_apply
 
 /-- If a symmetric operator preserves a submodule, its restriction to that submodule is
 symmetric. -/
-theorem IsSymmetric.restrictInvariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E} (hV : ∀ v ∈ V, T v ∈ V) :
-    IsSymmetric (T.restrict hV) := fun v w => hT v w
+theorem IsSymmetric.restrictInvariant {T : E →ₗ[𝕜] E} (hT : IsSymmetric T) {V : Submodule 𝕜 E}
+    (hV : ∀ v ∈ V, T v ∈ V) : IsSymmetric (T.restrict hV) := fun v w => hT v w
 #align linear_map.is_symmetric.restrict_invariant LinearMap.IsSymmetric.restrictInvariant
 
 theorem IsSymmetric.restrictScalars {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric) :
@@ -138,8 +142,8 @@ variable {V : Type _} [InnerProductSpace ℂ V]
 
 /-- A linear operator on a complex inner product space is symmetric precisely when
 `⟪T v, v⟫_ℂ` is real for all v.-/
-theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) : IsSymmetric T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ :=
-  by
+theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
+    IsSymmetric T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ := by
   constructor
   · intro hT v
     apply is_symmetric.conj_inner_sym hT
@@ -155,7 +159,8 @@ theorem is_symmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) : IsSymmetric
     norm_num
     ring
     
-#align linear_map.is_symmetric_iff_inner_map_self_real LinearMap.is_symmetric_iff_inner_map_self_real
+#align
+  linear_map.is_symmetric_iff_inner_map_self_real LinearMap.is_symmetric_iff_inner_map_self_real
 
 end Complex
 

@@ -47,28 +47,29 @@ theorem is_order_right_adjoint_Sup [CompleteLattice α] [Preorder β] (f : α �
     IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y => is_lub_Sup _
 #align is_order_right_adjoint_Sup is_order_right_adjoint_Sup
 
-theorem is_order_right_adjoint_cSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β) (hne : ∀ y, ∃ x, f x ≤ y)
-    (hbdd : ∀ y, BddAbove { x | f x ≤ y }) : IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y =>
-  is_lub_cSup (hne y) (hbdd y)
+theorem is_order_right_adjoint_cSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β)
+    (hne : ∀ y, ∃ x, f x ≤ y) (hbdd : ∀ y, BddAbove { x | f x ≤ y }) :
+    IsOrderRightAdjoint f fun y => sup { x | f x ≤ y } := fun y => is_lub_cSup (hne y) (hbdd y)
 #align is_order_right_adjoint_cSup is_order_right_adjoint_cSup
 
 namespace IsOrderRightAdjoint
 
-protected theorem unique [PartialOrder α] [Preorder β] {f : α → β} {g₁ g₂ : β → α} (h₁ : IsOrderRightAdjoint f g₁)
-    (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
+protected theorem unique [PartialOrder α] [Preorder β] {f : α → β} {g₁ g₂ : β → α}
+    (h₁ : IsOrderRightAdjoint f g₁) (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
   funext fun y => (h₁ y).unique (h₂ y)
 #align is_order_right_adjoint.unique IsOrderRightAdjoint.unique
 
-theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) : Monotone g :=
-  fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_trans hx hy
+theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) :
+    Monotone g := fun y₁ y₂ hy => ((h y₁).mono (h y₂)) fun x hx => le_trans hx hy
 #align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_mono
 
-theorem order_iso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
-    (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) := fun y => by simpa [e.le_symm_apply] using h (e.symm y)
+theorem order_iso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
+    (h : IsOrderRightAdjoint f g) (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) :=
+  fun y => by simpa [e.le_symm_apply] using h (e.symm y)
 #align is_order_right_adjoint.order_iso_comp IsOrderRightAdjoint.order_iso_comp
 
-theorem comp_order_iso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g)
-    (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by
+theorem comp_order_iso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
+    (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) := by
   intro y
   change IsLub (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
   rw [e.is_lub_preimage, e.apply_symm_apply]
@@ -86,7 +87,8 @@ semiconjugate to `fa` by `g'`.
 This is a version of Proposition 2.1 from [Étienne Ghys, Groupes d'homeomorphismes du cercle et
 cohomologie bornee][ghys87:groupes]. -/
 theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} {fb : β ↪o β} {g : α → β}
-    (h : Function.Semiconj g fa fb) {g' : β → α} (hg' : IsOrderRightAdjoint g g') : Function.Semiconj g' fb fa := by
+    (h : Function.Semiconj g fa fb) {g' : β → α} (hg' : IsOrderRightAdjoint g g') :
+    Function.Semiconj g' fb fa := by
   refine' fun y => (hg' _).unique _
   rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
   simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
@@ -95,7 +97,8 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
 variable {G : Type _}
 
 theorem semiconj_of_is_lub [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
-    (H : ∀ x, IsLub (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) : Function.Semiconj h (f₂ g) (f₁ g) := by
+    (H : ∀ x, IsLub (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) :
+    Function.Semiconj h (f₂ g) (f₁ g) := by
   refine' fun y => (H _).unique _
   have := (f₁ g).LeftOrdContinuous (H y)
   rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this

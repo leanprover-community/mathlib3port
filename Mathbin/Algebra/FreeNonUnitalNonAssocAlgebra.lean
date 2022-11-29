@@ -68,9 +68,11 @@ def lift : (X → A) ≃ (FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) :=
 #align free_non_unital_non_assoc_algebra.lift FreeNonUnitalNonAssocAlgebra.lift
 
 @[simp]
-theorem lift_symm_apply (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : (lift R).symm F = F ∘ of R :=
+theorem lift_symm_apply (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) :
+    (lift R).symm F = F ∘ of R :=
   rfl
-#align free_non_unital_non_assoc_algebra.lift_symm_apply FreeNonUnitalNonAssocAlgebra.lift_symm_apply
+#align
+  free_non_unital_non_assoc_algebra.lift_symm_apply FreeNonUnitalNonAssocAlgebra.lift_symm_apply
 
 @[simp]
 theorem of_comp_lift (f : X → A) : lift R f ∘ of R = f :=
@@ -78,7 +80,8 @@ theorem of_comp_lift (f : X → A) : lift R f ∘ of R = f :=
 #align free_non_unital_non_assoc_algebra.of_comp_lift FreeNonUnitalNonAssocAlgebra.of_comp_lift
 
 @[simp]
-theorem lift_unique (f : X → A) (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : F ∘ of R = f ↔ F = lift R f :=
+theorem lift_unique (f : X → A) (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) :
+    F ∘ of R = f ↔ F = lift R f :=
   (lift R).symm_apply_eq
 #align free_non_unital_non_assoc_algebra.lift_unique FreeNonUnitalNonAssocAlgebra.lift_unique
 
@@ -93,7 +96,8 @@ theorem lift_comp_of (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : lif
 #align free_non_unital_non_assoc_algebra.lift_comp_of FreeNonUnitalNonAssocAlgebra.lift_comp_of
 
 @[ext.1]
-theorem hom_ext {F₁ F₂ : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
+theorem hom_ext {F₁ F₂ : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A}
+    (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
   (lift R).symm.Injective <| funext h
 #align free_non_unital_non_assoc_algebra.hom_ext FreeNonUnitalNonAssocAlgebra.hom_ext
 

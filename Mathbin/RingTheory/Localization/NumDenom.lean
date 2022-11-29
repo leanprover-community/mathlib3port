@@ -38,7 +38,8 @@ theorem exists_reduced_fraction (x : K) :
     ∃ (a : A)(b : nonZeroDivisors A), (∀ {d}, d ∣ a → d ∣ b → IsUnit d) ∧ mk' K a b = x := by
   obtain ⟨⟨b, b_nonzero⟩, a, hab⟩ := exists_integer_multiple (nonZeroDivisors A) x
   obtain ⟨a', b', c', no_factor, rfl, rfl⟩ :=
-    UniqueFactorizationMonoid.exists_reduced_factors' a b (mem_non_zero_divisors_iff_ne_zero.mp b_nonzero)
+    UniqueFactorizationMonoid.exists_reduced_factors' a b
+      (mem_non_zero_divisors_iff_ne_zero.mp b_nonzero)
   obtain ⟨c'_nonzero, b'_nonzero⟩ := mul_mem_non_zero_divisors.mp b_nonzero
   refine' ⟨a', ⟨b', b'_nonzero⟩, @no_factor, _⟩
   refine' mul_left_cancel₀ (IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors b_nonzero) _
@@ -67,19 +68,23 @@ theorem mk'_num_denom (x : K) : mk' K (num A x) (denom A x) = x :=
 
 variable {A}
 
-theorem num_mul_denom_eq_num_iff_eq {x y : K} : x * algebraMap A K (denom A y) = algebraMap A K (num A y) ↔ x = y :=
+theorem num_mul_denom_eq_num_iff_eq {x y : K} :
+    x * algebraMap A K (denom A y) = algebraMap A K (num A y) ↔ x = y :=
   ⟨fun h => by simpa only [mk'_num_denom] using eq_mk'_iff_mul_eq.mpr h, fun h =>
     eq_mk'_iff_mul_eq.mp (by rw [h, mk'_num_denom])⟩
 #align is_fraction_ring.num_mul_denom_eq_num_iff_eq IsFractionRing.num_mul_denom_eq_num_iff_eq
 
-theorem num_mul_denom_eq_num_iff_eq' {x y : K} : y * algebraMap A K (denom A x) = algebraMap A K (num A x) ↔ x = y :=
+theorem num_mul_denom_eq_num_iff_eq' {x y : K} :
+    y * algebraMap A K (denom A x) = algebraMap A K (num A x) ↔ x = y :=
   ⟨fun h => by simpa only [eq_comm, mk'_num_denom] using eq_mk'_iff_mul_eq.mpr h, fun h =>
     eq_mk'_iff_mul_eq.mp (by rw [h, mk'_num_denom])⟩
 #align is_fraction_ring.num_mul_denom_eq_num_iff_eq' IsFractionRing.num_mul_denom_eq_num_iff_eq'
 
-theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} : num A y * denom A x = num A x * denom A y ↔ x = y :=
+theorem num_mul_denom_eq_num_mul_denom_iff_eq {x y : K} :
+    num A y * denom A x = num A x * denom A y ↔ x = y :=
   ⟨fun h => by simpa only [mk'_num_denom] using mk'_eq_of_eq h, fun h => by rw [h]⟩
-#align is_fraction_ring.num_mul_denom_eq_num_mul_denom_iff_eq IsFractionRing.num_mul_denom_eq_num_mul_denom_iff_eq
+#align
+  is_fraction_ring.num_mul_denom_eq_num_mul_denom_iff_eq IsFractionRing.num_mul_denom_eq_num_mul_denom_iff_eq
 
 theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=
   num_mul_denom_eq_num_iff_eq'.mp (by rw [zero_mul, h, RingHom.map_zero])

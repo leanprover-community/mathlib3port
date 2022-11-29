@@ -202,7 +202,8 @@ instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨Inhabited.default _⟩⟩
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
-def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (ULift.{u'} C) :=
+def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] :
+    C ≌ UliftHom.{v'} (ULift.{u'} C) :=
   Ulift.equivalence.trans UliftHom.equiv
 #align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.UliftHomUliftCategory.equiv
 

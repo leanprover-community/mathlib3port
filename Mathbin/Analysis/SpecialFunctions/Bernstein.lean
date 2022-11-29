@@ -61,14 +61,17 @@ def bernstein (n ν : ℕ) : C(I, ℝ) :=
 #align bernstein bernstein
 
 @[simp]
-theorem bernstein_apply (n ν : ℕ) (x : I) : bernstein n ν x = n.choose ν * x ^ ν * (1 - x) ^ (n - ν) := by
+theorem bernstein_apply (n ν : ℕ) (x : I) :
+    bernstein n ν x = n.choose ν * x ^ ν * (1 - x) ^ (n - ν) := by
   dsimp [bernstein, Polynomial.toContinuousMapOn, Polynomial.toContinuousMap, bernsteinPolynomial]
   simp
 #align bernstein_apply bernstein_apply
 
 theorem bernstein_nonneg {n ν : ℕ} {x : I} : 0 ≤ bernstein n ν x := by
   simp only [bernstein_apply]
-  exact mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (by unit_interval) _)) (pow_nonneg (by unit_interval) _)
+  exact
+    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (by unit_interval) _))
+      (pow_nonneg (by unit_interval) _)
 #align bernstein_nonneg bernstein_nonneg
 
 /-!
@@ -159,7 +162,8 @@ namespace bernsteinApproximation
 
 @[simp]
 theorem apply (n : ℕ) (f : C(I, ℝ)) (x : I) :
-    bernsteinApproximation n f x = ∑ k : Fin (n + 1), f k/ₙ * bernstein n k x := by simp [bernsteinApproximation]
+    bernsteinApproximation n f x = ∑ k : Fin (n + 1), f k/ₙ * bernstein n k x := by
+  simp [bernsteinApproximation]
 #align bernstein_approximation.apply bernsteinApproximation.apply
 
 /-- The modulus of (uniform) continuity for `f`, chosen so `|f x - f y| < ε/2` when `|x - y| < δ`.
@@ -180,8 +184,8 @@ def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Fin (n
 
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
-theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)} (m : k ∈ s f ε h n x) :
-    |f k/ₙ - f x| < ε / 2 := by
+theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
+    (m : k ∈ s f ε h n x) : |f k/ₙ - f x| < ε / 2 := by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
 #align bernstein_approximation.lt_of_mem_S bernsteinApproximation.lt_of_mem_S
@@ -189,8 +193,8 @@ theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k
 /-- If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
 This particular formulation will be helpful later.
 -/
-theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)} (m : k ∈ s f ε h n xᶜ) :
-    (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 := by
+theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
+    (m : k ∈ s f ε h n xᶜ) : (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 := by
   simp only [Finset.mem_compl, not_lt, Set.mem_to_finset, Set.mem_set_of_eq, S] at m
   erw [zpow_neg, ← div_eq_inv_mul, one_le_div (pow_pos δ_pos 2), sq_le_sq, abs_of_pos δ_pos]
   rwa [dist_comm] at m
@@ -215,13 +219,14 @@ for a continuous function `f : C([0,1], ℝ)` converge uniformly to `f` as `n` t
 This is the proof given in [Richard Beals' *Analysis, an introduction*][beals-analysis], §7D,
 and reproduced on wikipedia.
 -/
-theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ => bernsteinApproximation n f) atTop (𝓝 f) :=
-  by
+theorem bernstein_approximation_uniform (f : C(I, ℝ)) :
+    Tendsto (fun n : ℕ => bernsteinApproximation n f) atTop (𝓝 f) := by
   simp only [metric.nhds_basis_ball.tendsto_right_iff, Metric.mem_ball, dist_eq_norm]
   intro ε h
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_at_top_nhds_0_nat (2 * ‖f‖ * δ ^ (-2 : ℤ))
-  filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)), eventually_gt_at_top 0] with n nh npos'
+  filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)),
+    eventually_gt_at_top 0] with n nh npos'
   have npos : 0 < (n : ℝ) := by exact_mod_cast npos'
   -- Two easy inequalities we'll need later:
   have w₁ : 0 ≤ 2 * ‖f‖ := mul_nonneg (by norm_num) (norm_nonneg f)
@@ -235,11 +240,13 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
   calc
     |(bernsteinApproximation n f - f) x| = |bernsteinApproximation n f x - f x| := rfl
     _ = |bernsteinApproximation n f x - f x * 1| := by rw [mul_one]
-    _ = |bernsteinApproximation n f x - f x * ∑ k : Fin (n + 1), bernstein n k x| := by rw [bernstein.probability]
+    _ = |bernsteinApproximation n f x - f x * ∑ k : Fin (n + 1), bernstein n k x| := by
+      rw [bernstein.probability]
     _ = |∑ k : Fin (n + 1), (f k/ₙ - f x) * bernstein n k x| := by
       simp [bernsteinApproximation, Finset.mul_sum, sub_mul]
     _ ≤ ∑ k : Fin (n + 1), |(f k/ₙ - f x) * bernstein n k x| := Finset.abs_sum_le_sum_abs _ _
-    _ = ∑ k : Fin (n + 1), |f k/ₙ - f x| * bernstein n k x := by simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
+    _ = ∑ k : Fin (n + 1), |f k/ₙ - f x| * bernstein n k x := by
+      simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
     _ = (∑ k in S, |f k/ₙ - f x| * bernstein n k x) + ∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x :=
       (S.sum_add_sum_compl _).symm
     -- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
@@ -252,13 +259,15 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
     -- quickly give us a bound.
     calc
       (∑ k in S, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
-        Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_S m)) bernstein_nonneg
+        Finset.sum_le_sum fun k m =>
+          mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_S m)) bernstein_nonneg
       _ = ε / 2 * ∑ k in S, bernstein n k x := by rw [Finset.mul_sum]
       -- In this step we increase the sum over `S` back to a sum over all of `fin (n+1)`,
           -- so that we can use `bernstein.probability`.
           _ ≤
           ε / 2 * ∑ k : Fin (n + 1), bernstein n k x :=
-        mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg) (le_of_lt (half_pos h))
+        mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg)
+          (le_of_lt (half_pos h))
       _ = ε / 2 := by rw [bernstein.probability, mul_one]
       
     
@@ -267,7 +276,8 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
     -- (which is at least one because we are not in `S`).
     calc
       (∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ‖f‖ * bernstein n k x :=
-        Finset.sum_le_sum fun k m => mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg
+        Finset.sum_le_sum fun k m =>
+          mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg
       _ = 2 * ‖f‖ * ∑ k in Sᶜ, bernstein n k x := by rw [Finset.mul_sum]
       _ ≤ 2 * ‖f‖ * ∑ k in Sᶜ, δ ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 * bernstein n k x :=
         mul_le_mul_of_nonneg_left
@@ -282,7 +292,8 @@ theorem bernstein_approximation_uniform (f : C(I, ℝ)) : Tendsto (fun n : ℕ =
           (Finset.sum_le_univ_sum_of_nonneg fun k =>
             mul_nonneg (mul_nonneg pow_minus_two_nonneg (sq_nonneg _)) bernstein_nonneg)
           w₁
-      _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x := by conv_rhs =>
+      _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), (x - k/ₙ) ^ 2 * bernstein n k x := by
+        conv_rhs =>
         rw [mul_assoc, Finset.mul_sum]
         simp only [← mul_assoc]
       -- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound

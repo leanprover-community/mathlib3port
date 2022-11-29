@@ -76,7 +76,8 @@ def Bundle.ContinuousLinearMap (x : B) : Type _ :=
 instance Bundle.ContinuousLinearMap.addMonoidHomClass (x : B) :
     AddMonoidHomClass (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂ x) (E₁ x) (E₂ x) := by
   delta_instance bundle.continuous_linear_map
-#align bundle.continuous_linear_map.add_monoid_hom_class Bundle.ContinuousLinearMap.addMonoidHomClass
+#align
+  bundle.continuous_linear_map.add_monoid_hom_class Bundle.ContinuousLinearMap.addMonoidHomClass
 
 variable [∀ x, HasContinuousAdd (E₂ x)]
 
@@ -90,16 +91,16 @@ instance (x : B) : Module 𝕜₂ (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ 
 
 end Defs
 
-variable {𝕜₁ : Type _} [NontriviallyNormedField 𝕜₁] {𝕜₂ : Type _} [NontriviallyNormedField 𝕜₂] (σ : 𝕜₁ →+* 𝕜₂)
-  [iσ : RingHomIsometric σ]
+variable {𝕜₁ : Type _} [NontriviallyNormedField 𝕜₁] {𝕜₂ : Type _} [NontriviallyNormedField 𝕜₂]
+  (σ : 𝕜₁ →+* 𝕜₂) [iσ : RingHomIsometric σ]
 
 variable {B : Type _} [TopologicalSpace B]
 
-variable (F₁ : Type _) [NormedAddCommGroup F₁] [NormedSpace 𝕜₁ F₁] (E₁ : B → Type _) [∀ x, AddCommMonoid (E₁ x)]
-  [∀ x, Module 𝕜₁ (E₁ x)] [TopologicalSpace (TotalSpace E₁)]
+variable (F₁ : Type _) [NormedAddCommGroup F₁] [NormedSpace 𝕜₁ F₁] (E₁ : B → Type _)
+  [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜₁ (E₁ x)] [TopologicalSpace (TotalSpace E₁)]
 
-variable (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace 𝕜₂ F₂] (E₂ : B → Type _) [∀ x, AddCommMonoid (E₂ x)]
-  [∀ x, Module 𝕜₂ (E₂ x)] [TopologicalSpace (TotalSpace E₂)]
+variable (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace 𝕜₂ F₂] (E₂ : B → Type _)
+  [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜₂ (E₂ x)] [TopologicalSpace (TotalSpace E₂)]
 
 variable {F₁ E₁ F₂ E₂} (e₁ e₁' : Trivialization F₁ (π E₁)) (e₂ e₂' : Trivialization F₂ (π E₂))
 
@@ -112,10 +113,12 @@ include iσ
 function between the two induced (pre)trivializations
 `pretrivialization.continuous_linear_map σ e₁ e₂` and
 `pretrivialization.continuous_linear_map σ e₁' e₂'` of `bundle.continuous_linear_map`. -/
-def continuousLinearMapCoordChange [e₁.is_linear 𝕜₁] [e₁'.is_linear 𝕜₁] [e₂.is_linear 𝕜₂] [e₂'.is_linear 𝕜₂] (b : B) :
-    (F₁ →SL[σ] F₂) →L[𝕜₂] F₁ →SL[σ] F₂ :=
-  ((e₁'.coordChangeL 𝕜₁ e₁ b).symm.arrowCongrSL (e₂.coordChangeL 𝕜₂ e₂' b) : (F₁ →SL[σ] F₂) ≃L[𝕜₂] F₁ →SL[σ] F₂)
-#align pretrivialization.continuous_linear_map_coord_change Pretrivialization.continuousLinearMapCoordChange
+def continuousLinearMapCoordChange [e₁.is_linear 𝕜₁] [e₁'.is_linear 𝕜₁] [e₂.is_linear 𝕜₂]
+    [e₂'.is_linear 𝕜₂] (b : B) : (F₁ →SL[σ] F₂) →L[𝕜₂] F₁ →SL[σ] F₂ :=
+  ((e₁'.coordChangeL 𝕜₁ e₁ b).symm.arrowCongrSL (e₂.coordChangeL 𝕜₂ e₂' b) :
+    (F₁ →SL[σ] F₂) ≃L[𝕜₂] F₁ →SL[σ] F₂)
+#align
+  pretrivialization.continuous_linear_map_coord_change Pretrivialization.continuousLinearMapCoordChange
 
 variable {σ e₁ e₁' e₂ e₂'}
 
@@ -123,8 +126,9 @@ variable [∀ x : B, TopologicalSpace (E₁ x)] [FiberBundle F₁ E₁]
 
 variable [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₂ E₂]
 
-theorem continuous_on_continuous_linear_map_coord_change [VectorBundle 𝕜₁ F₁ E₁] [VectorBundle 𝕜₂ F₂ E₂]
-    [MemTrivializationAtlas e₁] [MemTrivializationAtlas e₁'] [MemTrivializationAtlas e₂] [MemTrivializationAtlas e₂'] :
+theorem continuous_on_continuous_linear_map_coord_change [VectorBundle 𝕜₁ F₁ E₁]
+    [VectorBundle 𝕜₂ F₂ E₂] [MemTrivializationAtlas e₁] [MemTrivializationAtlas e₁']
+    [MemTrivializationAtlas e₂] [MemTrivializationAtlas e₂'] :
     ContinuousOn (continuousLinearMapCoordChange σ e₁ e₁' e₂ e₂')
       (e₁.baseSet ∩ e₂.baseSet ∩ (e₁'.baseSet ∩ e₂'.baseSet)) :=
   by
@@ -140,8 +144,8 @@ theorem continuous_on_continuous_linear_map_coord_change [VectorBundle 𝕜₁ F
   · intro b hb
     ext (L v)
     simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
-      ContinuousLinearEquiv.arrow_congrSL_apply, comp_apply, Function.comp, compSL_apply, flip_apply,
-      ContinuousLinearEquiv.symm_symm]
+      ContinuousLinearEquiv.arrow_congrSL_apply, comp_apply, Function.comp, compSL_apply,
+      flip_apply, ContinuousLinearEquiv.symm_symm]
     
 #align
   pretrivialization.continuous_on_continuous_linear_map_coord_change Pretrivialization.continuous_on_continuous_linear_map_coord_change
@@ -156,7 +160,8 @@ variable (σ e₁ e₁' e₂ e₂') [e₁.is_linear 𝕜₁] [e₁'.is_linear �
 continuous `σ`-semilinear maps from `E₁` to `E₂`. That is, the map which will later become a
 trivialization, after the bundle of continuous semilinear maps is equipped with the right
 topological vector bundle structure. -/
-def continuousLinearMap : Pretrivialization (F₁ →SL[σ] F₂) (π (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) where
+def continuousLinearMap :
+    Pretrivialization (F₁ →SL[σ] F₂) (π (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) where
   toFun p := ⟨p.1, (e₂.continuousLinearMapAt 𝕜₂ p.1).comp <| p.2.comp <| e₁.symmL 𝕜₁ p.1⟩
   invFun p := ⟨p.1, (e₂.symmL 𝕜₂ p.1).comp <| p.2.comp <| e₁.continuousLinearMapAt 𝕜₁ p.1⟩
   source := Bundle.TotalSpace.proj ⁻¹' (e₁.baseSet ∩ e₂.baseSet)
@@ -179,7 +184,8 @@ def continuousLinearMap : Pretrivialization (F₁ →SL[σ] F₂) (π (Bundle.Co
   proj_to_fun := fun ⟨x, f⟩ h => rfl
 #align pretrivialization.continuous_linear_map Pretrivialization.continuousLinearMap
 
-instance continuousLinearMap.is_linear [∀ x, HasContinuousAdd (E₂ x)] [∀ x, HasContinuousSmul 𝕜₂ (E₂ x)] :
+instance continuousLinearMap.is_linear [∀ x, HasContinuousAdd (E₂ x)]
+    [∀ x, HasContinuousSmul 𝕜₂ (E₂ x)] :
     (Pretrivialization.continuousLinearMap σ e₁ e₂).is_linear
       𝕜₂ where linear x h :=
     { map_add := fun L L' =>
@@ -190,10 +196,12 @@ instance continuousLinearMap.is_linear [∀ x, HasContinuousAdd (E₂ x)] [∀ x
         show (e₂.continuousLinearMapAt 𝕜₂ x).comp ((c • L).comp (e₁.symmL 𝕜₁ x)) = _ by
           simp_rw [smul_comp, comp_smulₛₗ, RingHom.id_apply]
           rfl }
-#align pretrivialization.continuous_linear_map.is_linear Pretrivialization.continuousLinearMap.is_linear
+#align
+  pretrivialization.continuous_linear_map.is_linear Pretrivialization.continuousLinearMap.is_linear
 
 theorem continuous_linear_map_apply (p : TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :
-    (continuousLinearMap σ e₁ e₂) p = ⟨p.1, (e₂.continuousLinearMapAt 𝕜₂ p.1).comp <| p.2.comp <| e₁.symmL 𝕜₁ p.1⟩ :=
+    (continuousLinearMap σ e₁ e₂) p =
+      ⟨p.1, (e₂.continuousLinearMapAt 𝕜₂ p.1).comp <| p.2.comp <| e₁.symmL 𝕜₁ p.1⟩ :=
   rfl
 #align pretrivialization.continuous_linear_map_apply Pretrivialization.continuous_linear_map_apply
 
@@ -201,16 +209,18 @@ theorem continuous_linear_map_symm_apply (p : B × (F₁ →SL[σ] F₂)) :
     (continuousLinearMap σ e₁ e₂).toLocalEquiv.symm p =
       ⟨p.1, (e₂.symmL 𝕜₂ p.1).comp <| p.2.comp <| e₁.continuousLinearMapAt 𝕜₁ p.1⟩ :=
   rfl
-#align pretrivialization.continuous_linear_map_symm_apply Pretrivialization.continuous_linear_map_symm_apply
+#align
+  pretrivialization.continuous_linear_map_symm_apply Pretrivialization.continuous_linear_map_symm_apply
 
 variable [∀ x, HasContinuousAdd (E₂ x)]
 
-theorem continuous_linear_map_symm_apply' {b : B} (hb : b ∈ e₁.baseSet ∩ e₂.baseSet) (L : F₁ →SL[σ] F₂) :
-    (continuousLinearMap σ e₁ e₂).symm b L = (e₂.symmL 𝕜₂ b).comp (L.comp <| e₁.continuousLinearMapAt 𝕜₁ b) := by
-  rw [symm_apply]
-  rfl
-  exact hb
-#align pretrivialization.continuous_linear_map_symm_apply' Pretrivialization.continuous_linear_map_symm_apply'
+theorem continuous_linear_map_symm_apply' {b : B} (hb : b ∈ e₁.baseSet ∩ e₂.baseSet)
+    (L : F₁ →SL[σ] F₂) :
+    (continuousLinearMap σ e₁ e₂).symm b L =
+      (e₂.symmL 𝕜₂ b).comp (L.comp <| e₁.continuousLinearMapAt 𝕜₁ b) :=
+  by rw [symm_apply]; rfl; exact hb
+#align
+  pretrivialization.continuous_linear_map_symm_apply' Pretrivialization.continuous_linear_map_symm_apply'
 
 theorem continuous_linear_map_coord_change_apply [RingHomIsometric σ] (b : B)
     (hb : b ∈ e₁.baseSet ∩ e₂.baseSet ∩ (e₁'.baseSet ∩ e₂'.baseSet)) (L : F₁ →SL[σ] F₂) :
@@ -218,9 +228,10 @@ theorem continuous_linear_map_coord_change_apply [RingHomIsometric σ] (b : B)
       (continuousLinearMap σ e₁' e₂' (totalSpaceMk b ((continuousLinearMap σ e₁ e₂).symm b L))).2 :=
   by
   ext v
-  simp_rw [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.arrow_congrSL_apply,
-    continuous_linear_map_apply, continuous_linear_map_symm_apply' σ e₁ e₂ hb.1, comp_apply,
-    ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.symm_symm, Trivialization.continuous_linear_map_at_apply,
+  simp_rw [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearEquiv.arrow_congrSL_apply, continuous_linear_map_apply,
+    continuous_linear_map_symm_apply' σ e₁ e₂ hb.1, comp_apply, ContinuousLinearEquiv.coe_coe,
+    ContinuousLinearEquiv.symm_symm, Trivialization.continuous_linear_map_at_apply,
     Trivialization.symmL_apply]
   dsimp only [total_space_mk]
   rw [e₂.coord_changeL_apply e₂', e₁'.coord_changeL_apply e₁, e₁.coe_linear_map_at_of_mem hb.1.1,
@@ -245,25 +256,29 @@ variable [∀ x, HasContinuousAdd (E₂ x)] [∀ x, HasContinuousSmul 𝕜₂ (E
 `vector_prebundle` (this is an auxiliary construction for the
 `vector_bundle` instance, in which the pretrivializations are collated but no topology
 on the total space is yet provided). -/
-def _root_.bundle.continuous_linear_map.vector_prebundle :
+def Bundle.ContinuousLinearMap.vectorPrebundle :
     VectorPrebundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) where
   pretrivializationAtlas :=
     { e |
-      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ : MemTrivializationAtlas e₁)(_ :
-        MemTrivializationAtlas e₂), e = Pretrivialization.continuousLinearMap σ e₁ e₂ }
+      ∃ (e₁ : Trivialization F₁ (π E₁))(e₂ : Trivialization F₂ (π E₂))(_ :
+        MemTrivializationAtlas e₁)(_ : MemTrivializationAtlas e₂),
+        e = Pretrivialization.continuousLinearMap σ e₁ e₂ }
   pretrivialization_linear' := by
     rintro _ ⟨e₁, he₁, e₂, he₂, rfl⟩
     infer_instance
-  pretrivializationAt x := Pretrivialization.continuousLinearMap σ (trivializationAt F₁ E₁ x) (trivializationAt F₂ E₂ x)
-  mem_base_pretrivialization_at x := ⟨mem_base_set_trivialization_at F₁ E₁ x, mem_base_set_trivialization_at F₂ E₂ x⟩
+  pretrivializationAt x :=
+    Pretrivialization.continuousLinearMap σ (trivializationAt F₁ E₁ x) (trivializationAt F₂ E₂ x)
+  mem_base_pretrivialization_at x :=
+    ⟨mem_base_set_trivialization_at F₁ E₁ x, mem_base_set_trivialization_at F₂ E₂ x⟩
   pretrivialization_mem_atlas x := ⟨trivializationAt F₁ E₁ x, trivializationAt F₂ E₂ x, _, _, rfl⟩
   exists_coord_change := by
     rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩ _ ⟨e₁', e₂', he₁', he₂', rfl⟩
     skip
     exact
-      ⟨continuous_linear_map_coord_change σ e₁ e₁' e₂ e₂', continuous_on_continuous_linear_map_coord_change,
+      ⟨continuous_linear_map_coord_change σ e₁ e₁' e₂ e₂',
+        continuous_on_continuous_linear_map_coord_change,
         continuous_linear_map_coord_change_apply σ e₁ e₁' e₂ e₂'⟩
-#align _root_.bundle.continuous_linear_map.vector_prebundle _root_.bundle.continuous_linear_map.vector_prebundle
+#align bundle.continuous_linear_map.vector_prebundle Bundle.ContinuousLinearMap.vectorPrebundle
 
 /-- Topology on the continuous `σ`-semilinear_maps between the respective fibers at a point of two
 "normable" vector bundles over the same base. Here "normable" means that the bundles have fibers
@@ -277,19 +292,20 @@ bundles over the same base. -/
 instance Bundle.ContinuousLinearMap.topologicalSpaceTotalSpace :
     TopologicalSpace (TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :=
   (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).totalSpaceTopology
-#align bundle.continuous_linear_map.topological_space_total_space Bundle.ContinuousLinearMap.topologicalSpaceTotalSpace
+#align
+  bundle.continuous_linear_map.topological_space_total_space Bundle.ContinuousLinearMap.topologicalSpaceTotalSpace
 
 /-- The continuous `σ`-semilinear_maps between two vector bundles form a fiber bundle. -/
-instance _root_.bundle.continuous_linear_map.fiber_bundle :
+instance Bundle.ContinuousLinearMap.fiberBundle :
     FiberBundle (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) :=
   (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).toFiberBundle
-#align _root_.bundle.continuous_linear_map.fiber_bundle _root_.bundle.continuous_linear_map.fiber_bundle
+#align bundle.continuous_linear_map.fiber_bundle Bundle.ContinuousLinearMap.fiberBundle
 
 /-- The continuous `σ`-semilinear_maps between two vector bundles form a vector bundle. -/
-instance _root_.bundle.continuous_linear_map.vector_bundle :
+instance Bundle.ContinuousLinearMap.vectorBundle :
     VectorBundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) :=
   (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).toVectorBundle
-#align _root_.bundle.continuous_linear_map.vector_bundle _root_.bundle.continuous_linear_map.vector_bundle
+#align bundle.continuous_linear_map.vector_bundle Bundle.ContinuousLinearMap.vectorBundle
 
 variable (e₁ e₂) [he₁ : MemTrivializationAtlas e₁] [he₂ : MemTrivializationAtlas e₂] {F₁ E₁ F₂ E₂}
 
@@ -298,11 +314,12 @@ include he₁ he₂
 /-- Given trivializations `e₁`, `e₂` in the atlas for vector bundles `E₁`, `E₂` over a base `B`,
 the induced trivialization for the continuous `σ`-semilinear maps from `E₁` to `E₂`,
 whose base set is `e₁.base_set ∩ e₂.base_set`. -/
-def Trivialization.continuousLinearMap : Trivialization (F₁ →SL[σ] F₂) (π (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :=
+def Trivialization.continuousLinearMap :
+    Trivialization (F₁ →SL[σ] F₂) (π (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :=
   VectorPrebundle.trivializationOfMemPretrivializationAtlas _ ⟨e₁, e₂, he₁, he₂, rfl⟩
 #align trivialization.continuous_linear_map Trivialization.continuousLinearMap
 
-instance _root_.bundle.continuous_linear_map.mem_trivialization_atlas :
+instance Bundle.ContinuousLinearMap.mem_trivialization_atlas :
     MemTrivializationAtlas
       (e₁.ContinuousLinearMap σ e₂ :
         Trivialization (F₁ →SL[σ] F₂)
@@ -310,7 +327,7 @@ instance _root_.bundle.continuous_linear_map.mem_trivialization_atlas :
             (Bundle.ContinuousLinearMap σ F₁ E₁ F₂
               E₂))) where out := ⟨_, ⟨e₁, e₂, by infer_instance, by infer_instance, rfl⟩, rfl⟩
 #align
-  _root_.bundle.continuous_linear_map.mem_trivialization_atlas _root_.bundle.continuous_linear_map.mem_trivialization_atlas
+  bundle.continuous_linear_map.mem_trivialization_atlas Bundle.ContinuousLinearMap.mem_trivialization_atlas
 
 variable {e₁ e₂}
 
@@ -320,8 +337,10 @@ theorem Trivialization.base_set_continuous_linear_map :
   rfl
 #align trivialization.base_set_continuous_linear_map Trivialization.base_set_continuous_linear_map
 
-theorem Trivialization.continuous_linear_map_apply (p : TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :
-    e₁.ContinuousLinearMap σ e₂ p = ⟨p.1, (e₂.continuousLinearMapAt 𝕜₂ p.1).comp <| p.2.comp <| e₁.symmL 𝕜₁ p.1⟩ :=
+theorem Trivialization.continuous_linear_map_apply
+    (p : TotalSpace (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂)) :
+    e₁.ContinuousLinearMap σ e₂ p =
+      ⟨p.1, (e₂.continuousLinearMapAt 𝕜₂ p.1).comp <| p.2.comp <| e₁.symmL 𝕜₁ p.1⟩ :=
   rfl
 #align trivialization.continuous_linear_map_apply Trivialization.continuous_linear_map_apply
 

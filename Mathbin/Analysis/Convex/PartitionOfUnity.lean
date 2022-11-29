@@ -31,13 +31,14 @@ open BigOperators TopologicalSpace
 
 variable {ι X E : Type _} [TopologicalSpace X] [AddCommGroup E] [Module ℝ E]
 
-theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnity ι X s) {g : ι → X → E} {t : Set E}
-    {x : X} (hx : x ∈ s) (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
+theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnity ι X s)
+    {g : ι → X → E} {t : Set E} {x : X} (hx : x ∈ s) (hg : ∀ i, f i x ≠ 0 → g i x ∈ t)
+    (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
   ht.finsum_mem (fun i => f.Nonneg _ _) (f.sum_eq_one hx) hg
 #align partition_of_unity.finsum_smul_mem_convex PartitionOfUnity.finsum_smul_mem_convex
 
-variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [HasContinuousAdd E] [HasContinuousSmul ℝ E]
-  {t : X → Set E}
+variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [HasContinuousAdd E]
+  [HasContinuousSmul ℝ E] {t : X → Set E}
 
 /-- Let `X` be a normal paracompact topological space (e.g., any extended metric space). Let `E` be
 a topological real vector space. Let `t : X → set E` be a family of convex sets. Suppose that for
@@ -46,14 +47,16 @@ continuous on `U` and sends each `y ∈ U` to a point of `t y`. Then there exist
 `g : C(X, E)` such that `g x ∈ t x` for all `x`. See also
 `exists_continuous_forall_mem_convex_of_local_const`. -/
 theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
-    (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) : ∃ g : C(X, E), ∀ x, g x ∈ t x := by
+    (H : ∀ x : X, ∃ U ∈ 𝓝 x, ∃ g : X → E, ContinuousOn g U ∧ ∀ y ∈ U, g y ∈ t y) :
+    ∃ g : C(X, E), ∀ x, g x ∈ t x := by
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
-    PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => interior (U x)) (fun x => is_open_interior)
-      fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
+    PartitionOfUnity.exists_is_subordinate isClosedUniv (fun x => interior (U x))
+      (fun x => is_open_interior) fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,
-        (hf.continuous_finsum_smul fun i => is_open_interior) fun i => (hgc i).mono interior_subset⟩,
+        (hf.continuous_finsum_smul fun i => is_open_interior) fun i =>
+          (hgc i).mono interior_subset⟩,
       fun x => f.finsum_smul_mem_convex (mem_univ x) (fun i hi => hgt _ _ _) (ht _)⟩
   exact interior_subset (hf _ <| subset_closure hi)
 #align exists_continuous_forall_mem_convex_of_local exists_continuous_forall_mem_convex_of_local
@@ -68,5 +71,6 @@ theorem exists_continuous_forall_mem_convex_of_local_const (ht : ∀ x, Convex �
   (exists_continuous_forall_mem_convex_of_local ht) fun x =>
     let ⟨c, hc⟩ := H x
     ⟨_, hc, fun _ => c, continuous_on_const, fun y => id⟩
-#align exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_const
+#align
+  exists_continuous_forall_mem_convex_of_local_const exists_continuous_forall_mem_convex_of_local_const
 

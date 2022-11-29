@@ -40,7 +40,8 @@ def GradedObject (β : Type w) (C : Type u) : Type max w u :=
 #align category_theory.graded_object CategoryTheory.GradedObject
 
 -- Satisfying the inhabited linter...
-instance inhabitedGradedObject (β : Type w) (C : Type u) [Inhabited C] : Inhabited (GradedObject β C) :=
+instance inhabitedGradedObject (β : Type w) (C : Type u) [Inhabited C] :
+    Inhabited (GradedObject β C) :=
   ⟨fun b => Inhabited.default⟩
 #align category_theory.inhabited_graded_object CategoryTheory.inhabitedGradedObject
 
@@ -59,7 +60,8 @@ variable {C : Type u} [Category.{v} C]
 
 instance categoryOfGradedObjects (β : Type w) : Category.{max w v} (GradedObject β C) :=
   CategoryTheory.pi fun _ => C
-#align category_theory.graded_object.category_of_graded_objects CategoryTheory.GradedObject.categoryOfGradedObjects
+#align
+  category_theory.graded_object.category_of_graded_objects CategoryTheory.GradedObject.categoryOfGradedObjects
 
 /-- The projection of a graded object to its `i`-th component. -/
 @[simps]
@@ -76,22 +78,14 @@ variable (C)
 pulling back along two propositionally equal functions.
 -/
 @[simps]
-def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) : comap (fun _ => C) f ≅ comap (fun _ => C) g where
-  Hom :=
-    { app := fun X b =>
-        eqToHom
-          (by
-            dsimp [comap]
-            subst h) }
-  inv :=
-    { app := fun X b =>
-        eqToHom
-          (by
-            dsimp [comap]
-            subst h) }
+def comapEq {β γ : Type w} {f g : β → γ} (h : f = g) :
+    comap (fun _ => C) f ≅ comap (fun _ => C) g where
+  Hom := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
+  inv := { app := fun X b => eqToHom (by dsimp [comap]; subst h) }
 #align category_theory.graded_object.comap_eq CategoryTheory.GradedObject.comapEq
 
-theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) : comapEq C h.symm = (comapEq C h).symm := by tidy
+theorem comap_eq_symm {β γ : Type w} {f g : β → γ} (h : f = g) :
+    comapEq C h.symm = (comapEq C h).symm := by tidy
 #align category_theory.graded_object.comap_eq_symm CategoryTheory.GradedObject.comap_eq_symm
 
 theorem comap_eq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
@@ -171,20 +165,24 @@ instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObj
 theorem shift_functor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
-#align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shift_functor_obj_apply
+#align
+  category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shift_functor_obj_apply
 
 @[simp]
-theorem shift_functor_map_apply {β : Type _} [AddCommGroup β] (s : β) {X Y : GradedObjectWithShift s C} (f : X ⟶ Y)
-    (t : β) (n : ℤ) : (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
+theorem shift_functor_map_apply {β : Type _} [AddCommGroup β] (s : β)
+    {X Y : GradedObjectWithShift s C} (f : X ⟶ Y) (t : β) (n : ℤ) :
+    (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
-#align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shift_functor_map_apply
+#align
+  category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shift_functor_map_apply
 
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
     HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero X Y := { zero := fun b => 0 }
 #align category_theory.graded_object.has_zero_morphisms CategoryTheory.GradedObject.hasZeroMorphisms
 
 @[simp]
-theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) (b : β) : (0 : X ⟶ Y) b = 0 :=
+theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) (b : β) :
+    (0 : X ⟶ Y) b = 0 :=
   rfl
 #align category_theory.graded_object.zero_apply CategoryTheory.GradedObject.zero_apply
 
@@ -194,7 +192,10 @@ open ZeroObject
 
 instance has_zero_object [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
     HasZeroObject.{max w v} (GradedObject β C) := by
-  refine' ⟨⟨fun b => 0, fun X => ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩⟩⟩ <;> ext
+  refine'
+      ⟨⟨fun b => 0, fun X => ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩, fun X =>
+          ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩⟩⟩ <;>
+    ext
 #align category_theory.graded_object.has_zero_object CategoryTheory.GradedObject.has_zero_object
 
 end
@@ -227,7 +228,8 @@ end
 
 variable [HasZeroMorphisms C]
 
-/-- The `total` functor taking a graded object to the coproduct of its graded components is faithful.
+/--
+The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
@@ -247,7 +249,8 @@ noncomputable section
 
 variable (β : Type)
 
-variable (C : Type (u + 1)) [LargeCategory C] [ConcreteCategory C] [HasCoproducts.{0} C] [HasZeroMorphisms C]
+variable (C : Type (u + 1)) [LargeCategory C] [ConcreteCategory C] [HasCoproducts.{0} C]
+  [HasZeroMorphisms C]
 
 instance : ConcreteCategory (GradedObject β C) where forget := total β C ⋙ forget C
 

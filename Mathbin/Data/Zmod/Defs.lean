@@ -50,7 +50,8 @@ instance (n : ℕ) : CommSemigroup (Fin (n + 1)) :=
           _ ≡ a * (b * c) [MOD n + 1] := by rw [mul_assoc]
           _ ≡ a * (b * c % (n + 1)) [MOD n + 1] := (Nat.mod_modeq _ _).symm.mul_left _
           ),
-    mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ => Fin.eq_of_veq (show a * b % (n + 1) = b * a % (n + 1) by rw [mul_comm]) }
+    mul_comm := fun ⟨a, _⟩ ⟨b, _⟩ =>
+      Fin.eq_of_veq (show a * b % (n + 1) = b * a % (n + 1) by rw [mul_comm]) }
 
 private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c) = a * b + a * c :=
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
@@ -58,15 +59,17 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin (n + 1), a * (b + c
     (calc
       a * ((b + c) % (n + 1)) ≡ a * (b + c) [MOD n + 1] := (Nat.mod_modeq _ _).mul_left _
       _ ≡ a * b + a * c [MOD n + 1] := by rw [mul_add]
-      _ ≡ a * b % (n + 1) + a * c % (n + 1) [MOD n + 1] := (Nat.mod_modeq _ _).symm.add (Nat.mod_modeq _ _).symm
+      _ ≡ a * b % (n + 1) + a * c % (n + 1) [MOD n + 1] :=
+        (Nat.mod_modeq _ _).symm.add (Nat.mod_modeq _ _).symm
       )
 #align fin.left_distrib_aux fin.left_distrib_aux
 
 /-- Commutative ring structure on `fin (n+1)`. -/
 instance (n : ℕ) : CommRing (Fin (n + 1)) :=
-  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n with one_mul := Fin.one_mul, mul_one := Fin.mul_one,
-    left_distrib := left_distrib_aux n,
-    right_distrib := fun a b c => by rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
+  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n with one_mul := Fin.one_mul,
+    mul_one := Fin.mul_one, left_distrib := left_distrib_aux n,
+    right_distrib := fun a b c => by
+      rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
 
 end Fin
 
@@ -119,12 +122,17 @@ instance commRing (n : ℕ) : CommRing (Zmod n) where
   sub := Nat.casesOn n (@Sub.sub Int _) fun n => @Sub.sub (Fin n.succ) _
   sub_eq_add_neg := Nat.casesOn n (@sub_eq_add_neg Int _) fun n => @sub_eq_add_neg (Fin n.succ) _
   zsmul := Nat.casesOn n (@CommRing.zsmul Int _) fun n => @CommRing.zsmul (Fin n.succ) _
-  zsmul_zero' := Nat.casesOn n (@CommRing.zsmul_zero' Int _) fun n => @CommRing.zsmul_zero' (Fin n.succ) _
-  zsmul_succ' := Nat.casesOn n (@CommRing.zsmul_succ' Int _) fun n => @CommRing.zsmul_succ' (Fin n.succ) _
-  zsmul_neg' := Nat.casesOn n (@CommRing.zsmul_neg' Int _) fun n => @CommRing.zsmul_neg' (Fin n.succ) _
+  zsmul_zero' :=
+    Nat.casesOn n (@CommRing.zsmul_zero' Int _) fun n => @CommRing.zsmul_zero' (Fin n.succ) _
+  zsmul_succ' :=
+    Nat.casesOn n (@CommRing.zsmul_succ' Int _) fun n => @CommRing.zsmul_succ' (Fin n.succ) _
+  zsmul_neg' :=
+    Nat.casesOn n (@CommRing.zsmul_neg' Int _) fun n => @CommRing.zsmul_neg' (Fin n.succ) _
   nsmul := Nat.casesOn n (@CommRing.nsmul Int _) fun n => @CommRing.nsmul (Fin n.succ) _
-  nsmul_zero' := Nat.casesOn n (@CommRing.nsmul_zero' Int _) fun n => @CommRing.nsmul_zero' (Fin n.succ) _
-  nsmul_succ' := Nat.casesOn n (@CommRing.nsmul_succ' Int _) fun n => @CommRing.nsmul_succ' (Fin n.succ) _
+  nsmul_zero' :=
+    Nat.casesOn n (@CommRing.nsmul_zero' Int _) fun n => @CommRing.nsmul_zero' (Fin n.succ) _
+  nsmul_succ' :=
+    Nat.casesOn n (@CommRing.nsmul_succ' Int _) fun n => @CommRing.nsmul_succ' (Fin n.succ) _
   add_left_neg := by
     cases n
     exacts[@add_left_neg Int _, @add_left_neg (Fin n.succ) _]
@@ -139,9 +147,11 @@ instance commRing (n : ℕ) : CommRing (Zmod n) where
   nat_cast_succ := Nat.casesOn n (@Nat.cast_succ Int _) fun n => @Nat.cast_succ (Fin n.succ) _
   intCast := Nat.casesOn n (coe : ℤ → ℤ) fun n => (coe : ℤ → Fin n.succ)
   int_cast_of_nat := Nat.casesOn n (@Int.cast_of_nat Int _) fun n => @Int.cast_of_nat (Fin n.succ) _
-  int_cast_neg_succ_of_nat := Nat.casesOn n (@Int.cast_negSucc Int _) fun n => @Int.cast_negSucc (Fin n.succ) _
+  int_cast_neg_succ_of_nat :=
+    Nat.casesOn n (@Int.cast_negSucc Int _) fun n => @Int.cast_negSucc (Fin n.succ) _
   left_distrib := Nat.casesOn n (@left_distrib Int _ _ _) fun n => @left_distrib (Fin n.succ) _ _ _
-  right_distrib := Nat.casesOn n (@right_distrib Int _ _ _) fun n => @right_distrib (Fin n.succ) _ _ _
+  right_distrib :=
+    Nat.casesOn n (@right_distrib Int _ _ _) fun n => @right_distrib (Fin n.succ) _ _ _
   mul_comm := Nat.casesOn n (@mul_comm Int _) fun n => @mul_comm (Fin n.succ) _
 #align zmod.comm_ring Zmod.commRing
 

@@ -3,7 +3,7 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Int.Lemmas
 import Mathbin.Tactic.DeriveFintype
@@ -106,8 +106,8 @@ instance : BoundedOrder SignType where
   bot_le := Le.of_neg
 
 instance : HasDistribNeg SignType :=
-  { SignType.hasNeg with neg_neg := fun x => by cases x <;> rfl, neg_mul := fun x y => by casesm*_ <;> rfl,
-    mul_neg := fun x y => by casesm*_ <;> rfl }
+  { SignType.hasNeg with neg_neg := fun x => by cases x <;> rfl,
+    neg_mul := fun x y => by casesm*_ <;> rfl, mul_neg := fun x y => by casesm*_ <;> rfl }
 
 /-- `sign_type` is equivalent to `fin 3`. -/
 def fin3Equiv : SignType ≃* Fin 3 where
@@ -248,8 +248,8 @@ def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] : SignType →*₀ α w
 #align sign_type.cast_hom SignType.castHom
 
 theorem range_eq {α} (f : SignType → α) : Set.range f = {f zero, f neg, f pos} := by
-  classical simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ, Finset.coe_image, ←
-      Set.image_insert_eq]
+  classical simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ,
+      Finset.coe_image, ← Set.image_insert_eq]
 #align sign_type.range_eq SignType.range_eq
 
 end SignType
@@ -372,10 +372,10 @@ variable [LinearOrderedRing α] {a b : α}
 attribute [local instance] LinearOrderedRing.decidableLt
 
 theorem sign_mul (x y : α) : sign (x * y) = sign x * sign y := by
-  rcases lt_trichotomy x 0 with (hx | hx | hx) <;>
-    rcases lt_trichotomy y 0 with (hy | hy | hy) <;>
-      simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_one, neg_one_mul, neg_neg, one_mul,
-        mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero, mul_neg_of_pos_of_neg, mul_pos]
+  rcases lt_trichotomy x 0 with (hx | hx | hx) <;> rcases lt_trichotomy y 0 with (hy | hy | hy) <;>
+    simp only [sign_zero, mul_zero, zero_mul, sign_pos, sign_neg, hx, hy, mul_one, neg_one_mul,
+      neg_neg, one_mul, mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, neg_zero,
+      mul_neg_of_pos_of_neg, mul_pos]
 #align sign_mul sign_mul
 
 /-- `sign` as a `monoid_with_zero_hom` for a nontrivial ordered semiring. Note that linearity
@@ -413,7 +413,8 @@ theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign
     
 #align left.sign_neg Left.sign_neg
 
-theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) : sign (-a) = -sign a := by
+theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) :
+    sign (-a) = -sign a := by
   simp_rw [sign_apply, Right.neg_pos_iff, Right.neg_neg_iff]
   split_ifs with h h'
   · exact False.elim (lt_asymm h h')
@@ -427,6 +428,32 @@ theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)
 #align right.sign_neg Right.sign_neg
 
 end AddGroup
+
+section LinearOrderedAddCommGroup
+
+open BigOperators
+
+variable [LinearOrderedAddCommGroup α]
+
+/- I'm not sure why this is necessary, see
+https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Decidable.20vs.20decidable_rel -/
+attribute [local instance] LinearOrderedAddCommGroup.decidableLt
+
+theorem sign_sum {ι : Type _} {s : Finset ι} {f : ι → α} (hs : s.Nonempty) (t : SignType)
+    (h : ∀ i ∈ s, sign (f i) = t) : sign (∑ i in s, f i) = t := by
+  cases t
+  · simp_rw [zero_eq_zero, sign_eq_zero_iff] at h⊢
+    exact Finset.sum_eq_zero h
+    
+  · simp_rw [neg_eq_neg_one, sign_eq_neg_one_iff] at h⊢
+    exact Finset.sum_neg h hs
+    
+  · simp_rw [pos_eq_one, sign_eq_one_iff] at h⊢
+    exact Finset.sum_pos h hs
+    
+#align sign_sum sign_sum
+
+end LinearOrderedAddCommGroup
 
 namespace Int
 
@@ -449,11 +476,12 @@ open BigOperators
 private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
     ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
-        (t.card = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
+        (t.card = ∑ a in s, (f a).natAbs) ∧
+          ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
   by
   refine'
-    ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a => sign (f a.1), fun a => a.1,
-      fun a => a.1.Prop, _, _⟩
+    ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a => sign (f a.1),
+      fun a => a.1, fun a => a.1.Prop, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
     
   · intro x hx
@@ -466,7 +494,8 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
 theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
     ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
-        (Fintype.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
+        (Fintype.card β = ∑ a in s, (f a).natAbs) ∧
+          ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
   let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
   ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by simp [ht], fun a ha =>
     (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
@@ -476,13 +505,14 @@ theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
 theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
     (h : (∑ i in s, (f i).natAbs) ≤ n) :
     ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
-      (∀ b, g b ∉ s → sgn b = 0) ∧ Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
+      (∀ b, g b ∉ s → sgn b = 0) ∧
+        Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
   by
   obtain ⟨β, _, sgn, g, hg, hβ, hf⟩ := exists_signed_sum s f
   skip
   refine'
-    ⟨Sum β (Fin (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0, Sum.elim g <| Classical.arbitrary _, _, by
-      simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
+    ⟨Sum β (Fin (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0,
+      Sum.elim g <| Classical.arbitrary _, _, by simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
   rintro (b | b) hb
   · cases hb (hg _)
     

@@ -29,15 +29,14 @@ namespace Pgame
 inductive Short : Pgame.{u} → Type (u + 1)
   |
   mk :
-    ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} (sL : ∀ i : α, short (L i)) (sR : ∀ j : β, short (R j))
-      [Fintype α] [Fintype β], short ⟨α, β, L, R⟩
+    ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} (sL : ∀ i : α, short (L i))
+      (sR : ∀ j : β, short (R j)) [Fintype α] [Fintype β], short ⟨α, β, L, R⟩
 #align pgame.short Pgame.Short
 
 instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
   | mk xl xr xL xR =>
     ⟨fun a b => by
-      cases a
-      cases b
+      cases a; cases b
       congr
       · funext
         apply @Subsingleton.elim _ (subsingleton_short (xL x))
@@ -49,11 +48,10 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
 #align pgame.subsingleton_short Pgame.subsingleton_short
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
-def Short.mk' {x : Pgame} [Fintype x.LeftMoves] [Fintype x.RightMoves] (sL : ∀ i : x.LeftMoves, Short (x.moveLeft i))
+def Short.mk' {x : Pgame} [Fintype x.LeftMoves] [Fintype x.RightMoves]
+    (sL : ∀ i : x.LeftMoves, Short (x.moveLeft i))
     (sR : ∀ j : x.RightMoves, Short (x.moveRight j)) : Short x := by
-  (
-    cases x
-    dsimp at *) <;> exact short.mk sL sR
+  (cases x; dsimp at *) <;> exact short.mk sL sR
 #align pgame.short.mk' Pgame.Short.mk'
 
 attribute [class] short
@@ -61,7 +59,8 @@ attribute [class] short
 /-- Extracting the `fintype` instance for the indexing type for Left's moves in a short game.
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
-def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintype α := by
+def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] :
+    Fintype α := by
   cases' S with _ _ _ _ _ _ F _
   exact F
 #align pgame.fintype_left Pgame.fintypeLeft
@@ -77,7 +76,8 @@ instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
 /-- Extracting the `fintype` instance for the indexing type for Right's moves in a short game.
 This is an unindexed typeclass, so it can't be made a global instance.
 -/
-def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] : Fintype β := by
+def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [S : Short ⟨α, β, L, R⟩] :
+    Fintype β := by
   cases' S with _ _ _ _ _ _ _ F
   exact F
 #align pgame.fintype_right Pgame.fintypeRight
@@ -127,11 +127,11 @@ theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.ome
     haveI := hs
     rcases hs with ⟨sL, sR⟩
     rw [birthday, max_lt_iff]
-    constructor
-    all_goals
+    constructor; all_goals
     rw [← Cardinal.ord_aleph_0]
     refine'
-      Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0 (Cardinal.lt_aleph_0_of_finite _) fun i => _
+      Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_aleph_0
+        (Cardinal.lt_aleph_0_of_finite _) fun i => _
     rw [Cardinal.ord_aleph_0]
     apply short_birthday _
     · exact move_left_short' xL xR i
@@ -150,11 +150,7 @@ instance short0 : Short 0 :=
 #align pgame.short_0 Pgame.short0
 
 instance short1 : Short 1 :=
-  Short.mk
-    (fun i => by
-      cases i
-      infer_instance)
-    fun j => by cases j
+  Short.mk (fun i => by cases i; infer_instance) fun j => by cases j
 #align pgame.short_1 Pgame.short1
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -170,12 +166,12 @@ attribute [instance] list_short.nil list_short.cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance listShortNthLe : ∀ (L : List Pgame.{u}) [ListShort L] (i : Fin (List.length L)), Short (List.nthLe L i i.is_lt)
-  | [], _, n => by
-    exfalso
-    rcases n with ⟨_, ⟨⟩⟩
+instance listShortNthLe :
+    ∀ (L : List Pgame.{u}) [ListShort L] (i : Fin (List.length L)), Short (List.nthLe L i i.is_lt)
+  | [], _, n => by exfalso; rcases n with ⟨_, ⟨⟩⟩
   | hd::tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
-  | hd::tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ => @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
+  | hd::tl, @list_short.cons _ _ _ S, ⟨n + 1, h⟩ =>
+    @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
 #align pgame.list_short_nth_le Pgame.listShortNthLe
 
 instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
@@ -214,8 +210,7 @@ instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
 instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
   | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
     skip
-    apply short.mk
-    all_goals
+    apply short.mk; all_goals
     rintro ⟨i⟩
     · apply short_add
       

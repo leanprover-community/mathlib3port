@@ -56,7 +56,8 @@ protected theorem coe_div (a b : { x : α // 0 ≤ x }) : ((a / b : { x : α // 
 #align nonneg.coe_div Nonneg.coe_div
 
 @[simp]
-theorem mk_div_mk (hx : 0 ≤ x) (hy : 0 ≤ y) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ :=
+theorem mk_div_mk (hx : 0 ≤ x) (hy : 0 ≤ y) :
+    (⟨x, hx⟩ : { x : α // 0 ≤ x }) / ⟨y, hy⟩ = ⟨x / y, div_nonneg hx hy⟩ :=
   rfl
 #align nonneg.mk_div_mk Nonneg.mk_div_mk
 
@@ -65,19 +66,21 @@ instance hasZpow : Pow { x : α // 0 ≤ x } ℤ :=
 #align nonneg.has_zpow Nonneg.hasZpow
 
 @[simp, norm_cast]
-protected theorem coe_zpow (a : { x : α // 0 ≤ x }) (n : ℤ) : ((a ^ n : { x : α // 0 ≤ x }) : α) = a ^ n :=
+protected theorem coe_zpow (a : { x : α // 0 ≤ x }) (n : ℤ) :
+    ((a ^ n : { x : α // 0 ≤ x }) : α) = a ^ n :=
   rfl
 #align nonneg.coe_zpow Nonneg.coe_zpow
 
 @[simp]
-theorem mk_zpow (hx : 0 ≤ x) (n : ℤ) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) ^ n = ⟨x ^ n, zpow_nonneg hx n⟩ :=
+theorem mk_zpow (hx : 0 ≤ x) (n : ℤ) :
+    (⟨x, hx⟩ : { x : α // 0 ≤ x }) ^ n = ⟨x ^ n, zpow_nonneg hx n⟩ :=
   rfl
 #align nonneg.mk_zpow Nonneg.mk_zpow
 
 instance linearOrderedSemifield : LinearOrderedSemifield { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedSemifield _ Nonneg.coe_zero Nonneg.coe_one Nonneg.coe_add Nonneg.coe_mul
-    Nonneg.coe_inv Nonneg.coe_div (fun _ _ => rfl) Nonneg.coe_pow Nonneg.coe_zpow Nonneg.coe_nat_cast (fun _ _ => rfl)
-    fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedSemifield _ Nonneg.coe_zero Nonneg.coe_one Nonneg.coe_add
+    Nonneg.coe_mul Nonneg.coe_inv Nonneg.coe_div (fun _ _ => rfl) Nonneg.coe_pow Nonneg.coe_zpow
+    Nonneg.coe_nat_cast (fun _ _ => rfl) fun _ _ => rfl
 #align nonneg.linear_ordered_semifield Nonneg.linearOrderedSemifield
 
 end LinearOrderedSemifield
@@ -87,7 +90,8 @@ instance canonicallyLinearOrderedSemifield [LinearOrderedField α] :
   { Nonneg.linearOrderedSemifield, Nonneg.canonicallyOrderedCommSemiring with }
 #align nonneg.canonically_linear_ordered_semifield Nonneg.canonicallyLinearOrderedSemifield
 
-instance linearOrderedCommGroupWithZero [LinearOrderedField α] : LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
+instance linearOrderedCommGroupWithZero [LinearOrderedField α] :
+    LinearOrderedCommGroupWithZero { x : α // 0 ≤ x } :=
   inferInstance
 #align nonneg.linear_ordered_comm_group_with_zero Nonneg.linearOrderedCommGroupWithZero
 
@@ -100,7 +104,8 @@ instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { 
     ⟨n, show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
 #align nonneg.archimedean Nonneg.archimedean
 
-instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring { r : α // 0 ≤ r } where
+instance floorSemiring [OrderedSemiring α] [FloorSemiring α] :
+    FloorSemiring { r : α // 0 ≤ r } where
   floor a := ⌊(a : α)⌋₊
   ceil a := ⌈(a : α)⌉₊
   floor_of_neg a ha := FloorSemiring.floor_of_neg ha
@@ -113,12 +118,14 @@ instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring {
 #align nonneg.floor_semiring Nonneg.floorSemiring
 
 @[norm_cast]
-theorem nat_floor_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) : ⌊(a : α)⌋₊ = ⌊a⌋₊ :=
+theorem nat_floor_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) :
+    ⌊(a : α)⌋₊ = ⌊a⌋₊ :=
   rfl
 #align nonneg.nat_floor_coe Nonneg.nat_floor_coe
 
 @[norm_cast]
-theorem nat_ceil_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) : ⌈(a : α)⌉₊ = ⌈a⌉₊ :=
+theorem nat_ceil_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) :
+    ⌈(a : α)⌉₊ = ⌈a⌉₊ :=
   rfl
 #align nonneg.nat_ceil_coe Nonneg.nat_ceil_coe
 

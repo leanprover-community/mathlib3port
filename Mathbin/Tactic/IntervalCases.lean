@@ -238,7 +238,8 @@ def setElems {α} [DecidableEq α] (s : Set α) [Fintype s] : Finset α :=
 #align tactic.interval_cases.set_elems Tactic.IntervalCases.setElems
 
 /-- Each element of `s` is a member of `set_elems s`. -/
-theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) : a ∈ setElems s :=
+theorem mem_set_elems {α} [DecidableEq α] (s : Set α) [Fintype s] {a : α} (h : a ∈ s) :
+    a ∈ setElems s :=
   Finset.mem_image.2 ⟨⟨a, h⟩, Fintype.complete _, rfl⟩
 #align tactic.interval_cases.mem_set_elems Tactic.IntervalCases.mem_set_elems
 
@@ -289,7 +290,8 @@ in which case `interval_cases` calls `fin_cases` on the resulting fact `n ∈ se
 You can specify a name `h` for the new hypothesis,
 as `interval_cases n with h` or `interval_cases n using hl hu with h`.
 -/
-unsafe def interval_cases (n : parse texpr ?) (bounds : parse (tk "using" *> (Prod.mk <$> ident <*> ident))?)
+unsafe def interval_cases (n : parse texpr ?)
+    (bounds : parse (tk "using" *> (Prod.mk <$> ident <*> ident))?)
     (lname : parse (tk "with" *> ident)?) : tactic Unit := do
   if h : n then do
       guard bounds <|> fail "Do not use the `using` keyword if specifying the variable explicitly."
@@ -345,8 +347,8 @@ The variable `n` can belong to any type `α`, with the following restrictions:
 * an instance of `fintype set.Ico l u` is available for the relevant bounds.
 -/
 add_tactic_doc
-  { Name := "interval_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.interval_cases],
-    tags := ["case bashing"] }
+  { Name := "interval_cases", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.interval_cases], tags := ["case bashing"] }
 
 end Interactive
 

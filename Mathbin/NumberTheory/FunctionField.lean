@@ -56,19 +56,19 @@ abbrev FunctionField [Algebra (Ratfunc Fq) F] : Prop :=
 #align function_field FunctionField
 
 /-- `F` is a function field over `Fq` iff it is a finite extension of `Fq(t)`. -/
-protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] Fqt] [IsFractionRing Fq[X] Fqt]
-    [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra Fq[X] F] [IsScalarTower Fq[X] Fqt F]
-    [IsScalarTower Fq[X] (Ratfunc Fq) F] : FunctionField Fq F ↔ FiniteDimensional Fqt F := by
+protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] Fqt]
+    [IsFractionRing Fq[X] Fqt] [Algebra (Ratfunc Fq) F] [Algebra Fqt F] [Algebra Fq[X] F]
+    [IsScalarTower Fq[X] Fqt F] [IsScalarTower Fq[X] (Ratfunc Fq) F] :
+    FunctionField Fq F ↔ FiniteDimensional Fqt F := by
   let e := IsLocalization.algEquiv Fq[X]⁰ (Ratfunc Fq) Fqt
   have : ∀ (c) (x : F), e c • x = c • x := by
     intro c x
     rw [Algebra.smul_def, Algebra.smul_def]
     congr
     refine' congr_fun _ c
-    refine' IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ _ _ _ _ _ <;>
-      intros <;>
-        simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul, AlgEquiv.commutes, ←
-          IsScalarTower.algebra_map_apply]
+    refine' IsLocalization.ext (nonZeroDivisors Fq[X]) _ _ _ _ _ _ _ <;> intros <;>
+      simp only [AlgEquiv.map_one, RingHom.map_one, AlgEquiv.map_mul, RingHom.map_mul,
+        AlgEquiv.commutes, ← IsScalarTower.algebra_map_apply]
   constructor <;> intro h <;> skip
   · let b := FiniteDimensional.finBasis (Ratfunc Fq) F
     exact FiniteDimensional.ofFintypeBasis (b.map_coeffs e this)
@@ -81,10 +81,12 @@ protected theorem function_field_iff (Fqt : Type _) [Field Fqt] [Algebra Fq[X] F
     
 #align function_field_iff function_field_iff
 
-theorem algebra_map_injective [Algebra Fq[X] F] [Algebra (Ratfunc Fq) F] [IsScalarTower Fq[X] (Ratfunc Fq) F] :
-    Function.Injective ⇑(algebraMap Fq[X] F) := by
+theorem algebra_map_injective [Algebra Fq[X] F] [Algebra (Ratfunc Fq) F]
+    [IsScalarTower Fq[X] (Ratfunc Fq) F] : Function.Injective ⇑(algebraMap Fq[X] F) := by
   rw [IsScalarTower.algebra_map_eq Fq[X] (Ratfunc Fq) F]
-  exact Function.Injective.comp (algebraMap (Ratfunc Fq) F).Injective (IsFractionRing.injective Fq[X] (Ratfunc Fq))
+  exact
+    Function.Injective.comp (algebraMap (Ratfunc Fq) F).Injective
+      (IsFractionRing.injective Fq[X] (Ratfunc Fq))
 #align algebra_map_injective algebra_map_injective
 
 namespace FunctionField
@@ -114,16 +116,21 @@ variable [Algebra (Ratfunc Fq) F] [IsScalarTower Fq[X] (Ratfunc Fq) F]
 theorem algebra_map_injective : Function.Injective ⇑(algebraMap Fq[X] (ringOfIntegers Fq F)) := by
   have hinj : Function.Injective ⇑(algebraMap Fq[X] F) := by
     rw [IsScalarTower.algebra_map_eq Fq[X] (Ratfunc Fq) F]
-    exact Function.Injective.comp (algebraMap (Ratfunc Fq) F).Injective (IsFractionRing.injective Fq[X] (Ratfunc Fq))
+    exact
+      Function.Injective.comp (algebraMap (Ratfunc Fq) F).Injective
+        (IsFractionRing.injective Fq[X] (Ratfunc Fq))
   rw [injective_iff_map_eq_zero (algebraMap Fq[X] ↥(ring_of_integers Fq F))]
   intro p hp
   rw [← Subtype.coe_inj, Subalgebra.coe_zero] at hp
   rw [injective_iff_map_eq_zero (algebraMap Fq[X] F)] at hinj
   exact hinj p hp
-#align function_field.ring_of_integers.algebra_map_injective FunctionField.ringOfIntegers.algebra_map_injective
+#align
+  function_field.ring_of_integers.algebra_map_injective FunctionField.ringOfIntegers.algebra_map_injective
 
 theorem not_is_field : ¬IsField (ringOfIntegers Fq F) := by
-  simpa [← (IsIntegralClosure.is_integral_algebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
+  simpa [←
+    (IsIntegralClosure.is_integral_algebra Fq[X] F).is_field_iff_is_field
+      (algebra_map_injective Fq F)] using
     Polynomial.not_is_field Fq
 #align function_field.ring_of_integers.not_is_field FunctionField.ringOfIntegers.not_is_field
 
@@ -174,8 +181,8 @@ theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
   · by_cases hy : y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
       
-    · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ← of_add_add,
-        Ratfunc.int_degree_mul hx hy]
+    · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
+        of_add_add, Ratfunc.int_degree_mul hx hy]
       
     
 #align function_field.infty_valuation.map_mul' FunctionField.InftyValuation.map_mul'
@@ -198,9 +205,10 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
       · rw [infty_valuation_def, if_pos hxy]
         exact zero_le'
         
-      · rw [infty_valuation_def, infty_valuation_def, infty_valuation_def, if_neg hx, if_neg hy, if_neg hxy]
-        rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.of_add_le, WithZero.coe_le_coe, Multiplicative.of_add_le, ←
-          le_max_iff]
+      · rw [infty_valuation_def, infty_valuation_def, infty_valuation_def, if_neg hx, if_neg hy,
+          if_neg hxy]
+        rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.of_add_le, WithZero.coe_le_coe,
+          Multiplicative.of_add_le, ← le_max_iff]
         exact Ratfunc.int_degree_add_le hy hxy
         
       
@@ -209,7 +217,8 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
 
 @[simp]
 theorem infty_valuation_of_nonzero {x : Ratfunc Fq} (hx : x ≠ 0) :
-    inftyValuationDef Fq x = Multiplicative.ofAdd x.intDegree := by rw [infty_valuation_def, if_neg hx]
+    inftyValuationDef Fq x = Multiplicative.ofAdd x.intDegree := by
+  rw [infty_valuation_def, if_neg hx]
 #align function_field.infty_valuation_of_nonzero FunctionField.infty_valuation_of_nonzero
 
 /-- The valuation at infinity on `Fq(t)`. -/
@@ -227,7 +236,8 @@ theorem infty_valuation_apply {x : Ratfunc Fq} : inftyValuation Fq x = inftyValu
 #align function_field.infty_valuation_apply FunctionField.infty_valuation_apply
 
 @[simp]
-theorem inftyValuation.C {k : Fq} (hk : k ≠ 0) : inftyValuationDef Fq (Ratfunc.c k) = Multiplicative.ofAdd (0 : ℤ) := by
+theorem inftyValuation.C {k : Fq} (hk : k ≠ 0) :
+    inftyValuationDef Fq (Ratfunc.c k) = Multiplicative.ofAdd (0 : ℤ) := by
   have hCk : Ratfunc.c k ≠ 0 := (map_ne_zero _).mpr hk
   rw [infty_valuation_def, if_neg hCk, Ratfunc.int_degree_C]
 #align function_field.infty_valuation.C FunctionField.inftyValuation.C
@@ -239,7 +249,9 @@ theorem inftyValuation.X : inftyValuationDef Fq Ratfunc.x = Multiplicative.ofAdd
 
 @[simp]
 theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
-    inftyValuationDef Fq (algebraMap Fq[X] (Ratfunc Fq) p) = Multiplicative.ofAdd (p.natDegree : ℤ) := by
+    inftyValuationDef Fq (algebraMap Fq[X] (Ratfunc Fq) p) =
+      Multiplicative.ofAdd (p.natDegree : ℤ) :=
+  by
   have hp' : algebraMap Fq[X] (Ratfunc Fq) p ≠ 0 := by
     rw [Ne.def, Ratfunc.algebra_map_eq_zero_iff]
     exact hp

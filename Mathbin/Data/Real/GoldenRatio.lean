@@ -169,7 +169,8 @@ section Poly
 open Polynomial
 
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
-theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] : fibRec.charPoly = X ^ 2 - (X + (1 : β[X])) := by
+theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] :
+    fibRec.charPoly = X ^ 2 - (X + (1 : β[X])) := by
   rw [fibRec, LinearRecurrence.charPoly]
   simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', ← smul_X_eq_monomial]
 #align fib_rec_char_poly_eq fib_rec_char_poly_eq
@@ -200,7 +201,8 @@ theorem geom_gold_conj_is_sol_fib_rec : fibRec.IsSolution (pow ψ) := by
 end Fibrec
 
 /-- Binet's formula as a function equality. -/
-theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 := by
+theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 :=
+  by
   rw [fib_rec.sol_eq_of_eq_init]
   · intro i hi
     fin_cases hi
@@ -215,7 +217,8 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
     
   · ring_nf
     exact
-      (@fibRec ℝ _).solSpace.sub_mem (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_is_sol_fib_rec)
+      (@fibRec ℝ _).solSpace.sub_mem
+        (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_is_sol_fib_rec)
         (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fib_rec)
     
 #align real.coe_fib_eq' Real.coe_fib_eq'

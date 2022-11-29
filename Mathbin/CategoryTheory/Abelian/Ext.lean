@@ -30,7 +30,8 @@ noncomputable section
 
 open CategoryTheory
 
-variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C] [EnoughProjectives C]
+variable (R : Type _) [Ring R] (C : Type _) [Category C] [Abelian C] [Linear R C]
+  [EnoughProjectives C]
 
 /-- `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
@@ -43,8 +44,8 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
       map_id' := by
         intro X
         ext Y : 2
-        dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app, functor.left_op_obj,
-          functor.right_op_obj]
+        dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app,
+          functor.left_op_obj, functor.right_op_obj]
         rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
         rfl,
       map_comp' := by
@@ -56,7 +57,8 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
 open ZeroObject
 
 /-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
-def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
+def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) :
+    ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
   let E := (((linearYoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm
   E ≪≫
     { hom := 0, inv := 0,

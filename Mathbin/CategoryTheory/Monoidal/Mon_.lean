@@ -92,7 +92,8 @@ theorem mul_one_hom {Z : C} (f : Z ⟶ M.x) : (f ⊗ M.one) ≫ M.mul = (ρ_ Z).
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem assoc_flip : (𝟙 M.x ⊗ M.mul) ≫ M.mul = (α_ M.x M.x M.x).inv ≫ (M.mul ⊗ 𝟙 M.x) ≫ M.mul := by simp
+theorem assoc_flip : (𝟙 M.x ⊗ M.mul) ≫ M.mul = (α_ M.x M.x M.x).inv ≫ (M.mul ⊗ 𝟙 M.x) ≫ M.mul := by
+  simp
 #align Mon_.assoc_flip Mon_.assoc_flip
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -135,7 +136,8 @@ theorem id_hom' (M : Mon_ C) : (𝟙 M : Hom M M).Hom = 𝟙 M.x :=
 #align Mon_.id_hom' Mon_.id_hom'
 
 @[simp]
-theorem comp_hom' {M N K : Mon_ C} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
+theorem comp_hom' {M N K : Mon_ C} (f : M ⟶ N) (g : N ⟶ K) :
+    (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
   rfl
 #align Mon_.comp_hom' Mon_.comp_hom'
 
@@ -165,8 +167,8 @@ instance :
         C) where reflects X Y f e :=
     ⟨⟨{ Hom := inv f.hom,
           mul_hom' := by
-            simp only [is_iso.comp_inv_eq, hom.mul_hom, category.assoc, ← tensor_comp_assoc, is_iso.inv_hom_id,
-              tensor_id, category.id_comp] },
+            simp only [is_iso.comp_inv_eq, hom.mul_hom, category.assoc, ← tensor_comp_assoc,
+              is_iso.inv_hom_id, tensor_id, category.id_comp] },
         by tidy⟩⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -197,8 +199,7 @@ instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
         dsimp
         simp [A.one_mul, unitors_equal] }
   uniq f := by
-    ext
-    simp
+    ext; simp
     rw [← category.id_comp f.hom]
     erw [f.one_hom]
 #align Mon_.unique_hom_from_trivial Mon_.uniqueHomFromTrivial
@@ -253,7 +254,8 @@ def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
         rw [category.assoc, ← F.to_functor.map_comp, f.one_hom],
       mul_hom' := by
         dsimp
-        rw [category.assoc, F.μ_natural_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp, f.mul_hom] }
+        rw [category.assoc, F.μ_natural_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp,
+          f.mul_hom] }
   map_id' A := by
     ext
     simp
@@ -268,7 +270,8 @@ variable (C D)
 def mapMonFunctor : LaxMonoidalFunctor C D ⥤ Mon_ C ⥤ Mon_ D where
   obj := mapMon
   map F G α := { app := fun A => { Hom := α.app A.x } }
-#align category_theory.lax_monoidal_functor.map_Mon_functor CategoryTheory.LaxMonoidalFunctor.mapMonFunctor
+#align
+  category_theory.lax_monoidal_functor.map_Mon_functor CategoryTheory.LaxMonoidalFunctor.mapMonFunctor
 
 end CategoryTheory.LaxMonoidalFunctor
 
@@ -283,21 +286,23 @@ namespace EquivLaxMonoidalFunctorPunit
 def laxMonoidalToMon : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ⥤ Mon_ C where
   obj F := (F.mapMon : Mon_ _ ⥤ Mon_ C).obj (trivial (Discrete PUnit))
   map F G α := ((mapMonFunctor (Discrete PUnit) C).map α).app _
-#align Mon_.equiv_lax_monoidal_functor_punit.lax_monoidal_to_Mon Mon_.EquivLaxMonoidalFunctorPunit.laxMonoidalToMon
+#align
+  Mon_.equiv_lax_monoidal_functor_punit.lax_monoidal_to_Mon Mon_.EquivLaxMonoidalFunctorPunit.laxMonoidalToMon
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
 def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C where
   obj A :=
-    { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul, map_id' := fun _ => rfl,
-      map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
+    { obj := fun _ => A.x, map := fun _ _ _ => 𝟙 _, ε := A.one, μ := fun _ _ => A.mul,
+      map_id' := fun _ => rfl, map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
   map A B f :=
     { app := fun _ => f.Hom,
       naturality' := fun _ _ _ => by
         dsimp
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
-#align Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
+#align
+  Mon_.equiv_lax_monoidal_functor_punit.Mon_to_lax_monoidal Mon_.EquivLaxMonoidalFunctorPunit.monToLaxMonoidal
 
 attribute [local tidy] tactic.discrete_cases
 
@@ -305,10 +310,12 @@ attribute [local simp] eq_to_iso_map
 
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
-def unitIso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoidalToMon C ⋙ monToLaxMonoidal C :=
+def unitIso :
+    𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoidalToMon C ⋙ monToLaxMonoidal C :=
   NatIso.ofComponents
     (fun F =>
-      MonoidalNatIso.ofComponents (fun _ => F.toFunctor.mapIso (eqToIso (by ext))) (by tidy) (by tidy) (by tidy))
+      MonoidalNatIso.ofComponents (fun _ => F.toFunctor.mapIso (eqToIso (by ext))) (by tidy)
+        (by tidy) (by tidy))
     (by tidy)
 #align Mon_.equiv_lax_monoidal_functor_punit.unit_iso Mon_.EquivLaxMonoidalFunctorPunit.unitIso
 
@@ -324,7 +331,8 @@ open EquivLaxMonoidalFunctorPunit
 
 attribute [local simp] eq_to_iso_map
 
-/-- Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal category to `C`.
+/--
+Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal category to `C`.
 -/
 @[simps]
 def equivLaxMonoidalFunctorPunit : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C ≌ Mon_ C where
@@ -392,13 +400,15 @@ theorem one_associator {M N P : Mon_ C} :
 #align Mon_.one_associator Mon_.one_associator
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem one_left_unitor {M : Mon_ C} : ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.x).Hom = M.one := by
+theorem one_left_unitor {M : Mon_ C} :
+    ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.x).Hom = M.one := by
   slice_lhs 2 3 => rw [left_unitor_naturality]
   simp
 #align Mon_.one_left_unitor Mon_.one_left_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem one_right_unitor {M : Mon_ C} : ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.x).Hom = M.one := by
+theorem one_right_unitor {M : Mon_ C} :
+    ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.x).Hom = M.one := by
   slice_lhs 2 3 => rw [right_unitor_naturality, ← unitors_equal]
   simp
 #align Mon_.one_right_unitor Mon_.one_right_unitor
@@ -412,7 +422,8 @@ variable [BraidedCategory C]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Mon_tensor_one_mul (M N : Mon_ C) :
-    ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one) ⊗ 𝟙 (M.x ⊗ N.x)) ≫ tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
+    ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one) ⊗ 𝟙 (M.x ⊗ N.x)) ≫
+        tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
       (λ_ (M.x ⊗ N.x)).Hom :=
   by
   rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
@@ -429,7 +440,8 @@ theorem Mon_tensor_one_mul (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Mon_tensor_mul_one (M N : Mon_ C) :
-    (𝟙 (M.x ⊗ N.x) ⊗ (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)) ≫ tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
+    (𝟙 (M.x ⊗ N.x) ⊗ (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)) ≫
+        tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
       (ρ_ (M.x ⊗ N.x)).Hom :=
   by
   rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
@@ -477,10 +489,12 @@ theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_associator {M N P : Mon_ C} :
-    (tensorμ C (M.x ⊗ N.x, P.x) (M.x ⊗ N.x, P.x) ≫ (tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) ⊗ P.mul)) ≫
+    (tensorμ C (M.x ⊗ N.x, P.x) (M.x ⊗ N.x, P.x) ≫
+          (tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) ⊗ P.mul)) ≫
         (α_ M.x N.x P.x).Hom =
       ((α_ M.x N.x P.x).Hom ⊗ (α_ M.x N.x P.x).Hom) ≫
-        tensorμ C (M.x, N.x ⊗ P.x) (M.x, N.x ⊗ P.x) ≫ (M.mul ⊗ tensorμ C (N.x, P.x) (N.x, P.x) ≫ (N.mul ⊗ P.mul)) :=
+        tensorμ C (M.x, N.x ⊗ P.x) (M.x, N.x ⊗ P.x) ≫
+          (M.mul ⊗ tensorμ C (N.x, P.x) (N.x, P.x) ≫ (N.mul ⊗ P.mul)) :=
   by
   simp
   slice_lhs 2 3 => rw [← category.id_comp P.mul, tensor_comp]

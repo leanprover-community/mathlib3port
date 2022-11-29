@@ -27,10 +27,12 @@ theorem frequently_mod_eq {d n : ℕ} (h : d < n) : ∃ᶠ m in at_top, m % n = 
   simpa only [Nat.Modeq, mod_eq_of_lt h] using frequently_modeq h.ne_bot d
 #align nat.frequently_mod_eq Nat.frequently_mod_eq
 
-theorem frequently_even : ∃ᶠ m : ℕ in at_top, Even m := by simpa only [even_iff] using frequently_mod_eq zero_lt_two
+theorem frequently_even : ∃ᶠ m : ℕ in at_top, Even m := by
+  simpa only [even_iff] using frequently_mod_eq zero_lt_two
 #align nat.frequently_even Nat.frequently_even
 
-theorem frequently_odd : ∃ᶠ m : ℕ in at_top, Odd m := by simpa only [odd_iff] using frequently_mod_eq one_lt_two
+theorem frequently_odd : ∃ᶠ m : ℕ in at_top, Odd m := by
+  simpa only [odd_iff] using frequently_mod_eq one_lt_two
 #align nat.frequently_odd Nat.frequently_odd
 
 end Nat

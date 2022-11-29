@@ -146,7 +146,8 @@ theorem inr_inj {g₁ g₂ : G} : (inr g₁ : N ⋊[φ] G) = inr g₂ ↔ g₁ =
   inr_injective.eq_iff
 #align semidirect_product.inr_inj SemidirectProduct.inr_inj
 
-theorem inl_aut (g : G) (n : N) : (inl (φ g n) : N ⋊[φ] G) = inr g * inl n * inr g⁻¹ := by ext <;> simp
+theorem inl_aut (g : G) (n : N) : (inl (φ g n) : N ⋊[φ] G) = inr g * inl n * inr g⁻¹ := by
+  ext <;> simp
 #align semidirect_product.inl_aut SemidirectProduct.inl_aut
 
 theorem inl_aut_inv (g : G) (n : N) : (inl ((φ g)⁻¹ n) : N ⋊[φ] G) = inr g⁻¹ * inl n * inr g := by
@@ -178,7 +179,8 @@ theorem right_hom_comp_inl : (rightHom : N ⋊[φ] G →* G).comp inl = 1 := by 
 #align semidirect_product.right_hom_comp_inl SemidirectProduct.right_hom_comp_inl
 
 @[simp]
-theorem right_hom_comp_inr : (rightHom : N ⋊[φ] G →* G).comp inr = MonoidHom.id _ := by ext <;> simp [right_hom]
+theorem right_hom_comp_inr : (rightHom : N ⋊[φ] G →* G).comp inr = MonoidHom.id _ := by
+  ext <;> simp [right_hom]
 #align semidirect_product.right_hom_comp_inr SemidirectProduct.right_hom_comp_inr
 
 @[simp]
@@ -194,16 +196,18 @@ theorem right_hom_surjective : Function.Surjective (rightHom : N ⋊[φ] G → G
 #align semidirect_product.right_hom_surjective SemidirectProduct.right_hom_surjective
 
 theorem range_inl_eq_ker_right_hom : (inl : N →* N ⋊[φ] G).range = rightHom.ker :=
-  le_antisymm (fun _ => by simp (config := { contextual := true }) [MonoidHom.mem_ker, eq_comm]) fun x hx =>
-    ⟨x.left, by ext <;> simp_all [MonoidHom.mem_ker]⟩
+  le_antisymm (fun _ => by simp (config := { contextual := true }) [MonoidHom.mem_ker, eq_comm])
+    fun x hx => ⟨x.left, by ext <;> simp_all [MonoidHom.mem_ker]⟩
 #align semidirect_product.range_inl_eq_ker_right_hom SemidirectProduct.range_inl_eq_ker_right_hom
 
 section lift
 
-variable (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁)
+variable (f₁ : N →* H) (f₂ : G →* H)
+  (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁)
 
 /-- Define a group hom `N ⋊[φ] G →* H`, by defining maps `N →* H` and `G →* H`  -/
-def lift (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁) :
+def lift (f₁ : N →* H) (f₂ : G →* H)
+    (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁) :
     N ⋊[φ] G →* H where
   toFun a := f₁ a.1 * f₂ a.2
   map_one' := by simp
@@ -229,7 +233,8 @@ theorem lift_inr (g : G) : lift f₁ f₂ h (inr g) = f₂ g := by simp [lift]
 theorem lift_comp_inr : (lift f₁ f₂ h).comp inr = f₂ := by ext <;> simp
 #align semidirect_product.lift_comp_inr SemidirectProduct.lift_comp_inr
 
-theorem lift_unique (F : N ⋊[φ] G →* H) : F = lift (F.comp inl) (F.comp inr) fun _ => by ext <;> simp [inl_aut] := by
+theorem lift_unique (F : N ⋊[φ] G →* H) :
+    F = lift (F.comp inl) (F.comp inr) fun _ => by ext <;> simp [inl_aut] := by
   ext
   simp only [lift, MonoidHom.comp_apply, MonoidHom.coe_mk]
   rw [← F.map_mul, inl_left_mul_inr_right]
@@ -237,7 +242,8 @@ theorem lift_unique (F : N ⋊[φ] G →* H) : F = lift (F.comp inl) (F.comp inr
 
 /-- Two maps out of the semidirect product are equal if they're equal after composition
   with both `inl` and `inr` -/
-theorem hom_ext {f g : N ⋊[φ] G →* H} (hl : f.comp inl = g.comp inl) (hr : f.comp inr = g.comp inr) : f = g := by
+theorem hom_ext {f g : N ⋊[φ] G →* H} (hl : f.comp inl = g.comp inl)
+    (hr : f.comp inr = g.comp inr) : f = g := by
   rw [lift_unique f, lift_unique g]
   simp only [*]
 #align semidirect_product.hom_ext SemidirectProduct.hom_ext
@@ -250,7 +256,8 @@ variable {N₁ : Type _} {G₁ : Type _} [Group N₁] [Group G₁] {φ₁ : G₁
 
 /-- Define a map from `N ⋊[φ] G` to `N₁ ⋊[φ₁] G₁` given maps `N →* N₁` and `G →* G₁` that
   satisfy a commutativity condition `∀ n g, f₁ (φ g n) = φ₁ (f₂ g) (f₁ n)`.  -/
-def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁) :
+def map (f₁ : N →* N₁) (f₂ : G →* G₁)
+    (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁) :
     N ⋊[φ] G →* N₁ ⋊[φ₁] G₁ where
   toFun x := ⟨f₁ x.1, f₂ x.2⟩
   map_one' := by simp
@@ -259,7 +266,8 @@ def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ 
     ext <;> simp_all
 #align semidirect_product.map SemidirectProduct.map
 
-variable (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁)
+variable (f₁ : N →* N₁) (f₂ : G →* G₁)
+  (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁)
 
 @[simp]
 theorem map_left (g : N ⋊[φ] G) : (map f₁ f₂ h g).left = f₁ g.left :=

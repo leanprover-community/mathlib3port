@@ -43,7 +43,8 @@ to the simple case defined here. See [this zulip thread](
 https://leanprover.zulipchat.com/#narrow/stream/217875-Is-there.20code.20for.20X.3F/topic/Instances.20on.20.60sum.2Eelim.20A.20B.20i.60/near/218484619).
 -/
 @[simps apply]
-def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
+def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
+    (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
     MultilinearMap R (fun _ : Sum ι₁ ι₂ => N) (N₁ ⊗[R] N₂) where
   toFun v := (a fun i => v (Sum.inl i)) ⊗ₜ b fun i => v (Sum.inr i)
   map_add' v i p q := by cases i <;> simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
@@ -72,8 +73,8 @@ def domCoprod' :
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 
 @[simp]
-theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : MultilinearMap R (fun _ : ι₂ => N) N₂) :
-    domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
+theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
+    (b : MultilinearMap R (fun _ : ι₂ => N) N₂) : domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
   rfl
 #align multilinear_map.dom_coprod'_apply MultilinearMap.dom_coprod'_apply
 
@@ -81,9 +82,11 @@ theorem dom_coprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁) (b : 
 `multilinear_map.dom_coprod`. -/
 theorem dom_coprod_dom_dom_congr_sum_congr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) (σa : ι₁ ≃ ι₃) (σb : ι₂ ≃ ι₄) :
-    (a.domCoprod b).domDomCongr (σa.sumCongr σb) = (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
+    (a.domCoprod b).domDomCongr (σa.sumCongr σb) =
+      (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
   rfl
-#align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.dom_coprod_dom_dom_congr_sum_congr
+#align
+  multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.dom_coprod_dom_dom_congr_sum_congr
 
 end DomCoprod
 

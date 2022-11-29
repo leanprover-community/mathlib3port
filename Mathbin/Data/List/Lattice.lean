@@ -69,18 +69,20 @@ theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀ a ∈ l₁, ∀ b ∈ l₂,
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α}, (HasSubset.Subset.{u_1} (List.{u_1} α) (List.hasSubset.{u_1} α) l₁ l) -> (List.Disjoint.{u_1} α l l₂) -> (List.Disjoint.{u_1} α l₁ l₂)
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23191 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191}, (HasSubset.Subset.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191) (List.instHasSubsetList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191) l₁ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191 l l₂) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23191 l₁ l₂)
+  forall {α._@.Std.Data.List.Lemmas._hyg.23163 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163}, (HasSubset.Subset.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163) (List.instHasSubsetList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163) l₁ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163 l l₂) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23163 l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_subset_left List.disjoint_of_subset_leftₓ'. -/
-theorem disjoint_of_subset_left (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoint l₁ l₂ := fun x m => d (ss m)
+theorem disjoint_of_subset_left (ss : l₁ ⊆ l) (d : Disjoint l l₂) : Disjoint l₁ l₂ := fun x m =>
+  d (ss m)
 #align list.disjoint_of_subset_left List.disjoint_of_subset_left
 
 /- warning: list.disjoint_of_subset_right -> List.disjoint_of_subset_right is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α}, (HasSubset.Subset.{u_1} (List.{u_1} α) (List.hasSubset.{u_1} α) l₂ l) -> (List.Disjoint.{u_1} α l₁ l) -> (List.Disjoint.{u_1} α l₁ l₂)
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23230 : Type.{u_1}} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230}, (HasSubset.Subset.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230) (List.instHasSubsetList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230) l₂ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230 l₁ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23230 l₁ l₂)
+  forall {α._@.Std.Data.List.Lemmas._hyg.23202 : Type.{u_1}} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202}, (HasSubset.Subset.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202) (List.instHasSubsetList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202) l₂ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202 l₁ l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23202 l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_subset_right List.disjoint_of_subset_rightₓ'. -/
-theorem disjoint_of_subset_right (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ => d m (ss m₁)
+theorem disjoint_of_subset_right (ss : l₂ ⊆ l) (d : Disjoint l₁ l) : Disjoint l₁ l₂ := fun x m m₁ =>
+  d m (ss m₁)
 #align list.disjoint_of_subset_right List.disjoint_of_subset_right
 
 #print List.disjoint_of_disjoint_cons_left /-
@@ -111,9 +113,9 @@ theorem disjoint_nil_right (l : List α) : Disjoint l [] := by
 
 /- warning: list.singleton_disjoint -> List.singleton_disjoint is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α}, Iff (List.Disjoint.{u_1} α (List.cons.{u_1} α a (List.nil.{u_1} α)) l) (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l))
+  forall {α : Type.{u_1}} {l : List.{u_1} α} {a : α}, Iff (List.Disjoint.{u_1} α (List.cons.{u_1} α a (List.nil.{u_1} α)) l) (Not (Membership.Mem.{u_1, u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l))
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23414 : Type.{u_1}} {a : α._@.Std.Data.List.Lemmas._hyg.23414} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23414}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23414 (List.cons.{u_1} α._@.Std.Data.List.Lemmas._hyg.23414 a (List.nil.{u_1} α._@.Std.Data.List.Lemmas._hyg.23414)) l) (Not (Membership.mem.{u_1 u_1} α._@.Std.Data.List.Lemmas._hyg.23414 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23414) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23414) a l))
+  forall {α._@.Std.Data.List.Lemmas._hyg.23386 : Type.{u_1}} {a : α._@.Std.Data.List.Lemmas._hyg.23386} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23386}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23386 (List.cons.{u_1} α._@.Std.Data.List.Lemmas._hyg.23386 a (List.nil.{u_1} α._@.Std.Data.List.Lemmas._hyg.23386)) l) (Not (Membership.mem.{u_1, u_1} α._@.Std.Data.List.Lemmas._hyg.23386 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23386) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23386) a l))
 Case conversion may be inaccurate. Consider using '#align list.singleton_disjoint List.singleton_disjointₓ'. -/
 @[simp]
 theorem singleton_disjoint : Disjoint [a] l ↔ a ∉ l := by
@@ -131,7 +133,7 @@ theorem disjoint_singleton : Disjoint l [a] ↔ a ∉ l := by rw [disjoint_comm,
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α}, Iff (List.Disjoint.{u_1} α (Append.append.{u_1} (List.{u_1} α) (List.hasAppend.{u_1} α) l₁ l₂) l) (And (List.Disjoint.{u_1} α l₁ l) (List.Disjoint.{u_1} α l₂ l))
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23541 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541 (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541) (instHAppend.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541) (List.instAppendList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541)) l₁ l₂) l) (And (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541 l₁ l) (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23541 l₂ l))
+  forall {α._@.Std.Data.List.Lemmas._hyg.23513 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513 (HAppend.hAppend.{u_1, u_1, u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513) (instHAppend.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513) (List.instAppendList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513)) l₁ l₂) l) (And (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513 l₁ l) (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23513 l₂ l))
 Case conversion may be inaccurate. Consider using '#align list.disjoint_append_left List.disjoint_append_leftₓ'. -/
 @[simp]
 theorem disjoint_append_left : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧ Disjoint l₂ l := by
@@ -147,9 +149,9 @@ theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ �
 
 /- warning: list.disjoint_cons_left -> List.disjoint_cons_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α} {a : α}, Iff (List.Disjoint.{u_1} α (List.cons.{u_1} α a l₁) l₂) (And (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l₂)) (List.Disjoint.{u_1} α l₁ l₂))
+  forall {α : Type.{u_1}} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α} {a : α}, Iff (List.Disjoint.{u_1} α (List.cons.{u_1} α a l₁) l₂) (And (Not (Membership.Mem.{u_1, u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l₂)) (List.Disjoint.{u_1} α l₁ l₂))
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23699 : Type.{u_1}} {a : α._@.Std.Data.List.Lemmas._hyg.23699} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699 (List.cons.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699 a l₁) l₂) (And (Not (Membership.mem.{u_1 u_1} α._@.Std.Data.List.Lemmas._hyg.23699 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699) a l₂)) (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23699 l₁ l₂))
+  forall {α._@.Std.Data.List.Lemmas._hyg.23671 : Type.{u_1}} {a : α._@.Std.Data.List.Lemmas._hyg.23671} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671 (List.cons.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671 a l₁) l₂) (And (Not (Membership.mem.{u_1, u_1} α._@.Std.Data.List.Lemmas._hyg.23671 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671) a l₂)) (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23671 l₁ l₂))
 Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_left List.disjoint_cons_leftₓ'. -/
 @[simp]
 theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
@@ -158,9 +160,9 @@ theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoi
 
 /- warning: list.disjoint_cons_right -> List.disjoint_cons_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α} {a : α}, Iff (List.Disjoint.{u_1} α l₁ (List.cons.{u_1} α a l₂)) (And (Not (Membership.Mem.{u_1 u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l₁)) (List.Disjoint.{u_1} α l₁ l₂))
+  forall {α : Type.{u_1}} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α} {a : α}, Iff (List.Disjoint.{u_1} α l₁ (List.cons.{u_1} α a l₂)) (And (Not (Membership.Mem.{u_1, u_1} α (List.{u_1} α) (List.hasMem.{u_1} α) a l₁)) (List.Disjoint.{u_1} α l₁ l₂))
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23776 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776} {a : α._@.Std.Data.List.Lemmas._hyg.23776} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776 l₁ (List.cons.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776 a l₂)) (And (Not (Membership.mem.{u_1 u_1} α._@.Std.Data.List.Lemmas._hyg.23776 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776) a l₁)) (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23776 l₁ l₂))
+  forall {α._@.Std.Data.List.Lemmas._hyg.23748 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748} {a : α._@.Std.Data.List.Lemmas._hyg.23748} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748}, Iff (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748 l₁ (List.cons.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748 a l₂)) (And (Not (Membership.mem.{u_1, u_1} α._@.Std.Data.List.Lemmas._hyg.23748 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748) a l₁)) (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23748 l₁ l₂))
 Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_right List.disjoint_cons_rightₓ'. -/
 @[simp]
 theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjoint l₁ l₂ :=
@@ -171,7 +173,7 @@ theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjo
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α}, (List.Disjoint.{u_1} α (Append.append.{u_1} (List.{u_1} α) (List.hasAppend.{u_1} α) l₁ l₂) l) -> (List.Disjoint.{u_1} α l₁ l)
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23850 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850}, (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850 (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850) (instHAppend.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850) (List.instAppendList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850)) l₁ l₂) l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23850 l₁ l)
+  forall {α._@.Std.Data.List.Lemmas._hyg.23822 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822}, (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822 (HAppend.hAppend.{u_1, u_1, u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822) (instHAppend.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822) (List.instAppendList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822)) l₁ l₂) l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23822 l₁ l)
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_disjoint_append_left_left List.disjoint_of_disjoint_append_left_leftₓ'. -/
 theorem disjoint_of_disjoint_append_left_left (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₁ l :=
   (disjoint_append_left.1 d).1
@@ -181,7 +183,7 @@ theorem disjoint_of_disjoint_append_left_left (d : Disjoint (l₁ ++ l₂) l) : 
 lean 3 declaration is
   forall {α : Type.{u_1}} {l : List.{u_1} α} {l₁ : List.{u_1} α} {l₂ : List.{u_1} α}, (List.Disjoint.{u_1} α (Append.append.{u_1} (List.{u_1} α) (List.hasAppend.{u_1} α) l₁ l₂) l) -> (List.Disjoint.{u_1} α l₂ l)
 but is expected to have type
-  forall {α._@.Std.Data.List.Lemmas._hyg.23893 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893}, (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893 (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893) (instHAppend.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893) (List.instAppendList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893)) l₁ l₂) l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23893 l₂ l)
+  forall {α._@.Std.Data.List.Lemmas._hyg.23865 : Type.{u_1}} {l₁ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865} {l₂ : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865} {l : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865}, (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865 (HAppend.hAppend.{u_1, u_1, u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865) (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865) (instHAppend.{u_1} (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865) (List.instAppendList.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865)) l₁ l₂) l) -> (List.Disjoint.{u_1} α._@.Std.Data.List.Lemmas._hyg.23865 l₂ l)
 Case conversion may be inaccurate. Consider using '#align list.disjoint_of_disjoint_append_left_right List.disjoint_of_disjoint_append_left_rightₓ'. -/
 theorem disjoint_of_disjoint_append_left_right (d : Disjoint (l₁ ++ l₂) l) : Disjoint l₂ l :=
   (disjoint_append_left.1 d).2
@@ -205,18 +207,17 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {m : Nat} {n : Nat} {l : List.{u_1} α}, (List.Nodup.{u_1} α l) -> (LE.le.{0} Nat instLENat m n) -> (List.Disjoint.{u_1} α (List.take.{u_1} α m l) (List.drop.{u_1} α n l))
 Case conversion may be inaccurate. Consider using '#align list.disjoint_take_drop List.disjoint_take_dropₓ'. -/
-theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (l.take m) (l.drop n) := by
+theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (l.take m) (l.drop n) :=
+  by
   induction l generalizing m n
   case nil m n => simp
   case cons x xs xs_ih m n =>
-  cases m <;>
-    cases n <;>
-      simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_or_iff, eq_self_iff_true, not_true,
-        false_and_iff, disjoint_nil_left, take]
+  cases m <;> cases n <;>
+    simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_or_iff,
+      eq_self_iff_true, not_true, false_and_iff, disjoint_nil_left, take]
   · cases h
     
-  cases' hl with _ _ h₀ h₁
-  constructor
+  cases' hl with _ _ h₀ h₁; constructor
   · intro h
     exact h₀ _ (mem_of_mem_drop h) rfl
     
@@ -241,9 +242,9 @@ theorem nil_union (l : List α) : [] ∪ l = l :=
 
 /- warning: list.cons_union -> List.cons_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} α] (l₁ : List.{u_1} α) (l₂ : List.{u_1} α) (a : α), Eq.{succ u_1} (List.{u_1} α) (Union.union.{u_1} (List.{u_1} α) (List.hasUnion.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.cons.{u_1} α a l₁) l₂) (Insert.insert.{u_1 u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a (Union.union.{u_1} (List.{u_1} α) (List.hasUnion.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂))
+  forall {α : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} α] (l₁ : List.{u_1} α) (l₂ : List.{u_1} α) (a : α), Eq.{succ u_1} (List.{u_1} α) (Union.union.{u_1} (List.{u_1} α) (List.hasUnion.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.cons.{u_1} α a l₁) l₂) (Insert.insert.{u_1, u_1} α (List.{u_1} α) (List.hasInsert.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) a (Union.union.{u_1} (List.{u_1} α) (List.hasUnion.{u_1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.24568 : DecidableEq.{succ u_1} α] (a : α) (l₁ : List.{u_1} α) (l₂ : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.union.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.24568 a b) (List.cons.{u_1} α a l₁) l₂) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.24568 a b) a (List.union.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.24568 a b) l₁ l₂))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.24533 : DecidableEq.{succ u_1} α] (a : α) (l₁ : List.{u_1} α) (l₂ : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.union.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.24533 a b) (List.cons.{u_1} α a l₁) l₂) (List.insert.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.24533 a b) a (List.union.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.24533 a b) l₁ l₂))
 Case conversion may be inaccurate. Consider using '#align list.cons_union List.cons_unionₓ'. -/
 @[simp]
 theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert a (l₁ ∪ l₂) :=
@@ -253,7 +254,8 @@ theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert 
 @[simp]
 theorem mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
   induction l₁ <;>
-    simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons_iff, or_assoc', *]
+    simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons_iff,
+      or_assoc', *]
 #align list.mem_union List.mem_union
 
 theorem mem_union_left (h : a ∈ l₁) (l₂ : List α) : a ∈ l₁ ∪ l₂ :=
@@ -268,8 +270,11 @@ theorem sublist_suffix_of_union : ∀ l₁ l₂ : List α, ∃ t, t <+ l₁ ∧ 
   | [], l₂ => ⟨[], by rfl, rfl⟩
   | a :: l₁, l₂ =>
     let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂
-    if h : a ∈ l₁ ∪ l₂ then ⟨t, sublist_cons_of_sublist _ s, by simp only [e, cons_union, insert_of_mem h]⟩
-    else ⟨a :: t, s.cons_cons _, by simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> constructor <;> rfl⟩
+    if h : a ∈ l₁ ∪ l₂ then
+      ⟨t, sublist_cons_of_sublist _ s, by simp only [e, cons_union, insert_of_mem h]⟩
+    else
+      ⟨a :: t, s.cons_cons _, by
+        simp only [cons_append, cons_union, e, insert_of_not_mem h] <;> constructor <;> rfl⟩
 #align list.sublist_suffix_of_union List.sublist_suffix_of_union
 
 theorem suffix_union_right (l₁ l₂ : List α) : l₂ <:+ l₁ ∪ l₂ :=
@@ -339,7 +344,8 @@ theorem inter_subset_left (l₁ l₂ : List α) : l₁ ∩ l₂ ⊆ l₁ :=
 theorem inter_subset_right (l₁ l₂ : List α) : l₁ ∩ l₂ ⊆ l₂ := fun a => mem_of_mem_inter_right
 #align list.inter_subset_right List.inter_subset_right
 
-theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l₂) : l ⊆ l₁ ∩ l₂ := fun a h => mem_inter.2 ⟨h₁ h, h₂ h⟩
+theorem subset_inter {l l₁ l₂ : List α} (h₁ : l ⊆ l₁) (h₂ : l ⊆ l₂) : l ⊆ l₁ ∩ l₂ := fun a h =>
+  mem_inter.2 ⟨h₁ h, h₂ h⟩
 #align list.subset_inter List.subset_inter
 
 theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ := by
@@ -347,16 +353,19 @@ theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ :=
   rfl
 #align list.inter_eq_nil_iff_disjoint List.inter_eq_nil_iff_disjoint
 
-theorem forall_mem_inter_of_forall_left (h : ∀ x ∈ l₁, p x) (l₂ : List α) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
+theorem forall_mem_inter_of_forall_left (h : ∀ x ∈ l₁, p x) (l₂ : List α) :
+    ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   BAll.imp_left (fun x => mem_of_mem_inter_left) h
 #align list.forall_mem_inter_of_forall_left List.forall_mem_inter_of_forall_left
 
-theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x ∈ l₂, p x) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
+theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x ∈ l₂, p x) :
+    ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   BAll.imp_left (fun x => mem_of_mem_inter_right) h
 #align list.forall_mem_inter_of_forall_right List.forall_mem_inter_of_forall_right
 
 @[simp]
-theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by simp only [List.inter, mem_reverse]
+theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by
+  simp only [List.inter, mem_reverse]
 #align list.inter_reverse List.inter_reverse
 
 end Inter
@@ -375,13 +384,14 @@ theorem bag_inter_nil (l : List α) : l.bagInter [] = [] := by cases l <;> rfl
 #align list.bag_inter_nil List.bag_inter_nil
 
 @[simp]
-theorem cons_bag_inter_of_pos (l₁ : List α) (h : a ∈ l₂) : (a :: l₁).bagInter l₂ = a :: l₁.bagInter (l₂.erase a) := by
-  cases l₂ <;> exact if_pos h
+theorem cons_bag_inter_of_pos (l₁ : List α) (h : a ∈ l₂) :
+    (a :: l₁).bagInter l₂ = a :: l₁.bagInter (l₂.erase a) := by cases l₂ <;> exact if_pos h
 #align list.cons_bag_inter_of_pos List.cons_bag_inter_of_pos
 
 @[simp]
-theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).bagInter l₂ = l₁.bagInter l₂ := by
-  cases l₂
+theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).bagInter l₂ = l₁.bagInter l₂ :=
+  by
+  cases l₂;
   · simp only [bag_inter_nil]
     
   simp only [erase_of_not_mem h, List.bagInter, if_neg h]
@@ -408,12 +418,14 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter 
 #align list.mem_bag_inter List.mem_bag_inter
 
 @[simp]
-theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
+theorem count_bag_inter {a : α} :
+    ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
   | [], l₂ => by simp
   | l₁, [] => by simp
   | b :: l₁, l₂ => by
     by_cases hb : b ∈ l₂
-    · rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ← min_add_add_right]
+    · rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ←
+        min_add_add_right]
       by_cases ab : a = b
       · rw [if_pos ab, tsub_add_cancel_of_le]
         rwa [succ_le_iff, count_pos, ab]

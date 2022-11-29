@@ -18,7 +18,8 @@ variable {α : Type _}
 
 theorem lift_fun_vec_cons {n : ℕ} (r : α → α → Prop) [IsTrans α r] {f : Fin (n + 1) → α} {a : α} :
     ((· < ·) ⇒ r) (vecCons a f) (vecCons a f) ↔ r a (f 0) ∧ ((· < ·) ⇒ r) f f := by
-  simp only [lift_fun_iff_succ r, forall_fin_succ, cons_val_succ, cons_val_zero, ← succ_cast_succ, cast_succ_zero]
+  simp only [lift_fun_iff_succ r, forall_fin_succ, cons_val_succ, cons_val_zero, ← succ_cast_succ,
+    cast_succ_zero]
 #align lift_fun_vec_cons lift_fun_vec_cons
 
 variable [Preorder α] {n : ℕ} {f : Fin (n + 1) → α} {a : α}

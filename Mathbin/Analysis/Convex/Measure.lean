@@ -46,7 +46,8 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 := by
   · set B : ℕ → Set E := fun n => ball x (n + 1)
     have : μ (⋃ n : ℕ, frontier (s ∩ B n)) = 0 := by
       refine'
-        measure_Union_null fun n => H _ (hs.inter (convex_ball _ _)) _ (bounded_ball.mono (inter_subset_right _ _))
+        measure_Union_null fun n =>
+          H _ (hs.inter (convex_ball _ _)) _ (bounded_ball.mono (inter_subset_right _ _))
       rw [interior_inter, is_open_ball.interior_eq]
       exact ⟨hx, mem_ball_self (add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one)⟩
     refine' measure_mono_null (fun y hy => _) this
@@ -68,20 +69,25 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 := by
   replace hb : μ (interior s) ≠ ∞
   exact (hb.mono interior_subset).measure_lt_top.Ne
   suffices μ (closure s) ≤ μ (interior s) by
-    rwa [frontier, measure_diff interior_subset_closure is_open_interior.measurable_set hb, tsub_eq_zero_iff_le]
+    rwa [frontier, measure_diff interior_subset_closure is_open_interior.measurable_set hb,
+      tsub_eq_zero_iff_le]
   /- Due to `convex.closure_subset_image_homothety_interior_of_one_lt`, for any `r > 1` we have
     `closure s ⊆ homothety x r '' interior s`, hence `μ (closure s) ≤ r ^ d * μ (interior s)`,
     where `d = finrank ℝ E`. -/
   set d : ℕ := FiniteDimensional.finrank ℝ E
   have : ∀ r : ℝ≥0, 1 < r → μ (closure s) ≤ ↑(r ^ d) * μ (interior s) := by
     intro r hr
-    refine' (measure_mono <| hs.closure_subset_image_homothety_interior_of_one_lt hx r hr).trans_eq _
+    refine'
+      (measure_mono <| hs.closure_subset_image_homothety_interior_of_one_lt hx r hr).trans_eq _
     rw [add_haar_image_homothety, ← Nnreal.coe_pow, Nnreal.abs_eq, Ennreal.of_real_coe_nnreal]
-  have : ∀ᶠ r in 𝓝[>] (1 : ℝ≥0), μ (closure s) ≤ ↑(r ^ d) * μ (interior s) := mem_of_superset self_mem_nhds_within this
+  have : ∀ᶠ r in 𝓝[>] (1 : ℝ≥0), μ (closure s) ≤ ↑(r ^ d) * μ (interior s) :=
+    mem_of_superset self_mem_nhds_within this
   -- Taking the limit as `r → 1`, we get `μ (closure s) ≤ μ (interior s)`.
   refine' ge_of_tendsto _ this
   refine'
-    (((Ennreal.continuous_mul_const hb).comp (ennreal.continuous_coe.comp (continuous_pow d))).tendsto' _ _ _).mono_left
+    (((Ennreal.continuous_mul_const hb).comp
+              (ennreal.continuous_coe.comp (continuous_pow d))).tendsto'
+          _ _ _).mono_left
       nhds_within_le_nhds
   simp
 #align convex.add_haar_frontier Convex.add_haar_frontier

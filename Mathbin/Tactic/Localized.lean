@@ -64,14 +64,16 @@ unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
   tk "in"
   let nm ← ident
   let env ← get_env
-  let dummy_decl_name := mkNumName `_localized_decl ((String.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
+  let dummy_decl_name :=
+    mkNumName `_localized_decl ((String.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
   add_decl
       (declaration.defn dummy_decl_name [] q(Name × String) (reflect (⟨nm, cmd⟩ : Name × String))
         (ReducibilityHints.regular 1 tt) ff)
   localized_attr dummy_decl_name Unit.unit tt
 #align localized_cmd localized_cmd
 
-/-- This consists of two user-commands which allow you to declare notation and commands localized to a
+/--
+This consists of two user-commands which allow you to declare notation and commands localized to a
 locale.
 
 * Declare notation which is localized to a locale using:
@@ -128,8 +130,8 @@ localized "infix (name := my_add) ` ⊹[` R `] ` := my_add hole! R" in foo
 ```
 -/
 add_tactic_doc
-  { Name := "localized notation", category := DocCategory.cmd, declNames := [`localized_cmd, `open_locale_cmd],
-    tags := ["notation", "type classes"] }
+  { Name := "localized notation", category := DocCategory.cmd,
+    declNames := [`localized_cmd, `open_locale_cmd], tags := ["notation", "type classes"] }
 
 /-- Print all commands in a given locale -/
 unsafe def print_localized_commands (ns : List Name) : tactic Unit := do

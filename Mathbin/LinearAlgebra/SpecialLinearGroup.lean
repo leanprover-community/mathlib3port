@@ -107,7 +107,9 @@ instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 #align matrix.special_linear_group.has_one Matrix.SpecialLinearGroup.hasOne
 
-instance : Pow (SpecialLinearGroup n R) ℕ where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+instance :
+    Pow (SpecialLinearGroup n R)
+      ℕ where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
@@ -122,23 +124,19 @@ theorem coe_mk (A : Matrix n n R) (h : det A = 1) : ↑(⟨A, h⟩ : SpecialLine
 #align matrix.special_linear_group.coe_mk Matrix.SpecialLinearGroup.coe_mk
 
 @[simp]
-protected theorem coe_inv : ↑ₘA⁻¹ = adjugate A :=
+theorem coe_inv : ↑ₘA⁻¹ = adjugate A :=
   rfl
 #align matrix.special_linear_group.coe_inv Matrix.SpecialLinearGroup.coe_inv
 
 @[simp]
-protected theorem coe_mul : ↑ₘ(A * B) = ↑ₘA ⬝ ↑ₘB :=
+theorem coe_mul : ↑ₘ(A * B) = ↑ₘA ⬝ ↑ₘB :=
   rfl
 #align matrix.special_linear_group.coe_mul Matrix.SpecialLinearGroup.coe_mul
 
-instance : CoeIsMulHom (SpecialLinearGroup n R) (Matrix n n R) where coe_mul := SpecialLinearGroup.coe_mul
-
 @[simp]
-protected theorem coe_one : ↑ₘ(1 : SpecialLinearGroup n R) = (1 : Matrix n n R) :=
+theorem coe_one : ↑ₘ(1 : SpecialLinearGroup n R) = (1 : Matrix n n R) :=
   rfl
 #align matrix.special_linear_group.coe_one Matrix.SpecialLinearGroup.coe_one
-
-instance : CoeIsOneHom (SpecialLinearGroup n R) (Matrix n n R) where coe_one := SpecialLinearGroup.coe_one
 
 @[simp]
 theorem det_coe : det ↑ₘA = 1 :=
@@ -146,7 +144,7 @@ theorem det_coe : det ↑ₘA = 1 :=
 #align matrix.special_linear_group.det_coe Matrix.SpecialLinearGroup.det_coe
 
 @[simp]
-protected theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
+theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
   rfl
 #align matrix.special_linear_group.coe_pow Matrix.SpecialLinearGroup.coe_pow
 
@@ -162,7 +160,7 @@ theorem row_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) (i : n) : ↑ₘ
 end CoeLemmas
 
 instance : Monoid (SpecialLinearGroup n R) :=
-  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul SpecialLinearGroup.coe_pow
+  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul coe_pow
 
 instance : Group (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
@@ -174,8 +172,8 @@ instance : Group (SpecialLinearGroup n R) :=
 def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
   toFun A :=
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
-      (by rw [← to_lin'_mul, ← special_linear_group.coe_mul, mul_right_inv, coe_one, to_lin'_one])
-      (by rw [← to_lin'_mul, ← special_linear_group.coe_mul, mul_left_inv, coe_one, to_lin'_one])
+      (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
+      (by rw [← to_lin'_mul, ← coe_mul, mul_left_inv, coe_one, to_lin'_one])
   map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
   map_mul' A B := LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
 #align matrix.special_linear_group.to_lin' Matrix.SpecialLinearGroup.toLin'
@@ -185,20 +183,27 @@ theorem to_lin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
   rfl
 #align matrix.special_linear_group.to_lin'_apply Matrix.SpecialLinearGroup.to_lin'_apply
 
-theorem to_lin'_to_linear_map (A : SpecialLinearGroup n R) : ↑(SpecialLinearGroup.toLin' A) = Matrix.toLin' ↑ₘA :=
+theorem to_lin'_to_linear_map (A : SpecialLinearGroup n R) :
+    ↑(SpecialLinearGroup.toLin' A) = Matrix.toLin' ↑ₘA :=
   rfl
-#align matrix.special_linear_group.to_lin'_to_linear_map Matrix.SpecialLinearGroup.to_lin'_to_linear_map
+#align
+  matrix.special_linear_group.to_lin'_to_linear_map Matrix.SpecialLinearGroup.to_lin'_to_linear_map
 
-theorem to_lin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) : A.toLin'.symm v = Matrix.toLin' (↑ₘA⁻¹) v :=
+theorem to_lin'_symm_apply (A : SpecialLinearGroup n R) (v : n → R) :
+    A.toLin'.symm v = Matrix.toLin' (↑ₘA⁻¹) v :=
   rfl
 #align matrix.special_linear_group.to_lin'_symm_apply Matrix.SpecialLinearGroup.to_lin'_symm_apply
 
-theorem to_lin'_symm_to_linear_map (A : SpecialLinearGroup n R) : ↑A.toLin'.symm = Matrix.toLin' ↑ₘA⁻¹ :=
+theorem to_lin'_symm_to_linear_map (A : SpecialLinearGroup n R) :
+    ↑A.toLin'.symm = Matrix.toLin' ↑ₘA⁻¹ :=
   rfl
-#align matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.to_lin'_symm_to_linear_map
+#align
+  matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.to_lin'_symm_to_linear_map
 
-theorem to_lin'_injective : Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
-  Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
+theorem to_lin'_injective :
+    Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
+  Subtype.coe_injective <|
+    Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
 #align matrix.special_linear_group.to_lin'_injective Matrix.SpecialLinearGroup.to_lin'_injective
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/
@@ -245,7 +250,10 @@ variable [Fact (Even (Fintype.card n))]
 /-- Formal operation of negation on special linear group on even cardinality `n` given by negating
 each element. -/
 instance : Neg (SpecialLinearGroup n R) :=
-  ⟨fun g => ⟨-g, by simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
+  ⟨fun g =>
+    ⟨-g, by
+      simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using
+        det_smul (↑ₘg) (-1)⟩⟩
 
 @[simp]
 theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(g : Matrix n n R) :=
@@ -264,7 +272,8 @@ end Neg
 
 section SpecialCases
 
-theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]] = 1 := by
+theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]] = 1 :=
+  by
   rw [Matrix.det_fin_two, mul_comm]
   simp only [Subtype.val_eq_coe, cons_val_zero, cons_val_one, head_cons, mul_neg, neg_mul, neg_neg]
   have := A.2
@@ -272,11 +281,12 @@ theorem SL2_inv_expl_det (A : SL(2, R)) : det ![![A.1 1 1, -A.1 0 1], ![-A.1 1 0
   convert this
 #align matrix.special_linear_group.SL2_inv_expl_det Matrix.SpecialLinearGroup.SL2_inv_expl_det
 
-theorem SL2_inv_expl (A : SL(2, R)) : A⁻¹ = ⟨![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]], SL2_inv_expl_det A⟩ := by
+theorem SL2_inv_expl (A : SL(2, R)) :
+    A⁻¹ = ⟨![![A.1 1 1, -A.1 0 1], ![-A.1 1 0, A.1 0 0]], SL2_inv_expl_det A⟩ := by
   ext
   have := Matrix.adjugate_fin_two A.1
   simp only [Subtype.val_eq_coe] at this
-  rw [special_linear_group.coe_inv, this]
+  rw [coe_inv, this]
   rfl
 #align matrix.special_linear_group.SL2_inv_expl Matrix.SpecialLinearGroup.SL2_inv_expl
 

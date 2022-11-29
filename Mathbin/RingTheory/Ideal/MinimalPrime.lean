@@ -58,7 +58,9 @@ theorem Ideal.exists_minimal_primes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.m
   · refine' ⟨show J.is_prime by infer_instance, e⟩
     
   rintro (c : Set (Ideal R)) hc hc' J' hJ'
-  refine' ⟨OrderDual.toDual (Inf c), ⟨Ideal.Inf_is_prime_of_is_chain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
+  refine'
+    ⟨OrderDual.toDual (Inf c),
+      ⟨Ideal.Inf_is_prime_of_is_chain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
   · rw [OrderDual.ofDual_toDual]
     convert le_Inf _
     intro x hx
@@ -95,9 +97,10 @@ theorem Ideal.Inf_minimal_primes : inf I.minimalPrimes = I.radical := by
     
 #align ideal.Inf_minimal_primes Ideal.Inf_minimal_primes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p «expr ∈ » minimal_primes[minimal_primes] R) -/
-theorem Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective {f : R →+* S} (hf : Function.Injective f) (p)
-    (_ : p ∈ minimalPrimes R) : ∃ p' : Ideal S, p'.IsPrime ∧ p'.comap f = p := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ∈ » minimal_primes[minimal_primes] R) -/
+theorem Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective {f : R →+* S}
+    (hf : Function.Injective f) (p) (_ : p ∈ minimalPrimes R) :
+    ∃ p' : Ideal S, p'.IsPrime ∧ p'.comap f = p := by
   haveI := H.1.1
   have : Nontrivial (Localization (Submonoid.map f p.prime_compl)) := by
     refine' ⟨⟨1, 0, _⟩⟩
@@ -124,9 +127,10 @@ theorem Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective {f : R →+* S}
   apply IsUnit.map
   apply IsLocalization.map_units _ (show p.prime_compl from ⟨x, h⟩)
   infer_instance
-#align ideal.exists_comap_eq_of_mem_minimal_primes_of_injective Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective
+#align
+  ideal.exists_comap_eq_of_mem_minimal_primes_of_injective Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
 theorem Ideal.exists_comap_eq_of_mem_minimal_primes {I : Ideal S} (f : R →+* S) (p)
     (_ : p ∈ (I.comap f).minimalPrimes) : ∃ p' : Ideal S, p'.IsPrime ∧ I ≤ p' ∧ p'.comap f = p := by
   haveI := H.1.1
@@ -138,7 +142,8 @@ theorem Ideal.exists_comap_eq_of_mem_minimal_primes {I : Ideal S} (f : R →+* S
     rw [Ideal.mk_ker, e]
     exact H.1.2
   obtain ⟨p', hp₁, hp₂⟩ :=
-    Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective (I f).ker_lift_injective (p.map (I f).ker) _
+    Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective (I f).ker_lift_injective
+      (p.map (I f).ker) _
   · skip
     refine' ⟨p'.comap I, Ideal.IsPrime.comap _, _, _⟩
     · exact ideal.mk_ker.symm.trans_le (Ideal.comap_mono bot_le)
@@ -164,9 +169,9 @@ theorem Ideal.exists_comap_eq_of_mem_minimal_primes {I : Ideal S} (f : R →+* S
     
 #align ideal.exists_comap_eq_of_mem_minimal_primes Ideal.exists_comap_eq_of_mem_minimal_primes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
-theorem Ideal.exists_minimal_primes_comap_eq {I : Ideal S} (f : R →+* S) (p) (_ : p ∈ (I.comap f).minimalPrimes) :
-    ∃ p' ∈ I.minimalPrimes, Ideal.comap f p' = p := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
+theorem Ideal.exists_minimal_primes_comap_eq {I : Ideal S} (f : R →+* S) (p)
+    (_ : p ∈ (I.comap f).minimalPrimes) : ∃ p' ∈ I.minimalPrimes, Ideal.comap f p' = p := by
   obtain ⟨p', h₁, h₂, h₃⟩ := Ideal.exists_comap_eq_of_mem_minimal_primes f p H
   skip
   obtain ⟨q, hq, hq'⟩ := Ideal.exists_minimal_primes_le h₂
@@ -176,8 +181,8 @@ theorem Ideal.exists_minimal_primes_comap_eq {I : Ideal S} (f : R →+* S) (p) (
   exact (H.2 ⟨inferInstance, Ideal.comap_mono hq.1.2⟩ this).antisymm this
 #align ideal.exists_minimal_primes_comap_eq Ideal.exists_minimal_primes_comap_eq
 
-theorem Ideal.mimimal_primes_comap_of_surjective {f : R →+* S} (hf : Function.Surjective f) {I J : Ideal S}
-    (h : J ∈ I.minimalPrimes) : J.comap f ∈ (I.comap f).minimalPrimes := by
+theorem Ideal.mimimal_primes_comap_of_surjective {f : R →+* S} (hf : Function.Surjective f)
+    {I J : Ideal S} (h : J ∈ I.minimalPrimes) : J.comap f ∈ (I.comap f).minimalPrimes := by
   haveI := h.1.1
   refine' ⟨⟨inferInstance, Ideal.comap_mono h.1.2⟩, _⟩
   rintro K ⟨hK, e₁⟩ e₂
@@ -191,8 +196,8 @@ theorem Ideal.mimimal_primes_comap_of_surjective {f : R →+* S} (hf : Function.
     
 #align ideal.mimimal_primes_comap_of_surjective Ideal.mimimal_primes_comap_of_surjective
 
-theorem Ideal.comap_minimal_primes_eq_of_surjective {f : R →+* S} (hf : Function.Surjective f) (I : Ideal S) :
-    (I.comap f).minimalPrimes = Ideal.comap f '' I.minimalPrimes := by
+theorem Ideal.comap_minimal_primes_eq_of_surjective {f : R →+* S} (hf : Function.Surjective f)
+    (I : Ideal S) : (I.comap f).minimalPrimes = Ideal.comap f '' I.minimalPrimes := by
   ext J
   constructor
   · intro H
@@ -204,12 +209,14 @@ theorem Ideal.comap_minimal_primes_eq_of_surjective {f : R →+* S} (hf : Functi
     
 #align ideal.comap_minimal_primes_eq_of_surjective Ideal.comap_minimal_primes_eq_of_surjective
 
-theorem Ideal.minimal_primes_eq_comap : I.minimalPrimes = Ideal.comap I '' minimalPrimes (R ⧸ I) := by
+theorem Ideal.minimal_primes_eq_comap : I.minimalPrimes = Ideal.comap I '' minimalPrimes (R ⧸ I) :=
+  by
   rw [minimalPrimes, ← Ideal.comap_minimal_primes_eq_of_surjective Ideal.Quotient.mk_surjective, ←
     RingHom.ker_eq_comap_bot, Ideal.mk_ker]
 #align ideal.minimal_primes_eq_comap Ideal.minimal_primes_eq_comap
 
-theorem Ideal.minimal_primes_eq_subsingleton (hI : I.IsPrimary) : I.minimalPrimes = {I.radical} := by
+theorem Ideal.minimal_primes_eq_subsingleton (hI : I.IsPrimary) : I.minimalPrimes = {I.radical} :=
+  by
   ext J
   constructor
   · exact fun H =>

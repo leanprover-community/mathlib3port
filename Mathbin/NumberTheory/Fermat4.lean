@@ -32,7 +32,8 @@ theorem comm {a b c : ℤ} : Fermat42 a b c ↔ Fermat42 b a c := by
   tauto
 #align fermat_42.comm Fermat42.comm
 
-theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a) (k * b) (k ^ 2 * c) := by
+theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a) (k * b) (k ^ 2 * c) :=
+  by
   delta Fermat42
   constructor
   · intro f42
@@ -59,10 +60,10 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
 #align fermat_42.mul Fermat42.mul
 
 theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 := by
-  apply ne_zero_pow two_ne_zero _
-  apply ne_of_gt
+  apply ne_zero_pow two_ne_zero _; apply ne_of_gt
   rw [← h.2.2, (by ring : a ^ 4 + b ^ 4 = (a ^ 2) ^ 2 + (b ^ 2) ^ 2)]
-  exact add_pos (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.1)) (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.2.1))
+  exact
+    add_pos (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.1)) (sq_pos_of_ne_zero _ (pow_ne_zero 2 h.2.1))
 #align fermat_42.ne_zero Fermat42.ne_zero
 
 /-- We say a solution to `a ^ 4 + b ^ 4 = c ^ 2` is minimal if there is no other solution with
@@ -102,7 +103,8 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b := 
     apply Dvd.intro (a1 ^ 4 + b1 ^ 4)
     ring
   obtain ⟨c1, rfl⟩ := hpc
-  have hf : Fermat42 a1 b1 c1 := (Fermat42.mul (int.coe_nat_ne_zero.mpr (Nat.Prime.ne_zero hp))).mpr h.1
+  have hf : Fermat42 a1 b1 c1 :=
+    (Fermat42.mul (int.coe_nat_ne_zero.mpr (Nat.Prime.ne_zero hp))).mpr h.1
   apply Nat.le_lt_antisymm (h.2 _ _ _ hf)
   rw [Int.natAbs_mul, lt_mul_iff_one_lt_left, Int.nat_abs_pow, Int.natAbs_ofNat]
   · exact Nat.one_lt_pow _ _ zero_lt_two (Nat.Prime.one_lt hp)
@@ -112,7 +114,8 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b := 
 #align fermat_42.coprime_of_minimal Fermat42.coprime_of_minimal
 
 /-- We can swap `a` and `b` in a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2`. -/
-theorem minimal_comm {a b c : ℤ} : Minimal a b c → Minimal b a c := fun ⟨h1, h2⟩ => ⟨Fermat42.comm.mp h1, h2⟩
+theorem minimal_comm {a b c : ℤ} : Minimal a b c → Minimal b a c := fun ⟨h1, h2⟩ =>
+  ⟨Fermat42.comm.mp h1, h2⟩
 #align fermat_42.minimal_comm Fermat42.minimal_comm
 
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has positive `c`. -/
@@ -127,12 +130,14 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) := by
 #align fermat_42.neg_of_minimal Fermat42.neg_of_minimal
 
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd. -/
-theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
+theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
+    ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
   obtain ⟨a0, b0, c0, hf⟩ := exists_minimal h
   cases' Int.mod_two_eq_zero_or_one a0 with hap hap
   · cases' Int.mod_two_eq_zero_or_one b0 with hbp hbp
     · exfalso
-      have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) := Int.dvd_gcd (Int.dvd_of_mod_eq_zero hap) (Int.dvd_of_mod_eq_zero hbp)
+      have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) :=
+        Int.dvd_gcd (Int.dvd_of_mod_eq_zero hap) (Int.dvd_of_mod_eq_zero hbp)
       rw [int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1
       revert h1
       norm_num
@@ -145,8 +150,8 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Mi
 
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has
 `a` odd and `c` positive. -/
-theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 :=
-  by
+theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
+    ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 := by
   obtain ⟨a0, b0, c0, hf, hc⟩ := exists_odd_minimal h
   rcases lt_trichotomy 0 c0 with (h1 | rfl | h1)
   · use a0, b0, c0
@@ -167,10 +172,10 @@ theorem Int.coprime_of_sq_sum {r s : ℤ} (h2 : IsCoprime s r) : IsCoprime (r ^ 
   exact (IsCoprime.mul_left h2 h2).mul_add_left_left r
 #align int.coprime_of_sq_sum Int.coprime_of_sq_sum
 
-theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 2 + s ^ 2) (r * s) := by
+theorem Int.coprime_of_sq_sum' {r s : ℤ} (h : IsCoprime r s) : IsCoprime (r ^ 2 + s ^ 2) (r * s) :=
+  by
   apply IsCoprime.mul_right (Int.coprime_of_sq_sum (is_coprime_comm.mp h))
-  rw [add_comm]
-  apply Int.coprime_of_sq_sum h
+  rw [add_comm]; apply Int.coprime_of_sq_sum h
 #align int.coprime_of_sq_sum' Int.coprime_of_sq_sum'
 
 namespace Fermat42
@@ -218,7 +223,8 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- m and r * s are coprime because m = r ^ 2 + s ^ 2 and r and s are coprime.
   have hcp : Int.gcd m (r * s) = 1 := by
     rw [htt3]
-    exact int.gcd_eq_one_iff_coprime.mpr (Int.coprime_of_sq_sum' (int.gcd_eq_one_iff_coprime.mp htt4))
+    exact
+      int.gcd_eq_one_iff_coprime.mpr (Int.coprime_of_sq_sum' (int.gcd_eq_one_iff_coprime.mp htt4))
   -- b is even because b ^ 2 = 2 * m * n.
   have hb2 : 2 ∣ b := by
     apply @Int.Prime.dvd_pow' _ 2 _ (by norm_num : Nat.Prime 2)
@@ -316,14 +322,14 @@ end Fermat42
 
 theorem not_fermat_42 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 2 := by
   intro h
-  obtain ⟨a0, b0, c0, ⟨hf, h2, hp⟩⟩ := Fermat42.exists_pos_odd_minimal (And.intro ha (And.intro hb h))
+  obtain ⟨a0, b0, c0, ⟨hf, h2, hp⟩⟩ :=
+    Fermat42.exists_pos_odd_minimal (And.intro ha (And.intro hb h))
   apply Fermat42.not_minimal hf h2 hp
 #align not_fermat_42 not_fermat_42
 
 theorem not_fermat_4 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4 ≠ c ^ 4 := by
   intro heq
   apply @not_fermat_42 _ _ (c ^ 2) ha hb
-  rw [HEq]
-  ring
+  rw [HEq]; ring
 #align not_fermat_4 not_fermat_4
 

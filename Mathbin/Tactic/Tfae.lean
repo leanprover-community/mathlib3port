@@ -67,7 +67,8 @@ unsafe def tfae_have (h : parse <| optional ident <* tk ":") (i₁ : parse (with
     (re :
       parse
         ((tk "→" <|> tk "->") *> return Arrow.right <|>
-          (tk "↔" <|> tk "<->") *> return Arrow.left_right <|> (tk "←" <|> tk "<-") *> return Arrow.left))
+          (tk "↔" <|> tk "<->") *> return Arrow.left_right <|>
+            (tk "←" <|> tk "<-") *> return Arrow.left))
     (i₂ : parse (with_desc "j" small_nat)) : tactic Unit := do
   let q(Tfae $(l)) ← target
   let l ← parse_list l
@@ -154,6 +155,6 @@ end
 -/
 add_tactic_doc
   { Name := "tfae", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.tfae_have, `tactic.interactive.tfae_finish], tags := ["logic"],
-    inheritDescriptionFrom := `tactic.interactive.tfae_finish }
+    declNames := [`tactic.interactive.tfae_have, `tactic.interactive.tfae_finish],
+    tags := ["logic"], inheritDescriptionFrom := `tactic.interactive.tfae_finish }
 

@@ -33,12 +33,14 @@ section Quiver
 
 variable [Quiver.{v₁} C]
 
-theorem Quiver.Hom.op_inj {X Y : C} : Function.Injective (Quiver.Hom.op : (X ⟶ Y) → (op Y ⟶ op X)) := fun _ _ H =>
+theorem Quiver.Hom.op_inj {X Y : C} :
+    Function.Injective (Quiver.Hom.op : (X ⟶ Y) → (op Y ⟶ op X)) := fun _ _ H =>
   congr_arg Quiver.Hom.unop H
 #align quiver.hom.op_inj Quiver.Hom.op_inj
 
-theorem Quiver.Hom.unop_inj {X Y : Cᵒᵖ} : Function.Injective (Quiver.Hom.unop : (X ⟶ Y) → (unop Y ⟶ unop X)) :=
-  fun _ _ H => congr_arg Quiver.Hom.op H
+theorem Quiver.Hom.unop_inj {X Y : Cᵒᵖ} :
+    Function.Injective (Quiver.Hom.unop : (X ⟶ Y) → (unop Y ⟶ unop X)) := fun _ _ H =>
+  congr_arg Quiver.Hom.op H
 #align quiver.hom.unop_inj Quiver.Hom.unop_inj
 
 @[simp]
@@ -218,12 +220,14 @@ def opInv : (Cᵒᵖ ⥤ Dᵒᵖ) ⥤ (C ⥤ D)ᵒᵖ where
   obj F := op F.unop
   map F G α :=
     Quiver.Hom.op
-      { app := fun X => (α.app (op X)).unop, naturality' := fun X Y f => Quiver.Hom.op_inj <| (α.naturality f.op).symm }
+      { app := fun X => (α.app (op X)).unop,
+        naturality' := fun X Y f => Quiver.Hom.op_inj <| (α.naturality f.op).symm }
 #align category_theory.functor.op_inv CategoryTheory.Functor.opInv
 
 variable {C D}
 
-/-- Another variant of the opposite of functor, turning a functor `C ⥤ Dᵒᵖ` into a functor `Cᵒᵖ ⥤ D`.
+/--
+Another variant of the opposite of functor, turning a functor `C ⥤ Dᵒᵖ` into a functor `Cᵒᵖ ⥤ D`.
 In informal mathematics no distinction is made.
 -/
 @[simps]
@@ -232,7 +236,8 @@ protected def leftOp (F : C ⥤ Dᵒᵖ) : Cᵒᵖ ⥤ D where
   map X Y f := (F.map f.unop).unop
 #align category_theory.functor.left_op CategoryTheory.Functor.leftOp
 
-/-- Another variant of the opposite of functor, turning a functor `Cᵒᵖ ⥤ D` into a functor `C ⥤ Dᵒᵖ`.
+/--
+Another variant of the opposite of functor, turning a functor `Cᵒᵖ ⥤ D` into a functor `C ⥤ Dᵒᵖ`.
 In informal mathematics no distinction is made.
 -/
 @[simps]
@@ -245,16 +250,21 @@ instance {F : C ⥤ D} [Full F] : Full F.op where preimage X Y f := (F.preimage 
 
 instance {F : C ⥤ D} [Faithful F] :
     Faithful
-      F.op where map_injective' X Y f g h := Quiver.Hom.unop_inj <| by simpa using map_injective F (Quiver.Hom.op_inj h)
+      F.op where map_injective' X Y f g h :=
+    Quiver.Hom.unop_inj <| by simpa using map_injective F (Quiver.Hom.op_inj h)
 
 /-- If F is faithful then the right_op of F is also faithful. -/
 instance right_op_faithful {F : Cᵒᵖ ⥤ D} [Faithful F] :
-    Faithful F.rightOp where map_injective' X Y f g h := Quiver.Hom.op_inj (map_injective F (Quiver.Hom.op_inj h))
+    Faithful
+      F.rightOp where map_injective' X Y f g h :=
+    Quiver.Hom.op_inj (map_injective F (Quiver.Hom.op_inj h))
 #align category_theory.functor.right_op_faithful CategoryTheory.Functor.right_op_faithful
 
 /-- If F is faithful then the left_op of F is also faithful. -/
 instance left_op_faithful {F : C ⥤ Dᵒᵖ} [Faithful F] :
-    Faithful F.leftOp where map_injective' X Y f g h := Quiver.Hom.unop_inj (map_injective F (Quiver.Hom.unop_inj h))
+    Faithful
+      F.leftOp where map_injective' X Y f g h :=
+    Quiver.Hom.unop_inj (map_injective F (Quiver.Hom.unop_inj h))
 #align category_theory.functor.left_op_faithful CategoryTheory.Functor.left_op_faithful
 
 /-- The isomorphism between `F.left_op.right_op` and `F`. -/
@@ -318,7 +328,8 @@ we can take the "unopposite" of each component obtaining a natural transformatio
 @[simps]
 protected def removeOp (α : F.op ⟶ G.op) : G ⟶ F where
   app X := (α.app (op X)).unop
-  naturality' X Y f := Quiver.Hom.op_inj <| by simpa only [functor.op_map] using (α.naturality f.op).symm
+  naturality' X Y f :=
+    Quiver.Hom.op_inj <| by simpa only [functor.op_map] using (α.naturality f.op).symm
 #align category_theory.nat_trans.remove_op CategoryTheory.NatTrans.removeOp
 
 @[simp]
@@ -331,7 +342,8 @@ component obtaining a natural transformation `G ⟶ F`. -/
 @[simps]
 protected def removeUnop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F.unop ⟶ G.unop) : G ⟶ F where
   app X := (α.app (unop X)).op
-  naturality' X Y f := Quiver.Hom.unop_inj <| by simpa only [functor.unop_map] using (α.naturality f.unop).symm
+  naturality' X Y f :=
+    Quiver.Hom.unop_inj <| by simpa only [functor.unop_map] using (α.naturality f.unop).symm
 #align category_theory.nat_trans.remove_unop CategoryTheory.NatTrans.removeUnop
 
 @[simp]
@@ -370,7 +382,8 @@ taking `op` of each component gives a natural transformation `G ⟶ F`.
 @[simps]
 protected def removeLeftOp (α : F.leftOp ⟶ G.leftOp) : G ⟶ F where
   app X := (α.app (op X)).op
-  naturality' X Y f := Quiver.Hom.unop_inj <| by simpa only [functor.left_op_map] using (α.naturality f.op).symm
+  naturality' X Y f :=
+    Quiver.Hom.unop_inj <| by simpa only [functor.left_op_map] using (α.naturality f.op).symm
 #align category_theory.nat_trans.remove_left_op CategoryTheory.NatTrans.removeLeftOp
 
 @[simp]
@@ -409,7 +422,8 @@ taking `unop` of each component gives a natural transformation `G ⟶ F`.
 @[simps]
 protected def removeRightOp (α : F.rightOp ⟶ G.rightOp) : G ⟶ F where
   app X := (α.app X.unop).unop
-  naturality' X Y f := Quiver.Hom.op_inj <| by simpa only [functor.right_op_map] using (α.naturality f.unop).symm
+  naturality' X Y f :=
+    Quiver.Hom.op_inj <| by simpa only [functor.right_op_map] using (α.naturality f.unop).symm
 #align category_theory.nat_trans.remove_right_op CategoryTheory.NatTrans.removeRightOp
 
 @[simp]
@@ -466,18 +480,8 @@ isomorphism between the original functors `F ≅ G`. -/
 protected def op (α : F ≅ G) : G.op ≅ F.op where
   Hom := NatTrans.op α.Hom
   inv := NatTrans.op α.inv
-  hom_inv_id' := by
-    ext
-    dsimp
-    rw [← op_comp]
-    rw [α.inv_hom_id_app]
-    rfl
-  inv_hom_id' := by
-    ext
-    dsimp
-    rw [← op_comp]
-    rw [α.hom_inv_id_app]
-    rfl
+  hom_inv_id' := by ext; dsimp; rw [← op_comp]; rw [α.inv_hom_id_app]; rfl
+  inv_hom_id' := by ext; dsimp; rw [← op_comp]; rw [α.hom_inv_id_app]; rfl
 #align category_theory.nat_iso.op CategoryTheory.NatIso.op
 
 /-- The natural isomorphism between functors `G ≅ F` induced by a natural isomorphism
@@ -486,18 +490,8 @@ between the opposite functors `F.op ≅ G.op`. -/
 protected def removeOp (α : F.op ≅ G.op) : G ≅ F where
   Hom := NatTrans.removeOp α.Hom
   inv := NatTrans.removeOp α.inv
-  hom_inv_id' := by
-    ext
-    dsimp
-    rw [← unop_comp]
-    rw [α.inv_hom_id_app]
-    rfl
-  inv_hom_id' := by
-    ext
-    dsimp
-    rw [← unop_comp]
-    rw [α.hom_inv_id_app]
-    rfl
+  hom_inv_id' := by ext; dsimp; rw [← unop_comp]; rw [α.inv_hom_id_app]; rfl
+  inv_hom_id' := by ext; dsimp; rw [← unop_comp]; rw [α.hom_inv_id_app]; rfl
 #align category_theory.nat_iso.remove_op CategoryTheory.NatIso.removeOp
 
 /-- The natural isomorphism between functors `G.unop ≅ F.unop` induced by a natural isomorphism
@@ -506,18 +500,8 @@ between the original functors `F ≅ G`. -/
 protected def unop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F ≅ G) : G.unop ≅ F.unop where
   Hom := NatTrans.unop α.Hom
   inv := NatTrans.unop α.inv
-  hom_inv_id' := by
-    ext
-    dsimp
-    rw [← unop_comp]
-    rw [α.inv_hom_id_app]
-    rfl
-  inv_hom_id' := by
-    ext
-    dsimp
-    rw [← unop_comp]
-    rw [α.hom_inv_id_app]
-    rfl
+  hom_inv_id' := by ext; dsimp; rw [← unop_comp]; rw [α.inv_hom_id_app]; rfl
+  inv_hom_id' := by ext; dsimp; rw [← unop_comp]; rw [α.hom_inv_id_app]; rfl
 #align category_theory.nat_iso.unop CategoryTheory.NatIso.unop
 
 end NatIso

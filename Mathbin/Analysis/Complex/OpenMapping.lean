@@ -34,8 +34,8 @@ open Set Filter Metric Complex
 
 open TopologicalSpace
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {U : Set E} {f : ℂ → ℂ} {g : E → ℂ} {z₀ w : ℂ}
-  {ε r m : ℝ}
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {U : Set E} {f : ℂ → ℂ} {g : E → ℂ}
+  {z₀ w : ℂ} {ε r m : ℝ}
 
 /-- If the modulus of a holomorphic function `f` is bounded below by `ε` on a circle, then its range
 contains a disk of radius `ε / 2`. -/
@@ -52,7 +52,8 @@ theorem DiffContOnCl.ball_subset_image_closed_ball (h : DiffContOnCl ℂ f (ball
     continuous_norm.comp_continuous_on (closure_ball z₀ hr.ne.symm ▸ h1.continuous_on)
   have h3 : AnalyticOn ℂ f (ball z₀ r) := h.differentiable_on.analytic_on is_open_ball
   have h4 : ∀ z ∈ sphere z₀ r, ε / 2 ≤ ‖f z - v‖ := fun z hz => by
-    linarith [hf z hz, show ‖v - f z₀‖ < ε / 2 from mem_ball.mp hv, norm_sub_sub_norm_sub_le_norm_sub (f z) v (f z₀)]
+    linarith [hf z hz, show ‖v - f z₀‖ < ε / 2 from mem_ball.mp hv,
+      norm_sub_sub_norm_sub_le_norm_sub (f z) v (f z₀)]
   have h5 : ‖f z₀ - v‖ < ε / 2 := by simpa [← dist_eq_norm, dist_comm] using mem_ball.mp hv
   obtain ⟨z, hz1, hz2⟩ : ∃ z ∈ ball z₀ r, IsLocalMin (fun z => ‖f z - v‖) z
   exact exists_local_min_mem_ball h2 (mem_closed_ball_self hr.le) fun z hz => h5.trans_le (h4 z hz)
@@ -81,12 +82,14 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
   refine' (nhds_basis_ball.le_basis_iff (nhds_basis_closed_ball.map f)).mpr fun R hR => _
   have h1 := (hf.eventually_eq_or_eventually_ne analyticAtConst).resolve_left h
   have h2 : ∀ᶠ z in 𝓝 z₀, AnalyticAt ℂ f z := (is_open_analytic_at ℂ f).eventually_mem hf
-  obtain ⟨ρ, hρ, h3, h4⟩ : ∃ ρ > 0, AnalyticOn ℂ f (closed_ball z₀ ρ) ∧ ∀ z ∈ closed_ball z₀ ρ, z ≠ z₀ → f z ≠ f z₀ :=
-    by
+  obtain ⟨ρ, hρ, h3, h4⟩ :
+    ∃ ρ > 0, AnalyticOn ℂ f (closed_ball z₀ ρ) ∧ ∀ z ∈ closed_ball z₀ ρ, z ≠ z₀ → f z ≠ f z₀ := by
     simpa only [set_of_and, subset_inter_iff] using
       nhds_basis_closed_ball.mem_iff.mp (h2.and (eventually_nhds_within_iff.mp h1))
   replace h3 : DiffContOnCl ℂ f (ball z₀ ρ)
-  exact ⟨h3.differentiable_on.mono ball_subset_closed_ball, (closure_ball z₀ hρ.lt.ne.symm).symm ▸ h3.continuous_on⟩
+  exact
+    ⟨h3.differentiable_on.mono ball_subset_closed_ball,
+      (closure_ball z₀ hρ.lt.ne.symm).symm ▸ h3.continuous_on⟩
   let r := ρ ⊓ R
   have hr : 0 < r := lt_inf_iff.mpr ⟨hρ, hR⟩
   have h5 : closed_ball z₀ r ⊆ closed_ball z₀ ρ := closed_ball_subset_closed_ball inf_le_left
@@ -95,13 +98,15 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
     h4 z (h5 (sphere_subset_closed_ball hz)) (ne_of_mem_sphere hz hr.ne.symm)
   have h8 : (sphere z₀ r).Nonempty := normed_space.sphere_nonempty.mpr hr.le
   have h9 : ContinuousOn (fun x => ‖f x - f z₀‖) (sphere z₀ r) :=
-    continuous_norm.comp_continuous_on ((h6.sub_const (f z₀)).continuous_on_ball.mono sphere_subset_closed_ball)
+    continuous_norm.comp_continuous_on
+      ((h6.sub_const (f z₀)).continuous_on_ball.mono sphere_subset_closed_ball)
   obtain ⟨x, hx, hfx⟩ := (is_compact_sphere z₀ r).exists_forall_le h8 h9
   refine' ⟨‖f x - f z₀‖ / 2, half_pos (norm_sub_pos_iff.mpr (h7 x hx)), _⟩
   exact
     (h6.ball_subset_image_closed_ball hr (fun z hz => hfx z hz) (not_eventually.mp h)).trans
       (image_subset f (closed_ball_subset_closed_ball inf_le_right))
-#align analytic_at.eventually_constant_or_nhds_le_map_nhds_aux AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux
+#align
+  analytic_at.eventually_constant_or_nhds_le_map_nhds_aux AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux
 
 /-- The *open mapping theorem* for holomorphic functions, local version: is a function `g : E → ℂ`
 is analytic at a point `z₀`, then either it is constant in a neighborhood of `z₀`, or it maps every
@@ -122,7 +127,9 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     refine' fun z hz t ht => AnalyticAt.comp _ _
     · exact hgr (by simpa [ray, norm_smul, mem_sphere_zero_iff_norm.mp hz] using ht)
       
-    · exact analytic_at_const.add ((ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℂ ℂ) z).AnalyticAt t)
+    · exact
+        analytic_at_const.add
+          ((ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℂ ℂ) z).AnalyticAt t)
       
   by_cases ∀ z ∈ sphere (0 : E) 1, ∀ᶠ t in 𝓝 0, gray z t = gray z 0
   · left
@@ -140,8 +147,8 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     have h4 : ‖z - z₀‖ < r := by simpa [dist_eq_norm] using mem_ball.mp hz
     replace h4 : ↑‖z - z₀‖ ∈ ball (0 : ℂ) r := by
       simpa only [mem_ball_zero_iff, norm_eq_abs, abs_of_real, abs_norm_eq_norm]
-    simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right, Function.comp_apply,
-      Complex.coe_smul] using h3 (↑‖z - z₀‖) h4
+    simpa only [gray, ray, smul_smul, mul_inv_cancel h', one_smul, add_sub_cancel'_right,
+      Function.comp_apply, coe_smul] using h3 (↑‖z - z₀‖) h4
     
   · right
     -- Otherwise, it is open along at least one direction and that implies the result
@@ -151,12 +158,14 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     have h7 := h1.eventually_constant_or_nhds_le_map_nhds_aux.resolve_left hrz
     rw [show gray z 0 = g z₀ by simp [gray, ray], ← map_compose] at h7
     refine' h7.trans (map_mono _)
-    have h10 : Continuous fun t : ℂ => z₀ + t • z := continuous_const.add (continuous_id'.smul continuous_const)
+    have h10 : Continuous fun t : ℂ => z₀ + t • z :=
+      continuous_const.add (continuous_id'.smul continuous_const)
     simpa using h10.tendsto 0
     
-#align analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
+#align
+  analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (s «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » U) -/
 /-- The *open mapping theorem* for holomorphic functions, global version: if a function `g : E → ℂ`
 is analytic on a connected set `U`, then either it is constant on `U`, or it is open on `U` (in the
 sense that it maps any open set contained in `U` to an open set in `ℂ`). -/

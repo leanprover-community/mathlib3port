@@ -30,7 +30,8 @@ variable {G M α : Type _}
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
-class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
+class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace α} (μ : Measure α) :
+  Prop where
   measure_preimage_vadd : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c +ᵥ x) ⁻¹' s) = μ s
 #align measure_theory.vadd_invariant_measure MeasureTheory.VaddInvariantMeasure
 
@@ -39,7 +40,8 @@ class VaddInvariantMeasure (M α : Type _) [HasVadd M α] {_ : MeasurableSpace �
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
 @[to_additive]
-class SmulInvariantMeasure (M α : Type _) [HasSmul M α] {_ : MeasurableSpace α} (μ : Measure α) : Prop where
+class SmulInvariantMeasure (M α : Type _) [HasSmul M α] {_ : MeasurableSpace α} (μ : Measure α) :
+  Prop where
   measure_preimage_smul : ∀ (c : M) ⦃s : Set α⦄, MeasurableSet s → μ ((fun x => c • x) ⁻¹' s) = μ s
 #align measure_theory.smul_invariant_measure MeasureTheory.SmulInvariantMeasure
 
@@ -53,9 +55,11 @@ instance zero [MeasurableSpace α] [HasSmul M α] : SmulInvariantMeasure M α 0 
 variable [HasSmul M α] {m : MeasurableSpace α} {μ ν : Measure α}
 
 @[to_additive]
-instance add [SmulInvariantMeasure M α μ] [SmulInvariantMeasure M α ν] : SmulInvariantMeasure M α (μ + ν) :=
+instance add [SmulInvariantMeasure M α μ] [SmulInvariantMeasure M α ν] :
+    SmulInvariantMeasure M α (μ + ν) :=
   ⟨fun c s hs =>
-    show _ + _ = _ + _ from congr_arg₂ (· + ·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
+    show _ + _ = _ + _ from
+      congr_arg₂ (· + ·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
 #align measure_theory.smul_invariant_measure.add MeasureTheory.SmulInvariantMeasure.add
 
 @[to_additive]
@@ -66,14 +70,15 @@ instance smul [SmulInvariantMeasure M α μ] (c : ℝ≥0∞) : SmulInvariantMea
 @[to_additive]
 instance smulNnreal [SmulInvariantMeasure M α μ] (c : ℝ≥0) : SmulInvariantMeasure M α (c • μ) :=
   SmulInvariantMeasure.smul c
-#align measure_theory.smul_invariant_measure.smul_nnreal MeasureTheory.SmulInvariantMeasure.smulNnreal
+#align
+  measure_theory.smul_invariant_measure.smul_nnreal MeasureTheory.SmulInvariantMeasure.smulNnreal
 
 end SmulInvariantMeasure
 
 section HasMeasurableSmul
 
-variable {m : MeasurableSpace α} [MeasurableSpace M] [HasSmul M α] [HasMeasurableSmul M α] (c : M) (μ : Measure α)
-  [SmulInvariantMeasure M α μ]
+variable {m : MeasurableSpace α} [MeasurableSpace M] [HasSmul M α] [HasMeasurableSmul M α] (c : M)
+  (μ : Measure α) [SmulInvariantMeasure M α μ]
 
 @[simp, to_additive]
 theorem measurePreservingSmul : MeasurePreserving ((· • ·) c) μ μ :=
@@ -91,8 +96,8 @@ theorem map_smul : map ((· • ·) c) μ = μ :=
 
 end HasMeasurableSmul
 
-variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpace G] [HasMeasurableSmul G α] (c : G)
-  (μ : Measure α)
+variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpace G]
+  [HasMeasurableSmul G α] (c : G) (μ : Measure α)
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -102,7 +107,9 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         "Equivalent definitions of a measure invariant under a multiplicative action of a group.\n\n- 0: `smul_invariant_measure G α μ`;\n\n- 1: for every `c : G` and a measurable set `s`, the measure of the preimage of `s` under scalar\n     multiplication by `c` is equal to the measure of `s`;\n\n- 2: for every `c : G` and a measurable set `s`, the measure of the image `c • s` of `s` under\n     scalar multiplication by `c` is equal to the measure of `s`;\n\n- 3, 4: properties 2, 3 for any set, including non-measurable ones;\n\n- 5: for any `c : G`, scalar multiplication by `c` maps `μ` to `μ`;\n\n- 6: for any `c : G`, scalar multiplication by `c` is a measure preserving map. -/")]
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
         "]")]
       []
       []
@@ -123,7 +130,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")")
+              (Term.explicitBinder "(" [`s] [] [] ")")]
              []
              ","
              (Term.arrow
@@ -134,7 +142,10 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
                 `μ
                 [(Set.Data.Set.Basic.«term_⁻¹'_»
                   (Term.app
-                   (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
+                   (Term.paren
+                    "("
+                    (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·"))
+                    ")")
                    [`c])
                   " ⁻¹' "
                   `s)])
@@ -143,17 +154,22 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")")
+              (Term.explicitBinder "(" [`s] [] [] ")")]
              []
              ","
              (Term.arrow
               (Term.app `MeasurableSet [`s])
               "→"
-              («term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) "=" (Term.app `μ [`s]))))
+              («term_=_»
+               (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)])
+               "="
+               (Term.app `μ [`s]))))
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")")
+              (Term.explicitBinder "(" [`s] [] [] ")")]
              []
              ","
              («term_=_»
@@ -161,7 +177,10 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
                `μ
                [(Set.Data.Set.Basic.«term_⁻¹'_»
                  (Term.app
-                  (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
+                  (Term.paren
+                   "("
+                   (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·"))
+                   ")")
                   [`c])
                  " ⁻¹' "
                  `s)])
@@ -170,10 +189,14 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`c] [":" `G] [] ")") (Term.explicitBinder "(" [`s] [] [] ")")]
+             [(Term.explicitBinder "(" [`c] [":" `G] [] ")")
+              (Term.explicitBinder "(" [`s] [] [] ")")]
              []
              ","
-             («term_=_» (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)]) "=" (Term.app `μ [`s])))
+             («term_=_»
+              (Term.app `μ [(Algebra.Group.Defs.«term_•_» `c " • " `s)])
+              "="
+              (Term.app `μ [`s])))
             ","
             (Term.forall
              "∀"
@@ -184,7 +207,10 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               (Term.app
                `Measure.map
                [(Term.app
-                 (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")")
+                 (Term.paren
+                  "("
+                  (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·"))
+                  ")")
                  [`c])
                 `μ])
               "="
@@ -197,7 +223,12 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              ","
              (Term.app
               `MeasurePreserving
-              [(Term.app (Term.paren "(" (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·")) ")") [`c])
+              [(Term.app
+                (Term.paren
+                 "("
+                 (Algebra.Group.Defs.«term_•_» (Term.cdot "·") " • " (Term.cdot "·"))
+                 ")")
+                [`c])
                `μ
                `μ]))]
            "]")])))
@@ -208,7 +239,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         (Tactic.tacticSeq
          (Tactic.tacticSeq1Indented
           [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
-           []
+           ";"
            (Tactic.exact
             "exact"
             (Term.anonymousCtor
@@ -219,14 +250,18 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              "⟩"))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "6"))
-           []
+           ";"
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.intro "intro" [`h `c]) [])
-             (group (Tactic.exact "exact" (Term.proj (Term.app `measure_preserving_smul [`c `μ]) "." `map_eq)) [])])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.proj (Term.app `measure_preserving_smul [`c `μ]) "." `map_eq))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "7"))
-           []
+           ";"
            (Tactic.exact
             "exact"
             (Term.fun
@@ -235,10 +270,13 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               [`H `c]
               []
               "=>"
-              (Term.anonymousCtor "⟨" [(Term.app `measurable_const_smul [`c]) "," (Term.app `H [`c])] "⟩"))))
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.app `measurable_const_smul [`c]) "," (Term.app `H [`c])]
+               "⟩"))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "4"))
-           []
+           ";"
            (Tactic.exact
             "exact"
             (Term.fun
@@ -252,7 +290,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
                [(Term.app `measurableEmbeddingConstSmul [`c])]))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
-           []
+           ";"
            (Tactic.exact
             "exact"
             (Term.fun
@@ -268,21 +306,32 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
                  [(Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `preimage_smul_inv)] "]")
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `preimage_smul_inv)]
+                    "]")
                    [])
                   []
                   (Tactic.apply "apply" `H)]))))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "3"))
-           []
-           (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `c `s `hs] [] "=>" (Term.app `H [`c `s]))))
+           ";"
+           (Tactic.exact
+            "exact"
+            (Term.fun "fun" (Term.basicFun [`H `c `s `hs] [] "=>" (Term.app `H [`c `s]))))
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-           []
+           ";"
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
-             (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
+             (group
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]")
+               [])
+              [])
              (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
@@ -297,7 +346,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.tfaeHave "tfae_have" [] (num "1") "↔" (num "2"))
-          []
+          ";"
           (Tactic.exact
            "exact"
            (Term.anonymousCtor
@@ -308,14 +357,18 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
             "⟩"))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "6"))
-          []
+          ";"
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.intro "intro" [`h `c]) [])
-            (group (Tactic.exact "exact" (Term.proj (Term.app `measure_preserving_smul [`c `μ]) "." `map_eq)) [])])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.proj (Term.app `measure_preserving_smul [`c `μ]) "." `map_eq))
+             [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "7"))
-          []
+          ";"
           (Tactic.exact
            "exact"
            (Term.fun
@@ -324,10 +377,13 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              [`H `c]
              []
              "=>"
-             (Term.anonymousCtor "⟨" [(Term.app `measurable_const_smul [`c]) "," (Term.app `H [`c])] "⟩"))))
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app `measurable_const_smul [`c]) "," (Term.app `H [`c])]
+              "⟩"))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "7") "→" (num "4"))
-          []
+          ";"
           (Tactic.exact
            "exact"
            (Term.fun
@@ -341,7 +397,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               [(Term.app `measurableEmbeddingConstSmul [`c])]))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
-          []
+          ";"
           (Tactic.exact
            "exact"
            (Term.fun
@@ -357,21 +413,32 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
                 [(Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `preimage_smul_inv)] "]")
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `preimage_smul_inv)]
+                   "]")
                   [])
                  []
                  (Tactic.apply "apply" `H)]))))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "3"))
-          []
-          (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [`H `c `s `hs] [] "=>" (Term.app `H [`c `s]))))
+          ";"
+          (Tactic.exact
+           "exact"
+           (Term.fun "fun" (Term.basicFun [`H `c `s `hs] [] "=>" (Term.app `H [`c `s]))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
-          []
+          ";"
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
-            (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
+            (group
+             (Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]")
+              [])
+             [])
             (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
@@ -383,7 +450,9 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
       («tactic___;_»
        (cdotTk (patternIgnore (token.«·» "·")))
        [(group (Tactic.intro "intro" [`H `c `s `hs]) [])
-        (group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") []) [])
+        (group
+         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
+         [])
         (group (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs])) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `H [(«term_⁻¹_1» `c "⁻¹") `s `hs]))
@@ -393,45 +462,55 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_⁻¹_1» `c "⁻¹")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `preimage_smul)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `preimage_smul
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`H `c `s `hs])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -487,18 +566,25 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
     :=
       by
         tfae_have 1 ↔ 2
+          ;
           exact ⟨ fun h => h . 1 , fun h => ⟨ h ⟩ ⟩
           tfae_have 1 → 6
+          ;
           · intro h c exact measure_preserving_smul c μ . map_eq
           tfae_have 6 → 7
+          ;
           exact fun H c => ⟨ measurable_const_smul c , H c ⟩
           tfae_have 7 → 4
+          ;
           exact fun H c => H c . measure_preimage_emb measurableEmbeddingConstSmul c
           tfae_have 4 → 5
+          ;
           exact fun H c s => by rw [ ← preimage_smul_inv ] apply H
           tfae_have 5 → 3
+          ;
           exact fun H c s hs => H c s
           tfae_have 3 → 2
+          ;
           · intro H c s hs rw [ preimage_smul ] exact H c ⁻¹ s hs
           tfae_finish
 #align measure_theory.smul_invariant_measure_tfae MeasureTheory.smul_invariant_measure_tfae
@@ -535,23 +621,28 @@ theorem measure_smul_set (s : Set α) : μ (c • s) = μ s :=
 variable {μ}
 
 @[to_additive]
-theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) : NullMeasurableSet (c • s) μ := by
-  simpa only [← preimage_smul_inv] using hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
+theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) :
+    NullMeasurableSet (c • s) μ := by
+  simpa only [← preimage_smul_inv] using
+    hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
 #align measure_theory.null_measurable_set.smul MeasureTheory.NullMeasurableSet.smul
 
 section IsMinimal
 
-variable (G) [TopologicalSpace α] [HasContinuousConstSmul G α] [MulAction.IsMinimal G α] {K U : Set α}
+variable (G) [TopologicalSpace α] [HasContinuousConstSmul G α] [MulAction.IsMinimal G α]
+  {K U : Set α}
 
 /-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
 positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0` instead of
 `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_smul_invariant_of_ne_zero`. -/
 @[to_additive]
-theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact K) (hμK : μ K ≠ 0) (hU : IsOpen U)
-    (hne : U.Nonempty) : 0 < μ U :=
+theorem measure_is_open_pos_of_smul_invariant_of_compact_ne_zero (hK : IsCompact K) (hμK : μ K ≠ 0)
+    (hU : IsOpen U) (hne : U.Nonempty) : 0 < μ U :=
   let ⟨t, ht⟩ := hK.exists_finite_cover_smul G hU hne
   pos_iff_ne_zero.2 fun hμU =>
-    hμK <| measure_mono_null ht <| (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by rwa [measure_smul_set]
+    hμK <|
+      measure_mono_null ht <|
+        (measure_bUnion_null_iff t.countable_to_set).2 fun _ _ => by rwa [measure_smul_set]
 #align
   measure_theory.measure_is_open_pos_of_smul_invariant_of_compact_ne_zero MeasureTheory.measure_is_open_pos_of_smul_invariant_of_compact_ne_zero
 
@@ -567,29 +658,34 @@ theorem isLocallyFiniteMeasureOfSmulInvariant (hU : IsOpen U) (hne : U.Nonempty)
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
     ⟨(· • ·) g ⁻¹' U, (hU.Preimage (continuous_id.const_smul _)).mem_nhds hg,
       Ne.lt_top <| by rwa [measure_preimage_smul]⟩⟩
-#align measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.isLocallyFiniteMeasureOfSmulInvariant
+#align
+  measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.isLocallyFiniteMeasureOfSmulInvariant
 
 variable [Measure.Regular μ]
 
 @[to_additive]
-theorem measure_is_open_pos_of_smul_invariant_of_ne_zero (hμ : μ ≠ 0) (hU : IsOpen U) (hne : U.Nonempty) : 0 < μ U :=
+theorem measure_is_open_pos_of_smul_invariant_of_ne_zero (hμ : μ ≠ 0) (hU : IsOpen U)
+    (hne : U.Nonempty) : 0 < μ U :=
   let ⟨K, hK, hμK⟩ := Regular.exists_compact_not_null.mpr hμ
   measure_is_open_pos_of_smul_invariant_of_compact_ne_zero G hK hμK hU hne
 #align
   measure_theory.measure_is_open_pos_of_smul_invariant_of_ne_zero MeasureTheory.measure_is_open_pos_of_smul_invariant_of_ne_zero
 
 @[to_additive]
-theorem measure_pos_iff_nonempty_of_smul_invariant (hμ : μ ≠ 0) (hU : IsOpen U) : 0 < μ U ↔ U.Nonempty :=
-  ⟨fun h => nonempty_of_measure_ne_zero h.ne', measure_is_open_pos_of_smul_invariant_of_ne_zero G hμ hU⟩
+theorem measure_pos_iff_nonempty_of_smul_invariant (hμ : μ ≠ 0) (hU : IsOpen U) :
+    0 < μ U ↔ U.Nonempty :=
+  ⟨fun h => nonempty_of_measure_ne_zero h.ne',
+    measure_is_open_pos_of_smul_invariant_of_ne_zero G hμ hU⟩
 #align
   measure_theory.measure_pos_iff_nonempty_of_smul_invariant MeasureTheory.measure_pos_iff_nonempty_of_smul_invariant
 
 include G
 
 @[to_additive]
-theorem measure_eq_zero_iff_eq_empty_of_smul_invariant (hμ : μ ≠ 0) (hU : IsOpen U) : μ U = 0 ↔ U = ∅ := by
-  rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero, measure_pos_iff_nonempty_of_smul_invariant G hμ hU, ←
-    ne_empty_iff_nonempty]
+theorem measure_eq_zero_iff_eq_empty_of_smul_invariant (hμ : μ ≠ 0) (hU : IsOpen U) :
+    μ U = 0 ↔ U = ∅ := by
+  rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero,
+    measure_pos_iff_nonempty_of_smul_invariant G hμ hU, ← ne_empty_iff_nonempty]
 #align
   measure_theory.measure_eq_zero_iff_eq_empty_of_smul_invariant MeasureTheory.measure_eq_zero_iff_eq_empty_of_smul_invariant
 

@@ -25,9 +25,10 @@ variable {R S : Type _} (x y : PUnit.{u + 1}) (s : Set PUnit.{u + 1})
 @[to_additive]
 instance : CommGroup PUnit := by
   refine_struct
-      { mul := fun _ _ => star, one := star, inv := fun _ => star, div := fun _ _ => star, npow := fun _ _ => star,
-        zpow := fun _ _ => star.. } <;>
-    intros <;> exact Subsingleton.elim _ _
+        { mul := fun _ _ => star, one := star, inv := fun _ => star, div := fun _ _ => star,
+          npow := fun _ _ => star, zpow := fun _ _ => star.. } <;>
+      intros <;>
+    exact Subsingleton.elim _ _
 
 @[simp, to_additive]
 theorem one_eq : (1 : PUnit) = star :=
@@ -53,19 +54,21 @@ theorem inv_eq : x⁻¹ = star :=
 
 instance : CommRing PUnit := by
   refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit.. } <;>
-    intros <;> exact Subsingleton.elim _ _
+      intros <;>
+    exact Subsingleton.elim _ _
 
 instance : CancelCommMonoidWithZero PUnit := by
   refine' { PUnit.commRing with .. } <;> intros <;> exact Subsingleton.elim _ _
 
 instance : NormalizedGcdMonoid PUnit := by
   refine'
-      { gcd := fun _ _ => star, lcm := fun _ _ => star, normUnit := fun x => 1,
-        gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩,
-        gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elim _ _⟩,
-        dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elim _ _⟩,
-        gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elim _ _⟩.. } <;>
-    intros <;> exact Subsingleton.elim _ _
+        { gcd := fun _ _ => star, lcm := fun _ _ => star, normUnit := fun x => 1,
+          gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩,
+          gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elim _ _⟩,
+          dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elim _ _⟩,
+          gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elim _ _⟩.. } <;>
+      intros <;>
+    exact Subsingleton.elim _ _
 
 @[simp]
 theorem gcd_eq : gcd x y = star :=
@@ -84,15 +87,18 @@ theorem norm_unit_eq : normUnit x = 1 :=
 
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
-      { PUnit.commRing, PUnit.completeBooleanAlgebra with
-        exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elim _ _⟩.. } <;>
-    intros <;> trivial
+        { PUnit.commRing, PUnit.completeBooleanAlgebra with
+          exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elim _ _⟩.. } <;>
+      intros <;>
+    trivial
 
 instance : LinearOrderedCancelAddCommMonoid PUnit :=
-  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with le_of_add_le_add_left := fun _ _ _ _ => trivial }
+  { PUnit.canonicallyOrderedAddMonoid, PUnit.linearOrder with
+    le_of_add_le_add_left := fun _ _ _ _ => trivial }
 
 instance : LinearOrderedAddCommMonoidWithTop PUnit :=
-  { PUnit.completeBooleanAlgebra, PUnit.linearOrderedCancelAddCommMonoid with top_add' := fun _ => rfl }
+  { PUnit.completeBooleanAlgebra, PUnit.linearOrderedCancelAddCommMonoid with
+    top_add' := fun _ => rfl }
 
 @[to_additive]
 instance : HasSmul R PUnit :=

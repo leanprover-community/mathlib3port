@@ -52,7 +52,8 @@ noncomputable def piIsoPi : ∏ Z ≅ ModuleCat.of R (∀ i, Z i) :=
 
 -- We now show this isomorphism commutes with the inclusion of the kernel into the source.
 @[simp, elementwise]
-theorem pi_iso_pi_inv_kernel_ι (i : ι) : (piIsoPi Z).inv ≫ Pi.π Z i = (LinearMap.proj i : (∀ i : ι, Z i) →ₗ[R] Z i) :=
+theorem pi_iso_pi_inv_kernel_ι (i : ι) :
+    (piIsoPi Z).inv ≫ Pi.π Z i = (LinearMap.proj i : (∀ i : ι, Z i) →ₗ[R] Z i) :=
   limit.iso_limit_cone_inv_π _ _
 #align Module.pi_iso_pi_inv_kernel_ι ModuleCat.pi_iso_pi_inv_kernel_ι
 

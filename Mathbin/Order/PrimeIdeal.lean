@@ -117,7 +117,8 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ 
   exact fun h => inf_mem h.1 h.2
 #align order.ideal.is_prime.mem_or_mem Order.Ideal.IsPrime.mem_or_mem
 
-theorem IsPrime.ofMemOrMem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I := by
+theorem IsPrime.ofMemOrMem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I :=
+  by
   rw [is_prime_iff]
   use ‹_›
   apply is_pfilter.of_def
@@ -149,7 +150,8 @@ instance (priority := 100) IsMaximal.isPrime [IsMaximal I] : IsPrime I := by
   rintro ⟨hx, hynI⟩ hxy
   apply hynI
   let J := I ⊔ principal x
-  have hJuniv : (J : Set P) = Set.univ := is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
+  have hJuniv : (J : Set P) = Set.univ :=
+    is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
   have hyJ : y ∈ ↑J := set.eq_univ_iff_forall.mp hJuniv y
   rw [coe_sup_eq] at hyJ
   rcases hyJ with ⟨a, ha, b, hb, hy⟩
@@ -194,7 +196,9 @@ instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
   suffices ass : x ⊓ y ⊔ x ⊓ yᶜ ∈ J
   · rwa [sup_inf_inf_compl] at ass
     
-  exact sup_mem (J.lower inf_le_right hyJ) (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
+  exact
+    sup_mem (J.lower inf_le_right hyJ)
+      (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
 #align order.ideal.is_prime.is_maximal Order.Ideal.IsPrime.is_maximal
 
 end BooleanAlgebra
@@ -218,11 +222,11 @@ def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
   { i := h.compl_ideal.toIdeal, f, is_compl_I_F := is_compl_compl.symm }
 #align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
 
-theorem _root_.order.ideal.prime_pair.F_is_prime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
+theorem Order.Ideal.PrimePair.fIsPrime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
   { compl_ideal := by
       rw [IF.compl_F_eq_I]
       exact IF.I.is_ideal }
-#align order.pfilter._root_.order.ideal.prime_pair.F_is_prime order.pfilter._root_.order.ideal.prime_pair.F_is_prime
+#align order.ideal.prime_pair.F_is_prime Order.Ideal.PrimePair.fIsPrime
 
 end Pfilter
 

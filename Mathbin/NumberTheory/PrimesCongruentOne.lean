@@ -18,16 +18,18 @@ namespace Nat
 open Polynomial Nat Filter
 
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
-theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
+theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) :
+    ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
   let b := 3 * (k * n.factorial)
   have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs := by
     have hkey : ∀ l : ℕ, 2 < 3 * (l.succ * n.factorial) := fun l =>
-      lt_mul_of_lt_of_one_le (2 : ℕ).lt_succ_self (le_mul_of_le_of_one_le (Nat.succ_pos _) n.factorial_pos)
+      lt_mul_of_lt_of_one_le (2 : ℕ).lt_succ_self
+        (le_mul_of_le_of_one_le (Nat.succ_pos _) n.factorial_pos)
     rcases k with (_ | _ | k)
     · simpa using hpos
       
-    · simp only [one_mul, Int.ofNat_mul, Int.ofNat_succ, Int.ofNat_zero, zero_add, cyclotomic_one, eval_sub, eval_X,
-        eval_one]
+    · simp only [one_mul, Int.ofNat_mul, Int.ofNat_succ, Int.ofNat_zero, zero_add, cyclotomic_one,
+        eval_sub, eval_X, eval_one]
       convert Int.natAbs_lt_natAbs_of_nonneg_of_lt Int.one_nonneg _
       rw [lt_sub_iff_add_lt]
       specialize hkey 0
@@ -38,13 +40,16 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
       1 ≤ _ := by
         rw [le_tsub_iff_left (one_le_two.trans (hkey _).le)]
         exact (hkey _).le
-      _ < _ := sub_one_lt_nat_abs_cyclotomic_eval (one_lt_succ_succ k) (one_lt_two.trans (hkey k.succ)).Ne.symm
+      _ < _ :=
+        sub_one_lt_nat_abs_cyclotomic_eval (one_lt_succ_succ k)
+          (one_lt_two.trans (hkey k.succ)).Ne.symm
       
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
   haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_lt hgt).symm⟩
   have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
-    rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_ofNat, ←
-      Int.coe_cast_ring_hom, eval₂_hom, Int.coe_cast_ring_hom, Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
+    rw [is_root.def, ← map_cyclotomic_int k (Zmod p), eval_map, coe_cast_ring_hom, ← Int.cast_ofNat,
+      ← Int.coe_cast_ring_hom, eval₂_hom, Int.coe_cast_ring_hom,
+      Zmod.int_coe_zmod_eq_zero_iff_dvd _ _]
     apply Int.dvd_nat_abs.1
     exact_mod_cast min_fac_dvd (eval (↑b) (cyclotomic k ℤ)).natAbs
   refine' ⟨p, hprime.1, _, _⟩
@@ -55,7 +60,8 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
     
   · have hdiv :=
       order_of_dvd_of_pow_eq_one
-        (Zmod.units_pow_card_sub_one_eq_one p (Zmod.unitOfCoprime b (coprime_of_root_cyclotomic hpos hroot)))
+        (Zmod.units_pow_card_sub_one_eq_one p
+          (Zmod.unitOfCoprime b (coprime_of_root_cyclotomic hpos hroot)))
     have : ¬p ∣ k :=
       hprime.1.coprime_iff_not_dvd.1
         (coprime_of_root_cyclotomic hpos hroot).symm.coprime_mul_left_right.coprime_mul_right_right
@@ -66,13 +72,15 @@ theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : �
     
 #align nat.exists_prime_ge_modeq_one Nat.exists_prime_ge_modeq_one
 
-theorem frequently_at_top_modeq_one {k : ℕ} (hpos : 0 < k) : ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] := by
+theorem frequently_at_top_modeq_one {k : ℕ} (hpos : 0 < k) :
+    ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] := by
   refine' frequently_at_top.2 fun n => _
   obtain ⟨p, hp⟩ := exists_prime_ge_modeq_one n hpos
   exact ⟨p, ⟨hp.2.1, hp.1, hp.2.2⟩⟩
 #align nat.frequently_at_top_modeq_one Nat.frequently_at_top_modeq_one
 
-theorem infinite_set_of_prime_modeq_one {k : ℕ} (hpos : 0 < k) : Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
+theorem infinite_set_of_prime_modeq_one {k : ℕ} (hpos : 0 < k) :
+    Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
   frequently_at_top_iff_infinite.1 (frequently_at_top_modeq_one hpos)
 #align nat.infinite_set_of_prime_modeq_one Nat.infinite_set_of_prime_modeq_one
 

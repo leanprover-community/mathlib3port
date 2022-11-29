@@ -22,9 +22,13 @@ noncomputable section
 instance : ConditionallyCompleteLinearOrder ℤ :=
   { Int.linearOrder, LinearOrder.toLattice with
     sup := fun s =>
-      if h : s.Nonempty ∧ BddAbove s then greatestOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1 else 0,
+      if h : s.Nonempty ∧ BddAbove s then
+        greatestOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
+      else 0,
     inf := fun s =>
-      if h : s.Nonempty ∧ BddBelow s then leastOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1 else 0,
+      if h : s.Nonempty ∧ BddBelow s then
+        leastOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
+      else 0,
     le_cSup := by
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨⟨n, hns⟩, hs⟩
@@ -66,8 +70,8 @@ theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : sup s = 0 :=
   dif_neg (by simp [h])
 #align int.cSup_of_not_bdd_above Int.cSup_of_not_bdd_above
 
-theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, b ≤ z) (Hinh : ∃ z : ℤ, z ∈ s) :
-    inf s = leastOfBdd b Hb Hinh := by
+theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, b ≤ z)
+    (Hinh : ∃ z : ℤ, z ∈ s) : inf s = leastOfBdd b Hb Hinh := by
   convert dif_pos _ using 1
   · convert coe_least_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddBelow s)) _
     

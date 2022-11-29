@@ -42,7 +42,8 @@ protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀
   (s.pi t).map ⟨indicator s, indicator_injective s⟩
 #align finset.finsupp Finset.finsupp
 
-theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
+theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
+  by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
     refine' ⟨support_indicator_subset _ _, fun i hi => _⟩
@@ -57,13 +58,14 @@ theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support
 
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp]
-theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.support ⊆ s) : f ∈ s.Finsupp t ↔ ∀ i, f i ∈ t i :=
-  by
+theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.support ⊆ s) :
+    f ∈ s.Finsupp t ↔ ∀ i, f i ∈ t i := by
   refine'
     mem_finsupp_iff.trans
       (forall_and_distrib.symm.trans <|
         forall_congr' fun i =>
-          ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
+          ⟨fun h => _, fun h =>
+            ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi : i ∈ s
     · exact h.2 hi
       
@@ -76,7 +78,8 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.supp
 #align finset.mem_finsupp_iff_of_support_subset Finset.mem_finsupp_iff_of_support_subset
 
 @[simp]
-theorem card_finsupp (s : Finset ι) (t : ι → Finset α) : (s.Finsupp t).card = ∏ i in s, (t i).card :=
+theorem card_finsupp (s : Finset ι) (t : ι → Finset α) :
+    (s.Finsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 #align finset.card_finsupp Finset.card_finsupp
 

@@ -79,26 +79,27 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
          }
 #align category_theory.simple.of_iso CategoryTheory.Simple.of_iso
 
-theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f] (w : f ≠ 0) :
-    kernel.ι f = 0 := by classical
+theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f]
+    (w : f ≠ 0) : kernel.ι f = 0 := by classical
   by_contra
   haveI := is_iso_of_mono_of_nonzero h
   exact w (eq_zero_of_epi_kernel f)
-#align category_theory.kernel_zero_of_nonzero_from_simple CategoryTheory.kernel_zero_of_nonzero_from_simple
+#align
+  category_theory.kernel_zero_of_nonzero_from_simple CategoryTheory.kernel_zero_of_nonzero_from_simple
 
 -- See also `mono_of_nonzero_from_simple`, which requires `preadditive C`.
 /-- A nonzero morphism `f` to a simple object is an epimorphism
 (assuming `f` has an image, and `C` has equalizers).
 -/
-theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X ⟶ Y} [HasImage f] (w : f ≠ 0) : Epi f :=
-  by
+theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X ⟶ Y} [HasImage f]
+    (w : f ≠ 0) : Epi f := by
   rw [← image.fac f]
   haveI : is_iso (image.ι f) := is_iso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
   apply epi_comp
 #align category_theory.epi_of_nonzero_to_simple CategoryTheory.epi_of_nonzero_to_simple
 
-theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w : IsIso f → False) : f = 0 := by
-  classical
+theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f]
+    (w : IsIso f → False) : f = 0 := by classical
   by_contra
   exact w (is_iso_of_mono_of_nonzero h)
 #align category_theory.mono_to_simple_zero_of_not_iso CategoryTheory.mono_to_simple_zero_of_not_iso
@@ -112,7 +113,8 @@ instance (X : C) [Simple.{v} X] : Nontrivial (EndCat X) :=
 
 section
 
-theorem Simple.not_is_zero (X : C) [Simple X] : ¬IsZero X := by simpa [limits.is_zero.iff_id_eq_zero] using id_nonzero X
+theorem Simple.not_is_zero (X : C) [Simple X] : ¬IsZero X := by
+  simpa [limits.is_zero.iff_id_eq_zero] using id_nonzero X
 #align category_theory.simple.not_is_zero CategoryTheory.Simple.not_is_zero
 
 variable [HasZeroObject C]
@@ -137,7 +139,8 @@ variable [Abelian C]
 
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
     simple. -/
-theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso f ↔ f ≠ 0) : Simple X :=
+theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso f ↔ f ≠ 0) :
+    Simple X :=
   ⟨fun Y f I => by classical
     fconstructor
     · intros
@@ -157,22 +160,25 @@ theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
 theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f :=
   haveI-- `f ≠ 0` means that `kernel.ι f` is not an iso, and hence zero, and hence `f` is a mono.
-   : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
+   : mono f :=
+    preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
   is_iso_of_mono_of_epi f
 #align category_theory.is_iso_of_epi_of_nonzero CategoryTheory.is_iso_of_epi_of_nonzero
 
-theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : cokernel.π f = 0 := by
-  classical
+theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
+    cokernel.π f = 0 := by classical
   by_contra h
   haveI := is_iso_of_epi_of_nonzero h
   exact w (eq_zero_of_mono_cokernel f)
-#align category_theory.cokernel_zero_of_nonzero_to_simple CategoryTheory.cokernel_zero_of_nonzero_to_simple
+#align
+  category_theory.cokernel_zero_of_nonzero_to_simple CategoryTheory.cokernel_zero_of_nonzero_to_simple
 
-theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : IsIso f → False) : f = 0 := by
-  classical
+theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f]
+    (w : IsIso f → False) : f = 0 := by classical
   by_contra
   exact w (is_iso_of_epi_of_nonzero h)
-#align category_theory.epi_from_simple_zero_of_not_iso CategoryTheory.epi_from_simple_zero_of_not_iso
+#align
+  category_theory.epi_from_simple_zero_of_not_iso CategoryTheory.epi_from_simple_zero_of_not_iso
 
 end Abelian
 
@@ -225,8 +231,7 @@ instance {X : C} [Simple X] : Nontrivial (Subobject X) :=
 
 instance {X : C} [Simple X] :
     IsSimpleOrder (Subobject X) where eq_bot_or_eq_top := by
-    rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩
-    skip
+    rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩; skip
     change mk f = ⊥ ∨ mk f = ⊤
     by_cases h : f = 0
     · exact Or.inl (mk_eq_bot_iff_zero.mpr h)
@@ -236,9 +241,7 @@ instance {X : C} [Simple X] :
 
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
 theorem simple_of_is_simple_order_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X := by
-  constructor
-  intros
-  constructor
+  constructor; intros ; constructor
   · intro i
     rw [subobject.is_iso_iff_mk_eq_top] at i
     intro w
@@ -253,7 +256,8 @@ theorem simple_of_is_simple_order_subobject (X : C) [IsSimpleOrder (Subobject X)
     · exact (subobject.is_iso_iff_mk_eq_top _).mpr h
       
     
-#align category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_is_simple_order_subobject
+#align
+  category_theory.simple_of_is_simple_order_subobject CategoryTheory.simple_of_is_simple_order_subobject
 
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_is_simple_order (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=
@@ -262,7 +266,8 @@ theorem simple_iff_subobject_is_simple_order (X : C) : Simple X ↔ IsSimpleOrde
     infer_instance, by
     intro h
     exact simple_of_is_simple_order_subobject X⟩
-#align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_is_simple_order
+#align
+  category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_is_simple_order
 
 /-- A subobject is simple iff it is an atom in the subobject lattice. -/
 theorem subobject_simple_iff_is_atom {X : C} (Y : Subobject X) : Simple (Y : C) ↔ IsAtom Y :=

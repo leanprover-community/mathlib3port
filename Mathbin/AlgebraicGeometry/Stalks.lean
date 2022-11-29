@@ -46,7 +46,8 @@ abbrev stalk (X : PresheafedSpaceCat C) (x : X) : C :=
 
 /-- A morphism of presheafed spaces induces a morphism of stalks.
 -/
-def stalkMap {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x : X) : Y.stalk (α.base x) ⟶ X.stalk x :=
+def stalkMap {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x : X) :
+    Y.stalk (α.base x) ⟶ X.stalk x :=
   (stalkFunctor C (α.base x)).map α.c ≫ X.Presheaf.stalkPushforward C α.base x
 #align algebraic_geometry.PresheafedSpace.stalk_map AlgebraicGeometry.PresheafedSpaceCat.stalkMap
 
@@ -55,57 +56,64 @@ theorem stalk_map_germ {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (U : Open
     (x : (Opens.map α.base).obj U) :
     Y.Presheaf.germ ⟨α.base x, x.2⟩ ≫ stalkMap α ↑x = α.c.app (op U) ≫ X.Presheaf.germ x := by
   rw [stalk_map, stalk_functor_map_germ_assoc, stalk_pushforward_germ]
-#align algebraic_geometry.PresheafedSpace.stalk_map_germ AlgebraicGeometry.PresheafedSpaceCat.stalk_map_germ
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map_germ AlgebraicGeometry.PresheafedSpaceCat.stalk_map_germ
 
 section Restrict
 
 /-- For an open embedding `f : U ⟶ X` and a point `x : U`, we get an isomorphism between the stalk
 of `X` at `f x` and the stalk of the restriction of `X` along `f` at t `x`.
 -/
-def restrictStalkIso {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f)
-    (x : U) : (X.restrict h).stalk x ≅ X.stalk (f x) :=
+def restrictStalkIso {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
+    (h : OpenEmbedding f) (x : U) : (X.restrict h).stalk x ≅ X.stalk (f x) :=
   haveI-- As a left adjoint, the functor `h.is_open_map.functor_nhds x` is initial.
    := initial_of_adjunction (h.is_open_map.adjunction_nhds x)
   -- Typeclass resolution knows that the opposite of an initial functor is final. The result
     -- follows from the general fact that postcomposing with a final functor doesn't change colimits.
     final.colimit_iso
     (h.is_open_map.functor_nhds x).op ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
-#align algebraic_geometry.PresheafedSpace.restrict_stalk_iso AlgebraicGeometry.PresheafedSpaceCat.restrictStalkIso
+#align
+  algebraic_geometry.PresheafedSpace.restrict_stalk_iso AlgebraicGeometry.PresheafedSpaceCat.restrictStalkIso
 
 @[simp, elementwise, reassoc]
-theorem restrict_stalk_iso_hom_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
-    (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
+theorem restrict_stalk_iso_hom_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} C)
+    {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
     (X.restrict h).Presheaf.germ ⟨x, hx⟩ ≫ (restrictStalkIso X h x).Hom =
       X.Presheaf.germ ⟨f x, show f x ∈ h.IsOpenMap.Functor.obj V from ⟨x, hx, rfl⟩⟩ :=
-  colimit.ι_pre ((OpenNhds.inclusion (f x)).op ⋙ X.Presheaf) (h.IsOpenMap.functorNhds x).op (op ⟨V, hx⟩)
+  colimit.ι_pre ((OpenNhds.inclusion (f x)).op ⋙ X.Presheaf) (h.IsOpenMap.functorNhds x).op
+    (op ⟨V, hx⟩)
 #align
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso_hom_eq_germ AlgebraicGeometry.PresheafedSpaceCat.restrict_stalk_iso_hom_eq_germ
 
 @[simp, elementwise, reassoc]
-theorem restrict_stalk_iso_inv_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
-    (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
-    X.Presheaf.germ ⟨f x, show f x ∈ h.IsOpenMap.Functor.obj V from ⟨x, hx, rfl⟩⟩ ≫ (restrictStalkIso X h x).inv =
+theorem restrict_stalk_iso_inv_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} C)
+    {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (V : Opens U) (x : U) (hx : x ∈ V) :
+    X.Presheaf.germ ⟨f x, show f x ∈ h.IsOpenMap.Functor.obj V from ⟨x, hx, rfl⟩⟩ ≫
+        (restrictStalkIso X h x).inv =
       (X.restrict h).Presheaf.germ ⟨x, hx⟩ :=
   by rw [← restrict_stalk_iso_hom_eq_germ, category.assoc, iso.hom_inv_id, category.comp_id]
 #align
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso_inv_eq_germ AlgebraicGeometry.PresheafedSpaceCat.restrict_stalk_iso_inv_eq_germ
 
-theorem restrict_stalk_iso_inv_eq_of_restrict {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
-    (h : OpenEmbedding f) (x : U) : (X.restrictStalkIso h x).inv = stalkMap (X.of_restrict h) x := by
+theorem restrict_stalk_iso_inv_eq_of_restrict {U : TopCat} (X : PresheafedSpaceCat.{v} C)
+    {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (x : U) :
+    (X.restrictStalkIso h x).inv = stalkMap (X.of_restrict h) x := by
   ext V
   induction V using Opposite.rec
   let i : (h.is_open_map.functor_nhds x).obj ((open_nhds.map f x).obj V) ⟶ V :=
     hom_of_le (Set.image_preimage_subset f _)
   erw [iso.comp_inv_eq, colimit.ι_map_assoc, colimit.ι_map_assoc, colimit.ι_pre]
   simp_rw [category.assoc]
-  erw [colimit.ι_pre ((open_nhds.inclusion (f x)).op ⋙ X.presheaf) (h.is_open_map.functor_nhds x).op]
+  erw [colimit.ι_pre ((open_nhds.inclusion (f x)).op ⋙ X.presheaf)
+      (h.is_open_map.functor_nhds x).op]
   erw [← X.presheaf.map_comp_assoc]
   exact (colimit.w ((open_nhds.inclusion (f x)).op ⋙ X.presheaf) i.op).symm
 #align
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso_inv_eq_of_restrict AlgebraicGeometry.PresheafedSpaceCat.restrict_stalk_iso_inv_eq_of_restrict
 
-instance of_restrict_stalk_map_is_iso {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
-    (h : OpenEmbedding f) (x : U) : IsIso (stalkMap (X.of_restrict h) x) := by
+instance of_restrict_stalk_map_is_iso {U : TopCat} (X : PresheafedSpaceCat.{v} C)
+    {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) (x : U) :
+    IsIso (stalkMap (X.of_restrict h) x) := by
   rw [← restrict_stalk_iso_inv_eq_of_restrict]
   infer_instance
 #align
@@ -122,7 +130,8 @@ theorem id (X : PresheafedSpaceCat.{v} C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (
   rw [← map_comp]
   convert (stalk_functor C x).map_id X.presheaf
   tidy
-#align algebraic_geometry.PresheafedSpace.stalk_map.id AlgebraicGeometry.PresheafedSpaceCat.stalkMap.id
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map.id AlgebraicGeometry.PresheafedSpaceCat.stalkMap.id
 
 -- TODO understand why this proof is still gross (i.e. requires using `erw`)
 @[simp]
@@ -135,15 +144,16 @@ theorem comp {X Y Z : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (β : Y ⟶ Z) (x
   ext U
   induction U using Opposite.rec
   cases U
-  simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, colimit.ι_pre, whisker_left_app, whisker_right_app, assoc,
-    id_comp, map_id, map_comp]
+  simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, colimit.ι_pre, whisker_left_app,
+    whisker_right_app, assoc, id_comp, map_id, map_comp]
   dsimp
   simp only [map_id, assoc, pushforward.comp_inv_app]
   -- FIXME Why doesn't simp do this:
   erw [CategoryTheory.Functor.map_id]
   erw [CategoryTheory.Functor.map_id]
   erw [id_comp, id_comp]
-#align algebraic_geometry.PresheafedSpace.stalk_map.comp AlgebraicGeometry.PresheafedSpaceCat.stalkMap.comp
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map.comp AlgebraicGeometry.PresheafedSpaceCat.stalkMap.comp
 
 /-- If `α = β` and `x = x'`, we would like to say that `stalk_map α x = stalk_map β x'`.
 Unfortunately, this equality is not well-formed, as their types are not _definitionally_ the same.
@@ -157,12 +167,15 @@ theorem congr {X Y : PresheafedSpaceCat.{v} C} (α β : X ⟶ Y) (h₁ : α = β
     subst h₁
     subst h₂
     simp
-#align algebraic_geometry.PresheafedSpace.stalk_map.congr AlgebraicGeometry.PresheafedSpaceCat.stalkMap.congr
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map.congr AlgebraicGeometry.PresheafedSpaceCat.stalkMap.congr
 
 theorem congr_hom {X Y : PresheafedSpaceCat.{v} C} (α β : X ⟶ Y) (h : α = β) (x : X) :
-    stalkMap α x = eqToHom (show Y.stalk (α.base x) = Y.stalk (β.base x) by rw [h]) ≫ stalkMap β x := by
-  rw [← stalk_map.congr α β h x x rfl, eq_to_hom_refl, category.comp_id]
-#align algebraic_geometry.PresheafedSpace.stalk_map.congr_hom AlgebraicGeometry.PresheafedSpaceCat.stalkMap.congr_hom
+    stalkMap α x =
+      eqToHom (show Y.stalk (α.base x) = Y.stalk (β.base x) by rw [h]) ≫ stalkMap β x :=
+  by rw [← stalk_map.congr α β h x x rfl, eq_to_hom_refl, category.comp_id]
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map.congr_hom AlgebraicGeometry.PresheafedSpaceCat.stalkMap.congr_hom
 
 theorem congr_point {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) (x x' : X) (h : x = x') :
     stalkMap α x ≫ eqToHom (show X.stalk x = X.stalk x' by rw [h]) =
@@ -181,24 +194,32 @@ instance is_iso {X Y : PresheafedSpaceCat.{v} C} (α : X ⟶ Y) [IsIso α] (x : 
     -- type for an inverse.
     -- To get a proper inverse, we need to compose with the `eq_to_hom` arrow
     -- `X.stalk x ⟶ X.stalk ((α ≫ β).base x)`.
-    refine' ⟨eq_to_hom (show X.stalk x = X.stalk ((α ≫ β).base x) by rw [h_eq]) ≫ (stalk_map β (α.base x) : _), _, _⟩
+    refine'
+      ⟨eq_to_hom (show X.stalk x = X.stalk ((α ≫ β).base x) by rw [h_eq]) ≫
+          (stalk_map β (α.base x) : _),
+        _, _⟩
     · rw [← category.assoc, congr_point α x ((α ≫ β).base x) h_eq.symm, category.assoc]
       erw [← stalk_map.comp β α (α.base x)]
-      rw [congr_hom _ _ (is_iso.inv_hom_id α), stalk_map.id, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp]
+      rw [congr_hom _ _ (is_iso.inv_hom_id α), stalk_map.id, eq_to_hom_trans_assoc, eq_to_hom_refl,
+        category.id_comp]
       
-    · rw [category.assoc, ← stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id, eq_to_hom_trans_assoc,
-        eq_to_hom_refl, category.id_comp]
+    · rw [category.assoc, ← stalk_map.comp, congr_hom _ _ (is_iso.hom_inv_id α), stalk_map.id,
+        eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp]
       
-#align algebraic_geometry.PresheafedSpace.stalk_map.is_iso AlgebraicGeometry.PresheafedSpaceCat.stalkMap.is_iso
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map.is_iso AlgebraicGeometry.PresheafedSpaceCat.stalkMap.is_iso
 
 /-- An isomorphism between presheafed spaces induces an isomorphism of stalks.
 -/
-def stalkIso {X Y : PresheafedSpaceCat.{v} C} (α : X ≅ Y) (x : X) : Y.stalk (α.Hom.base x) ≅ X.stalk x :=
+def stalkIso {X Y : PresheafedSpaceCat.{v} C} (α : X ≅ Y) (x : X) :
+    Y.stalk (α.Hom.base x) ≅ X.stalk x :=
   asIso (stalkMap α.Hom x)
-#align algebraic_geometry.PresheafedSpace.stalk_map.stalk_iso AlgebraicGeometry.PresheafedSpaceCat.stalkMap.stalkIso
+#align
+  algebraic_geometry.PresheafedSpace.stalk_map.stalk_iso AlgebraicGeometry.PresheafedSpaceCat.stalkMap.stalkIso
 
 @[simp, reassoc, elementwise]
-theorem stalk_specializes_stalk_map {X Y : PresheafedSpaceCat.{v} C} (f : X ⟶ Y) {x y : X} (h : x ⤳ y) :
+theorem stalk_specializes_stalk_map {X Y : PresheafedSpaceCat.{v} C} (f : X ⟶ Y) {x y : X}
+    (h : x ⤳ y) :
     Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=
   by

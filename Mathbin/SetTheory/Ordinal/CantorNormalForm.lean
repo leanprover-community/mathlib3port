@@ -38,8 +38,8 @@ namespace Ordinal
 
 /-- Inducts on the base `b` expansion of an ordinal. -/
 @[elab_as_elim]
-noncomputable def cNFRec (b : Ordinal) {C : Ordinal → Sort _} (H0 : C 0) (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) :
-    ∀ o, C o
+noncomputable def cNFRec (b : Ordinal) {C : Ordinal → Sort _} (H0 : C 0)
+    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : ∀ o, C o
   | o =>
     if ho : o = 0 then by rwa [ho]
     else
@@ -48,15 +48,15 @@ noncomputable def cNFRec (b : Ordinal) {C : Ordinal → Sort _} (H0 : C 0) (H : 
 #align ordinal.CNF_rec Ordinal.cNFRec
 
 @[simp]
-theorem CNF_rec_zero {C : Ordinal → Sort _} (b : Ordinal) (H0 : C 0) (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) :
-    @cNFRec b C H0 H 0 = H0 := by
+theorem CNF_rec_zero {C : Ordinal → Sort _} (b : Ordinal) (H0 : C 0)
+    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @cNFRec b C H0 H 0 = H0 := by
   rw [CNF_rec, dif_pos rfl]
   rfl
 #align ordinal.CNF_rec_zero Ordinal.CNF_rec_zero
 
 theorem CNF_rec_pos (b : Ordinal) {o : Ordinal} {C : Ordinal → Sort _} (ho : o ≠ 0) (H0 : C 0)
-    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) : @cNFRec b C H0 H o = H o ho (@cNFRec b C H0 H _) := by
-  rw [CNF_rec, dif_neg ho]
+    (H : ∀ o, o ≠ 0 → C (o % b ^ log b o) → C o) :
+    @cNFRec b C H0 H o = H o ho (@cNFRec b C H0 H _) := by rw [CNF_rec, dif_neg ho]
 #align ordinal.CNF_rec_pos Ordinal.CNF_rec_pos
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -78,7 +78,8 @@ theorem CNF_zero (b : Ordinal) : cNF b 0 = [] :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursive definition for the Cantor normal form. -/
-theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) : cNF b o = (log b o, o / b ^ log b o)::cNF b (o % b ^ log b o) :=
+theorem CNF_ne_zero {b o : Ordinal} (ho : o ≠ 0) :
+    cNF b o = (log b o, o / b ^ log b o)::cNF b (o % b ^ log b o) :=
   CNF_rec_pos b ho _ _
 #align ordinal.CNF_ne_zero Ordinal.CNF_ne_zero
 
@@ -110,7 +111,8 @@ theorem CNF_foldr (b o : Ordinal) : (cNF b o).foldr (fun p r => b ^ p.1 * p.2 + 
 #align ordinal.CNF_foldr Ordinal.CNF_foldr
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `log b o`. -/
-theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → x.1 ≤ log b o := by
+theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o → x.1 ≤ log b o :=
+  by
   refine' CNF_rec b _ (fun o ho H => _) o
   · rw [CNF_zero]
     exact False.elim
@@ -155,7 +157,8 @@ theorem CNF_lt_snd {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF b o 
 #align ordinal.CNF_lt_snd Ordinal.CNF_lt_snd
 
 /-- Every coefficient in the Cantor normal form `CNF b o` is less than `b`. -/
-theorem CNF_snd_lt {b o : Ordinal.{u}} (hb : 1 < b) {x : Ordinal × Ordinal} : x ∈ cNF b o → x.2 < b := by
+theorem CNF_snd_lt {b o : Ordinal.{u}} (hb : 1 < b) {x : Ordinal × Ordinal} :
+    x ∈ cNF b o → x.2 < b := by
   refine' CNF_rec b _ (fun o ho IH => _) o
   · simp
     

@@ -32,7 +32,8 @@ def toMultiset : (Π₀ a : α, ℕ) →+ Multiset α :=
 #align dfinsupp.to_multiset Dfinsupp.toMultiset
 
 @[simp]
-theorem to_multiset_single (a : α) (n : ℕ) : toMultiset (Dfinsupp.single a n) = Multiset.repeat a n :=
+theorem to_multiset_single (a : α) (n : ℕ) :
+    toMultiset (Dfinsupp.single a n) = Multiset.repeat a n :=
   Dfinsupp.sum_add_hom_single _ _ _
 #align dfinsupp.to_multiset_single Dfinsupp.to_multiset_single
 
@@ -62,14 +63,16 @@ theorem to_dfinsupp_support (s : Multiset α) : s.toDfinsupp.support = s.toFinse
 #align multiset.to_dfinsupp_support Multiset.to_dfinsupp_support
 
 @[simp]
-theorem to_dfinsupp_repeat (a : α) (n : ℕ) : toDfinsupp (Multiset.repeat a n) = Dfinsupp.single a n := by
+theorem to_dfinsupp_repeat (a : α) (n : ℕ) :
+    toDfinsupp (Multiset.repeat a n) = Dfinsupp.single a n := by
   ext i
   dsimp [to_dfinsupp]
   simp [count_repeat, eq_comm]
 #align multiset.to_dfinsupp_repeat Multiset.to_dfinsupp_repeat
 
 @[simp]
-theorem to_dfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 := by rw [← repeat_one, to_dfinsupp_repeat]
+theorem to_dfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 := by
+  rw [← repeat_one, to_dfinsupp_repeat]
 #align multiset.to_dfinsupp_singleton Multiset.to_dfinsupp_singleton
 
 /-- `multiset.to_dfinsupp` as an `add_equiv`. -/
@@ -97,7 +100,8 @@ theorem to_dfinsupp_le_to_dfinsupp (s t : Multiset α) : toDfinsupp s ≤ toDfin
 end Multiset
 
 @[simp]
-theorem Dfinsupp.to_multiset_to_dfinsupp [DecidableEq α] (f : Π₀ a : α, ℕ) : f.toMultiset.toDfinsupp = f :=
+theorem Dfinsupp.to_multiset_to_dfinsupp [DecidableEq α] (f : Π₀ a : α, ℕ) :
+    f.toMultiset.toDfinsupp = f :=
   Multiset.equivDfinsupp.apply_symm_apply f
 #align dfinsupp.to_multiset_to_dfinsupp Dfinsupp.to_multiset_to_dfinsupp
 

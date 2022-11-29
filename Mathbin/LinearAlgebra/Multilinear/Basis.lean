@@ -29,7 +29,8 @@ variable [∀ i, Module R (M i)] [Module R M₂] [Module R M₃]
 
 /-- Two multilinear maps indexed by `fin n` are equal if they are equal when all arguments are
 basis vectors. -/
-theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n → Type _} (e : ∀ i, Basis (ι₁ i) R (M i))
+theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n → Type _}
+    (e : ∀ i, Basis (ι₁ i) R (M i))
     (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g := by
   induction' n with m hm
   · ext x
@@ -54,9 +55,12 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
 are basis vectors. Unlike `basis.ext_multilinear_fin`, this only uses a single basis; a
 dependently-typed version would still be true, but the proof would need a dependently-typed
 version of `dom_dom_congr`. -/
-theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
-    (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
+theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι]
+    {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _} (e : Basis ι₁ R M₂)
+    (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
   cases nonempty_fintype ι
-  exact (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp ((Basis.ext_multilinear_fin fun i => e) fun i => h (i ∘ _))
+  exact
+    (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp
+      ((Basis.ext_multilinear_fin fun i => e) fun i => h (i ∘ _))
 #align basis.ext_multilinear Basis.ext_multilinear
 

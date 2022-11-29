@@ -23,7 +23,8 @@ variable {α : Type _}
 /-- A `normed_ordered_add_group` is an additive group that is both a `normed_add_comm_group` and an
 `ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both classes
 carrying their own group structure. -/
-class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, HasNorm α, MetricSpace α where
+class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, HasNorm α,
+  MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_ordered_add_group NormedOrderedAddGroup
 
@@ -38,7 +39,8 @@ class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, HasNorm α, 
 /-- A `normed_linear_ordered_add_group` is an additive group that is both a `normed_add_comm_group`
 and a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both
 classes carrying their own group structure. -/
-class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGroup α, HasNorm α, MetricSpace α where
+class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGroup α, HasNorm α,
+  MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_linear_ordered_add_group NormedLinearOrderedAddGroup
 
@@ -46,30 +48,34 @@ class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGrou
 `linear_ordered_comm_group`. This class is necessary to avoid diamonds caused by both classes
 carrying their own group structure. -/
 @[to_additive]
-class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, HasNorm α, MetricSpace α where
+class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, HasNorm α,
+  MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_linear_ordered_group NormedLinearOrderedGroup
 
 /-- A `normed_linear_ordered_field` is a field that is both a `normed_field` and a
     `linear_ordered_field`. This class is necessary to avoid diamonds. -/
-class NormedLinearOrderedField (α : Type _) extends LinearOrderedField α, HasNorm α, MetricSpace α where
+class NormedLinearOrderedField (α : Type _) extends LinearOrderedField α, HasNorm α,
+  MetricSpace α where
   dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
   norm_mul' : ∀ x y : α, ‖x * y‖ = ‖x‖ * ‖y‖
 #align normed_linear_ordered_field NormedLinearOrderedField
 
 @[to_additive]
-instance (priority := 100) NormedOrderedGroup.toNormedCommGroup [NormedOrderedGroup α] : NormedCommGroup α :=
+instance (priority := 100) NormedOrderedGroup.toNormedCommGroup [NormedOrderedGroup α] :
+    NormedCommGroup α :=
   ⟨NormedOrderedGroup.dist_eq⟩
 #align normed_ordered_group.to_normed_comm_group NormedOrderedGroup.toNormedCommGroup
 
 @[to_additive]
-instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup [NormedLinearOrderedGroup α] :
-    NormedOrderedGroup α :=
+instance (priority := 100) NormedLinearOrderedGroup.toNormedOrderedGroup
+    [NormedLinearOrderedGroup α] : NormedOrderedGroup α :=
   ⟨NormedLinearOrderedGroup.dist_eq⟩
-#align normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
+#align
+  normed_linear_ordered_group.to_normed_ordered_group NormedLinearOrderedGroup.toNormedOrderedGroup
 
-instance (priority := 100) NormedLinearOrderedField.toNormedField (α : Type _) [NormedLinearOrderedField α] :
-    NormedField α where
+instance (priority := 100) NormedLinearOrderedField.toNormedField (α : Type _)
+    [NormedLinearOrderedField α] : NormedField α where
   dist_eq := NormedLinearOrderedField.dist_eq
   norm_mul' := NormedLinearOrderedField.norm_mul'
 #align normed_linear_ordered_field.to_normed_field NormedLinearOrderedField.toNormedField

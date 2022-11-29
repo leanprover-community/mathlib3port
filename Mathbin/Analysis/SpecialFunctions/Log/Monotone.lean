@@ -65,8 +65,8 @@ theorem log_div_self_rpow_antitone_on {a : ℝ} (ha : 0 < a) :
   nth_rw 0 [← rpow_one y]
   nth_rw 0 [← rpow_one x]
   rw [← div_self (ne_of_lt ha).symm, div_eq_mul_one_div a a, rpow_mul y_nonneg, rpow_mul x_nonneg,
-    log_rpow (rpow_pos_of_pos y_pos a), log_rpow (rpow_pos_of_pos x_pos a), mul_div_assoc, mul_div_assoc,
-    mul_le_mul_left (one_div_pos.mpr ha)]
+    log_rpow (rpow_pos_of_pos y_pos a), log_rpow (rpow_pos_of_pos x_pos a), mul_div_assoc,
+    mul_div_assoc, mul_le_mul_left (one_div_pos.mpr ha)]
   · refine' log_div_self_antitone_on _ _ _
     · simp only [Set.mem_set_of_eq]
       convert rpow_le_rpow _ hex (le_of_lt ha)

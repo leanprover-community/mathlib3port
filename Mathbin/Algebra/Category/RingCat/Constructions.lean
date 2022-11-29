@@ -40,12 +40,9 @@ def pushoutCocone : Limits.PushoutCocone f g := by
   letI := RingHom.toAlgebra f
   letI := RingHom.toAlgebra g
   apply limits.pushout_cocone.mk
-  show CommRingCat
-  exact CommRingCat.of (A ⊗[R] B)
-  show A ⟶ _
-  exact algebra.tensor_product.include_left.to_ring_hom
-  show B ⟶ _
-  exact algebra.tensor_product.include_right.to_ring_hom
+  show CommRingCat; exact CommRingCat.of (A ⊗[R] B)
+  show A ⟶ _; exact algebra.tensor_product.include_left.to_ring_hom
+  show B ⟶ _; exact algebra.tensor_product.include_right.to_ring_hom
   ext r
   trans algebraMap R (A ⊗[R] B) r
   · exact algebra.tensor_product.include_left.commutes r
@@ -97,7 +94,9 @@ def pushoutCoconeIsColimit : Limits.IsColimit (pushoutCocone f g) :=
         commutes' := fun r => by
           change (g ≫ s.inr) r = (f ≫ s.inl) r
           congr 1
-          exact (s.ι.naturality limits.walking_span.hom.snd).trans (s.ι.naturality limits.walking_span.hom.fst).symm }
+          exact
+            (s.ι.naturality limits.walking_span.hom.snd).trans
+              (s.ι.naturality limits.walking_span.hom.fst).symm }
     -- The factor map is a ⊗ b ↦ f(a) * g(b).
     use AlgHom.toRingHom (Algebra.TensorProduct.productMap f' g')
     simp only [pushout_cocone_inl, pushout_cocone_inr]
@@ -146,7 +145,8 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
   rw [one_mul, zero_mul, ← f.map_zero] at e
   exact e
-#align CommRing.CommRing_has_strict_terminal_objects CommRingCat.CommRing_has_strict_terminal_objects
+#align
+  CommRing.CommRing_has_strict_terminal_objects CommRingCat.CommRing_has_strict_terminal_objects
 
 theorem subsingleton_of_is_terminal {X : CommRingCat} (hX : IsTerminal X) : Subsingleton X :=
   (hX.uniqueUpToIso punitIsTerminal).commRingIsoToRingEquiv.toEquiv.subsingleton_congr.mpr
@@ -176,7 +176,8 @@ def prodFanIsLimit : IsLimit (prodFan A B) where
   lift c := RingHom.prod (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩)
   fac' c j := by
     ext
-    rcases j with ⟨⟨⟩⟩ <;> simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
+    rcases j with ⟨⟨⟩⟩ <;>
+      simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
   uniq' s m h := by
     ext
     · simpa using congr_hom (h ⟨walking_pair.left⟩) x
@@ -221,7 +222,7 @@ instance : IsLocalRingHom (equalizerFork f g).ι := by
     apply (f.is_unit_map ⟨⟨x, y, h₃, h₄⟩, rfl⟩ : IsUnit (f x)).mul_left_inj.mp
     conv_rhs => rw [h₁]
     rw [← f.map_mul, ← g.map_mul, h₄, f.map_one, g.map_one]
-  rw [is_unit_iff_exists_inv]
+  rw [isUnit_iff_exists_inv]
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
 instance equalizer_ι_is_local_ring_hom (F : walking_parallel_pair ⥤ CommRingCat.{u}) :
@@ -231,7 +232,9 @@ instance equalizer_ι_is_local_ring_hom (F : walking_parallel_pair ⥤ CommRingC
   rw [← this]
   rw [←
     limit.iso_limit_cone_hom_π
-      ⟨_, equalizer_fork_is_limit (F.map walking_parallel_pair_hom.left) (F.map walking_parallel_pair_hom.right)⟩
+      ⟨_,
+        equalizer_fork_is_limit (F.map walking_parallel_pair_hom.left)
+          (F.map walking_parallel_pair_hom.right)⟩
       walking_parallel_pair.zero]
   change IsLocalRingHom ((lim.map _ ≫ _ ≫ (equalizer_fork _ _).ι) ≫ _)
   infer_instance
@@ -244,7 +247,8 @@ open CategoryTheory.Limits.WalkingParallelPairHom
 instance equalizer_ι_is_local_ring_hom' (F : walking_parallel_pairᵒᵖ ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) := by
   have : _ = limit.π F (walking_parallel_pair_op_equiv.functor.obj _) :=
-    (limit.iso_limit_cone_inv_π ⟨_, is_limit.whisker_equivalence (limit.is_limit F) walking_parallel_pair_op_equiv⟩
+    (limit.iso_limit_cone_inv_π
+        ⟨_, is_limit.whisker_equivalence (limit.is_limit F) walking_parallel_pair_op_equiv⟩
         walking_parallel_pair.zero :
       _)
   erw [← this]
@@ -261,16 +265,19 @@ the two maps `A × B ⟶ C`. This is the constructed pullback cone.
 def pullbackCone {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : PullbackCone f g :=
   PullbackCone.mk
     (CommRingCat.ofHom <|
-      (RingHom.fst A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
+      (RingHom.fst A B).comp
+        (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
     (CommRingCat.ofHom <|
-      (RingHom.snd A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
+      (RingHom.snd A B).comp
+        (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
     (by
       ext ⟨x, e⟩
       simpa [CommRingCat.ofHom] using e)
 #align CommRing.pullback_cone CommRingCat.pullbackCone
 
 /-- The constructed pullback cone is indeed the limit. -/
-def pullbackConeIsLimit {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : IsLimit (pullbackCone f g) := by
+def pullbackConeIsLimit {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) :
+    IsLimit (pullbackCone f g) := by
   fapply pullback_cone.is_limit.mk
   · intro s
     apply (s.fst.prod s.snd).codRestrict

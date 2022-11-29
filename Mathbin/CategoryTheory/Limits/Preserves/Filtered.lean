@@ -33,16 +33,20 @@ variable {E : Type u₃} [Category.{v} E]
 
 variable {J : Type v} [SmallCategory J] {K : J ⥤ C}
 
-/-- A functor is said to preserve filtered colimits, if it preserves all colimits of shape `J`, where
+/--
+A functor is said to preserve filtered colimits, if it preserves all colimits of shape `J`, where
 `J` is a filtered category.
 -/
 class PreservesFilteredColimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
-  PreservesFilteredColimits : ∀ (J : Type v) [SmallCategory J] [IsFiltered J], PreservesColimitsOfShape J F
-#align category_theory.limits.preserves_filtered_colimits CategoryTheory.Limits.PreservesFilteredColimits
+  PreservesFilteredColimits :
+    ∀ (J : Type v) [SmallCategory J] [IsFiltered J], PreservesColimitsOfShape J F
+#align
+  category_theory.limits.preserves_filtered_colimits CategoryTheory.Limits.PreservesFilteredColimits
 
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
-instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C ⥤ D) [PreservesColimits F] :
+instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C ⥤ D)
+    [PreservesColimits F] :
     PreservesFilteredColimits F where PreservesFilteredColimits := inferInstance
 #align
   category_theory.limits.preserves_colimits.preserves_filtered_colimits CategoryTheory.Limits.PreservesColimits.preservesFilteredColimits
@@ -50,18 +54,22 @@ instance (priority := 100) PreservesColimits.preservesFilteredColimits (F : C �
 instance compPreservesFilteredColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFilteredColimits F]
     [PreservesFilteredColimits G] :
     PreservesFilteredColimits (F ⋙ G) where PreservesFilteredColimits J _ _ := inferInstance
-#align category_theory.limits.comp_preserves_filtered_colimits CategoryTheory.Limits.compPreservesFilteredColimits
+#align
+  category_theory.limits.comp_preserves_filtered_colimits CategoryTheory.Limits.compPreservesFilteredColimits
 
 /-- A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
 `J` is a cofiltered category.
 -/
 class PreservesCofilteredLimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where
-  PreservesCofilteredLimits : ∀ (J : Type v) [SmallCategory J] [IsCofiltered J], PreservesLimitsOfShape J F
-#align category_theory.limits.preserves_cofiltered_limits CategoryTheory.Limits.PreservesCofilteredLimits
+  PreservesCofilteredLimits :
+    ∀ (J : Type v) [SmallCategory J] [IsCofiltered J], PreservesLimitsOfShape J F
+#align
+  category_theory.limits.preserves_cofiltered_limits CategoryTheory.Limits.PreservesCofilteredLimits
 
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 
-instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ D) [PreservesLimits F] :
+instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ D)
+    [PreservesLimits F] :
     PreservesCofilteredLimits F where PreservesCofilteredLimits := inferInstance
 #align
   category_theory.limits.preserves_limits.preserves_cofiltered_limits CategoryTheory.Limits.PreservesLimits.preservesCofilteredLimits
@@ -69,7 +77,8 @@ instance (priority := 100) PreservesLimits.preservesCofilteredLimits (F : C ⥤ 
 instance compPreservesCofilteredLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesCofilteredLimits F]
     [PreservesCofilteredLimits G] :
     PreservesCofilteredLimits (F ⋙ G) where PreservesCofilteredLimits J _ _ := inferInstance
-#align category_theory.limits.comp_preserves_cofiltered_limits CategoryTheory.Limits.compPreservesCofilteredLimits
+#align
+  category_theory.limits.comp_preserves_cofiltered_limits CategoryTheory.Limits.compPreservesCofilteredLimits
 
 end CategoryTheory.Limits
 

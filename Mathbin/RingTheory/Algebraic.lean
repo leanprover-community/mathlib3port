@@ -38,8 +38,8 @@ def Transcendental (x : A) : Prop :=
   ¬IsAlgebraic R x
 #align transcendental Transcendental
 
-theorem is_transcendental_of_subsingleton [Subsingleton R] (x : A) : Transcendental R x := fun ⟨p, h, _⟩ =>
-  h <| Subsingleton.elim p 0
+theorem is_transcendental_of_subsingleton [Subsingleton R] (x : A) : Transcendental R x :=
+  fun ⟨p, h, _⟩ => h <| Subsingleton.elim p 0
 #align is_transcendental_of_subsingleton is_transcendental_of_subsingleton
 
 variable {R}
@@ -59,7 +59,8 @@ def Algebra.IsAlgebraic : Prop :=
 variable {R A}
 
 /-- A subalgebra is algebraic if and only if it is algebraic as an algebra. -/
-theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.IsAlgebraic ↔ @Algebra.IsAlgebraic R S _ _ S.Algebra := by
+theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) :
+    S.IsAlgebraic ↔ @Algebra.IsAlgebraic R S _ _ S.Algebra := by
   delta Algebra.IsAlgebraic Subalgebra.IsAlgebraic
   rw [Subtype.forall']
   refine' forall_congr' fun x => exists_congr fun p => and_congr Iff.rfl _
@@ -90,8 +91,8 @@ variable [CommRing S] [Ring A] [Algebra R A] [Algebra R S] [Algebra S A]
 variable [IsScalarTower R S A]
 
 /-- An integral element of an algebra is algebraic.-/
-theorem IsIntegral.is_algebraic [Nontrivial R] {x : A} : IsIntegral R x → IsAlgebraic R x := fun ⟨p, hp, hpx⟩ =>
-  ⟨p, hp.NeZero, hpx⟩
+theorem IsIntegral.is_algebraic [Nontrivial R] {x : A} : IsIntegral R x → IsAlgebraic R x :=
+  fun ⟨p, hp, hpx⟩ => ⟨p, hp.NeZero, hpx⟩
 #align is_integral.is_algebraic IsIntegral.is_algebraic
 
 variable {R}
@@ -120,41 +121,42 @@ theorem is_algebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) := by
   exact is_algebraic_algebra_map n
 #align is_algebraic_int is_algebraic_int
 
-theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A] (n : ℚ) :
-    IsAlgebraic R (n : A) := by
+theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A]
+    (n : ℚ) : IsAlgebraic R (n : A) := by
   rw [← map_rat_cast (algebraMap R A)]
   exact is_algebraic_algebra_map n
 #align is_algebraic_rat is_algebraic_rat
 
-theorem is_algebraic_of_mem_root_set {R : Type u} {A : Type v} [Field R] [Field A] [Algebra R A] {p : R[X]} {x : A}
-    (hx : x ∈ p.rootSet A) : IsAlgebraic R x :=
+theorem is_algebraic_of_mem_root_set {R : Type u} {A : Type v} [Field R] [Field A] [Algebra R A]
+    {p : R[X]} {x : A} (hx : x ∈ p.rootSet A) : IsAlgebraic R x :=
   ⟨p, ne_zero_of_mem_root_set hx, aeval_eq_zero_of_mem_root_set hx⟩
 #align is_algebraic_of_mem_root_set is_algebraic_of_mem_root_set
 
 open IsScalarTower
 
-theorem is_algebraic_algebra_map_of_is_algebraic {a : S} : IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) :=
-  fun ⟨f, hf₁, hf₂⟩ => ⟨f, hf₁, by rw [aeval_algebra_map_apply, hf₂, map_zero]⟩
+theorem is_algebraic_algebra_map_of_is_algebraic {a : S} :
+    IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) := fun ⟨f, hf₁, hf₂⟩ =>
+  ⟨f, hf₁, by rw [aeval_algebra_map_apply, hf₂, map_zero]⟩
 #align is_algebraic_algebra_map_of_is_algebraic is_algebraic_algebra_map_of_is_algebraic
 
 /-- This is slightly more general than `is_algebraic_algebra_map_of_is_algebraic` in that it
   allows noncommutative intermediate rings `A`. -/
-theorem is_algebraic_alg_hom_of_is_algebraic {B} [Ring B] [Algebra R B] (f : A →ₐ[R] B) {a : A} (h : IsAlgebraic R a) :
-    IsAlgebraic R (f a) :=
+theorem is_algebraic_alg_hom_of_is_algebraic {B} [Ring B] [Algebra R B] (f : A →ₐ[R] B) {a : A}
+    (h : IsAlgebraic R a) : IsAlgebraic R (f a) :=
   let ⟨p, hp, ha⟩ := h
   ⟨p, hp, by rw [aeval_alg_hom, f.comp_apply, ha, map_zero]⟩
 #align is_algebraic_alg_hom_of_is_algebraic is_algebraic_alg_hom_of_is_algebraic
 
 /-- Transfer `algebra.is_algebraic` across an `alg_equiv`. -/
-theorem _root_.alg_equiv.is_algebraic {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B) (h : Algebra.IsAlgebraic R A) :
-    Algebra.IsAlgebraic R B := fun b => by
+theorem AlgEquiv.is_algebraic {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B)
+    (h : Algebra.IsAlgebraic R A) : Algebra.IsAlgebraic R B := fun b => by
   convert ← is_algebraic_alg_hom_of_is_algebraic e.to_alg_hom (h _) <;> apply e.apply_symm_apply
-#align _root_.alg_equiv.is_algebraic _root_.alg_equiv.is_algebraic
+#align alg_equiv.is_algebraic AlgEquiv.is_algebraic
 
-theorem _root_.alg_equiv.is_algebraic_iff {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B) :
+theorem AlgEquiv.is_algebraic_iff {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B) :
     Algebra.IsAlgebraic R A ↔ Algebra.IsAlgebraic R B :=
   ⟨e.IsAlgebraic, e.symm.IsAlgebraic⟩
-#align _root_.alg_equiv.is_algebraic_iff _root_.alg_equiv.is_algebraic_iff
+#align alg_equiv.is_algebraic_iff AlgEquiv.is_algebraic_iff
 
 theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap S A)) :
     IsAlgebraic R (algebraMap S A a) ↔ IsAlgebraic R a :=
@@ -162,7 +164,8 @@ theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap
     is_algebraic_algebra_map_of_is_algebraic⟩
 #align is_algebraic_algebra_map_iff is_algebraic_algebra_map_iff
 
-theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) : IsAlgebraic R r := by
+theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) :
+    IsAlgebraic R r := by
   obtain ⟨p, p_nonzero, hp⟩ := ht
   refine' ⟨Polynomial.expand _ n p, _, _⟩
   · rwa [Polynomial.expand_ne_zero hn]
@@ -171,8 +174,8 @@ theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (
     
 #align is_algebraic_of_pow is_algebraic_of_pow
 
-theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) : Transcendental R (r ^ n) :=
-  fun ht' => ht <| is_algebraic_of_pow hn ht'
+theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) :
+    Transcendental R (r ^ n) := fun ht' => ht <| is_algebraic_of_pow hn ht'
 #align transcendental.pow Transcendental.pow
 
 end zero_ne_one
@@ -189,8 +192,10 @@ theorem is_algebraic_iff_is_integral {x : A} : IsAlgebraic K x ↔ IsIntegral K 
   rw [← aeval_def, AlgHom.map_mul, hpx, zero_mul]
 #align is_algebraic_iff_is_integral is_algebraic_iff_is_integral
 
-protected theorem Algebra.is_algebraic_iff_is_integral : Algebra.IsAlgebraic K A ↔ Algebra.IsIntegral K A :=
-  ⟨fun h x => is_algebraic_iff_is_integral.mp (h x), fun h x => is_algebraic_iff_is_integral.mpr (h x)⟩
+protected theorem Algebra.is_algebraic_iff_is_integral :
+    Algebra.IsAlgebraic K A ↔ Algebra.IsIntegral K A :=
+  ⟨fun h x => is_algebraic_iff_is_integral.mp (h x), fun h x =>
+    is_algebraic_iff_is_integral.mpr (h x)⟩
 #align algebra.is_algebraic_iff_is_integral Algebra.is_algebraic_iff_is_integral
 
 end Field
@@ -207,7 +212,8 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 /-- If L is an algebraic field extension of K and A is an algebraic algebra over L,
 then A is algebraic over K. -/
-theorem is_algebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A := by
+theorem is_algebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A :=
+  by
   simp only [IsAlgebraic, is_algebraic_iff_is_integral] at L_alg A_alg⊢
   exact is_integral_trans L_alg A_alg
 #align algebra.is_algebraic_trans Algebra.is_algebraic_trans
@@ -216,22 +222,25 @@ variable (K L)
 
 /-- If x is algebraic over R, then x is algebraic over S when S is an extension of R,
   and the map from `R` to `S` is injective. -/
-theorem _root_.is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (algebraMap R S)) {x : A}
-    (A_alg : IsAlgebraic R x) : IsAlgebraic S x :=
+theorem is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (algebraMap R S))
+    {x : A} (A_alg : IsAlgebraic R x) : IsAlgebraic S x :=
   let ⟨p, hp₁, hp₂⟩ := A_alg
-  ⟨p.map (algebraMap _ _), by rwa [Ne.def, ← degree_eq_bot, degree_map_eq_of_injective hinj, degree_eq_bot], by simpa⟩
-#align algebra._root_.is_algebraic_of_larger_base_of_injective algebra._root_.is_algebraic_of_larger_base_of_injective
+  ⟨p.map (algebraMap _ _), by
+    rwa [Ne.def, ← degree_eq_bot, degree_map_eq_of_injective hinj, degree_eq_bot], by simpa⟩
+#align is_algebraic_of_larger_base_of_injective is_algebraic_of_larger_base_of_injective
 
 /-- If A is an algebraic algebra over R, then A is algebraic over S when S is an extension of R,
   and the map from `R` to `S` is injective. -/
 theorem is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (algebraMap R S))
-    (A_alg : IsAlgebraic R A) : IsAlgebraic S A := fun x => is_algebraic_of_larger_base_of_injective hinj (A_alg x)
-#align algebra.is_algebraic_of_larger_base_of_injective Algebra.is_algebraic_of_larger_base_of_injective
+    (A_alg : IsAlgebraic R A) : IsAlgebraic S A := fun x =>
+  is_algebraic_of_larger_base_of_injective hinj (A_alg x)
+#align
+  algebra.is_algebraic_of_larger_base_of_injective Algebra.is_algebraic_of_larger_base_of_injective
 
 /-- If x is a algebraic over K, then x is algebraic over L when L is an extension of K -/
-theorem _root_.is_algebraic_of_larger_base {x : A} (A_alg : IsAlgebraic K x) : IsAlgebraic L x :=
+theorem is_algebraic_of_larger_base {x : A} (A_alg : IsAlgebraic K x) : IsAlgebraic L x :=
   is_algebraic_of_larger_base_of_injective (algebraMap K L).Injective A_alg
-#align algebra._root_.is_algebraic_of_larger_base algebra._root_.is_algebraic_of_larger_base
+#align is_algebraic_of_larger_base is_algebraic_of_larger_base
 
 /-- If A is an algebraic algebra over K, then A is algebraic over L when L is an extension of K -/
 theorem is_algebraic_of_larger_base (A_alg : IsAlgebraic K A) : IsAlgebraic L A :=
@@ -252,25 +261,29 @@ theorem is_algebraic_of_finite [finite : FiniteDimensional K L] : IsAlgebraic K 
 
 variable {K L}
 
-theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →ₐ[K] L) : Function.Bijective f := by
+theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →ₐ[K] L) :
+    Function.Bijective f := by
   refine' ⟨f.to_ring_hom.injective, fun b => _⟩
   obtain ⟨p, hp, he⟩ := ha b
-  let f' : p.root_set L → p.root_set L := Set.MapsTo.restrict f _ _ (root_set_maps_to (map_ne_zero hp) f)
+  let f' : p.root_set L → p.root_set L :=
+    Set.MapsTo.restrict f _ _ (root_set_maps_to (map_ne_zero hp) f)
   have : Function.Surjective f' :=
-    Finite.injective_iff_surjective.1 fun _ _ h => Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
+    Finite.injective_iff_surjective.1 fun _ _ h =>
+      Subtype.eq <| f.to_ring_hom.injective <| Subtype.ext_iff.1 h
   obtain ⟨a, ha⟩ := this ⟨b, (mem_root_set_iff hp b).2 he⟩
   exact ⟨a, Subtype.ext_iff.1 ha⟩
 #align algebra.is_algebraic.alg_hom_bijective Algebra.IsAlgebraic.alg_hom_bijective
 
-theorem _root_.alg_hom.bijective [FiniteDimensional K L] (ϕ : L →ₐ[K] L) : Function.Bijective ϕ :=
+theorem AlgHom.bijective [FiniteDimensional K L] (ϕ : L →ₐ[K] L) : Function.Bijective ϕ :=
   (Algebra.is_algebraic_of_finite K L).alg_hom_bijective ϕ
-#align algebra._root_.alg_hom.bijective algebra._root_.alg_hom.bijective
+#align alg_hom.bijective AlgHom.bijective
 
 variable (K L)
 
 /-- Bijection between algebra equivalences and algebra homomorphisms -/
 @[simps]
-noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L) : (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
+noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L) :
+    (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
   toFun ϕ := ϕ.toAlgHom
   invFun ϕ := AlgEquiv.ofBijective ϕ (ha.alg_hom_bijective ϕ)
   left_inv _ := by
@@ -284,15 +297,15 @@ noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L)
 
 /-- Bijection between algebra equivalences and algebra homomorphisms -/
 @[reducible]
-noncomputable def _root_.alg_equiv_equiv_alg_hom [FiniteDimensional K L] : (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) :=
+noncomputable def algEquivEquivAlgHom [FiniteDimensional K L] : (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) :=
   (Algebra.is_algebraic_of_finite K L).algEquivEquivAlgHom K L
-#align algebra._root_.alg_equiv_equiv_alg_hom algebra._root_.alg_equiv_equiv_alg_hom
+#align alg_equiv_equiv_alg_hom algEquivEquivAlgHom
 
 end Algebra
 
 variable {R S : Type _} [CommRing R] [IsDomain R] [CommRing S]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » (0 : R)) -/
 theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
     (inj : ∀ x, algebraMap R S x = 0 → x = 0) :
     ∃ (x : integralClosure R S)(y : _)(_ : y ≠ (0 : R)), z * algebraMap R S y = x := by
@@ -301,20 +314,23 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
   have a_ne_zero : a ≠ 0 := mt polynomial.leading_coeff_eq_zero.mp p_ne_zero
   have y_integral : IsIntegral R (algebraMap R S a) := is_integral_algebra_map
   have x_integral : IsIntegral R (z * algebraMap R S a) :=
-    ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩
+    ⟨p.integral_normalization, monic_integral_normalization p_ne_zero,
+      integral_normalization_aeval_eq_zero px inj⟩
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
 #align exists_integral_multiple exists_integral_multiple
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (d «expr ≠ » (0 : R)) -/
 /-- A fraction `(a : S) / (b : S)` can be reduced to `(c : S) / (d : R)`,
 if `S` is the integral closure of `R` in an algebraic extension `L` of `R`. -/
-theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L] [Algebra R L]
-    [IsScalarTower R S L] [IsIntegralClosure S R L] (h : Algebra.IsAlgebraic R L)
+theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S] [Algebra S L]
+    [Algebra R L] [IsScalarTower R S L] [IsIntegralClosure S R L] (h : Algebra.IsAlgebraic R L)
     (inj : Function.Injective (algebraMap R L)) (a : S) {b : S} (hb : b ≠ 0) :
     ∃ (c : S)(d : _)(_ : d ≠ (0 : R)), d • a = b * c := by
   obtain ⟨c, d, d_ne, hx⟩ :=
-    exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b)) ((injective_iff_map_eq_zero _).mp inj)
-  refine' ⟨IsIntegralClosure.mk' S (c : L) c.2, d, d_ne, IsIntegralClosure.algebra_map_injective S R L _⟩
+    exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b))
+      ((injective_iff_map_eq_zero _).mp inj)
+  refine'
+    ⟨IsIntegralClosure.mk' S (c : L) c.2, d, d_ne, IsIntegralClosure.algebra_map_injective S R L _⟩
   simp only [Algebra.smul_def, RingHom.map_mul, IsIntegralClosure.algebra_map_mk', ← hx, ←
     IsScalarTower.algebra_map_apply]
   rw [← mul_assoc _ (_ / _), mul_div_cancel' (algebraMap S L a), mul_comm]
@@ -344,15 +360,16 @@ theorem inv_eq_of_root_of_coeff_zero_ne_zero {x : L} {p : K[X]} (aeval_eq : aeva
   rw [AlgHom.map_add, AlgHom.map_mul, h, zero_mul, zero_add, aeval_C]
 #align inv_eq_of_root_of_coeff_zero_ne_zero inv_eq_of_root_of_coeff_zero_ne_zero
 
-theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]} (aeval_eq : aeval x p = 0)
-    (coeff_zero_ne : p.coeff 0 ≠ 0) : (x⁻¹ : L) ∈ A := by
+theorem Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero {x : A} {p : K[X]}
+    (aeval_eq : aeval x p = 0) (coeff_zero_ne : p.coeff 0 ≠ 0) : (x⁻¹ : L) ∈ A := by
   suffices (x⁻¹ : L) = (-p.coeff 0)⁻¹ • aeval x (div_X p) by
     rw [this]
     exact A.smul_mem (aeval x _).2 _
   have : aeval (x : L) p = 0 := by rw [Subalgebra.aeval_coe, aeval_eq, Subalgebra.coe_zero]
-  rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def, map_inv₀, map_neg,
-    inv_neg, neg_mul, Subalgebra.aeval_coe]
-#align subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero
+  rw [inv_eq_of_root_of_coeff_zero_ne_zero this coeff_zero_ne, div_eq_inv_mul, Algebra.smul_def,
+    map_inv₀, map_neg, inv_neg, neg_mul, Subalgebra.aeval_coe]
+#align
+  subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero Subalgebra.inv_mem_of_root_of_coeff_zero_ne_zero
 
 theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (x⁻¹ : L) ∈ A := by
   obtain ⟨p, ne_zero, aeval_eq⟩ := hx
@@ -381,7 +398,8 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (
 theorem Subalgebra.is_field_of_algebraic (hKL : Algebra.IsAlgebraic K L) : IsField A :=
   { show Nontrivial A by infer_instance, Subalgebra.toCommRing A with
     mul_inv_cancel := fun a ha =>
-      ⟨⟨a⁻¹, A.inv_mem_of_algebraic (hKL a)⟩, Subtype.ext (mul_inv_cancel (mt (Subalgebra.coe_eq_zero _).mp ha))⟩ }
+      ⟨⟨a⁻¹, A.inv_mem_of_algebraic (hKL a)⟩,
+        Subtype.ext (mul_inv_cancel (mt (Subalgebra.coe_eq_zero _).mp ha))⟩ }
 #align subalgebra.is_field_of_algebraic Subalgebra.is_field_of_algebraic
 
 end Field
@@ -400,8 +418,8 @@ def Polynomial.hasSmulPi [Semiring R'] [HasSmul R' S'] : HasSmul R'[X] (R' → S
 /-- This is not an instance as it forms a diamond with `pi.has_smul`.
 
 See the `instance_diamonds` test for details. -/
-noncomputable def Polynomial.hasSmulPi' [CommSemiring R'] [Semiring S'] [Algebra R' S'] [HasSmul S' T'] :
-    HasSmul R'[X] (S' → T') :=
+noncomputable def Polynomial.hasSmulPi' [CommSemiring R'] [Semiring S'] [Algebra R' S']
+    [HasSmul S' T'] : HasSmul R'[X] (S' → T') :=
   ⟨fun p f x => aeval x p • f x⟩
 #align polynomial.has_smul_pi' Polynomial.hasSmulPi'
 
@@ -416,8 +434,8 @@ theorem polynomial_smul_apply [Semiring R'] [HasSmul R' S'] (p : R'[X]) (f : R' 
 #align polynomial_smul_apply polynomial_smul_apply
 
 @[simp]
-theorem polynomial_smul_apply' [CommSemiring R'] [Semiring S'] [Algebra R' S'] [HasSmul S' T'] (p : R'[X]) (f : S' → T')
-    (x : S') : (p • f) x = aeval x p • f x :=
+theorem polynomial_smul_apply' [CommSemiring R'] [Semiring S'] [Algebra R' S'] [HasSmul S' T']
+    (p : R'[X]) (f : S' → T') (x : S') : (p • f) x = aeval x p • f x :=
   rfl
 #align polynomial_smul_apply' polynomial_smul_apply'
 
@@ -429,7 +447,8 @@ noncomputable def Polynomial.algebraPi : Algebra R'[X] (S' → T') :=
     map_one' := funext fun z => by simp only [Polynomial.aeval_one, Pi.one_apply, map_one],
     map_mul' := fun f g => funext fun z => by simp only [Pi.mul_apply, map_mul],
     map_zero' := funext fun z => by simp only [Polynomial.aeval_zero, Pi.zero_apply, map_zero],
-    map_add' := fun f g => funext fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
+    map_add' := fun f g =>
+      funext fun z => by simp only [Polynomial.aeval_add, Pi.add_apply, map_add],
     commutes' := fun p f => funext fun z => mul_comm _ _,
     smul_def' := fun p f =>
       funext fun z => by
@@ -446,7 +465,8 @@ theorem Polynomial.algebra_map_pi_eq_aeval :
 #align polynomial.algebra_map_pi_eq_aeval Polynomial.algebra_map_pi_eq_aeval
 
 @[simp]
-theorem Polynomial.algebra_map_pi_self_eq_eval : (algebraMap R'[X] (R' → R') : R'[X] → R' → R') = fun p z => eval z p :=
+theorem Polynomial.algebra_map_pi_self_eq_eval :
+    (algebraMap R'[X] (R' → R') : R'[X] → R' → R') = fun p z => eval z p :=
   rfl
 #align polynomial.algebra_map_pi_self_eq_eval Polynomial.algebra_map_pi_self_eq_eval
 

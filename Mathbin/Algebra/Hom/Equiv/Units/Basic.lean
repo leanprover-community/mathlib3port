@@ -35,8 +35,8 @@ variable [Monoid M] [Monoid N] [Monoid P]
 /-- A multiplicative equivalence of monoids defines a multiplicative equivalence
 of their groups of units. -/
 def mapEquiv (h : M ≃* N) : Mˣ ≃* Nˣ :=
-  { map h.toMonoidHom with invFun := map h.symm.toMonoidHom, left_inv := fun u => ext <| h.left_inv u,
-    right_inv := fun u => ext <| h.right_inv u }
+  { map h.toMonoidHom with invFun := map h.symm.toMonoidHom,
+    left_inv := fun u => ext <| h.left_inv u, right_inv := fun u => ext <| h.right_inv u }
 #align units.map_equiv Units.mapEquiv
 
 @[simp]
@@ -109,7 +109,8 @@ theorem coe_mul_left (a : G) : ⇑(Equiv.mulLeft a) = (· * ·) a :=
 #align equiv.coe_mul_left Equiv.coe_mul_left
 
 /-- Extra simp lemma that `dsimp` can use. `simp` will never use this. -/
-@[simp, nolint simp_nf, to_additive "Extra simp lemma that `dsimp` can use. `simp` will never use this."]
+@[simp, nolint simp_nf,
+  to_additive "Extra simp lemma that `dsimp` can use. `simp` will never use this."]
 theorem mul_left_symm_apply (a : G) : ((Equiv.mulLeft a).symm : G → G) = (· * ·) a⁻¹ :=
   rfl
 #align equiv.mul_left_symm_apply Equiv.mul_left_symm_apply
@@ -120,9 +121,9 @@ theorem mul_left_symm (a : G) : (Equiv.mulLeft a).symm = Equiv.mulLeft a⁻¹ :=
 #align equiv.mul_left_symm Equiv.mul_left_symm
 
 @[to_additive]
-theorem _root_.group.mul_left_bijective (a : G) : Function.Bijective ((· * ·) a) :=
+theorem Group.mul_left_bijective (a : G) : Function.Bijective ((· * ·) a) :=
   (Equiv.mulLeft a).Bijective
-#align equiv._root_.group.mul_left_bijective equiv._root_.group.mul_left_bijective
+#align group.mul_left_bijective Group.mul_left_bijective
 
 /-- Right multiplication in a `group` is a permutation of the underlying type. -/
 @[to_additive "Right addition in an `add_group` is a permutation of the underlying type."]
@@ -141,15 +142,16 @@ theorem mul_right_symm (a : G) : (Equiv.mulRight a).symm = Equiv.mulRight a⁻¹
 #align equiv.mul_right_symm Equiv.mul_right_symm
 
 /-- Extra simp lemma that `dsimp` can use. `simp` will never use this. -/
-@[simp, nolint simp_nf, to_additive "Extra simp lemma that `dsimp` can use. `simp` will never use this."]
+@[simp, nolint simp_nf,
+  to_additive "Extra simp lemma that `dsimp` can use. `simp` will never use this."]
 theorem mul_right_symm_apply (a : G) : ((Equiv.mulRight a).symm : G → G) = fun x => x * a⁻¹ :=
   rfl
 #align equiv.mul_right_symm_apply Equiv.mul_right_symm_apply
 
 @[to_additive]
-theorem _root_.group.mul_right_bijective (a : G) : Function.Bijective (· * a) :=
+theorem Group.mul_right_bijective (a : G) : Function.Bijective (· * a) :=
   (Equiv.mulRight a).Bijective
-#align equiv._root_.group.mul_right_bijective equiv._root_.group.mul_right_bijective
+#align group.mul_right_bijective Group.mul_right_bijective
 
 /-- A version of `equiv.mul_left a b⁻¹` that is defeq to `a / b`. -/
 @[to_additive " A version of `equiv.add_left a (-b)` that is defeq to `a - b`. ", simps]
@@ -161,7 +163,8 @@ protected def divLeft (a : G) : G ≃ G where
 #align equiv.div_left Equiv.divLeft
 
 @[to_additive]
-theorem div_left_eq_inv_trans_mul_left (a : G) : Equiv.divLeft a = (Equiv.inv G).trans (Equiv.mulLeft a) :=
+theorem div_left_eq_inv_trans_mul_left (a : G) :
+    Equiv.divLeft a = (Equiv.inv G).trans (Equiv.mulLeft a) :=
   ext fun _ => div_eq_mul_inv _ _
 #align equiv.div_left_eq_inv_trans_mul_left Equiv.div_left_eq_inv_trans_mul_left
 
@@ -191,7 +194,8 @@ def MulEquiv.inv (G : Type _) [DivisionCommMonoid G] : G ≃* G :=
 #align mul_equiv.inv MulEquiv.inv
 
 @[simp]
-theorem MulEquiv.inv_symm (G : Type _) [DivisionCommMonoid G] : (MulEquiv.inv G).symm = MulEquiv.inv G :=
+theorem MulEquiv.inv_symm (G : Type _) [DivisionCommMonoid G] :
+    (MulEquiv.inv G).symm = MulEquiv.inv G :=
   rfl
 #align mul_equiv.inv_symm MulEquiv.inv_symm
 

@@ -99,7 +99,7 @@ class HasSbtw (α : Type _) where
 
 export HasSbtw (Sbtw)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic order_laws_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic order_laws_tac -/
 /-- A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive and cyclic. `sbtw` is transitive.
 -/
@@ -362,13 +362,15 @@ end Set
 /-- The betweenness relation obtained from "looping around" `≤`.
 See note [reducible non-instances]. -/
 @[reducible]
-def LE.toHasBtw (α : Type _) [LE α] : HasBtw α where Btw a b c := a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
+def LE.toHasBtw (α : Type _) [LE α] :
+    HasBtw α where Btw a b c := a ≤ b ∧ b ≤ c ∨ b ≤ c ∧ c ≤ a ∨ c ≤ a ∧ a ≤ b
 #align has_le.to_has_btw LE.toHasBtw
 
 /-- The strict betweenness relation obtained from "looping around" `<`.
 See note [reducible non-instances]. -/
 @[reducible]
-def LT.toHasSbtw (α : Type _) [LT α] : HasSbtw α where Sbtw a b c := a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
+def LT.toHasSbtw (α : Type _) [LT α] :
+    HasSbtw α where Sbtw a b c := a < b ∧ b < c ∨ b < c ∧ c < a ∨ c < a ∧ a < b
 #align has_lt.to_has_sbtw LT.toHasSbtw
 
 /-- The circular preorder obtained from "looping around" a preorder.
@@ -446,7 +448,8 @@ See note [reducible non-instances]. -/
 def LinearOrder.toCircularOrder (α : Type _) [LinearOrder α] : CircularOrder α :=
   { PartialOrder.toCircularPartialOrder α with
     btw_total := fun a b c => by
-      cases' le_total a b with hab hba <;> cases' le_total b c with hbc hcb <;> cases' le_total c a with hca hac
+      cases' le_total a b with hab hba <;> cases' le_total b c with hbc hcb <;>
+        cases' le_total c a with hca hac
       · exact Or.inl (Or.inl ⟨hab, hbc⟩)
         
       · exact Or.inl (Or.inl ⟨hab, hbc⟩)
@@ -477,12 +480,14 @@ instance (α : Type _) [HasSbtw α] : HasSbtw αᵒᵈ :=
   ⟨fun a b c : α => Sbtw c b a⟩
 
 instance (α : Type _) [h : CircularPreorder α] : CircularPreorder αᵒᵈ :=
-  { OrderDual.hasBtw α, OrderDual.hasSbtw α with btw_refl := btw_refl, btw_cyclic_left := fun a b c => btw_cyclic_right,
+  { OrderDual.hasBtw α, OrderDual.hasSbtw α with btw_refl := btw_refl,
+    btw_cyclic_left := fun a b c => btw_cyclic_right,
     sbtw_trans_left := fun a b c d habc hbdc => hbdc.trans_right habc,
     sbtw_iff_btw_not_btw := fun a b c => @sbtw_iff_btw_not_btw α _ c b a }
 
 instance (α : Type _) [CircularPartialOrder α] : CircularPartialOrder αᵒᵈ :=
-  { OrderDual.circularPreorder α with btw_antisymm := fun a b c habc hcba => @btw_antisymm α _ _ _ _ hcba habc }
+  { OrderDual.circularPreorder α with
+    btw_antisymm := fun a b c habc hcba => @btw_antisymm α _ _ _ _ hcba habc }
 
 instance (α : Type _) [CircularOrder α] : CircularOrder αᵒᵈ :=
   { OrderDual.circularPartialOrder α with btw_total := fun a b c => btw_total c b a }

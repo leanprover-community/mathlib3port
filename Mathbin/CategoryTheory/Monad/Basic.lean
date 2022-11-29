@@ -56,7 +56,8 @@ structure Monad extends C ⥤ C where
 structure Comonad extends C ⥤ C where
   ε' : to_functor ⟶ 𝟭 _
   δ' : to_functor ⟶ to_functor ⋙ to_functor
-  coassoc' : ∀ X, NatTrans.app δ' _ ≫ to_functor.map (δ'.app X) = δ'.app _ ≫ δ'.app _ := by obviously
+  coassoc' : ∀ X, NatTrans.app δ' _ ≫ to_functor.map (δ'.app X) = δ'.app _ ≫ δ'.app _ := by
+    obviously
   left_counit' : ∀ X : C, δ'.app X ≫ ε'.app (to_functor.obj X) = 𝟙 _ := by obviously
   right_counit' : ∀ X : C, δ'.app X ≫ to_functor.map (ε'.app X) = 𝟙 _ := by obviously
 #align category_theory.comonad CategoryTheory.Comonad
@@ -136,27 +137,32 @@ initialize_simps_projections category_theory.monad (toFunctor → coe, η' → �
 initialize_simps_projections category_theory.comonad (toFunctor → coe, ε' → ε, δ' → δ)
 
 @[reassoc]
-theorem Monad.assoc (T : Monad C) (X : C) : (T : C ⥤ C).map (T.μ.app X) ≫ T.μ.app _ = T.μ.app _ ≫ T.μ.app _ :=
+theorem Monad.assoc (T : Monad C) (X : C) :
+    (T : C ⥤ C).map (T.μ.app X) ≫ T.μ.app _ = T.μ.app _ ≫ T.μ.app _ :=
   T.assoc' X
 #align category_theory.monad.assoc CategoryTheory.Monad.assoc
 
 @[simp, reassoc]
-theorem Monad.left_unit (T : Monad C) (X : C) : T.η.app ((T : C ⥤ C).obj X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
+theorem Monad.left_unit (T : Monad C) (X : C) :
+    T.η.app ((T : C ⥤ C).obj X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.left_unit' X
 #align category_theory.monad.left_unit CategoryTheory.Monad.left_unit
 
 @[simp, reassoc]
-theorem Monad.right_unit (T : Monad C) (X : C) : (T : C ⥤ C).map (T.η.app X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
+theorem Monad.right_unit (T : Monad C) (X : C) :
+    (T : C ⥤ C).map (T.η.app X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.right_unit' X
 #align category_theory.monad.right_unit CategoryTheory.Monad.right_unit
 
 @[reassoc]
-theorem Comonad.coassoc (G : Comonad C) (X : C) : G.δ.app _ ≫ (G : C ⥤ C).map (G.δ.app X) = G.δ.app _ ≫ G.δ.app _ :=
+theorem Comonad.coassoc (G : Comonad C) (X : C) :
+    G.δ.app _ ≫ (G : C ⥤ C).map (G.δ.app X) = G.δ.app _ ≫ G.δ.app _ :=
   G.coassoc' X
 #align category_theory.comonad.coassoc CategoryTheory.Comonad.coassoc
 
 @[simp, reassoc]
-theorem Comonad.left_counit (G : Comonad C) (X : C) : G.δ.app X ≫ G.ε.app ((G : C ⥤ C).obj X) = 𝟙 ((G : C ⥤ C).obj X) :=
+theorem Comonad.left_counit (G : Comonad C) (X : C) :
+    G.δ.app X ≫ G.ε.app ((G : C ⥤ C).obj X) = 𝟙 ((G : C ⥤ C).obj X) :=
   G.left_counit' X
 #align category_theory.comonad.left_counit CategoryTheory.Comonad.left_counit
 
@@ -263,8 +269,8 @@ def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N 
     { toNatTrans := f.inv, app_η' := fun X => by simp [← f_η],
       app_μ' := fun X => by
         rw [← nat_iso.cancel_nat_iso_hom_right f]
-        simp only [nat_trans.naturality, iso.inv_hom_id_app, assoc, comp_id, f_μ, nat_trans.naturality_assoc,
-          iso.inv_hom_id_app_assoc, ← functor.map_comp_assoc]
+        simp only [nat_trans.naturality, iso.inv_hom_id_app, assoc, comp_id, f_μ,
+          nat_trans.naturality_assoc, iso.inv_hom_id_app_assoc, ← functor.map_comp_assoc]
         simp }
 #align category_theory.monad_iso.mk CategoryTheory.MonadIso.mk
 
@@ -299,7 +305,8 @@ theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C)
     (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f := by
   ext
   rfl
-#align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monad_to_functor_map_iso_monad_iso_mk
+#align
+  category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monad_to_functor_map_iso_monad_iso_mk
 
 instance :
     ReflectsIsomorphisms (monadToFunctor C) where reflects M N f i := by
@@ -318,8 +325,8 @@ def comonadToFunctor : Comonad C ⥤ C ⥤ C where
 instance : Faithful (comonadToFunctor C) where
 
 @[simp]
-theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
-    (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f := by
+theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N)
+    (f_ε f_δ) : (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f := by
   ext
   rfl
 #align

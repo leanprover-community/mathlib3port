@@ -49,7 +49,8 @@ theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ �
 #align NFA.mem_step_set NFA.mem_step_set
 
 @[simp]
-theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by
+  simp_rw [step_set, Union_false, Union_empty]
 #align NFA.step_set_empty NFA.step_set_empty
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
@@ -117,10 +118,12 @@ theorem to_DFA_correct : M.toDFA.accepts = M.accepts := by
       
 #align NFA.to_DFA_correct NFA.to_DFA_correct
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
+    (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧
+          b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   rw [← to_DFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
@@ -145,7 +148,8 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
   induction' s with a s ih generalizing start
   · tauto
     
-  · rw [List.foldl, List.foldl, show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet] ]
+  · rw [List.foldl, List.foldl,
+      show M.to_NFA.step_set {start} a = {M.step start a} by simpa [NFA.stepSet] ]
     tauto
     
 #align DFA.to_NFA_eval_from_match DFA.to_NFA_eval_from_match

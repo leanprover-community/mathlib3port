@@ -37,9 +37,11 @@ variable {R : Type _} [CommSemiring R]
 `λ` runs through a multiset `s` is equal to a linear combination of the symmetric functions
 `esymm s` of the `λ`'s .-/
 theorem prod_X_add_C_eq_sum_esymm (s : Multiset R) :
-    (s.map fun r => X + c r).Prod = ∑ j in Finset.range (s.card + 1), c (s.esymm j) * X ^ (s.card - j) := by classical
-  rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp, map_bind, sum_bind,
-    Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
+    (s.map fun r => X + c r).Prod =
+      ∑ j in Finset.range (s.card + 1), c (s.esymm j) * X ^ (s.card - j) :=
+  by classical
+  rw [prod_map_add, antidiagonal_eq_map_powerset, map_map, ← bind_powerset_len, Function.comp,
+    map_bind, sum_bind, Finset.sum_eq_multiset_sum, Finset.range_coe, map_congr (Eq.refl _)]
   intro _ _
   rw [esymm, ← sum_hom', ← sum_map_mul_right, map_congr (Eq.refl _)]
   intro _ ht
@@ -73,11 +75,11 @@ theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h :
   rw [← map_map (fun r => X + C r) r, prod_X_add_C_coeff] <;> rwa [s.card_map r]
 #align multiset.prod_X_add_C_coeff' Multiset.prod_X_add_C_coeff'
 
-theorem _root_.finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
+theorem Finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
     (∏ i in s, X + c (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i := by
   rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]
   rfl
-#align multiset._root_.finset.prod_X_add_C_coeff multiset._root_.finset.prod_X_add_C_coeff
+#align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeff
 
 end Semiring
 
@@ -86,7 +88,8 @@ section Ring
 variable {R : Type _} [CommRing R]
 
 theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ k * esymm s k := by
-  rw [esymm, esymm, ← Multiset.sum_map_mul_left, Multiset.powerset_len_map, Multiset.map_map, map_congr (Eq.refl _)]
+  rw [esymm, esymm, ← Multiset.sum_map_mul_left, Multiset.powerset_len_map, Multiset.map_map,
+    map_congr (Eq.refl _)]
   intro x hx
   rw [(mem_powerset_len.mp hx).right.symm, ← prod_repeat, ← Multiset.map_const]
   nth_rw 2 [← map_id' x]
@@ -95,7 +98,8 @@ theorem esymm_neg (s : Multiset R) (k : ℕ) : (map Neg.neg s).esymm k = (-1) ^ 
 #align multiset.esymm_neg Multiset.esymm_neg
 
 theorem prod_X_sub_C_eq_sum_esymm (s : Multiset R) :
-    (s.map fun t => X - c t).Prod = ∑ j in Finset.range (s.card + 1), (-1) ^ j * (c (s.esymm j) * X ^ (s.card - j)) :=
+    (s.map fun t => X - c t).Prod =
+      ∑ j in Finset.range (s.card + 1), (-1) ^ j * (c (s.esymm j) * X ^ (s.card - j)) :=
   by
   conv_lhs =>
   congr
@@ -130,23 +134,20 @@ theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ s.card) :
 
 /-- Vieta's formula for the coefficients and the roots of a polynomial over an integral domain
   with as many roots as its degree. -/
-theorem _root_.polynomial.coeff_eq_esymm_roots_of_card [IsDomain R] {p : R[X]} (hroots : p.roots.card = p.natDegree)
-    {k : ℕ} (h : k ≤ p.natDegree) :
+theorem Polynomial.coeff_eq_esymm_roots_of_card [IsDomain R] {p : R[X]}
+    (hroots : p.roots.card = p.natDegree) {k : ℕ} (h : k ≤ p.natDegree) :
     p.coeff k = p.leadingCoeff * (-1) ^ (p.natDegree - k) * p.roots.esymm (p.natDegree - k) := by
   conv_lhs => rw [← C_leading_coeff_mul_prod_multiset_X_sub_C hroots]
-  rw [coeff_C_mul, mul_assoc]
-  congr
-  convert p.roots.prod_X_sub_C_coeff _ using 3 <;> rw [hroots]
-  exact h
-#align multiset._root_.polynomial.coeff_eq_esymm_roots_of_card multiset._root_.polynomial.coeff_eq_esymm_roots_of_card
+  rw [coeff_C_mul, mul_assoc]; congr
+  convert p.roots.prod_X_sub_C_coeff _ using 3 <;> rw [hroots]; exact h
+#align polynomial.coeff_eq_esymm_roots_of_card Polynomial.coeff_eq_esymm_roots_of_card
 
 /-- Vieta's formula for split polynomials over a field. -/
-theorem _root_.polynomial.coeff_eq_esymm_roots_of_splits {F} [Field F] {p : F[X]} (hsplit : p.Splits (RingHom.id F))
-    {k : ℕ} (h : k ≤ p.natDegree) :
+theorem Polynomial.coeff_eq_esymm_roots_of_splits {F} [Field F] {p : F[X]}
+    (hsplit : p.Splits (RingHom.id F)) {k : ℕ} (h : k ≤ p.natDegree) :
     p.coeff k = p.leadingCoeff * (-1) ^ (p.natDegree - k) * p.roots.esymm (p.natDegree - k) :=
   Polynomial.coeff_eq_esymm_roots_of_card (splits_iff_card_roots.1 hsplit) h
-#align
-  multiset._root_.polynomial.coeff_eq_esymm_roots_of_splits multiset._root_.polynomial.coeff_eq_esymm_roots_of_splits
+#align polynomial.coeff_eq_esymm_roots_of_splits Polynomial.coeff_eq_esymm_roots_of_splits
 
 end Ring
 
@@ -162,7 +163,8 @@ variable (R σ : Type _) [CommSemiring R] [Fintype σ]
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
 theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
-    (∏ i : σ, X + c (MvPolynomial.x i)) = ∑ j in range (card σ + 1), c (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
+    (∏ i : σ, X + c (MvPolynomial.x i)) =
+      ∑ j in range (card σ + 1), c (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
   by
   let s := finset.univ.val.map fun i : σ => MvPolynomial.x i
   rw [(_ : card σ = s.card)]
@@ -183,9 +185,7 @@ theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
     convert Multiset.prod_X_add_C_coeff s h
     rwa [Multiset.map_map]
     
-  repeat'
-  rw [Multiset.card_map]
-  rfl
+  repeat' rw [Multiset.card_map]; rfl
 #align mv_polynomial.prod_X_add_C_coeff MvPolynomial.prod_X_add_C_coeff
 
 end MvPolynomial

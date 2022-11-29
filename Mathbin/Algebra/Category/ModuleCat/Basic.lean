@@ -107,7 +107,8 @@ def of (X : Type v) [AddCommGroup X] [Module R X] : ModuleCat R :=
 #align Module.of ModuleCat.of
 
 @[simp]
-theorem forget₂_obj (X : ModuleCat R) : (forget₂ (ModuleCat R) AddCommGroupCat).obj X = AddCommGroupCat.of X :=
+theorem forget₂_obj (X : ModuleCat R) :
+    (forget₂ (ModuleCat R) AddCommGroupCat).obj X = AddCommGroupCat.of X :=
   rfl
 #align Module.forget₂_obj ModuleCat.forget₂_obj
 
@@ -124,14 +125,14 @@ theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
 #align Module.forget₂_map ModuleCat.forget₂_map
 
 /-- Typecheck a `linear_map` as a morphism in `Module R`. -/
-def ofHom {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X] [AddCommGroup Y] [Module R Y]
-    (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
+def ofHom {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X] [AddCommGroup Y]
+    [Module R Y] (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
 #align Module.of_hom ModuleCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X] [AddCommGroup Y] [Module R Y]
-    (f : X →ₗ[R] Y) (x : X) : ofHom f x = f x :=
+theorem of_hom_apply {R : Type u} [Ring R] {X Y : Type v} [AddCommGroup X] [Module R X]
+    [AddCommGroup Y] [Module R Y] (f : X →ₗ[R] Y) (x : X) : ofHom f x = f x :=
   rfl
 #align Module.of_hom_apply ModuleCat.of_hom_apply
 
@@ -222,16 +223,12 @@ scoped[ModuleCat] notation "↿" f:1024 => ModuleCat.asHomLeft f
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s. -/
 @[simps]
-def LinearEquiv.toModuleIso {g₁ : AddCommGroup X₁} {g₂ : AddCommGroup X₂} {m₁ : Module R X₁} {m₂ : Module R X₂}
-    (e : X₁ ≃ₗ[R] X₂) : ModuleCat.of R X₁ ≅ ModuleCat.of R X₂ where
+def LinearEquiv.toModuleIso {g₁ : AddCommGroup X₁} {g₂ : AddCommGroup X₂} {m₁ : Module R X₁}
+    {m₂ : Module R X₂} (e : X₁ ≃ₗ[R] X₂) : ModuleCat.of R X₁ ≅ ModuleCat.of R X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
-  hom_inv_id' := by
-    ext
-    exact e.left_inv x
-  inv_hom_id' := by
-    ext
-    exact e.right_inv x
+  hom_inv_id' := by ext; exact e.left_inv x
+  inv_hom_id' := by ext; exact e.right_inv x
 #align linear_equiv.to_Module_iso LinearEquiv.toModuleIso
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -251,8 +248,8 @@ def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅
 This version is better than `linear_equiv_to_Module_iso` when applicable, because Lean can't see
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
-def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup X₂} {m₂ : Module R X₂} (e : X₁ ≃ₗ[R] X₂) :
-    X₁ ≅ ModuleCat.of R X₂ where
+def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup X₂} {m₂ : Module R X₂}
+    (e : X₁ ≃ₗ[R] X₂) : X₁ ≅ ModuleCat.of R X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
   hom_inv_id' := LinearMap.ext fun x => by simp
@@ -264,8 +261,8 @@ def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup X
 This version is better than `linear_equiv_to_Module_iso` when applicable, because Lean can't see
 `Module.of R M` is defeq to `M` when `M : Module R`. -/
 @[simps]
-def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroup X₁} {m₁ : Module R X₁} {X₂ : ModuleCat.{v} R} (e : X₁ ≃ₗ[R] X₂) :
-    ModuleCat.of R X₁ ≅ X₂ where
+def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroup X₁} {m₁ : Module R X₁} {X₂ : ModuleCat.{v} R}
+    (e : X₁ ≃ₗ[R] X₂) : ModuleCat.of R X₁ ≅ X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
   hom_inv_id' := LinearMap.ext fun x => by simp
@@ -290,8 +287,8 @@ end CategoryTheory.Iso
 /-- linear equivalences between `module`s are the same as (isomorphic to) isomorphisms
 in `Module` -/
 @[simps]
-def linearEquivIsoModuleIso {X Y : Type u} [AddCommGroup X] [AddCommGroup Y] [Module R X] [Module R Y] :
-    (X ≃ₗ[R] Y) ≅ ModuleCat.of R X ≅ ModuleCat.of R Y where
+def linearEquivIsoModuleIso {X Y : Type u} [AddCommGroup X] [AddCommGroup Y] [Module R X]
+    [Module R Y] : (X ≃ₗ[R] Y) ≅ ModuleCat.of R X ≅ ModuleCat.of R Y where
   Hom e := e.toModuleIso
   inv i := i.toLinearEquiv
 #align linear_equiv_iso_Module_iso linearEquivIsoModuleIso
@@ -333,7 +330,8 @@ theorem Iso.hom_congr_eq_arrow_congr (i : X ≅ X') (j : Y ≅ Y') (f : X ⟶ Y)
   rfl
 #align Module.iso.hom_congr_eq_arrow_congr ModuleCat.Iso.hom_congr_eq_arrow_congr
 
-theorem Iso.conj_eq_conj (i : X ≅ X') (f : EndCat X) : Iso.conj i f = LinearEquiv.conj i.toLinearEquiv f :=
+theorem Iso.conj_eq_conj (i : X ≅ X') (f : EndCat X) :
+    Iso.conj i f = LinearEquiv.conj i.toLinearEquiv f :=
   rfl
 #align Module.iso.conj_eq_conj ModuleCat.Iso.conj_eq_conj
 

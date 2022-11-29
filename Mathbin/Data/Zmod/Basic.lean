@@ -126,7 +126,8 @@ theorem nat_cast_self (n : ℕ) : (n : Zmod n) = 0 :=
 #align zmod.nat_cast_self Zmod.nat_cast_self
 
 @[simp]
-theorem nat_cast_self' (n : ℕ) : (n + 1 : Zmod (n + 1)) = 0 := by rw [← Nat.cast_add_one, nat_cast_self (n + 1)]
+theorem nat_cast_self' (n : ℕ) : (n + 1 : Zmod (n + 1)) = 0 := by
+  rw [← Nat.cast_add_one, nat_cast_self (n + 1)]
 #align zmod.nat_cast_self' Zmod.nat_cast_self'
 
 section UniversalProperty
@@ -149,11 +150,6 @@ def cast : ∀ {n : ℕ}, Zmod n → R
 instance (priority := 900) (n : ℕ) : CoeTC (Zmod n) R :=
   ⟨cast⟩
 
-/-- The cast from `zmod n` to `R` is a morphism if the characteristic of `R` divides `n`,
-so in the case `n = 0` it is always a homomorphism -/
-instance : CoeIsAddMonoidHom (Zmod 0) R :=
-  Int.coeIsAddMonoidHom _
-
 @[simp]
 theorem cast_zero : ((0 : Zmod n) : R) = 0 := by cases n <;> simp
 #align zmod.cast_zero Zmod.cast_zero
@@ -168,12 +164,12 @@ theorem cast_eq_val [NeZero n] (a : Zmod n) : (a : R) = a.val := by
 variable {S : Type _} [AddGroupWithOne S]
 
 @[simp]
-theorem _root_.prod.fst_zmod_cast (a : Zmod n) : (a : R × S).fst = a := by cases n <;> simp
-#align zmod._root_.prod.fst_zmod_cast zmod._root_.prod.fst_zmod_cast
+theorem Prod.fst_zmod_cast (a : Zmod n) : (a : R × S).fst = a := by cases n <;> simp
+#align prod.fst_zmod_cast Prod.fst_zmod_cast
 
 @[simp]
-theorem _root_.prod.snd_zmod_cast (a : Zmod n) : (a : R × S).snd = a := by cases n <;> simp
-#align zmod._root_.prod.snd_zmod_cast zmod._root_.prod.snd_zmod_cast
+theorem Prod.snd_zmod_cast (a : Zmod n) : (a : R × S).snd = a := by cases n <;> simp
+#align prod.snd_zmod_cast Prod.snd_zmod_cast
 
 end
 
@@ -259,7 +255,8 @@ theorem int_cast_cast (i : Zmod n) : ((i : ℤ) : R) = i :=
   congr_fun (int_cast_comp_cast R) i
 #align zmod.int_cast_cast Zmod.int_cast_cast
 
-theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) : (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b := by
+theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) :
+    (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b := by
   cases n
   · simp
     
@@ -284,7 +281,7 @@ theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 := by
   · exact Int.cast_one
     
   show ((1 % (n + 1) : ℕ) : R) = 1
-  cases n
+  cases n;
   · rw [Nat.dvd_one] at h
     subst m
     apply Subsingleton.elim
@@ -301,7 +298,8 @@ theorem cast_add (h : m ∣ n) (a b : Zmod n) : ((a + b : Zmod n) : R) = a + b :
     
   simp only [coe_coe]
   symm
-  erw [Fin.coe_add, ← Nat.cast_add, ← sub_eq_zero, ← Nat.cast_sub (Nat.mod_le _ _), @CharP.cast_eq_zero_iff R _ m]
+  erw [Fin.coe_add, ← Nat.cast_add, ← sub_eq_zero, ← Nat.cast_sub (Nat.mod_le _ _),
+    @CharP.cast_eq_zero_iff R _ m]
   exact h.trans (Nat.dvd_sub_mod _)
 #align zmod.cast_add Zmod.cast_add
 
@@ -311,7 +309,8 @@ theorem cast_mul (h : m ∣ n) (a b : Zmod n) : ((a * b : Zmod n) : R) = a * b :
     
   simp only [coe_coe]
   symm
-  erw [Fin.coe_mul, ← Nat.cast_mul, ← sub_eq_zero, ← Nat.cast_sub (Nat.mod_le _ _), @CharP.cast_eq_zero_iff R _ m]
+  erw [Fin.coe_mul, ← Nat.cast_mul, ← sub_eq_zero, ← Nat.cast_sub (Nat.mod_le _ _),
+    @CharP.cast_eq_zero_iff R _ m]
   exact h.trans (Nat.dvd_sub_mod _)
 #align zmod.cast_mul Zmod.cast_mul
 
@@ -411,7 +410,8 @@ theorem cast_hom_injective : Function.Injective (Zmod.castHom (dvd_refl n) R) :=
   exact id
 #align zmod.cast_hom_injective Zmod.cast_hom_injective
 
-theorem cast_hom_bijective [Fintype R] (h : Fintype.card R = n) : Function.Bijective (Zmod.castHom (dvd_refl n) R) := by
+theorem cast_hom_bijective [Fintype R] (h : Fintype.card R = n) :
+    Function.Bijective (Zmod.castHom (dvd_refl n) R) := by
   haveI : NeZero n :=
     ⟨by
       intro hn
@@ -441,12 +441,10 @@ def ringEquivCongr {m n : ℕ} (h : m = n) : Zmod m ≃+* Zmod n := by
   · exact
       { Fin.cast h with
         map_mul' := fun a b => by
-          rw [OrderIso.to_fun_eq_coe]
-          ext
+          rw [OrderIso.to_fun_eq_coe]; ext
           rw [Fin.coe_cast, Fin.coe_mul, Fin.coe_mul, Fin.coe_cast, Fin.coe_cast, ← h],
         map_add' := fun a b => by
-          rw [OrderIso.to_fun_eq_coe]
-          ext
+          rw [OrderIso.to_fun_eq_coe]; ext
           rw [Fin.coe_cast, Fin.coe_add, Fin.coe_add, Fin.coe_cast, Fin.coe_cast, ← h] }
     
 #align zmod.ring_equiv_congr Zmod.ringEquivCongr
@@ -535,7 +533,8 @@ theorem cast_sub_one {R : Type _} [Ring R] {n : ℕ} (k : Zmod n) :
     
 #align zmod.cast_sub_one Zmod.cast_sub_one
 
-theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : Zmod p) [NeZero p] : ↑n = z ↔ ∃ k, n = z.val + p * k := by
+theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : Zmod p) [NeZero p] :
+    ↑n = z ↔ ∃ k, n = z.val + p * k := by
   constructor
   · rintro rfl
     refine' ⟨n / p, _⟩
@@ -546,15 +545,16 @@ theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : Zmod p) [NeZero p] : ↑n =
     
 #align zmod.nat_coe_zmod_eq_iff Zmod.nat_coe_zmod_eq_iff
 
-theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : Zmod p) [NeZero p] : ↑n = z ↔ ∃ k, n = z.val + p * k := by
+theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : Zmod p) [NeZero p] :
+    ↑n = z ↔ ∃ k, n = z.val + p * k := by
   constructor
   · rintro rfl
     refine' ⟨n / p, _⟩
     rw [val_int_cast, Int.mod_add_div]
     
   · rintro ⟨k, rfl⟩
-    rw [Int.cast_add, Int.cast_mul, Int.cast_ofNat, Int.cast_ofNat, nat_cast_val, Zmod.nat_cast_self, zero_mul,
-      add_zero, cast_id]
+    rw [Int.cast_add, Int.cast_mul, Int.cast_ofNat, Int.cast_ofNat, nat_cast_val,
+      Zmod.nat_cast_self, zero_mul, add_zero, cast_id]
     
 #align zmod.int_coe_zmod_eq_iff Zmod.int_coe_zmod_eq_iff
 
@@ -564,14 +564,18 @@ theorem int_cast_mod (a : ℤ) (b : ℕ) : ((a % b : ℤ) : Zmod b) = (a : Zmod 
   apply Int.mod_modeq
 #align zmod.int_cast_mod Zmod.int_cast_mod
 
-theorem ker_int_cast_add_hom (n : ℕ) : (Int.castAddHom (Zmod n)).ker = AddSubgroup.zmultiples n := by
+theorem ker_int_cast_add_hom (n : ℕ) : (Int.castAddHom (Zmod n)).ker = AddSubgroup.zmultiples n :=
+  by
   ext
-  rw [Int.mem_zmultiples_iff, AddMonoidHom.mem_ker, Int.coe_cast_add_hom, int_coe_zmod_eq_zero_iff_dvd]
+  rw [Int.mem_zmultiples_iff, AddMonoidHom.mem_ker, Int.coe_cast_add_hom,
+    int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_add_hom Zmod.ker_int_cast_add_hom
 
-theorem ker_int_cast_ring_hom (n : ℕ) : (Int.castRingHom (Zmod n)).ker = Ideal.span ({n} : Set ℤ) := by
+theorem ker_int_cast_ring_hom (n : ℕ) : (Int.castRingHom (Zmod n)).ker = Ideal.span ({n} : Set ℤ) :=
+  by
   ext
-  rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_cast_ring_hom, int_coe_zmod_eq_zero_iff_dvd]
+  rw [Ideal.mem_span_singleton, RingHom.mem_ker, Int.coe_cast_ring_hom,
+    int_coe_zmod_eq_zero_iff_dvd]
 #align zmod.ker_int_cast_ring_hom Zmod.ker_int_cast_ring_hom
 
 attribute [local semireducible] Int.NonNeg
@@ -591,7 +595,8 @@ theorem val_injective (n : ℕ) [NeZero n] : Function.Injective (Zmod.val : Zmod
   exact h
 #align zmod.val_injective Zmod.val_injective
 
-theorem val_one_eq_one_mod (n : ℕ) : (1 : Zmod n).val = 1 % n := by rw [← Nat.cast_one, val_nat_cast]
+theorem val_one_eq_one_mod (n : ℕ) : (1 : Zmod n).val = 1 % n := by
+  rw [← Nat.cast_one, val_nat_cast]
 #align zmod.val_one_eq_one_mod Zmod.val_one_eq_one_mod
 
 theorem val_one (n : ℕ) [Fact (1 < n)] : (1 : Zmod n).val = 1 := by
@@ -698,7 +703,8 @@ def unitOfCoprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (Zmod n)ˣ :=
 #align zmod.unit_of_coprime Zmod.unitOfCoprime
 
 @[simp]
-theorem coe_unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) : (unitOfCoprime x h : Zmod n) = x :=
+theorem coe_unit_of_coprime {n : ℕ} (x : ℕ) (h : Nat.Coprime x n) :
+    (unitOfCoprime x h : Zmod n) = x :=
   rfl
 #align zmod.coe_unit_of_coprime Zmod.coe_unit_of_coprime
 
@@ -708,11 +714,10 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (Zmod n)ˣ) : Nat.Coprime (u : Zmod 
     
   apply Nat.coprime_of_mul_modeq_one ((u⁻¹ : Units (Zmod (n + 1))) : Zmod (n + 1)).val
   have := Units.ext_iff.1 (mul_right_inv u)
-  rw [Units.coe_one] at this
-  rw [← eq_iff_modeq_nat, Nat.cast_one, ← this]
-  clear this
+  rw [Units.val_one] at this
+  rw [← eq_iff_modeq_nat, Nat.cast_one, ← this]; clear this
   rw [← nat_cast_zmod_val ((u * u⁻¹ : Units (Zmod (n + 1))) : Zmod (n + 1))]
-  rw [Units.coe_mul, val_mul, nat_cast_mod]
+  rw [Units.val_mul, val_mul, nat_cast_mod]
 #align zmod.val_coe_unit_coprime Zmod.val_coe_unit_coprime
 
 @[simp]
@@ -732,7 +737,8 @@ theorem mul_inv_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : a * a⁻¹ = 1 :
   rw [inv_coe_unit, u.mul_inv]
 #align zmod.mul_inv_of_unit Zmod.mul_inv_of_unit
 
-theorem inv_mul_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : a⁻¹ * a = 1 := by rw [mul_comm, mul_inv_of_unit a h]
+theorem inv_mul_of_unit {n : ℕ} (a : Zmod n) (h : IsUnit a) : a⁻¹ * a = 1 := by
+  rw [mul_comm, mul_inv_of_unit a h]
 #align zmod.inv_mul_of_unit Zmod.inv_mul_of_unit
 
 -- TODO: this equivalence is true for `zmod 0 = ℤ`, but needs to use different functions.
@@ -755,11 +761,13 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
   let to_fun : Zmod (m * n) → Zmod m × Zmod n :=
     Zmod.castHom (show m.lcm n ∣ m * n by simp [Nat.lcm_dvd_iff]) (Zmod m × Zmod n)
   let inv_fun : Zmod m × Zmod n → Zmod (m * n) := fun x =>
-    if m * n = 0 then if m = 1 then RingHom.snd _ _ x else RingHom.fst _ _ x else Nat.chineseRemainder h x.1.val x.2.val
+    if m * n = 0 then if m = 1 then RingHom.snd _ _ x else RingHom.fst _ _ x
+    else Nat.chineseRemainder h x.1.val x.2.val
   have inv : Function.LeftInverse inv_fun to_fun ∧ Function.RightInverse inv_fun to_fun :=
     if hmn0 : m * n = 0 then by
       rcases h.eq_of_mul_eq_zero hmn0 with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;>
-        simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, eq_int_cast, Prod.ext_iff]
+        simp [inv_fun, to_fun, Function.LeftInverse, Function.RightInverse, eq_int_cast,
+          Prod.ext_iff]
     else by
       haveI : NeZero (m * n) := ⟨hmn0⟩
       haveI : NeZero m := ⟨left_ne_zero_of_mul hmn0⟩
@@ -768,8 +776,8 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
         intro x
         dsimp only [dvd_mul_left, dvd_mul_right, Zmod.cast_hom_apply, coe_coe, inv_fun, to_fun]
         conv_rhs => rw [← Zmod.nat_cast_zmod_val x]
-        rw [if_neg hmn0, Zmod.eq_iff_modeq_nat, ← Nat.modeq_and_modeq_iff_modeq_mul h, Prod.fst_zmod_cast,
-          Prod.snd_zmod_cast]
+        rw [if_neg hmn0, Zmod.eq_iff_modeq_nat, ← Nat.modeq_and_modeq_iff_modeq_mul h,
+          Prod.fst_zmod_cast, Prod.snd_zmod_cast]
         refine'
           ⟨(Nat.chineseRemainder h (x : Zmod m).val (x : Zmod n).val).2.left.trans _,
             (Nat.chineseRemainder h (x : Zmod m).val (x : Zmod n).val).2.right.trans _⟩
@@ -778,7 +786,8 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
         · rw [← Zmod.eq_iff_modeq_nat, Zmod.nat_cast_zmod_val, Zmod.nat_cast_val]
           
       exact ⟨left_inv, left_inv.right_inverse_of_card_le (by simp)⟩
-  { toFun, invFun, map_mul' := RingHom.map_mul _, map_add' := RingHom.map_add _, left_inv := inv.1, right_inv := inv.2 }
+  { toFun, invFun, map_mul' := RingHom.map_mul _, map_add' := RingHom.map_add _, left_inv := inv.1,
+    right_inv := inv.2 }
 #align zmod.chinese_remainder Zmod.chineseRemainder
 
 -- todo: this can be made a `unique` instance.
@@ -792,7 +801,8 @@ theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : Zmo
     ⟨by
       rintro rfl
       simpa [fact_iff] using hn⟩
-  have hn2 : (n : ℕ) / 2 < n := Nat.div_lt_of_lt_mul ((lt_mul_iff_one_lt_left <| NeZero.pos n).2 (by decide))
+  have hn2 : (n : ℕ) / 2 < n :=
+    Nat.div_lt_of_lt_mul ((lt_mul_iff_one_lt_left <| NeZero.pos n).2 (by decide))
   have hn2' : (n : ℕ) - n / 2 = n / 2 + 1 := by
     conv =>
     lhs
@@ -805,13 +815,14 @@ theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : Zmo
     exact Nat.pos_of_ne_zero fun h => by simpa [h] using hx0
   · conv =>
     rhs
-    rw [← Nat.succ_le_iff, Nat.succ_eq_add_one, ← hn2', ← zero_add (-x), ← Zmod.nat_cast_self, ← sub_eq_add_neg, ←
-      Zmod.nat_cast_zmod_val x, ← Nat.cast_sub x.val_le, Zmod.val_nat_cast, Nat.mod_eq_of_lt hxn,
-      tsub_le_tsub_iff_left x.val_le]
+    rw [← Nat.succ_le_iff, Nat.succ_eq_add_one, ← hn2', ← zero_add (-x), ← Zmod.nat_cast_self, ←
+      sub_eq_add_neg, ← Zmod.nat_cast_zmod_val x, ← Nat.cast_sub x.val_le, Zmod.val_nat_cast,
+      Nat.mod_eq_of_lt hxn, tsub_le_tsub_iff_left x.val_le]
     
 #align zmod.le_div_two_iff_lt_neg Zmod.le_div_two_iff_lt_neg
 
-theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : Zmod n} (ha : a ≠ 0) : a ≠ -a := fun h => by
+theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : Zmod n} (ha : a ≠ 0) : a ≠ -a :=
+  fun h => by
   have : a.val ≤ n / 2 ↔ (n : ℕ) / 2 < (-a).val := le_div_two_iff_lt_neg n ha
   rwa [← h, ← not_lt, not_iff_self] at this
 #align zmod.ne_neg_self Zmod.ne_neg_self
@@ -841,7 +852,8 @@ theorem val_eq_zero : ∀ {n : ℕ} (a : Zmod n), a.val = 0 ↔ a = 0
     exact Iff.rfl
 #align zmod.val_eq_zero Zmod.val_eq_zero
 
-theorem val_cast_of_lt {n : ℕ} {a : ℕ} (h : a < n) : (a : Zmod n).val = a := by rw [val_nat_cast, Nat.mod_eq_of_lt h]
+theorem val_cast_of_lt {n : ℕ} {a : ℕ} (h : a < n) : (a : Zmod n).val = a := by
+  rw [val_nat_cast, Nat.mod_eq_of_lt h]
 #align zmod.val_cast_of_lt Zmod.val_cast_of_lt
 
 theorem neg_val' {n : ℕ} [NeZero n] (a : Zmod n) : (-a).val = (n - a.val) % n :=
@@ -849,13 +861,15 @@ theorem neg_val' {n : ℕ} [NeZero n] (a : Zmod n) : (-a).val = (n - a.val) % n 
     (-a).val = val (-a) % n := by rw [Nat.mod_eq_of_lt (-a).val_lt]
     _ = (n - val a) % n :=
       Nat.Modeq.add_right_cancel' _
-        (by rw [Nat.Modeq, ← val_add, add_left_neg, tsub_add_cancel_of_le a.val_le, Nat.mod_self, val_zero])
+        (by
+          rw [Nat.Modeq, ← val_add, add_left_neg, tsub_add_cancel_of_le a.val_le, Nat.mod_self,
+            val_zero])
     
 #align zmod.neg_val' Zmod.neg_val'
 
 theorem neg_val {n : ℕ} [NeZero n] (a : Zmod n) : (-a).val = if a = 0 then 0 else n - a.val := by
   rw [neg_val']
-  by_cases h : a = 0
+  by_cases h : a = 0;
   · rw [if_pos h, h, val_zero, tsub_zero, Nat.mod_self]
     
   rw [if_neg h]
@@ -909,14 +923,15 @@ theorem nat_abs_val_min_abs_le {n : ℕ} [NeZero n] (x : Zmod n) : x.valMinAbs.n
   rw [← Int.coe_nat_le, Int.ofNat_natAbs_of_nonpos this, neg_sub]
   conv_lhs =>
   congr
-  rw [← Nat.mod_add_div n 2, Int.ofNat_add, Int.ofNat_mul, Int.coe_nat_bit0, Int.ofNat_one]
+  rw [← Nat.mod_add_div n 2, Int.ofNat_add, Int.ofNat_mul, Int.ofNat_bit0, Int.ofNat_one]
   suffices ((n % 2 : ℕ) + n / 2 : ℤ) ≤ val x by
     rw [← sub_nonneg] at this⊢
     apply le_trans this (le_of_eq _)
     ring
   norm_cast
   calc
-    (n : ℕ) % 2 + n / 2 ≤ 1 + n / 2 := Nat.add_le_add_right (Nat.le_of_lt_succ (Nat.mod_lt _ (by decide))) _
+    (n : ℕ) % 2 + n / 2 ≤ 1 + n / 2 :=
+      Nat.add_le_add_right (Nat.le_of_lt_succ (Nat.mod_lt _ (by decide))) _
     _ ≤ x.val := by
       rw [add_comm]
       exact Nat.succ_le_of_lt (lt_of_not_ge h)
@@ -931,7 +946,7 @@ theorem val_min_abs_zero : ∀ n, (0 : Zmod n).valMinAbs = 0
 
 @[simp]
 theorem val_min_abs_eq_zero {n : ℕ} (x : Zmod n) : x.valMinAbs = 0 ↔ x = 0 := by
-  cases n
+  cases n;
   · simp
     
   constructor
@@ -966,7 +981,8 @@ theorem nat_cast_nat_abs_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
 #align zmod.nat_cast_nat_abs_val_min_abs Zmod.nat_cast_nat_abs_val_min_abs
 
 @[simp]
-theorem nat_abs_val_min_abs_neg {n : ℕ} (a : Zmod n) : (-a).valMinAbs.natAbs = a.valMinAbs.natAbs := by
+theorem nat_abs_val_min_abs_neg {n : ℕ} (a : Zmod n) : (-a).valMinAbs.natAbs = a.valMinAbs.natAbs :=
+  by
   cases n
   · simp only [Int.natAbs_neg, val_min_abs_def_zero]
     
@@ -981,10 +997,7 @@ theorem nat_abs_val_min_abs_neg {n : ℕ} (a : Zmod n) : (-a).valMinAbs.natAbs =
     rw [← not_le] at hpa
     simp only [if_neg ha0, neg_val, hpa, Int.ofNat_sub a.val_le]
     split_ifs
-    all_goals
-    rw [← Int.natAbs_neg]
-    congr 1
-    ring
+    all_goals rw [← Int.natAbs_neg]; congr 1; ring
     
   suffices (n + 1 : ℕ) % 2 + 2 * ((n + 1) / 2) - a.val ≤ (n + 1) / 2 ↔ (n + 1 : ℕ) / 2 < a.val by
     rwa [Nat.mod_add_div] at this
@@ -1013,9 +1026,10 @@ theorem val_eq_ite_val_min_abs {n : ℕ} [NeZero n] (a : Zmod n) :
   split_ifs <;> simp only [add_zero, sub_add_cancel]
 #align zmod.val_eq_ite_val_min_abs Zmod.val_eq_ite_val_min_abs
 
-theorem prime_ne_zero (p q : ℕ) [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq : p ≠ q) : (q : Zmod p) ≠ 0 := by
-  rwa [← Nat.cast_zero, Ne.def, eq_iff_modeq_nat, Nat.modeq_zero_iff_dvd, ← hp.1.coprime_iff_not_dvd,
-    Nat.coprime_primes hp.1 hq.1]
+theorem prime_ne_zero (p q : ℕ) [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq : p ≠ q) :
+    (q : Zmod p) ≠ 0 := by
+  rwa [← Nat.cast_zero, Ne.def, eq_iff_modeq_nat, Nat.modeq_zero_iff_dvd, ←
+    hp.1.coprime_iff_not_dvd, Nat.coprime_primes hp.1 hq.1]
 #align zmod.prime_ne_zero Zmod.prime_ne_zero
 
 end Zmod
@@ -1073,7 +1087,8 @@ instance subsingleton_ring_equiv [Semiring R] : Subsingleton (Zmod n ≃+* R) :=
 theorem ring_hom_map_cast [Ring R] (f : R →+* Zmod n) (k : Zmod n) : f k = k := by cases n <;> simp
 #align zmod.ring_hom_map_cast Zmod.ring_hom_map_cast
 
-theorem ring_hom_right_inverse [Ring R] (f : R →+* Zmod n) : Function.RightInverse (coe : Zmod n → R) f :=
+theorem ring_hom_right_inverse [Ring R] (f : R →+* Zmod n) :
+    Function.RightInverse (coe : Zmod n → R) f :=
   ring_hom_map_cast f
 #align zmod.ring_hom_right_inverse Zmod.ring_hom_right_inverse
 

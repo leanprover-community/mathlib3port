@@ -112,7 +112,8 @@ theorem count_of_sums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {
   count_filter_of_pos hi
 #align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_of_sums_of_ne_zero
 
-theorem count_of_sums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) : (ofSums n l hl).parts.count 0 = 0 :=
+theorem count_of_sums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) :
+    (ofSums n l hl).parts.count 0 = 0 :=
   count_filter_of_neg fun h => h rfl
 #align nat.partition.count_of_sums_zero Nat.Partition.count_of_sums_zero
 

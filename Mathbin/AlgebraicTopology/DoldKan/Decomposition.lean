@@ -52,7 +52,8 @@ theorem decomposition_Q (n q : ℕ) :
         (p i).f (n + 1) ≫ X.δ i.rev.succ ≫ X.σ i.rev :=
   by
   induction' q with q hq
-  · simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_false, Finset.sum_empty]
+  · simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_false,
+      Finset.sum_empty]
     
   · by_cases hqn : q + 1 ≤ n + 1
     swap
@@ -70,12 +71,13 @@ theorem decomposition_Q (n q : ℕ) :
       let q' : Fin (n + 1) := ⟨q, nat.succ_le_iff.mp hqn⟩
       convert Finset.sum_insert (_ : q' ∉ _)
       · ext i
-        simp only [Finset.mem_insert, Finset.mem_filter, Finset.mem_univ, true_and_iff, Nat.lt_succ_iff_lt_or_eq,
-          Fin.ext_iff]
+        simp only [Finset.mem_insert, Finset.mem_filter, Finset.mem_univ, true_and_iff,
+          Nat.lt_succ_iff_lt_or_eq, Fin.ext_iff]
         tauto
         
       · have hnaq' : n = a + q := by linarith
-        simpa only [Fin.coe_mk, (higher_faces_vanish.of_P q n).comp_Hσ_eq hnaq', q'.rev_eq hnaq', neg_neg]
+        simpa only [Fin.coe_mk, (higher_faces_vanish.of_P q n).comp_Hσ_eq hnaq', q'.rev_eq hnaq',
+          neg_neg]
         
       · simp only [Finset.mem_filter, Fin.coe_mk, lt_self_iff_false, and_false_iff, not_false_iff]
         
@@ -125,7 +127,8 @@ theorem id_φ : (id X n).φ = 𝟙 _ := by
     ext i
     simpa only [Finset.mem_univ, Finset.mem_filter, true_and_iff, true_iff_iff] using Fin.is_lt i
     
-#align algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φ
+#align
+  algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φ
 
 variable {X n}
 
@@ -134,20 +137,23 @@ variable {X n}
 def postComp : MorphComponents X n Z' where
   a := f.a ≫ h
   b i := f.b i ≫ h
-#align algebraic_topology.dold_kan.morph_components.post_comp AlgebraicTopology.DoldKan.MorphComponents.postComp
+#align
+  algebraic_topology.dold_kan.morph_components.post_comp AlgebraicTopology.DoldKan.MorphComponents.postComp
 
 @[simp]
 theorem post_comp_φ : (f.postComp h).φ = f.φ ≫ h := by
   unfold φ post_comp
   simp only [add_comp, sum_comp, assoc]
-#align algebraic_topology.dold_kan.morph_components.post_comp_φ AlgebraicTopology.DoldKan.MorphComponents.post_comp_φ
+#align
+  algebraic_topology.dold_kan.morph_components.post_comp_φ AlgebraicTopology.DoldKan.MorphComponents.post_comp_φ
 
 /-- A `morph_components` can be precomposed with a morphism of simplicial objects. -/
 @[simps]
 def preComp : MorphComponents X' n Z where
   a := g.app (op [n + 1]) ≫ f.a
   b i := g.app (op [n]) ≫ f.b i
-#align algebraic_topology.dold_kan.morph_components.pre_comp AlgebraicTopology.DoldKan.MorphComponents.preComp
+#align
+  algebraic_topology.dold_kan.morph_components.pre_comp AlgebraicTopology.DoldKan.MorphComponents.preComp
 
 @[simp]
 theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ := by
@@ -158,7 +164,8 @@ theorem pre_comp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ := by
     
   · simp only [comp_sum, P_f_naturality_assoc, simplicial_object.δ_naturality_assoc]
     
-#align algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.pre_comp_φ
+#align
+  algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.pre_comp_φ
 
 end MorphComponents
 

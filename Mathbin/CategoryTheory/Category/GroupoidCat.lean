@@ -85,7 +85,8 @@ instance forgetToCatFull : Full forgetToCat where preimage C D := id
 #align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.GroupoidCat.forgetToCatFull
 
 instance forget_to_Cat_faithful : Faithful forgetToCat where
-#align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.GroupoidCat.forget_to_Cat_faithful
+#align
+  category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.GroupoidCat.forget_to_Cat_faithful
 
 /-- Convert arrows in the category of groupoids to functors,
 which sometimes helps in applying simp lemmas -/
@@ -117,8 +118,7 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.I
     (by
       intro s m w
       apply functor.pi_ext
-      intro j
-      specialize w j
+      intro j; specialize w j
       simpa)
 #align category_theory.Groupoid.pi_limit_fan_is_limit CategoryTheory.GroupoidCat.piLimitFanIsLimit
 
@@ -129,7 +129,8 @@ instance has_pi : Limits.HasProducts GroupoidCat.{u, u} :=
 /-- The product of a family of groupoids is isomorphic
 to the product object in the category of Groupoids -/
 noncomputable def piIsoPi (J : Type u) (f : J → GroupoidCat.{u, u}) : @of (∀ j, f j) _ ≅ ∏ f :=
-  Limits.IsLimit.conePointUniqueUpToIso (piLimitFanIsLimit f) (Limits.limit.isLimit (Discrete.functor f))
+  Limits.IsLimit.conePointUniqueUpToIso (piLimitFanIsLimit f)
+    (Limits.limit.isLimit (Discrete.functor f))
 #align category_theory.Groupoid.pi_iso_pi CategoryTheory.GroupoidCat.piIsoPi
 
 @[simp]

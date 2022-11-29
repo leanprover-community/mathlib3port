@@ -14,8 +14,8 @@ This file defines `set.sigma`, the indexed sum of sets.
 
 namespace Set
 
-variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t₂ : ∀ i, Set (α i)} {u : Set (Σi, α i)}
-  {x : Σi, α i} {i j : ι} {a : α i}
+variable {ι ι' : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t₂ : ∀ i, Set (α i)}
+  {u : Set (Σi, α i)} {x : Σi, α i} {i j : ι} {a : α i}
 
 @[simp]
 theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} := by
@@ -28,13 +28,15 @@ theorem range_sigma_mk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma
     
 #align set.range_sigma_mk Set.range_sigma_mk
 
-theorem preimage_image_sigma_mk_of_ne (h : i ≠ j) (s : Set (α j)) : Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
+theorem preimage_image_sigma_mk_of_ne (h : i ≠ j) (s : Set (α j)) :
+    Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
   ext x
   simp [h.symm]
 #align set.preimage_image_sigma_mk_of_ne Set.preimage_image_sigma_mk_of_ne
 
-theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι → ι') (g : ∀ i, α i → β (f i)) (i : ι)
-    (s : Set (β (f i))) : Sigma.mk i '' (g i ⁻¹' s) ⊆ Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
+theorem image_sigma_mk_preimage_sigma_map_subset {β : ι' → Type _} (f : ι → ι')
+    (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
+    Sigma.mk i '' (g i ⁻¹' s) ⊆ Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
   image_subset_iff.2 fun x hx => ⟨g i x, hx, rfl⟩
 #align set.image_sigma_mk_preimage_sigma_map_subset Set.image_sigma_mk_preimage_sigma_map_subset
 
@@ -44,9 +46,7 @@ theorem image_sigma_mk_preimage_sigma_map {β : ι' → Type _} {f : ι → ι'}
   refine' (image_sigma_mk_preimage_sigma_map_subset f g i s).antisymm _
   rintro ⟨j, x⟩ ⟨y, hys, hxy⟩
   simp only [hf.eq_iff, Sigma.map] at hxy
-  rcases hxy with ⟨rfl, hxy⟩
-  rw [heq_iff_eq] at hxy
-  subst y
+  rcases hxy with ⟨rfl, hxy⟩; rw [heq_iff_eq] at hxy; subst y
   exact ⟨x, hys, rfl⟩
 #align set.image_sigma_mk_preimage_sigma_map Set.image_sigma_mk_preimage_sigma_map
 
@@ -78,11 +78,13 @@ theorem sigma_subset_iff : s.Sigma t ⊆ u ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a
   ⟨fun h i hi a ha => h <| mk_mem_sigma hi ha, fun h ⟨i, a⟩ ha => h ha.1 ha.2⟩
 #align set.sigma_subset_iff Set.sigma_subset_iff
 
-theorem forall_sigma_iff {p : (Σi, α i) → Prop} : (∀ x ∈ s.Sigma t, p x) ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → p ⟨i, a⟩ :=
+theorem forall_sigma_iff {p : (Σi, α i) → Prop} :
+    (∀ x ∈ s.Sigma t, p x) ↔ ∀ ⦃i⦄, i ∈ s → ∀ ⦃a⦄, a ∈ t i → p ⟨i, a⟩ :=
   sigma_subset_iff
 #align set.forall_sigma_iff Set.forall_sigma_iff
 
-theorem exists_sigma_iff {p : (Σi, α i) → Prop} : (∃ x ∈ s.Sigma t, p x) ↔ ∃ i ∈ s, ∃ a ∈ t i, p ⟨i, a⟩ :=
+theorem exists_sigma_iff {p : (Σi, α i) → Prop} :
+    (∃ x ∈ s.Sigma t, p x) ↔ ∃ i ∈ s, ∃ a ∈ t i, p ⟨i, a⟩ :=
   ⟨fun ⟨⟨i, a⟩, ha, h⟩ => ⟨i, ha.1, a, ha.2, h⟩, fun ⟨i, hi, a, ha, h⟩ => ⟨⟨i, a⟩, ⟨hi, ha⟩, h⟩⟩
 #align set.exists_sigma_iff Set.exists_sigma_iff
 
@@ -119,13 +121,14 @@ theorem singleton_sigma : ({i} : Set ι).Sigma t = Sigma.mk i '' t i :=
 #align set.singleton_sigma Set.singleton_sigma
 
 @[simp]
-theorem sigma_singleton {a : ∀ i, α i} : (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s :=
-  by
+theorem sigma_singleton {a : ∀ i, α i} :
+    (s.Sigma fun i => ({a i} : Set (α i))) = (fun i => Sigma.mk i <| a i) '' s := by
   ext ⟨x, y⟩
   simp [and_left_comm, eq_comm]
 #align set.sigma_singleton Set.sigma_singleton
 
-theorem singleton_sigma_singleton {a : ∀ i, α i} : (({i} : Set ι).Sigma fun i => ({a i} : Set (α i))) = {⟨i, a i⟩} := by
+theorem singleton_sigma_singleton {a : ∀ i, α i} :
+    (({i} : Set ι).Sigma fun i => ({a i} : Set (α i))) = {⟨i, a i⟩} := by
   rw [sigma_singleton, image_singleton]
 #align set.singleton_sigma_singleton Set.singleton_sigma_singleton
 
@@ -148,12 +151,14 @@ theorem insert_sigma : (insert i s).Sigma t = Sigma.mk i '' t i ∪ s.Sigma t :=
   rw [insert_eq, union_sigma, singleton_sigma]
 #align set.insert_sigma Set.insert_sigma
 
-theorem sigma_insert {a : ∀ i, α i} : (s.Sigma fun i => insert (a i) (t i)) = (fun i => ⟨i, a i⟩) '' s ∪ s.Sigma t := by
+theorem sigma_insert {a : ∀ i, α i} :
+    (s.Sigma fun i => insert (a i) (t i)) = (fun i => ⟨i, a i⟩) '' s ∪ s.Sigma t := by
   simp_rw [insert_eq, sigma_union, sigma_singleton]
 #align set.sigma_insert Set.sigma_insert
 
 theorem sigma_preimage_eq {f : ι' → ι} {g : ∀ i, β i → α i} :
-    ((f ⁻¹' s).Sigma fun i => g (f i) ⁻¹' t (f i)) = (fun p : Σi, β (f i) => Sigma.mk _ (g _ p.2)) ⁻¹' s.Sigma t :=
+    ((f ⁻¹' s).Sigma fun i => g (f i) ⁻¹' t (f i)) =
+      (fun p : Σi, β (f i) => Sigma.mk _ (g _ p.2)) ⁻¹' s.Sigma t :=
   rfl
 #align set.sigma_preimage_eq Set.sigma_preimage_eq
 
@@ -167,8 +172,9 @@ theorem sigma_preimage_right {g : ∀ i, β i → α i} :
   rfl
 #align set.sigma_preimage_right Set.sigma_preimage_right
 
-theorem preimage_sigma_map_sigma {α' : ι' → Type _} (f : ι → ι') (g : ∀ i, α i → α' (f i)) (s : Set ι')
-    (t : ∀ i, Set (α' i)) : Sigma.map f g ⁻¹' s.Sigma t = (f ⁻¹' s).Sigma fun i => g i ⁻¹' t (f i) :=
+theorem preimage_sigma_map_sigma {α' : ι' → Type _} (f : ι → ι') (g : ∀ i, α i → α' (f i))
+    (s : Set ι') (t : ∀ i, Set (α' i)) :
+    Sigma.map f g ⁻¹' s.Sigma t = (f ⁻¹' s).Sigma fun i => g i ⁻¹' t (f i) :=
   rfl
 #align set.preimage_sigma_map_sigma Set.preimage_sigma_map_sigma
 
@@ -182,8 +188,8 @@ theorem mk_preimage_sigma_eq_empty (hi : i ∉ s) : Sigma.mk i ⁻¹' s.Sigma t 
   ext fun _ => iff_of_false (hi ∘ And.left) id
 #align set.mk_preimage_sigma_eq_empty Set.mk_preimage_sigma_eq_empty
 
-theorem mk_preimage_sigma_eq_if [DecidablePred (· ∈ s)] : Sigma.mk i ⁻¹' s.Sigma t = if i ∈ s then t i else ∅ := by
-  split_ifs <;> simp [h]
+theorem mk_preimage_sigma_eq_if [DecidablePred (· ∈ s)] :
+    Sigma.mk i ⁻¹' s.Sigma t = if i ∈ s then t i else ∅ := by split_ifs <;> simp [h]
 #align set.mk_preimage_sigma_eq_if Set.mk_preimage_sigma_eq_if
 
 theorem mk_preimage_sigma_fn_eq_if {β : Type _} [DecidablePred (· ∈ s)] (g : β → α i) :
@@ -196,7 +202,8 @@ theorem sigma_univ_range_eq {f : ∀ i, α i → β i} :
   ext <| by simp [range]
 #align set.sigma_univ_range_eq Set.sigma_univ_range_eq
 
-protected theorem Nonempty.sigma : s.Nonempty → (∀ i, (t i).Nonempty) → (s.Sigma t : Set _).Nonempty := fun ⟨i, hi⟩ h =>
+protected theorem Nonempty.sigma :
+    s.Nonempty → (∀ i, (t i).Nonempty) → (s.Sigma t : Set _).Nonempty := fun ⟨i, hi⟩ h =>
   let ⟨a, ha⟩ := h i
   ⟨⟨i, a⟩, hi, ha⟩
 #align set.nonempty.sigma Set.Nonempty.sigma
@@ -204,8 +211,8 @@ protected theorem Nonempty.sigma : s.Nonempty → (∀ i, (t i).Nonempty) → (s
 theorem Nonempty.sigma_fst : (s.Sigma t : Set _).Nonempty → s.Nonempty := fun ⟨x, hx⟩ => ⟨x.1, hx.1⟩
 #align set.nonempty.sigma_fst Set.Nonempty.sigma_fst
 
-theorem Nonempty.sigma_snd : (s.Sigma t : Set _).Nonempty → ∃ i ∈ s, (t i).Nonempty := fun ⟨x, hx⟩ =>
-  ⟨x.1, hx.1, x.2, hx.2⟩
+theorem Nonempty.sigma_snd : (s.Sigma t : Set _).Nonempty → ∃ i ∈ s, (t i).Nonempty :=
+  fun ⟨x, hx⟩ => ⟨x.1, hx.1, x.2, hx.2⟩
 #align set.nonempty.sigma_snd Set.Nonempty.sigma_snd
 
 theorem sigma_nonempty_iff : (s.Sigma t : Set _).Nonempty ↔ ∃ i ∈ s, (t i).Nonempty :=
@@ -226,7 +233,8 @@ theorem image_sigma_mk_subset_sigma_right (hi : i ∈ s) : Sigma.mk i '' t i ⊆
   image_subset_iff.2 fun a => And.intro hi
 #align set.image_sigma_mk_subset_sigma_right Set.image_sigma_mk_subset_sigma_right
 
-theorem sigma_subset_preimage_fst (s : Set ι) (t : ∀ i, Set (α i)) : s.Sigma t ⊆ Sigma.fst ⁻¹' s := fun a => And.left
+theorem sigma_subset_preimage_fst (s : Set ι) (t : ∀ i, Set (α i)) : s.Sigma t ⊆ Sigma.fst ⁻¹' s :=
+  fun a => And.left
 #align set.sigma_subset_preimage_fst Set.sigma_subset_preimage_fst
 
 theorem fst_image_sigma_subset (s : Set ι) (t : ∀ i, Set (α i)) : Sigma.fst '' s.Sigma t ⊆ s :=
@@ -240,7 +248,8 @@ theorem fst_image_sigma (s : Set ι) (ht : ∀ i, (t i).Nonempty) : Sigma.fst ''
 #align set.fst_image_sigma Set.fst_image_sigma
 
 theorem sigma_diff_sigma : s₁.Sigma t₁ \ s₂.Sigma t₂ = s₁.Sigma (t₁ \ t₂) ∪ (s₁ \ s₂).Sigma t₁ :=
-  ext fun x => by by_cases h₁ : x.1 ∈ s₁ <;> by_cases h₂ : x.2 ∈ t₁ x.1 <;> simp [*, ← imp_iff_or_not]
+  ext fun x => by
+    by_cases h₁ : x.1 ∈ s₁ <;> by_cases h₂ : x.2 ∈ t₁ x.1 <;> simp [*, ← imp_iff_or_not]
 #align set.sigma_diff_sigma Set.sigma_diff_sigma
 
 end Set

@@ -143,12 +143,14 @@ theorem not_lt_of_mem_argmin : a ∈ l → m ∈ argmin f l → ¬f a < f m :=
 #align list.not_lt_of_mem_argmin List.not_lt_of_mem_argmin
 
 theorem argmax_concat (f : α → β) (a : α) (l : List α) :
-    argmax f (l ++ [a]) = Option.casesOn (argmax f l) (some a) fun c => if f c < f a then some a else some c := by
-  rw [argmax, argmax] <;> simp [arg_aux]
+    argmax f (l ++ [a]) =
+      Option.casesOn (argmax f l) (some a) fun c => if f c < f a then some a else some c :=
+  by rw [argmax, argmax] <;> simp [arg_aux]
 #align list.argmax_concat List.argmax_concat
 
 theorem argmin_concat (f : α → β) (a : α) (l : List α) :
-    argmin f (l ++ [a]) = Option.casesOn (argmin f l) (some a) fun c => if f a < f c then some a else some c :=
+    argmin f (l ++ [a]) =
+      Option.casesOn (argmin f l) (some a) fun c => if f a < f c then some a else some c :=
   @argmax_concat _ βᵒᵈ _ _ _ _ _
 #align list.argmin_concat List.argmin_concat
 
@@ -176,7 +178,8 @@ section LinearOrder
 
 variable [LinearOrder β] {f : α → β} {l : List α} {o : Option α} {a m : α}
 
-theorem le_of_mem_argmax : a ∈ l → m ∈ argmax f l → f a ≤ f m := fun ha hm => le_of_not_lt <| not_lt_of_mem_argmax ha hm
+theorem le_of_mem_argmax : a ∈ l → m ∈ argmax f l → f a ≤ f m := fun ha hm =>
+  le_of_not_lt <| not_lt_of_mem_argmax ha hm
 #align list.le_of_mem_argmax List.le_of_mem_argmax
 
 theorem le_of_mem_argmin : a ∈ l → m ∈ argmin f l → f m ≤ f a :=
@@ -184,7 +187,8 @@ theorem le_of_mem_argmin : a ∈ l → m ∈ argmin f l → f m ≤ f a :=
 #align list.le_of_mem_argmin List.le_of_mem_argmin
 
 theorem argmax_cons (f : α → β) (a : α) (l : List α) :
-    argmax f (a :: l) = Option.casesOn (argmax f l) (some a) fun c => if f a < f c then some c else some a :=
+    argmax f (a :: l) =
+      Option.casesOn (argmax f l) (some a) fun c => if f a < f c then some c else some a :=
   (List.reverseRecOn l rfl) fun hd tl ih => by
     rw [← cons_append, argmax_concat, ih, argmax_concat]
     cases' h : argmax f hd with m
@@ -201,13 +205,15 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
 #align list.argmax_cons List.argmax_cons
 
 theorem argmin_cons (f : α → β) (a : α) (l : List α) :
-    argmin f (a :: l) = Option.casesOn (argmin f l) (some a) fun c => if f c < f a then some c else some a := by
-  convert @argmax_cons _ βᵒᵈ _ _ _ _
+    argmin f (a :: l) =
+      Option.casesOn (argmin f l) (some a) fun c => if f c < f a then some c else some a :=
+  by convert @argmax_cons _ βᵒᵈ _ _ _ _
 #align list.argmin_cons List.argmin_cons
 
 variable [DecidableEq α]
 
-theorem index_of_argmax : ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
+theorem index_of_argmax :
+    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
   | [], m, _, _, _, _ => by simp
   | hd :: tl, m, hm, a, ha, ham => by
     simp only [index_of_cons, argmax_cons, Option.mem_def] at hm⊢
@@ -238,7 +244,8 @@ theorem index_of_argmin :
 #align list.index_of_argmin List.index_of_argmin
 
 theorem mem_argmax_iff :
-    m ∈ argmax f l ↔ m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
+    m ∈ argmax f l ↔
+      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
   ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_of_mem_argmax ha hm, fun _ => index_of_argmax hm⟩, by
     rintro ⟨hml, ham, hma⟩
     cases' harg : argmax f l with n
@@ -252,17 +259,20 @@ theorem mem_argmax_iff :
 #align list.mem_argmax_iff List.mem_argmax_iff
 
 theorem argmax_eq_some_iff :
-    argmax f l = some m ↔ m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
+    argmax f l = some m ↔
+      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
   mem_argmax_iff
 #align list.argmax_eq_some_iff List.argmax_eq_some_iff
 
 theorem mem_argmin_iff :
-    m ∈ argmin f l ↔ m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
+    m ∈ argmin f l ↔
+      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   @mem_argmax_iff _ βᵒᵈ _ _ _ _ _
 #align list.mem_argmin_iff List.mem_argmin_iff
 
 theorem argmin_eq_some_iff :
-    argmin f l = some m ↔ m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
+    argmin f l = some m ↔
+      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   mem_argmin_iff
 #align list.argmin_eq_some_iff List.argmin_eq_some_iff
 

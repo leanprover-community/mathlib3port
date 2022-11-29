@@ -22,7 +22,8 @@ unsafe def step {α : Type} (c : old_conv α) : old_conv Unit :=
   c >> return ()
 #align old_conv.step old_conv.step
 
-unsafe def istep {α : Type} (line0 col0 line col : Nat) (c : old_conv α) : old_conv Unit := fun r lhs ts =>
+unsafe def istep {α : Type} (line0 col0 line col : Nat) (c : old_conv α) : old_conv Unit :=
+  fun r lhs ts =>
   (@scopeTrace _ line col fun _ => (c >> return ()) r lhs ts).clamp_pos line0 line col
 #align old_conv.istep old_conv.istep
 
@@ -59,7 +60,8 @@ unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := f
   let-- to be able to use congruence lemmas @[congr]
     (found, new_lhs, pr)
     ←
-    tactic.ext_simplify_core false { zeta := false, beta := false, singlePass := true, eta := false, proj := false } s
+    tactic.ext_simplify_core false
+        { zeta := false, beta := false, singlePass := true, eta := false, proj := false } s
         (fun u => return u)
         (fun found s r p e => do
           guard (Not found)
@@ -68,7 +70,8 @@ unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := f
           let ⟨u, new_e, pr⟩ ← c r e
           return (tt, new_e, pr, ff))
         (fun a s r p e => tactic.failed) r lhs
-  if Not found then tactic.fail "find converter failed, pattern was not found" else return ⟨(), new_lhs, some pr⟩
+  if Not found then tactic.fail "find converter failed, pattern was not found"
+    else return ⟨(), new_lhs, some pr⟩
 #align old_conv.interactive.find old_conv.interactive.find
 
 end Interactive
@@ -157,14 +160,16 @@ unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic)
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 unsafe def conv_lhs (loc : parse (parser.optional (tk "at" *> ident)))
-    (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) : tactic Unit :=
+    (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) :
+    tactic Unit :=
   conv loc p (conv.interactive.to_lhs >> c)
 #align tactic.interactive.conv_lhs tactic.interactive.conv_lhs
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 unsafe def conv_rhs (loc : parse (parser.optional (tk "at" *> ident)))
-    (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) : tactic Unit :=
+    (p : parse (parser.optional (tk "in" *> parser.pexpr))) (c : conv.interactive.itactic) :
+    tactic Unit :=
   conv loc p (conv.interactive.to_rhs >> c)
 #align tactic.interactive.conv_rhs tactic.interactive.conv_rhs
 

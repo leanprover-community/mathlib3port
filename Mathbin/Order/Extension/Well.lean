@@ -46,12 +46,14 @@ arbitrary well-order to serve as a tiebreak between two elements of same rank.
 -/
 noncomputable def wellOrderExtension : LinearOrder α :=
   let l : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
-  @LinearOrder.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u, u} hwf a, a)) fun _ _ => congr_arg Prod.snd
+  @LinearOrder.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u, u} hwf a, a)) fun _ _ =>
+    congr_arg Prod.snd
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
 
 instance wellOrderExtension.is_well_founded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
   ⟨InvImage.wf _ <| Prod.lex_wf Ordinal.well_founded_lt.wf WellOrderingRel.is_well_order.wf⟩
-#align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.is_well_founded_lt
+#align
+  well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.is_well_founded_lt
 
 /-- Any well-founded relation can be extended to a well-ordering on that type. -/
 theorem exists_well_order_ge : ∃ s, r ≤ s ∧ IsWellOrder α s :=
@@ -76,7 +78,8 @@ def toWellOrderExtension : α ≃ WellOrderExtension α :=
 noncomputable instance [LT α] [WellFoundedLt α] : LinearOrder (WellOrderExtension α) :=
   (IsWellFounded.wf : @WellFounded α (· < ·)).wellOrderExtension
 
-instance WellOrderExtension.well_founded_lt [LT α] [WellFoundedLt α] : WellFoundedLt (WellOrderExtension α) :=
+instance WellOrderExtension.well_founded_lt [LT α] [WellFoundedLt α] :
+    WellFoundedLt (WellOrderExtension α) :=
   WellFounded.wellOrderExtension.is_well_founded_lt _
 #align well_order_extension.well_founded_lt WellOrderExtension.well_founded_lt
 

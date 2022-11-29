@@ -64,7 +64,8 @@ end Mvfunctor
 /-- laws for `mvfunctor` -/
 class IsLawfulMvfunctor {n : ℕ} (F : Typevec n → Type _) [Mvfunctor F] : Prop where
   id_map : ∀ {α : Typevec n} (x : F α), Typevec.id <$$> x = x
-  comp_map : ∀ {α β γ : Typevec n} (g : α ⟹ β) (h : β ⟹ γ) (x : F α), (h ⊚ g) <$$> x = h <$$> g <$$> x
+  comp_map :
+    ∀ {α β γ : Typevec n} (g : α ⟹ β) (h : β ⟹ γ) (x : F α), (h ⊚ g) <$$> x = h <$$> g <$$> x
 #align is_lawful_mvfunctor IsLawfulMvfunctor
 
 open Nat Typevec
@@ -111,8 +112,8 @@ section Liftp'
 
 variable (F)
 
-theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α) (h₀ : f ⊚ g = id)
-    (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u := by
+theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α)
+    (h₀ : f ⊚ g = id) (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u := by
   constructor <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u, use g <$$> u]
   · apply (h₁ u).mp h₂
     
@@ -130,7 +131,8 @@ theorem liftp_def (x : F α) : Liftp' p x ↔ ∃ u : F (subtype_ p), subtypeVal
 theorem liftr_def (x y : F α) :
     Liftr' r x y ↔
       ∃ u : F (subtype_ r),
-        (Typevec.prod.fst ⊚ subtypeVal r) <$$> u = x ∧ (Typevec.prod.snd ⊚ subtypeVal r) <$$> u = y :=
+        (Typevec.prod.fst ⊚ subtypeVal r) <$$> u = x ∧
+          (Typevec.prod.snd ⊚ subtypeVal r) <$$> u = y :=
   exists_iff_exists_of_mono _ _ _ (to_subtype'_of_subtype' r)
     (by simp only [map_map, comp_assoc, subtype_val_to_subtype'] <;> simp [comp])
 #align mvfunctor.liftr_def Mvfunctor.liftr_def
@@ -162,7 +164,8 @@ private def f :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 // ofRepeat (predLast' α pp i p_1) }) ⟹ fun i : Fin2 (n + 1) =>
         { p_1 : (α ::: β) i // PredLast α pp p_1 }
-  | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
+  | _, α, Fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.f mvfunctor.f
 
@@ -171,13 +174,14 @@ private def g :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i // PredLast α pp p_1 }) ⟹ fun i : Fin2 (n + 1) =>
         { p_1 // ofRepeat (predLast' α pp i p_1) }
-  | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
+  | _, α, Fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.g mvfunctor.g
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) : Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x :=
-  by
+theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) :
+    Liftp' (predLast' _ p) x ↔ Liftp (PredLast _ p) x := by
   dsimp only [liftp, liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
   · ext (i⟨x, _⟩)
@@ -196,23 +200,28 @@ variable (rr : β → β → Prop)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def f :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.prod.mk _ p_1.fst p_1.snd)) }) ⟹
+      (fun i : Fin2 (n + 1) =>
+          { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.prod.mk _ p_1.fst p_1.snd)) }) ⟹
         fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }
-  | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
+  | _, α, Fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.f mvfunctor.f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private def g :
     ∀ n α,
-      (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }) ⟹ fun i : Fin2 (n + 1) =>
+      (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }) ⟹
+        fun i : Fin2 (n + 1) =>
         { p_1 : _ × _ // ofRepeat (relLast' α rr i (Typevec.prod.mk _ p_1.1 p_1.2)) }
-  | _, α, Fin2.fs i, x => ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
+  | _, α, Fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.g mvfunctor.g
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem liftr_last_rel_iff (x y : F (α ::: β)) : Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
+theorem liftr_last_rel_iff (x y : F (α ::: β)) :
+    Liftr' (relLast' _ rr) x y ↔ Liftr (RelLast _ rr) x y := by
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
   · ext (i⟨x, _⟩) : 2

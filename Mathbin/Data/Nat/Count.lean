@@ -73,8 +73,8 @@ theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p 
     simp_rw [mem_map, mem_range, add_left_embedding_apply]
     rintro x hx ⟨c, _, rfl⟩
     exact (self_le_add_right _ _).not_lt hx
-  simp_rw [count_eq_card_filter_range, range_add, filter_union, card_disjoint_union this, filter_map, addLeftEmbedding,
-    card_map]
+  simp_rw [count_eq_card_filter_range, range_add, filter_union, card_disjoint_union this,
+    filter_map, addLeftEmbedding, card_map]
   rfl
 #align nat.count_add Nat.count_add
 
@@ -86,7 +86,8 @@ theorem count_add' (a b : ℕ) : count p (a + b) = count (fun k => p (k + b)) a 
 theorem count_one : count p 1 = if p 0 then 1 else 0 := by simp [count_succ]
 #align nat.count_one Nat.count_one
 
-theorem count_succ' (n : ℕ) : count p (n + 1) = count (fun k => p (k + 1)) n + if p 0 then 1 else 0 := by
+theorem count_succ' (n : ℕ) :
+    count p (n + 1) = count (fun k => p (k + 1)) n + if p 0 then 1 else 0 := by
   rw [count_add', count_one]
 #align nat.count_succ' Nat.count_succ'
 

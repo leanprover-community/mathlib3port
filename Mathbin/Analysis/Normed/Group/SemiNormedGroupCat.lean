@@ -30,7 +30,8 @@ def SemiNormedGroupCat : Type (u + 1) :=
 namespace SemiNormedGroupCat
 
 instance bundledHom : BundledHom @NormedAddGroupHom :=
-  ⟨@NormedAddGroupHom.toFun, @NormedAddGroupHom.id, @NormedAddGroupHom.comp, @NormedAddGroupHom.coe_inj⟩
+  ⟨@NormedAddGroupHom.toFun, @NormedAddGroupHom.id, @NormedAddGroupHom.comp,
+    @NormedAddGroupHom.coe_inj⟩
 #align SemiNormedGroup.bundled_hom SemiNormedGroupCat.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for SemiNormedGroupCat
@@ -64,7 +65,8 @@ theorem coe_comp {M N K : SemiNormedGroupCat} (f : M ⟶ N) (g : N ⟶ K) : (f �
 instance : Inhabited SemiNormedGroupCat :=
   ⟨of PUnit⟩
 
-instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] : Unique (SemiNormedGroupCat.of V) :=
+instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] :
+    Unique (SemiNormedGroupCat.of V) :=
   i
 #align SemiNormedGroup.of_unique SemiNormedGroupCat.ofUnique
 
@@ -90,8 +92,8 @@ instance has_zero_object : Limits.HasZeroObject SemiNormedGroupCat.{u} :=
   ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 #align SemiNormedGroup.has_zero_object SemiNormedGroupCat.has_zero_object
 
-theorem isoIsometryOfNormNoninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc) (h2 : i.inv.NormNoninc) :
-    Isometry i.hom := by
+theorem isoIsometryOfNormNoninc {V W : SemiNormedGroupCat} (i : V ≅ W) (h1 : i.hom.NormNoninc)
+    (h2 : i.inv.NormNoninc) : Isometry i.hom := by
   apply AddMonoidHomClass.isometryOfNorm
   intro v
   apply le_antisymm (h1 v)
@@ -144,7 +146,8 @@ def mkHom {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc) :
 #align SemiNormedGroup₁.mk_hom SemiNormedGroup₁Cat.mkHom
 
 @[simp]
-theorem mk_hom_apply {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc) (x) : mkHom f i x = f x :=
+theorem mk_hom_apply {M N : SemiNormedGroupCat} (f : M ⟶ N) (i : f.NormNoninc) (x) :
+    mkHom f i x = f x :=
   rfl
 #align SemiNormedGroup₁.mk_hom_apply SemiNormedGroup₁Cat.mk_hom_apply
 
@@ -163,7 +166,8 @@ def mkIso {M N : SemiNormedGroupCat} (f : M ≅ N) (i : f.hom.NormNoninc) (i' : 
 #align SemiNormedGroup₁.mk_iso SemiNormedGroup₁Cat.mkIso
 
 instance :
-    HasForget₂ SemiNormedGroup₁Cat SemiNormedGroupCat where forget₂ := { obj := fun X => X, map := fun X Y f => f.1 }
+    HasForget₂ SemiNormedGroup₁Cat
+      SemiNormedGroupCat where forget₂ := { obj := fun X => X, map := fun X Y f => f.1 }
 
 @[simp]
 theorem coe_of (V : Type u) [SeminormedAddCommGroup V] : (SemiNormedGroup₁Cat.of V : Type u) = V :=
@@ -190,7 +194,8 @@ theorem coe_comp' {M N K : SemiNormedGroup₁Cat} (f : M ⟶ N) (g : N ⟶ K) :
 instance : Inhabited SemiNormedGroup₁Cat :=
   ⟨of PUnit⟩
 
-instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] : Unique (SemiNormedGroup₁Cat.of V) :=
+instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] :
+    Unique (SemiNormedGroup₁Cat.of V) :=
   i
 #align SemiNormedGroup₁.of_unique SemiNormedGroup₁Cat.ofUnique
 

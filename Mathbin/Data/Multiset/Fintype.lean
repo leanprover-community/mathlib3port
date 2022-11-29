@@ -91,22 +91,25 @@ theorem Multiset.coe_mem {x : m} : ↑x ∈ m :=
 #align multiset.coe_mem Multiset.coe_mem
 
 @[simp]
-protected theorem Multiset.forall_coe (p : m → Prop) : (∀ x : m, p x) ↔ ∀ (x : α) (i : Fin (m.count x)), p ⟨x, i⟩ :=
+protected theorem Multiset.forall_coe (p : m → Prop) :
+    (∀ x : m, p x) ↔ ∀ (x : α) (i : Fin (m.count x)), p ⟨x, i⟩ :=
   Sigma.forall
 #align multiset.forall_coe Multiset.forall_coe
 
 @[simp]
-protected theorem Multiset.exists_coe (p : m → Prop) : (∃ x : m, p x) ↔ ∃ (x : α)(i : Fin (m.count x)), p ⟨x, i⟩ :=
+protected theorem Multiset.exists_coe (p : m → Prop) :
+    (∃ x : m, p x) ↔ ∃ (x : α)(i : Fin (m.count x)), p ⟨x, i⟩ :=
   Sigma.exists
 #align multiset.exists_coe Multiset.exists_coe
 
 instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
-  Fintype.ofFinset (m.toFinset.bUnion fun x => (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩)
+  Fintype.ofFinset
+    (m.toFinset.bUnion fun x => (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩)
     (by
       rintro ⟨x, i⟩
       simp only [Finset.mem_bUnion, Multiset.mem_to_finset, Finset.mem_map, Finset.mem_range,
-        Function.Embedding.coe_fn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right, Set.mem_set_of_eq,
-        and_iff_right_iff_imp]
+        Function.Embedding.coe_fn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right,
+        Set.mem_set_of_eq, and_iff_right_iff_imp]
       exact fun h => multiset.count_pos.mp (pos_of_gt h))
 
 /-- Construct a finset whose elements enumerate the elements of the multiset `m`.
@@ -117,7 +120,8 @@ def Multiset.toEnumFinset (m : Multiset α) : Finset (α × ℕ) :=
 #align multiset.to_enum_finset Multiset.toEnumFinset
 
 @[simp]
-theorem Multiset.mem_to_enum_finset (m : Multiset α) (p : α × ℕ) : p ∈ m.toEnumFinset ↔ p.2 < m.count p.1 :=
+theorem Multiset.mem_to_enum_finset (m : Multiset α) (p : α × ℕ) :
+    p ∈ m.toEnumFinset ↔ p.2 < m.count p.1 :=
   Set.mem_to_finset
 #align multiset.mem_to_enum_finset Multiset.mem_to_enum_finset
 
@@ -126,14 +130,16 @@ theorem Multiset.mem_of_mem_to_enum_finset {p : α × ℕ} (h : p ∈ m.toEnumFi
 #align multiset.mem_of_mem_to_enum_finset Multiset.mem_of_mem_to_enum_finset
 
 @[mono]
-theorem Multiset.to_enum_finset_mono {m₁ m₂ : Multiset α} (h : m₁ ≤ m₂) : m₁.toEnumFinset ⊆ m₂.toEnumFinset := by
+theorem Multiset.to_enum_finset_mono {m₁ m₂ : Multiset α} (h : m₁ ≤ m₂) :
+    m₁.toEnumFinset ⊆ m₂.toEnumFinset := by
   intro p
   simp only [Multiset.mem_to_enum_finset]
   exact gt_of_ge_of_gt (multiset.le_iff_count.mp h p.1)
 #align multiset.to_enum_finset_mono Multiset.to_enum_finset_mono
 
 @[simp]
-theorem Multiset.to_enum_finset_subset_iff {m₁ m₂ : Multiset α} : m₁.toEnumFinset ⊆ m₂.toEnumFinset ↔ m₁ ≤ m₂ := by
+theorem Multiset.to_enum_finset_subset_iff {m₁ m₂ : Multiset α} :
+    m₁.toEnumFinset ⊆ m₂.toEnumFinset ↔ m₁ ≤ m₂ := by
   refine' ⟨fun h => _, Multiset.to_enum_finset_mono⟩
   rw [Multiset.le_iff_count]
   intro x
@@ -193,16 +199,20 @@ instance Multiset.fintypeCoe : Fintype m :=
 theorem Multiset.map_univ_coe_embedding (m : Multiset α) :
     (Finset.univ : Finset m).map m.coeEmbedding = m.toEnumFinset := by
   ext ⟨x, i⟩
-  simp only [Fin.exists_iff, Finset.mem_map, Finset.mem_univ, Multiset.coe_embedding_apply, Prod.mk.inj_iff,
-    exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Fin.coe_mk, exists_prop, exists_eq_right_right,
-    exists_eq_right, Multiset.mem_to_enum_finset, iff_self_iff, true_and_iff]
+  simp only [Fin.exists_iff, Finset.mem_map, Finset.mem_univ, Multiset.coe_embedding_apply,
+    Prod.mk.inj_iff, exists_true_left, Multiset.exists_coe, Multiset.coe_mk, Fin.coe_mk,
+    exists_prop, exists_eq_right_right, exists_eq_right, Multiset.mem_to_enum_finset, iff_self_iff,
+    true_and_iff]
 #align multiset.map_univ_coe_embedding Multiset.map_univ_coe_embedding
 
 theorem Multiset.to_enum_finset_filter_eq (m : Multiset α) (x : α) :
-    (m.toEnumFinset.filter fun p => x = p.1) = (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩ := by
+    (m.toEnumFinset.filter fun p => x = p.1) =
+      (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩ :=
+  by
   ext ⟨y, i⟩
-  simp only [eq_comm, Finset.mem_filter, Multiset.mem_to_enum_finset, Finset.mem_map, Finset.mem_range,
-    Function.Embedding.coe_fn_mk, Prod.mk.inj_iff, exists_prop, exists_eq_right_right', and_congr_left_iff]
+  simp only [eq_comm, Finset.mem_filter, Multiset.mem_to_enum_finset, Finset.mem_map,
+    Finset.mem_range, Function.Embedding.coe_fn_mk, Prod.mk.inj_iff, exists_prop,
+    exists_eq_right_right', and_congr_left_iff]
   rintro rfl
   rfl
 #align multiset.to_enum_finset_filter_eq Multiset.to_enum_finset_filter_eq
@@ -210,12 +220,13 @@ theorem Multiset.to_enum_finset_filter_eq (m : Multiset α) (x : α) :
 @[simp]
 theorem Multiset.map_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.val.map Prod.fst = m := by
   ext x
-  simp only [Multiset.count_map, ← Finset.filter_val, Multiset.to_enum_finset_filter_eq, Finset.map_val,
-    Finset.range_coe, Multiset.card_map, Multiset.card_range]
+  simp only [Multiset.count_map, ← Finset.filter_val, Multiset.to_enum_finset_filter_eq,
+    Finset.map_val, Finset.range_coe, Multiset.card_map, Multiset.card_range]
 #align multiset.map_to_enum_finset_fst Multiset.map_to_enum_finset_fst
 
 @[simp]
-theorem Multiset.image_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.image Prod.fst = m.toFinset := by
+theorem Multiset.image_to_enum_finset_fst (m : Multiset α) :
+    m.toEnumFinset.image Prod.fst = m.toFinset := by
   rw [Finset.image, Multiset.map_to_enum_finset_fst]
 #align multiset.image_to_enum_finset_fst Multiset.image_to_enum_finset_fst
 
@@ -223,12 +234,14 @@ theorem Multiset.image_to_enum_finset_fst (m : Multiset α) : m.toEnumFinset.ima
 theorem Multiset.map_univ_coe (m : Multiset α) : (Finset.univ : Finset m).val.map coe = m := by
   have := m.map_to_enum_finset_fst
   rw [← m.map_univ_coe_embedding] at this
-  simpa only [Finset.map_val, Multiset.coe_embedding_apply, Multiset.map_map, Function.comp_apply] using this
+  simpa only [Finset.map_val, Multiset.coe_embedding_apply, Multiset.map_map,
+    Function.comp_apply] using this
 #align multiset.map_univ_coe Multiset.map_univ_coe
 
 @[simp]
 theorem Multiset.map_univ {β : Type _} (m : Multiset α) (f : α → β) :
-    ((Finset.univ : Finset m).val.map fun x => f x) = m.map f := by rw [← Multiset.map_map, Multiset.map_univ_coe]
+    ((Finset.univ : Finset m).val.map fun x => f x) = m.map f := by
+  rw [← Multiset.map_map, Multiset.map_univ_coe]
 #align multiset.map_univ Multiset.map_univ
 
 @[simp]
@@ -254,7 +267,8 @@ theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = �
 #align multiset.prod_eq_prod_coe Multiset.prod_eq_prod_coe
 
 @[to_additive]
-theorem Multiset.prod_eq_prod_to_enum_finset [CommMonoid α] (m : Multiset α) : m.Prod = ∏ x in m.toEnumFinset, x.1 := by
+theorem Multiset.prod_eq_prod_to_enum_finset [CommMonoid α] (m : Multiset α) :
+    m.Prod = ∏ x in m.toEnumFinset, x.1 := by
   congr
   simp
 #align multiset.prod_eq_prod_to_enum_finset Multiset.prod_eq_prod_to_enum_finset

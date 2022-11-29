@@ -61,9 +61,10 @@ unsafe def find_all_exprs_aux (env : environment) (f : expr → Bool) (g : Name 
 /-- `tactic.find_all_exprs env test exclude nm` searches for all declarations (transitively)
   occuring in `nm` that contain a subexpression `e` such that `test e` is true.
   All declarations `n` such that `exclude n` is true (and all their descendants) are ignored. -/
-unsafe def find_all_exprs (env : environment) (test : expr → Bool) (exclude : Name → Bool) (nm : Name) :
-    tactic <| List <| Name × Bool × name_set := do
-  let ⟨_, _, l, _, _⟩ ← find_all_exprs_aux env test exclude nm ⟨false, false, [], mk_name_map, mk_name_set⟩
+unsafe def find_all_exprs (env : environment) (test : expr → Bool) (exclude : Name → Bool)
+    (nm : Name) : tactic <| List <| Name × Bool × name_set := do
+  let ⟨_, _, l, _, _⟩ ←
+    find_all_exprs_aux env test exclude nm ⟨false, false, [], mk_name_map, mk_name_set⟩
   pure l
 #align tactic.find_all_exprs tactic.find_all_exprs
 

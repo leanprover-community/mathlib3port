@@ -73,7 +73,8 @@ def gcdMonoid (R) [EuclideanDomain R] : GcdMonoid R where
 
 variable {α : Type _} [EuclideanDomain α] [DecidableEq α]
 
-theorem span_gcd {α} [EuclideanDomain α] (x y : α) : span ({gcd x y} : Set α) = span ({x, y} : Set α) :=
+theorem span_gcd {α} [EuclideanDomain α] (x y : α) :
+    span ({gcd x y} : Set α) = span ({x, y} : Set α) :=
   letI := EuclideanDomain.gcdMonoid α
   span_gcd x y
 #align euclidean_domain.span_gcd EuclideanDomain.span_gcd
@@ -91,7 +92,8 @@ theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (nonzero : ¬(x =
 #align euclidean_domain.is_coprime_of_dvd EuclideanDomain.is_coprime_of_dvd
 
 -- this should be proved for UFDs surely?
-theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y :=
+theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) :
+    x ∣ y ∨ IsCoprime x y :=
   letI := EuclideanDomain.gcdMonoid α
   dvd_or_coprime x y h
 #align euclidean_domain.dvd_or_coprime EuclideanDomain.dvd_or_coprime

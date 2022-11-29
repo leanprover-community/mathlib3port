@@ -68,7 +68,8 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
       "theorem"
       (Command.declId `exists_ne [])
       (Command.declSig
-       [(Term.instBinder "[" [] (Term.app `Nontrivial [`α]) "]") (Term.explicitBinder "(" [`x] [":" `α] [] ")")]
+       [(Term.instBinder "[" [] (Term.app `Nontrivial [`α]) "]")
+        (Term.explicitBinder "(" [`x] [":" `α] [] ")")]
        (Term.typeSpec
         ":"
         («term∃_,_»
@@ -114,12 +115,14 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Decidable.exists_ne
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -132,7 +135,10 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem exists_ne [ Nontrivial α ] ( x : α ) : ∃ y , y ≠ x := by skip <;> exact Decidable.exists_ne x
+theorem
+  exists_ne
+  [ Nontrivial α ] ( x : α ) : ∃ y , y ≠ x
+  := by skip <;> exact Decidable.exists_ne x
 #align exists_ne exists_ne
 -/
 
@@ -194,7 +200,8 @@ instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α 
 attribute [instance] nonempty_of_inhabited
 
 /-- An inhabited type is either nontrivial, or has a unique element. -/
-noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : PSum (Nontrivial α) (Unique α) :=
+noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] :
+    PSum (Nontrivial α) (Unique α) :=
   if h : Nontrivial α then PSum.inl h
   else
     PSum.inr
@@ -222,7 +229,8 @@ theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α :=
 -/
 
 #print not_nontrivial /-
-theorem not_nontrivial (α) [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ => h <| Subsingleton.elim x y
+theorem not_nontrivial (α) [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ =>
+  h <| Subsingleton.elim x y
 #align not_nontrivial not_nontrivial
 -/
 
@@ -257,20 +265,21 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
 
 /- warning: function.injective.nontrivial -> Function.Injective.nontrivial is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Nontrivial.{u_2} β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.995 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Nontrivial.{u_2} β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.995 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (Nontrivial.{u_2} β)
 Case conversion may be inaccurate. Consider using '#align function.injective.nontrivial Function.Injective.nontrivialₓ'. -/
 /-- Pushforward a `nontrivial` instance along an injective function. -/
-protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} (hf : Function.Injective f) : Nontrivial β :=
+protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
+    (hf : Function.Injective f) : Nontrivial β :=
   let ⟨x, y, h⟩ := exists_pair_ne α
   ⟨⟨f x, f y, hf.Ne h⟩⟩
 #align function.injective.nontrivial Function.Injective.nontrivial
 
 #print Function.Surjective.nontrivial /-
 /-- Pullback a `nontrivial` instance along a surjective function. -/
-protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β} (hf : Function.Surjective f) :
-    Nontrivial α := by
+protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
+    (hf : Function.Surjective f) : Nontrivial α := by
   rcases exists_pair_ne β with ⟨x, y, h⟩
   rcases hf x with ⟨x', hx'⟩
   rcases hf y with ⟨y', hy'⟩
@@ -283,14 +292,14 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
 
 /- warning: function.injective.exists_ne -> Function.Injective.exists_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1155 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1155 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1, succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
 Case conversion may be inaccurate. Consider using '#align function.injective.exists_ne Function.Injective.exists_neₓ'. -/
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
-protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β} (hf : Function.Injective f) (y : β) :
-    ∃ x, f x ≠ y := by
+protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
+    (hf : Function.Injective f) (y : β) : ∃ x, f x ≠ y := by
   rcases exists_pair_ne α with ⟨x₁, x₂, hx⟩
   by_cases h : f x₂ = y
   · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
@@ -319,7 +328,9 @@ variable {I : Type _} {f : I → Type _}
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
-      [(Command.docComment "/--" "A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/")]
+      [(Command.docComment
+        "/--"
+        "A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/")]
       []
       []
       []
@@ -330,11 +341,17 @@ variable {I : Type _} {f : I → Type _}
       (Command.declId `nontrivial_at [])
       (Command.declSig
        [(Term.explicitBinder "(" [`i'] [":" `I] [] ")")
-        (Term.instBinder "[" [`inst ":"] (Term.forall "∀" [`i] [] "," (Term.app `Nonempty [(Term.app `f [`i])])) "]")
+        (Term.instBinder
+         "["
+         [`inst ":"]
+         (Term.forall "∀" [`i] [] "," (Term.app `Nonempty [(Term.app `f [`i])]))
+         "]")
         (Term.instBinder "[" [] (Term.app `Nontrivial [(Term.app `f [`i'])]) "]")]
        (Term.typeSpec
         ":"
-        (Term.app `Nontrivial [(Term.forall "∀" [`i] [(Term.typeSpec ":" `I)] "," (Term.app `f [`i]))])))
+        (Term.app
+         `Nontrivial
+         [(Term.forall "∀" [`i] [(Term.typeSpec ":" `I)] "," (Term.app `f [`i]))])))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -349,7 +366,10 @@ variable {I : Type _} {f : I → Type _}
              (Term.proj
               (Term.app
                `Function.update_injective
-               [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])]))) `i'])
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+                `i'])
               "."
               `Nontrivial)))])))
        [])
@@ -370,7 +390,10 @@ variable {I : Type _} {f : I → Type _}
             (Term.proj
              (Term.app
               `Function.update_injective
-              [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])]))) `i'])
+              [(Term.fun
+                "fun"
+                (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+               `i'])
              "."
              `Nontrivial)))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
@@ -383,7 +406,10 @@ variable {I : Type _} {f : I → Type _}
         (Term.proj
          (Term.app
           `Function.update_injective
-          [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])]))) `i'])
+          [(Term.fun
+            "fun"
+            (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+           `i'])
          "."
          `Nontrivial)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -392,29 +418,41 @@ variable {I : Type _} {f : I → Type _}
        (Term.proj
         (Term.app
          `Function.update_injective
-         [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])]))) `i'])
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+          `i'])
         "."
         `Nontrivial))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
        (Term.app
         `Function.update_injective
-        [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])]))) `i'])
+        [(Term.fun
+          "fun"
+          (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+         `i'])
        "."
        `Nontrivial)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app
        `Function.update_injective
-       [(Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])]))) `i'])
+       [(Term.fun
+         "fun"
+         (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+        `i'])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.app `inst [`i])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Classical.choice [(Term.app `inst [`i])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -425,32 +463,42 @@ variable {I : Type _} {f : I → Type _}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `inst
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `inst [`i]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Classical.choice
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.fun
       "fun"
-      (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.paren "(" (Term.app `inst [`i]) ")")])))
+      (Term.basicFun
+       [`i]
+       []
+       "=>"
+       (Term.app `Classical.choice [(Term.paren "(" (Term.app `inst [`i]) ")")])))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Function.update_injective
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -460,12 +508,17 @@ variable {I : Type _} {f : I → Type _}
         "("
         (Term.fun
          "fun"
-         (Term.basicFun [`i] [] "=>" (Term.app `Classical.choice [(Term.paren "(" (Term.app `inst [`i]) ")")])))
+         (Term.basicFun
+          [`i]
+          []
+          "=>"
+          (Term.app `Classical.choice [(Term.paren "(" (Term.app `inst [`i]) ")")])))
         ")")
        `i'])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -491,7 +544,8 @@ variable {I : Type _} {f : I → Type _}
 
 If a different index has the non-trivial type, then use `haveI := nontrivial_at that_index`.
 -/
-instance nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f default)] : Nontrivial (∀ i : I, f i) :=
+instance nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f default)] :
+    Nontrivial (∀ i : I, f i) :=
   nontrivial_at default
 #align pi.nontrivial Pi.nontrivial
 -/

@@ -110,7 +110,8 @@ theorem Duplicate.of_duplicate_cons {y : α} (h : x ∈+ y :: l) (hx : x ≠ y) 
   simpa [duplicate_cons_iff, hx.symm] using h
 #align list.duplicate.of_duplicate_cons List.Duplicate.of_duplicate_cons
 
-theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x ∈+ l := by simp [duplicate_cons_iff, hne.symm]
+theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x ∈+ l := by
+  simp [duplicate_cons_iff, hne.symm]
 #align list.duplicate_cons_iff_of_ne List.duplicate_cons_iff_of_ne
 
 theorem Duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x ∈+ l' := by
@@ -151,10 +152,12 @@ theorem nodup_iff_forall_not_duplicate : Nodup l ↔ ∀ x : α, ¬x ∈+ l := b
   simp_rw [nodup_iff_sublist, duplicate_iff_sublist]
 #align list.nodup_iff_forall_not_duplicate List.nodup_iff_forall_not_duplicate
 
-theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodup l := by simp [nodup_iff_forall_not_duplicate]
+theorem exists_duplicate_iff_not_nodup : (∃ x : α, x ∈+ l) ↔ ¬Nodup l := by
+  simp [nodup_iff_forall_not_duplicate]
 #align list.exists_duplicate_iff_not_nodup List.exists_duplicate_iff_not_nodup
 
-theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodup l := fun H => nodup_iff_forall_not_duplicate.mp H _ h
+theorem Duplicate.not_nodup (h : x ∈+ l) : ¬Nodup l := fun H =>
+  nodup_iff_forall_not_duplicate.mp H _ h
 #align list.duplicate.not_nodup List.Duplicate.not_nodup
 
 theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x l := by

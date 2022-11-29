@@ -35,8 +35,8 @@ variable [TopologicalSpace G] [Group G] [TopologicalGroup G]
 is locally compact. -/
 @[to_additive
       "Every separated topological group in which there exists a compact set with nonempty\ninterior is locally compact."]
-theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Space G] (K : PositiveCompacts G) :
-    LocallyCompactSpace G := by
+theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Space G]
+    (K : PositiveCompacts G) : LocallyCompactSpace G := by
   refine' locally_compact_of_compact_nhds fun x => _
   obtain ⟨y, hy⟩ := K.interior_nonempty
   let F := Homeomorph.mulLeft (x * y⁻¹)

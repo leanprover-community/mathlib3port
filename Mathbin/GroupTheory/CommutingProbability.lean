@@ -35,7 +35,8 @@ def commProb : ℚ :=
   Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2
 #align comm_prob commProb
 
-theorem comm_prob_def : commProb M = Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2 :=
+theorem comm_prob_def :
+    commProb M = Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2 :=
   rfl
 #align comm_prob_def comm_prob_def
 
@@ -43,7 +44,8 @@ variable [Finite M]
 
 theorem comm_prob_pos [h : Nonempty M] : 0 < commProb M :=
   h.elim fun x =>
-    div_pos (Nat.cast_pos.mpr (Finite.card_pos_iff.mpr ⟨⟨(x, x), rfl⟩⟩)) (pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2)
+    div_pos (Nat.cast_pos.mpr (Finite.card_pos_iff.mpr ⟨⟨(x, x), rfl⟩⟩))
+      (pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2)
 #align comm_prob_pos comm_prob_pos
 
 theorem comm_prob_le_one : commProb M ≤ 1 := by
@@ -54,11 +56,12 @@ theorem comm_prob_le_one : commProb M ≤ 1 := by
 
 variable {M}
 
-theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) := by
+theorem comm_prob_eq_one_iff [h : Nonempty M] :
+    commProb M = 1 ↔ Commutative ((· * ·) : M → M → M) := by
   haveI := Fintype.ofFinite M
   rw [commProb, ← Set.coe_set_of, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
-  rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod, set_fintype_card_eq_univ_iff,
-    Set.eq_univ_iff_forall]
+  rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod,
+    set_fintype_card_eq_univ_iff, Set.eq_univ_iff_forall]
   · exact ⟨fun h x y => h (x, y), fun h x => h x.1 x.2⟩
     
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr card_ne_zero)
@@ -98,8 +101,8 @@ variable {G} (H : Subgroup G)
 theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 := by
   /- After rewriting with `comm_prob_def`, we reduce to showing that `G` has at least as many
       commuting pairs as `H`. -/
-  rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_pow, ← Nat.cast_mul, mul_comm H.index,
-    H.card_mul_index, div_mul_cancel, Nat.cast_le]
+  rw [comm_prob_def, comm_prob_def, div_le_iff, mul_assoc, ← mul_pow, ← Nat.cast_mul,
+    mul_comm H.index, H.card_mul_index, div_mul_cancel, Nat.cast_le]
   · refine' Finite.card_le_of_injective (fun p => ⟨⟨p.1.1, p.1.2⟩, subtype.ext_iff.mp p.2⟩) _
     exact fun p q h => by simpa only [Subtype.ext_iff, Prod.ext_iff] using h
     
@@ -112,8 +115,8 @@ theorem Subgroup.comm_prob_subgroup_le : commProb H ≤ commProb G * H.index ^ 2
 theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * Nat.card H := by
   /- After rewriting with `comm_prob_def'`, we reduce to showing that `G` has at least as many
       conjugacy classes as `G ⧸ H`. -/
-  rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mul, ← Subgroup.index, H.card_mul_index,
-    div_mul_cancel, Nat.cast_le]
+  rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mul, ← Subgroup.index,
+    H.card_mul_index, div_mul_cancel, Nat.cast_le]
   · apply Finite.card_le_of_surjective
     show Function.Surjective (ConjClasses.map (QuotientGroup.mk' H))
     exact ConjClasses.map_surjective Quotient.surjective_Quotient_mk''

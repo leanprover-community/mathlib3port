@@ -59,7 +59,8 @@ theorem exists_not_acc_lt_of_not_acc {a : α} {r} (h : ¬Acc r a) : ∃ b, ¬Acc
 #align rel_embedding.exists_not_acc_lt_of_not_acc RelEmbedding.exists_not_acc_lt_of_not_acc
 
 /-- A value is accessible iff it isn't contained in any infinite decreasing sequence. -/
-theorem acc_iff_no_decreasing_seq {x} : Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.range f } := by
+theorem acc_iff_no_decreasing_seq {x} :
+    Acc r x ↔ IsEmpty { f : ((· > ·) : ℕ → ℕ → Prop) ↪r r // x ∈ Set.range f } := by
   constructor
   · refine' fun h => h.recOn fun x h IH => _
     constructor
@@ -72,7 +73,8 @@ theorem acc_iff_no_decreasing_seq {x} : Acc r x ↔ IsEmpty { f : ((· > ·) : �
       exact ⟨⟨w, h.1⟩, h.2⟩
     obtain ⟨f, h⟩ := Classical.axiom_of_choice this
     refine' fun E =>
-      Classical.by_contradiction fun hx => E.elim' ⟨nat_gt (fun n => ((f^[n]) ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
+      Classical.by_contradiction fun hx =>
+        E.elim' ⟨nat_gt (fun n => ((f^[n]) ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
     rw [Function.iterate_succ']
     apply h
     
@@ -84,7 +86,8 @@ theorem not_acc_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r
 #align rel_embedding.not_acc_of_decreasing_seq RelEmbedding.not_acc_of_decreasing_seq
 
 /-- A relation is well-founded iff it doesn't have any infinite decreasing sequence. -/
-theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) := by
+theorem well_founded_iff_no_descending_seq :
+    WellFounded r ↔ IsEmpty (((· > ·) : ℕ → ℕ → Prop) ↪r r) := by
   constructor
   · rintro ⟨h⟩
     exact ⟨fun f => not_acc_of_decreasing_seq f 0 (h _)⟩
@@ -92,12 +95,15 @@ theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty (((· > �
   · intro h
     exact ⟨fun x => acc_iff_no_decreasing_seq.2 inferInstance⟩
     
-#align rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.well_founded_iff_no_descending_seq
+#align
+  rel_embedding.well_founded_iff_no_descending_seq RelEmbedding.well_founded_iff_no_descending_seq
 
-theorem not_well_founded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r := by
+theorem not_well_founded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
+  by
   rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
   exact ⟨f⟩
-#align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_well_founded_of_decreasing_seq
+#align
+  rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_well_founded_of_decreasing_seq
 
 end RelEmbedding
 
@@ -157,7 +163,9 @@ theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : 
 end Nat
 
 theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
-    ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by classical
+    ∃ g : ℕ ↪o ℕ,
+      (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
+  by classical
   let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
   by_cases hbad : Infinite bad
   · haveI := hbad
@@ -171,7 +179,8 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
       by_cases he : hbad.to_finset.nonempty
       · refine'
           ⟨(hbad.to_finset.max' he).succ, fun n hn nbad =>
-            Nat.not_succ_le_self _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
+            Nat.not_succ_le_self _
+              (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
         
       · exact ⟨0, fun n hn nbad => he ⟨n, hbad.mem_to_finset.2 nbad⟩⟩
         
@@ -195,7 +204,9 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
 /-- This is the infinitary Erdős–Szekeres theorem, and an important lemma in the usual proof of
     Bolzano-Weierstrass for `ℝ`. -/
 theorem exists_increasing_or_nonincreasing_subseq (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
-    ∃ g : ℕ ↪o ℕ, (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
+    ∃ g : ℕ ↪o ℕ,
+      (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
+  by
   obtain ⟨g, hr | hnr⟩ := exists_increasing_or_nonincreasing_subseq' r f
   · refine' ⟨g, Or.intro_left _ fun m n mn => _⟩
     obtain ⟨x, rfl⟩ := exists_add_of_le (Nat.succ_le_iff.2 mn)
@@ -223,13 +234,13 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
     
 #align well_founded.monotone_chain_condition' WellFounded.monotone_chain_condition'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]] -/
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
   WellFounded.monotone_chain_condition'.trans <| by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
     rw [lt_iff_le_and_ne]
     simp [a.mono h]
 #align well_founded.monotone_chain_condition WellFounded.monotone_chain_condition
@@ -248,8 +259,9 @@ noncomputable def monotonicSequenceLimit [Preorder α] (a : ℕ →o α) :=
   a (monotonicSequenceLimitIndex a)
 #align monotonic_sequence_limit monotonicSequenceLimit
 
-theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α] (h : WellFounded ((· > ·) : α → α → Prop))
-    (a : ℕ →o α) : supr a = monotonicSequenceLimit a := by
+theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α]
+    (h : WellFounded ((· > ·) : α → α → Prop)) (a : ℕ →o α) : supr a = monotonicSequenceLimit a :=
+  by
   suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supr a _)
   apply supr_le
   intro m

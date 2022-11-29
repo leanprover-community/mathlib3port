@@ -23,17 +23,19 @@ namespace Nat.Partrec
 open Computable Part
 
 theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
-    ∃ h, Nat.Partrec h ∧ ∀ a, (∀ x ∈ h a, x ∈ f a ∨ x ∈ g a) ∧ ((h a).Dom ↔ (f a).Dom ∨ (g a).Dom) := by
+    ∃ h,
+      Nat.Partrec h ∧ ∀ a, (∀ x ∈ h a, x ∈ f a ∨ x ∈ g a) ∧ ((h a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
+  by
   obtain ⟨cf, rfl⟩ := code.exists_code.1 hf
   obtain ⟨cg, rfl⟩ := code.exists_code.1 hg
   have : Nat.Partrec fun n => Nat.rfindOpt fun k => cf.evaln k n <|> cg.evaln k n :=
     Partrec.nat_iff.1
       (Partrec.rfind_opt <|
-        primrec.option_orelse.to_comp.comp (code.evaln_prim.to_comp.comp <| (snd.pair (const cf)).pair fst)
+        primrec.option_orelse.to_comp.comp
+          (code.evaln_prim.to_comp.comp <| (snd.pair (const cf)).pair fst)
           (code.evaln_prim.to_comp.comp <| (snd.pair (const cg)).pair fst))
   refine' ⟨_, this, fun n => _⟩
-  suffices
-  refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
+  suffices; refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
   · intro h
     rw [Nat.rfind_opt_dom]
     simp only [dom_iff_mem, code.evaln_complete, Option.mem_def] at h
@@ -75,15 +77,20 @@ open Nat.Partrec (code)
 open Nat.Partrec.Code
 
 theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
-    ∃ k : α →. σ, Partrec k ∧ ∀ a, (∀ x ∈ k a, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) := by
+    ∃ k : α →. σ,
+      Partrec k ∧ ∀ a, (∀ x ∈ k a, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
+  by
   let ⟨k, hk, H⟩ := Nat.Partrec.merge' (bind_decode₂_iff.1 hf) (bind_decode₂_iff.1 hg)
   let k' a := (k (encode a)).bind fun n => decode σ n
-  refine' ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (computable.decode.of_option.comp snd).to₂, fun a => _⟩
+  refine'
+    ⟨k', ((nat_iff.2 hk).comp Computable.encode).bind (computable.decode.of_option.comp snd).to₂,
+      fun a => _⟩
   suffices
   refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
   · intro h
     rw [bind_dom]
-    have hk : (k (encode a)).Dom := (H _).2.2 (by simpa only [encodek₂, bind_some, coe_some] using h)
+    have hk : (k (encode a)).Dom :=
+      (H _).2.2 (by simpa only [encodek₂, bind_some, coe_some] using h)
     exists hk
     simp only [exists_prop, mem_map_iff, mem_coe, mem_bind_iff, Option.mem_def] at H
     obtain ⟨a', ha', y, hy, e⟩ | ⟨a', ha', y, hy, e⟩ := (H _).1 _ ⟨hk, rfl⟩ <;>
@@ -101,7 +108,8 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
   exact Or.inr ha
 #align partrec.merge' Partrec.merge'
 
-theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ (a), ∀ x ∈ f a, ∀ y ∈ g a, x = y) :
+theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g)
+    (H : ∀ (a), ∀ x ∈ f a, ∀ y ∈ g a, x = y) :
     ∃ k : α →. σ, Partrec k ∧ ∀ a x, x ∈ k a ↔ x ∈ f a ∨ x ∈ g a :=
   let ⟨k, hk, K⟩ := merge' hf hg
   ⟨k, hk, fun a x =>
@@ -119,8 +127,8 @@ theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) (H : ∀ (a),
         ⟩⟩
 #align partrec.merge Partrec.merge
 
-theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f) (hg : Partrec g) :
-    Partrec fun a => cond (c a) (f a) (g a) :=
+theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f)
+    (hg : Partrec g) : Partrec fun a => cond (c a) (f a) (g a) :=
   let ⟨cf, ef⟩ := exists_code.1 hf
   let ⟨cg, eg⟩ := exists_code.1 hg
   ((eval_part.comp (Computable.cond hc (const cf) (const cg)) Computable.id).bind
@@ -128,8 +136,8 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
     fun a => by cases c a <;> simp [ef, eg, encodek]
 #align partrec.cond Partrec.cond
 
-theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f) (hg : Partrec₂ g)
-    (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
+theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f)
+    (hg : Partrec₂ g) (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
     (cond (sum_cases hf (const true).to₂ (const false).to₂)
           (sum_cases_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
@@ -150,16 +158,18 @@ def RePred {α} [Primcodable α] (p : α → Prop) :=
   Partrec fun a => Part.assert (p a) fun _ => Part.some ()
 #align re_pred RePred
 
-theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (H : ∀ a, p a ↔ q a) : RePred q :=
+theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (H : ∀ a, p a ↔ q a) :
+    RePred q :=
   (funext fun a => propext (H a) : p = q) ▸ hp
 #align re_pred.of_eq RePred.of_eq
 
-theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) : RePred fun a => (f a).Dom :=
+theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) :
+    RePred fun a => (f a).Dom :=
   (h.map (Computable.const ()).to₂).of_eq fun n => Part.ext fun _ => by simp [Part.dom_iff_mem]
 #align partrec.dom_re Partrec.dom_re
 
-theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p) (H : ∀ a, p a ↔ q a) :
-    ComputablePred q :=
+theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p)
+    (H : ∀ a, p a ↔ q a) : ComputablePred q :=
   (funext fun a => propext (H a) : p = q) ▸ hp
 #align computable_pred.of_eq ComputablePred.of_eq
 
@@ -173,7 +183,8 @@ open Nat.Partrec (code)
 
 open Nat.Partrec.Code Computable
 
-theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
+theorem computable_iff {p : α → Prop} :
+    ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
   ⟨fun ⟨D, h⟩ => ⟨_, h, funext fun a => propext (Bool.decide_iff _).symm⟩, by
     rintro ⟨f, h, rfl⟩ <;> exact ⟨by infer_instance, by simpa using h⟩⟩
 #align computable_pred.computable_iff ComputablePred.computable_iff
@@ -190,18 +201,19 @@ protected theorem not {p : α → Prop} (hp : ComputablePred p) : ComputablePred
 theorem to_re {p : α → Prop} (hp : ComputablePred p) : RePred p := by
   obtain ⟨f, hf, rfl⟩ := computable_iff.1 hp
   unfold RePred
-  refine' (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n => Part.ext fun a => _
-  cases a
-  cases f n <;> simp
+  refine'
+    (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n =>
+      Part.ext fun a => _
+  cases a; cases f n <;> simp
 #align computable_pred.to_re ComputablePred.to_re
 
-theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C) {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g)
-    (fC : f ∈ C) : g ∈ C := by
-  cases' h with _ h
-  skip
+theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C) {f g} (hf : Nat.Partrec f)
+    (hg : Nat.Partrec g) (fC : f ∈ C) : g ∈ C := by
+  cases' h with _ h; skip
   obtain ⟨c, e⟩ :=
     fixed_point₂
-      (Partrec.cond (h.comp fst) ((Partrec.nat_iff.2 hg).comp snd).to₂ ((Partrec.nat_iff.2 hf).comp snd).to₂).to₂
+      (Partrec.cond (h.comp fst) ((Partrec.nat_iff.2 hg).comp snd).to₂
+          ((Partrec.nat_iff.2 hf).comp snd).to₂).to₂
   simp at e
   by_cases H : eval c ∈ C
   · simp only [H, if_true] at e
@@ -239,7 +251,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        (Term.typeSpec
         ":"
         («term_↔_»
-         (Term.app `ComputablePred [(Term.fun "fun" (Term.basicFun [`c] [] "=>" («term_∈_» `c "∈" `C)))])
+         (Term.app
+          `ComputablePred
+          [(Term.fun "fun" (Term.basicFun [`c] [] "=>" («term_∈_» `c "∈" `C)))])
          "↔"
          («term_∨_» («term_=_» `C "=" («term∅» "∅")) "∨" («term_=_» `C "=" `Set.univ)))))
       (Command.declValSimple
@@ -268,7 +282,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                    («term_↔_»
                     («term_∈_» `f "∈" `C)
                     "↔"
-                    («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                    («term_∈_»
+                     (Term.app `eval [`f])
+                     "∈"
+                     (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
                 ":="
                 (Term.fun
                  "fun"
@@ -287,7 +304,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                       []
                       "=>"
                       (Term.app
-                       (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                       (Term.proj
+                        (Term.app `H [(Term.hole "_") (Term.hole "_") `e])
+                        "."
+                        (fieldIdx "1"))
                        [`hg])))]
                    "⟩")))))
               []
@@ -323,7 +343,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                              []
                              []
                              ":="
-                             (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                             (Term.app
+                              (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
+                              [`C0])))
                            []
                            («term_<|_»
                             (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -355,14 +377,16 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                    (Tactic.tacticSeq
                     (Tactic.tacticSeq1Indented
                      [(Tactic.«tactic_<;>_»
-                       (Std.Tactic.obtain
-                        "obtain"
-                        [(Std.Tactic.RCases.rcasesPatMed
-                          [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                        []
-                        [":=" [`h]])
-                       "<;>"
                        (Tactic.«tactic_<;>_»
+                        (Std.Tactic.obtain
+                         "obtain"
+                         [(Std.Tactic.RCases.rcasesPatMed
+                           [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                            "|"
+                            (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                         []
+                         [":=" [`h]])
+                        "<;>"
                         (Tactic.simp
                          "simp"
                          []
@@ -373,19 +397,20 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                            ","
                            (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
                           "]"]
-                         [])
-                        "<;>"
-                        (Tactic.exact
-                         "exact"
-                         (Term.anonymousCtor
-                          "⟨"
-                          [(Term.byTactic
-                            "by"
-                            (Tactic.tacticSeq
-                             (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
-                           ","
-                           (Term.app `Computable.const [(Term.hole "_")])]
-                          "⟩"))))])))))]
+                         []))
+                       "<;>"
+                       (Tactic.exact
+                        "exact"
+                        (Term.anonymousCtor
+                         "⟨"
+                         [(Term.byTactic
+                           "by"
+                           (Tactic.tacticSeq
+                            (Tactic.tacticSeq1Indented
+                             [(Tactic.tacticInfer_instance "infer_instance")])))
+                          ","
+                          (Term.app `Computable.const [(Term.hole "_")])]
+                         "⟩")))])))))]
                "⟩"))))])))
        [])
       []
@@ -417,7 +442,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                   («term_↔_»
                    («term_∈_» `f "∈" `C)
                    "↔"
-                   («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                   («term_∈_»
+                    (Term.app `eval [`f])
+                    "∈"
+                    (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
                ":="
                (Term.fun
                 "fun"
@@ -436,7 +464,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                      []
                      "=>"
                      (Term.app
-                      (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                      (Term.proj
+                       (Term.app `H [(Term.hole "_") (Term.hole "_") `e])
+                       "."
+                       (fieldIdx "1"))
                       [`hg])))]
                   "⟩")))))
              []
@@ -472,7 +503,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                             []
                             []
                             ":="
-                            (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                            (Term.app
+                             (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
+                             [`C0])))
                           []
                           («term_<|_»
                            (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
@@ -504,14 +537,16 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                   (Tactic.tacticSeq
                    (Tactic.tacticSeq1Indented
                     [(Tactic.«tactic_<;>_»
-                      (Std.Tactic.obtain
-                       "obtain"
-                       [(Std.Tactic.RCases.rcasesPatMed
-                         [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                       []
-                       [":=" [`h]])
-                      "<;>"
                       (Tactic.«tactic_<;>_»
+                       (Std.Tactic.obtain
+                        "obtain"
+                        [(Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                           "|"
+                           (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                        []
+                        [":=" [`h]])
+                       "<;>"
                        (Tactic.simp
                         "simp"
                         []
@@ -522,19 +557,20 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                           ","
                           (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
                          "]"]
-                        [])
-                       "<;>"
-                       (Tactic.exact
-                        "exact"
-                        (Term.anonymousCtor
-                         "⟨"
-                         [(Term.byTactic
-                           "by"
-                           (Tactic.tacticSeq
-                            (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
-                          ","
-                          (Term.app `Computable.const [(Term.hole "_")])]
-                         "⟩"))))])))))]
+                        []))
+                      "<;>"
+                      (Tactic.exact
+                       "exact"
+                       (Term.anonymousCtor
+                        "⟨"
+                        [(Term.byTactic
+                          "by"
+                          (Tactic.tacticSeq
+                           (Tactic.tacticSeq1Indented
+                            [(Tactic.tacticInfer_instance "infer_instance")])))
+                         ","
+                         (Term.app `Computable.const [(Term.hole "_")])]
+                        "⟩")))])))))]
               "⟩"))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -558,7 +594,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
               («term_↔_»
                («term_∈_» `f "∈" `C)
                "↔"
-               («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+               («term_∈_»
+                (Term.app `eval [`f])
+                "∈"
+                (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
            ":="
            (Term.fun
             "fun"
@@ -576,7 +615,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                  [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
                  []
                  "=>"
-                 (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+                 (Term.app
+                  (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                  [`hg])))]
               "⟩")))))
          []
          (Term.anonymousCtor
@@ -628,7 +669,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                           "<|"
                           (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                         (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+                         (Term.app
+                          (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                          [`fC])])))))])))])))
            ","
            (Term.fun
             "fun"
@@ -641,34 +684,40 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
                 [(Tactic.«tactic_<;>_»
-                  (Std.Tactic.obtain
-                   "obtain"
-                   [(Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                   []
-                   [":=" [`h]])
-                  "<;>"
                   (Tactic.«tactic_<;>_»
+                   (Std.Tactic.obtain
+                    "obtain"
+                    [(Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                       "|"
+                       (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                    []
+                    [":=" [`h]])
+                   "<;>"
                    (Tactic.simp
                     "simp"
                     []
                     []
                     []
                     ["["
-                     [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
-                     "]"]
-                    [])
-                   "<;>"
-                   (Tactic.exact
-                    "exact"
-                    (Term.anonymousCtor
-                     "⟨"
-                     [(Term.byTactic
-                       "by"
-                       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                     [(Tactic.simpLemma [] [] `ComputablePred)
                       ","
-                      (Term.app `Computable.const [(Term.hole "_")])]
-                     "⟩"))))])))))]
+                      (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                     "]"]
+                    []))
+                  "<;>"
+                  (Tactic.exact
+                   "exact"
+                   (Term.anonymousCtor
+                    "⟨"
+                    [(Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.tacticInfer_instance "infer_instance")])))
+                     ","
+                     (Term.app `Computable.const [(Term.hole "_")])]
+                    "⟩")))])))))]
           "⟩"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
@@ -688,7 +737,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
              («term_↔_»
               («term_∈_» `f "∈" `C)
               "↔"
-              («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+              («term_∈_»
+               (Term.app `eval [`f])
+               "∈"
+               (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
           ":="
           (Term.fun
            "fun"
@@ -706,7 +758,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                 [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
                 []
                 "=>"
-                (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+                (Term.app
+                 (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                 [`hg])))]
              "⟩")))))
         []
         (Term.anonymousCtor
@@ -758,7 +812,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                          "<|"
                          (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                        (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+                        (Term.app
+                         (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                         [`fC])])))))])))])))
           ","
           (Term.fun
            "fun"
@@ -771,34 +827,39 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
                [(Tactic.«tactic_<;>_»
-                 (Std.Tactic.obtain
-                  "obtain"
-                  [(Std.Tactic.RCases.rcasesPatMed
-                    [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                  []
-                  [":=" [`h]])
-                 "<;>"
                  (Tactic.«tactic_<;>_»
+                  (Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                      "|"
+                      (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                   []
+                   [":=" [`h]])
+                  "<;>"
                   (Tactic.simp
                    "simp"
                    []
                    []
                    []
                    ["["
-                    [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
-                    "]"]
-                   [])
-                  "<;>"
-                  (Tactic.exact
-                   "exact"
-                   (Term.anonymousCtor
-                    "⟨"
-                    [(Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                    [(Tactic.simpLemma [] [] `ComputablePred)
                      ","
-                     (Term.app `Computable.const [(Term.hole "_")])]
-                    "⟩"))))])))))]
+                     (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                    "]"]
+                   []))
+                 "<;>"
+                 (Tactic.exact
+                  "exact"
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                    ","
+                    (Term.app `Computable.const [(Term.hole "_")])]
+                   "⟩")))])))))]
          "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -834,7 +895,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
                []
                "=>"
-               (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+               (Term.app
+                (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+                [`hg])))]
             "⟩")))))
        []
        (Term.anonymousCtor
@@ -886,7 +949,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                         "<|"
                         (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                       (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+                       (Term.app
+                        (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                        [`fC])])))))])))])))
          ","
          (Term.fun
           "fun"
@@ -899,34 +964,39 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
             (Tactic.tacticSeq
              (Tactic.tacticSeq1Indented
               [(Tactic.«tactic_<;>_»
-                (Std.Tactic.obtain
-                 "obtain"
-                 [(Std.Tactic.RCases.rcasesPatMed
-                   [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                 []
-                 [":=" [`h]])
-                "<;>"
                 (Tactic.«tactic_<;>_»
+                 (Std.Tactic.obtain
+                  "obtain"
+                  [(Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                     "|"
+                     (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                  []
+                  [":=" [`h]])
+                 "<;>"
                  (Tactic.simp
                   "simp"
                   []
                   []
                   []
                   ["["
-                   [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
-                   "]"]
-                  [])
-                 "<;>"
-                 (Tactic.exact
-                  "exact"
-                  (Term.anonymousCtor
-                   "⟨"
-                   [(Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                   [(Tactic.simpLemma [] [] `ComputablePred)
                     ","
-                    (Term.app `Computable.const [(Term.hole "_")])]
-                   "⟩"))))])))))]
+                    (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                   "]"]
+                  []))
+                "<;>"
+                (Tactic.exact
+                 "exact"
+                 (Term.anonymousCtor
+                  "⟨"
+                  [(Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                   ","
+                   (Term.app `Computable.const [(Term.hole "_")])]
+                  "⟩")))])))))]
         "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -978,7 +1048,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                        "<|"
                        (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                      (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+                      (Term.app
+                       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                       [`fC])])))))])))])))
         ","
         (Term.fun
          "fun"
@@ -991,34 +1063,39 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
              [(Tactic.«tactic_<;>_»
-               (Std.Tactic.obtain
-                "obtain"
-                [(Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                []
-                [":=" [`h]])
-               "<;>"
                (Tactic.«tactic_<;>_»
+                (Std.Tactic.obtain
+                 "obtain"
+                 [(Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                    "|"
+                    (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+                 []
+                 [":=" [`h]])
+                "<;>"
                 (Tactic.simp
                  "simp"
                  []
                  []
                  []
                  ["["
-                  [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
-                  "]"]
-                 [])
-                "<;>"
-                (Tactic.exact
-                 "exact"
-                 (Term.anonymousCtor
-                  "⟨"
-                  [(Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                  [(Tactic.simpLemma [] [] `ComputablePred)
                    ","
-                   (Term.app `Computable.const [(Term.hole "_")])]
-                  "⟩"))))])))))]
+                   (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                  "]"]
+                 []))
+               "<;>"
+               (Tactic.exact
+                "exact"
+                (Term.anonymousCtor
+                 "⟨"
+                 [(Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                  ","
+                  (Term.app `Computable.const [(Term.hole "_")])]
+                 "⟩")))])))))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -1032,104 +1109,98 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
            [(Tactic.«tactic_<;>_»
-             (Std.Tactic.obtain
-              "obtain"
-              [(Std.Tactic.RCases.rcasesPatMed
-                [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-              []
-              [":=" [`h]])
-             "<;>"
              (Tactic.«tactic_<;>_»
+              (Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.one `rfl)
+                  "|"
+                  (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+               []
+               [":=" [`h]])
+              "<;>"
               (Tactic.simp
                "simp"
                []
                []
                []
                ["["
-                [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
-                "]"]
-               [])
-              "<;>"
-              (Tactic.exact
-               "exact"
-               (Term.anonymousCtor
-                "⟨"
-                [(Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                [(Tactic.simpLemma [] [] `ComputablePred)
                  ","
-                 (Term.app `Computable.const [(Term.hole "_")])]
-                "⟩"))))])))))
+                 (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+                "]"]
+               []))
+             "<;>"
+             (Tactic.exact
+              "exact"
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+                ","
+                (Term.app `Computable.const [(Term.hole "_")])]
+               "⟩")))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
          [(Tactic.«tactic_<;>_»
-           (Std.Tactic.obtain
-            "obtain"
-            [(Std.Tactic.RCases.rcasesPatMed
-              [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-            []
-            [":=" [`h]])
-           "<;>"
            (Tactic.«tactic_<;>_»
+            (Std.Tactic.obtain
+             "obtain"
+             [(Std.Tactic.RCases.rcasesPatMed
+               [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+             []
+             [":=" [`h]])
+            "<;>"
             (Tactic.simp
              "simp"
              []
              []
              []
-             ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
-             [])
-            "<;>"
-            (Tactic.exact
-             "exact"
-             (Term.anonymousCtor
-              "⟨"
-              [(Term.byTactic
-                "by"
-                (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+             ["["
+              [(Tactic.simpLemma [] [] `ComputablePred)
                ","
-               (Term.app `Computable.const [(Term.hole "_")])]
-              "⟩"))))])))
+               (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+              "]"]
+             []))
+           "<;>"
+           (Tactic.exact
+            "exact"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+              ","
+              (Term.app `Computable.const [(Term.hole "_")])]
+             "⟩")))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
-       (Std.Tactic.obtain
-        "obtain"
-        [(Std.Tactic.RCases.rcasesPatMed
-          [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
-        []
-        [":=" [`h]])
-       "<;>"
        (Tactic.«tactic_<;>_»
+        (Std.Tactic.obtain
+         "obtain"
+         [(Std.Tactic.RCases.rcasesPatMed
+           [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+         []
+         [":=" [`h]])
+        "<;>"
         (Tactic.simp
          "simp"
          []
          []
          []
-         ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
-         [])
-        "<;>"
-        (Tactic.exact
-         "exact"
-         (Term.anonymousCtor
-          "⟨"
-          [(Term.byTactic
-            "by"
-            (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+         ["["
+          [(Tactic.simpLemma [] [] `ComputablePred)
            ","
-           (Term.app `Computable.const [(Term.hole "_")])]
-          "⟩"))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.«tactic_<;>_»
-       (Tactic.simp
-        "simp"
-        []
-        []
-        []
-        ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
-        [])
+           (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+          "]"]
+         []))
        "<;>"
        (Tactic.exact
         "exact"
@@ -1137,7 +1208,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
          "⟨"
          [(Term.byTactic
            "by"
-           (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
           ","
           (Term.app `Computable.const [(Term.hole "_")])]
          "⟩")))
@@ -1148,7 +1220,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
         "⟨"
         [(Term.byTactic
           "by"
-          (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
          ","
          (Term.app `Computable.const [(Term.hole "_")])]
         "⟩"))
@@ -1157,7 +1230,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        "⟨"
        [(Term.byTactic
          "by"
-         (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
         ","
         (Term.app `Computable.const [(Term.hole "_")])]
        "⟩")
@@ -1167,42 +1241,71 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Computable.const
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
-       (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented [(Tactic.tacticInfer_instance "infer_instance")])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.tacticInfer_instance "infer_instance")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.«tactic_<;>_»
+       (Std.Tactic.obtain
+        "obtain"
+        [(Std.Tactic.RCases.rcasesPatMed
+          [(Std.Tactic.RCases.rcasesPat.one `rfl) "|" (Std.Tactic.RCases.rcasesPat.one `rfl)])]
+        []
+        [":=" [`h]])
+       "<;>"
+       (Tactic.simp
+        "simp"
+        []
+        []
+        []
+        ["["
+         [(Tactic.simpLemma [] [] `ComputablePred)
+          ","
+          (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+         "]"]
+        []))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.simp
        "simp"
        []
        []
        []
-       ["[" [(Tactic.simpLemma [] [] `ComputablePred) "," (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)] "]"]
+       ["["
+        [(Tactic.simpLemma [] [] `ComputablePred)
+         ","
+         (Tactic.simpLemma [] [] `Set.mem_empty_iff_false)]
+        "]"]
        [])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Set.mem_empty_iff_false
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ComputablePred
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Std.Tactic.obtain
        "obtain"
@@ -1212,8 +1315,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        [":=" [`h]])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -1221,7 +1326,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -1271,7 +1377,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                      (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                      "<|"
                      (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                    (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+                    (Term.app
+                     (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                     [`fC])])))))])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
@@ -1314,7 +1422,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                    (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                    "<|"
                    (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                  (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])
+                  (Term.app
+                   (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                   [`fC])])))))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1357,7 +1467,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                  (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                  "<|"
                  (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))
+                (Term.app
+                 (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                 [`fC])])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `Set.eq_univ_of_forall
@@ -1392,7 +1504,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
                "<|"
                (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-              (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])
+              (Term.app
+               (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+               [`fC])])))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1494,7 +1608,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `fC
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1503,17 +1618,23 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hC
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hC [(Term.hole "_")]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Term.app (Term.proj (Term.paren "(" (Term.app `hC [(Term.hole "_")]) ")") "." (fieldIdx "1")) [`fC])
+     (Term.app
+      (Term.proj (Term.paren "(" (Term.app `hC [(Term.hole "_")]) ")") "." (fieldIdx "1"))
+      [`fC])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
@@ -1528,7 +1649,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Computable.id
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1537,16 +1659,21 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `cg
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `const
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `const [`cg]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eval_part.comp
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1574,7 +1701,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Computable.id
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1583,16 +1711,21 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `cf
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `const
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `const [`cf]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eval_part.comp
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1615,31 +1748,43 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hC
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `h "." `of_eq)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app (Term.proj `h "." `of_eq) [`hC]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app (Term.proj `h "." `of_eq) [`hC])
+     ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.term_''_', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Set.Data.Set.Basic.term_''_', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C
-[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `eval
 [PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (some 80, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 81, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Set.Data.Set.Basic.term_''_ `eval " '' " `C) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `rice
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1648,10 +1793,12 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hC
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hC [(Term.hole "_")]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
@@ -1663,57 +1810,68 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C0
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Set.ne_empty_iff_nonempty
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `fC
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `cf
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `cg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Set.eq_univ_of_forall
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C0
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `or_iff_not_imp_left
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1731,7 +1889,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
             [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
             []
             "=>"
-            (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+            (Term.app
+             (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+             [`hg])))]
          "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -1744,7 +1904,9 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
           [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
           []
           "=>"
-          (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))]
+          (Term.app
+           (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+           [`hg])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -1753,14 +1915,19 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
         [(Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")]
         []
         "=>"
-        (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])))
+        (Term.app
+         (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+         [`hg])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1")) [`hg])
+      (Term.app
+       (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
+       [`hg])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hg
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1769,23 +1936,31 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `e
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `H [(Term.hole "_") (Term.hole "_") `e]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `H [(Term.hole "_") (Term.hole "_") `e])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.implicitBinder'
@@ -1794,14 +1969,18 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
       (Term.anonymousCtor "⟨" [`g "," `hg "," `e] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `e
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hg
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Set.mem_image_of_mem [(Term.hole "_")])
@@ -1809,18 +1988,22 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Set.mem_image_of_mem
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.forall
@@ -1843,7 +2026,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
       (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C
-[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `eval
 [PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (some 80, term)
@@ -1854,17 +2038,20 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 21 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
       («term_∈_» `f "∈" `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -1872,7 +2059,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 20, (some 21, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1926,11 +2113,9 @@ theorem
                   h
                     =>
                     by
-                      obtain rfl | rfl := h
+                      obtain rfl | rfl := h <;> simp [ ComputablePred , Set.mem_empty_iff_false ]
                         <;>
-                        simp [ ComputablePred , Set.mem_empty_iff_false ]
-                          <;>
-                          exact ⟨ by infer_instance , Computable.const _ ⟩
+                        exact ⟨ by infer_instance , Computable.const _ ⟩
               ⟩
 #align computable_pred.rice₂ ComputablePred.rice₂
 
@@ -1950,7 +2135,8 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
     ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a :=
   ⟨fun h => ⟨h.to_re, h.Not.to_re⟩, fun ⟨h₁, h₂⟩ =>
     ⟨‹_›, by
-      obtain ⟨k, pk, hk⟩ := Partrec.merge (h₁.map (Computable.const tt).to₂) (h₂.map (Computable.const ff).to₂) _
+      obtain ⟨k, pk, hk⟩ :=
+        Partrec.merge (h₁.map (Computable.const tt).to₂) (h₂.map (Computable.const ff).to₂) _
       · refine' Partrec.of_eq pk fun n => Part.eq_some_iff.2 _
         rw [hk]
         simp
@@ -1978,7 +2164,9 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
          («term_∧_»
           (Term.app `RePred [`p])
           "∧"
-          (Term.app `RePred [(Term.fun "fun" (Term.basicFun [`a] [] "=>" («term¬_» "¬" (Term.app `p [`a]))))])))))
+          (Term.app
+           `RePred
+           [(Term.fun "fun" (Term.basicFun [`a] [] "=>" («term¬_» "¬" (Term.app `p [`a]))))])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -2013,8 +2201,9 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
       (Tactic.exact "exact" `computable_iff_re_compl_re)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `computable_iff_re_compl_re
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -2049,7 +2238,9 @@ inductive Partrec' : ∀ {n}, (Vector ℕ n →. ℕ) → Prop
   |
   comp {m n f} (g : Fin n → Vector ℕ m →. ℕ) :
     partrec' f → (∀ i, partrec' (g i)) → partrec' fun v => (mOfFn fun i => g i v) >>= f
-  | rfind {n} {f : Vector ℕ (n + 1) → ℕ} : @partrec' (n + 1) f → partrec' fun v => rfind fun n => some (f (n ::ᵥ v) = 0)
+  |
+  rfind {n} {f : Vector ℕ (n + 1) → ℕ} :
+    @partrec' (n + 1) f → partrec' fun v => rfind fun n => some (f (n ::ᵥ v) = 0)
 #align nat.partrec' Nat.Partrec'
 
 end Nat
@@ -2068,7 +2259,8 @@ theorem to_part {n f} (pf : @Partrec' n f) : Partrec f := by
   case comp m n f g _ _ hf hg => exact (vector_m_of_fn fun i => hg i).bind (hf.comp snd)
   case rfind n f _ hf =>
   have :=
-    ((primrec.eq.comp Primrec.id (Primrec.const 0)).to_comp.comp (hf.comp (vector_cons.comp snd fst))).to₂.Partrec₂
+    ((primrec.eq.comp Primrec.id (Primrec.const 0)).to_comp.comp
+          (hf.comp (vector_cons.comp snd fst))).to₂.Partrec₂
   exact this.rfind
 #align nat.partrec'.to_part Nat.Partrec'.to_part
 
@@ -2097,8 +2289,8 @@ protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
     fun v => by simp [m_of_fn, Part.bind_assoc, pure]
 #align nat.partrec'.bind Nat.Partrec'.bind
 
-protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
-    @Partrec' n fun v => (f v).map fun a => g (a ::ᵥ v) := by
+protected theorem map {n f} {g : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' n f)
+    (hg : @Partrec' (n + 1) g) : @Partrec' n fun v => (f v).map fun a => g (a ::ᵥ v) := by
   simp [(Part.bind_some_eq_map _ _).symm] <;> exact hf.bind hg
 #align nat.partrec'.map Nat.Partrec'.map
 
@@ -2117,7 +2309,8 @@ protected theorem nil {n} : @Vec n 0 fun _ => nil := fun i => i.elim0
 #align nat.partrec'.nil Nat.Partrec'.nil
 
 protected theorem cons {n m} {f : Vector ℕ n → ℕ} {g} (hf : @Partrec' n f) (hg : @Vec n m g) :
-    Vec fun v => f v ::ᵥ g v := fun i => Fin.cases (by simp [*]) (fun i => by simp only [hg i, nth_cons_succ]) i
+    Vec fun v => f v ::ᵥ g v := fun i =>
+  Fin.cases (by simp [*]) (fun i => by simp only [hg i, nth_cons_succ]) i
 #align nat.partrec'.cons Nat.Partrec'.cons
 
 theorem idv {n} : @Vec n n id :=
@@ -2128,21 +2321,23 @@ theorem comp' {n m f g} (hf : @Partrec' m f) (hg : @Vec n m g) : Partrec' fun v 
   (hf.comp _ hg).of_eq fun v => by simp
 #align nat.partrec'.comp' Nat.Partrec'.comp'
 
-theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec' 1 fun v => f v.head) (hg : @Partrec' n g) :
-    @Partrec' n fun v => f (g v) := by simpa using hf.comp' (partrec'.cons hg partrec'.nil)
+theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec' 1 fun v => f v.head)
+    (hg : @Partrec' n g) : @Partrec' n fun v => f (g v) := by
+  simpa using hf.comp' (partrec'.cons hg partrec'.nil)
 #align nat.partrec'.comp₁ Nat.Partrec'.comp₁
 
 theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
     @Partrec' n fun v => Nat.rfindOpt fun a => ofNat (Option ℕ) (f (a ::ᵥ v)) :=
   ((rfind <|
-            (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁ (fun n => Part.some (1 - n))
-              hf).bind
+            (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁
+              (fun n => Part.some (1 - n)) hf).bind
         ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq
     fun v =>
     Part.ext fun b => by
-      simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
-        Option.mem_def, Part.mem_coe]
-      refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
+      simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff,
+        Part.mem_some_iff, Option.mem_def, Part.mem_coe]
+      refine'
+        exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
       · congr
         funext n
         simp only [Part.some_inj, Pfun.coe_val]
@@ -2162,10 +2357,10 @@ open Nat.Partrec.Code
 
 theorem of_part : ∀ {n f}, Partrec f → @Partrec' n f :=
   suffices ∀ f, Nat.Partrec f → @Partrec' 1 fun v => f v.head from fun n f hf => by
-    let g
-    swap
+    let g; swap
     exact
-      (comp₁ g (this g hf) (prim Nat.Primrec'.encode)).of_eq fun i => by dsimp only [g] <;> simp [encodek, Part.map_id']
+      (comp₁ g (this g hf) (prim Nat.Primrec'.encode)).of_eq fun i => by
+        dsimp only [g] <;> simp [encodek, Part.map_id']
   fun f hf => by
   obtain ⟨c, rfl⟩ := exists_code.1 hf
   simpa [eval_eq_rfind_opt] using
@@ -2173,7 +2368,8 @@ theorem of_part : ∀ {n f}, Partrec f → @Partrec' n f :=
       of_prim <|
         Primrec.encode_iff.2 <|
           evaln_prim.comp <|
-            (primrec.vector_head.pair (Primrec.const c)).pair <| primrec.vector_head.comp Primrec.vector_tail
+            (primrec.vector_head.pair (Primrec.const c)).pair <|
+              primrec.vector_head.comp Primrec.vector_tail
 #align nat.partrec'.of_part Nat.Partrec'.of_part
 
 theorem part_iff {n f} : @Partrec' n f ↔ Partrec f :=
@@ -2183,7 +2379,8 @@ theorem part_iff {n f} : @Partrec' n f ↔ Partrec f :=
 theorem part_iff₁ {f : ℕ →. ℕ} : (@Partrec' 1 fun v => f v.head) ↔ Partrec f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp <| (Primrec.vector_of_fn fun i => Primrec.id).to_comp).of_eq fun v => by simp only [id.def, head_of_fn],
+      (h.comp <| (Primrec.vector_of_fn fun i => Primrec.id).to_comp).of_eq fun v => by
+        simp only [id.def, head_of_fn],
       fun h => h.comp vector_head⟩
 #align nat.partrec'.part_iff₁ Nat.Partrec'.part_iff₁
 

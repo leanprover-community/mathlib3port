@@ -35,16 +35,16 @@ def cmpLE {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
 -/
 
 #print cmpLE_swap /-
-theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) : (cmpLE x y).swap = cmpLE y x :=
-  by
+theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) :
+    (cmpLE x y).swap = cmpLE y x := by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, *, Ordering.swap]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_swap cmpLE_swap
 -/
 
 #print cmpLE_eq_cmp /-
-theorem cmpLE_eq_cmp {α} [Preorder α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)]
-    (x y : α) : cmpLE x y = cmp x y := by
+theorem cmpLE_eq_cmp {α} [Preorder α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)]
+    [@DecidableRel α (· < ·)] (x y : α) : cmpLE x y = cmp x y := by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, lt_iff_le_not_le, *, cmp, cmpUsing]
   cases not_or_of_not xy yx (total_of _ _ _)
 #align cmp_le_eq_cmp cmpLE_eq_cmp
@@ -74,12 +74,14 @@ alias compares_swap ↔ compares.of_swap compares.swap
 
 #print Ordering.swap_inj /-
 @[simp]
-theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by cases o₁ <;> cases o₂ <;> decide
+theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by
+  cases o₁ <;> cases o₂ <;> decide
 #align ordering.swap_inj Ordering.swap_inj
 -/
 
 #print Ordering.swap_eq_iff_eq_swap /-
-theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by rw [← swap_inj, swap_swap]
+theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by
+  rw [← swap_inj, swap_swap]
 #align ordering.swap_eq_iff_eq_swap Ordering.swap_eq_iff_eq_swap
 -/
 
@@ -136,7 +138,8 @@ theorem Compares.le_antisymm [Preorder α] {a b : α} : ∀ {o}, Compares o a b 
 -/
 
 #print Ordering.Compares.inj /-
-theorem Compares.inj [Preorder α] {o₁} : ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
+theorem Compares.inj [Preorder α] {o₁} :
+    ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
   | lt, a, b, h₁, h₂ => h₁.eq_lt.2 h₂
   | Eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
   | GT.gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
@@ -147,10 +150,11 @@ theorem Compares.inj [Preorder α] {o₁} : ∀ {o₂} {a b : α}, Compares o₁
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : LinearOrder.{u_1} α] [_inst_2 : Preorder.{u_2} β] {a : α} {b : α} {a' : β} {b' : β}, (forall {o : Ordering}, (Ordering.Compares.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) o a b) -> (Ordering.Compares.{u_2} β (Preorder.toLT.{u_2} β _inst_2) o a' b')) -> (forall (o : Ordering), Iff (Ordering.Compares.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) o a b) (Ordering.Compares.{u_2} β (Preorder.toLT.{u_2} β _inst_2) o a' b'))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.1698 : LinearOrder.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.1701 : Preorder.{u_2} β] {a : α} {b : α} {a' : β} {b' : β}, (forall {o : Ordering}, (Ordering.Compares.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.1698))) o a b) -> (Ordering.Compares.{u_2} β (Preorder.toLT.{u_2} β inst._@.Mathlib.Order.Compare._hyg.1701) o a' b')) -> (forall (o : Ordering), Iff (Ordering.Compares.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.1698))) o a b) (Ordering.Compares.{u_2} β (Preorder.toLT.{u_2} β inst._@.Mathlib.Order.Compare._hyg.1701) o a' b'))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.1684 : LinearOrder.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.1687 : Preorder.{u_2} β] {a : α} {b : α} {a' : β} {b' : β}, (forall {o : Ordering}, (Ordering.Compares.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.1684))) o a b) -> (Ordering.Compares.{u_2} β (Preorder.toLT.{u_2} β inst._@.Mathlib.Order.Compare._hyg.1687) o a' b')) -> (forall (o : Ordering), Iff (Ordering.Compares.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.1684))) o a b) (Ordering.Compares.{u_2} β (Preorder.toLT.{u_2} β inst._@.Mathlib.Order.Compare._hyg.1687) o a' b'))
 Case conversion may be inaccurate. Consider using '#align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_implₓ'. -/
-theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder β] {a b : α} {a' b' : β}
-    (h : ∀ {o}, Compares o a b → Compares o a' b') (o) : Compares o a b ↔ Compares o a' b' := by
+theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder β] {a b : α}
+    {a' b' : β} (h : ∀ {o}, Compares o a b → Compares o a' b') (o) :
+    Compares o a b ↔ Compares o a' b' := by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomy a b with hab hab
   · change compares Ordering.lt a b at hab
@@ -184,7 +188,8 @@ open Ordering OrderDual
 
 #print toDual_compares_toDual /-
 @[simp]
-theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} : Compares o (toDual a) (toDual b) ↔ Compares o b a := by
+theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} :
+    Compares o (toDual a) (toDual b) ↔ Compares o b a := by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align to_dual_compares_to_dual toDual_compares_toDual
@@ -192,8 +197,8 @@ theorem toDual_compares_toDual [LT α] {a b : α} {o : Ordering} : Compares o (t
 
 #print ofDual_compares_ofDual /-
 @[simp]
-theorem ofDual_compares_ofDual [LT α] {a b : αᵒᵈ} {o : Ordering} : Compares o (ofDual a) (ofDual b) ↔ Compares o b a :=
-  by
+theorem ofDual_compares_ofDual [LT α] {a b : αᵒᵈ} {o : Ordering} :
+    Compares o (ofDual a) (ofDual b) ↔ Compares o b a := by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 #align of_dual_compares_of_dual ofDual_compares_ofDual
@@ -206,7 +211,8 @@ theorem cmp_compares [LinearOrder α] (a b : α) : (cmp a b).Compares a b := by
 -/
 
 #print Ordering.Compares.cmp_eq /-
-theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h : o.Compares a b) : cmp a b = o :=
+theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h : o.Compares a b) :
+    cmp a b = o :=
   (cmp_compares a b).inj h
 #align ordering.compares.cmp_eq Ordering.Compares.cmp_eq
 -/
@@ -222,14 +228,16 @@ theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a 
 
 #print cmpLE_toDual /-
 @[simp]
-theorem cmpLE_toDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : cmpLE (toDual x) (toDual y) = cmpLE y x :=
+theorem cmpLE_toDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) :
+    cmpLE (toDual x) (toDual y) = cmpLE y x :=
   rfl
 #align cmp_le_to_dual cmpLE_toDual
 -/
 
 #print cmpLE_ofDual /-
 @[simp]
-theorem cmpLE_ofDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) : cmpLE (ofDual x) (ofDual y) = cmpLE y x :=
+theorem cmpLE_ofDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) :
+    cmpLE (ofDual x) (ofDual y) = cmpLE y x :=
   rfl
 #align cmp_le_of_dual cmpLE_ofDual
 -/
@@ -237,31 +245,35 @@ theorem cmpLE_ofDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) : c
 /- warning: cmp_to_dual clashes with cmp_le_to_dual -> cmpLE_toDual
 warning: cmp_to_dual -> cmpLE_toDual is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : LT.{u_1} α] [_inst_2 : DecidableRel.{succ u_1} α (LT.lt.{u_1} α _inst_1)] (x : α) (y : α), Eq.{1} Ordering (cmp.{u_1} (OrderDual.{u_1} α) (OrderDual.hasLt.{u_1} α _inst_1) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => _inst_2 b a) (coeFn.{(max 1 (succ u_1)) succ u_1} (Equiv.{succ u_1 succ u_1} α (OrderDual.{u_1} α)) (fun (_x : Equiv.{succ u_1 succ u_1} α (OrderDual.{u_1} α)) => α -> (OrderDual.{u_1} α)) (Equiv.hasCoeToFun.{succ u_1 succ u_1} α (OrderDual.{u_1} α)) (OrderDual.toDual.{u_1} α) x) (coeFn.{(max 1 (succ u_1)) succ u_1} (Equiv.{succ u_1 succ u_1} α (OrderDual.{u_1} α)) (fun (_x : Equiv.{succ u_1 succ u_1} α (OrderDual.{u_1} α)) => α -> (OrderDual.{u_1} α)) (Equiv.hasCoeToFun.{succ u_1 succ u_1} α (OrderDual.{u_1} α)) (OrderDual.toDual.{u_1} α) y)) (cmp.{u_1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) y x)
+  forall {α : Type.{u_1}} [_inst_1 : LT.{u_1} α] [_inst_2 : DecidableRel.{succ u_1} α (LT.lt.{u_1} α _inst_1)] (x : α) (y : α), Eq.{1} Ordering (cmp.{u_1} (OrderDual.{u_1} α) (OrderDual.hasLt.{u_1} α _inst_1) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => _inst_2 b a) (coeFn.{max 1 (succ u_1), succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) (fun (_x : Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) => α -> (OrderDual.{u_1} α)) (Equiv.hasCoeToFun.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) (OrderDual.toDual.{u_1} α) x) (coeFn.{max 1 (succ u_1), succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) (fun (_x : Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) => α -> (OrderDual.{u_1} α)) (Equiv.hasCoeToFun.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) (OrderDual.toDual.{u_1} α) y)) (cmp.{u_1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) y x)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.2507 : LE.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.2510 : DecidableRel.{succ u_1} α (fun (x._@.Mathlib.Order.Compare._hyg.2516 : α) (x._@.Mathlib.Order.Compare._hyg.2518 : α) => LE.le.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2507 x._@.Mathlib.Order.Compare._hyg.2516 x._@.Mathlib.Order.Compare._hyg.2518)] (x : α) (y : α), Eq.{1} Ordering (cmpLE.{u_1} (OrderDual.{u_1} α) (OrderDual.instLEOrderDual.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2507) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => inst._@.Mathlib.Order.Compare._hyg.2510 b a) (Equiv.toFun.{succ u_1 succ u_1} α (OrderDual.{u_1} α) (OrderDual.toDual.{u_1} α) x) (Equiv.toFun.{succ u_1 succ u_1} α (OrderDual.{u_1} α) (OrderDual.toDual.{u_1} α) y)) (cmpLE.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2507 (fun (a : α) (b : α) => inst._@.Mathlib.Order.Compare._hyg.2510 a b) y x)
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.2472 : LE.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.2475 : DecidableRel.{succ u_1} α (fun (x._@.Mathlib.Order.Compare._hyg.2481 : α) (x._@.Mathlib.Order.Compare._hyg.2483 : α) => LE.le.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2472 x._@.Mathlib.Order.Compare._hyg.2481 x._@.Mathlib.Order.Compare._hyg.2483)] (x : α) (y : α), Eq.{1} Ordering (cmpLE.{u_1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u_1} α) x) (OrderDual.instLEOrderDual.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2472) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => inst._@.Mathlib.Order.Compare._hyg.2475 b a) (FunLike.coe.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u_1} α) a) (EmbeddingLike.toFunLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) α (OrderDual.{u_1} α) (EquivLike.toEmbeddingLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) α (OrderDual.{u_1} α) (Equiv.instEquivLikeEquiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)))) (OrderDual.toDual.{u_1} α) x) (FunLike.coe.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : α) => OrderDual.{u_1} α) a) (EmbeddingLike.toFunLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) α (OrderDual.{u_1} α) (EquivLike.toEmbeddingLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)) α (OrderDual.{u_1} α) (Equiv.instEquivLikeEquiv.{succ u_1, succ u_1} α (OrderDual.{u_1} α)))) (OrderDual.toDual.{u_1} α) y)) (cmpLE.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2472 (fun (a : α) (b : α) => inst._@.Mathlib.Order.Compare._hyg.2475 a b) y x)
 Case conversion may be inaccurate. Consider using '#align cmp_to_dual cmpLE_toDualₓ'. -/
 @[simp]
-theorem cmpLE_toDual [LT α] [@DecidableRel α (· < ·)] (x y : α) : cmp (toDual x) (toDual y) = cmp y x :=
+theorem cmpLE_toDual [LT α] [@DecidableRel α (· < ·)] (x y : α) :
+    cmp (toDual x) (toDual y) = cmp y x :=
   rfl
 #align cmp_to_dual cmpLE_toDual
 
 /- warning: cmp_of_dual clashes with cmp_le_of_dual -> cmpLE_ofDual
 warning: cmp_of_dual -> cmpLE_ofDual is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : LT.{u_1} α] [_inst_2 : DecidableRel.{succ u_1} α (LT.lt.{u_1} α _inst_1)] (x : OrderDual.{u_1} α) (y : OrderDual.{u_1} α), Eq.{1} Ordering (cmp.{u_1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) (coeFn.{(max 1 (succ u_1)) succ u_1} (Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (fun (_x : Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) => (OrderDual.{u_1} α) -> α) (Equiv.hasCoeToFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (OrderDual.ofDual.{u_1} α) x) (coeFn.{(max 1 (succ u_1)) succ u_1} (Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (fun (_x : Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) => (OrderDual.{u_1} α) -> α) (Equiv.hasCoeToFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (OrderDual.ofDual.{u_1} α) y)) (cmp.{u_1} (OrderDual.{u_1} α) (OrderDual.hasLt.{u_1} α _inst_1) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => _inst_2 b a) y x)
+  forall {α : Type.{u_1}} [_inst_1 : LT.{u_1} α] [_inst_2 : DecidableRel.{succ u_1} α (LT.lt.{u_1} α _inst_1)] (x : OrderDual.{u_1} α) (y : OrderDual.{u_1} α), Eq.{1} Ordering (cmp.{u_1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) (coeFn.{max 1 (succ u_1), succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (fun (_x : Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) => (OrderDual.{u_1} α) -> α) (Equiv.hasCoeToFun.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.ofDual.{u_1} α) x) (coeFn.{max 1 (succ u_1), succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (fun (_x : Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) => (OrderDual.{u_1} α) -> α) (Equiv.hasCoeToFun.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.ofDual.{u_1} α) y)) (cmp.{u_1} (OrderDual.{u_1} α) (OrderDual.hasLt.{u_1} α _inst_1) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => _inst_2 b a) y x)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.2550 : LE.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.2553 : DecidableRel.{succ u_1} α (fun (x._@.Mathlib.Order.Compare._hyg.2559 : α) (x._@.Mathlib.Order.Compare._hyg.2561 : α) => LE.le.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2550 x._@.Mathlib.Order.Compare._hyg.2559 x._@.Mathlib.Order.Compare._hyg.2561)] (x : OrderDual.{u_1} α) (y : OrderDual.{u_1} α), Eq.{1} Ordering (cmpLE.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2550 (fun (a : α) (b : α) => inst._@.Mathlib.Order.Compare._hyg.2553 a b) (Equiv.toFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α (OrderDual.ofDual.{u_1} α) x) (Equiv.toFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α (OrderDual.ofDual.{u_1} α) y)) (cmpLE.{u_1} (OrderDual.{u_1} α) (OrderDual.instLEOrderDual.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2550) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => inst._@.Mathlib.Order.Compare._hyg.2553 b a) y x)
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.2515 : LE.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.2518 : DecidableRel.{succ u_1} α (fun (x._@.Mathlib.Order.Compare._hyg.2524 : α) (x._@.Mathlib.Order.Compare._hyg.2526 : α) => LE.le.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2515 x._@.Mathlib.Order.Compare._hyg.2524 x._@.Mathlib.Order.Compare._hyg.2526)] (x : OrderDual.{u_1} α) (y : OrderDual.{u_1} α), Eq.{1} Ordering (cmpLE.{u_1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u_1} α) => α) x) inst._@.Mathlib.Order.Compare._hyg.2515 (fun (a : α) (b : α) => inst._@.Mathlib.Order.Compare._hyg.2518 a b) (FunLike.coe.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.{u_1} α) (fun (a : OrderDual.{u_1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u_1} α) => α) a) (EmbeddingLike.toFunLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.{u_1} α) α (EquivLike.toEmbeddingLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.{u_1} α) α (Equiv.instEquivLikeEquiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α))) (OrderDual.ofDual.{u_1} α) x) (FunLike.coe.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.{u_1} α) (fun (a : OrderDual.{u_1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.21 : OrderDual.{u_1} α) => α) a) (EmbeddingLike.toFunLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.{u_1} α) α (EquivLike.toEmbeddingLike.{succ u_1, succ u_1, succ u_1} (Equiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α) (OrderDual.{u_1} α) α (Equiv.instEquivLikeEquiv.{succ u_1, succ u_1} (OrderDual.{u_1} α) α))) (OrderDual.ofDual.{u_1} α) y)) (cmpLE.{u_1} (OrderDual.{u_1} α) (OrderDual.instLEOrderDual.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2515) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => inst._@.Mathlib.Order.Compare._hyg.2518 b a) y x)
 Case conversion may be inaccurate. Consider using '#align cmp_of_dual cmpLE_ofDualₓ'. -/
 @[simp]
-theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) : cmp (ofDual x) (ofDual y) = cmp y x :=
+theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) :
+    cmp (ofDual x) (ofDual y) = cmp y x :=
   rfl
 #align cmp_of_dual cmpLE_ofDual
 
 #print linearOrderOfCompares /-
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
-def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering) (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
-  { ‹Preorder α› with le_antisymm := fun a b => (h a b).le_antisymm, le_total := fun a b => (h a b).le_total,
+def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
+    (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
+  { ‹Preorder α› with le_antisymm := fun a b => (h a b).le_antisymm,
+    le_total := fun a b => (h a b).le_total,
     decidableLe := fun a b => decidable_of_iff _ (h a b).ne_gt,
     decidableLt := fun a b => decidable_of_iff _ (h a b).eq_lt,
     DecidableEq := fun a b => decidable_of_iff _ (h a b).eq_eq }
@@ -303,16 +315,17 @@ variable {x y} {β : Type _} [LinearOrder β] {x' y' : β}
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [_inst_2 : LinearOrder.{u_2} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u_1} α _inst_1 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u_2} β _inst_2 a b) x' y')) (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u_1} α _inst_1 a b) y x) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u_2} β _inst_2 a b) y' x'))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3000 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3006 : LinearOrder.{u_2} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006 a b) x' y')) (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000 a b) y x) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006 a b) y' x'))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.2965 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.2971 : LinearOrder.{u_2} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2965))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2965 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.2971))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.2971 a b) x' y')) (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2965))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2965 a b) y x) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.2971))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.2971 a b) y' x'))
 Case conversion may be inaccurate. Consider using '#align cmp_eq_cmp_symm cmp_eq_cmp_symmₓ'. -/
-theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' := by rw [← cmp_swap x', ← cmp_swap x, swap_inj]
+theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' := by
+  rw [← cmp_swap x', ← cmp_swap x, swap_inj]
 #align cmp_eq_cmp_symm cmp_eq_cmp_symm
 
 /- warning: lt_iff_lt_of_cmp_eq_cmp -> lt_iff_lt_of_cmp_eq_cmp is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [_inst_2 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u_1} α _inst_1 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u_2} β _inst_2 a b) x' y')) -> (Iff (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) x y) (LT.lt.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) x' y'))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3123 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3129 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3123))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3123 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3129))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3129 a b) x' y')) -> (Iff (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3123))) x y) (LT.lt.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3129))) x' y'))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3088 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3094 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3088))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3088 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3094))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3094 a b) x' y')) -> (Iff (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3088))) x y) (LT.lt.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3094))) x' y'))
 Case conversion may be inaccurate. Consider using '#align lt_iff_lt_of_cmp_eq_cmp lt_iff_lt_of_cmp_eq_cmpₓ'. -/
 theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' := by
   rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff, h]
@@ -322,7 +335,7 @@ theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' :=
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [_inst_2 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u_1} α _inst_1 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u_2} β _inst_2 a b) x' y')) -> (Iff (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) x y) (LE.le.{u_2} β (Preorder.toLE.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) x' y'))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3189 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3195 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3189))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3189 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3195))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3195 a b) x' y')) -> (Iff (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3189))) x y) (LE.le.{u_2} β (Preorder.toLE.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3195))) x' y'))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3154 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3160 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3154))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3154 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3160))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3160 a b) x' y')) -> (Iff (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3154))) x y) (LE.le.{u_2} β (Preorder.toLE.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3160))) x' y'))
 Case conversion may be inaccurate. Consider using '#align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmpₓ'. -/
 theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y' := by
   rw [← not_lt, ← not_lt]
@@ -335,10 +348,11 @@ theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [_inst_2 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α _inst_1))) (fun (a : α) (b : α) => LT.lt.decidable.{u_1} α _inst_1 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β _inst_2))) (fun (a : β) (b : β) => LT.lt.decidable.{u_2} β _inst_2 a b) x' y')) -> (Iff (Eq.{succ u_1} α x y) (Eq.{succ u_2} β x' y'))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3294 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3300 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3294))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3294 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3300))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3300 a b) x' y')) -> (Iff (Eq.{succ u_1} α x y) (Eq.{succ u_2} β x' y'))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3259 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3265 : LinearOrder.{u_2} β] {x' : β} {y' : β}, (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3259))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3259 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3265))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3265 a b) x' y')) -> (Iff (Eq.{succ u_1} α x y) (Eq.{succ u_2} β x' y'))
 Case conversion may be inaccurate. Consider using '#align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmpₓ'. -/
 theorem eq_iff_eq_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x = y ↔ x' = y' := by
-  rw [le_antisymm_iff, le_antisymm_iff, le_iff_le_of_cmp_eq_cmp h, le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
+  rw [le_antisymm_iff, le_antisymm_iff, le_iff_le_of_cmp_eq_cmp h,
+    le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
 #align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmp
 
 #print LT.lt.cmp_eq_lt /-

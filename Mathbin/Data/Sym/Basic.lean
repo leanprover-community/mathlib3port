@@ -201,8 +201,8 @@ theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
 #align sym.cons_erase Sym.cons_erase
 
 @[simp]
-theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α) (h : a ∈ a ::ₛ s := mem_cons_self a s) :
-    (a ::ₛ s).erase a h = s :=
+theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α)
+    (h : a ∈ a ::ₛ s := mem_cons_self a s) : (a ::ₛ s).erase a h = s :=
   coe_injective <| Multiset.erase_cons_head a s.1
 #align sym.erase_cons_head Sym.erase_cons_head
 
@@ -319,8 +319,8 @@ theorem repeat_left_inj {a b : α} {n : ℕ} (h : n ≠ 0) : repeat a n = repeat
   Subtype.ext_iff.trans (Multiset.repeat_left_inj h)
 #align sym.repeat_left_inj Sym.repeat_left_inj
 
-theorem repeat_left_injective {n : ℕ} (h : n ≠ 0) : Function.Injective fun x : α => repeat x n := fun a b =>
-  (repeat_left_inj h).1
+theorem repeat_left_injective {n : ℕ} (h : n ≠ 0) : Function.Injective fun x : α => repeat x n :=
+  fun a b => (repeat_left_inj h).1
 #align sym.repeat_left_injective Sym.repeat_left_injective
 
 instance (n : ℕ) [Nontrivial α] : Nontrivial (Sym α (n + 1)) :=
@@ -333,13 +333,15 @@ def map {n : ℕ} (f : α → β) (x : Sym α n) : Sym β n :=
 #align sym.map Sym.map
 
 @[simp]
-theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
+theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} :
+    b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
   Multiset.mem_map
 #align sym.mem_map Sym.mem_map
 
 /-- Note: `sym.map_id` is not simp-normal, as simp ends up unfolding `id` with `sym.map_congr` -/
 @[simp]
-theorem map_id' {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by simp [Sym.map]
+theorem map_id' {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by
+  simp [Sym.map]
 #align sym.map_id' Sym.map_id'
 
 theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by simp [Sym.map]
@@ -356,7 +358,8 @@ theorem map_zero (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
 #align sym.map_zero Sym.map_zero
 
 @[simp]
-theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a ::ₛ s).map f = f a ::ₛ s.map f := by simp [map, cons]
+theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a ::ₛ s).map f = f a ::ₛ s.map f := by
+  simp [map, cons]
 #align sym.map_cons Sym.map_cons
 
 @[congr]
@@ -365,7 +368,8 @@ theorem map_congr {f g : α → β} {s : Sym α n} (h : ∀ x ∈ s, f x = g x) 
 #align sym.map_congr Sym.map_congr
 
 @[simp]
-theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} : map f (mk m hc) = mk (m.map f) (by simp [hc]) :=
+theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} :
+    map f (mk m hc) = mk (m.map f) (by simp [hc]) :=
   rfl
 #align sym.map_mk Sym.map_mk
 
@@ -374,7 +378,8 @@ theorem coe_map (s : Sym α n) (f : α → β) : ↑(s.map f) = Multiset.map f s
   rfl
 #align sym.coe_map Sym.coe_map
 
-theorem map_injective {f : α → β} (hf : Injective f) (n : ℕ) : Injective (map f : Sym α n → Sym β n) := fun s t h =>
+theorem map_injective {f : α → β} (hf : Injective f) (n : ℕ) :
+    Injective (map f : Sym α n → Sym β n) := fun s t h =>
   coe_injective <| Multiset.map_injective hf <| coe_inj.2 h
 #align sym.map_injective Sym.map_injective
 
@@ -395,7 +400,8 @@ def attach (s : Sym α n) : Sym { x // x ∈ s } n :=
 #align sym.attach Sym.attach
 
 @[simp]
-theorem attach_mk {m : Multiset α} {hc : m.card = n} : attach (mk m hc) = mk m.attach (Multiset.card_attach.trans hc) :=
+theorem attach_mk {m : Multiset α} {hc : m.card = n} :
+    attach (mk m hc) = mk m.attach (Multiset.card_attach.trans hc) :=
   rfl
 #align sym.attach_mk Sym.attach_mk
 
@@ -420,7 +426,8 @@ theorem attach_nil : (nil : Sym α 0).attach = nil :=
 
 @[simp]
 theorem attach_cons (x : α) (s : Sym α n) :
-    (cons x s).attach = cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.Prop⟩) :=
+    (cons x s).attach =
+      cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.Prop⟩) :=
   coe_injective <| Multiset.attach_cons _ _
 #align sym.attach_cons Sym.attach_cons
 
@@ -439,7 +446,8 @@ theorem cast_rfl : Sym.cast rfl s = s :=
 #align sym.cast_rfl Sym.cast_rfl
 
 @[simp]
-theorem cast_cast {n'' : ℕ} (h : n = n') (h' : n' = n'') : Sym.cast h' (Sym.cast h s) = Sym.cast (h.trans h') s :=
+theorem cast_cast {n'' : ℕ} (h : n = n') (h' : n' = n'') :
+    Sym.cast h' (Sym.cast h s) = Sym.cast (h.trans h') s :=
   rfl
 #align sym.cast_cast Sym.cast_cast
 
@@ -468,7 +476,8 @@ theorem append_inj_left {s s' : Sym α n} (t : Sym α n') : s.append t = s'.appe
   Subtype.ext_iff.trans <| (add_left_inj _).trans Subtype.ext_iff.symm
 #align sym.append_inj_left Sym.append_inj_left
 
-theorem append_comm (s : Sym α n') (s' : Sym α n') : s.append s' = Sym.cast (add_comm _ _) (s'.append s) := by
+theorem append_comm (s : Sym α n') (s' : Sym α n') :
+    s.append s' = Sym.cast (add_comm _ _) (s'.append s) := by
   ext
   simp [append, add_comm]
 #align sym.append_comm Sym.append_comm
@@ -488,12 +497,14 @@ def fill (a : α) (i : Fin (n + 1)) (m : Sym α (n - i)) : Sym α n :=
   Sym.cast (Nat.sub_add_cancel i.is_le) (m.append (repeat a i))
 #align sym.fill Sym.fill
 
-theorem coe_fill {a : α} {i : Fin (n + 1)} {m : Sym α (n - i)} : (fill a i m : Multiset α) = m + repeat a i :=
+theorem coe_fill {a : α} {i : Fin (n + 1)} {m : Sym α (n - i)} :
+    (fill a i m : Multiset α) = m + repeat a i :=
   rfl
 #align sym.coe_fill Sym.coe_fill
 
 theorem mem_fill_iff {a b : α} {i : Fin (n + 1)} {s : Sym α (n - i)} :
-    a ∈ Sym.fill b i s ↔ (i : ℕ) ≠ 0 ∧ a = b ∨ a ∈ s := by rw [fill, mem_cast, mem_append_iff, or_comm', mem_repeat]
+    a ∈ Sym.fill b i s ↔ (i : ℕ) ≠ 0 ∧ a = b ∨ a ∈ s := by
+  rw [fill, mem_cast, mem_append_iff, or_comm', mem_repeat]
 #align sym.mem_fill_iff Sym.mem_fill_iff
 
 open Multiset
@@ -501,7 +512,8 @@ open Multiset
 /-- Remove every `a` from a given `sym α n`.
 Yields the number of copies `i` and a term of `sym α (n - i)`. -/
 def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym α (n - i) :=
-  ⟨⟨m.1.count a, (count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩, m.1.filter ((· ≠ ·) a),
+  ⟨⟨m.1.count a, (count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩,
+    m.1.filter ((· ≠ ·) a),
     eq_tsub_of_add_eq <|
       Eq.trans
         (by
@@ -510,20 +522,21 @@ def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym �
         m.2⟩
 #align sym.filter_ne Sym.filterNe
 
-theorem sigma_sub_ext {m₁ m₂ : Σi : Fin (n + 1), Sym α (n - i)} (h : (m₁.2 : Multiset α) = m₂.2) : m₁ = m₂ :=
+theorem sigma_sub_ext {m₁ m₂ : Σi : Fin (n + 1), Sym α (n - i)} (h : (m₁.2 : Multiset α) = m₂.2) :
+    m₁ = m₂ :=
   Sigma.subtype_ext
     (Fin.ext <| by
-      rw [← Nat.sub_sub_self m₁.1.is_le, ← Nat.sub_sub_self m₂.1.is_le, ← m₁.2.2, ← m₂.2.2, Subtype.val_eq_coe,
-        Subtype.val_eq_coe, h])
+      rw [← Nat.sub_sub_self m₁.1.is_le, ← Nat.sub_sub_self m₂.1.is_le, ← m₁.2.2, ← m₂.2.2,
+        Subtype.val_eq_coe, Subtype.val_eq_coe, h])
     h
 #align sym.sigma_sub_ext Sym.sigma_sub_ext
 
-theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) : (m.filterNe a).2.fill a (m.filterNe a).1 = m :=
+theorem fill_filter_ne [DecidableEq α] (a : α) (m : Sym α n) :
+    (m.filterNe a).2.fill a (m.filterNe a).1 = m :=
   Subtype.ext
     (by
       dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.coe_mk]
-      ext b
-      rw [count_add, count_filter, Sym.coe_repeat, count_repeat]
+      ext b; rw [count_add, count_filter, Sym.coe_repeat, count_repeat]
       obtain rfl | h := eq_or_ne a b
       · rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]
         rfl
@@ -564,7 +577,10 @@ namespace symOptionSuccEquiv
 it contains a `none`. -/
 def encode [DecidableEq α] (s : Sym (Option α) n.succ) : Sum (Sym (Option α) n) (Sym α n.succ) :=
   if h : none ∈ s then Sum.inl (s.erase none h)
-  else Sum.inr (s.attach.map fun o => Option.get <| Option.ne_none_iff_isSome.1 <| ne_of_mem_of_not_mem o.2 h)
+  else
+    Sum.inr
+      (s.attach.map fun o =>
+        Option.get <| Option.ne_none_iff_isSome.1 <| ne_of_mem_of_not_mem o.2 h)
 #align sym_option_succ_equiv.encode SymOptionSuccEquiv.encode
 
 @[simp]
@@ -576,7 +592,9 @@ theorem encode_of_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : no
 @[simp]
 theorem encode_of_not_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : ¬none ∈ s) :
     encode s =
-      Sum.inr (s.attach.map fun o => Option.get <| Option.ne_none_iff_isSome.1 <| ne_of_mem_of_not_mem o.2 h) :=
+      Sum.inr
+        (s.attach.map fun o =>
+          Option.get <| Option.ne_none_iff_isSome.1 <| ne_of_mem_of_not_mem o.2 h) :=
   dif_neg h
 #align sym_option_succ_equiv.encode_of_not_none_mem SymOptionSuccEquiv.encode_of_not_none_mem
 
@@ -592,14 +610,15 @@ theorem decode_encode [DecidableEq α] (s : Sym (Option α) n.succ) : decode (en
   by_cases h : none ∈ s
   · simp [h]
     
-  · simp only [h, decode, not_false_iff, Subtype.val_eq_coe, encode_of_not_none_mem, embedding.coe_option_apply,
-      map_map, comp_app, Option.coe_get]
+  · simp only [h, decode, not_false_iff, Subtype.val_eq_coe, encode_of_not_none_mem,
+      embedding.coe_option_apply, map_map, comp_app, Option.coe_get]
     convert s.attach_map_coe
     
 #align sym_option_succ_equiv.decode_encode SymOptionSuccEquiv.decode_encode
 
 @[simp]
-theorem encode_decode [DecidableEq α] (s : Sum (Sym (Option α) n) (Sym α n.succ)) : encode (decode s) = s := by
+theorem encode_decode [DecidableEq α] (s : Sum (Sym (Option α) n) (Sym α n.succ)) :
+    encode (decode s) = s := by
   obtain s | s := s
   · simp
     
@@ -619,7 +638,8 @@ end symOptionSuccEquiv
 
 /-- The symmetric product over `option` is a disjoint union over simpler symmetric products. -/
 @[simps]
-def symOptionSuccEquiv [DecidableEq α] : Sym (Option α) n.succ ≃ Sum (Sym (Option α) n) (Sym α n.succ) where
+def symOptionSuccEquiv [DecidableEq α] :
+    Sym (Option α) n.succ ≃ Sum (Sym (Option α) n) (Sym α n.succ) where
   toFun := SymOptionSuccEquiv.encode
   invFun := SymOptionSuccEquiv.decode
   left_inv := SymOptionSuccEquiv.decode_encode

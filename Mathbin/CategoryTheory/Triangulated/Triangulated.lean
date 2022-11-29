@@ -25,9 +25,10 @@ open ZeroObject
 variable {C : Type _} [Category C] [Preadditive C] [HasZeroObject C] [HasShift C ℤ]
   [∀ n : ℤ, Functor.Additive (shiftFunctor C n)] [Pretriangulated C]
 
-variable {X₁ X₂ X₃ Z₁₂ Z₂₃ Z₁₃ : C} {u₁₂ : X₁ ⟶ X₂} {u₂₃ : X₂ ⟶ X₃} {u₁₃ : X₁ ⟶ X₃} (comm : u₁₂ ≫ u₂₃ = u₁₃)
-  {v₁₂ : X₂ ⟶ Z₁₂} {w₁₂ : Z₁₂ ⟶ X₁⟦(1 : ℤ)⟧} (h₁₂ : Triangle.mk u₁₂ v₁₂ w₁₂ ∈ (dist_triang C)) {v₂₃ : X₃ ⟶ Z₂₃}
-  {w₂₃ : Z₂₃ ⟶ X₂⟦(1 : ℤ)⟧} (h₂₃ : Triangle.mk u₂₃ v₂₃ w₂₃ ∈ (dist_triang C)) {v₁₃ : X₃ ⟶ Z₁₃} {w₁₃ : Z₁₃ ⟶ X₁⟦(1 : ℤ)⟧}
+variable {X₁ X₂ X₃ Z₁₂ Z₂₃ Z₁₃ : C} {u₁₂ : X₁ ⟶ X₂} {u₂₃ : X₂ ⟶ X₃} {u₁₃ : X₁ ⟶ X₃}
+  (comm : u₁₂ ≫ u₂₃ = u₁₃) {v₁₂ : X₂ ⟶ Z₁₂} {w₁₂ : Z₁₂ ⟶ X₁⟦(1 : ℤ)⟧}
+  (h₁₂ : Triangle.mk u₁₂ v₁₂ w₁₂ ∈ (dist_triang C)) {v₂₃ : X₃ ⟶ Z₂₃} {w₂₃ : Z₂₃ ⟶ X₂⟦(1 : ℤ)⟧}
+  (h₂₃ : Triangle.mk u₂₃ v₂₃ w₂₃ ∈ (dist_triang C)) {v₁₃ : X₃ ⟶ Z₁₃} {w₁₃ : Z₁₃ ⟶ X₁⟦(1 : ℤ)⟧}
   (h₁₃ : Triangle.mk u₁₃ v₁₃ w₁₃ ∈ (dist_triang C))
 
 namespace Triangulated
@@ -66,7 +67,8 @@ variable {comm h₁₂ h₂₃ h₁₃} (h : Octahedron comm h₁₂ h₂₃ h�
 @[simps]
 def triangle : Triangle C :=
   Triangle.mk h.m₁ h.m₃ (w₂₃ ≫ v₁₂⟦1⟧')
-#align category_theory.triangulated.octahedron.triangle CategoryTheory.Triangulated.Octahedron.triangle
+#align
+  category_theory.triangulated.octahedron.triangle CategoryTheory.Triangulated.Octahedron.triangle
 
 /-- The first morphism of triangles given by an octahedron. -/
 @[simps]
@@ -115,9 +117,10 @@ variable (C)
 the octahedron axiom (TR 4), see https://stacks.math.columbia.edu/tag/05QK -/
 class IsTriangulated where
   octahedron_axiom :
-    ∀ ⦃X₁ X₂ X₃ Z₁₂ Z₂₃ Z₁₃ : C⦄ ⦃u₁₂ : X₁ ⟶ X₂⦄ ⦃u₂₃ : X₂ ⟶ X₃⦄ ⦃u₁₃ : X₁ ⟶ X₃⦄ (comm : u₁₂ ≫ u₂₃ = u₁₃)
-      ⦃v₁₂ : X₂ ⟶ Z₁₂⦄ ⦃w₁₂ : Z₁₂ ⟶ X₁⟦1⟧⦄ (h₁₂ : Triangle.mk u₁₂ v₁₂ w₁₂ ∈ (dist_triang C)) ⦃v₂₃ : X₃ ⟶ Z₂₃⦄
-      ⦃w₂₃ : Z₂₃ ⟶ X₂⟦1⟧⦄ (h₂₃ : Triangle.mk u₂₃ v₂₃ w₂₃ ∈ (dist_triang C)) ⦃v₁₃ : X₃ ⟶ Z₁₃⦄ ⦃w₁₃ : Z₁₃ ⟶ X₁⟦1⟧⦄
+    ∀ ⦃X₁ X₂ X₃ Z₁₂ Z₂₃ Z₁₃ : C⦄ ⦃u₁₂ : X₁ ⟶ X₂⦄ ⦃u₂₃ : X₂ ⟶ X₃⦄ ⦃u₁₃ : X₁ ⟶ X₃⦄
+      (comm : u₁₂ ≫ u₂₃ = u₁₃) ⦃v₁₂ : X₂ ⟶ Z₁₂⦄ ⦃w₁₂ : Z₁₂ ⟶ X₁⟦1⟧⦄
+      (h₁₂ : Triangle.mk u₁₂ v₁₂ w₁₂ ∈ (dist_triang C)) ⦃v₂₃ : X₃ ⟶ Z₂₃⦄ ⦃w₂₃ : Z₂₃ ⟶ X₂⟦1⟧⦄
+      (h₂₃ : Triangle.mk u₂₃ v₂₃ w₂₃ ∈ (dist_triang C)) ⦃v₁₃ : X₃ ⟶ Z₁₃⦄ ⦃w₁₃ : Z₁₃ ⟶ X₁⟦1⟧⦄
       (h₁₃ : Triangle.mk u₁₃ v₁₃ w₁₃ ∈ (dist_triang C)), Nonempty (Octahedron comm h₁₂ h₂₃ h₁₃)
 #align category_theory.is_triangulated CategoryTheory.IsTriangulated
 

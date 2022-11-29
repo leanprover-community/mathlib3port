@@ -130,8 +130,8 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
             we use the `pre_apply` subtactic of `solve_by_elim` to preprocess each new goal with `intros`.
         -/
       solve_by_elim
-      { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq :: equiv_congr_lemmas),
-        ctx_thunk := pure [],
+      { use_symmetry := False, use_exfalso := False,
+        lemma_thunks := some (pure Eq :: equiv_congr_lemmas), ctx_thunk := pure [],
         max_depth := cfg,-- Subgoals may contain function types,
         -- and we want to continue trying to construct equivalences after the binders.
         pre_apply := tactic.intros >> skip,
@@ -170,7 +170,15 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                 let ty_pp ← pp ty
                   let eqv_pp ← pp eqv
                   let eqv_ty_pp ← infer_type eqv >>= pp
-                  trace f! "Attempting to rewrite the type `{ ty_pp }` using `{ eqv_pp } : { eqv_ty_pp }`."
+                  trace
+                    f!
+                      "Attempting to rewrite the type `{
+                        ty_pp
+                        }` using `{
+                        eqv_pp
+                        } : {
+                        eqv_ty_pp
+                        }`."
           let q( _ ≃ _ ) ← infer_type eqv | fail f! "{ eqv } must be an `equiv`"
           let equiv_ty ← to_expr ` `( $ ( ty ) ≃ _ )
           let new_eqv ← Prod.snd <$> ( solve_aux equiv_ty <| equiv_rw_type_core eqv cfg )
@@ -180,7 +188,8 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
             do
               let eqv_pp ← pp eqv
                 let ty_pp ← pp ty
-                fail f! "Could not construct an equivalence from { eqv_pp } of the form: { ty_pp } ≃ _"
+                fail
+                  f! "Could not construct an equivalence from { eqv_pp } of the form: { ty_pp } ≃ _"
           Prod.fst <$> new_eqv { failIfUnchanged := ff }
 #align tactic.equiv_rw_type tactic.equiv_rw_type
 
@@ -216,7 +225,8 @@ attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_appl
               let x' ← get_local x
                 let x_ty ← infer_type x'
                 let e ← equiv_rw_type e x_ty cfg
-                let eq ← to_expr ` `( $ ( x' ) = Equiv.symm $ ( e ) ( Equiv.toFun $ ( e ) $ ( x' ) ) )
+                let
+                  eq ← to_expr ` `( $ ( x' ) = Equiv.symm $ ( e ) ( Equiv.toFun $ ( e ) $ ( x' ) ) )
                 let prf ← to_expr ` `( ( Equiv.symm_apply_apply $ ( e ) $ ( x' ) ) . symm )
                 let h ← note_anon Eq prf
                 revert h
@@ -232,7 +242,11 @@ attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_appl
                   else
                   unfreezing_hyp x' ( clear' tt [ x' ] )
                     <|>
-                    fail f! "equiv_rw expected to be able to clear the original hypothesis { x }, but couldn't."
+                    fail
+                      f!
+                        "equiv_rw expected to be able to clear the original hypothesis {
+                          x
+                          }, but couldn't."
                 skip
             )
           { failIfUnchanged := false }
@@ -257,7 +271,8 @@ open Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Auxiliary function to call `equiv_rw_hyp` on a `list pexpr` recursively. -/
-unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) : List expr → itactic
+unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) :
+    List expr → itactic
   | [] => skip
   | e :: t => do
     if permissive then equiv_rw_hyp hyp e cfg <|> skip else equiv_rw_hyp hyp e cfg
@@ -295,8 +310,8 @@ a goal `⊢ unique α` into `⊢ unique β`.
 The maximum search depth for rewriting in subexpressions is controlled by
 `equiv_rw e {max_depth := n}`.
 -/
-unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location) (cfg : equiv_rw_cfg := {  }) : itactic :=
-  do
+unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location)
+    (cfg : equiv_rw_cfg := {  }) : itactic := do
   let es ← l.mmap fun e => to_expr e
   match locat with
     | loc.wildcard => do
@@ -339,8 +354,8 @@ add_tactic_doc
 #align tactic.interactive.equiv_rw_type tactic.interactive.equiv_rw_type
 
 add_tactic_doc
-  { Name := "equiv_rw_type", category := DocCategory.tactic, declNames := [`tactic.interactive.equiv_rw_type],
-    tags := ["rewriting", "equiv", "transport"] }
+  { Name := "equiv_rw_type", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.equiv_rw_type], tags := ["rewriting", "equiv", "transport"] }
 
 end Tactic.Interactive
 

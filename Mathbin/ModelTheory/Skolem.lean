@@ -44,7 +44,8 @@ def skolem₁ : Language :=
 
 variable {L}
 
-theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) = (#Σn, L.BoundedFormula Empty (n + 1)) := by
+theorem card_functions_sum_skolem₁ :
+    (#Σn, (L.Sum L.skolem₁).Functions n) = (#Σn, L.BoundedFormula Empty (n + 1)) := by
   simp only [card_functions_sum, skolem₁_functions, lift_id', mk_sigma, sum_add_distrib']
   rw [add_comm, add_eq_max, max_eq_left]
   · refine' sum_le_sum _ _ fun n => _
@@ -56,22 +57,27 @@ theorem card_functions_sum_skolem₁ : (#Σn, (L.Sum L.skolem₁).Functions n) =
   · rw [← mk_sigma]
     exact infinite_iff.1 (Infinite.of_injective (fun n => ⟨n, ⊥⟩) fun x y xy => (Sigma.mk.inj xy).1)
     
-#align first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
+#align
+  first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
 
 theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card := by
   rw [card_functions_sum_skolem₁]
   trans #Σn, L.bounded_formula Empty n
-  · exact ⟨⟨Sigma.map Nat.succ fun _ => id, nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
+  · exact
+      ⟨⟨Sigma.map Nat.succ fun _ => id,
+          nat.succ_injective.sigma_map fun _ => Function.injective_id⟩⟩
     
   · refine' trans bounded_formula.card_le (lift_le.1 _)
     simp only [mk_empty, lift_zero, lift_uzero, zero_add]
     
-#align first_order.language.card_functions_sum_skolem₁_le FirstOrder.Language.card_functions_sum_skolem₁_le
+#align
+  first_order.language.card_functions_sum_skolem₁_le FirstOrder.Language.card_functions_sum_skolem₁_le
 
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
 choice. -/
 noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
-  ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Fin.snoc x a : _ → M), fun _ r => Empty.elim r⟩
+  ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Fin.snoc x a : _ → M), fun _ r =>
+    Empty.elim r⟩
 #align first_order.language.skolem₁_Structure FirstOrder.Language.skolem₁Structure
 
 namespace Substructure
@@ -88,7 +94,8 @@ theorem skolem₁_reduct_is_elementary (S : (L.Sum L.skolem₁).Substructure M) 
   first_order.language.substructure.skolem₁_reduct_is_elementary FirstOrder.Language.Substructure.skolem₁_reduct_is_elementary
 
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
-noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) : L.ElementarySubstructure M :=
+noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :
+    L.ElementarySubstructure M :=
   ⟨LhomCat.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
 #align
   first_order.language.substructure.elementary_skolem₁_reduct FirstOrder.Language.Substructure.elementarySkolem₁Reduct
@@ -109,7 +116,8 @@ instance : Small (⊥ : (L.Sum L.skolem₁).Substructure M).elementarySkolem₁R
   rw [coe_sort_elementary_skolem₁_reduct]
   infer_instance
 
-theorem exists_small_elementary_substructure : ∃ S : L.ElementarySubstructure M, Small.{max u v} S :=
+theorem exists_small_elementary_substructure :
+    ∃ S : L.ElementarySubstructure M, Small.{max u v} S :=
   ⟨Substructure.elementarySkolem₁Reduct ⊥, inferInstance⟩
 #align
   first_order.language.exists_small_elementary_substructure FirstOrder.Language.exists_small_elementary_substructure
@@ -121,7 +129,8 @@ variable {M}
   `max (# s, L.card) ≤ κ` and `κ ≤ # M`, then `M` has an elementary substructure containing `s` of
   cardinality `κ`.  -/
 theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) (h1 : ℵ₀ ≤ κ)
-    (h2 : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} κ) (h3 : Cardinal.lift.{w'} L.card ≤ Cardinal.lift.{max u v} κ)
+    (h2 : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} κ)
+    (h3 : Cardinal.lift.{w'} L.card ≤ Cardinal.lift.{max u v} κ)
     (h4 : Cardinal.lift.{w} κ ≤ Cardinal.lift.{w'} (#M)) :
     ∃ S : L.ElementarySubstructure M, s ⊆ S ∧ Cardinal.lift.{w'} (#S) = Cardinal.lift.{w} κ := by
   obtain ⟨s', hs'⟩ := Cardinal.le_mk_iff_exists_set.1 h4
@@ -141,8 +150,8 @@ theorem exists_elementary_substructure_card_eq (s : Set M) (κ : Cardinal.{w'}) 
   · rw [← lift_le, lift_add, h, add_comm, add_eq_max h1]
     exact max_le le_rfl h2
     
-  · rw [lift_max, lift_aleph_0, max_le_iff, aleph_0_le_lift, and_comm', ← lift_le.{_, w'}, lift_lift, lift_lift, ←
-      aleph_0_le_lift, h]
+  · rw [lift_max, lift_aleph_0, max_le_iff, aleph_0_le_lift, and_comm', ← lift_le.{_, w'},
+      lift_lift, lift_lift, ← aleph_0_le_lift, h]
     refine' ⟨_, h1⟩
     simp only [← lift_lift, lift_umax, lift_umax']
     rw [lift_lift, ← lift_lift.{w', w} L.card]

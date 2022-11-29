@@ -60,8 +60,10 @@ namespace Prefunctor
 @[ext.1]
 theorem ext {V : Type u} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] {F G : Prefunctor V W}
     (h_obj : ∀ X, F.obj X = G.obj X)
-    (h_map : ∀ (X Y : V) (f : X ⟶ Y), F.map f = Eq.recOn (h_obj Y).symm (Eq.recOn (h_obj X).symm (G.map f))) : F = G :=
-  by
+    (h_map :
+      ∀ (X Y : V) (f : X ⟶ Y),
+        F.map f = Eq.recOn (h_obj Y).symm (Eq.recOn (h_obj X).symm (G.map f))) :
+    F = G := by
   cases' F with F_obj _
   cases' G with G_obj _
   obtain rfl : F_obj = G_obj := by
@@ -86,15 +88,16 @@ instance (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
 /-- Composition of morphisms between quivers.
 -/
 @[simps]
-def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W] (F : Prefunctor U V)
-    (G : Prefunctor V W) : Prefunctor U W where
+def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W]
+    (F : Prefunctor U V) (G : Prefunctor V W) : Prefunctor U W where
   obj X := G.obj (F.obj X)
   map X Y f := G.map (F.map f)
 #align prefunctor.comp Prefunctor.comp
 
 @[simp]
-theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z] (F : Prefunctor U V)
-    (G : Prefunctor V W) (H : Prefunctor W Z) : (F.comp G).comp H = F.comp (G.comp H) :=
+theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z]
+    (F : Prefunctor U V) (G : Prefunctor V W) (H : Prefunctor W Z) :
+    (F.comp G).comp H = F.comp (G.comp H) :=
   rfl
 #align prefunctor.comp_assoc Prefunctor.comp_assoc
 

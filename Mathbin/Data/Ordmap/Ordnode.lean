@@ -193,7 +193,9 @@ def balanceL (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
             
           · exact
               if lrs < ratio * lls then node (ls + 1) ll lx (node (lrs + 1) lr x nil)
-              else node (ls + 1) (node (lls + size lrl + 1) ll lx lrl) lrx (node (size lrr + 1) lrr x nil)
+              else
+                node (ls + 1) (node (lls + size lrl + 1) ll lx lrl) lrx
+                  (node (size lrr + 1) lrr x nil)
             
           
         
@@ -212,7 +214,9 @@ def balanceL (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
         --should not happen
         exact
           if lrs < ratio * lls then node (ls + rs + 1) ll lx (node (rs + lrs + 1) lr x r)
-          else node (ls + rs + 1) (node (lls + size lrl + 1) ll lx lrl) lrx (node (size lrr + rs + 1) lrr x r)
+          else
+            node (ls + rs + 1) (node (lls + size lrl + 1) ll lx lrl) lrx
+              (node (size lrr + rs + 1) lrr x r)
         
       
 #align ordnode.balance_l Ordnode.balanceL
@@ -239,7 +243,9 @@ def balanceR (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
             
           · exact
               if rls < ratio * rrs then node (rs + 1) (node (rls + 1) nil x rl) rx rr
-              else node (rs + 1) (node (size rll + 1) nil x rll) rlx (node (size rlr + rrs + 1) rlr rx rr)
+              else
+                node (rs + 1) (node (size rll + 1) nil x rll) rlx
+                  (node (size rlr + rrs + 1) rlr rx rr)
             
           
         
@@ -258,7 +264,9 @@ def balanceR (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
         --should not happen
         exact
           if rls < ratio * rrs then node (ls + rs + 1) (node (ls + rls + 1) l x rl) rx rr
-          else node (ls + rs + 1) (node (ls + size rll + 1) l x rll) rlx (node (size rlr + rrs + 1) rlr rx rr)
+          else
+            node (ls + rs + 1) (node (ls + size rll + 1) l x rll) rlx
+              (node (size rlr + rrs + 1) rlr rx rr)
         
       
 #align ordnode.balance_r Ordnode.balanceR
@@ -285,7 +293,9 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
             
           · exact
               if rls < ratio * rrs then node (rs + 1) (node (rls + 1) nil x rl) rx rr
-              else node (rs + 1) (node (size rll + 1) nil x rll) rlx (node (size rlr + rrs + 1) rlr rx rr)
+              else
+                node (rs + 1) (node (size rll + 1) nil x rll) rlx
+                  (node (size rlr + rrs + 1) rlr rx rr)
             
           
         
@@ -303,11 +313,14 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
             
           · exact
               if lrs < ratio * lls then node (ls + 1) ll lx (node (lrs + 1) lr x nil)
-              else node (ls + 1) (node (lls + size lrl + 1) ll lx lrl) lrx (node (size lrr + 1) lrr x nil)
+              else
+                node (ls + 1) (node (lls + size lrl + 1) ll lx lrl) lrx
+                  (node (size lrr + 1) lrr x nil)
             
           
         
-      · refine' if delta * ls < rs then _ else if delta * rs < ls then _ else node (ls + rs + 1) l x r
+      · refine'
+          if delta * ls < rs then _ else if delta * rs < ls then _ else node (ls + rs + 1) l x r
         · cases' id rl with rls rll rlx rlr
           · exact nil
             
@@ -318,7 +331,9 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
           --should not happen
           exact
             if rls < ratio * rrs then node (ls + rs + 1) (node (ls + rls + 1) l x rl) rx rr
-            else node (ls + rs + 1) (node (ls + size rll + 1) l x rll) rlx (node (size rlr + rrs + 1) rlr rx rr)
+            else
+              node (ls + rs + 1) (node (ls + size rll + 1) l x rll) rlx
+                (node (size rlr + rrs + 1) rlr rx rr)
           
         · cases' id ll with lls
           · exact nil
@@ -330,7 +345,9 @@ def balance (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α := by
           --should not happen
           exact
             if lrs < ratio * lls then node (ls + rs + 1) ll lx (node (lrs + rs + 1) lr x r)
-            else node (ls + rs + 1) (node (lls + size lrl + 1) ll lx lrl) lrx (node (size lrr + rs + 1) lrr x r)
+            else
+              node (ls + rs + 1) (node (lls + size lrl + 1) ll lx lrl) lrx
+                (node (size lrr + rs + 1) lrr x r)
           
         
       
@@ -551,7 +568,8 @@ assumption on the relative sizes.
 def link (l : Ordnode α) (x : α) : Ordnode α → Ordnode α :=
   (Ordnode.recOn l (insertMin x)) fun ls ll lx lr IHll IHlr r =>
     (Ordnode.recOn r (insertMax l x)) fun rs rl rx rr IHrl IHrr =>
-      if delta * ls < rs then balanceL IHrl rx rr else if delta * rs < ls then balanceR ll lx (IHlr r) else node' l x r
+      if delta * ls < rs then balanceL IHrl rx rr
+      else if delta * rs < ls then balanceR ll lx (IHlr r) else node' l x r
 #align ordnode.link Ordnode.link
 
 /-- O(n). Filter the elements of a tree satisfying a predicate.

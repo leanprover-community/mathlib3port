@@ -29,8 +29,8 @@ projection, idempotent
 
 variable {M N S M₀ M₁ R G G₀ : Type _}
 
-variable [Mul M] [Monoid N] [Semigroup S] [MulZeroClass M₀] [MulOneClass M₁] [NonAssocRing R] [Group G]
-  [CancelMonoidWithZero G₀]
+variable [Mul M] [Monoid N] [Semigroup S] [MulZeroClass M₀] [MulOneClass M₁] [NonAssocRing R]
+  [Group G] [CancelMonoidWithZero G₀]
 
 /-- An element `p` is said to be idempotent if `p * p = p`
 -/
@@ -48,8 +48,8 @@ theorem eq {p : M} (h : IsIdempotentElem p) : p * p = p :=
   h
 #align is_idempotent_elem.eq IsIdempotentElem.eq
 
-theorem mul_of_commute {p q : S} (h : Commute p q) (h₁ : IsIdempotentElem p) (h₂ : IsIdempotentElem q) :
-    IsIdempotentElem (p * q) := by
+theorem mul_of_commute {p q : S} (h : Commute p q) (h₁ : IsIdempotentElem p)
+    (h₂ : IsIdempotentElem q) : IsIdempotentElem (p * q) := by
   rw [IsIdempotentElem, mul_assoc, ← mul_assoc q, ← h.eq, mul_assoc p, h₂.eq, ← mul_assoc, h₁.eq]
 #align is_idempotent_elem.mul_of_commute IsIdempotentElem.mul_of_commute
 
@@ -83,7 +83,8 @@ theorem pow_succ_eq {p : N} (n : ℕ) (h : IsIdempotentElem p) : p ^ (n + 1) = p
 
 @[simp]
 theorem iff_eq_one {p : G} : IsIdempotentElem p ↔ p = 1 :=
-  Iff.intro (fun h => mul_left_cancel ((mul_one p).symm ▸ h.Eq : p * p = p * 1)) fun h => h.symm ▸ one
+  Iff.intro (fun h => mul_left_cancel ((mul_one p).symm ▸ h.Eq : p * p = p * 1)) fun h =>
+    h.symm ▸ one
 #align is_idempotent_elem.iff_eq_one IsIdempotentElem.iff_eq_one
 
 @[simp]

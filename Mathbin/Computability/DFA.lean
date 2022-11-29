@@ -50,8 +50,9 @@ theorem eval_from_singleton (s : σ) (a : α) : M.evalFrom s [a] = M.step s a :=
 #align DFA.eval_from_singleton DFA.eval_from_singleton
 
 @[simp]
-theorem eval_from_append_singleton (s : σ) (x : List α) (a : α) : M.evalFrom s (x ++ [a]) = M.step (M.evalFrom s x) a :=
-  by simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+theorem eval_from_append_singleton (s : σ) (x : List α) (a : α) :
+    M.evalFrom s (x ++ [a]) = M.step (M.evalFrom s x) a := by
+  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
 #align DFA.eval_from_append_singleton DFA.eval_from_append_singleton
 
 /-- `M.eval x` evaluates `M` with input `x` starting from the state `M.start`. -/
@@ -90,15 +91,19 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
     (hx : M.evalFrom s x = t) :
     ∃ q a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ M.evalFrom s a = q ∧ M.evalFrom q b = q ∧ M.evalFrom q c = t :=
+        a.length + b.length ≤ Fintype.card σ ∧
+          b ≠ [] ∧ M.evalFrom s a = q ∧ M.evalFrom q b = q ∧ M.evalFrom q c = t :=
   by
   obtain ⟨n, m, hneq, heq⟩ :=
-    Fintype.exists_ne_map_eq_of_card_lt (fun n : Fin (Fintype.card σ + 1) => M.eval_from s (x.take n)) (by norm_num)
+    Fintype.exists_ne_map_eq_of_card_lt
+      (fun n : Fin (Fintype.card σ + 1) => M.eval_from s (x.take n)) (by norm_num)
   wlog hle : (n : ℕ) ≤ m using n m
   have hlt : (n : ℕ) < m := (Ne.le_iff_lt hneq).mp hle
   have hm : (m : ℕ) ≤ Fintype.card σ := Fin.is_le m
   dsimp at heq
-  refine' ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by rfl, _⟩
+  refine'
+    ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by
+      rfl, _⟩
   · rw [List.take_append_drop, List.take_append_drop]
     
   · simp only [List.length_drop, List.length_take]
@@ -115,17 +120,19 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
       
     exact hm.trans hlen
     
-  have hq : M.eval_from (M.eval_from s ((x.take m).take n)) ((x.take m).drop n) = M.eval_from s ((x.take m).take n) :=
+  have hq :
+    M.eval_from (M.eval_from s ((x.take m).take n)) ((x.take m).drop n) =
+      M.eval_from s ((x.take m).take n) :=
     by
-    rw [List.take_take, min_eq_left hle, ← eval_from_of_append, HEq, ← min_eq_left hle, ← List.take_take,
-      min_eq_left hle, List.take_append_drop]
+    rw [List.take_take, min_eq_left hle, ← eval_from_of_append, HEq, ← min_eq_left hle, ←
+      List.take_take, min_eq_left hle, List.take_append_drop]
   use hq
-  rwa [← hq, ← eval_from_of_append, ← eval_from_of_append, ← List.append_assoc, List.take_append_drop,
-    List.take_append_drop]
+  rwa [← hq, ← eval_from_of_append, ← eval_from_of_append, ← List.append_assoc,
+    List.take_append_drop, List.take_append_drop]
 #align DFA.eval_from_split DFA.eval_from_split
 
-theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy : y ∈ @Language.star α {x}) :
-    M.evalFrom s y = s := by
+theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s)
+    (hy : y ∈ @Language.star α {x}) : M.evalFrom s y = s := by
   rw [Language.mem_star] at hy
   rcases hy with ⟨S, rfl, hS⟩
   induction' S with a S ih
@@ -140,9 +147,11 @@ theorem eval_from_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s) (hy 
     
 #align DFA.eval_from_of_pow DFA.eval_from_of_pow
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card σ ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
+    (hlen : Fintype.card σ ≤ List.length x) :
     ∃ a b c,
-      x = a ++ b ++ c ∧ a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
+      x = a ++ b ++ c ∧
+        a.length + b.length ≤ Fintype.card σ ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   obtain ⟨_, a, b, c, hx, hlen, hnil, rfl, hb, hc⟩ := M.eval_from_split hlen rfl
   use a, b, c, hx, hlen, hnil

@@ -28,7 +28,8 @@ namespace Completion
 
 variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
-instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : HasUniformContinuousConstSmul 𝕜 E :=
+instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul :
+    HasUniformContinuousConstSmul 𝕜 E :=
   ⟨fun c => (lipschitzWithSmul c).UniformContinuous⟩
 #align
   uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_has_uniform_continuous_const_smul
@@ -36,8 +37,9 @@ instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : Ha
 instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with smul := (· • ·),
     norm_smul_le := fun c x =>
-      (inductionOn x (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm))) fun y => by
-        simp only [← coe_smul, norm_coe, norm_smul] }
+      (inductionOn x
+          (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm)))
+        fun y => by simp only [← coe_smul, norm_coe, norm_smul] }
 
 variable {𝕜 E}
 
@@ -62,8 +64,8 @@ theorem coe_to_complL : ⇑(toComplL : E →L[𝕜] Completion E) = coe :=
 #align uniform_space.completion.coe_to_complL UniformSpace.Completion.coe_to_complL
 
 @[simp]
-theorem norm_to_complL {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
-    [Nontrivial E] : ‖(toComplL : E →L[𝕜] Completion E)‖ = 1 :=
+theorem norm_to_complL {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] [Nontrivial E] : ‖(toComplL : E →L[𝕜] Completion E)‖ = 1 :=
   (toComplₗᵢ : E →ₗᵢ[𝕜] Completion E).norm_to_continuous_linear_map
 #align uniform_space.completion.norm_to_complL UniformSpace.Completion.norm_to_complL
 
@@ -85,7 +87,8 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
       apply completion.induction_on₂ x y <;> clear x y
       · exact
           isClosedLe (Continuous.comp continuous_norm continuous_mul)
-            (Continuous.comp Real.continuous_mul (Continuous.prod_map continuous_norm continuous_norm))
+            (Continuous.comp Real.continuous_mul
+              (Continuous.prod_map continuous_norm continuous_norm))
         
       · intro x y
         simp only [← coe_mul, norm_coe]

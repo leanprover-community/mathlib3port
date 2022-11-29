@@ -69,7 +69,8 @@ def comp {a b : V} : ∀ {c}, Path a b → Path b c → Path a c
 #align quiver.path.comp Quiver.Path.comp
 
 @[simp]
-theorem comp_cons {a b c d : V} (p : Path a b) (q : Path b c) (e : c ⟶ d) : p.comp (q.cons e) = (p.comp q).cons e :=
+theorem comp_cons {a b c d : V} (p : Path a b) (q : Path b c) (e : c ⟶ d) :
+    p.comp (q.cons e) = (p.comp q).cons e :=
   rfl
 #align quiver.path.comp_cons Quiver.Path.comp_cons
 
@@ -119,17 +120,18 @@ theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length
 
 theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
-  ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq, by
+  ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq,
+    by
     rintro ⟨rfl, rfl⟩
     rfl⟩
 #align quiver.path.comp_inj' Quiver.Path.comp_inj'
 
-theorem comp_injective_left (q : Path b c) : Injective fun p : Path a b => p.comp q := fun p₁ p₂ h =>
-  ((comp_inj rfl).1 h).1
+theorem comp_injective_left (q : Path b c) : Injective fun p : Path a b => p.comp q :=
+  fun p₁ p₂ h => ((comp_inj rfl).1 h).1
 #align quiver.path.comp_injective_left Quiver.Path.comp_injective_left
 
-theorem comp_injective_right (p : Path a b) : Injective (p.comp : Path b c → Path a c) := fun q₁ q₂ h =>
-  ((comp_inj' rfl).1 h).2
+theorem comp_injective_right (p : Path a b) : Injective (p.comp : Path b c → Path a c) :=
+  fun q₁ q₂ h => ((comp_inj' rfl).1 h).2
 #align quiver.path.comp_injective_right Quiver.Path.comp_injective_right
 
 @[simp]
@@ -157,7 +159,8 @@ theorem to_list_comp (p : Path a b) : ∀ {c} (q : Path b c), (p.comp q).toList 
   | c, @cons _ _ _ d _ q f => by simp [to_list_comp]
 #align quiver.path.to_list_comp Quiver.Path.to_list_comp
 
-theorem to_list_chain_nonempty : ∀ {b} (p : Path a b), p.toList.Chain (fun x y => Nonempty (y ⟶ x)) b
+theorem to_list_chain_nonempty :
+    ∀ {b} (p : Path a b), p.toList.Chain (fun x y => Nonempty (y ⟶ x)) b
   | b, nil => List.Chain.nil
   | b, cons p f => p.to_list_chain_nonempty.cons ⟨f⟩
 #align quiver.path.to_list_chain_nonempty Quiver.Path.to_list_chain_nonempty
@@ -191,9 +194,9 @@ variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F 
 
 /- warning: prefunctor.map_path -> Prefunctor.mapPath is a dubious translation:
 lean 3 declaration is
-  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁ u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂ u₂} W] (F : Prefunctor.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁ u₁} V _inst_1 a b) -> (Quiver.Path.{v₂ u₂} W _inst_2 (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F b))
+  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁, u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂, u₂} W] (F : Prefunctor.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁, u₁} V _inst_1 a b) -> (Quiver.Path.{v₂, u₂} W _inst_2 (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F b))
 but is expected to have type
-  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁ u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂ u₂} W] (F : Prefunctor.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁ u₁} V _inst_1 a b) -> (Quiver.Path.{v₂ u₂} W _inst_2 (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁ v₂ u₁ u₂} V _inst_1 W _inst_2 F b))
+  forall {V : Type.{u₁}} [_inst_1 : Quiver.{v₁, u₁} V] {W : Type.{u₂}} [_inst_2 : Quiver.{v₂, u₂} W] (F : Prefunctor.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2) {a : V} {b : V}, (Quiver.Path.{v₁, u₁} V _inst_1 a b) -> (Quiver.Path.{v₂, u₂} W _inst_2 (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F a) (Prefunctor.obj.{v₁, v₂, u₁, u₂} V _inst_1 W _inst_2 F b))
 Case conversion may be inaccurate. Consider using '#align prefunctor.map_path Prefunctor.mapPathₓ'. -/
 /-- The image of a path under a prefunctor. -/
 def mapPath {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)
@@ -216,9 +219,7 @@ theorem map_path_cons {a b c : V} (p : Path a b) (e : b ⟶ c) :
 theorem map_path_comp {a b : V} (p : Path a b) :
     ∀ {c : V} (q : Path b c), F.mapPath (p.comp q) = (F.mapPath p).comp (F.mapPath q)
   | _, path.nil => rfl
-  | _, path.cons p e => by
-    dsimp
-    rw [map_path_comp]
+  | _, path.cons p e => by dsimp; rw [map_path_comp]
 #align prefunctor.map_path_comp Prefunctor.map_path_comp
 
 @[simp]

@@ -33,7 +33,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
       []
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
         "]")]
       []
       []
@@ -78,7 +80,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
               («term_=_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 `s.erase_none
                 ", "
@@ -86,7 +89,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 (Term.app `s.erase_none.map [`embedding.some])
                 ", "
@@ -105,7 +109,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                 "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  (Term.app `s.erase [`none])
                  ", "
@@ -115,14 +120,19 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                 "by"
                 (Tactic.tacticSeq
                  (Tactic.tacticSeq1Indented
-                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
+                  [(Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]")
+                    [])]))))
               (calcStep
                («term_=_»
                 (Term.hole "_")
                 "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  `s
                  ", "
@@ -148,7 +158,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
              («term_=_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                " in "
                `s.erase_none
                ", "
@@ -156,7 +167,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
               "="
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                " in "
                (Term.app `s.erase_none.map [`embedding.some])
                ", "
@@ -175,7 +187,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 (Term.app `s.erase [`none])
                 ", "
@@ -185,14 +198,19 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
+                 [(Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]")
+                   [])]))))
              (calcStep
               («term_=_»
                (Term.hole "_")
                "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 `s
                 ", "
@@ -225,7 +243,10 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
            (Term.app `Option.elim' [(num "1") `f `x])))
          ":="
          (Term.proj
-          («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
+          («term_<|_»
+           (Term.app `Prod_map [`s.erase_none `embedding.some])
+           "<|"
+           (Term.app `Option.elim' [(num "1") `f]))
           "."
           `symm))
         [(calcStep
@@ -244,7 +265,11 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
+             [(Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]")
+               [])]))))
          (calcStep
           («term_=_»
            (Term.hole "_")
@@ -280,7 +305,10 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
           (Term.app `Option.elim' [(num "1") `f `x])))
         ":="
         (Term.proj
-         («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
+         («term_<|_»
+          (Term.app `Prod_map [`s.erase_none `embedding.some])
+          "<|"
+          (Term.app `Option.elim' [(num "1") `f]))
          "."
          `symm))
        [(calcStep
@@ -299,7 +327,11 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]")
+              [])]))))
         (calcStep
          («term_=_»
           (Term.hole "_")
@@ -319,15 +351,18 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `prod_erase
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -354,24 +389,29 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
@@ -382,13 +422,18 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])])))
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]")
+           [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `map_some_erase_none
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -416,20 +461,24 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `s.erase [`none])
@@ -437,10 +486,12 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `none
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.erase
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -449,47 +500,63 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.proj
-       («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
+       («term_<|_»
+        (Term.app `Prod_map [`s.erase_none `embedding.some])
+        "<|"
+        (Term.app `Option.elim' [(num "1") `f]))
        "."
        `symm)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
+      («term_<|_»
+       (Term.app `Prod_map [`s.erase_none `embedding.some])
+       "<|"
+       (Term.app `Option.elim' [(num "1") `f]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Option.elim' [(num "1") `f])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `Prod_map [`s.erase_none `embedding.some])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `embedding.some
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s.erase_none
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Prod_map
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
+     («term_<|_»
+      (Term.app `Prod_map [`s.erase_none `embedding.some])
+      "<|"
+      (Term.app `Option.elim' [(num "1") `f]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -523,20 +590,24 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'num', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `s.erase_none.map [`embedding.some])
@@ -544,10 +615,12 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `embedding.some
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.erase_none.map
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -564,14 +637,17 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s.erase_none
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -584,7 +660,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
       (Term.app `f [`x]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -600,7 +676,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 @[ to_additive ]
   theorem
     prod_erase_none
-    ( f : α → M ) ( s : Finset Option α ) : ∏ x in s . eraseNone , f x = ∏ x in s , Option.elim' 1 f x
+    ( f : α → M ) ( s : Finset Option α )
+      : ∏ x in s . eraseNone , f x = ∏ x in s , Option.elim' 1 f x
     :=
       by
         skip

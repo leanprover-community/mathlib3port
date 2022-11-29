@@ -47,20 +47,23 @@ private unsafe def join_proofs (r : Name) (o₁ o₂ : Option expr) : tactic (Op
       | none => fail f! "converter failed, relation '{r}' is not transitive"
 #align old_conv.join_proofs old_conv.join_proofs
 
-protected unsafe def seq {α β : Type} (c₁ : old_conv (α → β)) (c₂ : old_conv α) : old_conv β := fun r e => do
+protected unsafe def seq {α β : Type} (c₁ : old_conv (α → β)) (c₂ : old_conv α) : old_conv β :=
+  fun r e => do
   let ⟨fn, e₁, pr₁⟩ ← c₁ r e
   let ⟨a, e₂, pr₂⟩ ← c₂ r e₁
   let pr ← join_proofs r pr₁ pr₂
   return ⟨fn a, e₂, pr⟩
 #align old_conv.seq old_conv.seq
 
-protected unsafe def fail {α β : Type} [has_to_format β] (msg : β) : old_conv α := fun r e => tactic.fail msg
+protected unsafe def fail {α β : Type} [has_to_format β] (msg : β) : old_conv α := fun r e =>
+  tactic.fail msg
 #align old_conv.fail old_conv.fail
 
 protected unsafe def failed {α : Type} : old_conv α := fun r e => tactic.failed
 #align old_conv.failed old_conv.failed
 
-protected unsafe def orelse {α : Type} (c₁ : old_conv α) (c₂ : old_conv α) : old_conv α := fun r e => c₁ r e <|> c₂ r e
+protected unsafe def orelse {α : Type} (c₁ : old_conv α) (c₂ : old_conv α) : old_conv α :=
+  fun r e => c₁ r e <|> c₂ r e
 #align old_conv.orelse old_conv.orelse
 
 protected unsafe def map {α β : Type} (f : α → β) (c : old_conv α) : old_conv β := fun r e => do
@@ -68,9 +71,11 @@ protected unsafe def map {α β : Type} (f : α → β) (c : old_conv α) : old_
   return ⟨f a, e₁, pr⟩
 #align old_conv.map old_conv.map
 
-protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old_conv β) : old_conv β := fun r e =>
+protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old_conv β) : old_conv β :=
+  fun r e =>
   Bind.bind (c₁ r e) fun ⟨a, e₁, pr₁⟩ =>
-    Bind.bind (c₂ a r e₁) fun ⟨b, e₂, pr₂⟩ => Bind.bind (join_proofs r pr₁ pr₂) fun pr => return ⟨b, e₂, pr⟩
+    Bind.bind (c₂ a r e₁) fun ⟨b, e₂, pr₂⟩ =>
+      Bind.bind (join_proofs r pr₁ pr₂) fun pr => return ⟨b, e₂, pr⟩
 #align old_conv.bind old_conv.bind
 
 /- do -- wrong bind instance something with `name`?
@@ -106,7 +111,8 @@ unsafe def trace_lhs : old_conv Unit :=
   lhs >>= trace
 #align old_conv.trace_lhs old_conv.trace_lhs
 
-unsafe def apply_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv Unit := fun r e => do
+unsafe def apply_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv Unit := fun r e =>
+  do
   let (new_e, pr) ← s.rewrite e prove r
   return ⟨(), new_e, some pr⟩
 #align old_conv.apply_lemmas_core old_conv.apply_lemmas_core
@@ -116,7 +122,8 @@ unsafe def apply_lemmas (s : simp_lemmas) : old_conv Unit :=
 #align old_conv.apply_lemmas old_conv.apply_lemmas
 
 -- adapter for using iff-lemmas as eq-lemmas
-unsafe def apply_propext_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv Unit := fun r e => do
+unsafe def apply_propext_lemmas_core (s : simp_lemmas) (prove : tactic Unit) : old_conv Unit :=
+  fun r e => do
   guard (r = `eq)
   let (new_e, pr) ← s.rewrite e prove `iff
   let new_pr ← mk_app `propext [pr]
@@ -178,7 +185,8 @@ unsafe def first {α : Type} : List (old_conv α) → old_conv α
   | c :: cs => c <|> first cs
 #align old_conv.first old_conv.first
 
-unsafe def match_pattern (p : pattern) : old_conv Unit := fun r e => tactic.match_pattern p e >> return ⟨(), e, none⟩
+unsafe def match_pattern (p : pattern) : old_conv Unit := fun r e =>
+  tactic.match_pattern p e >> return ⟨(), e, none⟩
 #align old_conv.match_pattern old_conv.match_pattern
 
 unsafe def mk_match_expr (p : pexpr) : tactic (old_conv Unit) := do
@@ -196,7 +204,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
   let expr.lam n bi d b ← return lhs
   let aux_type := expr.pi n bi d (expr.const `true [])
   let (result, _) ←
-    solve_aux aux_type <| do
+    (solve_aux aux_type) do
         let x ← intro1
         let c_result ← c r (b.instantiate_var x)
         let rhs := expr.lam n bi d (c_result.rhs.abstract x)
@@ -290,12 +298,15 @@ unsafe def findp : pexpr → old_conv Unit → old_conv Unit := fun p c r e => d
 #align old_conv.findp old_conv.findp
 
 unsafe def conversion (c : old_conv Unit) : tactic Unit := do
-  let (r, lhs, rhs) ← target_lhs_rhs <|> fail "conversion failed, target is not of the form 'lhs R rhs'"
+  let (r, lhs, rhs) ←
+    target_lhs_rhs <|> fail "conversion failed, target is not of the form 'lhs R rhs'"
   let (new_lhs, pr) ← to_tactic c r lhs
   unify new_lhs rhs <|> do
       let new_lhs_fmt ← pp new_lhs
       let rhs_fmt ← pp rhs
-      fail (to_fmt "conversion failed, expected" ++ rhs_fmt 4 ++ format.line ++ "provided" ++ new_lhs_fmt 4)
+      fail
+          (to_fmt "conversion failed, expected" ++ rhs_fmt 4 ++ format.line ++ "provided" ++
+            new_lhs_fmt 4)
   exact pr
 #align old_conv.conversion old_conv.conversion
 

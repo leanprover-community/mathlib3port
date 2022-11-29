@@ -224,8 +224,9 @@ instance hasSmul' : HasSmul S p where smul c x := ⟨c • x.1, smul_of_tower_me
 
 instance : IsScalarTower S R p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 
-instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M] [IsScalarTower S' R M]
-    [IsScalarTower S' S M] : IsScalarTower S' S p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
+instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M]
+    [IsScalarTower S' R M] [IsScalarTower S' S M] :
+    IsScalarTower S' S p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 #align sub_mul_action.is_scalar_tower' SubMulAction.is_scalar_tower'
 
 @[simp, norm_cast]
@@ -234,8 +235,8 @@ theorem coe_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
 #align sub_mul_action.coe_smul_of_tower SubMulAction.coe_smul_of_tower
 
 @[simp]
-theorem smul_mem_iff' {G} [Group G] [HasSmul G R] [MulAction G M] [IsScalarTower G R M] (g : G) {x : M} :
-    g • x ∈ p ↔ x ∈ p :=
+theorem smul_mem_iff' {G} [Group G] [HasSmul G R] [MulAction G M] [IsScalarTower G R M] (g : G)
+    {x : M} : g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 #align sub_mul_action.smul_mem_iff' SubMulAction.smul_mem_iff'
 
@@ -263,7 +264,8 @@ instance : MulAction R p :=
 end
 
 /-- Orbits in a `sub_mul_action` coincide with orbits in the ambient space. -/
-theorem coe_image_orbit {p : SubMulAction R M} (m : p) : coe '' MulAction.orbit R m = MulAction.orbit R (m : M) :=
+theorem coe_image_orbit {p : SubMulAction R M} (m : p) :
+    coe '' MulAction.orbit R m = MulAction.orbit R (m : M) :=
   (Set.range_comp _ _).symm
 #align sub_mul_action.coe_image_orbit SubMulAction.coe_image_orbit
 
@@ -308,7 +310,8 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
-instance [n_empty : Nonempty p] : Zero p where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
+instance [n_empty : Nonempty p] :
+    Zero p where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
 
 end Module
 

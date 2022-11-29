@@ -15,12 +15,12 @@ unsafe def monotonicity : user_attribute where
   descr := "Monotonicity rules for predicates"
 #align monotonicity monotonicity
 
-theorem Monotonicity.pi {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) : Implies (∀ a, p a) (∀ a, q a) :=
-  fun h' a => h a (h' a)
+theorem Monotonicity.pi {α : Sort u} {p q : α → Prop} (h : ∀ a, Implies (p a) (q a)) :
+    Implies (∀ a, p a) (∀ a, q a) := fun h' a => h a (h' a)
 #align monotonicity.pi Monotonicity.pi
 
-theorem Monotonicity.imp {p p' q q' : Prop} (h₁ : Implies p' q') (h₂ : Implies q p) : Implies (p → p') (q → q') :=
-  fun h => h₁ ∘ h ∘ h₂
+theorem Monotonicity.imp {p p' q q' : Prop} (h₁ : Implies p' q') (h₂ : Implies q p) :
+    Implies (p → p') (q → q') := fun h => h₁ ∘ h ∘ h₂
 #align monotonicity.imp Monotonicity.imp
 
 @[monotonicity]
@@ -44,12 +44,14 @@ theorem Monotonicity.exists {α : Sort u} {p q : α → Prop} (h : ∀ a, Implie
 #align monotonicity.exists Monotonicity.exists
 
 @[monotonicity]
-theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∧ q) (p' ∧ q') :=
+theorem Monotonicity.and {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') :
+    Implies (p ∧ q) (p' ∧ q') :=
   And.imp hp hq
 #align monotonicity.and Monotonicity.and
 
 @[monotonicity]
-theorem Monotonicity.or {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') : Implies (p ∨ q) (p' ∨ q') :=
+theorem Monotonicity.or {p p' q q' : Prop} (hp : Implies p p') (hq : Implies q q') :
+    Implies (p ∨ q) (p' ∨ q') :=
   Or.imp hp hq
 #align monotonicity.or Monotonicity.or
 
@@ -88,7 +90,10 @@ private unsafe def mono_aux (ns : List Name) (hs : List expr) : tactic Unit := d
                 let q' := qb 0 1
                 eapply ((const `monotonicity.imp [] : expr) pd p' qd q')
                 skip) <|>
-      first (hs fun h => apply_core h { md := transparency.none, NewGoals := new_goals.non_dep_only } >> skip) <|>
+      first
+          (hs fun h =>
+            apply_core h { md := transparency.none, NewGoals := new_goals.non_dep_only } >>
+              skip) <|>
         first
           (ns fun n => do
             let c ← mk_const n
@@ -182,39 +187,48 @@ namespace CoindPred
 
 unsafe def u_params (pd : coind_pred) : List level :=
   pd.u_names.map param
-#align tactic.add_coinductive_predicate.coind_pred.u_params tactic.add_coinductive_predicate.coind_pred.u_params
+#align
+  tactic.add_coinductive_predicate.coind_pred.u_params tactic.add_coinductive_predicate.coind_pred.u_params
 
 unsafe def f₁_l (pd : coind_pred) : expr :=
   pd.f₁.app_of_list pd.locals
-#align tactic.add_coinductive_predicate.coind_pred.f₁_l tactic.add_coinductive_predicate.coind_pred.f₁_l
+#align
+  tactic.add_coinductive_predicate.coind_pred.f₁_l tactic.add_coinductive_predicate.coind_pred.f₁_l
 
 unsafe def f₂_l (pd : coind_pred) : expr :=
   pd.f₂.app_of_list pd.locals
-#align tactic.add_coinductive_predicate.coind_pred.f₂_l tactic.add_coinductive_predicate.coind_pred.f₂_l
+#align
+  tactic.add_coinductive_predicate.coind_pred.f₂_l tactic.add_coinductive_predicate.coind_pred.f₂_l
 
 unsafe def pred (pd : coind_pred) : expr :=
   const pd.pd_name pd.u_params
-#align tactic.add_coinductive_predicate.coind_pred.pred tactic.add_coinductive_predicate.coind_pred.pred
+#align
+  tactic.add_coinductive_predicate.coind_pred.pred tactic.add_coinductive_predicate.coind_pred.pred
 
 unsafe def func (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "functional") pd.u_params
-#align tactic.add_coinductive_predicate.coind_pred.func tactic.add_coinductive_predicate.coind_pred.func
+#align
+  tactic.add_coinductive_predicate.coind_pred.func tactic.add_coinductive_predicate.coind_pred.func
 
 unsafe def func_g (pd : coind_pred) : expr :=
   pd.func.app_of_list <| pd.params
-#align tactic.add_coinductive_predicate.coind_pred.func_g tactic.add_coinductive_predicate.coind_pred.func_g
+#align
+  tactic.add_coinductive_predicate.coind_pred.func_g tactic.add_coinductive_predicate.coind_pred.func_g
 
 unsafe def pred_g (pd : coind_pred) : expr :=
   pd.pred.app_of_list <| pd.params
-#align tactic.add_coinductive_predicate.coind_pred.pred_g tactic.add_coinductive_predicate.coind_pred.pred_g
+#align
+  tactic.add_coinductive_predicate.coind_pred.pred_g tactic.add_coinductive_predicate.coind_pred.pred_g
 
 unsafe def impl_locals (pd : coind_pred) : List expr :=
   pd.locals.map to_implicit_binder
-#align tactic.add_coinductive_predicate.coind_pred.impl_locals tactic.add_coinductive_predicate.coind_pred.impl_locals
+#align
+  tactic.add_coinductive_predicate.coind_pred.impl_locals tactic.add_coinductive_predicate.coind_pred.impl_locals
 
 unsafe def impl_params (pd : coind_pred) : List expr :=
   pd.params.map to_implicit_binder
-#align tactic.add_coinductive_predicate.coind_pred.impl_params tactic.add_coinductive_predicate.coind_pred.impl_params
+#align
+  tactic.add_coinductive_predicate.coind_pred.impl_params tactic.add_coinductive_predicate.coind_pred.impl_params
 
 unsafe def le (pd : coind_pred) (f₁ f₂ : expr) : expr :=
   (imp (f₁.app_of_list pd.locals) (f₂.app_of_list pd.locals)).pis pd.impl_locals
@@ -227,7 +241,8 @@ unsafe def corec_functional (pd : coind_pred) : expr :=
 
 unsafe def mono (pd : coind_pred) : expr :=
   const (pd.func.const_name ++ "mono") pd.u_params
-#align tactic.add_coinductive_predicate.coind_pred.mono tactic.add_coinductive_predicate.coind_pred.mono
+#align
+  tactic.add_coinductive_predicate.coind_pred.mono tactic.add_coinductive_predicate.coind_pred.mono
 
 unsafe def rec' (pd : coind_pred) : tactic expr := do
   let c := pd.func.const_name ++ "rec"
@@ -235,20 +250,25 @@ unsafe def rec' (pd : coind_pred) : tactic expr := do
   let decl ← env.get c
   let num := decl.univ_params.length
   return (const c <| if Num = pd then pd else level.zero :: pd)
-#align tactic.add_coinductive_predicate.coind_pred.rec' tactic.add_coinductive_predicate.coind_pred.rec'
+#align
+  tactic.add_coinductive_predicate.coind_pred.rec' tactic.add_coinductive_predicate.coind_pred.rec'
 
 -- ^^ `rec`'s universes are not always `u_params`, e.g. eq, wf, false
 unsafe def construct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "construct") pd.u_params
-#align tactic.add_coinductive_predicate.coind_pred.construct tactic.add_coinductive_predicate.coind_pred.construct
+#align
+  tactic.add_coinductive_predicate.coind_pred.construct tactic.add_coinductive_predicate.coind_pred.construct
 
 unsafe def destruct (pd : coind_pred) : expr :=
   const (pd.pd_name ++ "destruct") pd.u_params
-#align tactic.add_coinductive_predicate.coind_pred.destruct tactic.add_coinductive_predicate.coind_pred.destruct
+#align
+  tactic.add_coinductive_predicate.coind_pred.destruct tactic.add_coinductive_predicate.coind_pred.destruct
 
-unsafe def add_theorem (pd : coind_pred) (n : Name) (type : expr) (tac : tactic Unit) : tactic expr :=
+unsafe def add_theorem (pd : coind_pred) (n : Name) (type : expr) (tac : tactic Unit) :
+    tactic expr :=
   add_theorem_by n pd.u_names type tac
-#align tactic.add_coinductive_predicate.coind_pred.add_theorem tactic.add_coinductive_predicate.coind_pred.add_theorem
+#align
+  tactic.add_coinductive_predicate.coind_pred.add_theorem tactic.add_coinductive_predicate.coind_pred.add_theorem
 
 end CoindPred
 
@@ -272,15 +292,17 @@ unsafe def compact_relation : List expr → List (expr × expr) → List expr ×
       compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
 #align tactic.compact_relation tactic.compact_relation
 
-unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) (preds : List <| expr × List expr) :
-    Tactic := do
+unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
+    (preds : List <| expr × List expr) : Tactic := do
   let params_names := params.map local_pp_name
   let u_params := u_names.map param
   let pre_info ←
     preds.mmap fun ⟨c, is⟩ => do
         let (ls, t) ← open_pis c.local_type
         is_def_eq t q(Prop) <|>
-            fail ((f! "Type of {c} is not Prop. Currently only ") ++ "coinductive predicates are supported.")
+            fail
+              ((f! "Type of {c} is not Prop. Currently only ") ++
+                "coinductive predicates are supported.")
         let n := if preds.length = 1 then "" else "_" ++ c.local_pp_name.lastString
         let f₁ ← mk_local_def (mkSimpleName <| "C" ++ n) c.local_type
         let f₂ ← mk_local_def (mkSimpleName <| "C₂" ++ n) c.local_type
@@ -297,11 +319,12 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
               let (args, t') ← open_pis i.local_type
               let Name.mk_string sub p ← return i.local_uniq_name
               let loc_args :=
-                args.map fun e => (fs₁.zip preds).foldl (fun (e : expr) ⟨f, c, _⟩ => e.replace_with (pred_g c) f) e
+                args.map fun e =>
+                  (fs₁.zip preds).foldl (fun (e : expr) ⟨f, c, _⟩ => e.replace_with (pred_g c) f) e
               let t' := t'.replace_with (pred_g c) f₂
               return
-                  { orig_nm := i, func_nm := p ++ "functional" ++ sub, type := i, loc_type := t' loc_args, concl := t',
-                    loc_args, args, insts := t' }
+                  { orig_nm := i, func_nm := p ++ "functional" ++ sub, type := i,
+                    loc_type := t' loc_args, concl := t', loc_args, args, insts := t' }
         return { pd_name := c, type := c, f₁, f₂, u_f, intros, locals := ls, params, u_names }
   -- Introduce all functionals
       pds
@@ -314,7 +337,8 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
             fun r : coind_rule => do
             let t := instantiate_local pd (pd fs₁) r
             return (r, r, t <| params ++ fs₁)
-      add_inductive pd u_names (params + preds) (pd <| params ++ fs₁) (func_intros fun ⟨t, _, r⟩ => (t, r))
+      add_inductive pd u_names (params + preds) (pd <| params ++ fs₁)
+          (func_intros fun ⟨t, _, r⟩ => (t, r))
       let mono_params
         ←-- Prove monotonicity rule
             pds
@@ -337,13 +361,17 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           -- somehow `induction` / `cases` doesn't work?
               func_intros
               fun ⟨n, pp_n, t⟩ =>
-              solve1 <| do
+              solve1 do
                 let bs ← intros
-                let ms ← apply_core ((const n u_params).app_of_list <| ps ++ fs Prod.fst) { NewGoals := new_goals.all }
+                let ms ←
+                  apply_core ((const n u_params).app_of_list <| ps ++ fs Prod.fst)
+                      { NewGoals := new_goals.all }
                 let params ← (ms bs).enum.mfilter fun ⟨n, m, d⟩ => not <$> is_assigned m.2
                 params fun ⟨n, m, d⟩ =>
                     mono d (fs Prod.snd) <|>
-                      fail f!"failed to prove montonoicity of {(n + 1)}. parameter of intro-rule {pp_n}"
+                      fail
+                        f!"failed to prove montonoicity of {(n +
+                            1)}. parameter of intro-rule {pp_n}"
   pds fun pd => do
       let func_f := fun pd : coind_pred => pd <| pds coind_pred.f₁
       let pred_body
@@ -379,7 +407,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           let (hs, h, _) ← elim_gen_prod pds h [] []
           eapply <| pd ps
           pds fun pd : coind_pred =>
-              focus1 <| do
+              focus1 do
                 eapply <| pd
                 focus <| hs exact
           let some h' ← return <| hs n
@@ -393,7 +421,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
         let func_pred_g := fun pd : coind_pred => pd <| ps ++ pds fun pd : coind_pred => pd ps
         eapply <| pd <| ps ++ pds func_pred_g
         pds fun pd : coind_pred =>
-            solve1 <| do
+            solve1 do
               eapply <| pd ps
               pds fun pd => solve1 <| eapply (pd ps) >> skip
   -- prove `cases_on` rules
@@ -434,7 +462,8 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                     | _, _ => Prod.mk (bs, eqs) <$> mk_exists_lst bs (mk_and_lst eqs)
             let shape := intros Prod.fst
             let intros := intros Prod.snd
-            Prod.mk shape <$> mk_local_def (mkSimpleName <| "h_" ++ pd) (((pd pd).imp (mk_or_lst intros)).pis pd)
+            Prod.mk shape <$>
+                mk_local_def (mkSimpleName <| "h_" ++ pd) (((pd pd).imp (mk_or_lst intros)).pis pd)
       let shape := rules Prod.fst
       let rules := rules Prod.snd
       let h ← mk_local_def `h <| pd pd
@@ -446,7 +475,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
           let rules ← intro_lst <| rules local_pp_name
           eapply <| pd <| ps ++ fs
           (pds <| rules shape).mmap fun ⟨pd, hr, s⟩ =>
-              solve1 <| do
+              solve1 do
                 let ls ← intro_lst <| pd local_pp_name
                 let h' ← intro `h
                 let h' ← note `h' none <| hr ls h'
@@ -458,7 +487,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
                     do
                     let hs ← elim_gen_sum n h'
                     (hs <| pd s).mmap' fun ⟨h, r, n_bs, n_eqs⟩ =>
-                        solve1 <| do
+                        solve1 do
                           let (as, h, _) ← elim_gen_prod (n_bs - if n_eqs = 0 then 1 else 0) h [] []
                           if n_eqs > 0 then do
                               let (eqs, eq', _) ← elim_gen_prod (n_eqs - 1) h [] []
@@ -471,7 +500,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
       pds
       fun pd =>
       pd fun r =>
-        pd r (r params) <| do
+        (pd r (r params)) do
           let ps ← intro_lst <| params local_pp_name
           let bs ← intros
           eapply <| pd
@@ -483,7 +512,8 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr) 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 -- we setup a trivial goal for the tactic framework
 @[user_command]
-unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "coinductive") : lean.parser Unit := do
+unsafe def coinductive_predicate (meta_info : decl_meta_info) (_ : parse <| tk "coinductive") :
+    lean.parser Unit := do
   let decl ← inductive_decl.parse meta_info
   add_coinductive_predicate decl decl <| decl fun d => (d, d)
   decl fun d => do
@@ -501,9 +531,11 @@ the quantifiers in the current goal.
 
 Current version: do not support mutual inductive rules -/
 unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
-  focus1 <| do
+  focus1 do
     let ctxts' ← intros
-    let ctxts ← ctxts'.mmap fun v => local_const v.local_uniq_name v.local_pp_name v.local_binding_info <$> infer_type v
+    let ctxts ←
+      ctxts'.mmap fun v =>
+          local_const v.local_uniq_name v.local_pp_name v.local_binding_info <$> infer_type v
     let mvars ← apply_core rule { approx := false, NewGoals := NewGoals.all }
     let g
       ←-- analyse relation
@@ -514,7 +546,9 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
     let (is, ty) ← open_pis tgt
     let-- construct coinduction predicate
       (bs, eqs)
-      ← compact_relation ctxts <$> (is.zip m_is).mmap fun ⟨i, m⟩ => Prod.mk i <$> instantiate_mvars m.2
+      ←
+      compact_relation ctxts <$>
+          (is.zip m_is).mmap fun ⟨i, m⟩ => Prod.mk i <$> instantiate_mvars m.2
     solve1 do
         let eqs ←
           (mk_and_lst <$> eqs fun ⟨i, m⟩ => mk_app `eq [m, i] >>= instantiate_mvars) <|> do

@@ -98,7 +98,8 @@ theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : �
 
 /-- Constructor for a closure operator using the weaker idempotency axiom: `f (f x) ≤ f x`. -/
 @[simps]
-def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) : ClosureOperator α where
+def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ : ∀ x, f (f x) ≤ f x) :
+    ClosureOperator α where
   toFun := f
   monotone' := hf₁
   le_closure' := hf₂
@@ -108,7 +109,8 @@ def mk' (f : α → α) (hf₁ : Monotone f) (hf₂ : ∀ x, x ≤ f x) (hf₃ :
 /-- Convenience constructor for a closure operator using the weaker minimality axiom:
 `x ≤ f y → f x ≤ f y`, which is sometimes easier to prove in practice. -/
 @[simps]
-def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f y → f x ≤ f y) : ClosureOperator α where
+def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f y → f x ≤ f y) :
+    ClosureOperator α where
   toFun := f
   monotone' x y hxy := hmin (hxy.trans (hf y))
   le_closure' := hf
@@ -119,8 +121,8 @@ def mk₂ (f : α → α) (hf : ∀ x, x ≤ f x) (hmin : ∀ ⦃x y⦄, x ≤ f
 you already know a sufficient condition for being closed and using `mem_mk₃_closed` will avoid you
 the (slight) hassle of having to prove it both inside and outside the constructor. -/
 @[simps]
-def mk₃ (f : α → α) (p : α → Prop) (hf : ∀ x, x ≤ f x) (hfp : ∀ x, p (f x)) (hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y) :
-    ClosureOperator α :=
+def mk₃ (f : α → α) (p : α → Prop) (hf : ∀ x, x ≤ f x) (hfp : ∀ x, p (f x))
+    (hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y) : ClosureOperator α :=
   mk₂ f hf fun x y hxy => hmin hxy (hfp y)
 #align closure_operator.mk₃ ClosureOperator.mk₃
 
@@ -134,7 +136,8 @@ theorem closure_mem_mk₃ {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f
 /-- Analogue of `closure_le_closed_iff_le` but with the `p` that was fed into the `mk₃` constructor.
 -/
 theorem closure_le_mk₃_iff {f : α → α} {p : α → Prop} {hf : ∀ x, x ≤ f x} {hfp : ∀ x, p (f x)}
-    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x y : α} (hxy : x ≤ y) (hy : p y) : mk₃ f p hf hfp hmin x ≤ y :=
+    {hmin : ∀ ⦃x y⦄, x ≤ y → p y → f x ≤ y} {x y : α} (hxy : x ≤ y) (hy : p y) :
+    mk₃ f p hf hfp hmin x ≤ y :=
   hmin hxy hy
 #align closure_operator.closure_le_mk₃_iff ClosureOperator.closure_le_mk₃_iff
 
@@ -200,7 +203,10 @@ theorem closure_le_closed_iff_le (x : α) {y : α} (hy : c.closed y) : c x ≤ y
 /-- A closure operator is equal to the closure operator obtained by feeding `c.closed` into the
 `mk₃` constructor. -/
 theorem eq_mk₃_closed (c : ClosureOperator α) :
-    c = mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy => (c.closure_le_closed_iff_le x hy).2 hxy := by
+    c =
+      mk₃ c c.closed c.le_closure c.closure_is_closed fun x y hxy hy =>
+        (c.closure_le_closed_iff_le x hy).2 hxy :=
+  by
   ext
   rfl
 #align closure_operator.eq_mk₃_closed ClosureOperator.eq_mk₃_closed
@@ -230,7 +236,8 @@ theorem top_mem_closed : ⊤ ∈ c.closed :=
 
 end OrderTop
 
-theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) : c (x ⊓ y) ≤ c x ⊓ c y :=
+theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) :
+    c (x ⊓ y) ≤ c x ⊓ c y :=
   c.Monotone.map_inf_le _ _
 #align closure_operator.closure_inf_le ClosureOperator.closure_inf_le
 
@@ -243,7 +250,8 @@ theorem closure_sup_closure_le (x y : α) : c x ⊔ c y ≤ c (x ⊔ y) :=
 #align closure_operator.closure_sup_closure_le ClosureOperator.closure_sup_closure_le
 
 theorem closure_sup_closure_left (x y : α) : c (c x ⊔ y) = c (x ⊔ y) :=
-  ((c.le_closure_iff _ _).1 (sup_le (c.Monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
+  ((c.le_closure_iff _ _).1
+        (sup_le (c.Monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
     (c.Monotone (sup_le_sup_right (c.le_closure _) _))
 #align closure_operator.closure_sup_closure_left ClosureOperator.closure_sup_closure_left
 
@@ -270,7 +278,8 @@ theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem closure_supr₂_closure (f : ∀ i, κ i → α) : c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
+theorem closure_supr₂_closure (f : ∀ i, κ i → α) :
+    c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
   le_antisymm ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
     c.Monotone <| supr₂_mono fun i j => c.le_closure _
 #align closure_operator.closure_supr₂_closure ClosureOperator.closure_supr₂_closure
@@ -415,7 +424,8 @@ theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.closed y) : u (l x) �
 
 end PartialOrder
 
-theorem closure_top [PartialOrder α] [OrderTop α] [Preorder β] {u : β → α} (l : LowerAdjoint u) : u (l ⊤) = ⊤ :=
+theorem closure_top [PartialOrder α] [OrderTop α] [Preorder β] {u : β → α} (l : LowerAdjoint u) :
+    u (l ⊤) = ⊤ :=
   l.ClosureOperator.closure_top
 #align lower_adjoint.closure_top LowerAdjoint.closure_top
 
@@ -456,7 +466,8 @@ theorem closure_supr_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
+theorem closure_supr₂_closure (f : ∀ i, κ i → α) :
+    u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
   l.ClosureOperator.closure_supr₂_closure _
 #align lower_adjoint.closure_supr₂_closure LowerAdjoint.closure_supr₂_closure
 
@@ -471,7 +482,8 @@ theorem subset_closure (s : Set β) : s ⊆ l s :=
   l.le_closure s
 #align lower_adjoint.subset_closure LowerAdjoint.subset_closure
 
-theorem not_mem_of_not_mem_closure {s : Set β} {P : β} (hP : P ∉ l s) : P ∉ s := fun h => hP (subset_closure _ s h)
+theorem not_mem_of_not_mem_closure {s : Set β} {P : β} (hP : P ∉ l s) : P ∉ s := fun h =>
+  hP (subset_closure _ s h)
 #align lower_adjoint.not_mem_of_not_mem_closure LowerAdjoint.not_mem_of_not_mem_closure
 
 theorem le_iff_subset (s : Set β) (S : α) : l s ≤ S ↔ s ⊆ S :=
@@ -514,7 +526,8 @@ theorem closure_Union_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem closure_Union₂_closure (f : ∀ i, κ i → α) : l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
+theorem closure_Union₂_closure (f : ∀ i, κ i → α) :
+    l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
   SetLike.coe_injective <| l.closure_supr₂_closure _
 #align lower_adjoint.closure_Union₂_closure LowerAdjoint.closure_Union₂_closure
 
@@ -529,8 +542,8 @@ variable {α}
 
 /-- Every Galois connection induces a lower adjoint. -/
 @[simps]
-def GaloisConnection.lowerAdjoint [Preorder α] [Preorder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
-    LowerAdjoint u where
+def GaloisConnection.lowerAdjoint [Preorder α] [Preorder β] {l : α → β} {u : β → α}
+    (gc : GaloisConnection l u) : LowerAdjoint u where
   toFun := l
   gc' := gc
 #align galois_connection.lower_adjoint GaloisConnection.lowerAdjoint
@@ -538,13 +551,14 @@ def GaloisConnection.lowerAdjoint [Preorder α] [Preorder β] {l : α → β} {u
 /-- Every Galois connection induces a closure operator given by the composition. This is the partial
 order version of the statement that every adjunction induces a monad. -/
 @[simps]
-def GaloisConnection.closureOperator [PartialOrder α] [Preorder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
-    ClosureOperator α :=
+def GaloisConnection.closureOperator [PartialOrder α] [Preorder β] {l : α → β} {u : β → α}
+    (gc : GaloisConnection l u) : ClosureOperator α :=
   gc.LowerAdjoint.ClosureOperator
 #align galois_connection.closure_operator GaloisConnection.closureOperator
 
 /-- The set of closed elements has a Galois insertion to the underlying type. -/
-def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) : GaloisInsertion c.toClosed coe where
+def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) :
+    GaloisInsertion c.toClosed coe where
   choice x hx := ⟨x, hx.antisymm (c.le_closure x)⟩
   gc x y := c.closure_le_closed_iff_le _ y.2
   le_l_u x := c.le_closure _
@@ -555,7 +569,8 @@ def ClosureOperator.gi [PartialOrder α] (c : ClosureOperator α) : GaloisInsert
 operator.
 Note that the inverse in the opposite direction does not hold in general. -/
 @[simp]
-theorem closure_operator_gi_self [PartialOrder α] (c : ClosureOperator α) : c.gi.gc.ClosureOperator = c := by
+theorem closure_operator_gi_self [PartialOrder α] (c : ClosureOperator α) :
+    c.gi.gc.ClosureOperator = c := by
   ext x
   rfl
 #align closure_operator_gi_self closure_operator_gi_self

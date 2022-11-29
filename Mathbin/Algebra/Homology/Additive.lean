@@ -49,12 +49,14 @@ instance : Sub (C ⟶ D) :=
 
 instance hasNatScalar : HasSmul ℕ (C ⟶ D) :=
   ⟨fun n f =>
-    { f := fun i => n • f.f i, comm' := fun i j h => by simp [preadditive.nsmul_comp, preadditive.comp_nsmul] }⟩
+    { f := fun i => n • f.f i,
+      comm' := fun i j h => by simp [preadditive.nsmul_comp, preadditive.comp_nsmul] }⟩
 #align homological_complex.has_nat_scalar HomologicalComplex.hasNatScalar
 
 instance hasIntScalar : HasSmul ℤ (C ⟶ D) :=
   ⟨fun n f =>
-    { f := fun i => n • f.f i, comm' := fun i j h => by simp [preadditive.zsmul_comp, preadditive.comp_zsmul] }⟩
+    { f := fun i => n • f.f i,
+      comm' := fun i j h => by simp [preadditive.zsmul_comp, preadditive.comp_zsmul] }⟩
 #align homological_complex.has_int_scalar HomologicalComplex.hasIntScalar
 
 @[simp]
@@ -88,8 +90,8 @@ theorem zsmul_f_apply (n : ℤ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f
 #align homological_complex.zsmul_f_apply HomologicalComplex.zsmul_f_apply
 
 instance : AddCommGroup (C ⟶ D) :=
-  Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective (by tidy) (by tidy) (by tidy) (by tidy)
-    (by tidy) (by tidy)
+  Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective (by tidy) (by tidy)
+    (by tidy) (by tidy) (by tidy) (by tidy)
 
 instance : Preadditive (HomologicalComplex V c) where
 
@@ -122,8 +124,7 @@ instance homology_additive :
     ext
     simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
     congr
-    ext
-    simp
+    ext; simp
 #align homological_complex.homology_additive HomologicalComplex.homology_additive
 
 end HomologicalComplex
@@ -151,32 +152,37 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
 
 instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
     (F.mapHomologicalComplex c).Additive where
-#align category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
+#align
+  category_theory.functor.map_homogical_complex_additive CategoryTheory.Functor.map_homogical_complex_additive
 
 /-- A natural transformation between functors induces a natural transformation
 between those functors applied to homological complexes.
 -/
 @[simps]
-def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
+def NatTrans.mapHomologicalComplex {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G)
+    (c : ComplexShape ι) :
     F.mapHomologicalComplex c ⟶ G.mapHomologicalComplex c where app C := { f := fun i => α.app _ }
-#align category_theory.nat_trans.map_homological_complex CategoryTheory.NatTrans.mapHomologicalComplex
+#align
+  category_theory.nat_trans.map_homological_complex CategoryTheory.NatTrans.mapHomologicalComplex
 
 @[simp]
 theorem NatTrans.map_homological_complex_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     NatTrans.mapHomologicalComplex (𝟙 F) c = 𝟙 (F.mapHomologicalComplex c) := by tidy
-#align category_theory.nat_trans.map_homological_complex_id CategoryTheory.NatTrans.map_homological_complex_id
+#align
+  category_theory.nat_trans.map_homological_complex_id CategoryTheory.NatTrans.map_homological_complex_id
 
 @[simp]
-theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive] [G.Additive]
-    [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
+theorem NatTrans.map_homological_complex_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive]
+    [G.Additive] [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
     NatTrans.mapHomologicalComplex (α ≫ β) c =
       NatTrans.mapHomologicalComplex α c ≫ NatTrans.mapHomologicalComplex β c :=
   by tidy
-#align category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.map_homological_complex_comp
+#align
+  category_theory.nat_trans.map_homological_complex_comp CategoryTheory.NatTrans.map_homological_complex_comp
 
 @[simp, reassoc]
-theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive] [G.Additive]
-    (α : F ⟶ G) {C D : HomologicalComplex V c} (f : C ⟶ D) :
+theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G : V ⥤ W} [F.Additive]
+    [G.Additive] (α : F ⟶ G) {C D : HomologicalComplex V c} (f : C ⟶ D) :
     (F.mapHomologicalComplex c).map f ≫ (NatTrans.mapHomologicalComplex α c).app D =
       (NatTrans.mapHomologicalComplex α c).app C ≫ (G.mapHomologicalComplex c).map f :=
   by tidy
@@ -199,7 +205,8 @@ theorem map_chain_complex_of (F : V ⥤ W) [F.Additive] (X : α → V) (d : ∀ 
   by
   refine' HomologicalComplex.ext rfl _
   rintro i j (rfl : j + 1 = i)
-  simp only [CategoryTheory.Functor.map_homological_complex_obj_d, of_d, eq_to_hom_refl, comp_id, id_comp]
+  simp only [CategoryTheory.Functor.map_homological_complex_obj_d, of_d, eq_to_hom_refl, comp_id,
+    id_comp]
 #align chain_complex.map_chain_complex_of ChainComplex.map_chain_complex_of
 
 end ChainComplex
@@ -241,31 +248,36 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
     ext i
     dsimp
     split_ifs with h <;> simp [h]
-#align homological_complex.single_map_homological_complex HomologicalComplex.singleMapHomologicalComplex
+#align
+  homological_complex.single_map_homological_complex HomologicalComplex.singleMapHomologicalComplex
 
 variable (F : V ⥤ W) [Functor.Additive F] (c)
 
 @[simp]
 theorem single_map_homological_complex_hom_app_self (j : ι) (X : V) :
-    ((singleMapHomologicalComplex F c j).Hom.app X).f j = eqToHom (by simp) := by simp [single_map_homological_complex]
+    ((singleMapHomologicalComplex F c j).Hom.app X).f j = eqToHom (by simp) := by
+  simp [single_map_homological_complex]
 #align
   homological_complex.single_map_homological_complex_hom_app_self HomologicalComplex.single_map_homological_complex_hom_app_self
 
 @[simp]
 theorem single_map_homological_complex_hom_app_ne {i j : ι} (h : i ≠ j) (X : V) :
-    ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by simp [single_map_homological_complex, h]
+    ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by
+  simp [single_map_homological_complex, h]
 #align
   homological_complex.single_map_homological_complex_hom_app_ne HomologicalComplex.single_map_homological_complex_hom_app_ne
 
 @[simp]
 theorem single_map_homological_complex_inv_app_self (j : ι) (X : V) :
-    ((singleMapHomologicalComplex F c j).inv.app X).f j = eqToHom (by simp) := by simp [single_map_homological_complex]
+    ((singleMapHomologicalComplex F c j).inv.app X).f j = eqToHom (by simp) := by
+  simp [single_map_homological_complex]
 #align
   homological_complex.single_map_homological_complex_inv_app_self HomologicalComplex.single_map_homological_complex_inv_app_self
 
 @[simp]
 theorem single_map_homological_complex_inv_app_ne {i j : ι} (h : i ≠ j) (X : V) :
-    ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by simp [single_map_homological_complex, h]
+    ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by
+  simp [single_map_homological_complex, h]
 #align
   homological_complex.single_map_homological_complex_inv_app_ne HomologicalComplex.single_map_homological_complex_inv_app_ne
 
@@ -276,7 +288,8 @@ namespace ChainComplex
 /-- Turning an object into a chain complex supported at zero then applying a functor is
 the same as applying the functor then forming the complex.
 -/
-def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
+def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
+    single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
   NatIso.ofComponents
     (fun X =>
       { Hom :=
@@ -348,7 +361,8 @@ namespace CochainComplex
 /-- Turning an object into a cochain complex supported at zero then applying a functor is
 the same as applying the functor then forming the cochain complex.
 -/
-def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
+def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
+    single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
   NatIso.ofComponents
     (fun X =>
       { Hom :=

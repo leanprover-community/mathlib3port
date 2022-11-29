@@ -27,8 +27,8 @@ and return a predicate on `α → β`. -/
 class UnbundledHom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β → (α → β) → Prop) where
   hom_id : ∀ {α} (ia : c α), hom ia ia id
   hom_comp :
-    ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β} (hg : hom Iβ Iγ g) (hf : hom Iα Iβ f),
-      hom Iα Iγ (g ∘ f)
+    ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β} (hg : hom Iβ Iγ g)
+      (hf : hom Iα Iβ f), hom Iα Iγ (g ∘ f)
 #align category_theory.unbundled_hom CategoryTheory.UnbundledHom
 
 namespace UnbundledHom
@@ -48,11 +48,13 @@ instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype 
 
 section HasForget₂
 
-variable {c hom} {c' : Type u → Type u} {hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop} [𝒞' : UnbundledHom hom']
+variable {c hom} {c' : Type u → Type u} {hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop}
+  [𝒞' : UnbundledHom hom']
 
 include 𝒞'
 
-variable (obj : ∀ ⦃α⦄, c α → c' α) (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
+variable (obj : ∀ ⦃α⦄, c α → c' α)
+  (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
 
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/

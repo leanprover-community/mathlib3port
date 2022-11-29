@@ -35,7 +35,8 @@ section
 
 variable {P X Y Z : C} (f : P ⟶ X) (g : P ⟶ Y)
 
-/-- The map of a binary fan is a limit iff the fork consisting of the mapped morphisms is a limit. This
+/--
+The map of a binary fan is a limit iff the fork consisting of the mapped morphisms is a limit. This
 essentially lets us commute `binary_fan.mk` with `functor.map_cone`.
 -/
 def isLimitMapConeBinaryFanEquiv :
@@ -46,19 +47,22 @@ def isLimitMapConeBinaryFanEquiv :
         (by
           rintro (_ | _)
           tidy)))
-#align category_theory.limits.is_limit_map_cone_binary_fan_equiv CategoryTheory.Limits.isLimitMapConeBinaryFanEquiv
+#align
+  category_theory.limits.is_limit_map_cone_binary_fan_equiv CategoryTheory.Limits.isLimitMapConeBinaryFanEquiv
 
 /-- The property of preserving products expressed in terms of binary fans. -/
 def mapIsLimitOfPreservesOfIsLimit [PreservesLimit (pair X Y) G] (l : IsLimit (BinaryFan.mk f g)) :
     IsLimit (BinaryFan.mk (G.map f) (G.map g)) :=
   isLimitMapConeBinaryFanEquiv G f g (PreservesLimit.preserves l)
-#align category_theory.limits.map_is_limit_of_preserves_of_is_limit CategoryTheory.Limits.mapIsLimitOfPreservesOfIsLimit
+#align
+  category_theory.limits.map_is_limit_of_preserves_of_is_limit CategoryTheory.Limits.mapIsLimitOfPreservesOfIsLimit
 
 /-- The property of reflecting products expressed in terms of binary fans. -/
-def isLimitOfReflectsOfMapIsLimit [ReflectsLimit (pair X Y) G] (l : IsLimit (BinaryFan.mk (G.map f) (G.map g))) :
-    IsLimit (BinaryFan.mk f g) :=
+def isLimitOfReflectsOfMapIsLimit [ReflectsLimit (pair X Y) G]
+    (l : IsLimit (BinaryFan.mk (G.map f) (G.map g))) : IsLimit (BinaryFan.mk f g) :=
   ReflectsLimit.reflects ((isLimitMapConeBinaryFanEquiv G f g).symm l)
-#align category_theory.limits.is_limit_of_reflects_of_map_is_limit CategoryTheory.Limits.isLimitOfReflectsOfMapIsLimit
+#align
+  category_theory.limits.is_limit_of_reflects_of_map_is_limit CategoryTheory.Limits.isLimitOfReflectsOfMapIsLimit
 
 variable (X Y) [HasBinaryProduct X Y]
 
@@ -76,7 +80,8 @@ variable [HasBinaryProduct (G.obj X) (G.obj Y)]
 /-- If the product comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
 pair of `(X,Y)`.
 -/
-def PreservesLimitPair.ofIsoProdComparison [i : IsIso (prodComparison G X Y)] : PreservesLimit (pair X Y) G := by
+def PreservesLimitPair.ofIsoProdComparison [i : IsIso (prodComparison G X Y)] :
+    PreservesLimit (pair X Y) G := by
   apply preserves_limit_of_preserves_limit_cone (prod_is_prod X Y)
   apply (is_limit_map_cone_binary_fan_equiv _ _ _).symm _
   apply is_limit.of_point_iso (limit.is_limit (pair (G.obj X) (G.obj Y)))
@@ -96,7 +101,8 @@ def PreservesLimitPair.iso : G.obj (X ⨯ Y) ≅ G.obj X ⨯ G.obj Y :=
 @[simp]
 theorem PreservesLimitPair.iso_hom : (PreservesLimitPair.iso G X Y).Hom = prodComparison G X Y :=
   rfl
-#align category_theory.limits.preserves_limit_pair.iso_hom CategoryTheory.Limits.PreservesLimitPair.iso_hom
+#align
+  category_theory.limits.preserves_limit_pair.iso_hom CategoryTheory.Limits.PreservesLimitPair.iso_hom
 
 instance : IsIso (prodComparison G X Y) := by
   rw [← preserves_limit_pair.iso_hom]
@@ -124,8 +130,8 @@ def isColimitMapCoconeBinaryCofanEquiv :
   category_theory.limits.is_colimit_map_cocone_binary_cofan_equiv CategoryTheory.Limits.isColimitMapCoconeBinaryCofanEquiv
 
 /-- The property of preserving coproducts expressed in terms of binary cofans. -/
-def mapIsColimitOfPreservesOfIsColimit [PreservesColimit (pair X Y) G] (l : IsColimit (BinaryCofan.mk f g)) :
-    IsColimit (BinaryCofan.mk (G.map f) (G.map g)) :=
+def mapIsColimitOfPreservesOfIsColimit [PreservesColimit (pair X Y) G]
+    (l : IsColimit (BinaryCofan.mk f g)) : IsColimit (BinaryCofan.mk (G.map f) (G.map g)) :=
   isColimitMapCoconeBinaryCofanEquiv G f g (PreservesColimit.preserves l)
 #align
   category_theory.limits.map_is_colimit_of_preserves_of_is_colimit CategoryTheory.Limits.mapIsColimitOfPreservesOfIsColimit
@@ -139,7 +145,8 @@ def isColimitOfReflectsOfMapIsColimit [ReflectsColimit (pair X Y) G]
 
 variable (X Y) [HasBinaryCoproduct X Y]
 
-/-- If `G` preserves binary coproducts and `C` has them, then the binary cofan constructed of the mapped
+/--
+If `G` preserves binary coproducts and `C` has them, then the binary cofan constructed of the mapped
 morphisms of the binary product cocone is a colimit.
 -/
 def isColimitOfHasBinaryCoproductOfPreservesColimit [PreservesColimit (pair X Y) G] :
@@ -153,8 +160,8 @@ variable [HasBinaryCoproduct (G.obj X) (G.obj Y)]
 /-- If the coproduct comparison map for `G` at `(X,Y)` is an isomorphism, then `G` preserves the
 pair of `(X,Y)`.
 -/
-def PreservesColimitPair.ofIsoCoprodComparison [i : IsIso (coprodComparison G X Y)] : PreservesColimit (pair X Y) G :=
-  by
+def PreservesColimitPair.ofIsoCoprodComparison [i : IsIso (coprodComparison G X Y)] :
+    PreservesColimit (pair X Y) G := by
   apply preserves_colimit_of_preserves_colimit_cocone (coprod_is_coprod X Y)
   apply (is_colimit_map_cocone_binary_cofan_equiv _ _ _).symm _
   apply is_colimit.of_point_iso (colimit.is_colimit (pair (G.obj X) (G.obj Y)))
@@ -164,17 +171,22 @@ def PreservesColimitPair.ofIsoCoprodComparison [i : IsIso (coprodComparison G X 
 
 variable [PreservesColimit (pair X Y) G]
 
-/-- If `G` preserves the coproduct of `(X,Y)`, then the coproduct comparison map for `G` at `(X,Y)` is
+/--
+If `G` preserves the coproduct of `(X,Y)`, then the coproduct comparison map for `G` at `(X,Y)` is
 an isomorphism.
 -/
 def PreservesColimitPair.iso : G.obj X ⨿ G.obj Y ≅ G.obj (X ⨿ Y) :=
-  IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitOfHasBinaryCoproductOfPreservesColimit G X Y)
-#align category_theory.limits.preserves_colimit_pair.iso CategoryTheory.Limits.PreservesColimitPair.iso
+  IsColimit.coconePointUniqueUpToIso (colimit.isColimit _)
+    (isColimitOfHasBinaryCoproductOfPreservesColimit G X Y)
+#align
+  category_theory.limits.preserves_colimit_pair.iso CategoryTheory.Limits.PreservesColimitPair.iso
 
 @[simp]
-theorem PreservesColimitPair.iso_hom : (PreservesColimitPair.iso G X Y).Hom = coprodComparison G X Y :=
+theorem PreservesColimitPair.iso_hom :
+    (PreservesColimitPair.iso G X Y).Hom = coprodComparison G X Y :=
   rfl
-#align category_theory.limits.preserves_colimit_pair.iso_hom CategoryTheory.Limits.PreservesColimitPair.iso_hom
+#align
+  category_theory.limits.preserves_colimit_pair.iso_hom CategoryTheory.Limits.PreservesColimitPair.iso_hom
 
 instance : IsIso (coprodComparison G X Y) := by
   rw [← preserves_colimit_pair.iso_hom]

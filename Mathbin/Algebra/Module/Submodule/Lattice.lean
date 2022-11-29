@@ -38,7 +38,8 @@ namespace Submodule
 
 /-- The set `{0}` is the bottom element of the lattice of submodules. -/
 instance : HasBot (Submodule R M) :=
-  ⟨{ (⊥ : AddSubmonoid M) with carrier := {0}, smul_mem' := by simp (config := { contextual := true }) }⟩
+  ⟨{ (⊥ : AddSubmonoid M) with carrier := {0},
+      smul_mem' := by simp (config := { contextual := true }) }⟩
 
 instance inhabited' : Inhabited (Submodule R M) :=
   ⟨⊥⟩
@@ -71,7 +72,8 @@ theorem mem_bot {x : M} : x ∈ (⊥ : Submodule R M) ↔ x = 0 :=
 end
 
 @[simp]
-theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = ⊥ ↔ p = ⊥ := by simp [SetLike.ext_iff]
+theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = ⊥ ↔ p = ⊥ := by
+  simp [SetLike.ext_iff]
 #align submodule.restrict_scalars_eq_bot_iff Submodule.restrict_scalars_eq_bot_iff
 
 instance uniqueBot : Unique (⊥ : Submodule R M) :=
@@ -83,14 +85,13 @@ instance : OrderBot (Submodule R M) where
   bot_le p x := by simp (config := { contextual := true }) [zero_mem]
 
 protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x ∈ p, x = (0 : M) :=
-  ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h => eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
+  ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h =>
+    eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
 #align submodule.eq_bot_iff Submodule.eq_bot_iff
 
 @[ext.1]
 protected theorem bot_ext (x y : (⊥ : Submodule R M)) : x = y := by
-  rcases x with ⟨x, xm⟩
-  rcases y with ⟨y, ym⟩
-  congr
+  rcases x with ⟨x, xm⟩; rcases y with ⟨y, ym⟩; congr
   rw [(Submodule.eq_bot_iff _).mp rfl x xm]
   rw [(Submodule.eq_bot_iff _).mp rfl y ym]
 #align submodule.bot_ext Submodule.bot_ext
@@ -166,7 +167,8 @@ theorem restrict_scalars_top : restrictScalars S (⊤ : Submodule R M) = ⊤ :=
 end
 
 @[simp]
-theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = ⊤ ↔ p = ⊤ := by simp [SetLike.ext_iff]
+theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = ⊤ ↔ p = ⊤ := by
+  simp [SetLike.ext_iff]
 #align submodule.restrict_scalars_eq_top_iff Submodule.restrict_scalars_eq_top_iff
 
 instance : OrderTop (Submodule R M) where
@@ -220,12 +222,16 @@ instance : HasInf (Submodule R M) :=
       smul_mem' := by simp (config := { contextual := true }) [smul_mem] }⟩
 
 instance : CompleteLattice (Submodule R M) :=
-  { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
-    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (· ⊓ ·), le_inf := fun a b c => Set.subset_inter,
-    inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t }, le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs,
-    Sup_le := fun s p hs => Inf_le' hs, inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
+  { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with
+    sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
+    le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha,
+    le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb,
+    sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := (· ⊓ ·),
+    le_inf := fun a b c => Set.subset_inter, inf_le_left := fun a b => Set.inter_subset_left _ _,
+    inf_le_right := fun a b => Set.inter_subset_right _ _,
+    sup := fun tt => inf { t | ∀ t' ∈ tt, t' ≤ t },
+    le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs, Sup_le := fun s p hs => Inf_le' hs,
+    inf := inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
 
 @[simp]
 theorem inf_coe : ↑(p ⊓ q) = (p ∩ q : Set M) :=
@@ -243,7 +249,8 @@ theorem Inf_coe (P : Set (Submodule R M)) : (↑(inf P) : Set M) = ⋂ p ∈ P, 
 #align submodule.Inf_coe Submodule.Inf_coe
 
 @[simp]
-theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
+theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) :
+    (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
   letI := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
@@ -269,7 +276,8 @@ theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ �
 #align submodule.mem_infi Submodule.mem_infi
 
 @[simp]
-theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i ∈ s, x ∈ p i := by
+theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} :
+    x ∈ s.inf p ↔ ∀ i ∈ s, x ∈ p i := by
   simp only [← SetLike.mem_coe, finset_inf_coe, Set.mem_Inter]
 #align submodule.mem_finset_inf Submodule.mem_finset_inf
 
@@ -285,33 +293,35 @@ theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T
   add_mem (mem_sup_left hs) (mem_sup_right ht)
 #align submodule.add_mem_sup Submodule.add_mem_sup
 
-theorem sub_mem_sup {R' M' : Type _} [Ring R'] [AddCommGroup M'] [Module R' M'] {S T : Submodule R' M'} {s t : M'}
-    (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S ⊔ T := by
+theorem sub_mem_sup {R' M' : Type _} [Ring R'] [AddCommGroup M'] [Module R' M']
+    {S T : Submodule R' M'} {s t : M'} (hs : s ∈ S) (ht : t ∈ T) : s - t ∈ S ⊔ T := by
   rw [sub_eq_add_neg]
   exact add_mem_sup hs (neg_mem ht)
 #align submodule.sub_mem_sup Submodule.sub_mem_sup
 
-theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) : b ∈ ⨆ i, p i :=
+theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) :
+    b ∈ ⨆ i, p i :=
   have : p i ≤ ⨆ i, p i := le_supr p i
   @this b h
 #align submodule.mem_supr_of_mem Submodule.mem_supr_of_mem
 
 open BigOperators
 
-theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
-    (∑ i, f i) ∈ ⨆ i, p i :=
+theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M}
+    (h : ∀ i, f i ∈ p i) : (∑ i, f i) ∈ ⨆ i, p i :=
   sum_mem fun i hi => mem_supr_of_mem i (h i)
 #align submodule.sum_mem_supr Submodule.sum_mem_supr
 
-theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i ∈ s, f i ∈ p i) :
-    (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
+theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M}
+    (h : ∀ i ∈ s, f i ∈ p i) : (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
   sum_mem fun i hi => mem_supr_of_mem i <| mem_supr_of_mem hi (h i hi)
 #align submodule.sum_mem_bsupr Submodule.sum_mem_bsupr
 
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
 
 
-theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ sup S :=
+theorem mem_Sup_of_mem {S : Set (Submodule R M)} {s : Submodule R M} (hs : s ∈ S) :
+    ∀ {x : M}, x ∈ s → x ∈ sup S :=
   show s ≤ sup S from le_Sup hs
 #align submodule.mem_Sup_of_mem Submodule.mem_Sup_of_mem
 
@@ -319,8 +329,10 @@ theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, x �
   disjoint_iff_inf_le.trans <| show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by simp
 #align submodule.disjoint_def Submodule.disjoint_def
 
-theorem disjoint_def' {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x ∈ p, ∀ y ∈ p', x = y → x = (0 : M) :=
-  disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx <| hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
+theorem disjoint_def' {p p' : Submodule R M} :
+    Disjoint p p' ↔ ∀ x ∈ p, ∀ y ∈ p', x = y → x = (0 : M) :=
+  disjoint_def.trans
+    ⟨fun h x hx y hy hxy => h x hx <| hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
 #align submodule.disjoint_def' Submodule.disjoint_def'
 
 theorem eq_zero_of_coe_mem_of_disjoint (hpq : Disjoint p q) {a : p} (ha : (a : M) ∈ q) : a = 0 := by
@@ -352,12 +364,15 @@ theorem AddSubmonoid.coe_to_nat_submodule (S : AddSubmonoid M) : (S.toNatSubmodu
 #align add_submonoid.coe_to_nat_submodule AddSubmonoid.coe_to_nat_submodule
 
 @[simp]
-theorem AddSubmonoid.to_nat_submodule_to_add_submonoid (S : AddSubmonoid M) : S.toNatSubmodule.toAddSubmonoid = S :=
+theorem AddSubmonoid.to_nat_submodule_to_add_submonoid (S : AddSubmonoid M) :
+    S.toNatSubmodule.toAddSubmonoid = S :=
   AddSubmonoid.toNatSubmodule.symm_apply_apply S
-#align add_submonoid.to_nat_submodule_to_add_submonoid AddSubmonoid.to_nat_submodule_to_add_submonoid
+#align
+  add_submonoid.to_nat_submodule_to_add_submonoid AddSubmonoid.to_nat_submodule_to_add_submonoid
 
 @[simp]
-theorem Submodule.to_add_submonoid_to_nat_submodule (S : Submodule ℕ M) : S.toAddSubmonoid.toNatSubmodule = S :=
+theorem Submodule.to_add_submonoid_to_nat_submodule (S : Submodule ℕ M) :
+    S.toAddSubmonoid.toNatSubmodule = S :=
   AddSubmonoid.toNatSubmodule.apply_symm_apply S
 #align submodule.to_add_submonoid_to_nat_submodule Submodule.to_add_submonoid_to_nat_submodule
 
@@ -390,12 +405,14 @@ theorem AddSubgroup.coe_to_int_submodule (S : AddSubgroup M) : (S.toIntSubmodule
 #align add_subgroup.coe_to_int_submodule AddSubgroup.coe_to_int_submodule
 
 @[simp]
-theorem AddSubgroup.to_int_submodule_to_add_subgroup (S : AddSubgroup M) : S.toIntSubmodule.toAddSubgroup = S :=
+theorem AddSubgroup.to_int_submodule_to_add_subgroup (S : AddSubgroup M) :
+    S.toIntSubmodule.toAddSubgroup = S :=
   AddSubgroup.toIntSubmodule.symm_apply_apply S
 #align add_subgroup.to_int_submodule_to_add_subgroup AddSubgroup.to_int_submodule_to_add_subgroup
 
 @[simp]
-theorem Submodule.to_add_subgroup_to_int_submodule (S : Submodule ℤ M) : S.toAddSubgroup.toIntSubmodule = S :=
+theorem Submodule.to_add_subgroup_to_int_submodule (S : Submodule ℤ M) :
+    S.toAddSubgroup.toIntSubmodule = S :=
   AddSubgroup.toIntSubmodule.apply_symm_apply S
 #align submodule.to_add_subgroup_to_int_submodule Submodule.to_add_subgroup_to_int_submodule
 

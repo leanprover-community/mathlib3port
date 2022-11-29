@@ -93,8 +93,8 @@ theorem sup_eq_closure (H K : Submonoid M) : H ⊔ K = closure (H * K) :=
 #align submonoid.sup_eq_closure Submonoid.sup_eq_closure
 
 @[to_additive]
-theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [IsScalarTower M N N] (r : M) (s : Set N)
-    {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) := by
+theorem pow_smul_mem_closure_smul {N : Type _} [CommMonoid N] [MulAction M N] [IsScalarTower M N N]
+    (r : M) (s : Set N) {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) := by
   apply @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx
   · intro x hx
     exact ⟨1, subset_closure ⟨_, hx, by rw [pow_one]⟩⟩
@@ -220,7 +220,8 @@ protected def pointwiseMulAction : MulAction α (Submonoid M) where
     ext
     simp
   mul_smul a₁ a₂ S :=
-    (congr_arg (fun f : Monoid.EndCat M => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+    (congr_arg (fun f : Monoid.EndCat M => S.map f) (MonoidHom.map_mul _ _ _)).trans
+      (S.map_map _ _).symm
 #align submonoid.pointwise_mul_action Submonoid.pointwiseMulAction
 
 scoped[Pointwise] attribute [instance] Submonoid.pointwiseMulAction
@@ -236,7 +237,8 @@ theorem smul_mem_pointwise_smul (m : M) (a : α) (S : Submonoid M) : m ∈ S →
   (Set.smul_mem_smul_set : _ → _ ∈ a • (S : Set M))
 #align submonoid.smul_mem_pointwise_smul Submonoid.smul_mem_pointwise_smul
 
-theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) : m ∈ a • S ↔ ∃ s : M, s ∈ S ∧ a • s = m :=
+theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) :
+    m ∈ a • S ↔ ∃ s : M, s ∈ S ∧ a • s = m :=
   (Set.mem_smul_set : m ∈ a • (S : Set M) ↔ _)
 #align submonoid.mem_smul_pointwise_iff_exists Submonoid.mem_smul_pointwise_iff_exists
 
@@ -258,7 +260,8 @@ theorem smul_mem_pointwise_smul_iff {a : α} {S : Submonoid M} {x : M} : a • x
   smul_mem_smul_set_iff
 #align submonoid.smul_mem_pointwise_smul_iff Submonoid.smul_mem_pointwise_smul_iff
 
-theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : Submonoid M} {x : M} : x ∈ a • S ↔ a⁻¹ • x ∈ S :=
+theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : Submonoid M} {x : M} :
+    x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem
 #align submonoid.mem_pointwise_smul_iff_inv_smul_mem Submonoid.mem_pointwise_smul_iff_inv_smul_mem
 
@@ -288,22 +291,27 @@ variable [GroupWithZero α] [MulDistribMulAction α M]
 open Pointwise
 
 @[simp]
-theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) : a • x ∈ a • S ↔ x ∈ S :=
+theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) :
+    a • x ∈ a • S ↔ x ∈ S :=
   smul_mem_smul_set_iff₀ ha (S : Set M) x
 #align submonoid.smul_mem_pointwise_smul_iff₀ Submonoid.smul_mem_pointwise_smul_iff₀
 
-theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) : x ∈ a • S ↔ a⁻¹ • x ∈ S :=
+theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) :
+    x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set M) x
 #align submonoid.mem_pointwise_smul_iff_inv_smul_mem₀ Submonoid.mem_pointwise_smul_iff_inv_smul_mem₀
 
-theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
+theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) :
+    x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff₀ ha (S : Set M) x
 #align submonoid.mem_inv_pointwise_smul_iff₀ Submonoid.mem_inv_pointwise_smul_iff₀
 
 @[simp]
-theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} : a • S ≤ a • T ↔ S ≤ T :=
+theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} :
+    a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
-#align submonoid.pointwise_smul_le_pointwise_smul_iff₀ Submonoid.pointwise_smul_le_pointwise_smul_iff₀
+#align
+  submonoid.pointwise_smul_le_pointwise_smul_iff₀ Submonoid.pointwise_smul_le_pointwise_smul_iff₀
 
 theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff₀ ha
@@ -335,9 +343,11 @@ variable [Monoid α] [DistribMulAction α A]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (AddSubmonoid A) where
   smul a S := S.map (DistribMulAction.toAddMonoidEnd _ A a)
-  one_smul S := (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  one_smul S :=
+    (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_one _)).trans S.map_id
   mul_smul a₁ a₂ S :=
-    (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+    (congr_arg (fun f : AddMonoid.EndCat A => S.map f) (MonoidHom.map_mul _ _ _)).trans
+      (S.map_map _ _).symm
 #align add_submonoid.pointwise_mul_action AddSubmonoid.pointwiseMulAction
 
 scoped[Pointwise] attribute [instance] AddSubmonoid.pointwiseMulAction
@@ -355,7 +365,8 @@ theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S 
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
-  ⟨fun a S => (congr_arg fun f : AddMonoid.EndCat A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S =>
+    (congr_arg fun f : AddMonoid.EndCat A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 #align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_central_scalar
 
 end Monoid
@@ -371,11 +382,14 @@ theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : a �
   smul_mem_smul_set_iff
 #align add_submonoid.smul_mem_pointwise_smul_iff AddSubmonoid.smul_mem_pointwise_smul_iff
 
-theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : AddSubmonoid A} {x : A} : x ∈ a • S ↔ a⁻¹ • x ∈ S :=
+theorem mem_pointwise_smul_iff_inv_smul_mem {a : α} {S : AddSubmonoid A} {x : A} :
+    x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem
-#align add_submonoid.mem_pointwise_smul_iff_inv_smul_mem AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem
+#align
+  add_submonoid.mem_pointwise_smul_iff_inv_smul_mem AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem
 
-theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubmonoid A) : m ∈ a • S ↔ ∃ s : A, s ∈ S ∧ a • s = m :=
+theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubmonoid A) :
+    m ∈ a • S ↔ ∃ s : A, s ∈ S ∧ a • s = m :=
   (Set.mem_smul_set : m ∈ a • (S : Set A) ↔ _)
 #align add_submonoid.mem_smul_pointwise_iff_exists AddSubmonoid.mem_smul_pointwise_iff_exists
 
@@ -384,9 +398,11 @@ theorem mem_inv_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : x ∈
 #align add_submonoid.mem_inv_pointwise_smul_iff AddSubmonoid.mem_inv_pointwise_smul_iff
 
 @[simp]
-theorem pointwise_smul_le_pointwise_smul_iff {a : α} {S T : AddSubmonoid A} : a • S ≤ a • T ↔ S ≤ T :=
+theorem pointwise_smul_le_pointwise_smul_iff {a : α} {S T : AddSubmonoid A} :
+    a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff
-#align add_submonoid.pointwise_smul_le_pointwise_smul_iff AddSubmonoid.pointwise_smul_le_pointwise_smul_iff
+#align
+  add_submonoid.pointwise_smul_le_pointwise_smul_iff AddSubmonoid.pointwise_smul_le_pointwise_smul_iff
 
 theorem pointwise_smul_le_iff {a : α} {S T : AddSubmonoid A} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff
@@ -405,29 +421,36 @@ variable [GroupWithZero α] [DistribMulAction α A]
 open Pointwise
 
 @[simp]
-theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) : a • x ∈ a • S ↔ x ∈ S :=
+theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) :
+    a • x ∈ a • S ↔ x ∈ S :=
   smul_mem_smul_set_iff₀ ha (S : Set A) x
 #align add_submonoid.smul_mem_pointwise_smul_iff₀ AddSubmonoid.smul_mem_pointwise_smul_iff₀
 
 theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) :
     x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set A) x
-#align add_submonoid.mem_pointwise_smul_iff_inv_smul_mem₀ AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem₀
+#align
+  add_submonoid.mem_pointwise_smul_iff_inv_smul_mem₀ AddSubmonoid.mem_pointwise_smul_iff_inv_smul_mem₀
 
-theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
+theorem mem_inv_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) :
+    x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff₀ ha (S : Set A) x
 #align add_submonoid.mem_inv_pointwise_smul_iff₀ AddSubmonoid.mem_inv_pointwise_smul_iff₀
 
 @[simp]
-theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} : a • S ≤ a • T ↔ S ≤ T :=
+theorem pointwise_smul_le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} :
+    a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
-#align add_submonoid.pointwise_smul_le_pointwise_smul_iff₀ AddSubmonoid.pointwise_smul_le_pointwise_smul_iff₀
+#align
+  add_submonoid.pointwise_smul_le_pointwise_smul_iff₀ AddSubmonoid.pointwise_smul_le_pointwise_smul_iff₀
 
-theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} : a • S ≤ T ↔ S ≤ a⁻¹ • T :=
+theorem pointwise_smul_le_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} :
+    a • S ≤ T ↔ S ≤ a⁻¹ • T :=
   set_smul_subset_iff₀ ha
 #align add_submonoid.pointwise_smul_le_iff₀ AddSubmonoid.pointwise_smul_le_iff₀
 
-theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} : S ≤ a • T ↔ a⁻¹ • S ≤ T :=
+theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} :
+    S ≤ a • T ↔ a⁻¹ • S ≤ T :=
   subset_set_smul_iff₀ ha
 #align add_submonoid.le_pointwise_smul_iff₀ AddSubmonoid.le_pointwise_smul_iff₀
 
@@ -510,16 +533,14 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
     intro a ha b hb
     apply closure_induction ha
     on_goal 1 =>
-    intros
-    apply closure_induction hb
-    on_goal 1 =>
-    intros
-    exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
+    intros ; apply closure_induction hb
+    on_goal 1 => intros ; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
-    intros
-    simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
-    solve_by_elim (config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
-      zero_mem _]
+    intros ;
+    simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm,
+      smul_mul_assoc]
+    solve_by_elim (config :=
+      { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _]
     
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
@@ -533,12 +554,14 @@ theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) : M * N = closure (M * N) 
 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
-  eq_bot_iff.2 <| mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
+  eq_bot_iff.2 <|
+    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
 #align add_submonoid.mul_bot AddSubmonoid.mul_bot
 
 @[simp]
 theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
-  eq_bot_iff.2 <| mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
+  eq_bot_iff.2 <|
+    mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
 #align add_submonoid.bot_mul AddSubmonoid.bot_mul
 
 @[mono]
@@ -554,7 +577,8 @@ theorem mul_le_mul_right {M N P : AddSubmonoid R} (h : N ≤ P) : M * N ≤ M * 
   mul_le_mul (le_refl M) h
 #align add_submonoid.mul_le_mul_right AddSubmonoid.mul_le_mul_right
 
-theorem mul_subset_mul {M N : AddSubmonoid R} : (↑M : Set R) * (↑N : Set R) ⊆ (↑(M * N) : Set R) := by
+theorem mul_subset_mul {M N : AddSubmonoid R} : (↑M : Set R) * (↑N : Set R) ⊆ (↑(M * N) : Set R) :=
+  by
   rintro _ ⟨i, j, hi, hj, rfl⟩
   exact mul_mem_mul hi hj
 #align add_submonoid.mul_subset_mul AddSubmonoid.mul_subset_mul
@@ -571,14 +595,18 @@ This is available as an instance in the `pointwise` locale. -/
 protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
   { AddSubmonoid.hasInvolutiveNeg with neg := Neg.neg,
     neg_mul := fun x y => by
-      refine' le_antisymm (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
+      refine'
+          le_antisymm (mul_le.2 fun m hm n hn => _)
+            ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← neg_mul] at *
       · exact mul_mem_mul hm hn
         
       · exact mul_mem_mul (neg_mem_neg.2 hm) hn
         ,
     mul_neg := fun x y => by
-      refine' le_antisymm (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
+      refine'
+          le_antisymm (mul_le.2 fun m hm n hn => _)
+            ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← mul_neg] at *
       · exact mul_mem_mul hm hn
         
@@ -613,7 +641,8 @@ instance : Semigroup (AddSubmonoid R) where
       (mul_le.2 fun mn hmn p hp =>
         suffices M * N ≤ (M * (N * P)).comap (AddMonoidHom.mulRight p) from this hmn
         mul_le.2 fun m hm n hn =>
-          show m * n * p ∈ M * (N * P) from (mul_assoc m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
+          show m * n * p ∈ M * (N * P) from
+            (mul_assoc m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
       (mul_le.2 fun m hm np hnp =>
         suffices N * P ≤ (M * N * P).comap (AddMonoidHom.mulLeft m) from this hnp
         mul_le.2 fun n hn p hp =>
@@ -633,8 +662,8 @@ theorem closure_pow (s : Set R) : ∀ n : ℕ, closure s ^ n = closure (s ^ n)
   | n + 1 => by rw [pow_succ, pow_succ, closure_pow, closure_mul_closure]
 #align add_submonoid.closure_pow AddSubmonoid.closure_pow
 
-theorem pow_eq_closure_pow_set (s : AddSubmonoid R) (n : ℕ) : s ^ n = closure ((s : Set R) ^ n) := by
-  rw [← closure_pow, closure_eq]
+theorem pow_eq_closure_pow_set (s : AddSubmonoid R) (n : ℕ) : s ^ n = closure ((s : Set R) ^ n) :=
+  by rw [← closure_pow, closure_eq]
 #align add_submonoid.pow_eq_closure_pow_set AddSubmonoid.pow_eq_closure_pow_set
 
 theorem pow_subset_pow {s : AddSubmonoid R} {n : ℕ} : (↑s : Set R) ^ n ⊆ ↑(s ^ n) :=
@@ -650,7 +679,8 @@ namespace Set.IsPwo
 variable [OrderedCancelCommMonoid α] {s : Set α}
 
 @[to_additive]
-theorem submonoid_closure (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.IsPwo) : IsPwo (Submonoid.closure s : Set α) := by
+theorem submonoid_closure (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.IsPwo) :
+    IsPwo (Submonoid.closure s : Set α) := by
   rw [Submonoid.closure_eq_image_prod]
   refine' (h.partially_well_ordered_on_sublist_forall₂ (· ≤ ·)).image_of_monotone_on _
   exact fun l1 hl1 l2 hl2 h12 => h12.prod_le_prod' fun x hx => hpos x <| hl2 x hx

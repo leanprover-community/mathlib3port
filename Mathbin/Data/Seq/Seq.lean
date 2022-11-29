@@ -172,8 +172,8 @@ theorem terminatedStable : ∀ (s : Seq α) {m n : ℕ}, m ≤ n → s.Terminate
 /-- If `s.nth n = some aₙ` for some value `aₙ`, then there is also some value `aₘ` such
 that `s.nth = some aₘ` for `m ≤ n`.
 -/
-theorem ge_stable (s : Seq α) {aₙ : α} {n m : ℕ} (m_le_n : m ≤ n) (s_nth_eq_some : s.nth n = some aₙ) :
-    ∃ aₘ : α, s.nth m = some aₘ :=
+theorem ge_stable (s : Seq α) {aₙ : α} {n m : ℕ} (m_le_n : m ≤ n)
+    (s_nth_eq_some : s.nth n = some aₙ) : ∃ aₘ : α, s.nth m = some aₘ :=
   have : s.nth n ≠ none := by simp [s_nth_eq_some]
   have : s.nth m ≠ none := mt (s.le_stable m_le_n) this
   Option.ne_none_iff_exists'.mp this
@@ -224,11 +224,15 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
       "theorem"
       (Command.declId `destruct_eq_cons [])
       (Command.declSig
-       [(Term.implicitBinder "{" [`s] [":" (Term.app `Seq [`α])] "}") (Term.implicitBinder "{" [`a `s'] [] "}")]
+       [(Term.implicitBinder "{" [`s] [":" (Term.app `Seq [`α])] "}")
+        (Term.implicitBinder "{" [`a `s'] [] "}")]
        (Term.typeSpec
         ":"
         (Term.arrow
-         («term_=_» (Term.app `destruct [`s]) "=" (Term.app `some [(Term.tuple "(" [`a "," [`s']] ")")]))
+         («term_=_»
+          (Term.app `destruct [`s])
+          "="
+          (Term.app `some [(Term.tuple "(" [`a "," [`s']] ")")]))
          "→"
          («term_=_» `s "=" (Term.app `cons [`a `s'])))))
       (Command.declValSimple
@@ -249,7 +253,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
             "<;>"
             (Tactic.intro "intro" [`h]))
            []
-           («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.contradiction "contradiction") [])])
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.contradiction "contradiction") [])])
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
@@ -292,7 +298,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]")
                [])
               [])
-             (group (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm)) [])])])))
+             (group
+              (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm))
+              [])])])))
        [])
       []
       []))
@@ -315,7 +323,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
            "<;>"
            (Tactic.intro "intro" [`h]))
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.contradiction "contradiction") [])])
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.contradiction "contradiction") [])])
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
@@ -358,7 +368,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]")
               [])
              [])
-            (group (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm)) [])])])))
+            (group
+             (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm))
+             [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_»
@@ -372,7 +384,11 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
          [])
         (group (Tactic.injections "injections" ["_" `h1 `h2]) [])
         (group
-         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]") [])
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]")
+          [])
          [])
         (group (Tactic.apply "apply" `Subtype.eq) [])
         (group
@@ -392,7 +408,11 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
           [(Tactic.location "at" (Tactic.locationHyp [`f0] []))])
          [])
         (group
-         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]") [])
+         (Tactic.rwSeq
+          "rw"
+          []
+          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]")
+          [])
          [])
         (group (Tactic.exact "exact" (Term.proj (Term.app `Stream.eta [`f]) "." `symm)) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -405,19 +425,27 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Stream.eta
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Stream.eta [`f]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]") [])
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `f0)] "]")
+       [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f0
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.rwSeq
@@ -428,33 +456,49 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f0
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h1
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Tactic.dsimp "dsimp" [] [] [] ["[" [(Tactic.simpLemma [] [] `tail) "," (Tactic.simpLemma [] [] `cons)] "]"] [])
+      (Tactic.dsimp
+       "dsimp"
+       []
+       []
+       []
+       ["[" [(Tactic.simpLemma [] [] `tail) "," (Tactic.simpLemma [] [] `cons)] "]"]
+       [])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `cons
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `tail
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.apply "apply" `Subtype.eq)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.eq
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]") [])
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `h2)] "]")
+       [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h2
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.injections "injections" ["_" `h1 `h2])
@@ -498,9 +542,7 @@ theorem destruct_cons (a : α) : ∀ s, destruct (cons a s) = some (a, s)
   | ⟨f, al⟩ => by
     unfold cons destruct Functor.map
     apply congr_arg fun s => some (a, s)
-    apply Subtype.eq
-    dsimp [tail]
-    rw [Stream.tail_cons]
+    apply Subtype.eq; dsimp [tail]; rw [Stream.tail_cons]
 #align seq.destruct_cons Seq.destruct_cons
 
 theorem head_eq_destruct (s : Seq α) : head s = Prod.fst <$> destruct s := by
@@ -513,7 +555,8 @@ theorem head_nil : head (nil : Seq α) = none :=
 #align seq.head_nil Seq.head_nil
 
 @[simp]
-theorem head_cons (a : α) (s) : head (cons a s) = some a := by rw [head_eq_destruct, destruct_cons] <;> rfl
+theorem head_cons (a : α) (s) : head (cons a s) = some a := by
+  rw [head_eq_destruct, destruct_cons] <;> rfl
 #align seq.head_cons Seq.head_cons
 
 @[simp]
@@ -536,7 +579,7 @@ warning: seq.rec_on -> Seq.recOn is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u}} {C : (Seq.{u} α) -> Sort.{v}} (s : Seq.{u} α), (C (Seq.nil.{u} α)) -> (forall (x : α) (s : Seq.{u} α), C (Seq.cons.{u} α x s)) -> (C s)
 but is expected to have type
-  forall {f : Type.{u} -> Type.{v}} {motive : (Seq.{u v} f) -> Sort.{u_1}} (t : Seq.{u v} f), (forall (seq : forall {α : Type.{u}} {β : Type.{u}}, (f (α -> β)) -> (Unit -> (f α)) -> (f β)), motive (Seq.mk.{u v} f seq)) -> (motive t)
+  forall {f : Type.{u} -> Type.{v}} {motive : (Seq.{u, v} f) -> Sort.{u_1}} (t : Seq.{u, v} f), (forall (seq : forall {α : Type.{u}} {β : Type.{u}}, (f (α -> β)) -> (Unit -> (f α)) -> (f β)), motive (Seq.mk.{u, v} f seq)) -> (motive t)
 Case conversion may be inaccurate. Consider using '#align seq.rec_on Seq.recOnₓ'. -/
 /-- Recursion principle for sequences, compare with `list.rec_on`. -/
 def recOn {C : Seq α → Sort v} (s : Seq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s)) : C s := by
@@ -550,9 +593,9 @@ def recOn {C : Seq α → Sort v} (s : Seq α) (h1 : C nil) (h2 : ∀ x s, C (co
     
 #align seq.rec_on Seq.recOn
 
-theorem memRecOn {C : Seq α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) : C s := by
-  cases' M with k e
-  unfold Stream.nth at e
+theorem memRecOn {C : Seq α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) :
+    C s := by
+  cases' M with k e; unfold Stream.nth at e
   induction' k with k IH generalizing s
   · have TH : s = cons a (tail s) := by
       apply destruct_eq_cons
@@ -562,8 +605,7 @@ theorem memRecOn {C : Seq α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a = b
     rw [TH]
     apply h1 _ _ (Or.inl rfl)
     
-  revert e
-  apply s.rec_on _ fun b s' => _ <;> intro e
+  revert e; apply s.rec_on _ fun b s' => _ <;> intro e
   · injection e
     
   · have h_eq : (cons b s').val (Nat.succ k) = s'.val k := by cases s' <;> rfl
@@ -586,9 +628,7 @@ def corec (f : β → Option (α × β)) (b : β) : Seq α := by
   refine' ⟨Stream.corec' (corec.F f) (some b), fun n h => _⟩
   rw [Stream.corec'_eq]
   change Stream.corec' (corec.F f) (corec.F f (some b)).2 n = none
-  revert h
-  generalize some b = o
-  revert o
+  revert h; generalize some b = o; revert o
   induction' n with n IH <;> intro o
   · change (corec.F f o).1 = none → (corec.F f (corec.F f o).2).1 = none
     cases' o with b <;> intro h
@@ -609,22 +649,20 @@ def corec (f : β → Option (α × β)) (b : β) : Seq α := by
 #align seq.corec Seq.corec
 
 @[simp]
-theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) = omap (corec f) (f b) := by
+theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) = omap (corec f) (f b) :=
+  by
   dsimp [corec, destruct, nth]
   change Stream.corec' (corec.F f) (some b) 0 with (corec.F f (some b)).1
   dsimp [corec.F]
-  induction' h : f b with s
+  induction' h : f b with s;
   · rfl
     
-  cases' s with a b'
-  dsimp [corec.F]
+  cases' s with a b'; dsimp [corec.F]
   apply congr_arg fun b' => some (a, b')
   apply Subtype.eq
   dsimp [corec, tail]
   rw [Stream.corec'_eq, Stream.tail_cons]
-  dsimp [corec.F]
-  rw [h]
-  rfl
+  dsimp [corec.F]; rw [h]; rfl
 #align seq.corec_eq Seq.corec_eq
 
 section Bisim
@@ -684,18 +722,21 @@ end Bisim
 
 theorem coinduction :
     ∀ {s₁ s₂ : Seq α},
-      head s₁ = head s₂ → (∀ (β : Type u) (fr : Seq α → β), fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂
-  | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩, hh, ht => Subtype.eq (Stream.coinduction hh fun β fr => ht β fun s => fr s.1)
+      head s₁ = head s₂ →
+        (∀ (β : Type u) (fr : Seq α → β), fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂
+  | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩, hh, ht =>
+    Subtype.eq (Stream.coinduction hh fun β fr => ht β fun s => fr s.1)
 #align seq.coinduction Seq.coinduction
 
 theorem coinduction2 (s) (f g : Seq α → Seq β)
-    (H : ∀ s, BisimO (fun s1 s2 : Seq β => ∃ s : Seq α, s1 = f s ∧ s2 = g s) (destruct (f s)) (destruct (g s))) :
+    (H :
+      ∀ s,
+        BisimO (fun s1 s2 : Seq β => ∃ s : Seq α, s1 = f s ∧ s2 = g s) (destruct (f s))
+          (destruct (g s))) :
     f s = g s := by
   refine' eq_of_bisim (fun s1 s2 => ∃ s, s1 = f s ∧ s2 = g s) _ ⟨s, rfl, rfl⟩
-  intro s1 s2 h
-  rcases h with ⟨s, h1, h2⟩
-  rw [h1, h2]
-  apply H
+  intro s1 s2 h; rcases h with ⟨s, h1, h2⟩
+  rw [h1, h2]; apply H
 #align seq.coinduction2 Seq.coinduction2
 
 /-- Embed a list as a sequence -/
@@ -721,7 +762,8 @@ theorem of_list_nth (l : List α) (n : ℕ) : (ofList l).nth n = l.nth n :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem of_list_cons (a : α) (l : List α) : ofList (a::l) = cons a (ofList l) := by ext1 (_ | n) <;> rfl
+theorem of_list_cons (a : α) (l : List α) : ofList (a::l) = cons a (ofList l) := by
+  ext1 (_ | n) <;> rfl
 #align seq.of_list_cons Seq.of_list_cons
 
 /-- Embed an infinite stream as a sequence -/
@@ -791,7 +833,7 @@ def map (f : α → β) : Seq α → Seq β
       induction' e : s n with <;> intro
       · rw [al e]
         assumption
-        
+        ;
       · contradiction
         ⟩
 #align seq.map Seq.map
@@ -867,8 +909,9 @@ def zipWith (f : α → β → γ) : Seq α → Seq β → Seq γ
 
 variable {s : Seq α} {s' : Seq β} {n : ℕ}
 
-theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a) (s_nth_eq_some' : s'.nth n = some b)
-    (f : α → β → γ) : (zipWith f s s').nth n = some (f a b) := by
+theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a)
+    (s_nth_eq_some' : s'.nth n = some b) (f : α → β → γ) : (zipWith f s s').nth n = some (f a b) :=
+  by
   cases' s with st
   have : st n = some a := s_nth_eq_some
   cases' s' with st'
@@ -876,14 +919,16 @@ theorem zip_with_nth_some {a : α} {b : β} (s_nth_eq_some : s.nth n = some a) (
   simp only [zip_with, Seq.nth, *]
 #align seq.zip_with_nth_some Seq.zip_with_nth_some
 
-theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) : (zipWith f s s').nth n = none := by
+theorem zip_with_nth_none (s_nth_eq_none : s.nth n = none) (f : α → β → γ) :
+    (zipWith f s s').nth n = none := by
   cases' s with st
   have : st n = none := s_nth_eq_none
   cases' s' with st'
   cases st'_nth_eq : st' n <;> simp only [zip_with, Seq.nth, *]
 #align seq.zip_with_nth_none Seq.zip_with_nth_none
 
-theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) : (zipWith f s s').nth n = none := by
+theorem zip_with_nth_none' (s'_nth_eq_none : s'.nth n = none) (f : α → β → γ) :
+    (zipWith f s s').nth n = none := by
   cases' s' with st'
   have : st' n = none := s'_nth_eq_none
   cases' s with st
@@ -940,7 +985,8 @@ def toList (s : Seq α) (h : s.Terminates) : List α :=
 #align seq.to_list Seq.toList
 
 /-- Convert a sequence which is known not to terminate into a stream -/
-def toStream (s : Seq α) (h : ¬s.Terminates) : Stream α := fun n => Option.get <| not_terminates_iff.1 h n
+def toStream (s : Seq α) (h : ¬s.Terminates) : Stream α := fun n =>
+  Option.get <| not_terminates_iff.1 h n
 #align seq.to_stream Seq.toStream
 
 /-- Convert a sequence into either a list or a stream depending on whether
@@ -952,12 +998,9 @@ def toListOrStream (s : Seq α) [Decidable s.Terminates] : Sum (List α) (Stream
 
 @[simp]
 theorem nil_append (s : Seq α) : append nil s = s := by
-  apply coinduction2
-  intro s
-  dsimp [append]
-  rw [corec_eq]
-  dsimp [append]
-  apply rec_on s _ _
+  apply coinduction2; intro s
+  dsimp [append]; rw [corec_eq]
+  dsimp [append]; apply rec_on s _ _
   · trivial
     
   · intro x s
@@ -970,18 +1013,14 @@ theorem nil_append (s : Seq α) : append nil s = s := by
 @[simp]
 theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :=
   destruct_eq_cons <| by
-    dsimp [append]
-    rw [corec_eq]
-    dsimp [append]
-    rw [destruct_cons]
-    dsimp [append]
-    rfl
+    dsimp [append]; rw [corec_eq]
+    dsimp [append]; rw [destruct_cons]
+    dsimp [append]; rfl
 #align seq.cons_append Seq.cons_append
 
 @[simp]
 theorem append_nil (s : Seq α) : append s nil = s := by
-  apply coinduction2 s
-  intro s
+  apply coinduction2 s; intro s
   apply rec_on s _ _
   · trivial
     
@@ -1050,8 +1089,10 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Seq α, map (g ∘ f)
 
 @[simp]
 theorem map_append (f : α → β) (s t) : map f (append s t) = append (map f s) (map f t) := by
-  apply eq_of_bisim (fun s1 s2 => ∃ s t, s1 = map f (append s t) ∧ s2 = append (map f s) (map f t)) _ ⟨s, t, rfl, rfl⟩
-  intro s1 s2 h
+  apply
+    eq_of_bisim (fun s1 s2 => ∃ s t, s1 = map f (append s t) ∧ s2 = append (map f s) (map f t)) _
+      ⟨s, t, rfl, rfl⟩
+  intro s1 s2 h;
   exact
     match s1, s2, h with
     | _, _, ⟨s, t, rfl, rfl⟩ => by
@@ -1088,20 +1129,22 @@ theorem join_cons_nil (a : α) (S) : join (cons (a, nil) S) = cons a (join S) :=
 #align seq.join_cons_nil Seq.join_cons_nil
 
 @[simp]
-theorem join_cons_cons (a b : α) (s S) : join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
+theorem join_cons_cons (a b : α) (s S) :
+    join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
   destruct_eq_cons <| by simp [join]
 #align seq.join_cons_cons Seq.join_cons_cons
 
 @[simp]
 theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join S)) := by
   apply
-    eq_of_bisim (fun s1 s2 => s1 = s2 ∨ ∃ a s S, s1 = join (cons (a, s) S) ∧ s2 = cons a (append s (join S))) _
-      (Or.inr ⟨a, s, S, rfl, rfl⟩)
+    eq_of_bisim
+      (fun s1 s2 => s1 = s2 ∨ ∃ a s S, s1 = join (cons (a, s) S) ∧ s2 = cons a (append s (join S)))
+      _ (Or.inr ⟨a, s, S, rfl, rfl⟩)
   intro s1 s2 h
   exact
     match s1, s2, h with
     | _, _, Or.inl <| Eq.refl s => by
-      apply rec_on s
+      apply rec_on s;
       · trivial
         
       · intro x s
@@ -1120,7 +1163,9 @@ theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join
 
 @[simp]
 theorem join_append (S T : Seq (Seq1 α)) : join (append S T) = append (join S) (join T) := by
-  apply eq_of_bisim fun s1 s2 => ∃ s S T, s1 = append s (join (append S T)) ∧ s2 = append s (append (join S) (join T))
+  apply
+    eq_of_bisim fun s1 s2 =>
+      ∃ s S T, s1 = append s (join (append S T)) ∧ s2 = append s (append (join S) (join T))
   · intro s1 s2 h
     exact
       match s1, s2, h with
@@ -1155,11 +1200,13 @@ theorem of_stream_cons (a : α) (s) : ofStream (a::s) = cons a (ofStream s) := b
 #align seq.of_stream_cons Seq.of_stream_cons
 
 @[simp]
-theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (ofList l') := by induction l <;> simp [*]
+theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (ofList l') := by
+  induction l <;> simp [*]
 #align seq.of_list_append Seq.of_list_append
 
 @[simp]
-theorem of_stream_append (l : List α) (s : Stream α) : ofStream (l ++ₛ s) = append (ofList l) (ofStream s) := by
+theorem of_stream_append (l : List α) (s : Stream α) :
+    ofStream (l ++ₛ s) = append (ofList l) (ofStream s) := by
   induction l <;> simp [*, Stream.nil_append_stream, Stream.cons_append_stream]
 #align seq.of_stream_append Seq.of_stream_append
 
@@ -1181,16 +1228,16 @@ theorem dropn_add (s : Seq α) (m) : ∀ n, drop s (m + n) = drop (drop s m) n
   | n + 1 => congr_arg tail (dropn_add n)
 #align seq.dropn_add Seq.dropn_add
 
-theorem dropn_tail (s : Seq α) (n) : drop (tail s) n = drop s (n + 1) := by rw [add_comm] <;> symm <;> apply dropn_add
+theorem dropn_tail (s : Seq α) (n) : drop (tail s) n = drop s (n + 1) := by
+  rw [add_comm] <;> symm <;> apply dropn_add
 #align seq.dropn_tail Seq.dropn_tail
 
 @[simp]
 theorem head_dropn (s : Seq α) (n) : head (drop s n) = nth s n := by
-  induction' n with n IH generalizing s
+  induction' n with n IH generalizing s;
   · rfl
     
-  rw [Nat.succ_eq_add_one, ← nth_tail, ← dropn_tail]
-  apply IH
+  rw [Nat.succ_eq_add_one, ← nth_tail, ← dropn_tail]; apply IH
 #align seq.head_dropn Seq.head_dropn
 
 theorem mem_map (f : α → β) {a : α} : ∀ {s : Seq α}, a ∈ s → f a ∈ map f s
@@ -1204,11 +1251,8 @@ theorem exists_of_mem_map {f} {b : β} : ∀ {s : Seq α}, b ∈ map f s → ∃
 #align seq.exists_of_mem_map Seq.exists_of_mem_map
 
 theorem of_mem_append {s₁ s₂ : Seq α} {a : α} (h : a ∈ append s₁ s₂) : a ∈ s₁ ∨ a ∈ s₂ := by
-  have := h
-  revert this
-  generalize e : append s₁ s₂ = ss
-  intro h
-  revert s₁
+  have := h; revert this
+  generalize e : append s₁ s₂ = ss; intro h; revert s₁
   apply mem_rec_on h _
   intro b s' o s₁
   apply s₁.rec_on _ fun c t₁ => _ <;> intro m e <;> have := congr_arg destruct e
@@ -1234,7 +1278,8 @@ theorem mem_append_left {s₁ s₂ : Seq α} {a : α} (h : a ∈ s₁) : a ∈ a
 #align seq.mem_append_left Seq.mem_append_left
 
 @[simp]
-theorem enum_cons (s : Seq α) (x : α) : enum (cons x s) = cons (0, x) (map (Prod.map Nat.succ id) (enum s)) := by
+theorem enum_cons (s : Seq α) (x : α) :
+    enum (cons x s) = cons (0, x) (map (Prod.map Nat.succ id) (enum s)) := by
   ext ⟨n⟩ : 1
   · simp
     
@@ -1312,10 +1357,8 @@ theorem join_map_ret (s : Seq α) : Seq.join (Seq.map ret s) = s := by
 @[simp]
 theorem bind_ret (f : α → β) : ∀ s, bind s (ret ∘ f) = map f s
   | ⟨a, s⟩ => by
-    dsimp [bind, map]
-    change fun x => ret (f x) with ret ∘ f
-    rw [map_comp]
-    simp [Function.comp, ret]
+    dsimp [bind, map]; change fun x => ret (f x) with ret ∘ f
+    rw [map_comp]; simp [Function.comp, ret]
 #align seq1.bind_ret Seq1.bind_ret
 
 @[simp]
@@ -1355,10 +1398,12 @@ theorem map_join (f : α → β) : ∀ S, map f (join S) = join (map (map f) S)
 #align seq1.map_join Seq1.map_join
 
 @[simp]
-theorem join_join (SS : Seq (Seq1 (Seq1 α))) : Seq.join (Seq.join SS) = Seq.join (Seq.map join SS) := by
+theorem join_join (SS : Seq (Seq1 (Seq1 α))) :
+    Seq.join (Seq.join SS) = Seq.join (Seq.map join SS) := by
   apply
     eq_of_bisim fun s1 s2 =>
-      ∃ s SS, s1 = Seq.append s (Seq.join (Seq.join SS)) ∧ s2 = Seq.append s (Seq.join (Seq.map join SS))
+      ∃ s SS,
+        s1 = Seq.append s (Seq.join (Seq.join SS)) ∧ s2 = Seq.append s (Seq.join (Seq.map join SS))
   · intro s1 s2 h
     exact
       match s1, s2, h with

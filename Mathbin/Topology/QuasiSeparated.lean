@@ -44,7 +44,8 @@ def IsQuasiSeparated (s : Set α) : Prop :=
 subsets are still compact. -/
 @[mk_iff]
 class QuasiSeparatedSpace (α : Type _) [TopologicalSpace α] : Prop where
-  inter_is_compact : ∀ U V : Set α, IsOpen U → IsCompact U → IsOpen V → IsCompact V → IsCompact (U ∩ V)
+  inter_is_compact :
+    ∀ U V : Set α, IsOpen U → IsCompact U → IsOpen V → IsCompact V → IsCompact (U ∩ V)
 #align quasi_separated_space QuasiSeparatedSpace
 
 theorem is_quasi_separated_univ_iff {α : Type _} [TopologicalSpace α] :
@@ -61,7 +62,8 @@ theorem is_quasi_separated_univ {α : Type _} [TopologicalSpace α] [QuasiSepara
 theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s) (h : Embedding f) :
     IsQuasiSeparated (f '' s) := by
   intro U V hU hU' hU'' hV hV' hV''
-  convert (H (f ⁻¹' U) (f ⁻¹' V) _ (h.continuous.1 _ hU') _ _ (h.continuous.1 _ hV') _).image h.continuous
+  convert
+    (H (f ⁻¹' U) (f ⁻¹' V) _ (h.continuous.1 _ hU') _ _ (h.continuous.1 _ hV') _).image h.continuous
   · symm
     rw [← Set.preimage_inter, Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact (Set.inter_subset_left _ _).trans (hU.trans (Set.image_subset_range _ _))
@@ -92,8 +94,8 @@ theorem OpenEmbedding.is_quasi_separated_iff (h : OpenEmbedding f) {s : Set α} 
   intro H U V hU hU' hU'' hV hV' hV''
   rw [h.to_embedding.is_compact_iff_is_compact_image, ← Set.image_inter h.inj]
   exact
-    H (f '' U) (f '' V) (Set.image_subset _ hU) (h.is_open_map _ hU') (hU''.image h.continuous) (Set.image_subset _ hV)
-      (h.is_open_map _ hV') (hV''.image h.continuous)
+    H (f '' U) (f '' V) (Set.image_subset _ hU) (h.is_open_map _ hU') (hU''.image h.continuous)
+      (Set.image_subset _ hV) (h.is_open_map _ hV') (hV''.image h.continuous)
 #align open_embedding.is_quasi_separated_iff OpenEmbedding.is_quasi_separated_iff
 
 theorem is_quasi_separated_iff_quasi_separated_space (s : Set α) (hs : IsOpen s) :
@@ -102,7 +104,8 @@ theorem is_quasi_separated_iff_quasi_separated_space (s : Set α) (hs : IsOpen s
   convert hs.open_embedding_subtype_coe.is_quasi_separated_iff.symm <;> simp
 #align is_quasi_separated_iff_quasi_separated_space is_quasi_separated_iff_quasi_separated_space
 
-theorem IsQuasiSeparated.of_subset {s t : Set α} (ht : IsQuasiSeparated t) (h : s ⊆ t) : IsQuasiSeparated s := by
+theorem IsQuasiSeparated.of_subset {s t : Set α} (ht : IsQuasiSeparated t) (h : s ⊆ t) :
+    IsQuasiSeparated s := by
   intro U V hU hU' hU'' hV hV' hV''
   exact ht U V (hU.trans h) hU' hU'' (hV.trans h) hV' hV''
 #align is_quasi_separated.of_subset IsQuasiSeparated.of_subset
@@ -111,15 +114,19 @@ instance (priority := 100) T2Space.to_quasi_separated_space [T2Space α] : Quasi
   ⟨fun U V hU hU' hV hV' => hU'.inter hV'⟩
 #align t2_space.to_quasi_separated_space T2Space.to_quasi_separated_space
 
-instance (priority := 100) NoetherianSpace.to_quasi_separated_space [NoetherianSpace α] : QuasiSeparatedSpace α :=
+instance (priority := 100) NoetherianSpace.to_quasi_separated_space [NoetherianSpace α] :
+    QuasiSeparatedSpace α :=
   ⟨fun _ _ _ _ _ _ => NoetherianSpace.is_compact _⟩
 #align noetherian_space.to_quasi_separated_space NoetherianSpace.to_quasi_separated_space
 
-theorem IsQuasiSeparated.of_quasi_separated_space (s : Set α) [QuasiSeparatedSpace α] : IsQuasiSeparated s :=
+theorem IsQuasiSeparated.of_quasi_separated_space (s : Set α) [QuasiSeparatedSpace α] :
+    IsQuasiSeparated s :=
   is_quasi_separated_univ.ofSubset (Set.subset_univ _)
 #align is_quasi_separated.of_quasi_separated_space IsQuasiSeparated.of_quasi_separated_space
 
-theorem QuasiSeparatedSpace.of_open_embedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] : QuasiSeparatedSpace α :=
-  is_quasi_separated_univ_iff.mp (h.is_quasi_separated_iff.mpr <| IsQuasiSeparated.of_quasi_separated_space _)
+theorem QuasiSeparatedSpace.of_open_embedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] :
+    QuasiSeparatedSpace α :=
+  is_quasi_separated_univ_iff.mp
+    (h.is_quasi_separated_iff.mpr <| IsQuasiSeparated.of_quasi_separated_space _)
 #align quasi_separated_space.of_open_embedding QuasiSeparatedSpace.of_open_embedding
 

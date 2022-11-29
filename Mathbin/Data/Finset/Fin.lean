@@ -27,7 +27,8 @@ def attachFin (s : Finset ℕ) {n : ℕ} (h : ∀ m ∈ s, m < n) : Finset (Fin 
 #align finset.attach_fin Finset.attachFin
 
 @[simp]
-theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀ m ∈ s, m < n) {a : Fin n} : a ∈ s.attachFin h ↔ (a : ℕ) ∈ s :=
+theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀ m ∈ s, m < n) {a : Fin n} :
+    a ∈ s.attachFin h ↔ (a : ℕ) ∈ s :=
   ⟨fun h =>
     let ⟨b, hb₁, hb₂⟩ := Multiset.mem_pmap.1 h
     hb₂ ▸ hb₁,
@@ -35,7 +36,8 @@ theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀ m ∈ s, m < n) {a : 
 #align finset.mem_attach_fin Finset.mem_attach_fin
 
 @[simp]
-theorem card_attach_fin {n : ℕ} (s : Finset ℕ) (h : ∀ m ∈ s, m < n) : (s.attachFin h).card = s.card :=
+theorem card_attach_fin {n : ℕ} (s : Finset ℕ) (h : ∀ m ∈ s, m < n) :
+    (s.attachFin h).card = s.card :=
   Multiset.card_pmap _ _ _
 #align finset.card_attach_fin Finset.card_attach_fin
 

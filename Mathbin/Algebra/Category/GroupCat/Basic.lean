@@ -154,7 +154,8 @@ def ofHom {X Y : Type u} [CommGroup X] [CommGroup Y] (f : X →* Y) : of X ⟶ o
 add_decl_doc AddCommGroupCat.ofHom
 
 @[simp, to_additive]
-theorem of_hom_apply {X Y : Type _} [CommGroup X] [CommGroup Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
+theorem of_hom_apply {X Y : Type _} [CommGroup X] [CommGroup Y] (f : X →* Y) (x : X) :
+    ofHom f x = f x :=
   rfl
 #align CommGroup.of_hom_apply CommGroupCat.of_hom_apply
 
@@ -229,18 +230,20 @@ theorem as_hom_apply {G : AddCommGroupCat.{0}} (g : G) (i : ℤ) : (asHom g) i =
   rfl
 #align AddCommGroup.as_hom_apply AddCommGroupCat.as_hom_apply
 
-theorem as_hom_injective {G : AddCommGroupCat.{0}} : Function.Injective (@asHom G) := fun h k w => by
-  convert congr_arg (fun k : AddCommGroupCat.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
+theorem as_hom_injective {G : AddCommGroupCat.{0}} : Function.Injective (@asHom G) := fun h k w =>
+  by convert congr_arg (fun k : AddCommGroupCat.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
 #align AddCommGroup.as_hom_injective AddCommGroupCat.as_hom_injective
 
 @[ext.1]
-theorem int_hom_ext {G : AddCommGroupCat.{0}} (f g : AddCommGroupCat.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
+theorem int_hom_ext {G : AddCommGroupCat.{0}} (f g : AddCommGroupCat.of ℤ ⟶ G)
+    (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=
   AddMonoidHom.ext_int w
 #align AddCommGroup.int_hom_ext AddCommGroupCat.int_hom_ext
 
 -- TODO: this argument should be generalised to the situation where
 -- the forgetful functor is representable.
-theorem injective_of_mono {G H : AddCommGroupCat.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f := fun g₁ g₂ h => by
+theorem injective_of_mono {G H : AddCommGroupCat.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
+  fun g₁ g₂ h => by
   have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
     ext
     simpa [as_hom_apply] using h
@@ -274,13 +277,16 @@ add_decl_doc AddEquiv.toAddCommGroupIso
 namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Group`. -/
-@[to_additive AddGroup_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddGroup`.", simps]
+@[to_additive AddGroup_iso_to_add_equiv
+      "Build an `add_equiv` from an isomorphism in the category\n`AddGroup`.",
+  simps]
 def groupIsoToMulEquiv {X Y : GroupCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.Group_iso_to_mul_equiv CategoryTheory.Iso.groupIsoToMulEquiv
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommGroup`. -/
-@[to_additive AddCommGroup_iso_to_add_equiv "Build an `add_equiv` from an isomorphism\nin the category `AddCommGroup`.",
+@[to_additive AddCommGroup_iso_to_add_equiv
+      "Build an `add_equiv` from an isomorphism\nin the category `AddCommGroup`.",
   simps]
 def commGroupIsoToMulEquiv {X Y : CommGroupCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id

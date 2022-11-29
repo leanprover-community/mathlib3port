@@ -76,14 +76,16 @@ theorem comp_apply {X Y Z : FintypeCat} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f
 def equivEquivIso {A B : FintypeCat} : A ≃ B ≃ (A ≅ B) where
   toFun e := { Hom := e, inv := e.symm }
   invFun i :=
-    { toFun := i.Hom, invFun := i.inv, left_inv := Iso.hom_inv_id_apply i, right_inv := Iso.inv_hom_id_apply i }
+    { toFun := i.Hom, invFun := i.inv, left_inv := Iso.hom_inv_id_apply i,
+      right_inv := Iso.inv_hom_id_apply i }
   left_inv := by tidy
   right_inv := by tidy
 #align Fintype.equiv_equiv_iso FintypeCat.equivEquivIso
 
 universe u
 
-/-- The "standard" skeleton for `Fintype`. This is the full subcategory of `Fintype` spanned by objects
+/--
+The "standard" skeleton for `Fintype`. This is the full subcategory of `Fintype` spanned by objects
 of the form `ulift (fin n)` for `n : ℕ`. We parameterize the objects of `Fintype.skeleton`
 directly as `ulift ℕ`, as the type `ulift (fin m) ≃ ulift (fin n)` is
 nonempty if and only if `n = m`. Specifying universes, `skeleton : Type u` is a small

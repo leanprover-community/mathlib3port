@@ -48,7 +48,8 @@ instance {M : Type _} [AddRightCancelMonoid M] [Preorder M] [CovariantClass M M 
     AddRightCancelSemigroup { x : M // 0 < x } :=
   Subtype.coe_injective.AddRightCancelSemigroup _ coe_add
 
-instance covariant_class_add_lt : CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· < ·) :=
+instance covariant_class_add_lt :
+    CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· < ·) :=
   ⟨fun x y z hyz => Subtype.coe_lt_coe.1 <| add_lt_add_left hyz _⟩
 #align positive.covariant_class_add_lt Positive.covariant_class_add_lt
 
@@ -79,7 +80,8 @@ instance contravariant_class_swap_add_le [ContravariantClass M M (swap (· + ·)
 
 end AddBasic
 
-instance covariant_class_add_le [AddMonoid M] [PartialOrder M] [CovariantClass M M (· + ·) (· < ·)] :
+instance covariant_class_add_le [AddMonoid M] [PartialOrder M]
+    [CovariantClass M M (· + ·) (· < ·)] :
     CovariantClass { x : M // 0 < x } { x : M // 0 < x } (· + ·) (· ≤ ·) :=
   ⟨fun x => StrictMono.monotone fun _ _ h => add_lt_add_left h _⟩
 #align positive.covariant_class_add_le Positive.covariant_class_add_le
@@ -126,8 +128,10 @@ end Mul
 section mul_comm
 
 instance [StrictOrderedCommSemiring R] [Nontrivial R] : OrderedCommMonoid { x : R // 0 < x } :=
-  { Subtype.partialOrder _, Subtype.coe_injective.CommMonoid (coe : { x : R // 0 < x } → R) coe_one coe_mul coe_pow with
-    mul_le_mul_left := fun x y hxy c => Subtype.coe_le_coe.1 <| mul_le_mul_of_nonneg_left hxy c.2.le }
+  { Subtype.partialOrder _,
+    Subtype.coe_injective.CommMonoid (coe : { x : R // 0 < x } → R) coe_one coe_mul coe_pow with
+    mul_le_mul_left := fun x y hxy c =>
+      Subtype.coe_le_coe.1 <| mul_le_mul_of_nonneg_left hxy c.2.le }
 
 /-- If `R` is a nontrivial linear ordered commutative semiring, then `{x : R // 0 < x}` is a linear
 ordered cancellative commutative monoid. -/

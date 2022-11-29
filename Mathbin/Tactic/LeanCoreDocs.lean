@@ -38,44 +38,44 @@ add_tactic_doc
     tags := ["core", "lemma application", "finishing"] }
 
 add_tactic_doc
-  { Name := "all_goals", category := DocCategory.tactic, declNames := [`tactic.interactive.all_goals],
-    tags := ["core", "goal management"] }
+  { Name := "all_goals", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.all_goals], tags := ["core", "goal management"] }
 
 add_tactic_doc
-  { Name := "any_goals", category := DocCategory.tactic, declNames := [`tactic.interactive.any_goals],
-    tags := ["core", "goal management"] }
+  { Name := "any_goals", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.any_goals], tags := ["core", "goal management"] }
 
 add_tactic_doc
   { Name := "apply", category := DocCategory.tactic, declNames := [`tactic.interactive.apply],
     tags := ["core", "basic", "lemma application"] }
 
 add_tactic_doc
-  { Name := "apply_auto_param", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_auto_param],
-    tags := ["core", "lemma application"] }
+  { Name := "apply_auto_param", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.apply_auto_param], tags := ["core", "lemma application"] }
 
 add_tactic_doc
-  { Name := "apply_instance", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_instance],
-    tags := ["core", "type class"] }
+  { Name := "apply_instance", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.apply_instance], tags := ["core", "type class"] }
 
 add_tactic_doc
-  { Name := "apply_opt_param", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_opt_param],
-    tags := ["core", "lemma application"] }
+  { Name := "apply_opt_param", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.apply_opt_param], tags := ["core", "lemma application"] }
 
 add_tactic_doc
-  { Name := "apply_with", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_with],
-    tags := ["core", "lemma application"] }
+  { Name := "apply_with", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.apply_with], tags := ["core", "lemma application"] }
 
 add_tactic_doc
   { Name := "assume", category := DocCategory.tactic, declNames := [`tactic.interactive.assume],
     tags := ["core", "logic"] }
 
 add_tactic_doc
-  { Name := "assumption", category := DocCategory.tactic, declNames := [`tactic.interactive.assumption],
-    tags := ["core", "basic", "finishing"] }
+  { Name := "assumption", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.assumption], tags := ["core", "basic", "finishing"] }
 
 add_tactic_doc
-  { Name := "assumption'", category := DocCategory.tactic, declNames := [`tactic.interactive.assumption'],
-    tags := ["core", "goal management"] }
+  { Name := "assumption'", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.assumption'], tags := ["core", "goal management"] }
 
 add_tactic_doc
   { Name := "async", category := DocCategory.tactic, declNames := [`tactic.interactive.async],
@@ -102,7 +102,8 @@ mathlib).
 -/
 add_tactic_doc
   { Name := "by_contra / by_contradiction", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.by_contra, `tactic.interactive.by_contradiction], tags := ["core", "logic"] }
+    declNames := [`tactic.interactive.by_contra, `tactic.interactive.by_contradiction],
+    tags := ["core", "logic"] }
 
 add_tactic_doc
   { Name := "case", category := DocCategory.tactic, declNames := [`tactic.interactive.case],
@@ -146,7 +147,8 @@ cases_type* or and
 ```
 -/
 add_tactic_doc
-  { Name := "cases_type", category := DocCategory.tactic, declNames := [`tactic.interactive.cases_type],
+  { Name := "cases_type", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.cases_type],
     tags := ["core", "induction", "context management"] }
 
 add_tactic_doc
@@ -183,12 +185,12 @@ add_tactic_doc
     tags := ["core", "congruence"] }
 
 add_tactic_doc
-  { Name := "constructor", category := DocCategory.tactic, declNames := [`tactic.interactive.constructor],
-    tags := ["core", "logic"] }
+  { Name := "constructor", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.constructor], tags := ["core", "logic"] }
 
 add_tactic_doc
-  { Name := "contradiction", category := DocCategory.tactic, declNames := [`tactic.interactive.contradiction],
-    tags := ["core", "basic", "finishing"] }
+  { Name := "contradiction", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.contradiction], tags := ["core", "basic", "finishing"] }
 
 add_tactic_doc
   { Name := "delta", category := DocCategory.tactic, declNames := [`tactic.interactive.delta],
@@ -215,14 +217,15 @@ add_tactic_doc
     tags := ["core", "lemma application"] }
 
 add_tactic_doc
-  { Name := "econstructor", category := DocCategory.tactic, declNames := [`tactic.interactive.econstructor],
-    tags := ["core", "logic"] }
+  { Name := "econstructor", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.econstructor], tags := ["core", "logic"] }
 
 /-- A variant of `rw` that uses the unifier more aggressively, unfolding semireducible definitions.
 -/
 add_tactic_doc
   { Name := "erewrite / erw", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.erewrite, `tactic.interactive.erw], tags := ["core", "rewriting"] }
+    declNames := [`tactic.interactive.erewrite, `tactic.interactive.erw],
+    tags := ["core", "rewriting"] }
 
 add_tactic_doc
   { Name := "exact", category := DocCategory.tactic, declNames := [`tactic.interactive.exact],
@@ -251,8 +254,8 @@ add_tactic_doc
     tags := ["core", "logic"] }
 
 add_tactic_doc
-  { Name := "fail_if_success", category := DocCategory.tactic, declNames := [`tactic.interactive.fail_if_success],
-    tags := ["core", "testing", "combinator"] }
+  { Name := "fail_if_success", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.fail_if_success], tags := ["core", "testing", "combinator"] }
 
 add_tactic_doc
   { Name := "fapply", category := DocCategory.tactic, declNames := [`tactic.interactive.fapply],
@@ -282,15 +285,17 @@ add_tactic_doc
     tags := ["core", "logic"] }
 
 add_tactic_doc
-  { Name := "generalize", category := DocCategory.tactic, declNames := [`tactic.interactive.generalize],
-    tags := ["core", "context management"] }
+  { Name := "generalize", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.generalize], tags := ["core", "context management"] }
 
 add_tactic_doc
-  { Name := "guard_hyp", category := DocCategory.tactic, declNames := [`tactic.interactive.guard_hyp],
+  { Name := "guard_hyp", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.guard_hyp],
     tags := ["core", "testing", "context management"] }
 
 add_tactic_doc
-  { Name := "guard_target", category := DocCategory.tactic, declNames := [`tactic.interactive.guard_target],
+  { Name := "guard_target", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.guard_target],
     tags := ["core", "testing", "goal management"] }
 
 add_tactic_doc
@@ -298,16 +303,16 @@ add_tactic_doc
     tags := ["core", "basic", "context management"] }
 
 add_tactic_doc
-  { Name := "induction", category := DocCategory.tactic, declNames := [`tactic.interactive.induction],
-    tags := ["core", "basic", "induction"] }
+  { Name := "induction", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.induction], tags := ["core", "basic", "induction"] }
 
 add_tactic_doc
-  { Name := "injection", category := DocCategory.tactic, declNames := [`tactic.interactive.injection],
-    tags := ["core", "structures", "induction"] }
+  { Name := "injection", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.injection], tags := ["core", "structures", "induction"] }
 
 add_tactic_doc
-  { Name := "injections", category := DocCategory.tactic, declNames := [`tactic.interactive.injections],
-    tags := ["core", "structures", "induction"] }
+  { Name := "injections", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.injections], tags := ["core", "structures", "induction"] }
 
 /-- If the current goal is a Pi/forall `∀ x : t, u` (resp. `let x := t in u`) then `intro` puts
 `x : t` (resp. `x := t`) in the local context. The new subgoal target is `u`.
@@ -329,7 +334,8 @@ them.
 -/
 add_tactic_doc
   { Name := "intro / intros", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.intro, `tactic.interactive.intros], tags := ["core", "basic", "logic"] }
+    declNames := [`tactic.interactive.intro, `tactic.interactive.intros],
+    tags := ["core", "basic", "logic"] }
 
 add_tactic_doc
   { Name := "introv", category := DocCategory.tactic, declNames := [`tactic.interactive.introv],
@@ -346,7 +352,8 @@ Similarly, `right` applies the second constructor.
 -/
 add_tactic_doc
   { Name := "left / right", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.left, `tactic.interactive.right], tags := ["core", "basic", "logic"] }
+    declNames := [`tactic.interactive.left, `tactic.interactive.right],
+    tags := ["core", "basic", "logic"] }
 
 /-- `let h : t := p` adds the hypothesis `h : t := p` to the current goal if `p` a term of type `t`.
 If `t` is omitted, it will be inferred.
@@ -369,20 +376,23 @@ add_tactic_doc
     tags := ["core", "lemma application"] }
 
 add_tactic_doc
-  { Name := "match_target", category := DocCategory.tactic, declNames := [`tactic.interactive.match_target],
+  { Name := "match_target", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.match_target],
     tags := ["core", "testing", "goal management"] }
 
 add_tactic_doc
   { Name := "refine", category := DocCategory.tactic, declNames := [`tactic.interactive.refine],
     tags := ["core", "basic", "lemma application"] }
 
-/-- This tactic applies to a goal whose target has the form `t ~ u` where `~` is a reflexive relation,
+/--
+This tactic applies to a goal whose target has the form `t ~ u` where `~` is a reflexive relation,
 that is, a relation which has a reflexivity lemma tagged with the attribute `[refl]`.
 The tactic checks whether `t` and `u` are definitionally equal and then solves the goal.
 -/
 add_tactic_doc
   { Name := "refl / reflexivity", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.refl, `tactic.interactive.reflexivity], tags := ["core", "basic", "finishing"] }
+    declNames := [`tactic.interactive.refl, `tactic.interactive.reflexivity],
+    tags := ["core", "basic", "finishing"] }
 
 add_tactic_doc
   { Name := "rename", category := DocCategory.tactic, declNames := [`tactic.interactive.rename],
@@ -411,7 +421,8 @@ the target of the goal.
 -/
 add_tactic_doc
   { Name := "rw / rewrite", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.rw, `tactic.interactive.rewrite], tags := ["core", "basic", "rewriting"] }
+    declNames := [`tactic.interactive.rw, `tactic.interactive.rewrite],
+    tags := ["core", "basic", "rewriting"] }
 
 add_tactic_doc
   { Name := "rwa", category := DocCategory.tactic, declNames := [`tactic.interactive.rwa],
@@ -422,8 +433,8 @@ add_tactic_doc
     tags := ["core", "goal management", "renaming"] }
 
 add_tactic_doc
-  { Name := "simp_intros", category := DocCategory.tactic, declNames := [`tactic.interactive.simp_intros],
-    tags := ["core", "simplification"] }
+  { Name := "simp_intros", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.simp_intros], tags := ["core", "simplification"] }
 
 add_tactic_doc
   { Name := "skip", category := DocCategory.tactic, declNames := [`tactic.interactive.skip],
@@ -439,7 +450,8 @@ add_tactic_doc
     inheritDescriptionFrom := `tactic.interactive.sorry, tags := ["core", "testing", "debugging"] }
 
 add_tactic_doc
-  { Name := "specialize", category := DocCategory.tactic, declNames := [`tactic.interactive.specialize],
+  { Name := "specialize", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.specialize],
     tags := ["core", "context management", "lemma application"] }
 
 add_tactic_doc
@@ -451,12 +463,12 @@ add_tactic_doc
     tags := ["core", "rewriting"] }
 
 add_tactic_doc
-  { Name := "subst_vars", category := DocCategory.tactic, declNames := [`tactic.interactive.subst_vars],
-    tags := ["core", "rewriting"] }
+  { Name := "subst_vars", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.subst_vars], tags := ["core", "rewriting"] }
 
 add_tactic_doc
-  { Name := "success_if_fail", category := DocCategory.tactic, declNames := [`tactic.interactive.success_if_fail],
-    tags := ["core", "testing", "combinator"] }
+  { Name := "success_if_fail", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.success_if_fail], tags := ["core", "testing", "combinator"] }
 
 add_tactic_doc
   { Name := "suffices", category := DocCategory.tactic, declNames := [`tactic.interactive.suffices],
@@ -471,16 +483,16 @@ add_tactic_doc
     tags := ["core", "debugging", "testing"] }
 
 add_tactic_doc
-  { Name := "trace_simp_set", category := DocCategory.tactic, declNames := [`tactic.interactive.trace_simp_set],
-    tags := ["core", "debugging", "testing"] }
+  { Name := "trace_simp_set", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.trace_simp_set], tags := ["core", "debugging", "testing"] }
 
 add_tactic_doc
-  { Name := "trace_state", category := DocCategory.tactic, declNames := [`tactic.interactive.trace_state],
-    tags := ["core", "debugging", "testing"] }
+  { Name := "trace_state", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.trace_state], tags := ["core", "debugging", "testing"] }
 
 add_tactic_doc
-  { Name := "transitivity", category := DocCategory.tactic, declNames := [`tactic.interactive.transitivity],
-    tags := ["core", "lemma application"] }
+  { Name := "transitivity", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.transitivity], tags := ["core", "lemma application"] }
 
 add_tactic_doc
   { Name := "trivial", category := DocCategory.tactic, declNames := [`tactic.interactive.trivial],
@@ -491,8 +503,8 @@ add_tactic_doc
     tags := ["core", "combinator"] }
 
 add_tactic_doc
-  { Name := "type_check", category := DocCategory.tactic, declNames := [`tactic.interactive.type_check],
-    tags := ["core", "debugging", "testing"] }
+  { Name := "type_check", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.type_check], tags := ["core", "debugging", "testing"] }
 
 add_tactic_doc
   { Name := "unfold", category := DocCategory.tactic, declNames := [`tactic.interactive.unfold],
@@ -503,31 +515,34 @@ add_tactic_doc
     tags := ["core", "rewriting"] }
 
 add_tactic_doc
-  { Name := "unfold_projs", category := DocCategory.tactic, declNames := [`tactic.interactive.unfold_projs],
-    tags := ["core", "rewriting"] }
+  { Name := "unfold_projs", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.unfold_projs], tags := ["core", "rewriting"] }
 
 add_tactic_doc
-  { Name := "with_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.with_cases],
-    tags := ["core", "combinator"] }
+  { Name := "with_cases", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.with_cases], tags := ["core", "combinator"] }
 
 -- conv mode tactics
 /-- Navigate to the left-hand-side of a relation.
 A goal of `| a = b` will turn into the goal `| a`.
 -/
 add_tactic_doc
-  { Name := "conv: to_lhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_lhs], tags := ["conv"] }
+  { Name := "conv: to_lhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_lhs],
+    tags := ["conv"] }
 
 /-- Navigate to the right-hand-side of a relation.
 A goal of `| a = b` will turn into the goal `| b`.
 -/
 add_tactic_doc
-  { Name := "conv: to_rhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_rhs], tags := ["conv"] }
+  { Name := "conv: to_rhs", category := DocCategory.tactic, declNames := [`conv.interactive.to_rhs],
+    tags := ["conv"] }
 
 /-- Navigate into every argument of the current head function.
 A target of `| (a * b) * c` will turn into the two targets `| a * b` and `| c`.
 -/
 add_tactic_doc
-  { Name := "conv: congr", category := DocCategory.tactic, declNames := [`conv.interactive.congr], tags := ["conv"] }
+  { Name := "conv: congr", category := DocCategory.tactic, declNames := [`conv.interactive.congr],
+    tags := ["conv"] }
 
 /-- Navigate into the contents of top-level `λ` binders.
 A target of `| λ a, a + b` will turn into the target `| a + b` and introduce `a` into the local
@@ -536,7 +551,8 @@ If there are multiple binders, all of them will be entered, and if there are non
 no-op.
 -/
 add_tactic_doc
-  { Name := "conv: funext", category := DocCategory.tactic, declNames := [`conv.interactive.funext], tags := ["conv"] }
+  { Name := "conv: funext", category := DocCategory.tactic, declNames := [`conv.interactive.funext],
+    tags := ["conv"] }
 
 /-- Navigate into the first scope matching the expression.
 
@@ -544,7 +560,8 @@ For a target of `| ∀ c, a + (b + c) = 1`, `find (b + _) { ... }` will run the 
 `{}` with a target of `| b + c`.
 -/
 add_tactic_doc
-  { Name := "conv: find", category := DocCategory.tactic, declNames := [`conv.interactive.find], tags := ["conv"] }
+  { Name := "conv: find", category := DocCategory.tactic, declNames := [`conv.interactive.find],
+    tags := ["conv"] }
 
 /-- Navigate into the numbered scopes matching the expression.
 
@@ -552,11 +569,13 @@ For a target of `| λ c, 10 * c + 20 * c + 30 * c`, `for (_ * _) [1, 3] { ... }`
 tactics within the `{}` with first a target of `| 10 * c`, then a target of `| 30 * c`.
 -/
 add_tactic_doc
-  { Name := "conv: for", category := DocCategory.tactic, declNames := [`conv.interactive.for], tags := ["conv"] }
+  { Name := "conv: for", category := DocCategory.tactic, declNames := [`conv.interactive.for],
+    tags := ["conv"] }
 
 /-- End conversion of the current goal. This is often what is needed when muscle memory would type
 `sorry`.
 -/
 add_tactic_doc
-  { Name := "conv: skip", category := DocCategory.tactic, declNames := [`conv.interactive.skip], tags := ["conv"] }
+  { Name := "conv: skip", category := DocCategory.tactic, declNames := [`conv.interactive.skip],
+    tags := ["conv"] }
 

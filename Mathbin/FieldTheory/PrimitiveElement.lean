@@ -70,7 +70,8 @@ theorem exists_primitive_element_of_finite_top [Finite E] : ∃ α : E, F⟮⟯ 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /-- Primitive element theorem for finite dimensional extension of a finite field. -/
-theorem exists_primitive_element_of_finite_bot [Finite F] [FiniteDimensional F E] : ∃ α : E, F⟮⟯ = ⊤ :=
+theorem exists_primitive_element_of_finite_bot [Finite F] [FiniteDimensional F E] :
+    ∃ α : E, F⟮⟯ = ⊤ :=
   haveI : Finite E := finite_of_finite F E
   exists_primitive_element_of_finite_top F E
 #align field.exists_primitive_element_of_finite_bot Field.exists_primitive_element_of_finite_bot
@@ -144,7 +145,8 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
       (g.map (algebraMap F F⟮⟯))
   let h := EuclideanDomain.gcd ((f.map ιFE).comp (C γ - C (ιFE c) * X)) (g.map ιFE)
   have map_g_ne_zero : g.map ιFE ≠ 0 := map_ne_zero (minpoly.ne_zero hβ)
-  have h_ne_zero : h ≠ 0 := mt euclidean_domain.gcd_eq_zero_iff.mp (not_and.mpr fun _ => map_g_ne_zero)
+  have h_ne_zero : h ≠ 0 :=
+    mt euclidean_domain.gcd_eq_zero_iff.mp (not_and.mpr fun _ => map_g_ne_zero)
   suffices p_linear : p.map (algebraMap F⟮⟯ E) = C h.leading_coeff * (X - C β)
   · have finale : β = algebraMap F⟮⟯ E (-p.coeff 0 / p.coeff 1) := by
       rw [map_div₀, RingHom.map_neg, ← coeff_map, ← coeff_map, p_linear]
@@ -155,12 +157,13 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   have h_sep : h.separable := separable_gcd_right _ (IsSeparable.separable F β).map
   have h_root : h.eval β = 0 := by
     apply eval_gcd_eq_zero
-    · rw [eval_comp, eval_sub, eval_mul, eval_C, eval_C, eval_X, eval_map, ← aeval_def, ← Algebra.smul_def,
-        add_sub_cancel, minpoly.aeval]
+    · rw [eval_comp, eval_sub, eval_mul, eval_C, eval_C, eval_X, eval_map, ← aeval_def, ←
+        Algebra.smul_def, add_sub_cancel, minpoly.aeval]
       
     · rw [eval_map, ← aeval_def, minpoly.aeval]
       
-  have h_splits : splits ιEE' h := splits_of_splits_gcd_right ιEE' map_g_ne_zero (splitting_field.splits _)
+  have h_splits : splits ιEE' h :=
+    splits_of_splits_gcd_right ιEE' map_g_ne_zero (splitting_field.splits _)
   have h_roots : ∀ x ∈ (h.map ιEE').roots, x = ιEE' β := by
     intro x hx
     rw [mem_roots_map h_ne_zero] at hx
@@ -238,11 +241,12 @@ end SeparableAssumption
 end Field
 
 @[simp]
-theorem AlgHom.card (F E K : Type _) [Field F] [Field E] [Field K] [IsAlgClosed K] [Algebra F E] [FiniteDimensional F E]
-    [IsSeparable F E] [Algebra F K] : Fintype.card (E →ₐ[F] K) = finrank F E := by
+theorem AlgHom.card (F E K : Type _) [Field F] [Field E] [Field K] [IsAlgClosed K] [Algebra F E]
+    [FiniteDimensional F E] [IsSeparable F E] [Algebra F K] :
+    Fintype.card (E →ₐ[F] K) = finrank F E := by
   convert
-    (AlgHom.card_of_power_basis (Field.powerBasisOfFiniteOfSeparable F E) (IsSeparable.separable _ _)
-          (IsAlgClosed.splitsCodomain _)).trans
+    (AlgHom.card_of_power_basis (Field.powerBasisOfFiniteOfSeparable F E)
+          (IsSeparable.separable _ _) (IsAlgClosed.splitsCodomain _)).trans
       (PowerBasis.finrank _).symm
   infer_instance
 #align alg_hom.card AlgHom.card

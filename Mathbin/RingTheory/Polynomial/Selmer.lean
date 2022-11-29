@@ -34,7 +34,8 @@ theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^
   have key : z ^ n = 1 ∨ z ^ n = z ∨ z ^ n = z ^ 2 := by
     rw [← Nat.mod_add_div n 3, pow_add, pow_mul, h3, one_pow, mul_one]
     have : n % 3 < 3 := Nat.mod_lt n zero_lt_three
-    interval_cases n % 3 <;> simp only [h, pow_zero, pow_one, eq_self_iff_true, or_true_iff, true_or_iff]
+    interval_cases n % 3 <;>
+      simp only [h, pow_zero, pow_one, eq_self_iff_true, or_true_iff, true_or_iff]
   have z_ne_zero : z ≠ 0 := fun h =>
     zero_ne_one ((zero_pow zero_lt_three).symm.trans (show (0 : ℂ) ^ 3 = 1 from h ▸ h3))
   rcases key with (key | key | key)
@@ -52,14 +53,15 @@ theorem X_pow_sub_X_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X
     exact Associated.irreducible ⟨-1, mul_neg_one X⟩ irreducible_X
     
   have hn : 1 < n := nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn0, hn1⟩
-  have hp : (X ^ n - X - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by simp only [trinomial, C_neg, C_1] <;> ring
+  have hp : (X ^ n - X - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by
+    simp only [trinomial, C_neg, C_1] <;> ring
   rw [hp]
   apply is_unit_trinomial.irreducible_of_coprime' ⟨0, 1, n, zero_lt_one, hn, -1, -1, 1, rfl⟩
   rintro z ⟨h1, h2⟩
   apply X_pow_sub_X_sub_one_irreducible_aux z
   rw [trinomial_mirror zero_lt_one hn (-1 : ℤˣ).NeZero (1 : ℤˣ).NeZero] at h2
   simp_rw [trinomial, aeval_add, aeval_mul, aeval_X_pow, aeval_C] at h1 h2
-  simp_rw [Units.coe_neg, Units.coe_one, map_neg, map_one] at h1 h2
+  simp_rw [Units.coe_neg, Units.val_one, map_neg, map_one] at h1 h2
   replace h1 : z ^ n = z + 1 := by linear_combination h1
   replace h2 := mul_eq_zero_of_left h2 z
   rw [add_mul, add_mul, add_zero, mul_assoc (-1 : ℂ), ← pow_succ', Nat.sub_add_cancel hn.le] at h2
@@ -72,10 +74,14 @@ theorem X_pow_sub_X_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]
     exact Associated.irreducible ⟨-1, mul_neg_one X⟩ irreducible_X
     
-  have hp : (X ^ n - X - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by simp only [trinomial, C_neg, C_1] <;> ring
+  have hp : (X ^ n - X - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by
+    simp only [trinomial, C_neg, C_1] <;> ring
   have hn : 1 < n := nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn0, hn1⟩
-  have h := (is_primitive.int.irreducible_iff_irreducible_map_cast _).mp (X_pow_sub_X_sub_one_irreducible hn1)
-  · rwa [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_one, Polynomial.map_X] at h
+  have h :=
+    (is_primitive.int.irreducible_iff_irreducible_map_cast _).mp
+      (X_pow_sub_X_sub_one_irreducible hn1)
+  · rwa [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_one,
+      Polynomial.map_X] at h
     
   · exact hp.symm ▸ (trinomial_monic zero_lt_one hn).IsPrimitive
     

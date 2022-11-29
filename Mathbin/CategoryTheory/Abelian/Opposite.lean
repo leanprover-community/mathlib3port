@@ -88,11 +88,13 @@ def cokernelUnopOp : Opposite.op (cokernel g.unop) ≅ kernel g :=
 #align category_theory.cokernel_unop_op CategoryTheory.cokernelUnopOp
 
 theorem Cokernel.π_op :
-    (cokernel.π f.op).unop = (cokernelOpUnop f).Hom ≫ kernel.ι f ≫ eqToHom (Opposite.unop_op _).symm := by
-  simp [cokernel_op_unop]
+    (cokernel.π f.op).unop =
+      (cokernelOpUnop f).Hom ≫ kernel.ι f ≫ eqToHom (Opposite.unop_op _).symm :=
+  by simp [cokernel_op_unop]
 #align category_theory.cokernel.π_op CategoryTheory.Cokernel.π_op
 
-theorem Kernel.ι_op : (kernel.ι f.op).unop = eqToHom (Opposite.unop_op _) ≫ cokernel.π f ≫ (kernelOpUnop f).inv := by
+theorem Kernel.ι_op :
+    (kernel.ι f.op).unop = eqToHom (Opposite.unop_op _) ≫ cokernel.π f ≫ (kernelOpUnop f).inv := by
   simp [kernel_op_unop]
 #align category_theory.kernel.ι_op CategoryTheory.Kernel.ι_op
 
@@ -114,12 +116,15 @@ def kernelUnopUnop : kernel g.unop ≅ (cokernel g).unop :=
   (kernelUnopOp g).unop.symm
 #align category_theory.kernel_unop_unop CategoryTheory.kernelUnopUnop
 
-theorem Kernel.ι_unop : (kernel.ι g.unop).op = eqToHom (Opposite.op_unop _) ≫ cokernel.π g ≫ (kernelUnopOp g).inv := by
+theorem Kernel.ι_unop :
+    (kernel.ι g.unop).op = eqToHom (Opposite.op_unop _) ≫ cokernel.π g ≫ (kernelUnopOp g).inv := by
   simp
 #align category_theory.kernel.ι_unop CategoryTheory.Kernel.ι_unop
 
 theorem Cokernel.π_unop :
-    (cokernel.π g.unop).op = (cokernelUnopOp g).Hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm := by simp
+    (cokernel.π g.unop).op =
+      (cokernelUnopOp g).Hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm :=
+  by simp
 #align category_theory.cokernel.π_unop CategoryTheory.Cokernel.π_unop
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/

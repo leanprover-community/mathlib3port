@@ -31,25 +31,29 @@ in another file. However, the lemmas about it are stated here.
 
 /-- A linearly ordered commutative group with a zero element. -/
 @[protect_proj]
-class LinearOrderedCommGroupWithZero (α : Type _) extends LinearOrderedCommMonoidWithZero α, CommGroupWithZero α
+class LinearOrderedCommGroupWithZero (α : Type _) extends LinearOrderedCommMonoidWithZero α,
+  CommGroupWithZero α
 #align linear_ordered_comm_group_with_zero LinearOrderedCommGroupWithZero
 
 variable {α : Type _}
 
 variable {a b c d x y z : α}
 
-instance [LinearOrderedAddCommMonoidWithTop α] : LinearOrderedCommMonoidWithZero (Multiplicative αᵒᵈ) :=
-  { Multiplicative.orderedCommMonoid, Multiplicative.linearOrder with zero := Multiplicative.ofAdd (⊤ : α),
-    zero_mul := top_add, mul_zero := add_top, zero_le_one := (le_top : (0 : α) ≤ ⊤) }
+instance [LinearOrderedAddCommMonoidWithTop α] :
+    LinearOrderedCommMonoidWithZero (Multiplicative αᵒᵈ) :=
+  { Multiplicative.orderedCommMonoid, Multiplicative.linearOrder with
+    zero := Multiplicative.ofAdd (⊤ : α), zero_mul := top_add, mul_zero := add_top,
+    zero_le_one := (le_top : (0 : α) ≤ ⊤) }
 
-instance [LinearOrderedAddCommGroupWithTop α] : LinearOrderedCommGroupWithZero (Multiplicative αᵒᵈ) :=
-  { Multiplicative.divInvMonoid, Multiplicative.linearOrderedCommMonoidWithZero, Multiplicative.nontrivial with
-    inv_zero := LinearOrderedAddCommGroupWithTop.neg_top,
+instance [LinearOrderedAddCommGroupWithTop α] :
+    LinearOrderedCommGroupWithZero (Multiplicative αᵒᵈ) :=
+  { Multiplicative.divInvMonoid, Multiplicative.linearOrderedCommMonoidWithZero,
+    Multiplicative.nontrivial with inv_zero := LinearOrderedAddCommGroupWithTop.neg_top,
     mul_inv_cancel := LinearOrderedAddCommGroupWithTop.add_neg_cancel }
 
 instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoidWithZero (WithZero α) :=
-  { WithZero.linearOrder, WithZero.commMonoidWithZero with mul_le_mul_left := fun x y => mul_le_mul_left',
-    zero_le_one := WithZero.zero_le _ }
+  { WithZero.linearOrder, WithZero.commMonoidWithZero with
+    mul_le_mul_left := fun x y => mul_le_mul_left', zero_le_one := WithZero.zero_le _ }
 
 instance [LinearOrderedCommGroup α] : LinearOrderedCommGroupWithZero (WithZero α) :=
   { WithZero.linearOrderedCommMonoidWithZero, WithZero.commGroupWithZero with }
@@ -64,14 +68,17 @@ The following facts are true more generally in a (linearly) ordered commutative 
 /-- Pullback a `linear_ordered_comm_monoid_with_zero` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β] [Pow β ℕ] [HasSup β]
-    [HasInf β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β]
+    [Pow β ℕ] [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0)
+    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedCommMonoidWithZero β :=
-  { LinearOrder.lift f hf hsup hinf, hf.OrderedCommMonoid f one mul npow, hf.CommMonoidWithZero f zero one mul npow with
-    zero_le_one := show f 0 ≤ f 1 by simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
-#align function.injective.linear_ordered_comm_monoid_with_zero Function.Injective.linearOrderedCommMonoidWithZero
+  { LinearOrder.lift f hf hsup hinf, hf.OrderedCommMonoid f one mul npow,
+    hf.CommMonoidWithZero f zero one mul npow with
+    zero_le_one :=
+      show f 0 ≤ f 1 by simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
+#align
+  function.injective.linear_ordered_comm_monoid_with_zero Function.Injective.linearOrderedCommMonoidWithZero
 
 @[simp]
 theorem zero_le' : 0 ≤ a := by simpa only [mul_zero, mul_one] using mul_le_mul_left' zero_le_one a
@@ -174,7 +181,9 @@ theorem mul_lt_mul_of_lt_of_le₀ (hab : a ≤ b) (hb : b ≠ 0) (hcd : c < d) :
     if hc : c = 0 then by
       rw [hc, mul_zero, zero_lt_iff]
       exact mul_ne_zero hb hd
-    else show Units.mk0 a ha * Units.mk0 c hc < Units.mk0 b hb * Units.mk0 d hd from mul_lt_mul_of_le_of_lt hab hcd
+    else
+      show Units.mk0 a ha * Units.mk0 c hc < Units.mk0 b hb * Units.mk0 d hd from
+        mul_lt_mul_of_le_of_lt hab hcd
 #align mul_lt_mul_of_lt_of_le₀ mul_lt_mul_of_lt_of_le₀
 
 theorem mul_lt_mul₀ (hab : a < b) (hcd : c < d) : a * c < b * d :=
@@ -228,10 +237,12 @@ theorem div_le_div_left₀ (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) : a / b 
   simp only [div_eq_mul_inv, mul_le_mul_left₀ ha, inv_le_inv₀ hb hc]
 #align div_le_div_left₀ div_le_div_left₀
 
-theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by rw [div_eq_mul_inv, le_mul_inv_iff₀ hc]
+theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by
+  rw [div_eq_mul_inv, le_mul_inv_iff₀ hc]
 #align le_div_iff₀ le_div_iff₀
 
-theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
+theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by
+  rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
 #align div_le_iff₀ div_le_iff₀
 
 /-- `equiv.mul_left₀` as an order_iso on a `linear_ordered_comm_group_with_zero.`.
@@ -263,6 +274,6 @@ theorem OrderIso.mul_right₀'_symm {a : α} (ha : a ≠ 0) :
 #align order_iso.mul_right₀'_symm OrderIso.mul_right₀'_symm
 
 instance : LinearOrderedAddCommGroupWithTop (Additive αᵒᵈ) :=
-  { Additive.subNegMonoid, Additive.linearOrderedAddCommMonoidWithTop, Additive.nontrivial with neg_top := inv_zero,
-    add_neg_cancel := fun a ha => mul_inv_cancel ha }
+  { Additive.subNegMonoid, Additive.linearOrderedAddCommMonoidWithTop, Additive.nontrivial with
+    neg_top := inv_zero, add_neg_cancel := fun a ha => mul_inv_cancel ha }
 

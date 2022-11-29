@@ -43,8 +43,8 @@ theorem denoms_clearable_zero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClea
 #align denoms_clearable_zero denoms_clearable_zero
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
-theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R) (nN : n ≤ N) :
-    DenomsClearable a b N (c r * X ^ n) i := by
+theorem denoms_clearable_C_mul_X_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R)
+    (nN : n ≤ N) : DenomsClearable a b N (c r * X ^ n) i := by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
   rw [C_mul_X_pow_eq_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, eval_mul, eval_pow, eval_C]
   rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, eval_X, mul_comm]
@@ -64,8 +64,8 @@ theorem DenomsClearable.add {N : ℕ} {f g : R[X]} :
 
 theorem denoms_clearable_of_nat_degree_le (N : ℕ) (a : R) (bu : bi * i b = 1) :
     ∀ f : R[X], f.natDegree ≤ N → DenomsClearable a b N f i :=
-  induction_with_nat_degree_le _ N (denoms_clearable_zero N a bu) (fun N_1 r r0 => denoms_clearable_C_mul_X_pow a bu r)
-    fun f g fg gN df dg => df.add dg
+  induction_with_nat_degree_le _ N (denoms_clearable_zero N a bu)
+    (fun N_1 r r0 => denoms_clearable_C_mul_X_pow a bu r) fun f g fg gN df dg => df.add dg
 #align denoms_clearable_of_nat_degree_le denoms_clearable_of_nat_degree_le
 
 /-- If `i : R → K` is a ring homomorphism, `f` is a polynomial with coefficients in `R`,
@@ -85,8 +85,8 @@ denominators, yields a number greater than or equal to one.  The target can be a
 `linear_ordered_field K`.
 The assumption on `K` could be weakened to `linear_ordered_comm_ring` assuming that the
 image of the denominator is invertible in `K`. -/
-theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ[X]} {a b : ℤ} (b0 : 0 < b)
-    (fab : eval ((a : K) / b) (f.map (algebraMap ℤ K)) ≠ 0) :
+theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ[X]} {a b : ℤ}
+    (b0 : 0 < b) (fab : eval ((a : K) / b) (f.map (algebraMap ℤ K)) ≠ 0) :
     (1 : K) ≤ b ^ f.natDegree * |eval ((a : K) / b) (f.map (algebraMap ℤ K))| := by
   obtain ⟨ev, bi, bu, hF⟩ :=
     @denoms_clearable_nat_degree _ _ _ _ b _ (algebraMap ℤ K) f a

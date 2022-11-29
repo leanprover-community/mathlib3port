@@ -26,14 +26,16 @@ open Polynomial
 
 universe u v w x y z
 
-variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R} {m n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R}
+  {m n : ℕ}
 
 section Semiring
 
 variable [Semiring R] {p q r : R[X]}
 
 @[elab_as_elim]
-protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a)) (h_add : ∀ p q, M p → M q → M (p + q))
+protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a))
+    (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p := by
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a
@@ -73,7 +75,8 @@ variable {f : R[X]} {I : Ideal R[X]}
 
 /-- If the coefficients of a polynomial belong to an ideal, then that ideal contains
 the ideal spanned by the coefficients of the polynomial. -/
-theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) : Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I := by
+theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) :
+    Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I := by
   simp (config := { singlePass := true }) only [@eq_comm _ _ (C _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
 #align polynomial.span_le_of_C_coeff_mem Polynomial.span_le_of_C_coeff_mem

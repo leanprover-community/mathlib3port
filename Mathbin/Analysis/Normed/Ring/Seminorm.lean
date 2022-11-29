@@ -49,7 +49,8 @@ structure RingNorm (R : Type _) [NonUnitalNonAssocRing R] extends RingSeminorm R
 /-- A multiplicative seminorm on a ring `R` is a function `f : R → ℝ` that preserves zero and
 multiplication, takes nonnegative values, is subadditive and such that `f (-x) = f x` for all `x`.
 -/
-structure MulRingSeminorm (R : Type _) [NonAssocRing R] extends AddGroupSeminorm R, MonoidWithZeroHom R ℝ
+structure MulRingSeminorm (R : Type _) [NonAssocRing R] extends AddGroupSeminorm R,
+  MonoidWithZeroHom R ℝ
 #align mul_ring_seminorm MulRingSeminorm
 
 /-- A multiplicative norm on a ring `R` is a multiplicative ring seminorm such that `f x = 0`
@@ -70,34 +71,34 @@ class RingSeminormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAsso
 /-- `ring_norm_class F α` states that `F` is a type of norms on the ring `α`.
 
 You should extend this class when you extend `ring_norm`. -/
-class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends RingSeminormClass F α,
-  AddGroupNormClass F α
+class RingNormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
+  RingSeminormClass F α, AddGroupNormClass F α
 #align ring_norm_class RingNormClass
 
 /-- `mul_ring_seminorm_class F α` states that `F` is a type of multiplicative seminorms on the ring
 `α`.
 
 You should extend this class when you extend `mul_ring_seminorm`. -/
-class MulRingSeminormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends AddGroupSeminormClass F α,
-  MonoidWithZeroHomClass F α ℝ
+class MulRingSeminormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends
+  AddGroupSeminormClass F α, MonoidWithZeroHomClass F α ℝ
 #align mul_ring_seminorm_class MulRingSeminormClass
 
 /-- `mul_ring_norm_class F α` states that `F` is a type of multiplicative norms on the ring `α`.
 
 You should extend this class when you extend `mul_ring_norm`. -/
-class MulRingNormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends MulRingSeminormClass F α,
-  AddGroupNormClass F α
+class MulRingNormClass (F : Type _) (α : outParam <| Type _) [NonAssocRing α] extends
+  MulRingSeminormClass F α, AddGroupNormClass F α
 #align mul_ring_norm_class MulRingNormClass
 
 -- See note [lower instance priority]
-instance (priority := 100) MulRingSeminormClass.toRingSeminormClass [NonAssocRing R] [MulRingSeminormClass F R] :
-    RingSeminormClass F R :=
+instance (priority := 100) MulRingSeminormClass.toRingSeminormClass [NonAssocRing R]
+    [MulRingSeminormClass F R] : RingSeminormClass F R :=
   { ‹MulRingSeminormClass F R› with map_mul_le_mul := fun f a b => (map_mul _ _ _).le }
 #align mul_ring_seminorm_class.to_ring_seminorm_class MulRingSeminormClass.toRingSeminormClass
 
 -- See note [lower instance priority]
-instance (priority := 100) MulRingNormClass.toRingNormClass [NonAssocRing R] [MulRingNormClass F R] :
-    RingNormClass F R :=
+instance (priority := 100) MulRingNormClass.toRingNormClass [NonAssocRing R]
+    [MulRingNormClass F R] : RingNormClass F R :=
   { ‹MulRingNormClass F R›, MulRingSeminormClass.toRingSeminormClass with }
 #align mul_ring_norm_class.to_ring_norm_class MulRingNormClass.toRingNormClass
 
@@ -342,7 +343,8 @@ instance : Inhabited (MulRingNorm R) :=
 end MulRingNorm
 
 /-- A nonzero ring seminorm on a field `K` is a ring norm. -/
-def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f ≠ 0) : RingNorm K :=
+def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f ≠ 0) :
+    RingNorm K :=
   { f with
     eq_zero_of_map_eq_zero' := fun x hx => by
       obtain ⟨c, hc⟩ := ring_seminorm.ne_zero_iff.mp hnt
@@ -350,7 +352,8 @@ def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f
       have hc0 : f c = 0 := by
         rw [← mul_one c, ← mul_inv_cancel hn0, ← mul_assoc, mul_comm c, mul_assoc]
         exact
-          le_antisymm (le_trans (map_mul_le_mul f _ _) (by rw [← RingSeminorm.to_fun_eq_coe, hx, zero_mul]))
+          le_antisymm
+            (le_trans (map_mul_le_mul f _ _) (by rw [← RingSeminorm.to_fun_eq_coe, hx, zero_mul]))
             (map_nonneg f _)
       exact hc hc0 }
 #align ring_seminorm.to_ring_norm RingSeminorm.toRingNorm

@@ -47,13 +47,14 @@ Note that if `M` does not fit in `w`, the reverse direction of this implication 
 `module.free.of_basis`. -/
 theorem Module.free_def [Small.{w} M] : Module.Free R M ↔ ∃ I : Type w, Nonempty (Basis I R M) :=
   ⟨fun h =>
-    ⟨Shrink (Set.range h.exists_basis.some.2), ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
+    ⟨Shrink (Set.range h.exists_basis.some.2),
+      ⟨(Basis.reindexRange h.exists_basis.some.2).reindex (equivShrink _)⟩⟩,
     fun h => ⟨(nonempty_sigma.2 h).map fun ⟨i, b⟩ => ⟨Set.range b, b.reindexRange⟩⟩⟩
 #align module.free_def Module.free_def
 
 theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis S R M) :=
-  ⟨fun h => ⟨Set.range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩, fun ⟨S, hS⟩ =>
-    ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
+  ⟨fun h => ⟨Set.range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩,
+    fun ⟨S, hS⟩ => ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
 #align module.free_iff_set Module.free_iff_set
 
 variable {R M}
@@ -116,7 +117,8 @@ theorem ofEquiv (e : M ≃ₗ[R] N) : Module.Free R N :=
 
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
 instance. -/
-theorem ofEquiv' {P : Type v} [AddCommMonoid P] [Module R P] (h : Module.Free R P) (e : P ≃ₗ[R] N) : Module.Free R N :=
+theorem ofEquiv' {P : Type v} [AddCommMonoid P] [Module R P] (h : Module.Free R P) (e : P ≃ₗ[R] N) :
+    Module.Free R N :=
   ofEquiv e
 #align module.free.of_equiv' Module.Free.ofEquiv'
 
@@ -166,13 +168,13 @@ instance (priority := 100) ofSubsingleton' [Subsingleton R] : Module.Free R N :=
   Module.Free.ofSubsingleton R N
 #align module.free.of_subsingleton' Module.Free.ofSubsingleton'
 
-instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
-    [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
+instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
+    [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
   of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
 
-instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
-    [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
+instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
+    [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
   Module.Free.dfinsupp R M
 #align module.free.direct_sum Module.Free.directSum
 

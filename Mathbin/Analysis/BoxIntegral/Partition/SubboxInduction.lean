@@ -54,7 +54,8 @@ theorem mem_split_center : J ∈ splitCenter I ↔ ∃ s, I.splitCenterBox s = J
 #align box_integral.prepartition.mem_split_center BoxIntegral.Prepartition.mem_split_center
 
 theorem isPartitionSplitCenter (I : Box ι) : IsPartition (splitCenter I) := fun x hx => by simp [hx]
-#align box_integral.prepartition.is_partition_split_center BoxIntegral.Prepartition.isPartitionSplitCenter
+#align
+  box_integral.prepartition.is_partition_split_center BoxIntegral.Prepartition.isPartitionSplitCenter
 
 theorem upper_sub_lower_of_mem_split_center (h : J ∈ splitCenter I) (i : ι) :
     J.upper i - J.lower i = (I.upper i - I.lower i) / 2 :=
@@ -81,12 +82,15 @@ hold true.
 Then `p I` is true. See also `box_integral.box.subbox_induction_on'` for a version using
 `box_integral.box.split_center_box` instead of `box_integral.prepartition.split_center`. -/
 @[elab_as_elim]
-theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J ≤ I, (∀ J' ∈ splitCenter J, p J') → p J)
+theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
+    (H_ind : ∀ J ≤ I, (∀ J' ∈ splitCenter J, p J') → p J)
     (H_nhds :
       ∀ z ∈ I.icc,
         ∃ U ∈ 𝓝[I.icc] z,
           ∀ J ≤ I,
-            ∀ (m : ℕ), z ∈ J.icc → J.icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+            ∀ (m : ℕ),
+              z ∈ J.icc →
+                J.icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   refine' subbox_induction_on' I (fun J hle hs => (H_ind J hle) fun J' h' => _) H_nhds
   rcases mem_split_center.1 h' with ⟨s, rfl⟩
@@ -102,7 +106,8 @@ theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
 
 This lemma implies that the Henstock filter is nontrivial, hence the Henstock integral is
 well-defined. -/
-theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box ι) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box ι)
+    (r : (ι → ℝ) → ioi (0 : ℝ)) :
     ∃ π : TaggedPrepartition I,
       π.IsPartition ∧
         π.IsHenstock ∧
@@ -113,7 +118,8 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
   refine' subbox_induction_on I (fun J hle hJ => _) fun z hz => _
   · choose! πi hP hHen hr Hn Hd using hJ
     choose! n hn using Hn
-    have hP : ((split_center J).bUnionTagged πi).IsPartition := (is_partition_split_center _).bUnionTagged hP
+    have hP : ((split_center J).bUnionTagged πi).IsPartition :=
+      (is_partition_split_center _).bUnionTagged hP
     have hsub :
       ∀ J' ∈ (split_center J).bUnionTagged πi,
         ∃ n : ℕ, ∀ i, (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n :=
@@ -127,12 +133,14 @@ theorem exists_tagged_partition_is_Henstock_is_subordinate_homothetic (I : Box �
     rcases hsub J' h' with ⟨n, hn⟩
     exact box.distortion_eq_of_sub_eq_div hn
     
-  · refine' ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop), _⟩
+  · refine'
+      ⟨I.Icc ∩ closed_ball z (r z), inter_mem_nhds_within _ (closed_ball_mem_nhds _ (r z).coe_prop),
+        _⟩
     intro J Hle n Hmem HIcc Hsub
     rw [Set.subset_inter_iff] at HIcc
     refine'
-      ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _, (is_subordinate_single _ _).2 HIcc.2, _,
-        distortion_single _ _⟩
+      ⟨single _ _ le_rfl _ Hmem, is_partition_single _, is_Henstock_single _,
+        (is_subordinate_single _ _).2 HIcc.2, _, distortion_single _ _⟩
     simp only [tagged_prepartition.mem_single, forall_eq]
     refine' ⟨0, fun i => _⟩
     simp
@@ -158,11 +166,11 @@ exists a tagged prepartition `π'` of `I` such that
 theorem exists_tagged_le_is_Henstock_is_subordinate_Union_eq {I : Box ι} (r : (ι → ℝ) → ioi (0 : ℝ))
     (π : Prepartition I) :
     ∃ π' : TaggedPrepartition I,
-      π'.toPrepartition ≤ π ∧ π'.IsHenstock ∧ π'.IsSubordinate r ∧ π'.distortion = π.distortion ∧ π'.union = π.union :=
+      π'.toPrepartition ≤ π ∧
+        π'.IsHenstock ∧ π'.IsSubordinate r ∧ π'.distortion = π.distortion ∧ π'.union = π.union :=
   by
   have := fun J => box.exists_tagged_partition_is_Henstock_is_subordinate_homothetic J r
-  choose! πi πip πiH πir hsub πid
-  clear hsub
+  choose! πi πip πiH πir hsub πid; clear hsub
   refine'
     ⟨π.bUnion_tagged πi, bUnion_le _ _, is_Henstock_bUnion_tagged.2 fun J _ => πiH J,
       is_subordinate_bUnion_tagged.2 fun J _ => πir J, _, π.Union_bUnion_partition fun J _ => πip J⟩
@@ -190,23 +198,28 @@ theorem to_subordinate_to_prepartition_le (π : Prepartition I) (r : (ι → ℝ
 #align
   box_integral.prepartition.to_subordinate_to_prepartition_le BoxIntegral.Prepartition.to_subordinate_to_prepartition_le
 
-theorem isHenstockToSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : (π.toSubordinate r).IsHenstock :=
+theorem isHenstockToSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (π.toSubordinate r).IsHenstock :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.1
-#align box_integral.prepartition.is_Henstock_to_subordinate BoxIntegral.Prepartition.isHenstockToSubordinate
+#align
+  box_integral.prepartition.is_Henstock_to_subordinate BoxIntegral.Prepartition.isHenstockToSubordinate
 
 theorem isSubordinateToSubordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
     (π.toSubordinate r).IsSubordinate r :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.2.1
-#align box_integral.prepartition.is_subordinate_to_subordinate BoxIntegral.Prepartition.isSubordinateToSubordinate
+#align
+  box_integral.prepartition.is_subordinate_to_subordinate BoxIntegral.Prepartition.isSubordinateToSubordinate
 
 @[simp]
 theorem distortion_to_subordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
     (π.toSubordinate r).distortion = π.distortion :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.2.2.1
-#align box_integral.prepartition.distortion_to_subordinate BoxIntegral.Prepartition.distortion_to_subordinate
+#align
+  box_integral.prepartition.distortion_to_subordinate BoxIntegral.Prepartition.distortion_to_subordinate
 
 @[simp]
-theorem Union_to_subordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : (π.toSubordinate r).union = π.union :=
+theorem Union_to_subordinate (π : Prepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (π.toSubordinate r).union = π.union :=
   (π.exists_tagged_le_is_Henstock_is_subordinate_Union_eq r).some_spec.2.2.2.2
 #align box_integral.prepartition.Union_to_subordinate BoxIntegral.Prepartition.Union_to_subordinate
 
@@ -225,14 +238,15 @@ a function `r : ℝⁿ → (0, ∞)`, returns the union of `π₁` and `π₂.to
 * `π` is subordinate to `r` outside of `π₁`;
 * the distortion of `π` is equal to the maximum of the distortions of `π₁` and `π₂`.
 -/
-def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I) (hU : π₂.union = I \ π₁.union)
-    (r : (ι → ℝ) → ioi (0 : ℝ)) : TaggedPrepartition I :=
+def unionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) : TaggedPrepartition I :=
   π₁.disjUnion (π₂.toSubordinate r) (((π₂.Union_to_subordinate r).trans hU).symm ▸ disjoint_diff)
 #align
   box_integral.tagged_prepartition.union_compl_to_subordinate BoxIntegral.TaggedPrepartition.unionComplToSubordinate
 
 theorem isPartitionUnionComplToSubordinate (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) : IsPartition (π₁.unionComplToSubordinate π₂ hU r) :=
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    IsPartition (π₁.unionComplToSubordinate π₂ hU r) :=
   Prepartition.isPartitionDisjUnionOfEqDiff ((π₂.Union_to_subordinate r).trans hU)
 #align
   box_integral.tagged_prepartition.is_partition_union_compl_to_subordinate BoxIntegral.TaggedPrepartition.isPartitionUnionComplToSubordinate
@@ -247,7 +261,8 @@ theorem union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (π₂ :
 
 @[simp]
 theorem Union_union_compl_to_subordinate_boxes (π₁ : TaggedPrepartition I) (π₂ : Prepartition I)
-    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) : (π₁.unionComplToSubordinate π₂ hU r).union = I :=
+    (hU : π₂.union = I \ π₁.union) (r : (ι → ℝ) → ioi (0 : ℝ)) :
+    (π₁.unionComplToSubordinate π₂ hU r).union = I :=
   (isPartitionUnionComplToSubordinate _ _ _ _).Union_eq
 #align
   box_integral.tagged_prepartition.Union_union_compl_to_subordinate_boxes BoxIntegral.TaggedPrepartition.Union_union_compl_to_subordinate_boxes

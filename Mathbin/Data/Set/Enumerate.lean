@@ -58,7 +58,8 @@ theorem enumerate_eq_none : ∀ {s n₁ n₂}, enumerate s n₁ = none → n₁ 
       
 #align set.enumerate_eq_none Set.enumerate_eq_none
 
-theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) : ∀ {s n a}, enumerate s n = some a → a ∈ s
+theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) :
+    ∀ {s n a}, enumerate s n = some a → a ∈ s
   | s, 0, a => h_sel s a
   | s, n + 1, a => by
     cases h : sel s

@@ -38,8 +38,8 @@ section
 /-- `locally_bounded_map_class F α β` states that `F` is a type of bounded maps.
 
 You should extend this class when you extend `locally_bounded_map`. -/
-class LocallyBoundedMapClass (F : Type _) (α β : outParam <| Type _) [Bornology α] [Bornology β] extends
-  FunLike F α fun _ => β where
+class LocallyBoundedMapClass (F : Type _) (α β : outParam <| Type _) [Bornology α]
+  [Bornology β] extends FunLike F α fun _ => β where
   comap_cobounded_le (f : F) : (cobounded β).comap f ≤ cobounded α
 #align locally_bounded_map_class LocallyBoundedMapClass
 
@@ -47,12 +47,13 @@ end
 
 export LocallyBoundedMapClass (comap_cobounded_le)
 
-theorem IsBounded.image [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] {f : F} {s : Set α}
-    (hs : IsBounded s) : IsBounded (f '' s) :=
+theorem IsBounded.image [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] {f : F}
+    {s : Set α} (hs : IsBounded s) : IsBounded (f '' s) :=
   comap_cobounded_le_iff.1 (comap_cobounded_le f) hs
 #align is_bounded.image IsBounded.image
 
-instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] : CoeTC F (LocallyBoundedMap α β) :=
+instance [Bornology α] [Bornology β] [LocallyBoundedMapClass F α β] :
+    CoeTC F (LocallyBoundedMap α β) :=
   ⟨fun f => ⟨f, comap_cobounded_le f⟩⟩
 
 namespace LocallyBoundedMap
@@ -138,7 +139,8 @@ theorem id_apply (a : α) : LocallyBoundedMap.id α a = a :=
 /-- Composition of `locally_bounded_map`s as a `locally_bounded_map`. -/
 def comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : LocallyBoundedMap α γ where
   toFun := f ∘ g
-  comap_cobounded_le' := comap_comap.ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'
+  comap_cobounded_le' :=
+    comap_comap.ge.trans <| (comap_mono f.comap_cobounded_le').trans g.comap_cobounded_le'
 #align locally_bounded_map.comp LocallyBoundedMap.comp
 
 @[simp]
@@ -147,13 +149,14 @@ theorem coe_comp (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) : �
 #align locally_bounded_map.coe_comp LocallyBoundedMap.coe_comp
 
 @[simp]
-theorem comp_apply (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) (a : α) : f.comp g a = f (g a) :=
+theorem comp_apply (f : LocallyBoundedMap β γ) (g : LocallyBoundedMap α β) (a : α) :
+    f.comp g a = f (g a) :=
   rfl
 #align locally_bounded_map.comp_apply LocallyBoundedMap.comp_apply
 
 @[simp]
-theorem comp_assoc (f : LocallyBoundedMap γ δ) (g : LocallyBoundedMap β γ) (h : LocallyBoundedMap α β) :
-    (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : LocallyBoundedMap γ δ) (g : LocallyBoundedMap β γ)
+    (h : LocallyBoundedMap α β) : (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align locally_bounded_map.comp_assoc LocallyBoundedMap.comp_assoc
 
@@ -167,8 +170,8 @@ theorem id_comp (f : LocallyBoundedMap α β) : (LocallyBoundedMap.id β).comp f
   ext fun a => rfl
 #align locally_bounded_map.id_comp LocallyBoundedMap.id_comp
 
-theorem cancel_right {g₁ g₂ : LocallyBoundedMap β γ} {f : LocallyBoundedMap α β} (hf : Surjective f) :
-    g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+theorem cancel_right {g₁ g₂ : LocallyBoundedMap β γ} {f : LocallyBoundedMap α β}
+    (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align locally_bounded_map.cancel_right LocallyBoundedMap.cancel_right
 

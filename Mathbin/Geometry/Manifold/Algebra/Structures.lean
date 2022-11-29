@@ -17,8 +17,8 @@ open Manifold
 
 section SmoothRing
 
-variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E]
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option default_priority -/
 set_option default_priority 100
@@ -27,18 +27,18 @@ set_option default_priority 100
 -- See note [Design choices about smooth algebraic structures]
 /-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
-class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [TopologicalSpace R] [ChartedSpace H R] extends
-  HasSmoothAdd I R : Prop where
+class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [TopologicalSpace R]
+  [ChartedSpace H R] extends HasSmoothAdd I R : Prop where
   smoothMul : Smooth (I.Prod I) I fun p : R × R => p.1 * p.2
 #align smooth_ring SmoothRing
 
-instance SmoothRing.toHasSmoothMul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R] [TopologicalSpace R]
-    [ChartedSpace H R] [h : SmoothRing I R] : HasSmoothMul I R :=
+instance SmoothRing.toHasSmoothMul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiring R]
+    [TopologicalSpace R] [ChartedSpace H R] [h : SmoothRing I R] : HasSmoothMul I R :=
   { h with }
 #align smooth_ring.to_has_smooth_mul SmoothRing.toHasSmoothMul
 
-instance SmoothRing.toLieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) [Ring R] [TopologicalSpace R]
-    [ChartedSpace H R] [SmoothRing I R] : LieAddGroup I R where
+instance SmoothRing.toLieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) [Ring R]
+    [TopologicalSpace R] [ChartedSpace H R] [SmoothRing I R] : LieAddGroup I R where
   compatible e e' := HasGroupoid.compatible (contDiffGroupoid ⊤ I)
   smoothAdd := smoothAdd I
   smoothNeg := by simpa only [neg_one_mul] using @smoothMulLeft 𝕜 _ H _ E _ _ I R _ _ _ _ (-1)
@@ -56,8 +56,8 @@ instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : Smooth
       exact contDiffMul }
 #align field_smooth_ring fieldSmoothRing
 
-variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
-  [NormedSpace 𝕜 E] [ChartedSpace H R] (I : ModelWithCorners 𝕜 E H)
+variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NontriviallyNormedField 𝕜]
+  [NormedAddCommGroup E] [NormedSpace 𝕜 E] [ChartedSpace H R] (I : ModelWithCorners 𝕜 E H)
 
 /-- A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/

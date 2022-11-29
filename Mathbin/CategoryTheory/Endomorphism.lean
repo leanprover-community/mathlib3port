@@ -112,8 +112,10 @@ instance group {C : Type u} [Groupoid.{v} C] (X : C) : Group (EndCat X) :=
 
 end EndCat
 
-theorem is_unit_iff_is_iso {C : Type u} [Category.{v} C] {X : C} (f : EndCat X) : IsUnit (f : EndCat X) ↔ IsIso f :=
-  ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h => ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
+theorem is_unit_iff_is_iso {C : Type u} [Category.{v} C] {X : C} (f : EndCat X) :
+    IsUnit (f : EndCat X) ↔ IsIso f :=
+  ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h =>
+    ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
 #align category_theory.is_unit_iff_is_iso CategoryTheory.is_unit_iff_is_iso
 
 variable {C : Type u} [Category.{v} C] (X : C)
@@ -135,12 +137,13 @@ instance inhabited : Inhabited (AutCat X) :=
 
 instance : Group (AutCat X) := by
   refine_struct
-      { one := iso.refl X, inv := iso.symm, mul := flip iso.trans, div := _,
-        npow := @npowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩,
-        zpow := @zpowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ } <;>
-    intros <;>
-      try rfl <;>
-        ext <;> simp [flip, (· * ·), Monoid.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoid.one, Inv.inv]
+            { one := iso.refl X, inv := iso.symm, mul := flip iso.trans, div := _,
+              npow := @npowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩,
+              zpow := @zpowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ } <;>
+          intros <;>
+        try rfl <;>
+      ext <;>
+    simp [flip, (· * ·), Monoid.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoid.one, Inv.inv]
 
 theorem Aut_mul_def (f g : AutCat X) : f * g = g.trans f :=
   rfl

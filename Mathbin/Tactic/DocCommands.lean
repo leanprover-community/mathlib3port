@@ -88,12 +88,13 @@ unsafe def library_note_attr : user_attribute where
 Example: ``mk_reflected_definition `foo 17`` constructs the definition
 declaration corresponding to `def foo : ℕ := 17`
 -/
-unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] (body : type) [reflected _ body] :
-    declaration :=
+unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] (body : type)
+    [reflected _ body] : declaration :=
   mk_definition decl_name (reflect type).collect_univ_params (reflect type) (reflect body)
 #align mk_reflected_definition mk_reflected_definition
 
-/-- If `note_name` and `note` are strings, `add_library_note note_name note` adds a declaration named
+/--
+If `note_name` and `note` are strings, `add_library_note note_name note` adds a declaration named
 `library_note.<note_name>` with `note` as the docstring and tags it with the `library_note`
 attribute.
 -/
@@ -115,7 +116,8 @@ library_note "note id"
 ```
 -/
 @[user_command]
-unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "library_note")) : parser Unit := do
+unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "library_note")) :
+    parser Unit := do
   let note_name ← parser.pexpr
   let note_name ← eval_pexpr String note_name
   let some doc_string ← pure mi.doc_string |
@@ -165,7 +167,8 @@ structure TacticDocEntry where
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
 unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) (desc : String) : json :=
   json.object
-    [("name", d.Name), ("category", d.category.toString), ("decl_names", d.declNames.map (json.of_string ∘ toString)),
+    [("name", d.Name), ("category", d.category.toString),
+      ("decl_names", d.declNames.map (json.of_string ∘ toString)),
       ("tags", d.tags.map json.of_string), ("description", desc)]
 #align tactic_doc_entry.to_json tactic_doc_entry.to_json
 
@@ -251,8 +254,8 @@ messages.
 
 -/
 @[user_command]
-unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_tactic_doc") : parser Unit :=
-  do
+unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info)
+    (_ : parse <| tk "add_tactic_doc") : parser Unit := do
   let pe ← parser.pexpr
   let e ← eval_pexpr TacticDocEntry pe
   tactic.add_tactic_doc e mi
@@ -299,8 +302,9 @@ def f := pi_binders ...
 ```
 -/
 add_tactic_doc
-  { Name := "library_note", category := DocCategory.cmd, declNames := [`library_note, `tactic.add_library_note],
-    tags := ["documentation"], inheritDescriptionFrom := `library_note }
+  { Name := "library_note", category := DocCategory.cmd,
+    declNames := [`library_note, `tactic.add_library_note], tags := ["documentation"],
+    inheritDescriptionFrom := `library_note }
 
 add_tactic_doc
   { Name := "add_tactic_doc", category := DocCategory.cmd,
@@ -354,8 +358,8 @@ Journal of the ACM (1980)
 (de Moura, Selsam IJCAR 2016).
 -/
 add_tactic_doc
-  { Name := "cc (congruence closure)", category := DocCategory.tactic, declNames := [`tactic.interactive.cc],
-    tags := ["core", "finishing"] }
+  { Name := "cc (congruence closure)", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.cc], tags := ["core", "finishing"] }
 
 /-- `conv {...}` allows the user to perform targeted rewriting on a goal or hypothesis,
 by focusing on particular subexpressions.
@@ -407,7 +411,8 @@ end
 and likewise for `to_rhs`.
 -/
 add_tactic_doc
-  { Name := "conv", category := DocCategory.tactic, declNames := [`tactic.interactive.conv], tags := ["core"] }
+  { Name := "conv", category := DocCategory.tactic, declNames := [`tactic.interactive.conv],
+    tags := ["core"] }
 
 add_tactic_doc
   { Name := "simp", category := DocCategory.tactic, declNames := [`tactic.interactive.simp],
@@ -434,7 +439,8 @@ component.ignore_props $ component.mk_simple int int 0 (λ _ x y, (x + y, none))
 ```
 -/
 add_tactic_doc
-  { Name := "#html", category := DocCategory.cmd, declNames := [`show_widget_cmd], tags := ["core", "widgets"] }
+  { Name := "#html", category := DocCategory.cmd, declNames := [`show_widget_cmd],
+    tags := ["core", "widgets"] }
 
 /-- The `add_decl_doc` command is used to add a doc string to an existing declaration.
 
@@ -448,7 +454,8 @@ add_decl_doc foo
 ```
 -/
 @[user_command]
-unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_decl_doc") : parser Unit := do
+unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_decl_doc") :
+    parser Unit := do
   let n ← parser.ident
   let n ← resolve_constant n
   let some doc ← pure mi.doc_string |

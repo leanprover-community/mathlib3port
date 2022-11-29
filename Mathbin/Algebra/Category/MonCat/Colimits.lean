@@ -71,18 +71,22 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
   | refl : ∀ x, relation x x
   | symm : ∀ (x y) (h : relation x y), relation y x
-  | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
+  |
+  trans :
+    ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
   |
   map :
     ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
-      relation (of j' ((F.map f) x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
+      relation (of j' ((F.map f) x))
+        (of j x)-- Then one relation per operation, describing the interaction with `of`
 
   | mul : ∀ (j) (x y : F.obj j), relation (of j (x * y)) (mul (of j x) (of j y))
   | one : ∀ j, relation (of j 1) one-- Then one relation per argument of each operation
 
   | mul_1 : ∀ (x x' y) (r : relation x x'), relation (mul x y) (mul x' y)
-  | mul_2 : ∀ (x y y') (r : relation y y'), relation (mul x y) (mul x y')-- And one relation per axiom
+  |
+  mul_2 : ∀ (x y y') (r : relation y y'), relation (mul x y) (mul x y')-- And one relation per axiom
 
   | mul_assoc : ∀ x y z, relation (mul (mul x y) z) (mul x (mul y z))
   | one_mul : ∀ x, relation (mul one x) x
@@ -158,7 +162,8 @@ theorem quot_one : Quot.mk Setoid.r one = (1 : ColimitType F) :=
 #align Mon.colimits.quot_one MonCat.Colimits.quot_one
 
 @[simp]
-theorem quot_mul (x y) : Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
+theorem quot_mul (x y) :
+    Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align Mon.colimits.quot_mul MonCat.Colimits.quot_mul
 
@@ -180,7 +185,8 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
 #align Mon.colimits.cocone_morphism MonCat.Colimits.coconeMorphism
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
+    F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
@@ -264,7 +270,8 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
     ext
     induction x
     induction x
-    · have w' := congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
+    · have w' :=
+        congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
       erw [w']
       rfl
       
@@ -278,7 +285,8 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
 instance has_colimits_Mon :
     HasColimits
       MonCat where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
+    { HasColimit := fun F =>
+        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
 #align Mon.colimits.has_colimits_Mon MonCat.Colimits.has_colimits_Mon
 
 end MonCat.Colimits

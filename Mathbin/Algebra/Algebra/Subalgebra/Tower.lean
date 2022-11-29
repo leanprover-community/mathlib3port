@@ -64,7 +64,8 @@ instance subalgebra (S₀ : Subalgebra R S) : IsScalarTower S₀ S A :=
 variable [Algebra R A] [IsScalarTower R S A]
 
 instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
-  (@IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _) fun _ => (IsScalarTower.algebra_map_apply R S A _ : _)
+  (@IsScalarTower.of_algebra_map_eq R S₀ A _ _ _ _ _ _) fun _ =>
+    (IsScalarTower.algebra_map_apply R S A _ : _)
 #align is_scalar_tower.subalgebra' IsScalarTower.subalgebra'
 
 end Semiring
@@ -113,8 +114,9 @@ theorem mem_restrict_scalars {U : Subalgebra S A} {x : A} : x ∈ restrictScalar
   Iff.rfl
 #align subalgebra.mem_restrict_scalars Subalgebra.mem_restrict_scalars
 
-theorem restrict_scalars_injective : Function.Injective (restrictScalars R : Subalgebra S A → Subalgebra R A) :=
-  fun U V H => ext fun x => by rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
+theorem restrict_scalars_injective :
+    Function.Injective (restrictScalars R : Subalgebra S A → Subalgebra R A) := fun U V H =>
+  ext fun x => by rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
 #align subalgebra.restrict_scalars_injective Subalgebra.restrict_scalars_injective
 
 /-- Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.
@@ -138,13 +140,15 @@ variable [CommSemiring R] [CommSemiring S] [CommSemiring A]
 variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 theorem adjoin_range_to_alg_hom (t : Set A) :
-    (Algebra.adjoin (toAlgHom R S A).range t).restrictScalars R = (Algebra.adjoin S t).restrictScalars R :=
+    (Algebra.adjoin (toAlgHom R S A).range t).restrictScalars R =
+      (Algebra.adjoin S t).restrictScalars R :=
   Subalgebra.ext fun z =>
     show
       z ∈ Subsemiring.closure (Set.range (algebraMap (toAlgHom R S A).range A) ∪ t : Set A) ↔
         z ∈ Subsemiring.closure (Set.range (algebraMap S A) ∪ t : Set A)
       by
-      suffices Set.range (algebraMap (toAlgHom R S A).range A) = Set.range (algebraMap S A) by rw [this]
+      suffices Set.range (algebraMap (toAlgHom R S A).range A) = Set.range (algebraMap S A) by
+        rw [this]
       ext z
       exact ⟨fun ⟨⟨x, y, h1⟩, h2⟩ => ⟨y, h2 ▸ h1⟩, fun ⟨y, hy⟩ => ⟨⟨z, y, hy⟩, rfl⟩⟩
 #align is_scalar_tower.adjoin_range_to_alg_hom IsScalarTower.adjoin_range_to_alg_hom

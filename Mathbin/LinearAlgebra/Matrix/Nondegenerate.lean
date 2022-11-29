@@ -34,10 +34,11 @@ theorem Nondegenerate.eq_zero_of_ortho {M : Matrix m m R} (hM : Nondegenerate M)
 #align matrix.nondegenerate.eq_zero_of_ortho Matrix.Nondegenerate.eq_zero_of_ortho
 
 /-- If `M` is nondegenerate and `v ≠ 0`, then there is some `w` such that `w ⬝ M ⬝ v ≠ 0`. -/
-theorem Nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : Nondegenerate M) {v : m → R} (hv : v ≠ 0) :
-    ∃ w, Matrix.dotProduct v (mulVec M w) ≠ 0 :=
+theorem Nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : Nondegenerate M)
+    {v : m → R} (hv : v ≠ 0) : ∃ w, Matrix.dotProduct v (mulVec M w) ≠ 0 :=
   not_forall.mp (mt hM.eq_zero_of_ortho hv)
-#align matrix.nondegenerate.exists_not_ortho_of_ne_zero Matrix.Nondegenerate.exists_not_ortho_of_ne_zero
+#align
+  matrix.nondegenerate.exists_not_ortho_of_ne_zero Matrix.Nondegenerate.exists_not_ortho_of_ne_zero
 
 variable [CommRing A] [IsDomain A]
 
@@ -45,7 +46,8 @@ variable [CommRing A] [IsDomain A]
 
 See also `bilin_form.nondegenerate_of_det_ne_zero'` and `bilin_form.nondegenerate_of_det_ne_zero`.
 -/
-theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) : Nondegenerate M := by
+theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) :
+    Nondegenerate M := by
   intro v hv
   ext i
   specialize hv (M.cramer (Pi.single i 1))
@@ -64,7 +66,8 @@ theorem nondegenerate_of_det_ne_zero [DecidableEq m] {M : Matrix m m A} (hM : M.
 
 theorem eq_zero_of_vec_mul_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}
     (hv : M.vecMul v = 0) : v = 0 :=
-  (nondegenerate_of_det_ne_zero hM).eq_zero_of_ortho fun w => by rw [dot_product_mul_vec, hv, zero_dot_product]
+  (nondegenerate_of_det_ne_zero hM).eq_zero_of_ortho fun w => by
+    rw [dot_product_mul_vec, hv, zero_dot_product]
 #align matrix.eq_zero_of_vec_mul_eq_zero Matrix.eq_zero_of_vec_mul_eq_zero
 
 theorem eq_zero_of_mul_vec_eq_zero [DecidableEq m] {M : Matrix m m A} (hM : M.det ≠ 0) {v : m → A}

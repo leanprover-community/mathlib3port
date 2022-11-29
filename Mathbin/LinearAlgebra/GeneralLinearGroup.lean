@@ -37,7 +37,8 @@ attribute [-instance] special_linear_group.has_coe_to_fun
 
 /-- `GL n R` is the group of `n` by `n` `R`-matrices with unit determinant.
 Defined as a subtype of matrices-/
-abbrev GeneralLinearGroup (n : Type u) (R : Type v) [DecidableEq n] [Fintype n] [CommRing R] : Type _ :=
+abbrev GeneralLinearGroup (n : Type u) (R : Type v) [DecidableEq n] [Fintype n] [CommRing R] :
+    Type _ :=
   (Matrix n n R)ˣ
 #align matrix.general_linear_group Matrix.GeneralLinearGroup
 
@@ -137,7 +138,8 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRing R]
 
 instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
   ⟨fun A => ⟨↑A, ↑A⁻¹, congr_arg coe (mul_right_inv A), congr_arg coe (mul_left_inv A)⟩⟩
-#align matrix.special_linear_group.has_coe_to_general_linear_group Matrix.SpecialLinearGroup.hasCoeToGeneralLinearGroup
+#align
+  matrix.special_linear_group.has_coe_to_general_linear_group Matrix.SpecialLinearGroup.hasCoeToGeneralLinearGroup
 
 @[simp]
 theorem coe_to_GL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=
@@ -175,7 +177,8 @@ end
 
 section Neg
 
-variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R] [Fact (Even (Fintype.card n))]
+variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R]
+  [Fact (Even (Fintype.card n))]
 
 /-- Formal operation of negation on general linear group on even cardinality `n` given by negating
 each element. -/
@@ -197,7 +200,8 @@ theorem gLPos.coe_neg (g : gLPos n R) : ↑(-g) = -(g : Matrix n n R) :=
 #align matrix.GL_pos.coe_neg Matrix.gLPos.coe_neg
 
 @[simp]
-theorem gLPos.coe_neg_apply (g : gLPos n R) (i j : n) : (↑(-g) : Matrix n n R) i j = -(↑g : Matrix n n R) i j :=
+theorem gLPos.coe_neg_apply (g : gLPos n R) (i j : n) :
+    (↑(-g) : Matrix n n R) i j = -(↑g : Matrix n n R) i j :=
   rfl
 #align matrix.GL_pos.coe_neg_apply Matrix.gLPos.coe_neg_apply
 
@@ -225,7 +229,8 @@ theorem coe_eq_to_GL_pos : (coe : SpecialLinearGroup n R → gLPos n R) = to_GL_
 #align matrix.special_linear_group.coe_eq_to_GL_pos Matrix.SpecialLinearGroup.coe_eq_to_GL_pos
 
 theorem to_GL_pos_injective : Function.Injective (toGLPos : SpecialLinearGroup n R → gLPos n R) :=
-  (show Function.Injective ((coe : gLPos n R → Matrix n n R) ∘ to_GL_pos) from Subtype.coe_injective).of_comp
+  (show Function.Injective ((coe : gLPos n R → Matrix n n R) ∘ to_GL_pos) from
+      Subtype.coe_injective).of_comp
 #align matrix.special_linear_group.to_GL_pos_injective Matrix.SpecialLinearGroup.to_GL_pos_injective
 
 /-- Coercing a `special_linear_group` via `GL_pos` and `GL` is the same as coercing striaght to a
@@ -234,12 +239,14 @@ matrix. -/
 theorem coe_GL_pos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
     (↑(↑(↑g : gLPos n R) : GL n R) : Matrix n n R) = ↑g :=
   rfl
-#align matrix.special_linear_group.coe_GL_pos_coe_GL_coe_matrix Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix
+#align
+  matrix.special_linear_group.coe_GL_pos_coe_GL_coe_matrix Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix
 
 @[simp]
 theorem coe_to_GL_pos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
   Units.ext g.Prop
-#align matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_GL_pos_to_GL_det
+#align
+  matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_GL_pos_to_GL_det
 
 variable [Fact (Even (Fintype.card n))]
 
@@ -257,9 +264,11 @@ section Examples
 /-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
-def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Fin 2) R :=
+def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) :
+    Matrix.GeneralLinearGroup (Fin 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
-    («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
+    («expr!![ »
+      "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
     (by simpa [det_fin_two, sq] using hab)
 #align matrix.plane_conformal_matrix Matrix.planeConformalMatrix
 

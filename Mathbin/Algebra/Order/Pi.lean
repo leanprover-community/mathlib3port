@@ -33,36 +33,42 @@ namespace Pi
       "The product of a family of ordered additive commutative monoids is\n  an ordered additive commutative monoid."]
 instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedCommMonoid (Z i)] :
     OrderedCommMonoid (∀ i, Z i) :=
-  { Pi.partialOrder, Pi.commMonoid with mul_le_mul_left := fun f g w h i => mul_le_mul_left' (w i) _ }
+  { Pi.partialOrder, Pi.commMonoid with
+    mul_le_mul_left := fun f g w h i => mul_le_mul_left' (w i) _ }
 #align pi.ordered_comm_monoid Pi.orderedCommMonoid
 
 @[to_additive]
-instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, HasExistsMulOfLe (α i)] :
-    HasExistsMulOfLe (∀ i, α i) :=
-  ⟨fun a b h => ⟨fun i => (exists_mul_of_le <| h i).some, funext fun i => (exists_mul_of_le <| h i).some_spec⟩⟩
+instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)]
+    [∀ i, HasExistsMulOfLe (α i)] : HasExistsMulOfLe (∀ i, α i) :=
+  ⟨fun a b h =>
+    ⟨fun i => (exists_mul_of_le <| h i).some, funext fun i => (exists_mul_of_le <| h i).some_spec⟩⟩
 
 /-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
 @[to_additive
       "The product of a family of canonically ordered additive monoids is\n  a canonically ordered additive monoid."]
-instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] : CanonicallyOrderedMonoid (∀ i, Z i) :=
-  { Pi.orderBot, Pi.orderedCommMonoid, Pi.has_exists_mul_of_le with le_self_mul := fun f g i => le_self_mul }
+instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] :
+    CanonicallyOrderedMonoid (∀ i, Z i) :=
+  { Pi.orderBot, Pi.orderedCommMonoid, Pi.has_exists_mul_of_le with
+    le_self_mul := fun f g i => le_self_mul }
 
 @[to_additive]
-instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by
+instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] :
+    OrderedCancelCommMonoid (∀ i : I, f i) := by
   refine_struct
-      { Pi.partialOrder, Pi.monoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·), lt := (· < ·),
-        npow := Monoid.npow } <;>
+      { Pi.partialOrder, Pi.monoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·),
+        lt := (· < ·), npow := Monoid.npow } <;>
     pi_instance_derive_field
 #align pi.ordered_cancel_comm_monoid Pi.orderedCancelCommMonoid
 
 @[to_additive]
 instance orderedCommGroup [∀ i, OrderedCommGroup <| f i] : OrderedCommGroup (∀ i : I, f i) :=
-  { Pi.commGroup, Pi.orderedCommMonoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·), lt := (· < ·),
-    npow := Monoid.npow }
+  { Pi.commGroup, Pi.orderedCommMonoid with mul := (· * ·), one := (1 : ∀ i, f i), le := (· ≤ ·),
+    lt := (· < ·), npow := Monoid.npow }
 #align pi.ordered_comm_group Pi.orderedCommGroup
 
 instance [∀ i, OrderedSemiring (f i)] : OrderedSemiring (∀ i, f i) :=
-  { Pi.semiring, Pi.partialOrder with add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _,
+  { Pi.semiring, Pi.partialOrder with
+    add_le_add_left := fun a b hab c i => add_le_add_left (hab _) _,
     zero_le_one := fun _ => zero_le_one,
     mul_le_mul_of_nonneg_left := fun a b c hab hc i => mul_le_mul_of_nonneg_left (hab _) <| hc _,
     mul_le_mul_of_nonneg_right := fun a b c hab hc i => mul_le_mul_of_nonneg_right (hab _) <| hc _ }
@@ -146,7 +152,8 @@ unsafe def positivity_const : expr → tactic strictness
           nonnegative <$> to_expr ``(function_const_nonneg_of_pos $(ι) $(p))
       | nonnegative p => nonnegative <$> to_expr ``(const_nonneg_of_nonneg $(ι) $(p))
       | nonzero p => nonzero <$> to_expr ``(function_const_ne_zero $(ι) $(p))
-  | e => pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `function.const ι a`"
+  | e =>
+    pp e >>= fail ∘ format.bracket "The expression `" "` is not of the form `function.const ι a`"
 #align tactic.positivity_const tactic.positivity_const
 
 end Tactic

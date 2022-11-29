@@ -74,7 +74,8 @@ theorem fib_two : fib 2 = 1 :=
 #align nat.fib_two Nat.fib_two
 
 /-- Shows that `fib` indeed satisfies the Fibonacci recurrence `Fₙ₊₂ = Fₙ + Fₙ₊₁.` -/
-theorem fib_add_two {n : ℕ} : fib (n + 2) = fib n + fib (n + 1) := by simp only [fib, Function.iterate_succ']
+theorem fib_add_two {n : ℕ} : fib (n + 2) = fib n + fib (n + 1) := by
+  simp only [fib, Function.iterate_succ']
 #align nat.fib_add_two Nat.fib_add_two
 
 theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by cases n <;> simp [fib_add_two]
@@ -162,7 +163,8 @@ theorem fib_two_mul_add_one (n : ℕ) : fib (2 * n + 1) = fib (n + 1) ^ 2 + fib 
   ring
 #align nat.fib_two_mul_add_one Nat.fib_two_mul_add_one
 
-theorem fib_bit0 (n : ℕ) : fib (bit0 n) = fib n * (2 * fib (n + 1) - fib n) := by rw [bit0_eq_two_mul, fib_two_mul]
+theorem fib_bit0 (n : ℕ) : fib (bit0 n) = fib n * (2 * fib (n + 1) - fib n) := by
+  rw [bit0_eq_two_mul, fib_two_mul]
 #align nat.fib_bit0 Nat.fib_bit0
 
 theorem fib_bit1 (n : ℕ) : fib (bit1 n) = fib (n + 1) ^ 2 + fib n ^ 2 := by
@@ -186,7 +188,8 @@ theorem fib_bit1_succ (n : ℕ) : fib (bit1 n + 1) = fib (n + 1) * (2 * fib n + 
 Supports `nat.fast_fib`. -/
 def fastFibAux : ℕ → ℕ × ℕ :=
   Nat.binaryRec (fib 0, fib 1) fun b n p =>
-    if b then (p.2 ^ 2 + p.1 ^ 2, p.2 * (2 * p.1 + p.2)) else (p.1 * (2 * p.2 - p.1), p.2 ^ 2 + p.1 ^ 2)
+    if b then (p.2 ^ 2 + p.1 ^ 2, p.2 * (2 * p.1 + p.2))
+    else (p.1 * (2 * p.2 - p.1), p.2 ^ 2 + p.1 ^ 2)
 #align nat.fast_fib_aux Nat.fastFibAux
 
 /-- Computes `nat.fib n` using the binary representation of `n`.
@@ -224,9 +227,10 @@ theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) := by
   · simp [fast_fib_aux]
     
   · cases b <;>
-      simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih, congr_arg Prod.snd ih,
-          Prod.mk.inj_iff] <;>
-        constructor <;> simp [bit, fib_bit0, fib_bit1, fib_bit0_succ, fib_bit1_succ]
+          simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih,
+            congr_arg Prod.snd ih, Prod.mk.inj_iff] <;>
+        constructor <;>
+      simp [bit, fib_bit0, fib_bit1, fib_bit0_succ, fib_bit1_succ]
     
 #align nat.fast_fib_aux_eq Nat.fast_fib_aux_eq
 
@@ -238,13 +242,15 @@ theorem gcd_fib_add_self (m n : ℕ) : gcd (fib m) (fib (n + m)) = gcd (fib m) (
   · rw [h]
     simp
     
-  replace h := Nat.succ_pred_eq_of_pos h
-  rw [← h, succ_eq_add_one]
+  replace h := Nat.succ_pred_eq_of_pos h; rw [← h, succ_eq_add_one]
   calc
-    gcd (fib m) (fib (n.pred + 1 + m)) = gcd (fib m) (fib n.pred * fib m + fib (n.pred + 1) * fib (m + 1)) := by
+    gcd (fib m) (fib (n.pred + 1 + m)) =
+        gcd (fib m) (fib n.pred * fib m + fib (n.pred + 1) * fib (m + 1)) :=
+      by
       rw [← fib_add n.pred _]
       ring_nf
-    _ = gcd (fib m) (fib (n.pred + 1) * fib (m + 1)) := by rw [add_comm, gcd_add_mul_right_right (fib m) _ (fib n.pred)]
+    _ = gcd (fib m) (fib (n.pred + 1) * fib (m + 1)) := by
+      rw [add_comm, gcd_add_mul_right_right (fib m) _ (fib n.pred)]
     _ = gcd (fib m) (fib (n.pred + 1)) :=
       coprime.gcd_mul_right_cancel_right (fib (n.pred + 1)) (coprime.symm (fib_coprime_fib_succ m))
     
@@ -271,10 +277,12 @@ theorem fib_gcd (m n : ℕ) : fib (gcd m n) = gcd (fib m) (fib n) := by
   rwa [gcd_comm, gcd_comm (fib m)]
 #align nat.fib_gcd Nat.fib_gcd
 
-theorem fib_dvd (m n : ℕ) (h : m ∣ n) : fib m ∣ fib n := by rwa [gcd_eq_left_iff_dvd, ← fib_gcd, gcd_eq_left_iff_dvd.mp]
+theorem fib_dvd (m n : ℕ) (h : m ∣ n) : fib m ∣ fib n := by
+  rwa [gcd_eq_left_iff_dvd, ← fib_gcd, gcd_eq_left_iff_dvd.mp]
 #align nat.fib_dvd Nat.fib_dvd
 
-theorem fib_succ_eq_sum_choose : ∀ n : ℕ, fib (n + 1) = ∑ p in Finset.Nat.antidiagonal n, choose p.1 p.2 :=
+theorem fib_succ_eq_sum_choose :
+    ∀ n : ℕ, fib (n + 1) = ∑ p in Finset.Nat.antidiagonal n, choose p.1 p.2 :=
   twoStepInduction rfl rfl fun n h1 h2 => by
     rw [fib_add_two, h1, h2, Finset.Nat.antidiagonal_succ_succ', Finset.Nat.antidiagonal_succ']
     simp [choose_succ_succ, Finset.sum_add_distrib, add_left_comm]
@@ -314,25 +322,29 @@ theorem is_fib_aux_one : IsFibAux 1 1 1 :=
   ⟨fib_one, fib_two⟩
 #align norm_num.is_fib_aux_one NormNum.is_fib_aux_one
 
-theorem is_fib_aux_bit0 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b) (h2 : a * c = a')
-    (h3 : a * a = a2) (h4 : b * b = b2) (h5 : a2 + b2 = b') : IsFibAux (bit0 n) a' b' :=
-  ⟨by rw [fib_bit0, H.1, H.2, ← bit0_eq_two_mul, show bit0 b - a = c by rw [← h1, Nat.add_sub_cancel_left], h2], by
-    rw [fib_bit0_succ, H.1, H.2, pow_two, pow_two, h3, h4, add_comm, h5]⟩
+theorem is_fib_aux_bit0 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b)
+    (h2 : a * c = a') (h3 : a * a = a2) (h4 : b * b = b2) (h5 : a2 + b2 = b') :
+    IsFibAux (bit0 n) a' b' :=
+  ⟨by
+    rw [fib_bit0, H.1, H.2, ← bit0_eq_two_mul,
+      show bit0 b - a = c by rw [← h1, Nat.add_sub_cancel_left], h2],
+    by rw [fib_bit0_succ, H.1, H.2, pow_two, pow_two, h3, h4, add_comm, h5]⟩
 #align norm_num.is_fib_aux_bit0 NormNum.is_fib_aux_bit0
 
-theorem is_fib_aux_bit1 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a * a = a2) (h2 : b * b = b2)
-    (h3 : a2 + b2 = a') (h4 : bit0 a + b = c) (h5 : b * c = b') : IsFibAux (bit1 n) a' b' :=
+theorem is_fib_aux_bit1 {n a b c a2 b2 a' b' : ℕ} (H : IsFibAux n a b) (h1 : a * a = a2)
+    (h2 : b * b = b2) (h3 : a2 + b2 = a') (h4 : bit0 a + b = c) (h5 : b * c = b') :
+    IsFibAux (bit1 n) a' b' :=
   ⟨by rw [fib_bit1, H.1, H.2, pow_two, pow_two, h1, h2, add_comm, h3], by
     rw [fib_bit1_succ, H.1, H.2, ← bit0_eq_two_mul, h4, h5]⟩
 #align norm_num.is_fib_aux_bit1 NormNum.is_fib_aux_bit1
 
-theorem is_fib_aux_bit0_done {n a b c a' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b) (h2 : a * c = a') :
-    fib (bit0 n) = a' :=
+theorem is_fib_aux_bit0_done {n a b c a' : ℕ} (H : IsFibAux n a b) (h1 : a + c = bit0 b)
+    (h2 : a * c = a') : fib (bit0 n) = a' :=
   (is_fib_aux_bit0 H h1 h2 rfl rfl rfl).1
 #align norm_num.is_fib_aux_bit0_done NormNum.is_fib_aux_bit0_done
 
-theorem is_fib_aux_bit1_done {n a b a2 b2 a' : ℕ} (H : IsFibAux n a b) (h1 : a * a = a2) (h2 : b * b = b2)
-    (h3 : a2 + b2 = a') : fib (bit1 n) = a' :=
+theorem is_fib_aux_bit1_done {n a b a2 b2 a' : ℕ} (H : IsFibAux n a b) (h1 : a * a = a2)
+    (h2 : b * b = b2) (h3 : a2 + b2 = a') : fib (bit1 n) = a' :=
   (is_fib_aux_bit1 H h1 h2 h3 rfl rfl).1
 #align norm_num.is_fib_aux_bit1_done NormNum.is_fib_aux_bit1_done
 
@@ -351,7 +363,9 @@ unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache
       let (ic, a2, h3) ← prove_mul_nat ic a a
       let (ic, b2, h4) ← prove_mul_nat ic b b
       let (ic, b', h5) ← prove_add_nat' ic a2 b2
-      pure (ic, a', b', q(@is_fib_aux_bit0).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
+      pure
+          (ic, a', b',
+            q(@is_fib_aux_bit0).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
     | match_numeral_result.bit1 e => do
       let (ic, a, b, H) ← prove_fib_aux e
       let na ← a.toNat
@@ -362,7 +376,9 @@ unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache
       let (ic, a', h3) ← prove_add_nat' ic a2 b2
       let (ic, h4) ← prove_add_nat ic (q((bit0 : ℕ → ℕ)).mk_app [a]) b c
       let (ic, b', h5) ← prove_mul_nat ic b c
-      pure (ic, a', b', q(@is_fib_aux_bit1).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
+      pure
+          (ic, a', b',
+            q(@is_fib_aux_bit1).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
     | _ => failed
 #align norm_num.prove_fib_aux norm_num.prove_fib_aux
 

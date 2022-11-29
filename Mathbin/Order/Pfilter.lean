@@ -52,8 +52,9 @@ def IsPfilter [Preorder P] (F : Set P) : Prop :=
   @IsIdeal Pᵒᵈ _ F
 #align order.is_pfilter Order.IsPfilter
 
-theorem IsPfilter.of_def [Preorder P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
-    (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : IsPfilter F :=
+theorem IsPfilter.of_def [Preorder P] {F : Set P} (nonempty : F.Nonempty)
+    (directed : DirectedOn (· ≥ ·) F) (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) :
+    IsPfilter F :=
   ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, Nonempty, Directed⟩
 #align order.is_pfilter.of_def Order.IsPfilter.of_def
 
@@ -189,7 +190,8 @@ section CompleteSemilatticeInf
 variable [CompleteSemilatticeInf P] {F : Pfilter P}
 
 theorem Inf_gc :
-    GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F => inf (OrderDual.ofDual F : Pfilter P) :=
+    GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
+      inf (OrderDual.ofDual F : Pfilter P) :=
   fun x F => by
   simp
   rfl
@@ -197,7 +199,8 @@ theorem Inf_gc :
 
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
-    GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F => inf (OrderDual.ofDual F : Pfilter P) where
+    GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F =>
+      inf (OrderDual.ofDual F : Pfilter P) where
   choice F _ := inf (id F : Pfilter P)
   gc := Inf_gc
   u_l_le s := Inf_le <| mem_principal.2 <| le_refl s

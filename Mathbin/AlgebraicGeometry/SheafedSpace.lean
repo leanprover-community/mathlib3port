@@ -77,7 +77,8 @@ instance : Inhabited (SheafedSpaceCat (discrete Unit)) :=
   ⟨unit (TopCat.of PEmpty)⟩
 
 instance : Category (SheafedSpaceCat C) :=
-  show Category (InducedCategory (PresheafedSpaceCat.{v} C) SheafedSpaceCat.toPresheafedSpace) by infer_instance
+  show Category (InducedCategory (PresheafedSpaceCat.{v} C) SheafedSpaceCat.toPresheafedSpace) by
+    infer_instance
 
 /-- Forgetting the sheaf condition is a functor from `SheafedSpace C` to `PresheafedSpace C`. -/
 def forgetToPresheafedSpace : SheafedSpaceCat.{v} C ⥤ PresheafedSpaceCat.{v} C :=
@@ -88,7 +89,8 @@ def forgetToPresheafedSpace : SheafedSpaceCat.{v} C ⥤ PresheafedSpaceCat.{v} C
 instance is_PresheafedSpace_iso {X Y : SheafedSpaceCat.{v} C} (f : X ⟶ Y) [IsIso f] :
     @IsIso (PresheafedSpaceCat C) _ _ _ f :=
   SheafedSpaceCat.forgetToPresheafedSpace.map_is_iso f
-#align algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpaceCat.is_PresheafedSpace_iso
+#align
+  algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpaceCat.is_PresheafedSpace_iso
 
 variable {C}
 
@@ -101,7 +103,8 @@ theorem id_base (X : SheafedSpaceCat C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : To
   rfl
 #align algebraic_geometry.SheafedSpace.id_base AlgebraicGeometry.SheafedSpaceCat.id_base
 
-theorem id_c (X : SheafedSpaceCat C) : (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
+theorem id_c (X : SheafedSpaceCat C) :
+    (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
   rfl
 #align algebraic_geometry.SheafedSpace.id_c AlgebraicGeometry.SheafedSpaceCat.id_c
 
@@ -122,7 +125,8 @@ theorem id_c_app (X : SheafedSpaceCat C) (U) :
 #align algebraic_geometry.SheafedSpace.id_c_app AlgebraicGeometry.SheafedSpaceCat.id_c_app
 
 @[simp]
-theorem comp_base {X Y Z : SheafedSpaceCat C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).base = f.base ≫ g.base :=
+theorem comp_base {X Y Z : SheafedSpaceCat C} (f : X ⟶ Y) (g : Y ⟶ Z) :
+    (f ≫ g).base = f.base ≫ g.base :=
   rfl
 #align algebraic_geometry.SheafedSpace.comp_base AlgebraicGeometry.SheafedSpaceCat.comp_base
 
@@ -165,7 +169,8 @@ def restrict {U : TopCat} (X : SheafedSpaceCat C) {f : U ⟶ (X : TopCat.{v})} (
 -/
 def restrictTopIso (X : SheafedSpaceCat C) : X.restrict (Opens.open_embedding ⊤) ≅ X :=
   forgetToPresheafedSpace.preimageIso X.toPresheafedSpace.restrictTopIso
-#align algebraic_geometry.SheafedSpace.restrict_top_iso AlgebraicGeometry.SheafedSpaceCat.restrictTopIso
+#align
+  algebraic_geometry.SheafedSpace.restrict_top_iso AlgebraicGeometry.SheafedSpaceCat.restrictTopIso
 
 /-- The global sections, notated Gamma.
 -/
@@ -195,7 +200,8 @@ theorem Γ_map_op {X Y : SheafedSpaceCat C} (f : X ⟶ Y) : Γ.map f.op = f.c.ap
   rfl
 #align algebraic_geometry.SheafedSpace.Γ_map_op AlgebraicGeometry.SheafedSpaceCat.Γ_map_op
 
-noncomputable instance [HasLimits C] : CreatesColimits (forgetToPresheafedSpace : SheafedSpaceCat C ⥤ _) :=
+noncomputable instance [HasLimits C] :
+    CreatesColimits (forgetToPresheafedSpace : SheafedSpaceCat C ⥤ _) :=
   ⟨fun J hJ =>
     ⟨fun K =>
       creates_colimit_of_fully_faithful_of_iso

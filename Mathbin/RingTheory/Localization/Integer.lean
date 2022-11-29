@@ -107,12 +107,15 @@ theorem exist_integer_multiples_of_finite {ι : Type _} [Finite ι] (f : ι → 
   cases nonempty_fintype ι
   obtain ⟨b, hb⟩ := exist_integer_multiples M Finset.univ f
   exact ⟨b, fun i => hb i (Finset.mem_univ _)⟩
-#align is_localization.exist_integer_multiples_of_finite IsLocalization.exist_integer_multiples_of_finite
+#align
+  is_localization.exist_integer_multiples_of_finite IsLocalization.exist_integer_multiples_of_finite
 
 /-- We can clear the denominators of a finite set of fractions. -/
-theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀ a ∈ s, IsInteger R ((b : R) • a) :=
+theorem exist_integer_multiples_of_finset (s : Finset S) :
+    ∃ b : M, ∀ a ∈ s, IsInteger R ((b : R) • a) :=
   exist_integer_multiples M s id
-#align is_localization.exist_integer_multiples_of_finset IsLocalization.exist_integer_multiples_of_finset
+#align
+  is_localization.exist_integer_multiples_of_finset IsLocalization.exist_integer_multiples_of_finset
 
 /-- A choice of a common multiple of the denominators of a `finset`-indexed family of fractions. -/
 noncomputable def commonDenom {ι : Type _} (s : Finset ι) (f : ι → S) : M :=

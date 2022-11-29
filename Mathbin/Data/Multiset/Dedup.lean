@@ -111,14 +111,15 @@ theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodup s :=
     (le_iff_subset d).2 <| Subset.trans (subset_of_le l) (subset_dedup _)⟩
 #align multiset.le_dedup Multiset.le_dedup
 
-theorem le_dedup_self {s : Multiset α} : s ≤ dedup s ↔ Nodup s := by rw [le_dedup, and_iff_right le_rfl]
+theorem le_dedup_self {s : Multiset α} : s ≤ dedup s ↔ Nodup s := by
+  rw [le_dedup, and_iff_right le_rfl]
 #align multiset.le_dedup_self Multiset.le_dedup_self
 
 theorem dedup_ext {s t : Multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t := by simp [nodup.ext]
 #align multiset.dedup_ext Multiset.dedup_ext
 
-theorem dedup_map_dedup_eq [DecidableEq β] (f : α → β) (s : Multiset α) : dedup (map f (dedup s)) = dedup (map f s) :=
-  by simp [dedup_ext]
+theorem dedup_map_dedup_eq [DecidableEq β] (f : α → β) (s : Multiset α) :
+    dedup (map f (dedup s)) = dedup (map f s) := by simp [dedup_ext]
 #align multiset.dedup_map_dedup_eq Multiset.dedup_map_dedup_eq
 
 @[simp]
@@ -127,13 +128,14 @@ theorem dedup_nsmul {s : Multiset α} {n : ℕ} (h0 : n ≠ 0) : (n • s).dedup
   by_cases h : a ∈ s <;> simp [h, h0]
 #align multiset.dedup_nsmul Multiset.dedup_nsmul
 
-theorem Nodup.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedup ↔ s ≤ t := by simp [le_dedup, hno]
+theorem Nodup.le_dedup_iff_le {s t : Multiset α} (hno : s.Nodup) : s ≤ t.dedup ↔ s ≤ t := by
+  simp [le_dedup, hno]
 #align multiset.nodup.le_dedup_iff_le Multiset.Nodup.le_dedup_iff_le
 
 end Multiset
 
-theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup) (hn : n ≠ 0) :
-    s ≤ n • t ↔ s ≤ t := by classical
+theorem Multiset.Nodup.le_nsmul_iff_le {α : Type _} {s t : Multiset α} {n : ℕ} (h : s.Nodup)
+    (hn : n ≠ 0) : s ≤ n • t ↔ s ≤ t := by classical
   rw [← h.le_dedup_iff_le, Iff.comm, ← h.le_dedup_iff_le]
   simp [hn]
 #align multiset.nodup.le_nsmul_iff_le Multiset.Nodup.le_nsmul_iff_le

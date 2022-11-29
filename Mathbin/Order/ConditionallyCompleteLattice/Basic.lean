@@ -43,7 +43,8 @@ Extension of Sup and Inf from a preorder `α` to `with_top α` and `with_bot α`
 open Classical
 
 noncomputable instance {α : Type _} [Preorder α] [HasSup α] : HasSup (WithTop α) :=
-  ⟨fun S => if ⊤ ∈ S then ⊤ else if BddAbove (coe ⁻¹' S : Set α) then ↑(sup (coe ⁻¹' S : Set α)) else ⊤⟩
+  ⟨fun S =>
+    if ⊤ ∈ S then ⊤ else if BddAbove (coe ⁻¹' S : Set α) then ↑(sup (coe ⁻¹' S : Set α)) else ⊤⟩
 
 noncomputable instance {α : Type _} [HasInf α] : HasInf (WithTop α) :=
   ⟨fun S => if S ⊆ {⊤} then ⊤ else ↑(inf (coe ⁻¹' S : Set α))⟩
@@ -60,11 +61,12 @@ theorem WithTop.cInf_empty {α : Type _} [HasInf α] : inf (∅ : Set (WithTop �
 #align with_top.cInf_empty WithTop.cInf_empty
 
 @[simp]
-theorem WithTop.cinfi_empty {α : Type _} [IsEmpty ι] [HasInf α] (f : ι → WithTop α) : (⨅ i, f i) = ⊤ := by
-  rw [infi, range_eq_empty, WithTop.cInf_empty]
+theorem WithTop.cinfi_empty {α : Type _} [IsEmpty ι] [HasInf α] (f : ι → WithTop α) :
+    (⨅ i, f i) = ⊤ := by rw [infi, range_eq_empty, WithTop.cInf_empty]
 #align with_top.cinfi_empty WithTop.cinfi_empty
 
-theorem WithTop.coe_Inf' [HasInf α] {s : Set α} (hs : s.Nonempty) : ↑(inf s) = (inf (coe '' s) : WithTop α) := by
+theorem WithTop.coe_Inf' [HasInf α] {s : Set α} (hs : s.Nonempty) :
+    ↑(inf s) = (inf (coe '' s) : WithTop α) := by
   obtain ⟨x, hx⟩ := hs
   change _ = ite _ _ _
   split_ifs
@@ -76,7 +78,8 @@ theorem WithTop.coe_Inf' [HasInf α] {s : Set α} (hs : s.Nonempty) : ↑(inf s)
 #align with_top.coe_Inf' WithTop.coe_Inf'
 
 @[norm_cast]
-theorem WithTop.coe_infi [Nonempty ι] [HasInf α] (f : ι → α) : ↑(⨅ i, f i) = (⨅ i, f i : WithTop α) := by
+theorem WithTop.coe_infi [Nonempty ι] [HasInf α] (f : ι → α) :
+    ↑(⨅ i, f i) = (⨅ i, f i : WithTop α) := by
   rw [infi, infi, WithTop.coe_Inf' (range_nonempty f), range_comp]
 #align with_top.coe_infi WithTop.coe_infi
 
@@ -101,17 +104,20 @@ theorem WithBot.cSup_empty {α : Type _} [HasSup α] : sup (∅ : Set (WithBot �
 #align with_bot.cSup_empty WithBot.cSup_empty
 
 @[simp]
-theorem WithBot.csupr_empty {α : Type _} [IsEmpty ι] [HasSup α] (f : ι → WithBot α) : (⨆ i, f i) = ⊥ :=
+theorem WithBot.csupr_empty {α : Type _} [IsEmpty ι] [HasSup α] (f : ι → WithBot α) :
+    (⨆ i, f i) = ⊥ :=
   @WithTop.cinfi_empty _ αᵒᵈ _ _ _
 #align with_bot.csupr_empty WithBot.csupr_empty
 
 @[norm_cast]
-theorem WithBot.coe_Sup' [HasSup α] {s : Set α} (hs : s.Nonempty) : ↑(sup s) = (sup (coe '' s) : WithBot α) :=
+theorem WithBot.coe_Sup' [HasSup α] {s : Set α} (hs : s.Nonempty) :
+    ↑(sup s) = (sup (coe '' s) : WithBot α) :=
   @WithTop.coe_Inf' αᵒᵈ _ _ hs
 #align with_bot.coe_Sup' WithBot.coe_Sup'
 
 @[norm_cast]
-theorem WithBot.coe_supr [Nonempty ι] [HasSup α] (f : ι → α) : ↑(⨆ i, f i) = (⨆ i, f i : WithBot α) :=
+theorem WithBot.coe_supr [Nonempty ι] [HasSup α] (f : ι → α) :
+    ↑(⨆ i, f i) = (⨆ i, f i : WithBot α) :=
   @WithTop.coe_infi αᵒᵈ _ _ _ _
 #align with_bot.coe_supr WithBot.coe_supr
 
@@ -168,16 +174,18 @@ To differentiate the statements from the corresponding statements in (unconditio
 complete linear orders, we prefix Inf and Sup by a c everywhere. The same statements should
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
-class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α, HasBot α where
+class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α,
+  HasBot α where
   bot_le : ∀ x : α, ⊥ ≤ x
   cSup_empty : Sup ∅ = ⊥
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
 
 -- see Note [lower instance priority]
-instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot [h : ConditionallyCompleteLinearOrderBot α] :
-    OrderBot α :=
+instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot
+    [h : ConditionallyCompleteLinearOrderBot α] : OrderBot α :=
   { h with }
-#align conditionally_complete_linear_order_bot.to_order_bot ConditionallyCompleteLinearOrderBot.toOrderBot
+#align
+  conditionally_complete_linear_order_bot.to_order_bot ConditionallyCompleteLinearOrderBot.toOrderBot
 
 -- see Note [lower instance priority]
 /-- A complete lattice is a conditionally complete lattice, as there are no restrictions
@@ -185,14 +193,17 @@ on the properties of Inf and Sup in a complete lattice.-/
 instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [CompleteLattice α] :
     ConditionallyCompleteLattice α :=
   { ‹CompleteLattice α› with le_cSup := by intros <;> apply le_Sup <;> assumption,
-    cSup_le := by intros <;> apply Sup_le <;> assumption, cInf_le := by intros <;> apply Inf_le <;> assumption,
+    cSup_le := by intros <;> apply Sup_le <;> assumption,
+    cInf_le := by intros <;> apply Inf_le <;> assumption,
     le_cInf := by intros <;> apply le_Inf <;> assumption }
-#align complete_lattice.to_conditionally_complete_lattice CompleteLattice.toConditionallyCompleteLattice
+#align
+  complete_lattice.to_conditionally_complete_lattice CompleteLattice.toConditionallyCompleteLattice
 
 -- see Note [lower instance priority]
 instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrderBot {α : Type _}
     [CompleteLinearOrder α] : ConditionallyCompleteLinearOrderBot α :=
-  { CompleteLattice.toConditionallyCompleteLattice, ‹CompleteLinearOrder α› with cSup_empty := Sup_empty }
+  { CompleteLattice.toConditionallyCompleteLattice, ‹CompleteLinearOrder α› with
+    cSup_empty := Sup_empty }
 #align
   complete_linear_order.to_conditionally_complete_linear_order_bot CompleteLinearOrder.toConditionallyCompleteLinearOrderBot
 
@@ -202,8 +213,8 @@ open Classical
 
 /-- A well founded linear order is conditionally complete, with a bottom element. -/
 @[reducible]
-noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) [i₁ : LinearOrder α] [i₂ : OrderBot α]
-    [h : IsWellOrder α (· < ·)] : ConditionallyCompleteLinearOrderBot α :=
+noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) [i₁ : LinearOrder α]
+    [i₂ : OrderBot α] [h : IsWellOrder α (· < ·)] : ConditionallyCompleteLinearOrderBot α :=
   { i₁, i₂, LinearOrder.toLattice with inf := fun s => if hs : s.Nonempty then h.wf.min s hs else ⊥,
     cInf_le := fun s a hs has => by
       have s_ne : s.nonempty := ⟨a, has⟩
@@ -221,7 +232,8 @@ noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) 
       simp only [h's, dif_pos]
       simpa using h.wf.not_lt_min _ h's has,
     cSup_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
-#align is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
+#align
+  is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
 
 end
 
@@ -229,8 +241,10 @@ section OrderDual
 
 instance (α : Type _) [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice αᵒᵈ :=
   { OrderDual.hasInf α, OrderDual.hasSup α, OrderDual.lattice α with
-    le_cSup := @ConditionallyCompleteLattice.cInf_le α _, cSup_le := @ConditionallyCompleteLattice.le_cInf α _,
-    le_cInf := @ConditionallyCompleteLattice.cSup_le α _, cInf_le := @ConditionallyCompleteLattice.le_cSup α _ }
+    le_cSup := @ConditionallyCompleteLattice.cInf_le α _,
+    cSup_le := @ConditionallyCompleteLattice.le_cInf α _,
+    le_cInf := @ConditionallyCompleteLattice.cSup_le α _,
+    cInf_le := @ConditionallyCompleteLattice.le_cSup α _ }
 
 instance (α : Type _) [ConditionallyCompleteLinearOrder α] : ConditionallyCompleteLinearOrder αᵒᵈ :=
   { OrderDual.conditionallyCompleteLattice α, OrderDual.linearOrder α with }
@@ -253,21 +267,27 @@ instance : conditionally_complete_lattice my_T :=
 ```
 -/
 def conditionallyCompleteLatticeOfSup (α : Type _) [H1 : PartialOrder α] [H2 : HasSup α]
-    (bdd_above_pair : ∀ a b : α, BddAbove ({a, b} : Set α)) (bdd_below_pair : ∀ a b : α, BddBelow ({a, b} : Set α))
-    (is_lub_Sup : ∀ s : Set α, BddAbove s → s.Nonempty → IsLub s (sup s)) : ConditionallyCompleteLattice α :=
+    (bdd_above_pair : ∀ a b : α, BddAbove ({a, b} : Set α))
+    (bdd_below_pair : ∀ a b : α, BddBelow ({a, b} : Set α))
+    (is_lub_Sup : ∀ s : Set α, BddAbove s → s.Nonempty → IsLub s (sup s)) :
+    ConditionallyCompleteLattice α :=
   { H1, H2 with sup := fun a b => sup {a, b},
-    le_sup_left := fun a b => (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _),
+    le_sup_left := fun a b =>
+      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _),
     le_sup_right := fun a b =>
-      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert_of_mem _ (mem_singleton _)),
+      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1
+        (mem_insert_of_mem _ (mem_singleton _)),
     sup_le := fun a b c hac hbc =>
       (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).2
         (forall_insert_of_forall (forall_eq.mpr hbc) hac),
     inf := fun a b => sup (lowerBounds {a, b}),
     inf_le_left := fun a b =>
-      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩) (bdd_below_pair a b)).2
+      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩)
+            (bdd_below_pair a b)).2
         fun c hc => hc <| mem_insert _ _,
     inf_le_right := fun a b =>
-      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩) (bdd_below_pair a b)).2
+      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩)
+            (bdd_below_pair a b)).2
         fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _),
     le_inf := fun c a b hca hcb =>
       (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bdd_above_lower_bounds ⟨a, mem_insert _ _⟩)
@@ -277,7 +297,8 @@ def conditionallyCompleteLatticeOfSup (α : Type _) [H1 : PartialOrder α] [H2 :
     le_cSup := fun s a hs ha => (is_lub_Sup s hs ⟨a, ha⟩).1 ha,
     cInf_le := fun s a hs ha =>
       (is_lub_Sup (lowerBounds s) (Nonempty.bdd_above_lower_bounds ⟨a, ha⟩) hs).2 fun b hb => hb ha,
-    le_cInf := fun s a hs ha => (is_lub_Sup (lowerBounds s) hs.bdd_above_lower_bounds ⟨a, ha⟩).1 ha }
+    le_cInf := fun s a hs ha =>
+      (is_lub_Sup (lowerBounds s) hs.bdd_above_lower_bounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Sup conditionallyCompleteLatticeOfSup
 
 /-- Create a `conditionally_complete_lattice_of_Inf` from a `partial_order` and `Inf` function
@@ -296,21 +317,27 @@ instance : conditionally_complete_lattice my_T :=
 ```
 -/
 def conditionallyCompleteLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 : HasInf α]
-    (bdd_above_pair : ∀ a b : α, BddAbove ({a, b} : Set α)) (bdd_below_pair : ∀ a b : α, BddBelow ({a, b} : Set α))
-    (is_glb_Inf : ∀ s : Set α, BddBelow s → s.Nonempty → IsGlb s (inf s)) : ConditionallyCompleteLattice α :=
+    (bdd_above_pair : ∀ a b : α, BddAbove ({a, b} : Set α))
+    (bdd_below_pair : ∀ a b : α, BddBelow ({a, b} : Set α))
+    (is_glb_Inf : ∀ s : Set α, BddBelow s → s.Nonempty → IsGlb s (inf s)) :
+    ConditionallyCompleteLattice α :=
   { H1, H2 with inf := fun a b => inf {a, b},
-    inf_le_left := fun a b => (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _),
+    inf_le_left := fun a b =>
+      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _),
     inf_le_right := fun a b =>
-      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert_of_mem _ (mem_singleton _)),
+      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1
+        (mem_insert_of_mem _ (mem_singleton _)),
     le_inf := fun c a b hca hcb =>
       (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).2
         (forall_insert_of_forall (forall_eq.mpr hcb) hca),
     sup := fun a b => inf (upperBounds {a, b}),
     le_sup_left := fun a b =>
-      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩) (bdd_above_pair a b)).2
+      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩)
+            (bdd_above_pair a b)).2
         fun c hc => hc <| mem_insert _ _,
     le_sup_right := fun a b =>
-      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩) (bdd_above_pair a b)).2
+      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩)
+            (bdd_above_pair a b)).2
         fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _),
     sup_le := fun a b c hac hbc =>
       (is_glb_Inf (upperBounds {a, b}) (Nonempty.bdd_below_upper_bounds ⟨a, mem_insert _ _⟩)
@@ -320,29 +347,34 @@ def conditionallyCompleteLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 :
     cInf_le := fun s a hs ha => (is_glb_Inf s hs ⟨a, ha⟩).1 ha,
     le_cSup := fun s a hs ha =>
       (is_glb_Inf (upperBounds s) (Nonempty.bdd_below_upper_bounds ⟨a, ha⟩) hs).2 fun b hb => hb ha,
-    cSup_le := fun s a hs ha => (is_glb_Inf (upperBounds s) hs.bdd_below_upper_bounds ⟨a, ha⟩).1 ha }
+    cSup_le := fun s a hs ha =>
+      (is_glb_Inf (upperBounds s) hs.bdd_below_upper_bounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Inf conditionallyCompleteLatticeOfInf
 
 /-- A version of `conditionally_complete_lattice_of_Sup` when we already know that `α` is a lattice.
 
 This should only be used when it is both hard and unnecessary to provide `Inf` explicitly. -/
 def conditionallyCompleteLatticeOfLatticeOfSup (α : Type _) [H1 : Lattice α] [H2 : HasSup α]
-    (is_lub_Sup : ∀ s : Set α, BddAbove s → s.Nonempty → IsLub s (sup s)) : ConditionallyCompleteLattice α :=
+    (is_lub_Sup : ∀ s : Set α, BddAbove s → s.Nonempty → IsLub s (sup s)) :
+    ConditionallyCompleteLattice α :=
   { H1,
     conditionallyCompleteLatticeOfSup α
       (fun a b => ⟨a ⊔ b, forall_insert_of_forall (forall_eq.mpr le_sup_right) le_sup_left⟩)
-      (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩) is_lub_Sup with }
+      (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩)
+      is_lub_Sup with }
 #align conditionally_complete_lattice_of_lattice_of_Sup conditionallyCompleteLatticeOfLatticeOfSup
 
 /-- A version of `conditionally_complete_lattice_of_Inf` when we already know that `α` is a lattice.
 
 This should only be used when it is both hard and unnecessary to provide `Sup` explicitly. -/
 def conditionallyCompleteLatticeOfLatticeOfInf (α : Type _) [H1 : Lattice α] [H2 : HasInf α]
-    (is_glb_Inf : ∀ s : Set α, BddBelow s → s.Nonempty → IsGlb s (inf s)) : ConditionallyCompleteLattice α :=
+    (is_glb_Inf : ∀ s : Set α, BddBelow s → s.Nonempty → IsGlb s (inf s)) :
+    ConditionallyCompleteLattice α :=
   { H1,
     conditionallyCompleteLatticeOfInf α
       (fun a b => ⟨a ⊔ b, forall_insert_of_forall (forall_eq.mpr le_sup_right) le_sup_left⟩)
-      (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩) is_glb_Inf with }
+      (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩)
+      is_glb_Inf with }
 #align conditionally_complete_lattice_of_lattice_of_Inf conditionallyCompleteLatticeOfLatticeOfInf
 
 section ConditionallyCompleteLattice
@@ -381,7 +413,8 @@ theorem cInf_le_cInf (ht : BddBelow t) (hs : s.Nonempty) (h : s ⊆ t) : inf t �
   le_cInf hs fun a ha => cInf_le ht (h ha)
 #align cInf_le_cInf cInf_le_cInf
 
-theorem le_cSup_iff (h : BddAbove s) (hs : s.Nonempty) : a ≤ sup s ↔ ∀ b, b ∈ upperBounds s → a ≤ b :=
+theorem le_cSup_iff (h : BddAbove s) (hs : s.Nonempty) :
+    a ≤ sup s ↔ ∀ b, b ∈ upperBounds s → a ≤ b :=
   ⟨fun h b hb => le_trans h (cSup_le hs hb), fun hb => hb _ fun x => le_cSup h⟩
 #align le_cSup_iff le_cSup_iff
 
@@ -393,7 +426,8 @@ theorem is_lub_cSup (ne : s.Nonempty) (H : BddAbove s) : IsLub s (sup s) :=
   ⟨fun x => le_cSup H, fun x => cSup_le Ne⟩
 #align is_lub_cSup is_lub_cSup
 
-theorem is_lub_csupr [Nonempty ι] {f : ι → α} (H : BddAbove (range f)) : IsLub (range f) (⨆ i, f i) :=
+theorem is_lub_csupr [Nonempty ι] {f : ι → α} (H : BddAbove (range f)) :
+    IsLub (range f) (⨆ i, f i) :=
   is_lub_cSup (range_nonempty f) H
 #align is_lub_csupr is_lub_csupr
 
@@ -407,7 +441,8 @@ theorem is_glb_cInf (ne : s.Nonempty) (H : BddBelow s) : IsGlb s (inf s) :=
   ⟨fun x => cInf_le H, fun x => le_cInf Ne⟩
 #align is_glb_cInf is_glb_cInf
 
-theorem is_glb_cinfi [Nonempty ι] {f : ι → α} (H : BddBelow (range f)) : IsGlb (range f) (⨅ i, f i) :=
+theorem is_glb_cinfi [Nonempty ι] {f : ι → α} (H : BddBelow (range f)) :
+    IsGlb (range f) (⨅ i, f i) :=
   is_glb_cInf (range_nonempty f) H
 #align is_glb_cinfi is_glb_cinfi
 
@@ -416,21 +451,23 @@ theorem is_glb_cinfi_set {f : β → α} {s : Set β} (H : BddBelow (f '' s)) (H
   @is_lub_csupr_set αᵒᵈ _ _ _ _ H Hne
 #align is_glb_cinfi_set is_glb_cinfi_set
 
-theorem csupr_le_iff [Nonempty ι] {f : ι → α} {a : α} (hf : BddAbove (range f)) : supr f ≤ a ↔ ∀ i, f i ≤ a :=
+theorem csupr_le_iff [Nonempty ι] {f : ι → α} {a : α} (hf : BddAbove (range f)) :
+    supr f ≤ a ↔ ∀ i, f i ≤ a :=
   (is_lub_le_iff <| is_lub_csupr hf).trans forall_range_iff
 #align csupr_le_iff csupr_le_iff
 
-theorem le_cinfi_iff [Nonempty ι] {f : ι → α} {a : α} (hf : BddBelow (range f)) : a ≤ infi f ↔ ∀ i, a ≤ f i :=
+theorem le_cinfi_iff [Nonempty ι] {f : ι → α} {a : α} (hf : BddBelow (range f)) :
+    a ≤ infi f ↔ ∀ i, a ≤ f i :=
   (le_is_glb_iff <| is_glb_cinfi hf).trans forall_range_iff
 #align le_cinfi_iff le_cinfi_iff
 
-theorem csupr_set_le_iff {ι : Type _} {s : Set ι} {f : ι → α} {a : α} (hs : s.Nonempty) (hf : BddAbove (f '' s)) :
-    (⨆ i : s, f i) ≤ a ↔ ∀ i ∈ s, f i ≤ a :=
+theorem csupr_set_le_iff {ι : Type _} {s : Set ι} {f : ι → α} {a : α} (hs : s.Nonempty)
+    (hf : BddAbove (f '' s)) : (⨆ i : s, f i) ≤ a ↔ ∀ i ∈ s, f i ≤ a :=
   (is_lub_le_iff <| is_lub_csupr_set hf hs).trans ball_image_iff
 #align csupr_set_le_iff csupr_set_le_iff
 
-theorem le_cinfi_set_iff {ι : Type _} {s : Set ι} {f : ι → α} {a : α} (hs : s.Nonempty) (hf : BddBelow (f '' s)) :
-    (a ≤ ⨅ i : s, f i) ↔ ∀ i ∈ s, a ≤ f i :=
+theorem le_cinfi_set_iff {ι : Type _} {s : Set ι} {f : ι → α} {a : α} (hs : s.Nonempty)
+    (hf : BddBelow (f '' s)) : (a ≤ ⨅ i : s, f i) ↔ ∀ i ∈ s, a ≤ f i :=
   (le_is_glb_iff <| is_glb_cinfi_set hf hs).trans ball_image_iff
 #align le_cinfi_set_iff le_cinfi_set_iff
 
@@ -442,7 +479,8 @@ theorem IsLub.csupr_eq [Nonempty ι] {f : ι → α} (H : IsLub (range f) a) : (
   H.cSup_eq (range_nonempty f)
 #align is_lub.csupr_eq IsLub.csupr_eq
 
-theorem IsLub.csupr_set_eq {s : Set β} {f : β → α} (H : IsLub (f '' s) a) (Hne : s.Nonempty) : (⨆ i : s, f i) = a :=
+theorem IsLub.csupr_set_eq {s : Set β} {f : β → α} (H : IsLub (f '' s) a) (Hne : s.Nonempty) :
+    (⨆ i : s, f i) = a :=
   IsLub.cSup_eq (image_eq_range f s ▸ H) (image_eq_range f s ▸ Hne.image f)
 #align is_lub.csupr_set_eq IsLub.csupr_set_eq
 
@@ -463,7 +501,8 @@ theorem IsGlb.cinfi_eq [Nonempty ι] {f : ι → α} (H : IsGlb (range f) a) : (
   H.cInf_eq (range_nonempty f)
 #align is_glb.cinfi_eq IsGlb.cinfi_eq
 
-theorem IsGlb.cinfi_set_eq {s : Set β} {f : β → α} (H : IsGlb (f '' s) a) (Hne : s.Nonempty) : (⨅ i : s, f i) = a :=
+theorem IsGlb.cinfi_set_eq {s : Set β} {f : β → α} (H : IsGlb (f '' s) a) (Hne : s.Nonempty) :
+    (⨅ i : s, f i) = a :=
   IsGlb.cInf_eq (image_eq_range f s ▸ H) (image_eq_range f s ▸ Hne.image f)
 #align is_glb.cinfi_set_eq IsGlb.cinfi_set_eq
 
@@ -476,8 +515,8 @@ theorem IsLeast.Inf_mem (H : IsLeast s a) : inf s ∈ s :=
   H.cInf_eq.symm ▸ H.1
 #align is_least.Inf_mem IsLeast.Inf_mem
 
-theorem subset_Icc_cInf_cSup (hb : BddBelow s) (ha : BddAbove s) : s ⊆ icc (inf s) (sup s) := fun x hx =>
-  ⟨cInf_le hb hx, le_cSup ha hx⟩
+theorem subset_Icc_cInf_cSup (hb : BddBelow s) (ha : BddAbove s) : s ⊆ icc (inf s) (sup s) :=
+  fun x hx => ⟨cInf_le hb hx, le_cSup ha hx⟩
 #align subset_Icc_cInf_cSup subset_Icc_cInf_cSup
 
 theorem cSup_le_iff (hb : BddAbove s) (hs : s.Nonempty) : sup s ≤ a ↔ ∀ b ∈ s, b ≤ a :=
@@ -488,16 +527,18 @@ theorem le_cInf_iff (hb : BddBelow s) (hs : s.Nonempty) : a ≤ inf s ↔ ∀ b 
   le_is_glb_iff (is_glb_cInf hs hb)
 #align le_cInf_iff le_cInf_iff
 
-theorem cSup_lower_bounds_eq_cInf {s : Set α} (h : BddBelow s) (hs : s.Nonempty) : sup (lowerBounds s) = inf s :=
+theorem cSup_lower_bounds_eq_cInf {s : Set α} (h : BddBelow s) (hs : s.Nonempty) :
+    sup (lowerBounds s) = inf s :=
   (is_lub_cSup h <| hs.mono fun x hx y hy => hy hx).unique (is_glb_cInf hs h).IsLub
 #align cSup_lower_bounds_eq_cInf cSup_lower_bounds_eq_cInf
 
-theorem cInf_upper_bounds_eq_cSup {s : Set α} (h : BddAbove s) (hs : s.Nonempty) : inf (upperBounds s) = sup s :=
+theorem cInf_upper_bounds_eq_cSup {s : Set α} (h : BddAbove s) (hs : s.Nonempty) :
+    inf (upperBounds s) = sup s :=
   (is_glb_cInf h <| hs.mono fun x hx y hy => hy hx).unique (is_lub_cSup hs h).IsGlb
 #align cInf_upper_bounds_eq_cSup cInf_upper_bounds_eq_cSup
 
-theorem not_mem_of_lt_cInf {x : α} {s : Set α} (h : x < inf s) (hs : BddBelow s) : x ∉ s := fun hx =>
-  lt_irrefl _ (h.trans_le (cInf_le hs hx))
+theorem not_mem_of_lt_cInf {x : α} {s : Set α} (h : x < inf s) (hs : BddBelow s) : x ∉ s :=
+  fun hx => lt_irrefl _ (h.trans_le (cInf_le hs hx))
 #align not_mem_of_lt_cInf not_mem_of_lt_cInf
 
 theorem not_mem_of_cSup_lt {x : α} {s : Set α} (h : sup s < x) (hs : BddAbove s) : x ∉ s :=
@@ -542,8 +583,8 @@ theorem cInf_lt_of_lt : BddBelow s → a ∈ s → a < b → inf s < b :=
 
 /-- If all elements of a nonempty set `s` are less than or equal to all elements
 of a nonempty set `t`, then there exists an element between these sets. -/
-theorem exists_between_of_forall_le (sne : s.Nonempty) (tne : t.Nonempty) (hst : ∀ x ∈ s, ∀ y ∈ t, x ≤ y) :
-    (upperBounds s ∩ lowerBounds t).Nonempty :=
+theorem exists_between_of_forall_le (sne : s.Nonempty) (tne : t.Nonempty)
+    (hst : ∀ x ∈ s, ∀ y ∈ t, x ≤ y) : (upperBounds s ∩ lowerBounds t).Nonempty :=
   ⟨inf t, fun x hx => le_cInf tne <| hst x hx, fun y hy => cInf_le (sne.mono hst) hy⟩
 #align exists_between_of_forall_le exists_between_of_forall_le
 
@@ -591,7 +632,8 @@ theorem cInf_union (hs : BddBelow s) (sne : s.Nonempty) (ht : BddBelow t) (tne :
 
 /-- The supremum of an intersection of two sets is bounded by the minimum of the suprema of each
 set, if all sets are bounded above and nonempty.-/
-theorem cSup_inter_le (hs : BddAbove s) (ht : BddAbove t) (hst : (s ∩ t).Nonempty) : sup (s ∩ t) ≤ sup s ⊓ sup t :=
+theorem cSup_inter_le (hs : BddAbove s) (ht : BddAbove t) (hst : (s ∩ t).Nonempty) :
+    sup (s ∩ t) ≤ sup s ⊓ sup t :=
   (cSup_le hst) fun x hx => le_inf (le_cSup hs hx.1) (le_cSup ht hx.2)
 #align cSup_inter_le cSup_inter_le
 
@@ -690,7 +732,8 @@ theorem le_csupr_of_le {f : ι → α} (H : BddAbove (range f)) (c : ι) (h : a 
 #align le_csupr_of_le le_csupr_of_le
 
 /-- The indexed supremum of two functions are comparable if the functions are pointwise comparable-/
-theorem csupr_mono {f g : ι → α} (B : BddAbove (range g)) (H : ∀ x, f x ≤ g x) : supr f ≤ supr g := by
+theorem csupr_mono {f g : ι → α} (B : BddAbove (range g)) (H : ∀ x, f x ≤ g x) : supr f ≤ supr g :=
+  by
   cases isEmpty_or_nonempty ι
   · rw [supr_of_empty', supr_of_empty']
     
@@ -698,7 +741,8 @@ theorem csupr_mono {f g : ι → α} (B : BddAbove (range g)) (H : ∀ x, f x �
     
 #align csupr_mono csupr_mono
 
-theorem le_csupr_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) {c : β} (hc : c ∈ s) : f c ≤ ⨆ i : s, f i :=
+theorem le_csupr_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) {c : β} (hc : c ∈ s) :
+    f c ≤ ⨆ i : s, f i :=
   (le_cSup H <| mem_image_of_mem f hc).trans_eq Sup_image'
 #align le_csupr_set le_csupr_set
 
@@ -721,12 +765,14 @@ theorem cinfi_le_of_le {f : ι → α} (H : BddBelow (range f)) (c : ι) (h : f 
   @le_csupr_of_le αᵒᵈ _ _ _ _ H c h
 #align cinfi_le_of_le cinfi_le_of_le
 
-theorem cinfi_set_le {f : β → α} {s : Set β} (H : BddBelow (f '' s)) {c : β} (hc : c ∈ s) : (⨅ i : s, f i) ≤ f c :=
+theorem cinfi_set_le {f : β → α} {s : Set β} (H : BddBelow (f '' s)) {c : β} (hc : c ∈ s) :
+    (⨅ i : s, f i) ≤ f c :=
   @le_csupr_set αᵒᵈ _ _ _ _ H _ hc
 #align cinfi_set_le cinfi_set_le
 
 @[simp]
-theorem csupr_const [hι : Nonempty ι] {a : α} : (⨆ b : ι, a) = a := by rw [supr, range_const, cSup_singleton]
+theorem csupr_const [hι : Nonempty ι] {a : α} : (⨆ b : ι, a) = a := by
+  rw [supr, range_const, cSup_singleton]
 #align csupr_const csupr_const
 
 @[simp]
@@ -761,8 +807,8 @@ is larger than `f i` for all `i`, and that this is not the case of any `w<b`.
 See `supr_eq_of_forall_le_of_forall_lt_exists_gt` for a version in complete lattices. -/
 theorem csupr_eq_of_forall_le_of_forall_lt_exists_gt [Nonempty ι] {f : ι → α} (h₁ : ∀ i, f i ≤ b)
     (h₂ : ∀ w, w < b → ∃ i, w < f i) : (⨆ i : ι, f i) = b :=
-  cSup_eq_of_forall_le_of_forall_lt_exists_gt (range_nonempty f) (forall_range_iff.mpr h₁) fun w hw =>
-    exists_range_iff.mpr <| h₂ w hw
+  cSup_eq_of_forall_le_of_forall_lt_exists_gt (range_nonempty f) (forall_range_iff.mpr h₁)
+    fun w hw => exists_range_iff.mpr <| h₂ w hw
 #align csupr_eq_of_forall_le_of_forall_lt_exists_gt csupr_eq_of_forall_le_of_forall_lt_exists_gt
 
 /-- Introduction rule to prove that `b` is the infimum of `f`: it suffices to check that `b`
@@ -775,8 +821,8 @@ theorem cinfi_eq_of_forall_ge_of_forall_gt_exists_lt [Nonempty ι] {f : ι → �
 
 /-- Nested intervals lemma: if `f` is a monotone sequence, `g` is an antitone sequence, and
 `f n ≤ g n` for all `n`, then `⨆ n, f n` belongs to all the intervals `[f n, g n]`. -/
-theorem Monotone.csupr_mem_Inter_Icc_of_antitone [SemilatticeSup β] {f g : β → α} (hf : Monotone f) (hg : Antitone g)
-    (h : f ≤ g) : (⨆ n, f n) ∈ ⋂ n, icc (f n) (g n) := by
+theorem Monotone.csupr_mem_Inter_Icc_of_antitone [SemilatticeSup β] {f g : β → α} (hf : Monotone f)
+    (hg : Antitone g) (h : f ≤ g) : (⨆ n, f n) ∈ ⋂ n, icc (f n) (g n) := by
   refine' mem_Inter.2 fun n => _
   haveI : Nonempty β := ⟨n⟩
   have : ∀ m, f m ≤ g n := fun m => hf.forall_le_of_antitone hg h m n
@@ -785,9 +831,11 @@ theorem Monotone.csupr_mem_Inter_Icc_of_antitone [SemilatticeSup β] {f g : β �
 
 /-- Nested intervals lemma: if `[f n, g n]` is an antitone sequence of nonempty
 closed intervals, then `⨆ n, f n` belongs to all the intervals `[f n, g n]`. -/
-theorem csupr_mem_Inter_Icc_of_antitone_Icc [SemilatticeSup β] {f g : β → α} (h : Antitone fun n => icc (f n) (g n))
-    (h' : ∀ n, f n ≤ g n) : (⨆ n, f n) ∈ ⋂ n, icc (f n) (g n) :=
-  Monotone.csupr_mem_Inter_Icc_of_antitone (fun m n hmn => ((Icc_subset_Icc_iff (h' n)).1 (h hmn)).1)
+theorem csupr_mem_Inter_Icc_of_antitone_Icc [SemilatticeSup β] {f g : β → α}
+    (h : Antitone fun n => icc (f n) (g n)) (h' : ∀ n, f n ≤ g n) :
+    (⨆ n, f n) ∈ ⋂ n, icc (f n) (g n) :=
+  Monotone.csupr_mem_Inter_Icc_of_antitone
+    (fun m n hmn => ((Icc_subset_Icc_iff (h' n)).1 (h hmn)).1)
     (fun m n hmn => ((Icc_subset_Icc_iff (h' n)).1 (h hmn)).2) h'
 #align csupr_mem_Inter_Icc_of_antitone_Icc csupr_mem_Inter_Icc_of_antitone_Icc
 
@@ -801,15 +849,19 @@ theorem cSup_eq_of_is_forall_le_of_forall_le_imp_ge (hs : s.Nonempty) (h_is_ub :
 
 end ConditionallyCompleteLattice
 
-instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _} [∀ i, ConditionallyCompleteLattice (α i)] :
-    ConditionallyCompleteLattice (∀ i, α i) :=
+instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _}
+    [∀ i, ConditionallyCompleteLattice (α i)] : ConditionallyCompleteLattice (∀ i, α i) :=
   { Pi.lattice, Pi.hasSup, Pi.hasInf with
-    le_cSup := fun s f ⟨g, hg⟩ hf i => le_cSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
+    le_cSup := fun s f ⟨g, hg⟩ hf i =>
+      le_cSup ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
     cSup_le := fun s f hs hf i =>
-      (cSup_le (by haveI := hs.to_subtype <;> apply range_nonempty)) fun b ⟨⟨g, hg⟩, hb⟩ => hb ▸ hf hg i,
-    cInf_le := fun s f ⟨g, hg⟩ hf i => cInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
+      (cSup_le (by haveI := hs.to_subtype <;> apply range_nonempty)) fun b ⟨⟨g, hg⟩, hb⟩ =>
+        hb ▸ hf hg i,
+    cInf_le := fun s f ⟨g, hg⟩ hf i =>
+      cInf_le ⟨g i, Set.forall_range_iff.2 fun ⟨f', hf'⟩ => hg hf' i⟩ ⟨⟨f, hf⟩, rfl⟩,
     le_cInf := fun s f hs hf i =>
-      (le_cInf (by haveI := hs.to_subtype <;> apply range_nonempty)) fun b ⟨⟨g, hg⟩, hb⟩ => hb ▸ hf hg i }
+      (le_cInf (by haveI := hs.to_subtype <;> apply range_nonempty)) fun b ⟨⟨g, hg⟩, hb⟩ =>
+        hb ▸ hf hg i }
 #align pi.conditionally_complete_lattice Pi.conditionallyCompleteLattice
 
 section ConditionallyCompleteLinearOrder
@@ -848,7 +900,8 @@ open Function
 
 variable [IsWellOrder α (· < ·)]
 
-theorem Inf_eq_argmin_on (hs : s.Nonempty) : inf s = argminOn id (@IsWellFounded.wf α (· < ·) _) s hs :=
+theorem Inf_eq_argmin_on (hs : s.Nonempty) :
+    inf s = argminOn id (@IsWellFounded.wf α (· < ·) _) s hs :=
   IsLeast.cInf_eq ⟨argmin_on_mem _ _ _ _, fun a ha => argmin_on_le id _ _ ha⟩
 #align Inf_eq_argmin_on Inf_eq_argmin_on
 
@@ -869,13 +922,13 @@ theorem infi_mem [Nonempty ι] (f : ι → α) : infi f ∈ range f :=
   Inf_mem (range_nonempty f)
 #align infi_mem infi_mem
 
-theorem MonotoneOn.map_Inf {β : Type _} [ConditionallyCompleteLattice β] {f : α → β} (hf : MonotoneOn f s)
-    (hs : s.Nonempty) : f (inf s) = inf (f '' s) :=
+theorem MonotoneOn.map_Inf {β : Type _} [ConditionallyCompleteLattice β] {f : α → β}
+    (hf : MonotoneOn f s) (hs : s.Nonempty) : f (inf s) = inf (f '' s) :=
   (hf.map_is_least (is_least_Inf hs)).cInf_eq.symm
 #align monotone_on.map_Inf MonotoneOn.map_Inf
 
-theorem Monotone.map_Inf {β : Type _} [ConditionallyCompleteLattice β] {f : α → β} (hf : Monotone f) (hs : s.Nonempty) :
-    f (inf s) = inf (f '' s) :=
+theorem Monotone.map_Inf {β : Type _} [ConditionallyCompleteLattice β] {f : α → β} (hf : Monotone f)
+    (hs : s.Nonempty) : f (inf s) = inf (f '' s) :=
   (hf.map_is_least (is_least_Inf hs)).cInf_eq.symm
 #align monotone.map_Inf Monotone.map_Inf
 
@@ -898,7 +951,8 @@ theorem cSup_empty : (sup ∅ : α) = ⊥ :=
 #align cSup_empty cSup_empty
 
 @[simp]
-theorem csupr_of_empty [IsEmpty ι] (f : ι → α) : (⨆ i, f i) = ⊥ := by rw [supr_of_empty', cSup_empty]
+theorem csupr_of_empty [IsEmpty ι] (f : ι → α) : (⨆ i, f i) = ⊥ := by
+  rw [supr_of_empty', cSup_empty]
 #align csupr_of_empty csupr_of_empty
 
 @[simp]
@@ -927,12 +981,13 @@ theorem cSup_le' {s : Set α} {a : α} (h : a ∈ upperBounds s) : sup s ≤ a :
   (cSup_le_iff' ⟨a, h⟩).2 h
 #align cSup_le' cSup_le'
 
-theorem le_cSup_iff' {s : Set α} {a : α} (h : BddAbove s) : a ≤ sup s ↔ ∀ b, b ∈ upperBounds s → a ≤ b :=
+theorem le_cSup_iff' {s : Set α} {a : α} (h : BddAbove s) :
+    a ≤ sup s ↔ ∀ b, b ∈ upperBounds s → a ≤ b :=
   ⟨fun h b hb => le_trans h (cSup_le' hb), fun hb => hb _ fun x => le_cSup h⟩
 #align le_cSup_iff' le_cSup_iff'
 
-theorem le_csupr_iff' {s : ι → α} {a : α} (h : BddAbove (range s)) : a ≤ supr s ↔ ∀ b, (∀ i, s i ≤ b) → a ≤ b := by
-  simp [supr, h, le_cSup_iff', upperBounds]
+theorem le_csupr_iff' {s : ι → α} {a : α} (h : BddAbove (range s)) :
+    a ≤ supr s ↔ ∀ b, (∀ i, s i ≤ b) → a ≤ b := by simp [supr, h, le_cSup_iff', upperBounds]
 #align le_csupr_iff' le_csupr_iff'
 
 theorem le_cInf_iff'' {s : Set α} {a : α} (ne : s.Nonempty) : a ≤ inf s ↔ ∀ b : α, b ∈ s → a ≤ b :=
@@ -956,7 +1011,8 @@ theorem exists_lt_of_lt_cSup' {s : Set α} {a : α} (h : a < sup s) : ∃ b ∈ 
   exact cSup_le' h
 #align exists_lt_of_lt_cSup' exists_lt_of_lt_cSup'
 
-theorem csupr_le_iff' {f : ι → α} (h : BddAbove (range f)) {a : α} : (⨆ i, f i) ≤ a ↔ ∀ i, f i ≤ a :=
+theorem csupr_le_iff' {f : ι → α} (h : BddAbove (range f)) {a : α} :
+    (⨆ i, f i) ≤ a ↔ ∀ i, f i ≤ a :=
   (cSup_le_iff' h).trans forall_range_iff
 #align csupr_le_iff' csupr_le_iff'
 
@@ -969,8 +1025,8 @@ theorem exists_lt_of_lt_csupr' {f : ι → α} {a : α} (h : a < ⨆ i, f i) : �
   exact csupr_le' h
 #align exists_lt_of_lt_csupr' exists_lt_of_lt_csupr'
 
-theorem csupr_mono' {ι'} {f : ι → α} {g : ι' → α} (hg : BddAbove (range g)) (h : ∀ i, ∃ i', f i ≤ g i') :
-    supr f ≤ supr g :=
+theorem csupr_mono' {ι'} {f : ι → α} {g : ι' → α} (hg : BddAbove (range g))
+    (h : ∀ i, ∃ i', f i ≤ g i') : supr f ≤ supr g :=
   csupr_le' fun i => Exists.elim (h i) (le_csupr_of_le hg)
 #align csupr_mono' csupr_mono'
 
@@ -988,8 +1044,8 @@ variable [ConditionallyCompleteLinearOrderBot α]
 
 /-- The Sup of a non-empty set is its least upper bound for a conditionally
 complete lattice with a top. -/
-theorem is_lub_Sup' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)} (hs : s.Nonempty) :
-    IsLub s (sup s) := by
+theorem is_lub_Sup' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)}
+    (hs : s.Nonempty) : IsLub s (sup s) := by
   constructor
   · show ite _ _ _ ∈ _
     split_ifs
@@ -1062,8 +1118,8 @@ theorem is_lub_Sup (s : Set (WithTop α)) : IsLub s (sup s) := by
 
 /-- The Inf of a bounded-below set is its greatest lower bound for a conditionally
 complete lattice with a top. -/
-theorem is_glb_Inf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)} (hs : BddBelow s) :
-    IsGlb s (inf s) := by
+theorem is_glb_Inf' {β : Type _} [ConditionallyCompleteLattice β] {s : Set (WithTop β)}
+    (hs : BddBelow s) : IsGlb s (inf s) := by
   constructor
   · show ite _ _ _ ∈ _
     split_ifs
@@ -1134,12 +1190,14 @@ noncomputable instance : CompleteLinearOrder (WithTop α) :=
 
 /-- A version of `with_top.coe_Sup'` with a more convenient but less general statement. -/
 @[norm_cast]
-theorem coe_Sup {s : Set α} (hb : BddAbove s) : ↑(sup s) = (⨆ a ∈ s, ↑a : WithTop α) := by rw [coe_Sup' hb, Sup_image]
+theorem coe_Sup {s : Set α} (hb : BddAbove s) : ↑(sup s) = (⨆ a ∈ s, ↑a : WithTop α) := by
+  rw [coe_Sup' hb, Sup_image]
 #align with_top.coe_Sup WithTop.coe_Sup
 
 /-- A version of `with_top.coe_Inf'` with a more convenient but less general statement. -/
 @[norm_cast]
-theorem coe_Inf {s : Set α} (hs : s.Nonempty) : ↑(inf s) = (⨅ a ∈ s, ↑a : WithTop α) := by rw [coe_Inf' hs, Inf_image]
+theorem coe_Inf {s : Set α} (hs : s.Nonempty) : ↑(inf s) = (⨅ a ∈ s, ↑a : WithTop α) := by
+  rw [coe_Inf' hs, Inf_image]
 #align with_top.coe_Inf WithTop.coe_Inf
 
 end WithTop
@@ -1156,7 +1214,8 @@ theorem le_cSup_image {s : Set α} {c : α} (hcs : c ∈ s) (h_bdd : BddAbove s)
   le_cSup (map_bdd_above h_mono h_bdd) (mem_image_of_mem f hcs)
 #align monotone.le_cSup_image Monotone.le_cSup_image
 
-theorem cSup_image_le {s : Set α} (hs : s.Nonempty) {B : α} (hB : B ∈ upperBounds s) : sup (f '' s) ≤ f B :=
+theorem cSup_image_le {s : Set α} (hs : s.Nonempty) {B : α} (hB : B ∈ upperBounds s) :
+    sup (f '' s) ≤ f B :=
   cSup_le (Nonempty.image f hs) (h_mono.mem_upper_bounds_image hB)
 #align monotone.cSup_image_le Monotone.cSup_image_le
 
@@ -1164,7 +1223,8 @@ theorem cInf_image_le {s : Set α} {c : α} (hcs : c ∈ s) (h_bdd : BddBelow s)
   @le_cSup_image αᵒᵈ βᵒᵈ _ _ _ (fun x y hxy => h_mono hxy) _ _ hcs h_bdd
 #align monotone.cInf_image_le Monotone.cInf_image_le
 
-theorem le_cInf_image {s : Set α} (hs : s.Nonempty) {B : α} (hB : B ∈ lowerBounds s) : f B ≤ inf (f '' s) :=
+theorem le_cInf_image {s : Set α} (hs : s.Nonempty) {B : α} (hB : B ∈ lowerBounds s) :
+    f B ≤ inf (f '' s) :=
   @cSup_image_le αᵒᵈ βᵒᵈ _ _ _ (fun x y hxy => h_mono hxy) _ hs _ hB
 #align monotone.le_cInf_image Monotone.le_cInf_image
 
@@ -1172,7 +1232,8 @@ end Monotone
 
 namespace GaloisConnection
 
-variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι] {l : α → β} {u : β → α}
+variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι] {l : α → β}
+  {u : β → α}
 
 theorem l_cSup (gc : GaloisConnection l u) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) :
     l (sup s) = ⨆ x : s, l x :=
@@ -1183,12 +1244,12 @@ theorem l_cSup' (gc : GaloisConnection l u) {s : Set α} (hne : s.Nonempty) (hbd
     l (sup s) = sup (l '' s) := by rw [gc.l_cSup hne hbdd, Sup_image']
 #align galois_connection.l_cSup' GaloisConnection.l_cSup'
 
-theorem l_csupr (gc : GaloisConnection l u) {f : ι → α} (hf : BddAbove (range f)) : l (⨆ i, f i) = ⨆ i, l (f i) := by
-  rw [supr, gc.l_cSup (range_nonempty _) hf, supr_range']
+theorem l_csupr (gc : GaloisConnection l u) {f : ι → α} (hf : BddAbove (range f)) :
+    l (⨆ i, f i) = ⨆ i, l (f i) := by rw [supr, gc.l_cSup (range_nonempty _) hf, supr_range']
 #align galois_connection.l_csupr GaloisConnection.l_csupr
 
-theorem l_csupr_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s)) (hne : s.Nonempty) :
-    l (⨆ i : s, f i) = ⨆ i : s, l (f i) := by
+theorem l_csupr_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s))
+    (hne : s.Nonempty) : l (⨆ i : s, f i) = ⨆ i : s, l (f i) := by
   haveI := hne.to_subtype
   rw [image_eq_range] at hf
   exact gc.l_csupr hf
@@ -1204,12 +1265,13 @@ theorem u_cInf' (gc : GaloisConnection l u) {s : Set β} (hne : s.Nonempty) (hbd
   gc.dual.l_cSup' hne hbdd
 #align galois_connection.u_cInf' GaloisConnection.u_cInf'
 
-theorem u_cinfi (gc : GaloisConnection l u) {f : ι → β} (hf : BddBelow (range f)) : u (⨅ i, f i) = ⨅ i, u (f i) :=
+theorem u_cinfi (gc : GaloisConnection l u) {f : ι → β} (hf : BddBelow (range f)) :
+    u (⨅ i, f i) = ⨅ i, u (f i) :=
   gc.dual.l_csupr hf
 #align galois_connection.u_cinfi GaloisConnection.u_cinfi
 
-theorem u_cinfi_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → β} (hf : BddBelow (f '' s)) (hne : s.Nonempty) :
-    u (⨅ i : s, f i) = ⨅ i : s, u (f i) :=
+theorem u_cinfi_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → β} (hf : BddBelow (f '' s))
+    (hne : s.Nonempty) : u (⨅ i : s, f i) = ⨅ i : s, u (f i) :=
   gc.dual.l_csupr_set hf hne
 #align galois_connection.u_cinfi_set GaloisConnection.u_cinfi_set
 
@@ -1219,37 +1281,43 @@ namespace OrderIso
 
 variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι]
 
-theorem map_cSup (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) : e (sup s) = ⨆ x : s, e x :=
+theorem map_cSup (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) :
+    e (sup s) = ⨆ x : s, e x :=
   e.to_galois_connection.l_cSup hne hbdd
 #align order_iso.map_cSup OrderIso.map_cSup
 
-theorem map_cSup' (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) : e (sup s) = sup (e '' s) :=
+theorem map_cSup' (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) :
+    e (sup s) = sup (e '' s) :=
   e.to_galois_connection.l_cSup' hne hbdd
 #align order_iso.map_cSup' OrderIso.map_cSup'
 
-theorem map_csupr (e : α ≃o β) {f : ι → α} (hf : BddAbove (range f)) : e (⨆ i, f i) = ⨆ i, e (f i) :=
+theorem map_csupr (e : α ≃o β) {f : ι → α} (hf : BddAbove (range f)) :
+    e (⨆ i, f i) = ⨆ i, e (f i) :=
   e.to_galois_connection.l_csupr hf
 #align order_iso.map_csupr OrderIso.map_csupr
 
-theorem map_csupr_set (e : α ≃o β) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s)) (hne : s.Nonempty) :
-    e (⨆ i : s, f i) = ⨆ i : s, e (f i) :=
+theorem map_csupr_set (e : α ≃o β) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s))
+    (hne : s.Nonempty) : e (⨆ i : s, f i) = ⨆ i : s, e (f i) :=
   e.to_galois_connection.l_csupr_set hf hne
 #align order_iso.map_csupr_set OrderIso.map_csupr_set
 
-theorem map_cInf (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddBelow s) : e (inf s) = ⨅ x : s, e x :=
+theorem map_cInf (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddBelow s) :
+    e (inf s) = ⨅ x : s, e x :=
   e.dual.map_cSup hne hbdd
 #align order_iso.map_cInf OrderIso.map_cInf
 
-theorem map_cInf' (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddBelow s) : e (inf s) = inf (e '' s) :=
+theorem map_cInf' (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddBelow s) :
+    e (inf s) = inf (e '' s) :=
   e.dual.map_cSup' hne hbdd
 #align order_iso.map_cInf' OrderIso.map_cInf'
 
-theorem map_cinfi (e : α ≃o β) {f : ι → α} (hf : BddBelow (range f)) : e (⨅ i, f i) = ⨅ i, e (f i) :=
+theorem map_cinfi (e : α ≃o β) {f : ι → α} (hf : BddBelow (range f)) :
+    e (⨅ i, f i) = ⨅ i, e (f i) :=
   e.dual.map_csupr hf
 #align order_iso.map_cinfi OrderIso.map_cinfi
 
-theorem map_cinfi_set (e : α ≃o β) {s : Set γ} {f : γ → α} (hf : BddBelow (f '' s)) (hne : s.Nonempty) :
-    e (⨅ i : s, f i) = ⨅ i : s, e (f i) :=
+theorem map_cinfi_set (e : α ≃o β) {s : Set γ} {f : γ → α} (hf : BddBelow (f '' s))
+    (hne : s.Nonempty) : e (⨅ i : s, f i) = ⨅ i : s, e (f i) :=
   e.dual.map_csupr_set hf hne
 #align order_iso.map_cinfi_set OrderIso.map_cinfi_set
 
@@ -1265,16 +1333,17 @@ a binary function whose partial evaluations are lower/upper adjoints of Galois c
 
 section
 
-variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ]
-  {f : α → β → γ} {s : Set α} {t : Set β}
+variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β]
+  [ConditionallyCompleteLattice γ] {f : α → β → γ} {s : Set α} {t : Set β}
 
 variable {l u : α → β → γ} {l₁ u₁ : β → γ → α} {l₂ u₂ : α → γ → β}
 
 theorem cSup_image2_eq_cSup_cSup (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) (hs₀ : s.Nonempty) (hs₁ : BddAbove s) (ht₀ : t.Nonempty)
-    (ht₁ : BddAbove t) : sup (image2 l s t) = l (sup s) (sup t) := by
+    (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) (hs₀ : s.Nonempty) (hs₁ : BddAbove s)
+    (ht₀ : t.Nonempty) (ht₁ : BddAbove t) : sup (image2 l s t) = l (sup s) (sup t) := by
   refine' eq_of_forall_ge_iff fun c => _
-  rw [cSup_le_iff (hs₁.image2 (fun _ => (h₁ _).monotone_l) (fun _ => (h₂ _).monotone_l) ht₁) (hs₀.image2 ht₀),
+  rw [cSup_le_iff (hs₁.image2 (fun _ => (h₁ _).monotone_l) (fun _ => (h₂ _).monotone_l) ht₁)
+      (hs₀.image2 ht₀),
     forall_image2_iff, forall₂_swap, (h₂ _).le_iff_le, cSup_le_iff ht₁ ht₀]
   simp_rw [← (h₂ _).le_iff_le, (h₁ _).le_iff_le, cSup_le_iff hs₁ hs₀]
 #align cSup_image2_eq_cSup_cSup cSup_image2_eq_cSup_cSup
@@ -1300,7 +1369,8 @@ theorem cSup_image2_eq_cInf_cInf (h₁ : ∀ b, GaloisConnection (swap l b ∘ o
 theorem cInf_image2_eq_cInf_cInf (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
     (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) :
     s.Nonempty → BddBelow s → t.Nonempty → BddBelow t → inf (image2 u s t) = u (inf s) (inf t) :=
-  @cSup_image2_eq_cSup_cSup αᵒᵈ βᵒᵈ γᵒᵈ _ _ _ _ _ _ l₁ l₂ (fun _ => (h₁ _).dual) fun _ => (h₂ _).dual
+  @cSup_image2_eq_cSup_cSup αᵒᵈ βᵒᵈ γᵒᵈ _ _ _ _ _ _ l₁ l₂ (fun _ => (h₁ _).dual) fun _ =>
+    (h₂ _).dual
 #align cInf_image2_eq_cInf_cInf cInf_image2_eq_cInf_cInf
 
 theorem cInf_image2_eq_cInf_cSup (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
@@ -1344,8 +1414,8 @@ open Classical
 
 /-- Adding a top element to a conditionally complete lattice
 gives a conditionally complete lattice -/
-noncomputable instance WithTop.conditionallyCompleteLattice {α : Type _} [ConditionallyCompleteLattice α] :
-    ConditionallyCompleteLattice (WithTop α) :=
+noncomputable instance WithTop.conditionallyCompleteLattice {α : Type _}
+    [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice (WithTop α) :=
   { WithTop.lattice, WithTop.hasSup, WithTop.hasInf with
     le_cSup := fun S a hS haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
     cSup_le := fun S a hS haS => (WithTop.is_lub_Sup' hS).2 haS,
@@ -1355,8 +1425,8 @@ noncomputable instance WithTop.conditionallyCompleteLattice {α : Type _} [Condi
 
 /-- Adding a bottom element to a conditionally complete lattice
 gives a conditionally complete lattice -/
-noncomputable instance WithBot.conditionallyCompleteLattice {α : Type _} [ConditionallyCompleteLattice α] :
-    ConditionallyCompleteLattice (WithBot α) :=
+noncomputable instance WithBot.conditionallyCompleteLattice {α : Type _}
+    [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice (WithBot α) :=
   { WithBot.lattice, WithBot.hasSup, WithBot.hasInf with
     le_cSup := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).cInf_le,
     cSup_le := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).le_cInf,
@@ -1364,8 +1434,8 @@ noncomputable instance WithBot.conditionallyCompleteLattice {α : Type _} [Condi
     le_cInf := (@WithTop.conditionallyCompleteLattice αᵒᵈ _).cSup_le }
 #align with_bot.conditionally_complete_lattice WithBot.conditionallyCompleteLattice
 
-noncomputable instance WithTop.WithBot.completeLattice {α : Type _} [ConditionallyCompleteLattice α] :
-    CompleteLattice (WithTop (WithBot α)) :=
+noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
+    [ConditionallyCompleteLattice α] : CompleteLattice (WithTop (WithBot α)) :=
   { WithTop.hasInf, WithTop.hasSup, WithTop.boundedOrder, WithTop.lattice with
     le_Sup := fun S a haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
     Sup_le := fun S a ha => by
@@ -1409,13 +1479,13 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _} [Conditiona
     le_Inf := fun S a haS => (WithTop.is_glb_Inf' ⟨a, haS⟩).2 haS }
 #align with_top.with_bot.complete_lattice WithTop.WithBot.completeLattice
 
-noncomputable instance WithTop.WithBot.completeLinearOrder {α : Type _} [ConditionallyCompleteLinearOrder α] :
-    CompleteLinearOrder (WithTop (WithBot α)) :=
+noncomputable instance WithTop.WithBot.completeLinearOrder {α : Type _}
+    [ConditionallyCompleteLinearOrder α] : CompleteLinearOrder (WithTop (WithBot α)) :=
   { WithTop.WithBot.completeLattice, WithTop.linearOrder with }
 #align with_top.with_bot.complete_linear_order WithTop.WithBot.completeLinearOrder
 
-theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α] (f : ι → α) :
-    (⨆ x, (f x : WithTop α)) = ⊤ ↔ ¬BddAbove (Set.range f) := by
+theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
+    (f : ι → α) : (⨆ x, (f x : WithTop α)) = ⊤ ↔ ¬BddAbove (Set.range f) := by
   rw [supr_eq_top, not_bdd_above_iff]
   refine' ⟨fun hf r => _, fun hf a ha => _⟩
   · rcases hf r (WithTop.coe_lt_top r) with ⟨i, hi⟩
@@ -1426,8 +1496,8 @@ theorem WithTop.supr_coe_eq_top {ι : Sort _} {α : Type _} [ConditionallyComple
     
 #align with_top.supr_coe_eq_top WithTop.supr_coe_eq_top
 
-theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α] (f : ι → α) :
-    (⨆ x, (f x : WithTop α)) < ⊤ ↔ BddAbove (Set.range f) :=
+theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
+    (f : ι → α) : (⨆ x, (f x : WithTop α)) < ⊤ ↔ BddAbove (Set.range f) :=
   lt_top_iff_ne_top.trans <| (WithTop.supr_coe_eq_top f).Not.trans not_not
 #align with_top.supr_coe_lt_top WithTop.supr_coe_lt_top
 

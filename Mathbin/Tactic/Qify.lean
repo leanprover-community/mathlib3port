@@ -113,7 +113,8 @@ This is often useful since `ℚ` has well-behaved division and subtraction.
 The list of extra lemmas is used in the `push_cast` step.
 
 Returns an expression `e'` and a proof that `e = e'`.-/
-unsafe def tactic.qify (extra_lems : List simp_arg_type) : expr → tactic (expr × expr) := fun q => do
+unsafe def tactic.qify (extra_lems : List simp_arg_type) : expr → tactic (expr × expr) := fun q =>
+  do
   let (q1, p1) ← qify.lift_to_q q <|> fail "failed to find an applicable qify lemma"
   let (q2, p2) ← norm_cast.derive_push_cast extra_lems q1
   Prod.mk q2 <$> mk_eq_trans p1 p2
@@ -167,7 +168,8 @@ end
 `qify` makes use of the `@[qify]` attribute to move propositions,
 and the `push_cast` tactic to simplify the `ℚ`-valued expressions.
 -/
-unsafe def tactic.interactive.qify (sl : parse simp_arg_list) (l : parse location) : tactic Unit := do
+unsafe def tactic.interactive.qify (sl : parse simp_arg_list) (l : parse location) : tactic Unit :=
+  do
   let locs ← l.get_locals
   replace_at (tactic.qify sl) locs l >>= guardb
 #align tactic.interactive.qify tactic.interactive.qify
@@ -175,7 +177,8 @@ unsafe def tactic.interactive.qify (sl : parse simp_arg_list) (l : parse locatio
 end
 
 add_tactic_doc
-  { Name := "qify", category := DocCategory.attr, declNames := [`qify.qify_attr], tags := ["coercions", "transport"] }
+  { Name := "qify", category := DocCategory.attr, declNames := [`qify.qify_attr],
+    tags := ["coercions", "transport"] }
 
 add_tactic_doc
   { Name := "qify", category := DocCategory.tactic, declNames := [`tactic.interactive.qify],

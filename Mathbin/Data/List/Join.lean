@@ -47,7 +47,8 @@ theorem join_filter_empty_eq_ff [DecidablePred fun l : List α => l.Empty = ff] 
 
 @[simp]
 theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List (List α)} :
-    join (L.filter fun l => l ≠ []) = L.join := by simp [join_filter_empty_eq_ff, ← empty_iff_eq_nil]
+    join (L.filter fun l => l ≠ []) = L.join := by
+  simp [join_filter_empty_eq_ff, ← empty_iff_eq_nil]
 #align list.join_filter_ne_nil List.join_filter_ne_nil
 
 theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join := by
@@ -62,22 +63,24 @@ theorem length_join (L : List (List α)) : length (join L) = sum (map length L) 
 #align list.length_join List.length_join
 
 @[simp]
-theorem length_bind (l : List α) (f : α → List β) : length (List.bind l f) = sum (map (length ∘ f) l) := by
-  rw [List.bind, length_join, map_map]
+theorem length_bind (l : List α) (f : α → List β) :
+    length (List.bind l f) = sum (map (length ∘ f) l) := by rw [List.bind, length_join, map_map]
 #align list.length_bind List.length_bind
 
 @[simp]
 theorem bind_eq_nil {l : List α} {f : α → List β} : List.bind l f = [] ↔ ∀ x ∈ l, f x = [] :=
-  join_eq_nil.trans <| by simp only [mem_map, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
+  join_eq_nil.trans <| by
+    simp only [mem_map, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
 #align list.bind_eq_nil List.bind_eq_nil
 
 /-- In a join, taking the first elements up to an index which is the sum of the lengths of the
 first `i` sublists, is the same as taking the join of the first `i` sublists. -/
-theorem take_sum_join (L : List (List α)) (i : ℕ) : L.join.take ((L.map length).take i).Sum = (L.take i).join := by
-  induction L generalizing i
+theorem take_sum_join (L : List (List α)) (i : ℕ) :
+    L.join.take ((L.map length).take i).Sum = (L.take i).join := by
+  induction L generalizing i;
   · simp
     
-  cases i
+  cases i;
   · simp
     
   simp [take_append, L_ih]
@@ -85,11 +88,12 @@ theorem take_sum_join (L : List (List α)) (i : ℕ) : L.join.take ((L.map lengt
 
 /-- In a join, dropping all the elements up to an index which is the sum of the lengths of the
 first `i` sublists, is the same as taking the join after dropping the first `i` sublists. -/
-theorem drop_sum_join (L : List (List α)) (i : ℕ) : L.join.drop ((L.map length).take i).Sum = (L.drop i).join := by
-  induction L generalizing i
+theorem drop_sum_join (L : List (List α)) (i : ℕ) :
+    L.join.drop ((L.map length).take i).Sum = (L.drop i).join := by
+  induction L generalizing i;
   · simp
     
-  cases i
+  cases i;
   · simp
     
   simp [drop_append, L_ih]
@@ -117,19 +121,24 @@ theorem drop_take_succ_eq_cons_nth_le (L : List α) {i : ℕ} (hi : i < L.length
 original sublist of index `i` if `A` is the sum of the lenghts of sublists of index `< i`, and
 `B` is the sum of the lengths of sublists of index `≤ i`. -/
 theorem drop_take_succ_join_eq_nth_le (L : List (List α)) {i : ℕ} (hi : i < L.length) :
-    (L.join.take ((L.map length).take (i + 1)).Sum).drop ((L.map length).take i).Sum = nthLe L i hi := by
-  have : (L.map length).take i = ((L.take (i + 1)).map length).take i := by simp [map_take, take_take]
+    (L.join.take ((L.map length).take (i + 1)).Sum).drop ((L.map length).take i).Sum =
+      nthLe L i hi :=
+  by
+  have : (L.map length).take i = ((L.take (i + 1)).map length).take i := by
+    simp [map_take, take_take]
   simp [take_sum_join, this, drop_sum_join, drop_take_succ_eq_cons_nth_le _ hi]
 #align list.drop_take_succ_join_eq_nth_le List.drop_take_succ_join_eq_nth_le
 
 /-- Auxiliary lemma to control elements in a join. -/
-theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
-    ((L.map length).take i).Sum + j < ((L.map length).take (i + 1)).Sum := by simp [hi, sum_take_succ, hj]
+theorem sum_take_map_length_lt1 (L : List (List α)) {i j : ℕ} (hi : i < L.length)
+    (hj : j < (nthLe L i hi).length) :
+    ((L.map length).take i).Sum + j < ((L.map length).take (i + 1)).Sum := by
+  simp [hi, sum_take_succ, hj]
 #align list.sum_take_map_length_lt1 List.sum_take_map_length_lt1
 
 /-- Auxiliary lemma to control elements in a join. -/
-theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
-    ((L.map length).take i).Sum + j < L.join.length := by
+theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.length)
+    (hj : j < (nthLe L i hi).length) : ((L.map length).take i).Sum + j < L.join.length := by
   convert lt_of_lt_of_le (sum_take_map_length_lt1 L hi hj) (monotone_sum_take _ hi)
   have : L.length = (L.map length).length := by simp
   simp [this, -length_map]
@@ -138,15 +147,19 @@ theorem sum_take_map_length_lt2 (L : List (List α)) {i j : ℕ} (hi : i < L.len
 /-- The `n`-th element in a join of sublists is the `j`-th element of the `i`th sublist,
 where `n` can be obtained in terms of `i` and `j` by adding the lengths of all the sublists
 of index `< i`, and adding `j`. -/
-theorem nth_le_join (L : List (List α)) {i j : ℕ} (hi : i < L.length) (hj : j < (nthLe L i hi).length) :
-    nthLe L.join (((L.map length).take i).Sum + j) (sum_take_map_length_lt2 L hi hj) = nthLe (nthLe L i hi) j hj := by
-  rw [nth_le_take L.join (sum_take_map_length_lt2 L hi hj) (sum_take_map_length_lt1 L hi hj), nth_le_drop,
-    nth_le_of_eq (drop_take_succ_join_eq_nth_le L hi)]
+theorem nth_le_join (L : List (List α)) {i j : ℕ} (hi : i < L.length)
+    (hj : j < (nthLe L i hi).length) :
+    nthLe L.join (((L.map length).take i).Sum + j) (sum_take_map_length_lt2 L hi hj) =
+      nthLe (nthLe L i hi) j hj :=
+  by
+  rw [nth_le_take L.join (sum_take_map_length_lt2 L hi hj) (sum_take_map_length_lt1 L hi hj),
+    nth_le_drop, nth_le_of_eq (drop_take_succ_join_eq_nth_le L hi)]
 #align list.nth_le_join List.nth_le_join
 
 /-- Two lists of sublists are equal iff their joins coincide, as well as the lengths of the
 sublists. -/
-theorem eq_iff_join_eq (L L' : List (List α)) : L = L' ↔ L.join = L'.join ∧ map length L = map length L' := by
+theorem eq_iff_join_eq (L L' : List (List α)) :
+    L = L' ↔ L.join = L'.join ∧ map length L = map length L' := by
   refine' ⟨fun H => by simp [H], _⟩
   rintro ⟨join_eq, length_eq⟩
   apply ext_le
@@ -158,7 +171,8 @@ theorem eq_iff_join_eq (L L' : List (List α)) : L = L' ↔ L.join = L'.join ∧
     
 #align list.eq_iff_join_eq List.eq_iff_join_eq
 
-theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) : (L.drop (L.length - 1)).join = L.last h := by
+theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) :
+    (L.drop (L.length - 1)).join = L.last h := by
   induction L using List.reverseRecOn
   · cases h rfl
     
@@ -178,7 +192,8 @@ theorem append_join_map_append (L : List (List α)) (x : List α) :
 #align list.append_join_map_append List.append_join_map_append
 
 /-- Reversing a join is the same as reversing the order of parts and reversing all parts. -/
-theorem reverse_join (L : List (List α)) : L.join.reverse = (List.map List.reverse L).reverse.join := by
+theorem reverse_join (L : List (List α)) :
+    L.join.reverse = (List.map List.reverse L).reverse.join := by
   induction L
   · rfl
     
@@ -187,7 +202,8 @@ theorem reverse_join (L : List (List α)) : L.join.reverse = (List.map List.reve
 #align list.reverse_join List.reverse_join
 
 /-- Joining a reverse is the same as reversing all parts and reversing the joined result. -/
-theorem join_reverse (L : List (List α)) : L.reverse.join = (List.map List.reverse L).join.reverse := by
+theorem join_reverse (L : List (List α)) :
+    L.reverse.join = (List.map List.reverse L).join.reverse := by
   simpa [reverse_reverse] using congr_arg List.reverse (reverse_join L.reverse)
 #align list.join_reverse List.join_reverse
 

@@ -140,7 +140,8 @@ def randomR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g 
 #align rand.random_r Rand.randomR
 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
-def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g (Stream (x .. y)) := do
+def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) :
+    RandG g (Stream (x .. y)) := do
   let gen ← Uliftable.up (split g)
   pure <| corec_state (BoundedRandom.randomR g x y h) gen
 #align rand.random_series_r Rand.randomSeriesR
@@ -278,7 +279,9 @@ open Nat
 instance natBoundedRandom :
     BoundedRandom ℕ where randomR g inst x y hxy := do
     let z ← @Fin.random g inst (succ <| y - x) _
-    pure ⟨z + x, Nat.le_add_left _ _, by rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
+    pure
+        ⟨z + x, Nat.le_add_left _ _, by
+          rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
 #align nat_bounded_random natBoundedRandom
 
 /-- This `bounded_random` interval generates integers between `x` and
@@ -312,15 +315,16 @@ def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Random (Fin n)
 
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) := by
-  simp only [and_imp, Set.mem_Icc]
-  intro h₀ h₁
+  simp only [and_imp, Set.mem_Icc]; intro h₀ h₁
   constructor <;> [have h₂ := Bool.of_nat_le_of_nat h₀, have h₂ := Bool.of_nat_le_of_nat h₁] <;>
-    rw [Bool.of_nat_to_nat] at h₂ <;> exact h₂
+      rw [Bool.of_nat_to_nat] at h₂ <;>
+    exact h₂
 #align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_of_nat_mem_Icc_of_mem_Icc_to_nat
 
 instance :
     Random
-      Bool where Random g inst := (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_le _)
+      Bool where Random g inst :=
+    (Bool.ofNat ∘ Subtype.val) <$> @BoundedRandom.randomR ℕ _ _ g inst 0 1 (Nat.zero_le _)
 
 instance :
     BoundedRandom
@@ -336,12 +340,10 @@ def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=
   have h' : ∀ a : Fin (2 ^ n), a ∈ (x.toFin .. y.toFin) → Bitvec.ofFin a ∈ (x .. y) := by
-    simp only [and_imp, Set.mem_Icc]
-    intro z h₀ h₁
+    simp only [and_imp, Set.mem_Icc]; intro z h₀ h₁
     replace h₀ := Bitvec.of_fin_le_of_fin_of_le h₀
     replace h₁ := Bitvec.of_fin_le_of_fin_of_le h₁
-    rw [Bitvec.of_fin_to_fin] at h₀ h₁
-    constructor <;> assumption
+    rw [Bitvec.of_fin_to_fin] at h₀ h₁; constructor <;> assumption
   Subtype.map Bitvec.ofFin h' <$> Rand.randomR x.toFin y.toFin (Bitvec.to_fin_le_to_fin_of_le h)
 #align bitvec.random_r Bitvec.randomR
 

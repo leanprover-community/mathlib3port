@@ -174,8 +174,9 @@ theorem mul_div_mul_left (a b : G₀) (hc : c ≠ 0) : c * a / (c * b) = a / b :
   hc.IsUnit.mul_div_mul_left _ _
 #align mul_div_mul_left mul_div_mul_left
 
-theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb : b ≠ 0) (hd : d ≠ 0) (h : a / b = c / d) :
-    a * d = c * b := by rw [← mul_one a, ← div_self hb, ← mul_comm_div, h, div_mul_eq_mul_div, div_mul_cancel _ hd]
+theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb : b ≠ 0) (hd : d ≠ 0)
+    (h : a / b = c / d) : a * d = c * b := by
+  rw [← mul_one a, ← div_self hb, ← mul_comm_div, h, div_mul_eq_mul_div, div_mul_cancel _ hd]
 #align mul_eq_mul_of_div_eq_div mul_eq_mul_of_div_eq_div
 
 @[field_simps]
@@ -232,7 +233,7 @@ include G₀'
 /-- A monoid homomorphism between groups with zeros sending `0` to `0` sends `a⁻¹` to `(f a)⁻¹`. -/
 @[simp]
 theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
-  by_cases h : a = 0
+  by_cases h : a = 0;
   · simp [h]
     
   apply eq_inv_of_mul_eq_one_left
@@ -243,16 +244,6 @@ theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
 theorem map_div₀ : f (a / b) = f a / f b :=
   map_div' f (map_inv₀ f) a b
 #align map_div₀ map_div₀
-
-@[simp]
-theorem coe_inv₀ [HasLiftT G₀ G₀'] [CoeIsMonoidWithZeroHom G₀ G₀'] (a : G₀) : ↑a⁻¹ = (↑a : G₀')⁻¹ :=
-  map_inv₀ (MonoidWithZeroHom.coe G₀ G₀') a
-#align coe_inv₀ coe_inv₀
-
-@[simp]
-theorem coe_div₀ [HasLiftT G₀ G₀'] [CoeIsMonoidWithZeroHom G₀ G₀'] (a b : G₀) : ↑(a / b) = (↑a : G₀') / ↑b :=
-  map_div₀ (MonoidWithZeroHom.coe G₀ G₀') a b
-#align coe_div₀ coe_div₀
 
 end GroupWithZero
 

@@ -24,8 +24,8 @@ section
 
 open Ideal Ideal.Quotient
 
-theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h : (p : R) ∣ a - b) (k : ℕ) :
-    (p ^ (k + 1) : R) ∣ a ^ p ^ k - b ^ p ^ k := by
+theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h : (p : R) ∣ a - b)
+    (k : ℕ) : (p ^ (k + 1) : R) ∣ a ^ p ^ k - b ^ p ^ k := by
   induction' k with k ih
   · rwa [pow_one, pow_zero, pow_one, pow_one]
     
@@ -35,8 +35,8 @@ theorem dvd_sub_pow_of_dvd_sub {R : Type _} [CommRing R] {p : ℕ} {a b : R} (h 
   let f : R →+* R ⧸ I := mk I
   have hp : (p : R ⧸ I) = 0 := by rw [← map_nat_cast f, eq_zero_iff_mem, mem_span_singleton]
   rw [← mem_span_singleton, ← Ideal.Quotient.eq] at h
-  rw [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, RingHom.map_pow, RingHom.map_pow, h,
-    geom_sum₂_self, hp, zero_mul]
+  rw [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, RingHom.map_pow,
+    RingHom.map_pow, h, geom_sum₂_self, hp, zero_mul]
 #align dvd_sub_pow_of_dvd_sub dvd_sub_pow_of_dvd_sub
 
 end

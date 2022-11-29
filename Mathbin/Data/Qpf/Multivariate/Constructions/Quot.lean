@@ -38,7 +38,8 @@ variable {FG_repr : ∀ {α}, G α → F α}
 construct `mvqpf` instances by transporting them across
 surjective functions -/
 def quotientQpf (FG_abs_repr : ∀ {α} (x : G α), FG_abs (FG_repr x) = x)
-    (FG_abs_map : ∀ {α β} (f : α ⟹ β) (x : F α), FG_abs (f <$$> x) = f <$$> FG_abs x) : Mvqpf G where
+    (FG_abs_map : ∀ {α β} (f : α ⟹ β) (x : F α), FG_abs (f <$$> x) = f <$$> FG_abs x) :
+    Mvqpf G where
   p := q.p
   abs α p := FG_abs (abs p)
   repr α x := repr (FG_repr x)
@@ -76,8 +77,8 @@ def Quot1.mvfunctor : Mvfunctor (Quot1 R) where map := Quot1.map R Hfunc
 
 /-- `quot1` is a qpf -/
 noncomputable def relQuot : @Mvqpf _ (Quot1 R) (Mvqpf.Quot1.mvfunctor R Hfunc) :=
-  @quotientQpf n F _ q _ (Mvqpf.Quot1.mvfunctor R Hfunc) (fun α x => Quot.mk _ x) (fun α => Quot.out)
-    (fun α x => Quot.out_eq _) fun α β f x => rfl
+  @quotientQpf n F _ q _ (Mvqpf.Quot1.mvfunctor R Hfunc) (fun α x => Quot.mk _ x)
+    (fun α => Quot.out) (fun α x => Quot.out_eq _) fun α β f x => rfl
 #align mvqpf.rel_quot Mvqpf.relQuot
 
 end Rel

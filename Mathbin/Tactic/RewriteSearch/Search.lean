@@ -93,8 +93,8 @@ unsafe def mk_graph (conf : config) (rules : List (expr × Bool)) (eq : expr) : 
   let lhs_vertex : vertex := ⟨0, lhs, lhs_pp, Side.L, none⟩
   let rhs_vertex : vertex := ⟨1, rhs, rhs_pp, Side.R, none⟩
   return
-      ⟨conf, rules, [lhs_vertex, rhs_vertex].toBuffer, native.rb_map.of_list [(lhs_pp, [0]), (rhs_pp, [1])], none, lhs,
-        rhs⟩
+      ⟨conf, rules, [lhs_vertex, rhs_vertex].toBuffer,
+        native.rb_map.of_list [(lhs_pp, [0]), (rhs_pp, [1])], none, lhs, rhs⟩
 #align tactic.rewrite_search.mk_graph tactic.rewrite_search.mk_graph
 
 variable (g : graph)
@@ -154,7 +154,8 @@ private unsafe def add_rewrite (v : vertex) (rw : rewrite) : tactic graph := do
   match maybe_id with
     | some id => do
       let existing_vertex ← g id
-      if v = existing_vertex then return g else return { g with solving_edge := some ⟨v, existing_vertex, rw, rw⟩ }
+      if v = existing_vertex then return g
+        else return { g with solving_edge := some ⟨v, existing_vertex, rw, rw⟩ }
     | none => do
       let new_vertex_id := g
       let new_edge : edge := ⟨v, new_vertex_id, rw, rw⟩

@@ -22,7 +22,8 @@ namespace SimplexCategory
 
 open Simplicial Nnreal BigOperators Classical
 
-attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort CategoryTheory.ConcreteCategory.hasCoeToFun
+attribute [local instance]
+  CategoryTheory.ConcreteCategory.hasCoeToSort CategoryTheory.ConcreteCategory.hasCoeToFun
 
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
@@ -53,7 +54,8 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
       rw [Function.onFun, disjoint_iff_inf_le]
       intro e he
       apply h
-      simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he
+      simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter,
+        Finset.mem_inter] at he
       rw [← he.1, ← he.2]
       ⟩
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
@@ -67,7 +69,9 @@ theorem coe_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i
 @[continuity]
 theorem continuous_to_Top_map {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
   Continuous.subtype_mk
-    (continuous_pi fun i => (continuous_finset_sum _) fun j hj => (continuous_apply _).comp continuous_subtype_val) _
+    (continuous_pi fun i =>
+      (continuous_finset_sum _) fun j hj => (continuous_apply _).comp continuous_subtype_val)
+    _
 #align simplex_category.continuous_to_Top_map SimplexCategory.continuous_to_Top_map
 
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/
@@ -94,7 +98,8 @@ def toTop : SimplexCategory ⥤ TopCat where
       rw [Function.onFun, disjoint_iff_inf_le]
       intro e he
       apply h
-      simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter, Finset.mem_inter] at he
+      simp only [true_and_iff, Finset.inf_eq_inter, Finset.mem_univ, Finset.mem_filter,
+        Finset.mem_inter] at he
       rw [← he.1, ← he.2]
       
 #align simplex_category.to_Top SimplexCategory.toTop

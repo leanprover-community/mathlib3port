@@ -78,7 +78,8 @@ def map (f : α → β) (s : Stream α) : Stream β := fun n => f (nth s n)
 
 /-- Zip two streams using a binary operation:
 `stream.nth n (stream.zip f s₁ s₂) = f (stream.nth s₁) (stream.nth s₂)`. -/
-def zip (f : α → β → δ) (s₁ : Stream α) (s₂ : Stream β) : Stream δ := fun n => f (nth s₁ n) (nth s₂ n)
+def zip (f : α → β → δ) (s₁ : Stream α) (s₂ : Stream β) : Stream δ := fun n =>
+  f (nth s₁ n) (nth s₂ n)
 #align stream.zip Stream.zip
 
 /-- Enumerate a stream by tagging each element with its index. -/

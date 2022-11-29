@@ -23,8 +23,8 @@ This file defines local homeomorphisms.
 
 open TopologicalSpace
 
-variable {X Y Z : Type _} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z] (g : Y → Z) (f : X → Y)
-  (s : Set X) (t : Set Y)
+variable {X Y Z : Type _} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z] (g : Y → Z)
+  (f : X → Y) (s : Set X) (t : Set Y)
 
 /-- A function `f : X → Y` satisfies `is_locally_homeomorph_on f s` if each `x ∈ s` is contained in
 the source of some `e : local_homeomorph X Y` with `f = e`. -/
@@ -56,7 +56,8 @@ theorem map_nhds_eq (hf : IsLocallyHomeomorphOn f s) {x : X} (hx : x ∈ s) : (�
   he.symm ▸ e.map_nhds_eq hx
 #align is_locally_homeomorph_on.map_nhds_eq IsLocallyHomeomorphOn.map_nhds_eq
 
-protected theorem continuous_at (hf : IsLocallyHomeomorphOn f s) {x : X} (hx : x ∈ s) : ContinuousAt f x :=
+protected theorem continuous_at (hf : IsLocallyHomeomorphOn f s) {x : X} (hx : x ∈ s) :
+    ContinuousAt f x :=
   (hf.map_nhds_eq hx).le
 #align is_locally_homeomorph_on.continuous_at IsLocallyHomeomorphOn.continuous_at
 
@@ -64,8 +65,8 @@ protected theorem continuous_on (hf : IsLocallyHomeomorphOn f s) : ContinuousOn 
   ContinuousAt.continuous_on fun x => hf.ContinuousAt
 #align is_locally_homeomorph_on.continuous_on IsLocallyHomeomorphOn.continuous_on
 
-protected theorem comp (hg : IsLocallyHomeomorphOn g t) (hf : IsLocallyHomeomorphOn f s) (h : Set.MapsTo f s t) :
-    IsLocallyHomeomorphOn (g ∘ f) s := by
+protected theorem comp (hg : IsLocallyHomeomorphOn g t) (hf : IsLocallyHomeomorphOn f s)
+    (h : Set.MapsTo f s t) : IsLocallyHomeomorphOn (g ∘ f) s := by
   intro x hx
   obtain ⟨eg, hxg, rfl⟩ := hg (f x) (h hx)
   obtain ⟨ef, hxf, rfl⟩ := hf x hx
@@ -85,7 +86,8 @@ variable {f}
 theorem is_locally_homeomorph_iff_is_locally_homeomorph_on_univ :
     IsLocallyHomeomorph f ↔ IsLocallyHomeomorphOn f Set.univ := by
   simp only [IsLocallyHomeomorph, IsLocallyHomeomorphOn, Set.mem_univ, forall_true_left]
-#align is_locally_homeomorph_iff_is_locally_homeomorph_on_univ is_locally_homeomorph_iff_is_locally_homeomorph_on_univ
+#align
+  is_locally_homeomorph_iff_is_locally_homeomorph_on_univ is_locally_homeomorph_iff_is_locally_homeomorph_on_univ
 
 protected theorem IsLocallyHomeomorph.is_locally_homeomorph_on (hf : IsLocallyHomeomorph f) :
     IsLocallyHomeomorphOn f Set.univ :=
@@ -99,8 +101,10 @@ namespace IsLocallyHomeomorph
 /-- Proves that `f` satisfies `is_locally_homeomorph f`. The condition `h` is weaker than the
 definition of `is_locally_homeomorph f`, since it only requires `e : local_homeomorph X Y` to
 agree with `f` on its source `e.source`, as opposed to on the whole space `X`. -/
-theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀ y ∈ e.source, f y = e y) : IsLocallyHomeomorph f :=
-  is_locally_homeomorph_iff_is_locally_homeomorph_on_univ.mpr (IsLocallyHomeomorphOn.mk f Set.univ fun x hx => h x)
+theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀ y ∈ e.source, f y = e y) :
+    IsLocallyHomeomorph f :=
+  is_locally_homeomorph_iff_is_locally_homeomorph_on_univ.mpr
+    (IsLocallyHomeomorphOn.mk f Set.univ fun x hx => h x)
 #align is_locally_homeomorph.mk IsLocallyHomeomorph.mk
 
 variable {g f}
@@ -117,7 +121,8 @@ protected theorem is_open_map (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
   IsOpenMap.of_nhds_le fun x => ge_of_eq (hf.map_nhds_eq x)
 #align is_locally_homeomorph.is_open_map IsLocallyHomeomorph.is_open_map
 
-protected theorem comp (hg : IsLocallyHomeomorph g) (hf : IsLocallyHomeomorph f) : IsLocallyHomeomorph (g ∘ f) :=
+protected theorem comp (hg : IsLocallyHomeomorph g) (hf : IsLocallyHomeomorph f) :
+    IsLocallyHomeomorph (g ∘ f) :=
   is_locally_homeomorph_iff_is_locally_homeomorph_on_univ.mpr
     (hg.IsLocallyHomeomorphOn.comp hf.IsLocallyHomeomorphOn (Set.univ.maps_to_univ f))
 #align is_locally_homeomorph.comp IsLocallyHomeomorph.comp

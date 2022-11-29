@@ -39,13 +39,15 @@ export HasExistsAddOfLe (exists_add_of_le)
 
 -- See note [lower instance priority]
 @[to_additive]
-instance (priority := 100) Group.has_exists_mul_of_le (α : Type u) [Group α] [LE α] : HasExistsMulOfLe α :=
+instance (priority := 100) Group.has_exists_mul_of_le (α : Type u) [Group α] [LE α] :
+    HasExistsMulOfLe α :=
   ⟨fun a b hab => ⟨a⁻¹ * b, (mul_inv_cancel_left _ _).symm⟩⟩
 #align group.has_exists_mul_of_le Group.has_exists_mul_of_le
 
 section MulOneClass
 
-variable [MulOneClass α] [Preorder α] [ContravariantClass α α (· * ·) (· < ·)] [HasExistsMulOfLe α] {a b : α}
+variable [MulOneClass α] [Preorder α] [ContravariantClass α α (· * ·) (· < ·)] [HasExistsMulOfLe α]
+  {a b : α}
 
 @[to_additive]
 theorem exists_one_lt_mul_of_lt' (h : a < b) : ∃ c, 1 < c ∧ a * c = b := by
@@ -57,8 +59,8 @@ end MulOneClass
 
 section HasExistsMulOfLe
 
-variable [LinearOrder α] [DenselyOrdered α] [Monoid α] [HasExistsMulOfLe α] [CovariantClass α α (· * ·) (· < ·)]
-  [ContravariantClass α α (· * ·) (· < ·)] {a b : α}
+variable [LinearOrder α] [DenselyOrdered α] [Monoid α] [HasExistsMulOfLe α]
+  [CovariantClass α α (· * ·) (· < ·)] [ContravariantClass α α (· * ·) (· < ·)] {a b : α}
 
 @[to_additive]
 theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : a ≤ b :=
@@ -94,8 +96,8 @@ class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α,
 -/
 
 -- see Note [lower instance priority]
-instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedAddMonoid α] :
-    OrderBot α :=
+instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u)
+    [h : CanonicallyOrderedAddMonoid α] : OrderBot α :=
   { h with }
 #align canonically_ordered_add_monoid.to_order_bot CanonicallyOrderedAddMonoid.toOrderBot
 
@@ -117,15 +119,15 @@ class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, HasBo
 
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) CanonicallyOrderedMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedMonoid α] :
-    OrderBot α :=
+instance (priority := 100) CanonicallyOrderedMonoid.toOrderBot (α : Type u)
+    [h : CanonicallyOrderedMonoid α] : OrderBot α :=
   { h with }
 #align canonically_ordered_monoid.to_order_bot CanonicallyOrderedMonoid.toOrderBot
 
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) CanonicallyOrderedMonoid.has_exists_mul_of_le (α : Type u) [h : CanonicallyOrderedMonoid α] :
-    HasExistsMulOfLe α :=
+instance (priority := 100) CanonicallyOrderedMonoid.has_exists_mul_of_le (α : Type u)
+    [h : CanonicallyOrderedMonoid α] : HasExistsMulOfLe α :=
   { h with }
 #align canonically_ordered_monoid.has_exists_mul_of_le CanonicallyOrderedMonoid.has_exists_mul_of_le
 
@@ -172,7 +174,8 @@ theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
 #align le_iff_exists_mul le_iff_exists_mul
 
 @[to_additive]
-theorem le_iff_exists_mul' : a ≤ b ↔ ∃ c, b = c * a := by simpa only [mul_comm _ a] using le_iff_exists_mul
+theorem le_iff_exists_mul' : a ≤ b ↔ ∃ c, b = c * a := by
+  simpa only [mul_comm _ a] using le_iff_exists_mul
 #align le_iff_exists_mul' le_iff_exists_mul'
 
 @[simp, to_additive zero_le]
@@ -237,10 +240,8 @@ theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
 @[to_additive]
 theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c := by
   simp_rw [lt_iff_le_and_ne, and_comm', le_iff_exists_mul, ← exists_and_left, exists_prop]
-  apply exists_congr
-  intro c
-  rw [and_congr_left_iff, gt_iff_lt]
-  rintro rfl
+  apply exists_congr; intro c
+  rw [and_congr_left_iff, gt_iff_lt]; rintro rfl
   constructor
   · rw [one_lt_iff_ne_one]
     apply mt
@@ -271,7 +272,8 @@ theorem of_gt {M} [CanonicallyOrderedAddMonoid M] {x y : M} (h : x < y) : NeZero
 -- 1 < p is still an often-used `fact`, due to `nat.prime` implying it, and it implying `nontrivial`
 -- on `zmod`'s ring structure. We cannot just set this to be any `x < y`, else that becomes a
 -- metavariable and it will hugely slow down typeclass inference.
-instance (priority := 10) of_gt' {M} [CanonicallyOrderedAddMonoid M] [One M] {y : M} [Fact (1 < y)] : NeZero y :=
+instance (priority := 10) of_gt' {M} [CanonicallyOrderedAddMonoid M] [One M] {y : M}
+    [Fact (1 < y)] : NeZero y :=
   of_gt <| Fact.out <| 1 < y
 #align ne_zero.of_gt' NeZero.of_gt'
 
@@ -284,7 +286,8 @@ end NeZero
 /-- A canonically linear-ordered additive monoid is a canonically ordered additive monoid
     whose ordering is a linear order. -/
 @[protect_proj]
-class CanonicallyLinearOrderedAddMonoid (α : Type _) extends CanonicallyOrderedAddMonoid α, LinearOrder α
+class CanonicallyLinearOrderedAddMonoid (α : Type _) extends CanonicallyOrderedAddMonoid α,
+  LinearOrder α
 #align canonically_linear_ordered_add_monoid CanonicallyLinearOrderedAddMonoid
 
 /-- A canonically linear-ordered monoid is a canonically ordered monoid
@@ -301,7 +304,8 @@ variable [CanonicallyLinearOrderedMonoid α]
 @[to_additive]
 instance (priority := 100) CanonicallyLinearOrderedMonoid.semilatticeSup : SemilatticeSup α :=
   { LinearOrder.toLattice with }
-#align canonically_linear_ordered_monoid.semilattice_sup CanonicallyLinearOrderedMonoid.semilatticeSup
+#align
+  canonically_linear_ordered_monoid.semilattice_sup CanonicallyLinearOrderedMonoid.semilatticeSup
 
 @[to_additive]
 theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) := by
@@ -332,7 +336,9 @@ theorem min_one (a : α) : min a 1 = 1 :=
 #align min_one min_one
 
 /-- In a linearly ordered monoid, we are happy for `bot_eq_one` to be a `@[simp]` lemma. -/
-@[simp, to_additive "In a linearly ordered monoid, we are happy for `bot_eq_zero` to be a `@[simp]` lemma"]
+@[simp,
+  to_additive
+      "In a linearly ordered monoid, we are happy for `bot_eq_zero` to be a `@[simp]` lemma"]
 theorem bot_eq_one' : (⊥ : α) = 1 :=
   bot_eq_one
 #align bot_eq_one' bot_eq_one'

@@ -77,11 +77,12 @@ attribute [to_additive] GroupFilterBasis.toFilterBasis
 
 /-- `group_filter_basis` constructor in the commutative group case. -/
 @[to_additive "`add_group_filter_basis` constructor in the additive commutative group case."]
-def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G)) (nonempty : sets.Nonempty)
-    (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y) (one : ∀ U ∈ sets, (1 : G) ∈ U)
-    (mul : ∀ U ∈ sets, ∃ V ∈ sets, V * V ⊆ U) (inv : ∀ U ∈ sets, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) :
-    GroupFilterBasis G :=
-  { sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv, conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
+def groupFilterBasisOfComm {G : Type _} [CommGroup G] (sets : Set (Set G))
+    (nonempty : sets.Nonempty) (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ z ∈ sets, z ⊆ x ∩ y)
+    (one : ∀ U ∈ sets, (1 : G) ∈ U) (mul : ∀ U ∈ sets, ∃ V ∈ sets, V * V ⊆ U)
+    (inv : ∀ U ∈ sets, ∃ V ∈ sets, V ⊆ (fun x => x⁻¹) ⁻¹' U) : GroupFilterBasis G :=
+  { sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv,
+    conj' := fun x U U_in => ⟨U, U_in, by simp⟩ }
 #align group_filter_basis_of_comm groupFilterBasisOfComm
 
 namespace GroupFilterBasis
@@ -114,7 +115,8 @@ theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x₀ 
 
 /-- The trivial group filter basis consists of `{1}` only. The associated topology
 is discrete. -/
-@[to_additive "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
+@[to_additive
+      "The trivial additive group filter basis consists of `{0}` only. The associated\ntopology is discrete."]
 instance : Inhabited (GroupFilterBasis G) :=
   ⟨by
     refine' { sets := {{1}}, Nonempty := singleton_nonempty _.. }
@@ -139,17 +141,19 @@ instance : Inhabited (GroupFilterBasis G) :=
       ⟩
 
 @[to_additive]
-theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U := fun x x_in =>
-  ⟨1, x, one h, x_in, one_mul x⟩
+theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U ⊆ U * U :=
+  fun x x_in => ⟨1, x, one h, x_in, one_mul x⟩
 #align group_filter_basis.prod_subset_self GroupFilterBasis.prod_subset_self
 
 /-- The neighborhood function of a `group_filter_basis` -/
 @[to_additive "The neighborhood function of a `add_group_filter_basis`"]
-def n (B : GroupFilterBasis G) : G → Filter G := fun x => map (fun y => x * y) B.toFilterBasis.filter
+def n (B : GroupFilterBasis G) : G → Filter G := fun x =>
+  map (fun y => x * y) B.toFilterBasis.filter
 #align group_filter_basis.N GroupFilterBasis.n
 
 @[simp, to_additive]
-theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by simp only [N, one_mul, map_id']
+theorem N_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
+  simp only [N, one_mul, map_id']
 #align group_filter_basis.N_one GroupFilterBasis.N_one
 
 @[to_additive]
@@ -193,7 +197,8 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
 #align group_filter_basis.nhds_eq GroupFilterBasis.nhds_eq
 
 @[to_additive]
-theorem nhds_one_eq (B : GroupFilterBasis G) : @nhds G B.topology (1 : G) = B.toFilterBasis.filter := by
+theorem nhds_one_eq (B : GroupFilterBasis G) :
+    @nhds G B.topology (1 : G) = B.toFilterBasis.filter := by
   rw [B.nhds_eq]
   simp only [N, one_mul]
   exact map_id
@@ -207,13 +212,15 @@ theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
 #align group_filter_basis.nhds_has_basis GroupFilterBasis.nhds_has_basis
 
 @[to_additive]
-theorem nhds_one_has_basis (B : GroupFilterBasis G) : HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id := by
+theorem nhds_one_has_basis (B : GroupFilterBasis G) :
+    HasBasis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id := by
   rw [B.nhds_one_eq]
   exact B.to_filter_basis.has_basis
 #align group_filter_basis.nhds_one_has_basis GroupFilterBasis.nhds_one_has_basis
 
 @[to_additive]
-theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 := by
+theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 :=
+  by
   rw [B.nhds_one_has_basis.mem_iff]
   exact ⟨U, hU, rfl.subset⟩
 #align group_filter_basis.mem_nhds_one GroupFilterBasis.mem_nhds_one
@@ -223,7 +230,8 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
 topological group. -/
 @[to_additive
       "If a group is endowed with a topological structure coming from a group filter basis\nthen it's a topological group."]
-instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ := by
+instance (priority := 100) is_topological_group (B : GroupFilterBasis G) :
+    @TopologicalGroup G B.topology _ := by
   letI := B.topology
   have basis := B.nhds_one_has_basis
   have basis' := basis.prod basis
@@ -324,8 +332,8 @@ end RingFilterBasis
   Example : if `M` is a topological module then the neighbourhoods of zero are a
   `module_filter_basis`. Conversely given a `module_filter_basis` one can define a topology
   compatible with the module structure on `M`.  -/
-structure ModuleFilterBasis (R M : Type _) [CommRing R] [TopologicalSpace R] [AddCommGroup M] [Module R M] extends
-  AddGroupFilterBasis M where
+structure ModuleFilterBasis (R M : Type _) [CommRing R] [TopologicalSpace R] [AddCommGroup M]
+  [Module R M] extends AddGroupFilterBasis M where
   smul' : ∀ {U}, U ∈ sets → ∃ V ∈ 𝓝 (0 : R), ∃ W ∈ sets, V • W ⊆ U
   smul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ V ∈ sets, V ⊆ (fun x => x₀ • x) ⁻¹' U
   smul_right' : ∀ (m₀ : M) {U}, U ∈ sets → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ U
@@ -333,7 +341,8 @@ structure ModuleFilterBasis (R M : Type _) [CommRing R] [TopologicalSpace R] [Ad
 
 namespace ModuleFilterBasis
 
-variable {R M : Type _} [CommRing R] [TopologicalSpace R] [AddCommGroup M] [Module R M] (B : ModuleFilterBasis R M)
+variable {R M : Type _} [CommRing R] [TopologicalSpace R] [AddCommGroup M] [Module R M]
+  (B : ModuleFilterBasis R M)
 
 instance GroupFilterBasis.hasMem : Membership (Set M) (ModuleFilterBasis R M) :=
   ⟨fun s B => s ∈ B.sets⟩
@@ -394,11 +403,12 @@ by their neighborhoods of 0 to obtain the `has_continuous_smul` on the pre-exist
 
 But it turns out it's just easier to get it as a biproduct of the proof, so this is just a free
 quality-of-life improvement. -/
-theorem _root_.has_continuous_smul.of_basis_zero {ι : Type _} [TopologicalRing R] [TopologicalSpace M]
+theorem HasContinuousSmul.of_basis_zero {ι : Type _} [TopologicalRing R] [TopologicalSpace M]
     [TopologicalAddGroup M] {p : ι → Prop} {b : ι → Set M} (h : HasBasis (𝓝 0) p b)
     (hsmul : ∀ {i}, p i → ∃ V ∈ 𝓝 (0 : R), ∃ (j : _)(hj : p j), V • b j ⊆ b i)
     (hsmul_left : ∀ (x₀ : R) {i}, p i → ∃ (j : _)(hj : p j), b j ⊆ (fun x => x₀ • x) ⁻¹' b i)
-    (hsmul_right : ∀ (m₀ : M) {i}, p i → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ b i) : HasContinuousSmul R M := by
+    (hsmul_right : ∀ (m₀ : M) {i}, p i → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ b i) : HasContinuousSmul R M :=
+  by
   apply HasContinuousSmul.of_nhds_zero
   · rw [h.tendsto_right_iff]
     intro i hi
@@ -418,16 +428,18 @@ theorem _root_.has_continuous_smul.of_basis_zero {ι : Type _} [TopologicalRing 
     rcases hsmul_left x₀ hi with ⟨j, hj, hji⟩
     exact mem_of_superset (h.mem_of_mem hj) hji
     
-#align
-  module_filter_basis._root_.has_continuous_smul.of_basis_zero module_filter_basis._root_.has_continuous_smul.of_basis_zero
+#align has_continuous_smul.of_basis_zero HasContinuousSmul.of_basis_zero
 
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology := by
+instance (priority := 100) has_continuous_smul [TopologicalRing R] :
+    @HasContinuousSmul R M _ _ B.topology := by
   let B' := B.to_add_group_filter_basis
   letI := B'.topology
   haveI := B'.is_topological_add_group
-  exact HasContinuousSmul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left B.smul_right
+  exact
+    HasContinuousSmul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left
+      B.smul_right
 #align module_filter_basis.has_continuous_smul ModuleFilterBasis.has_continuous_smul
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/

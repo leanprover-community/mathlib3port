@@ -44,8 +44,8 @@ structure PreErgodic (μ : Measure α := by exact MeasureTheory.MeasureSpace.vol
 /-- A map `f : α → α` is said to be ergodic with respect to a measure `μ` if it is measure
 preserving and pre-ergodic. -/
 @[nolint has_nonempty_instance]
-structure Ergodic (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends MeasurePreserving f μ μ,
-  PreErgodic f μ : Prop
+structure Ergodic (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
+  MeasurePreserving f μ μ, PreErgodic f μ : Prop
 #align ergodic Ergodic
 
 /-- A map `f : α → α` is said to be quasi ergodic with respect to a measure `μ` if it is quasi
@@ -59,13 +59,14 @@ variable {f} {μ : Measure α}
 
 namespace PreErgodic
 
-theorem measure_self_or_compl_eq_zero (hf : PreErgodic f μ) (hs : MeasurableSet s) (hs' : f ⁻¹' s = s) :
-    μ s = 0 ∨ μ (sᶜ) = 0 := by simpa using hf.ae_empty_or_univ hs hs'
+theorem measure_self_or_compl_eq_zero (hf : PreErgodic f μ) (hs : MeasurableSet s)
+    (hs' : f ⁻¹' s = s) : μ s = 0 ∨ μ (sᶜ) = 0 := by simpa using hf.ae_empty_or_univ hs hs'
 #align pre_ergodic.measure_self_or_compl_eq_zero PreErgodic.measure_self_or_compl_eq_zero
 
 /-- On a probability space, the (pre)ergodicity condition is a zero one law. -/
-theorem prob_eq_zero_or_one [IsProbabilityMeasure μ] (hf : PreErgodic f μ) (hs : MeasurableSet s) (hs' : f ⁻¹' s = s) :
-    μ s = 0 ∨ μ s = 1 := by simpa [hs] using hf.measure_self_or_compl_eq_zero hs hs'
+theorem prob_eq_zero_or_one [IsProbabilityMeasure μ] (hf : PreErgodic f μ) (hs : MeasurableSet s)
+    (hs' : f ⁻¹' s = s) : μ s = 0 ∨ μ s = 1 := by
+  simpa [hs] using hf.measure_self_or_compl_eq_zero hs hs'
 #align pre_ergodic.prob_eq_zero_or_one PreErgodic.prob_eq_zero_or_one
 
 theorem ofIterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=

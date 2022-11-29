@@ -90,9 +90,9 @@ theorem pow_down [Pow α β] (a : ULift.{v} α) (b : β) : (a ^ b).down = a.down
 /-- The multiplicative equivalence between `ulift α` and `α`.
 -/
 @[to_additive "The additive equivalence between `ulift α` and `α`."]
-def _root_.mul_equiv.ulift [Mul α] : ULift α ≃* α :=
+def MulEquiv.ulift [Mul α] : ULift α ≃* α :=
   { Equiv.ulift with map_mul' := fun x y => rfl }
-#align ulift._root_.mul_equiv.ulift ulift._root_.mul_equiv.ulift
+#align mul_equiv.ulift MulEquiv.ulift
 
 @[to_additive]
 instance semigroup [Semigroup α] : Semigroup (ULift α) :=
@@ -119,7 +119,8 @@ instance monoid [Monoid α] : Monoid (ULift α) :=
 #align ulift.monoid ULift.monoid
 
 instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=
-  { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩, nat_cast_zero := congr_arg ULift.up Nat.cast_zero,
+  { ULift.hasOne, ULift.addMonoid with natCast := fun n => ⟨n⟩,
+    nat_cast_zero := congr_arg ULift.up Nat.cast_zero,
     nat_cast_succ := fun n => congr_arg ULift.up (Nat.cast_succ _) }
 #align ulift.add_monoid_with_one ULift.addMonoidWithOne
 
@@ -143,13 +144,14 @@ instance commMonoidWithZero [CommMonoidWithZero α] : CommMonoidWithZero (ULift 
 
 @[to_additive]
 instance divInvMonoid [DivInvMonoid α] : DivInvMonoid (ULift α) :=
-  Equiv.ulift.Injective.DivInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
-    rfl
+  Equiv.ulift.Injective.DivInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.div_inv_monoid ULift.divInvMonoid
 
 @[to_additive]
 instance group [Group α] : Group (ULift α) :=
-  Equiv.ulift.Injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.Injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.group ULift.group
 
 instance addGroupWithOne [AddGroupWithOne α] : AddGroupWithOne (ULift α) :=
@@ -165,17 +167,18 @@ theorem int_cast_down [AddGroupWithOne α] (n : ℤ) : (n : ULift α).down = n :
 
 @[to_additive]
 instance commGroup [CommGroup α] : CommGroup (ULift α) :=
-  Equiv.ulift.Injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.Injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_group ULift.commGroup
 
 instance groupWithZero [GroupWithZero α] : GroupWithZero (ULift α) :=
-  Equiv.ulift.Injective.GroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    fun _ _ => rfl
+  Equiv.ulift.Injective.GroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.group_with_zero ULift.groupWithZero
 
 instance commGroupWithZero [CommGroupWithZero α] : CommGroupWithZero (ULift α) :=
-  Equiv.ulift.Injective.CommGroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    fun _ _ => rfl
+  Equiv.ulift.Injective.CommGroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_group_with_zero ULift.commGroupWithZero
 
 @[to_additive AddLeftCancelSemigroup]

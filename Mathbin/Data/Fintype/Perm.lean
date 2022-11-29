@@ -41,7 +41,8 @@ theorem length_perms_of_list : ∀ l : List α, length (permsOfList l) = l.lengt
     cc
 #align length_perms_of_list length_perms_of_list
 
-theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x → x ∈ l) : f ∈ permsOfList l := by
+theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x → x ∈ l) :
+    f ∈ permsOfList l := by
   induction' l with a l IH generalizing f h
   · exact List.mem_singleton.2 (Equiv.ext fun x => Decidable.by_contradiction <| h _)
     
@@ -58,7 +59,8 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
       apply hx
       simp only [mul_apply, swap_apply_right]
     refine' List.mem_of_ne_of_mem hxa (h x fun h => _)
-    simp only [h, mul_apply, swap_apply_def, mul_apply, Ne.def, apply_eq_iff_eq] at hx <;> split_ifs  at hx
+    simp only [h, mul_apply, swap_apply_def, mul_apply, Ne.def, apply_eq_iff_eq] at hx <;>
+      split_ifs  at hx
     exacts[hxa (h.symm.trans h_1), hx h]
   suffices f ∈ permsOfList l ∨ ∃ b ∈ l, ∃ g ∈ permsOfList l, swap a b * g = f by
     simpa only [permsOfList, exists_prop, List.mem_map, mem_append, List.mem_bind]
@@ -69,12 +71,14 @@ theorem mem_perms_of_list_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠
     
 #align mem_perms_of_list_of_mem mem_perms_of_list_of_mem
 
-theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
+theorem mem_of_mem_perms_of_list :
+    ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
   | [], f, h => by
     have : f = 1 := by simpa [permsOfList] using h
     rw [this] <;> simp
   | a :: l, f, h =>
-    (mem_append.1 h).elim (fun h x hx => mem_cons_of_mem _ (mem_of_mem_perms_of_list h hx)) fun h x hx =>
+    (mem_append.1 h).elim (fun h x hx => mem_cons_of_mem _ (mem_of_mem_perms_of_list h hx))
+      fun h x hx =>
       let ⟨y, hy, hy'⟩ := List.mem_bind.1 h
       let ⟨g, hg₁, hg₂⟩ := List.mem_map.1 hy'
       if hxa : x = a then by simp [hxa]
@@ -84,10 +88,12 @@ theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : Perm α}, f ∈ permsO
           mem_cons_of_mem _ <|
             mem_of_mem_perms_of_list hg₁ <| by
               rw [eq_inv_mul_iff_mul_eq.2 hg₂, mul_apply, swap_inv, swap_apply_def] <;>
-                split_ifs <;> [exact Ne.symm hxy, exact Ne.symm hxa, exact hx]
+                  split_ifs <;>
+                [exact Ne.symm hxy, exact Ne.symm hxa, exact hx]
 #align mem_of_mem_perms_of_list mem_of_mem_perms_of_list
 
-theorem mem_perms_of_list_iff {l : List α} {f : Perm α} : f ∈ permsOfList l ↔ ∀ {x}, f x ≠ x → x ∈ l :=
+theorem mem_perms_of_list_iff {l : List α} {f : Perm α} :
+    f ∈ permsOfList l ↔ ∀ {x}, f x ≠ x → x ∈ l :=
   ⟨mem_of_mem_perms_of_list, mem_perms_of_list_of_mem⟩
 #align mem_perms_of_list_iff mem_perms_of_list_iff
 
@@ -104,16 +110,19 @@ theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).
           ⟨fun _ _ => hln'.map fun _ _ => mul_left_cancel, fun i j hj hij x hx₁ hx₂ =>
             let ⟨f, hf⟩ := List.mem_map.1 hx₁
             let ⟨g, hg⟩ := List.mem_map.1 hx₂
-            have hix : x a = nth_le l i (lt_trans hij hj) := by rw [← hf.2, mul_apply, hmeml hf.1, swap_apply_left]
+            have hix : x a = nth_le l i (lt_trans hij hj) := by
+              rw [← hf.2, mul_apply, hmeml hf.1, swap_apply_left]
             have hiy : x a = nth_le l j hj := by rw [← hg.2, mul_apply, hmeml hg.1, swap_apply_left]
             (absurd (hf.2.trans hg.2.symm)) fun h =>
-              ne_of_lt hij <| nodup_iff_nth_le_inj.1 hl' i j (lt_trans hij hj) hj <| by rw [← hix, hiy]⟩,
+              ne_of_lt hij <|
+                nodup_iff_nth_le_inj.1 hl' i j (lt_trans hij hj) hj <| by rw [← hix, hiy]⟩,
           fun f hf₁ hf₂ =>
           let ⟨x, hx, hx'⟩ := List.mem_bind.1 hf₂
           let ⟨g, hg⟩ := List.mem_map.1 hx'
           have hgxa : g⁻¹ x = a := f.Injective <| by rw [hmeml hf₁, ← hg.2] <;> simp
           have hxa : x ≠ a := fun h => (List.nodup_cons.1 hl).1 (h ▸ hx)
-          (List.nodup_cons.1 hl).1 <| hgxa ▸ mem_of_mem_perms_of_list hg.1 (by rwa [apply_inv_self, hgxa])⟩
+          (List.nodup_cons.1 hl).1 <|
+            hgxa ▸ mem_of_mem_perms_of_list hg.1 (by rwa [apply_inv_self, hgxa])⟩
 #align nodup_perms_of_list nodup_perms_of_list
 
 /-- Given a finset, produce the finset of all permutations of its elements. -/
@@ -125,7 +134,8 @@ def permsOfFinset (s : Finset α) : Finset (Perm α) :=
     s.2
 #align perms_of_finset permsOfFinset
 
-theorem mem_perms_of_finset_iff : ∀ {s : Finset α} {f : Perm α}, f ∈ permsOfFinset s ↔ ∀ {x}, f x ≠ x → x ∈ s := by
+theorem mem_perms_of_finset_iff :
+    ∀ {s : Finset α} {f : Perm α}, f ∈ permsOfFinset s ↔ ∀ {x}, f x ≠ x → x ∈ s := by
   rintro ⟨⟨l⟩, hs⟩ f <;> exact mem_perms_of_list_iff
 #align mem_perms_of_finset_iff mem_perms_of_finset_iff
 
@@ -150,7 +160,8 @@ theorem Fintype.card_perm [Fintype α] : Fintype.card (Perm α) = (Fintype.card 
   Subsingleton.elim (@fintypePerm α _ _) (@Equiv.fintype α α _ _ _ _) ▸ card_perms_of_finset _
 #align fintype.card_perm Fintype.card_perm
 
-theorem Fintype.card_equiv [Fintype α] [Fintype β] (e : α ≃ β) : Fintype.card (α ≃ β) = (Fintype.card α)! :=
+theorem Fintype.card_equiv [Fintype α] [Fintype β] (e : α ≃ β) :
+    Fintype.card (α ≃ β) = (Fintype.card α)! :=
   Fintype.card_congr (equivCongr (Equiv.refl α) e) ▸ Fintype.card_perm
 #align fintype.card_equiv Fintype.card_equiv
 

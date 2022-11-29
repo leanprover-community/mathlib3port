@@ -49,15 +49,17 @@ theorem embedding_of_subset_coe : embeddingOfSubset x a n = dist a (x n) - dist 
 #align Kuratowski_embedding.embedding_of_subset_coe KuratowskiEmbedding.embedding_of_subset_coe
 
 /-- The embedding map is always a semi-contraction. -/
-theorem embedding_of_subset_dist_le (a b : α) : dist (embeddingOfSubset x a) (embeddingOfSubset x b) ≤ dist a b := by
+theorem embedding_of_subset_dist_le (a b : α) :
+    dist (embeddingOfSubset x a) (embeddingOfSubset x b) ≤ dist a b := by
   refine' lp.norm_le_of_forall_le dist_nonneg fun n => _
   simp only [lp.coe_fn_sub, Pi.sub_apply, embedding_of_subset_coe, Real.dist_eq]
   convert abs_dist_sub_le a b (x n) using 2
   ring
-#align Kuratowski_embedding.embedding_of_subset_dist_le KuratowskiEmbedding.embedding_of_subset_dist_le
+#align
+  Kuratowski_embedding.embedding_of_subset_dist_le KuratowskiEmbedding.embedding_of_subset_dist_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
 theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
   refine' Isometry.ofDistEq fun a b => _
@@ -75,11 +77,10 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
         ring
       _ ≤ 2 * dist a (x n) + |dist b (x n) - dist a (x n)| := by
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add_left, \",\", expr le_abs_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-      _ ≤ 2 * (e / 2) + |embedding_of_subset x b n - embedding_of_subset x a n| := by
-        rw [C]
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add_left, \",\", expr le_abs_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      _ ≤ 2 * (e / 2) + |embedding_of_subset x b n - embedding_of_subset x a n| := by rw [C];
         trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr hn.le, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr hn.le, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error";
         norm_num
       _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) := by
         have :
@@ -87,16 +88,18 @@ theorem embeddingOfSubsetIsometry (H : DenseRange x) : Isometry (embeddingOfSubs
             dist (embedding_of_subset x b) (embedding_of_subset x a) :=
           by
           simpa [dist_eq_norm] using
-            lp.norm_apply_le_norm Ennreal.top_ne_zero (embedding_of_subset x b - embedding_of_subset x a) n
+            lp.norm_apply_le_norm Ennreal.top_ne_zero
+              (embedding_of_subset x b - embedding_of_subset x a) n
         nlinarith
       _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by ring
       
   simpa [dist_comm] using this
-#align Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embeddingOfSubsetIsometry
+#align
+  Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embeddingOfSubsetIsometry
 
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
-theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] : ∃ f : α → ℓ_infty_ℝ, Isometry f :=
-  by
+theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] :
+    ∃ f : α → ℓ_infty_ℝ, Isometry f := by
   cases' (univ : Set α).eq_empty_or_nonempty with h h
   · use fun _ => 0
     intro x
@@ -111,7 +114,8 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     -- Use embedding_of_subset to construct the desired isometry
     exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
     
-#align Kuratowski_embedding.exists_isometric_embedding KuratowskiEmbedding.exists_isometric_embedding
+#align
+  Kuratowski_embedding.exists_isometric_embedding KuratowskiEmbedding.exists_isometric_embedding
 
 end kuratowskiEmbedding
 
@@ -129,8 +133,8 @@ protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [S
 #align Kuratowski_embedding.isometry kuratowskiEmbedding.isometry
 
 /-- Version of the Kuratowski embedding for nonempty compacts -/
-def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α] [Nonempty α] :
-    NonemptyCompacts ℓ_infty_ℝ where
+def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α]
+    [Nonempty α] : NonemptyCompacts ℓ_infty_ℝ where
   carrier := range (kuratowskiEmbedding α)
   is_compact' := is_compact_range (kuratowskiEmbedding.isometry α).Continuous
   nonempty' := range_nonempty _

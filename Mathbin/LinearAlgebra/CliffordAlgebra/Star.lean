@@ -33,7 +33,8 @@ namespace CliffordAlgebra
 
 instance : StarRing (CliffordAlgebra Q) where
   star x := reverse (involute x)
-  star_involutive x := by simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
+  star_involutive x := by
+    simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
   star_mul x y := by simp only [map_mul, reverse.map_mul]
   star_add x y := by simp only [map_add]
 
@@ -58,7 +59,8 @@ theorem star_smul (r : R) (x : CliffordAlgebra Q) : star (r • x) = r • star 
 #align clifford_algebra.star_smul CliffordAlgebra.star_smul
 
 @[simp]
-theorem star_algebra_map (r : R) : star (algebraMap R (CliffordAlgebra Q) r) = algebraMap R (CliffordAlgebra Q) r := by
+theorem star_algebra_map (r : R) :
+    star (algebraMap R (CliffordAlgebra Q) r) = algebraMap R (CliffordAlgebra Q) r := by
   rw [star_def, involute.commutes, reverse.commutes]
 #align clifford_algebra.star_algebra_map CliffordAlgebra.star_algebra_map
 

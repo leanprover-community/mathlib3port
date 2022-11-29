@@ -108,7 +108,8 @@ structure AlmostMono {α ι κ : Type _} (C : (ι → Option α) → κ) where
   has_color : ∀ x : α, C (line (some x)) = color
 #align combinatorics.line.almost_mono Combinatorics.Line.AlmostMono
 
-instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (AlmostMono fun v : ι → Option α => (default : κ)) :=
+instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] :
+    Inhabited (AlmostMono fun v : ι → Option α => (default : κ)) :=
   ⟨{ line := default, Color := default, has_color := fun _ => rfl }⟩
 
 /-- The type of collections of lines such that
@@ -159,8 +160,8 @@ theorem apply_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i = 
   simp only [Option.get_or_else_none, h, l.apply]
 #align combinatorics.line.apply_none Combinatorics.Line.apply_none
 
-theorem apply_of_ne_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i ≠ none) : some (l x i) = l.idxFun i := by
-  rw [l.apply, Option.get_or_else_of_ne_none h]
+theorem apply_of_ne_none {α ι} (l : Line α ι) (x : α) (i : ι) (h : l.idxFun i ≠ none) :
+    some (l x i) = l.idxFun i := by rw [l.apply, Option.get_or_else_of_ne_none h]
 #align combinatorics.line.apply_of_ne_none Combinatorics.Line.apply_of_ne_none
 
 @[simp]
@@ -169,19 +170,22 @@ theorem map_apply {α α' ι} (f : α → α') (l : Line α ι) (x : α) : l.map
 #align combinatorics.line.map_apply Combinatorics.Line.map_apply
 
 @[simp]
-theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) : l.vertical v x = Sum.elim v (l x) := by
+theorem vertical_apply {α ι ι'} (v : ι → α) (l : Line α ι') (x : α) :
+    l.vertical v x = Sum.elim v (l x) := by
   funext i
   cases i <;> rfl
 #align combinatorics.line.vertical_apply Combinatorics.Line.vertical_apply
 
 @[simp]
-theorem horizontal_apply {α ι ι'} (l : Line α ι) (v : ι' → α) (x : α) : l.horizontal v x = Sum.elim (l x) v := by
+theorem horizontal_apply {α ι ι'} (l : Line α ι) (v : ι' → α) (x : α) :
+    l.horizontal v x = Sum.elim (l x) v := by
   funext i
   cases i <;> rfl
 #align combinatorics.line.horizontal_apply Combinatorics.Line.horizontal_apply
 
 @[simp]
-theorem prod_apply {α ι ι'} (l : Line α ι) (l' : Line α ι') (x : α) : l.Prod l' x = Sum.elim (l x) (l' x) := by
+theorem prod_apply {α ι ι'} (l : Line α ι) (l' : Line α ι') (x : α) :
+    l.Prod l' x = Sum.elim (l x) (l' x) := by
   funext i
   cases i <;> rfl
 #align combinatorics.line.prod_apply Combinatorics.Line.prod_apply
@@ -224,9 +228,7 @@ private theorem exists_mono_in_high_dimension' :
       by_cases h : Nonempty α
       on_goal 2 =>
       refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
-      rintro (_ | ⟨a⟩)
-      rfl
-      exact (h ⟨a⟩).elim
+      rintro (_ | ⟨a⟩); rfl; exact (h ⟨a⟩).elim
       -- The key idea is to show that for every `r`, in high dimension we can either find
       -- `r` color focused lines or a monochromatic line.
       suffices key :
@@ -314,7 +316,8 @@ private theorem exists_mono_in_high_dimension' :
       -- Finally, we really do have `r+1` lines!
       · rw [Multiset.card_cons, Multiset.card_map, sr]
         )
-#align combinatorics.line.exists_mono_in_high_dimension' combinatorics.line.exists_mono_in_high_dimension'
+#align
+  combinatorics.line.exists_mono_in_high_dimension' combinatorics.line.exists_mono_in_high_dimension'
 
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
@@ -324,27 +327,29 @@ theorem exists_mono_in_high_dimension (α : Type u) [Finite α] (κ : Type v) [F
   ⟨ι, ιfin, fun C =>
     let ⟨l, c, hc⟩ := hι (ULift.up ∘ C)
     ⟨l, c.down, fun x => by rw [← hc]⟩⟩
-#align combinatorics.line.exists_mono_in_high_dimension Combinatorics.Line.exists_mono_in_high_dimension
+#align
+  combinatorics.line.exists_mono_in_high_dimension Combinatorics.Line.exists_mono_in_high_dimension
 
 end Line
 
 /-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
 monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
-theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finset M) [Finite κ] (C : M → κ) :
-    ∃ a > 0, ∃ (b : M)(c : κ), ∀ s ∈ S, C (a • s + b) = c := by
+theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finset M) [Finite κ]
+    (C : M → κ) : ∃ a > 0, ∃ (b : M)(c : κ), ∀ s ∈ S, C (a • s + b) = c := by
   obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ
   skip
   specialize hι fun v => C <| ∑ i, v i
   obtain ⟨l, c, hl⟩ := hι
   set s : Finset ι := { i ∈ Finset.univ | l.idx_fun i = none } with hs
-  refine' ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getOrElse 0, c, _⟩
+  refine'
+    ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getOrElse 0,
+      c, _⟩
   · rw [hs, Finset.sep_def, Finset.mem_filter]
     exact ⟨Finset.mem_univ _, l.proper.some_spec⟩
     
   intro x xs
   rw [← hl ⟨x, xs⟩]
-  clear hl
-  congr
+  clear hl; congr
   rw [← Finset.sum_add_sum_compl s]
   congr 1
   · rw [← Finset.sum_const]

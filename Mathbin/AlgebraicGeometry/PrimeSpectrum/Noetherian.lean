@@ -21,7 +21,7 @@ variable (R : Type u) [CommRing R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
@@ -54,12 +54,15 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
 #align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_prime_spectrum_prod_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
-theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {I : Ideal A} (h_nzI : I ≠ ⊥) :
-    ∃ Z : Multiset (PrimeSpectrum A), Multiset.prod (Z.map asIdeal) ≤ I ∧ Multiset.prod (Z.map asIdeal) ≠ ⊥ := by
+theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {I : Ideal A}
+    (h_nzI : I ≠ ⊥) :
+    ∃ Z : Multiset (PrimeSpectrum A),
+      Multiset.prod (Z.map asIdeal) ≤ I ∧ Multiset.prod (Z.map asIdeal) ≠ ⊥ :=
+  by
   revert h_nzI
   refine' IsNoetherian.induction (fun (M : Ideal A) hgt => _) I
   intro h_nzM
@@ -67,7 +70,8 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
   apply IsDomain.to_nontrivial A
   by_cases h_topM : M = ⊤
   · rcases h_topM with rfl
-    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by apply ring.not_is_field_iff_exists_prime.mp h_fA
+    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by
+      apply ring.not_is_field_iff_exists_prime.mp h_fA
     use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
     rwa [Multiset.map_singleton, Multiset.prod_singleton]
     

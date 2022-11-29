@@ -34,7 +34,8 @@ theorem cast_neg_nat_cast {R} [Field R] (n : ℕ) : ((-n : ℤ) : R) = -n := by 
 #align int.cast_neg_nat_cast Int.cast_neg_nat_cast
 
 @[simp]
-theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) : ((m / n : ℤ) : α) = m / n := by
+theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
+    ((m / n : ℤ) : α) = m / n := by
   rcases n_dvd with ⟨k, rfl⟩
   have : n ≠ 0 := by
     rintro rfl

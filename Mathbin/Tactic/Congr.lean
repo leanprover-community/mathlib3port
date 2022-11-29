@@ -40,7 +40,8 @@ unsafe def apply_iff_congr_core : tactic Unit :=
  with `x = y`. Also has support for `==` and `↔`. -/
 unsafe def congr_core' : tactic Unit := do
   let tgt ← target
-  apply_eq_congr_core tgt <|> apply_heq_congr_core <|> apply_iff_congr_core <|> fail "congr tactic failed"
+  apply_eq_congr_core tgt <|>
+      apply_heq_congr_core <|> apply_iff_congr_core <|> fail "congr tactic failed"
 #align tactic.congr_core' tactic.congr_core'
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -77,7 +78,8 @@ unsafe def congr' : Option ℕ → tactic Unit
       assumption <|>
         reflexivity Transparency.none <|>
           by_proof_irrel <|>
-            (guard (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
+            (guard (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|>
+              reflexivity
 #align tactic.congr' tactic.congr'
 
 namespace Interactive
@@ -99,7 +101,8 @@ the depth of recursive applications.
 unsafe def congr' (n : parse (parser.optional (with_desc "n" small_nat))) :
     parse
         (parser.optional
-          (tk "with" *> Prod.mk <$> parser.many rintro_patt_parse_hi <*> parser.optional (tk ":" *> small_nat))) →
+          (tk "with" *> Prod.mk <$> parser.many rintro_patt_parse_hi <*>
+            parser.optional (tk ":" *> small_nat))) →
       tactic Unit
   | none => tactic.congr' n
   | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p.join m $> ()))
@@ -148,7 +151,8 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
 
 add_tactic_doc
   { Name := "congr'", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr],
+    declNames :=
+      [`tactic.interactive.congr', `tactic.interactive.congr, `tactic.interactive.rcongr],
     tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.congr' }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -212,7 +216,17 @@ add_tactic_doc
           let
             v
               ←
-              to_expr ( if sym . isSome then ` `( $ ( src ) = $ ( tgt ) ) else ` `( $ ( tgt ) = $ ( src ) ) ) true false
+              to_expr
+                  (
+                      if
+                        sym . isSome
+                        then
+                        ` `( $ ( src ) = $ ( tgt ) )
+                        else
+                        ` `( $ ( tgt ) = $ ( src ) )
+                      )
+                    true
+                    false
                 >>=
                 mk_meta_var
           ( if sym then mk_eq_mp v r else mk_eq_mpr v r ) >>= tactic.exact
@@ -237,7 +251,8 @@ it will generate equality proof obligations using `congr' n` to resolve discrepa
 `convert` takes a proof term.
 That is, `convert_to g using n` is equivalent to `convert (_ : g) using n`.
 -/
-unsafe def convert_to (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
+unsafe def convert_to (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) :
+    tactic Unit :=
   match n with
   | none => convert_to_core r >> sorry
   | some 0 => convert_to_core r
@@ -255,14 +270,15 @@ begin
 end
 ```
 -/
-unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
+unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) :
+    tactic Unit :=
   andthen (convert_to r n) (try ac_refl)
 #align tactic.interactive.ac_change tactic.interactive.ac_change
 
 add_tactic_doc
   { Name := "convert_to", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.convert_to, `tactic.interactive.ac_change], tags := ["congruence"],
-    inheritDescriptionFrom := `tactic.interactive.convert_to }
+    declNames := [`tactic.interactive.convert_to, `tactic.interactive.ac_change],
+    tags := ["congruence"], inheritDescriptionFrom := `tactic.interactive.convert_to }
 
 end Interactive
 

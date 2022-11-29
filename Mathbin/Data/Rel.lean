@@ -86,14 +86,11 @@ def comp (r : Rel α β) (s : Rel β γ) : Rel α γ := fun x z => ∃ y, r x y 
 local infixr:0 " ∘ " => Rel.comp
 
 theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) ∘ t) = (r ∘ s ∘ t) := by
-  unfold comp
-  ext (x w)
-  constructor
+  unfold comp; ext (x w); constructor
   · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩
     exact ⟨y, rxy, z, syz, tzw⟩
     
-  rintro ⟨y, rxy, z, syz, tzw⟩
-  exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
+  rintro ⟨y, rxy, z, syz, tzw⟩; exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
 #align rel.comp_assoc Rel.comp_assoc
 
 @[simp]
@@ -129,7 +126,8 @@ theorem mem_image (y : β) (s : Set α) : y ∈ image r s ↔ ∃ x ∈ s, r x y
   Iff.rfl
 #align rel.mem_image Rel.mem_image
 
-theorem image_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.image r.image := fun s t h y ⟨x, xs, rxy⟩ => ⟨x, h xs, rxy⟩
+theorem image_subset : ((· ⊆ ·) ⇒ (· ⊆ ·)) r.image r.image := fun s t h y ⟨x, xs, rxy⟩ =>
+  ⟨x, h xs, rxy⟩
 #align rel.image_subset Rel.image_subset
 
 theorem image_mono : Monotone r.image :=
@@ -141,7 +139,9 @@ theorem image_inter (s t : Set α) : r.image (s ∩ t) ⊆ r.image s ∩ r.image
 #align rel.image_inter Rel.image_inter
 
 theorem image_union (s t : Set α) : r.image (s ∪ t) = r.image s ∪ r.image t :=
-  le_antisymm (fun y ⟨x, xst, rxy⟩ => xst.elim (fun xs => Or.inl ⟨x, ⟨xs, rxy⟩⟩) fun xt => Or.inr ⟨x, ⟨xt, rxy⟩⟩)
+  le_antisymm
+    (fun y ⟨x, xst, rxy⟩ =>
+      xst.elim (fun xs => Or.inl ⟨x, ⟨xs, rxy⟩⟩) fun xt => Or.inr ⟨x, ⟨xt, rxy⟩⟩)
     (r.image_mono.le_map_sup s t)
 #align rel.image_union Rel.image_union
 
@@ -152,14 +152,11 @@ theorem image_id (s : Set α) : image (@Eq α) s = s := by
 #align rel.image_id Rel.image_id
 
 theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (image r t) := by
-  ext z
-  simp only [mem_image]
-  constructor
+  ext z; simp only [mem_image]; constructor
   · rintro ⟨x, xt, y, rxy, syz⟩
     exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
     
-  rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩
-  exact ⟨x, xt, y, rxy, syz⟩
+  rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩; exact ⟨x, xt, y, rxy, syz⟩
 #align rel.image_comp Rel.image_comp
 
 theorem image_univ : r.image Set.univ = r.codom := by
@@ -192,11 +189,12 @@ theorem preimage_union (s t : Set β) : r.Preimage (s ∪ t) = r.Preimage s ∪ 
   image_union _ s t
 #align rel.preimage_union Rel.preimage_union
 
-theorem preimage_id (s : Set α) : preimage (@Eq α) s = s := by simp only [preimage, inv_id, image_id]
+theorem preimage_id (s : Set α) : preimage (@Eq α) s = s := by
+  simp only [preimage, inv_id, image_id]
 #align rel.preimage_id Rel.preimage_id
 
-theorem preimage_comp (s : Rel β γ) (t : Set γ) : preimage (r ∘ s) t = preimage r (preimage s t) := by
-  simp only [preimage, inv_comp, image_comp]
+theorem preimage_comp (s : Rel β γ) (t : Set γ) : preimage (r ∘ s) t = preimage r (preimage s t) :=
+  by simp only [preimage, inv_comp, image_comp]
 #align rel.preimage_comp Rel.preimage_comp
 
 theorem preimage_univ : r.Preimage Set.univ = r.dom := by rw [preimage, image_univ, codom_inv]
@@ -236,9 +234,7 @@ theorem core_id (s : Set α) : core (@Eq α) s = s := by simp [core]
 #align rel.core_id Rel.core_id
 
 theorem core_comp (s : Rel β γ) (t : Set γ) : core (r ∘ s) t = core r (core s t) := by
-  ext x
-  simp [core, comp]
-  constructor
+  ext x; simp [core, comp]; constructor
   · exact fun h y rxy z => h z y rxy
     
   · exact fun h z y rzy => h y rzy z

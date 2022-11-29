@@ -18,9 +18,9 @@ namespace Nat
 
 /- warning: nat.pow_le_pow_of_le_left -> Nat.pow_le_pow_of_le_left is a dubious translation:
 lean 3 declaration is
-  forall {x : Nat} {y : Nat}, (LE.le.{0} Nat Nat.hasLe x y) -> (forall (i : Nat), LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) y i))
+  forall {x : Nat} {y : Nat}, (LE.le.{0} Nat Nat.hasLe x y) -> (forall (i : Nat), LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) y i))
 but is expected to have type
-  forall {n : Nat} {m : Nat}, (LE.le.{0} Nat instLENat n m) -> (forall (i : Nat), LE.le.{0} Nat instLENat (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) n i) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) m i))
+  forall {n : Nat} {m : Nat}, (LE.le.{0} Nat instLENat n m) -> (forall (i : Nat), LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) m i))
 Case conversion may be inaccurate. Consider using '#align nat.pow_le_pow_of_le_left Nat.pow_le_pow_of_le_leftₓ'. -/
 -- This is redundant with `pow_le_pow_of_le_left'`,
 -- We leave a version in the `nat` namespace as well.
@@ -31,9 +31,9 @@ protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ,
 
 /- warning: nat.pow_le_pow_of_le_right -> Nat.pow_le_pow_of_le_right is a dubious translation:
 lean 3 declaration is
-  forall {x : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) x) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat Nat.hasLe i j) -> (LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x j)))
+  forall {x : Nat}, (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) x) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat Nat.hasLe i j) -> (LE.le.{0} Nat Nat.hasLe (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) x j)))
 but is expected to have type
-  forall {n : Nat}, (GT.gt.{0} Nat instLTNat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat instLENat i j) -> (LE.le.{0} Nat instLENat (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) n i) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) n j)))
+  forall {n : Nat}, (GT.gt.{0} Nat instLTNat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (forall {i : Nat} {j : Nat}, (LE.le.{0} Nat instLENat i j) -> (LE.le.{0} Nat instLENat (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n i) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) n j)))
 Case conversion may be inaccurate. Consider using '#align nat.pow_le_pow_of_le_right Nat.pow_le_pow_of_le_rightₓ'. -/
 theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
   pow_le_pow' H h
@@ -112,7 +112,8 @@ theorem one_lt_two_pow' (n : ℕ) : 1 < 2 ^ (n + 1) :=
   one_lt_pow (n + 1) 2 (succ_pos n) (by decide)
 #align nat.one_lt_two_pow' Nat.one_lt_two_pow'
 
-theorem pow_right_strict_mono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ => pow_lt_pow_of_lt_right k
+theorem pow_right_strict_mono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ =>
+  pow_lt_pow_of_lt_right k
 #align nat.pow_right_strict_mono Nat.pow_right_strict_mono
 
 theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m ≤ n :=
@@ -138,7 +139,8 @@ theorem mul_lt_mul_pow_succ {n a q : ℕ} (a0 : 0 < a) (q1 : 1 < q) : n * q < a 
 
 end Nat
 
-theorem StrictMono.nat_pow {n : ℕ} (hn : 1 ≤ n) {f : ℕ → ℕ} (hf : StrictMono f) : StrictMono fun m => f m ^ n :=
+theorem StrictMono.nat_pow {n : ℕ} (hn : 1 ≤ n) {f : ℕ → ℕ} (hf : StrictMono f) :
+    StrictMono fun m => f m ^ n :=
   (Nat.pow_left_strict_mono hn).comp hf
 #align strict_mono.nat_pow StrictMono.nat_pow
 
@@ -168,8 +170,7 @@ alias sq_sub_sq ← pow_two_sub_pow_two
 
 theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
   induction' b with b ih
-  rfl
-  simp [pow_succ, Nat.mul_mod, ih]
+  rfl; simp [pow_succ, Nat.mul_mod, ih]
 #align nat.pow_mod Nat.pow_mod
 
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b := by
@@ -266,7 +267,9 @@ theorem lt_of_pow_dvd_right {p i n : ℕ} (hn : n ≠ 0) (hp : 2 ≤ p) (h : p ^
 
 theorem shiftl_eq_mul_pow (m) : ∀ n, shiftl m n = m * 2 ^ n
   | 0 => (Nat.mul_one _).symm
-  | k + 1 => show bit0 (shiftl m k) = m * (2 * 2 ^ k) by rw [bit0_val, shiftl_eq_mul_pow, mul_left_comm, mul_comm 2]
+  | k + 1 =>
+    show bit0 (shiftl m k) = m * (2 * 2 ^ k) by
+      rw [bit0_val, shiftl_eq_mul_pow, mul_left_comm, mul_comm 2]
 #align nat.shiftl_eq_mul_pow Nat.shiftl_eq_mul_pow
 
 theorem shiftl'_tt_eq_mul_pow (m) : ∀ n, shiftl' true m n + 1 = (m + 1) * 2 ^ n
@@ -289,7 +292,9 @@ theorem zero_shiftl (n) : shiftl 0 n = 0 :=
 
 theorem shiftr_eq_div_pow (m) : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_one _).symm
-  | k + 1 => (congr_arg div2 (shiftr_eq_div_pow k)).trans <| by rw [div2_val, Nat.div_div_eq_div_mul, mul_comm] <;> rfl
+  | k + 1 =>
+    (congr_arg div2 (shiftr_eq_div_pow k)).trans <| by
+      rw [div2_val, Nat.div_div_eq_div_mul, mul_comm] <;> rfl
 #align nat.shiftr_eq_div_pow Nat.shiftr_eq_div_pow
 
 @[simp]
@@ -344,7 +349,7 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   rw [size_bit h, Nat.add_succ]
   by_cases s0 : shiftl' b m n = 0 <;> [skip, rw [IH s0]]
   rw [s0] at h⊢
-  cases b
+  cases b;
   · exact absurd rfl h
     
   have : shiftl' tt m n + 1 = 1 := congr_arg (· + 1) s0
@@ -352,7 +357,8 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   obtain rfl := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
   rw [one_mul] at this
   obtain rfl : n = 0 :=
-    Nat.eq_zero_of_le_zero (le_of_not_gt fun hn => ne_of_gt (pow_lt_pow_of_lt_right (by decide) hn) this)
+    Nat.eq_zero_of_le_zero
+      (le_of_not_gt fun hn => ne_of_gt (pow_lt_pow_of_lt_right (by decide) hn) this)
   rfl
 #align nat.size_shiftl' Nat.size_shiftl'
 
@@ -377,8 +383,7 @@ theorem lt_size_self (n : ℕ) : n < 2 ^ size n := by
 
 theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
   ⟨fun h => lt_of_lt_of_le (lt_size_self _) (pow_le_pow_of_le_right (by decide) h), by
-    rw [← one_shiftl]
-    revert n
+    rw [← one_shiftl]; revert n
     apply binary_rec _ _ m
     · intro n h
       simp
@@ -397,7 +402,8 @@ theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
       ⟩
 #align nat.size_le Nat.size_le
 
-theorem lt_size {m n : ℕ} : m < size n ↔ 2 ^ m ≤ n := by rw [← not_lt, Decidable.iff_not_comm, not_lt, size_le]
+theorem lt_size {m n : ℕ} : m < size n ↔ 2 ^ m ≤ n := by
+  rw [← not_lt, Decidable.iff_not_comm, not_lt, size_le]
 #align nat.lt_size Nat.lt_size
 
 theorem size_pos {n : ℕ} : 0 < size n ↔ 0 < n := by rw [lt_size] <;> rfl
@@ -408,7 +414,8 @@ theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 := by
 #align nat.size_eq_zero Nat.size_eq_zero
 
 theorem size_pow {n : ℕ} : size (2 ^ n) = n + 1 :=
-  le_antisymm (size_le.2 <| pow_lt_pow_of_lt_right (by decide) (lt_succ_self _)) (lt_size.2 <| le_rfl)
+  le_antisymm (size_le.2 <| pow_lt_pow_of_lt_right (by decide) (lt_succ_self _))
+    (lt_size.2 <| le_rfl)
 #align nat.size_pow Nat.size_pow
 
 theorem size_le_size {m n : ℕ} (h : m ≤ n) : size m ≤ size n :=

@@ -36,7 +36,8 @@ def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i)
 #align finset.dfinsupp Finset.dfinsupp
 
 @[simp]
-theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
+theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) :
+    (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 #align finset.card_dfinsupp Finset.card_dfinsupp
 
@@ -65,7 +66,8 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
     mem_dfinsupp_iff.trans
       (forall_and_distrib.symm.trans <|
         forall_congr' fun i =>
-          ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
+          ⟨fun h => _, fun h =>
+            ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
   · by_cases hi : i ∈ s
     · exact h.2 hi
       
@@ -101,7 +103,8 @@ end BundledSingleton
 
 section BundledIcc
 
-variable [∀ i, Zero (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFiniteOrder (α i)] {f g : Π₀ i, α i} {i : ι} {a : α i}
+variable [∀ i, Zero (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFiniteOrder (α i)]
+  {f g : Π₀ i, α i} {i : ι} {a : α i}
 
 /-- Pointwise `finset.Icc` bundled as a `dfinsupp`. -/
 def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
@@ -112,9 +115,11 @@ def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
         ⟨fs + gs, fun i =>
           or_iff_not_imp_left.2 fun h => by
             have hf : f i = 0 :=
-              (fs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_right _ _) h)
+              (fs.prop i).resolve_left
+                (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_right _ _) h)
             have hg : g i = 0 :=
-              (gs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_left _ _) h)
+              (gs.prop i).resolve_left
+                (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_left _ _) h)
             rw [hf, hg]
             exact Icc_self _⟩
 #align dfinsupp.range_Icc Dfinsupp.rangeIcc
@@ -170,7 +175,8 @@ variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 variable [∀ i, PartialOrder (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
-  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g) fun f g x => by
+  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g)
+    fun f g x => by
     refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
     simp_rw [mem_range_Icc_apply_iff, forall_and]
     rfl
@@ -208,7 +214,8 @@ variable [∀ i, CanonicallyOrderedAddMonoid (α i)] [∀ i, LocallyFiniteOrder 
 variable (f : Π₀ i, α i)
 
 theorem card_Iic : (iic f).card = ∏ i in f.support, (iic (f i)).card := by
-  simp_rw [Iic_eq_Icc, card_Icc, Dfinsupp.bot_eq_zero, support_zero, empty_union, zero_apply, bot_eq_zero]
+  simp_rw [Iic_eq_Icc, card_Icc, Dfinsupp.bot_eq_zero, support_zero, empty_union, zero_apply,
+    bot_eq_zero]
 #align dfinsupp.card_Iic Dfinsupp.card_Iic
 
 theorem card_Iio : (iio f).card = (∏ i in f.support, (iic (f i)).card) - 1 := by

@@ -41,8 +41,8 @@ def character (V : FdRep k G) (g : G) :=
   LinearMap.trace k V (V.ρ g)
 #align fdRep.character FdRep.character
 
-theorem char_mul_comm (V : FdRep k G) (g : G) (h : G) : V.character (h * g) = V.character (g * h) := by
-  simp only [trace_mul_comm, character, map_mul]
+theorem char_mul_comm (V : FdRep k G) (g : G) (h : G) : V.character (h * g) = V.character (g * h) :=
+  by simp only [trace_mul_comm, character, map_mul]
 #align fdRep.char_mul_comm FdRep.char_mul_comm
 
 @[simp]
@@ -83,8 +83,9 @@ theorem char_dual (V : FdRep k G) (g : G) : (of (dual V.ρ)).character g = V.cha
 #align fdRep.char_dual FdRep.char_dual
 
 @[simp]
-theorem char_lin_hom (V W : FdRep k G) (g : G) : (of (linHom V.ρ W.ρ)).character g = V.character g⁻¹ * W.character g :=
-  by rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
+theorem char_lin_hom (V W : FdRep k G) (g : G) :
+    (of (linHom V.ρ W.ρ)).character g = V.character g⁻¹ * W.character g := by
+  rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
 #align fdRep.char_lin_hom FdRep.char_lin_hom
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
@@ -108,7 +109,9 @@ variable [Fintype G] [Invertible (Fintype.card G : k)]
 /-- Orthogonality of characters for irreducible representations of finite group over an
 algebraically closed field whose characteristic doesn't divide the order of the group. -/
 theorem char_orthonormal (V W : FdRep k G) [Simple V] [Simple W] :
-    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g * W.character g⁻¹) = if Nonempty (V ≅ W) then ↑1 else ↑0 := by
+    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g * W.character g⁻¹) =
+      if Nonempty (V ≅ W) then ↑1 else ↑0 :=
+  by
   -- First, we can rewrite the summand `V.character g * W.character g⁻¹` as the character
   -- of the representation `V ⊗ W* ≅ Hom(W, V)` applied to `g`.
   conv in V.character _ * W.character _ =>

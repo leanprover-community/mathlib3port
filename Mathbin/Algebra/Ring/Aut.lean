@@ -45,24 +45,32 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance : Group (RingAut R) := by
   refine_struct
-      { mul := fun g h => RingEquiv.trans h g, one := RingEquiv.refl R, inv := RingEquiv.symm, div := _,
-        npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩,
-        zpow := @zpowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩ ⟨RingEquiv.symm⟩ } <;>
-    intros <;> ext <;> try rfl <;> apply Equiv.left_inv
+            { mul := fun g h => RingEquiv.trans h g, one := RingEquiv.refl R, inv := RingEquiv.symm,
+              div := _, npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩,
+              zpow :=
+                @zpowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩
+                  ⟨RingEquiv.symm⟩ } <;>
+          intros <;>
+        ext <;>
+      try rfl <;>
+    apply Equiv.left_inv
 
 instance : Inhabited (RingAut R) :=
   ⟨1⟩
 
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
-def toAddAut : RingAut R →* AddAut R := by refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
+def toAddAut : RingAut R →* AddAut R := by
+  refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
 #align ring_aut.to_add_aut RingAut.toAddAut
 
 /-- Monoid homomorphism from ring automorphisms to multiplicative automorphisms. -/
-def toMulAut : RingAut R →* MulAut R := by refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
+def toMulAut : RingAut R →* MulAut R := by
+  refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
 #align ring_aut.to_mul_aut RingAut.toMulAut
 
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
-def toPerm : RingAut R →* Equiv.Perm R := by refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : RingAut R →* Equiv.Perm R := by
+  refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
 #align ring_aut.to_perm RingAut.toPerm
 
 end mul_add
@@ -98,11 +106,11 @@ variable (G R)
 This is a stronger version of `distrib_mul_action.to_add_aut` and
 `mul_distrib_mul_action.to_mul_aut`. -/
 @[simps]
-def _root_.mul_semiring_action.to_ring_aut [MulSemiringAction G R] : G →* RingAut R where
+def MulSemiringAction.toRingAut [MulSemiringAction G R] : G →* RingAut R where
   toFun := MulSemiringAction.toRingEquiv G R
   map_mul' g h := RingEquiv.ext <| mul_smul g h
   map_one' := RingEquiv.ext <| one_smul _
-#align ring_aut._root_.mul_semiring_action.to_ring_aut ring_aut._root_.mul_semiring_action.to_ring_aut
+#align mul_semiring_action.to_ring_aut MulSemiringAction.toRingAut
 
 end Semiring
 

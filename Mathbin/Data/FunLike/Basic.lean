@@ -134,9 +134,9 @@ attribute [instance] coeFnTrans
 
 /- warning: fun_like -> FunLike is a dubious translation:
 lean 3 declaration is
-  Sort.{u_1} -> (forall (α : outParam.{succ u_2} Sort.{u_2}), (outParam.{(max u_2 (succ u_3))} (α -> Sort.{u_3})) -> Sort.{max 1 (imax u_1 u_2 u_3)})
+  Sort.{u_1} -> (forall (α : outParam.{succ u_2} Sort.{u_2}), (outParam.{max u_2 (succ u_3)} (α -> Sort.{u_3})) -> Sort.{max 1 (imax u_1 u_2 u_3)})
 but is expected to have type
-  Sort.{u_1} -> (forall (α : outParam.{succ u_2} Sort.{u_2}), (outParam.{(max u_2 (succ u_3))} (α -> Sort.{u_3})) -> Sort.{max (max (max 1 u_1) u_2) u_3})
+  Sort.{u_1} -> (forall (α : outParam.{succ u_2} Sort.{u_2}), (outParam.{max u_2 (succ u_3)} (α -> Sort.{u_3})) -> Sort.{max (max (max 1 u_1) u_2) u_3})
 Case conversion may be inaccurate. Consider using '#align fun_like FunLikeₓ'. -/
 /-- The class `fun_like F α β` expresses that terms of type `F` have an
 injective coercion to functions from `α` to `β`.
@@ -169,9 +169,9 @@ instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where coe := Fun
 
 /- warning: fun_like.coe_eq_coe_fn -> FunLike.coe_eq_coe_fn is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β], Eq.{(imax u_1 u_2 u_3)} (F -> (forall (a : α), β a)) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i) (coeFn.{u_1 (imax u_2 u_3)} F (fun (ᾰ : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β], Eq.{imax u_1 u_2 u_3} (F -> (forall (a : α), β a)) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i) (coeFn.{u_1, imax u_2 u_3} F (fun (ᾰ : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β], Eq.{(imax u_1 u_2 u_3)} (F -> (forall (a : α), β a)) (FunLike.coe.{u_1 u_2 u_3} F α β i) (fun (f : F) => FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i f)
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β], Eq.{imax u_1 u_2 u_3} (F -> (forall (a : α), β a)) (FunLike.coe.{u_1, u_2, u_3} F α β i) (fun (f : F) => FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i f)
 Case conversion may be inaccurate. Consider using '#align fun_like.coe_eq_coe_fn FunLike.coe_eq_coe_fnₓ'. -/
 @[simp]
 theorem coe_eq_coe_fn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=
@@ -180,9 +180,9 @@ theorem coe_eq_coe_fn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=
 
 /- warning: fun_like.coe_injective -> FunLike.coe_injective is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β], Function.Injective.{u_1 (imax u_2 u_3)} F (forall (a : α), β a) (coeFn.{u_1 (imax u_2 u_3)} F (fun (ᾰ : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β], Function.Injective.{u_1, imax u_2 u_3} F (forall (a : α), β a) (coeFn.{u_1, imax u_2 u_3} F (fun (ᾰ : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β], Function.Injective.{u_1 (imax u_2 u_3)} F (forall (a : α), β a) (fun (f : F) => FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i f)
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β], Function.Injective.{u_1, imax u_2 u_3} F (forall (a : α), β a) (fun (f : F) => FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i f)
 Case conversion may be inaccurate. Consider using '#align fun_like.coe_injective FunLike.coe_injectiveₓ'. -/
 theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
   FunLike.coe_injective'
@@ -190,9 +190,9 @@ theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
 
 /- warning: fun_like.coe_fn_eq -> FunLike.coe_fn_eq is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, Iff (Eq.{(imax u_2 u_3)} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g)) (Eq.{u_1} F f g)
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, Iff (Eq.{imax u_2 u_3} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g)) (Eq.{u_1} F f g)
 but is expected to have type
-  forall {F : Sort.{u_3}} {α : Sort.{u_1}} {β : α -> Sort.{u_2}} [i : FunLike.{u_3 u_1 u_2} F α β] {f : F} {g : F}, Iff (Eq.{(imax u_1 u_2)} (forall (a : α), β a) (FunLike.coe.{u_3 u_1 u_2} F α (fun (a : α) => β a) i f) (FunLike.coe.{u_3 u_1 u_2} F α (fun (a : α) => β a) i g)) (Eq.{u_3} F f g)
+  forall {F : Sort.{u_3}} {α : Sort.{u_1}} {β : α -> Sort.{u_2}} [i : FunLike.{u_3, u_1, u_2} F α β] {f : F} {g : F}, Iff (Eq.{imax u_1 u_2} (forall (a : α), β a) (FunLike.coe.{u_3, u_1, u_2} F α (fun (a : α) => β a) i f) (FunLike.coe.{u_3, u_1, u_2} F α (fun (a : α) => β a) i g)) (Eq.{u_3} F f g)
 Case conversion may be inaccurate. Consider using '#align fun_like.coe_fn_eq FunLike.coe_fn_eqₓ'. -/
 @[simp, norm_cast]
 theorem coe_fn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) ↔ f = g :=
@@ -201,9 +201,9 @@ theorem coe_fn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) �
 
 /- warning: fun_like.ext' -> FunLike.ext' is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, (Eq.{(imax u_2 u_3)} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g)) -> (Eq.{u_1} F f g)
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, (Eq.{imax u_2 u_3} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g)) -> (Eq.{u_1} F f g)
 but is expected to have type
-  forall {F : Sort.{u_3}} {α : Sort.{u_1}} {β : α -> Sort.{u_2}} [i : FunLike.{u_3 u_1 u_2} F α β] {f : F} {g : F}, (Eq.{(imax u_1 u_2)} (forall (a : α), β a) (FunLike.coe.{u_3 u_1 u_2} F α (fun (a : α) => β a) i f) (FunLike.coe.{u_3 u_1 u_2} F α (fun (a : α) => β a) i g)) -> (Eq.{u_3} F f g)
+  forall {F : Sort.{u_3}} {α : Sort.{u_1}} {β : α -> Sort.{u_2}} [i : FunLike.{u_3, u_1, u_2} F α β] {f : F} {g : F}, (Eq.{imax u_1 u_2} (forall (a : α), β a) (FunLike.coe.{u_3, u_1, u_2} F α (fun (a : α) => β a) i f) (FunLike.coe.{u_3, u_1, u_2} F α (fun (a : α) => β a) i g)) -> (Eq.{u_3} F f g)
 Case conversion may be inaccurate. Consider using '#align fun_like.ext' FunLike.ext'ₓ'. -/
 theorem ext' {f g : F} (h : (f : ∀ a : α, β a) = (g : ∀ a : α, β a)) : f = g :=
   coe_injective h
@@ -211,9 +211,9 @@ theorem ext' {f g : F} (h : (f : ∀ a : α, β a) = (g : ∀ a : α, β a)) : f
 
 /- warning: fun_like.ext'_iff -> FunLike.ext'_iff is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (Eq.{(imax u_2 u_3)} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (Eq.{imax u_2 u_3} ((fun (_x : F) => forall (a : α), β a) f) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (Eq.{(imax u_2 u_3)} (forall (a : α), β a) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i f) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i g))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (Eq.{imax u_2 u_3} (forall (a : α), β a) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i f) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i g))
 Case conversion may be inaccurate. Consider using '#align fun_like.ext'_iff FunLike.ext'_iffₓ'. -/
 theorem ext'_iff {f g : F} : f = g ↔ (f : ∀ a : α, β a) = (g : ∀ a : α, β a) :=
   coe_fn_eq.symm
@@ -221,9 +221,9 @@ theorem ext'_iff {f g : F} : f = g ↔ (f : ∀ a : α, β a) = (g : ∀ a : α,
 
 /- warning: fun_like.ext -> FunLike.ext is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] (f : F) (g : F), (forall (x : α), Eq.{u_3} (β x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g x)) -> (Eq.{u_1} F f g)
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] (f : F) (g : F), (forall (x : α), Eq.{u_3} (β x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g x)) -> (Eq.{u_1} F f g)
 but is expected to have type
-  forall {F : Sort.{u_2}} {α : Sort.{u_3}} {β : α -> Sort.{u_1}} [i : FunLike.{u_2 u_3 u_1} F α β] (f : F) (g : F), (forall (x : α), Eq.{u_1} (β x) (FunLike.coe.{u_2 u_3 u_1} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_2 u_3 u_1} F α (fun (a : α) => β a) i g x)) -> (Eq.{u_2} F f g)
+  forall {F : Sort.{u_2}} {α : Sort.{u_3}} {β : α -> Sort.{u_1}} [i : FunLike.{u_2, u_3, u_1} F α β] (f : F) (g : F), (forall (x : α), Eq.{u_1} (β x) (FunLike.coe.{u_2, u_3, u_1} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_2, u_3, u_1} F α (fun (a : α) => β a) i g x)) -> (Eq.{u_2} F f g)
 Case conversion may be inaccurate. Consider using '#align fun_like.ext FunLike.extₓ'. -/
 theorem ext (f g : F) (h : ∀ x : α, f x = g x) : f = g :=
   coe_injective (funext h)
@@ -231,9 +231,9 @@ theorem ext (f g : F) (h : ∀ x : α, f x = g x) : f = g :=
 
 /- warning: fun_like.ext_iff -> FunLike.ext_iff is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (forall (x : α), Eq.{u_3} (β x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g x))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (forall (x : α), Eq.{u_3} (β x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g x))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_3}} {β : α -> Sort.{u_2}} [i : FunLike.{u_1 u_3 u_2} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (forall (x : α), Eq.{u_2} (β x) (FunLike.coe.{u_1 u_3 u_2} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_1 u_3 u_2} F α (fun (a : α) => β a) i g x))
+  forall {F : Sort.{u_1}} {α : Sort.{u_3}} {β : α -> Sort.{u_2}} [i : FunLike.{u_1, u_3, u_2} F α β] {f : F} {g : F}, Iff (Eq.{u_1} F f g) (forall (x : α), Eq.{u_2} (β x) (FunLike.coe.{u_1, u_3, u_2} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_1, u_3, u_2} F α (fun (a : α) => β a) i g x))
 Case conversion may be inaccurate. Consider using '#align fun_like.ext_iff FunLike.ext_iffₓ'. -/
 theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
   coe_fn_eq.symm.trans Function.funext_iff
@@ -241,9 +241,9 @@ theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
 
 /- warning: fun_like.congr_fun -> FunLike.congr_fun is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, (Eq.{u_1} F f g) -> (forall (x : α), Eq.{u_3} (β x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g x))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, (Eq.{u_1} F f g) -> (forall (x : α), Eq.{u_3} (β x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g x))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_3}} {β : α -> Sort.{u_2}} [i : FunLike.{u_1 u_3 u_2} F α β] {f : F} {g : F}, (Eq.{u_1} F f g) -> (forall (x : α), Eq.{u_2} (β x) (FunLike.coe.{u_1 u_3 u_2} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_1 u_3 u_2} F α (fun (a : α) => β a) i g x))
+  forall {F : Sort.{u_1}} {α : Sort.{u_3}} {β : α -> Sort.{u_2}} [i : FunLike.{u_1, u_3, u_2} F α β] {f : F} {g : F}, (Eq.{u_1} F f g) -> (forall (x : α), Eq.{u_2} (β x) (FunLike.coe.{u_1, u_3, u_2} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_1, u_3, u_2} F α (fun (a : α) => β a) i g x))
 Case conversion may be inaccurate. Consider using '#align fun_like.congr_fun FunLike.congr_funₓ'. -/
 protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
   congr_fun (congr_arg _ h₁) x
@@ -251,9 +251,9 @@ protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
 
 /- warning: fun_like.ne_iff -> FunLike.ne_iff is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, Iff (Ne.{u_1} F f g) (Exists.{u_2} α (fun (a : α) => Ne.{u_3} (β a) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f a) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g a)))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, Iff (Ne.{u_1} F f g) (Exists.{u_2} α (fun (a : α) => Ne.{u_3} (β a) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f a) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g a)))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, Iff (Ne.{u_1} F f g) (Exists.{u_2} α (fun (a : α) => Ne.{u_3} (β a) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i f a) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i g a)))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, Iff (Ne.{u_1} F f g) (Exists.{u_2} α (fun (a : α) => Ne.{u_3} (β a) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i f a) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i g a)))
 Case conversion may be inaccurate. Consider using '#align fun_like.ne_iff FunLike.ne_iffₓ'. -/
 theorem ne_iff {f g : F} : f ≠ g ↔ ∃ a, f a ≠ g a :=
   ext_iff.Not.trans not_forall
@@ -261,14 +261,20 @@ theorem ne_iff {f g : F} : f ≠ g ↔ ∃ a, f a ≠ g a :=
 
 /- warning: fun_like.exists_ne -> FunLike.exists_ne is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, (Ne.{u_1} F f g) -> (Exists.{u_2} α (fun (x : α) => Ne.{u_3} (β x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) f x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α β i) g x)))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, (Ne.{u_1} F f g) -> (Exists.{u_2} α (fun (x : α) => Ne.{u_3} (β x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) f x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => forall (a : α), β a) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α β i) g x)))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α β] {f : F} {g : F}, (Ne.{u_1} F f g) -> (Exists.{u_2} α (fun (x : α) => Ne.{u_3} (β x) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => β a) i g x)))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] {f : F} {g : F}, (Ne.{u_1} F f g) -> (Exists.{u_2} α (fun (x : α) => Ne.{u_3} (β x) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i f x) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => β a) i g x)))
 Case conversion may be inaccurate. Consider using '#align fun_like.exists_ne FunLike.exists_neₓ'. -/
 theorem exists_ne {f g : F} (h : f ≠ g) : ∃ x, f x ≠ g x :=
   ne_iff.mp h
 #align fun_like.exists_ne FunLike.exists_ne
 
+/- warning: fun_like.subsingleton_cod -> FunLike.subsingleton_cod is a dubious translation:
+lean 3 declaration is
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : α -> Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α β] [_inst_1 : forall (a : α), Subsingleton.{u_3} (β a)], Subsingleton.{u_1} F
+but is expected to have type
+  forall {F : Sort.{u_2}} {α : Sort.{u_3}} {β : α -> Sort.{u_1}} [i : FunLike.{u_2, u_3, u_1} F α β] [inst._@.Mathlib.Data.FunLike.Basic._hyg.539 : forall (a : α), Subsingleton.{u_1} (β a)], Subsingleton.{u_2} F
+Case conversion may be inaccurate. Consider using '#align fun_like.subsingleton_cod FunLike.subsingleton_codₓ'. -/
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/
 theorem subsingleton_cod [∀ a, Subsingleton (β a)] : Subsingleton F :=
   ⟨fun f g => coe_injective <| Subsingleton.elim _ _⟩
@@ -291,9 +297,9 @@ namespace FunLike
 
 /- warning: fun_like.congr -> FunLike.congr is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α (fun (_x : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u_1} F f g) -> (Eq.{u_2} α x y) -> (Eq.{u_3} β (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α (fun (_x : α) => β) i) f x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α (fun (_x : α) => β) i) g y))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α (fun (_x : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u_1} F f g) -> (Eq.{u_2} α x y) -> (Eq.{u_3} β (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α (fun (_x : α) => β) i) f x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α (fun (_x : α) => β) i) g y))
 but is expected to have type
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.561 : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u_1} F f g) -> (Eq.{u_2} α x y) -> (Eq.{u_3} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.561 : α) => β) x) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.561 : α) => β) a) i f x) (FunLike.coe.{u_1 u_2 u_3} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.561 : α) => β) a) i g y))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.600 : α) => β)] {f : F} {g : F} {x : α} {y : α}, (Eq.{u_1} F f g) -> (Eq.{u_2} α x y) -> (Eq.{u_3} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.600 : α) => β) x) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.600 : α) => β) a) i f x) (FunLike.coe.{u_1, u_2, u_3} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.600 : α) => β) a) i g y))
 Case conversion may be inaccurate. Consider using '#align fun_like.congr FunLike.congrₓ'. -/
 protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x = g y :=
   congr (congr_arg _ h₁) h₂
@@ -301,9 +307,9 @@ protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x
 
 /- warning: fun_like.congr_arg -> FunLike.congr_arg is a dubious translation:
 lean 3 declaration is
-  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : Sort.{u_3}} [i : FunLike.{u_1 u_2 u_3} F α (fun (_x : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u_2} α x y) -> (Eq.{u_3} β (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α (fun (_x : α) => β) i) f x) (coeFn.{u_1 (imax u_2 u_3)} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1 u_2 u_3} F α (fun (_x : α) => β) i) f y))
+  forall {F : Sort.{u_1}} {α : Sort.{u_2}} {β : Sort.{u_3}} [i : FunLike.{u_1, u_2, u_3} F α (fun (_x : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u_2} α x y) -> (Eq.{u_3} β (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α (fun (_x : α) => β) i) f x) (coeFn.{u_1, imax u_2 u_3} F (fun (_x : F) => α -> β) (FunLike.hasCoeToFun.{u_1, u_2, u_3} F α (fun (_x : α) => β) i) f y))
 but is expected to have type
-  forall {F : Sort.{u_3}} {α : Sort.{u_1}} {β : Sort.{u_2}} [i : FunLike.{u_3 u_1 u_2} F α (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.603 : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u_1} α x y) -> (Eq.{u_2} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.603 : α) => β) x) (FunLike.coe.{u_3 u_1 u_2} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.603 : α) => β) a) i f x) (FunLike.coe.{u_3 u_1 u_2} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.603 : α) => β) a) i f y))
+  forall {F : Sort.{u_3}} {α : Sort.{u_1}} {β : Sort.{u_2}} [i : FunLike.{u_3, u_1, u_2} F α (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.642 : α) => β)] (f : F) {x : α} {y : α}, (Eq.{u_1} α x y) -> (Eq.{u_2} ((fun (x._@.Mathlib.Data.FunLike.Basic._hyg.642 : α) => β) x) (FunLike.coe.{u_3, u_1, u_2} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.642 : α) => β) a) i f x) (FunLike.coe.{u_3, u_1, u_2} F α (fun (a : α) => (fun (x._@.Mathlib.Data.FunLike.Basic._hyg.642 : α) => β) a) i f y))
 Case conversion may be inaccurate. Consider using '#align fun_like.congr_arg FunLike.congr_argₓ'. -/
 protected theorem congr_arg (f : F) {x y : α} (h₂ : x = y) : f x = f y :=
   congr_arg _ h₂

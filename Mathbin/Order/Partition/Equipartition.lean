@@ -31,26 +31,31 @@ def IsEquipartition : Prop :=
 
 theorem is_equipartition_iff_card_parts_eq_average :
     P.IsEquipartition ↔
-      ∀ a : Finset α, a ∈ P.parts → a.card = s.card / P.parts.card ∨ a.card = s.card / P.parts.card + 1 :=
+      ∀ a : Finset α,
+        a ∈ P.parts → a.card = s.card / P.parts.card ∨ a.card = s.card / P.parts.card + 1 :=
   by simp_rw [is_equipartition, Finset.equitable_on_iff, P.sum_card_parts]
-#align finpartition.is_equipartition_iff_card_parts_eq_average Finpartition.is_equipartition_iff_card_parts_eq_average
+#align
+  finpartition.is_equipartition_iff_card_parts_eq_average Finpartition.is_equipartition_iff_card_parts_eq_average
 
 variable {P}
 
-theorem _root_.set.subsingleton.is_equipartition (h : (P.parts : Set (Finset α)).Subsingleton) : P.IsEquipartition :=
+theorem Set.Subsingleton.isEquipartition (h : (P.parts : Set (Finset α)).Subsingleton) :
+    P.IsEquipartition :=
   h.EquitableOn _
-#align finpartition._root_.set.subsingleton.is_equipartition finpartition._root_.set.subsingleton.is_equipartition
+#align set.subsingleton.is_equipartition Set.Subsingleton.isEquipartition
 
 theorem IsEquipartition.card_parts_eq_average (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
     t.card = s.card / P.parts.card ∨ t.card = s.card / P.parts.card + 1 :=
   P.is_equipartition_iff_card_parts_eq_average.1 hP _ ht
-#align finpartition.is_equipartition.card_parts_eq_average Finpartition.IsEquipartition.card_parts_eq_average
+#align
+  finpartition.is_equipartition.card_parts_eq_average Finpartition.IsEquipartition.card_parts_eq_average
 
 theorem IsEquipartition.average_le_card_part (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
     s.card / P.parts.card ≤ t.card := by
   rw [← P.sum_card_parts]
   exact equitable_on.le hP ht
-#align finpartition.is_equipartition.average_le_card_part Finpartition.IsEquipartition.average_le_card_part
+#align
+  finpartition.is_equipartition.average_le_card_part Finpartition.IsEquipartition.average_le_card_part
 
 theorem IsEquipartition.card_part_le_average_add_one (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
     t.card ≤ s.card / P.parts.card + 1 := by

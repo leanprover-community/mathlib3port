@@ -41,8 +41,8 @@ variable {J : Type w} [SmallCategory J] {K : J ⥤ C}
 where `J : Type` is a finite category.
 -/
 class PreservesFiniteLimits (F : C ⥤ D) where
-  PreservesFiniteLimits : ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesLimitsOfShape J F := by
-    infer_instance
+  PreservesFiniteLimits :
+    ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesLimitsOfShape J F := by infer_instance
 #align category_theory.limits.preserves_finite_limits CategoryTheory.Limits.PreservesFiniteLimits
 
 attribute [instance] preserves_finite_limits.preserves_finite_limits
@@ -50,7 +50,8 @@ attribute [instance] preserves_finite_limits.preserves_finite_limits
 /-- Preserving finite limits also implies preserving limits over finite shapes in higher universes,
 though through a noncomputable instance. -/
 noncomputable instance (priority := 100) preservesLimitsOfShapeOfPreservesFiniteLimits (F : C ⥤ D)
-    [PreservesFiniteLimits F] (J : Type w) [SmallCategory J] [FinCategory J] : PreservesLimitsOfShape J F := by
+    [PreservesFiniteLimits F] (J : Type w) [SmallCategory J] [FinCategory J] :
+    PreservesLimitsOfShape J F := by
   apply preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J)
 #align
   category_theory.limits.preserves_limits_of_shape_of_preserves_finite_limits CategoryTheory.Limits.preservesLimitsOfShapeOfPreservesFiniteLimits
@@ -63,8 +64,8 @@ noncomputable instance (priority := 100) PreservesLimits.preservesFiniteLimitsOf
 #align
   category_theory.limits.preserves_limits.preserves_finite_limits_of_size CategoryTheory.Limits.PreservesLimits.preservesFiniteLimitsOfSize
 
-noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D) [PreservesLimits F] :
-    PreservesFiniteLimits F :=
+noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D)
+    [PreservesLimits F] : PreservesFiniteLimits F :=
   PreservesLimits.preservesFiniteLimitsOfSize F
 #align
   category_theory.limits.preserves_limits.preserves_finite_limits CategoryTheory.Limits.PreservesLimits.preservesFiniteLimits
@@ -88,30 +89,35 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
   category_theory.limits.preserves_finite_limits_of_preserves_finite_limits_of_size CategoryTheory.Limits.preservesFiniteLimitsOfPreservesFiniteLimitsOfSize
 
 instance idPreservesFiniteLimits : PreservesFiniteLimits (𝟭 C) where
-#align category_theory.limits.id_preserves_finite_limits CategoryTheory.Limits.idPreservesFiniteLimits
+#align
+  category_theory.limits.id_preserves_finite_limits CategoryTheory.Limits.idPreservesFiniteLimits
 
 /-- The composition of two left exact functors is left exact. -/
-def compPreservesFiniteLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteLimits F] [PreservesFiniteLimits G] :
-    PreservesFiniteLimits (F ⋙ G) :=
+def compPreservesFiniteLimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteLimits F]
+    [PreservesFiniteLimits G] : PreservesFiniteLimits (F ⋙ G) :=
   ⟨fun _ _ _ => by
     skip
     infer_instance⟩
-#align category_theory.limits.comp_preserves_finite_limits CategoryTheory.Limits.compPreservesFiniteLimits
+#align
+  category_theory.limits.comp_preserves_finite_limits CategoryTheory.Limits.compPreservesFiniteLimits
 
 /-- A functor is said to preserve finite colimits, if it preserves all colimits of
 shape `J`, where `J : Type` is a finite category.
 -/
 class PreservesFiniteColimits (F : C ⥤ D) where
-  PreservesFiniteColimits : ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesColimitsOfShape J F := by
+  PreservesFiniteColimits :
+    ∀ (J : Type) [SmallCategory J] [FinCategory J], PreservesColimitsOfShape J F := by
     infer_instance
-#align category_theory.limits.preserves_finite_colimits CategoryTheory.Limits.PreservesFiniteColimits
+#align
+  category_theory.limits.preserves_finite_colimits CategoryTheory.Limits.PreservesFiniteColimits
 
 attribute [instance] preserves_finite_colimits.preserves_finite_colimits
 
 /-- Preserving finite limits also implies preserving limits over finite shapes in higher universes,
 though through a noncomputable instance. -/
-noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFiniteColimits (F : C ⥤ D)
-    [PreservesFiniteColimits F] (J : Type w) [SmallCategory J] [FinCategory J] : PreservesColimitsOfShape J F := by
+noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFiniteColimits
+    (F : C ⥤ D) [PreservesFiniteColimits F] (J : Type w) [SmallCategory J] [FinCategory J] :
+    PreservesColimitsOfShape J F := by
   apply preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J)
 #align
   category_theory.limits.preserves_colimits_of_shape_of_preserves_finite_colimits CategoryTheory.Limits.preservesColimitsOfShapeOfPreservesFiniteColimits
@@ -143,15 +149,17 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
   category_theory.limits.preserves_finite_colimits_of_preserves_finite_colimits_of_size CategoryTheory.Limits.preservesFiniteColimitsOfPreservesFiniteColimitsOfSize
 
 instance idPreservesFiniteColimits : PreservesFiniteColimits (𝟭 C) where
-#align category_theory.limits.id_preserves_finite_colimits CategoryTheory.Limits.idPreservesFiniteColimits
+#align
+  category_theory.limits.id_preserves_finite_colimits CategoryTheory.Limits.idPreservesFiniteColimits
 
 /-- The composition of two right exact functors is right exact. -/
-def compPreservesFiniteColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteColimits F] [PreservesFiniteColimits G] :
-    PreservesFiniteColimits (F ⋙ G) :=
+def compPreservesFiniteColimits (F : C ⥤ D) (G : D ⥤ E) [PreservesFiniteColimits F]
+    [PreservesFiniteColimits G] : PreservesFiniteColimits (F ⋙ G) :=
   ⟨fun _ _ _ => by
     skip
     infer_instance⟩
-#align category_theory.limits.comp_preserves_finite_colimits CategoryTheory.Limits.compPreservesFiniteColimits
+#align
+  category_theory.limits.comp_preserves_finite_colimits CategoryTheory.Limits.compPreservesFiniteColimits
 
 end CategoryTheory.Limits
 

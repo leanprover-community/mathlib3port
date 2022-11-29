@@ -40,7 +40,9 @@ instance : HasFiniteProducts (Type v₁) :=
 
 instance :
     CartesianClosed
-      (Type v₁) where closed' X := { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
+      (Type
+        v₁) where closed' X :=
+    { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
 
 instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u₁) :=
   has_finite_products_of_has_products.{u₁} _

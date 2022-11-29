@@ -21,8 +21,8 @@ unsafe def prove_neg : Int → tactic expr
   | -[m+1] => return q(Int.negSucc_lt_zero $(q(m)))
 #align omega.prove_neg omega.prove_neg
 
-theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x ∈ List.repeat (0 : Int) m, x = (0 : Int) := fun x =>
-  List.eq_of_mem_repeat
+theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x ∈ List.repeat (0 : Int) m, x = (0 : Int) :=
+  fun x => List.eq_of_mem_repeat
 #align omega.forall_mem_repeat_zero_eq_zero Omega.forall_mem_repeat_zero_eq_zero
 
 /-- Return expr of proof that elements of (repeat 0 is.length) are all 0 -/

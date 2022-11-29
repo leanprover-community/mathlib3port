@@ -90,7 +90,9 @@ instance : NoncompactSpace ℚ :=
 theorem uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=
   Rat.uniform_embedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2 <| by
     simp only [(· ∘ ·), Rat.cast_add] <;>
-      exact real.uniform_continuous_add.comp (rat.uniform_continuous_coe_real.prod_map Rat.uniform_continuous_coe_real)
+      exact
+        real.uniform_continuous_add.comp
+          (rat.uniform_continuous_coe_real.prod_map Rat.uniform_continuous_coe_real)
 #align rat.uniform_continuous_add Rat.uniform_continuous_add
 
 theorem uniform_continuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
@@ -108,19 +110,22 @@ instance : OrderTopology ℚ :=
 
 theorem uniform_continuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
-    ⟨ε, ε0, fun a b h => lt_of_le_of_lt (by simpa [Rat.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _) h⟩
+    ⟨ε, ε0, fun a b h =>
+      lt_of_le_of_lt (by simpa [Rat.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _) h⟩
 #align rat.uniform_continuous_abs Rat.uniform_continuous_abs
 
 theorem continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
   Rat.embedding_coe_real.continuous_iff.2 <| by
-    simp [(· ∘ ·)] <;> exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
+    simp [(· ∘ ·)] <;>
+      exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
 #align rat.continuous_mul Rat.continuous_mul
 
 instance : TopologicalRing ℚ :=
   { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
 
 theorem totally_bounded_Icc (a b : ℚ) : TotallyBounded (icc a b) := by
-  simpa only [preimage_cast_Icc] using totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
+  simpa only [preimage_cast_Icc] using
+    totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
 #align rat.totally_bounded_Icc Rat.totally_bounded_Icc
 
 end Rat

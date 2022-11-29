@@ -515,7 +515,8 @@ unsafe def mk_proof (lem : Name) (args : List expr) (hs : List ex_info) : ring_e
 Often, we construct a proof term using congruence where reflexivity suffices.
 To solve this, the following function tries to get away with reflexivity.
 -/
-unsafe def mk_proof_or_refl (term : expr) (lem : Name) (args : List expr) (hs : List ex_info) : ring_exp_m expr := do
+unsafe def mk_proof_or_refl (term : expr) (lem : Name) (args : List expr) (hs : List ex_info) :
+    ring_exp_m expr := do
   let hs_full ← none_or_proof_term hs
   match hs_full with
     | none => lift <| mk_eq_refl term
@@ -559,7 +560,8 @@ unsafe def ex_zero : ring_exp_m (ex Sum) := do
 unsafe def ex_sum (p : ex Prod) (ps : ex Sum) : ring_exp_m (ex Sum) := do
   let pps_o ← add_orig p ps
   let pps_p ← mk_add [p.pretty, ps.pretty]
-  let pps_pf ← mk_proof_or_refl pps_p `` sum_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
+  let pps_pf ←
+    mk_proof_or_refl pps_p `` sum_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.sum ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
 #align tactic.ring_exp.ex_sum tactic.ring_exp.ex_sum
 
@@ -586,7 +588,8 @@ unsafe def ex_one : ring_exp_m (ex Prod) := do
 unsafe def ex_prod (p : ex exp) (ps : ex Prod) : ring_exp_m (ex Prod) := do
   let pps_o ← mul_orig p ps
   let pps_p ← mk_mul [p.pretty, ps.pretty]
-  let pps_pf ← mk_proof_or_refl pps_p `` prod_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
+  let pps_pf ←
+    mk_proof_or_refl pps_p `` prod_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.prod ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
 #align tactic.ring_exp.ex_prod tactic.ring_exp.ex_prod
 
@@ -605,7 +608,8 @@ unsafe def ex_exp (p : ex base) (ps : ex Prod) : ring_exp_m (ex exp) := do
   let ctx ← get_context
   let pps_o ← pow_orig p ps
   let pps_p ← mk_pow [p.pretty, ps.pretty]
-  let pps_pf ← mk_proof_or_refl pps_p `` exp_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
+  let pps_pf ←
+    mk_proof_or_refl pps_p `` exp_congr [p.orig, p.pretty, ps.orig, ps.pretty] [p.info, ps.info]
   pure (ex.exp ⟨pps_o, pps_p, pps_pf⟩ (p none none) (ps none none))
 #align tactic.ring_exp.ex_exp tactic.ring_exp.ex_exp
 
@@ -831,7 +835,8 @@ theorem add_pf_sum_overlap {pps p ps qqs q qs pq pqs : α} :
 #align tactic.ring_exp.add_pf_sum_overlap Tactic.RingExp.add_pf_sum_overlap
 
 theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
-    pps = p + ps → qqs = q + qs → p + q = 0 → ps + qs = pqs → pps + qqs = pqs := fun pps_pf qqs_pf pq_pf pqs_pf =>
+    pps = p + ps → qqs = q + qs → p + q = 0 → ps + qs = pqs → pps + qqs = pqs :=
+  fun pps_pf qqs_pf pq_pf pqs_pf =>
   calc
     pps + qqs = p + ps + (q + qs) := by rw [pps_pf, qqs_pf]
     _ = p + q + (ps + qs) := by cc
@@ -840,10 +845,12 @@ theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
     
 #align tactic.ring_exp.add_pf_sum_overlap_zero Tactic.RingExp.add_pf_sum_overlap_zero
 
-theorem add_pf_sum_lt {pps p ps qqs pqs : α} : pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs := by cc
+theorem add_pf_sum_lt {pps p ps qqs pqs : α} :
+    pps = p + ps → ps + qqs = pqs → pps + qqs = p + pqs := by cc
 #align tactic.ring_exp.add_pf_sum_lt Tactic.RingExp.add_pf_sum_lt
 
-theorem add_pf_sum_gt {pps qqs q qs pqs : α} : qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs := by cc
+theorem add_pf_sum_gt {pps qqs q qs pqs : α} :
+    qqs = q + qs → pps + qs = pqs → pps + qqs = q + pqs := by cc
 #align tactic.ring_exp.add_pf_sum_gt Tactic.RingExp.add_pf_sum_gt
 
 /-- Add two expressions.
@@ -871,11 +878,13 @@ unsafe def add : ex Sum → ex Sum → ring_exp_m (ex Sum)
         let pqs ← add ps qs
         let pqqs ← ex_sum pq pqs
         let qqs_pf ← qqs
-        let pf ← mk_proof `` add_pf_sum_overlap [pps, p, ps, qqs, q, qs, pq, pqs] [pps, qqs, pq, pqs]
+        let pf ←
+          mk_proof `` add_pf_sum_overlap [pps, p, ps, qqs, q, qs, pq, pqs] [pps, qqs, pq, pqs]
         pure <| pqqs ppqqs_o pf
       | overlap.zero pq => do
         let pqs ← add ps qs
-        let pf ← mk_proof `` add_pf_sum_overlap_zero [pps, p, ps, qqs, q, qs, pqs] [pps, qqs, pq, pqs]
+        let pf ←
+          mk_proof `` add_pf_sum_overlap_zero [pps, p, ps, qqs, q, qs, pqs] [pps, qqs, pq, pqs]
         pure <| pqs ppqqs_o pf
       | overlap.none =>
         if p q then do
@@ -894,24 +903,30 @@ end Addition
 
 section Multiplication
 
-theorem mul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq := by cc
+theorem mul_pf_c_c {ps ps' qs qs' pq : α} : ps = ps' → qs = qs' → ps' * qs' = pq → ps * qs = pq :=
+  by cc
 #align tactic.ring_exp.mul_pf_c_c Tactic.RingExp.mul_pf_c_c
 
-theorem mul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs := by cc
+theorem mul_pf_c_prod {ps qqs q qs pqs : α} : qqs = q * qs → ps * qs = pqs → ps * qqs = q * pqs :=
+  by cc
 #align tactic.ring_exp.mul_pf_c_prod Tactic.RingExp.mul_pf_c_prod
 
-theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs := by cc
+theorem mul_pf_prod_c {pps p ps qs pqs : α} : pps = p * ps → ps * qs = pqs → pps * qs = p * pqs :=
+  by cc
 #align tactic.ring_exp.mul_pf_prod_c Tactic.RingExp.mul_pf_prod_c
 
 theorem mul_pp_pf_overlap {pps p_b ps qqs qs psqs : α} {p_e q_e : ℕ} :
-    pps = p_b ^ p_e * ps → qqs = p_b ^ q_e * qs → p_b ^ (p_e + q_e) * (ps * qs) = psqs → pps * qqs = psqs :=
+    pps = p_b ^ p_e * ps →
+      qqs = p_b ^ q_e * qs → p_b ^ (p_e + q_e) * (ps * qs) = psqs → pps * qqs = psqs :=
   fun ps_pf qs_pf psqs_pf => by simp [symm psqs_pf, pow_add, ps_pf, qs_pf] <;> ac_rfl
 #align tactic.ring_exp.mul_pp_pf_overlap Tactic.RingExp.mul_pp_pf_overlap
 
-theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} : pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by cc
+theorem mul_pp_pf_prod_lt {pps p ps qqs pqs : α} :
+    pps = p * ps → ps * qqs = pqs → pps * qqs = p * pqs := by cc
 #align tactic.ring_exp.mul_pp_pf_prod_lt Tactic.RingExp.mul_pp_pf_prod_lt
 
-theorem mul_pp_pf_prod_gt {pps qqs q qs pqs : α} : qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by cc
+theorem mul_pp_pf_prod_gt {pps qqs q qs pqs : α} :
+    qqs = q * qs → pps * qs = pqs → pps * qqs = q * pqs := by cc
 #align tactic.ring_exp.mul_pp_pf_prod_gt Tactic.RingExp.mul_pp_pf_prod_gt
 
 /-- Multiply two expressions.
@@ -936,13 +951,17 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
     let pqs ← mul_pp ps qs
     let pqqs ← ex_prod q pqs
     let pqqs_o ← mul_orig ps qqs
-    let pf ← mk_proof `` mul_pf_c_prod [ps.orig, qqs.orig, q.pretty, qs.pretty, pqs.pretty] [qqs.info, pqs.info]
+    let pf ←
+      mk_proof `` mul_pf_c_prod [ps.orig, qqs.orig, q.pretty, qs.pretty, pqs.pretty]
+          [qqs.info, pqs.info]
     pure <| pqqs pqqs_o pf
   | pps@(ex.prod _ p ps), qs@(ex.coeff _ y) => do
     let pqs ← mul_pp ps qs
     let ppqs ← ex_prod p pqs
     let ppqs_o ← mul_orig pps qs
-    let pf ← mk_proof `` mul_pf_prod_c [pps.orig, p.pretty, ps.pretty, qs.orig, pqs.pretty] [pps.info, pqs.info]
+    let pf ←
+      mk_proof `` mul_pf_prod_c [pps.orig, p.pretty, ps.pretty, qs.orig, pqs.pretty]
+          [pps.info, pqs.info]
     pure <| ppqs ppqs_o pf
   | pps@(ex.prod _ (p@(ex.exp _ p_b p_e)) ps), qqs@(ex.prod _ (q@(ex.exp _ q_b q_e)) qs) => do
     let ppqqs_o ← mul_orig pps qqs
@@ -952,7 +971,8 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
         let psqs ← mul_pp ps qs
         let pq ← ex_exp p_b pq_e
         let ppsqqs ← ex_prod pq psqs
-        let pf ← mk_proof `` mul_pp_pf_overlap [pps, p_b, ps, qqs, qs, ppsqqs, p_e, q_e] [pps, qqs, ppsqqs]
+        let pf ←
+          mk_proof `` mul_pp_pf_overlap [pps, p_b, ps, qqs, qs, ppsqqs, p_e, q_e] [pps, qqs, ppsqqs]
         pure <| ppsqqs ppqqs_o pf
       | _, _ =>
         if p q then do
@@ -970,8 +990,8 @@ unsafe def mul_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
 theorem mul_p_pf_zero {ps qs : α} : ps = 0 → ps * qs = 0 := fun ps_pf => by rw [ps_pf, zero_mul]
 #align tactic.ring_exp.mul_p_pf_zero Tactic.RingExp.mul_p_pf_zero
 
-theorem mul_p_pf_sum {pps p ps qs ppsqs : α} : pps = p + ps → p * qs + ps * qs = ppsqs → pps * qs = ppsqs :=
-  fun pps_pf ppsqs_pf =>
+theorem mul_p_pf_sum {pps p ps qs ppsqs : α} :
+    pps = p + ps → p * qs + ps * qs = ppsqs → pps * qs = ppsqs := fun pps_pf ppsqs_pf =>
   calc
     pps * qs = (p + ps) * qs := by rw [pps_pf]
     _ = p * qs + ps * qs := add_mul _ _ _
@@ -997,15 +1017,17 @@ unsafe def mul_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let pps_pf ← pps.proof_term
     let ppsqs_o ← mul_orig pps qs
     let ppsqs_pf ← ppsqs.proof_term
-    let pf ← mk_proof `` mul_p_pf_sum [pps.orig, p.pretty, ps.pretty, qs.orig, ppsqs.pretty] [pps.info, ppsqs.info]
+    let pf ←
+      mk_proof `` mul_p_pf_sum [pps.orig, p.pretty, ps.pretty, qs.orig, ppsqs.pretty]
+          [pps.info, ppsqs.info]
     pure <| ppsqs ppsqs_o pf
 #align tactic.ring_exp.mul_p tactic.ring_exp.mul_p
 
 theorem mul_pf_zero {ps qs : α} : qs = 0 → ps * qs = 0 := fun qs_pf => by rw [qs_pf, mul_zero]
 #align tactic.ring_exp.mul_pf_zero Tactic.RingExp.mul_pf_zero
 
-theorem mul_pf_sum {ps qqs q qs psqqs : α} : qqs = q + qs → ps * q + ps * qs = psqqs → ps * qqs = psqqs :=
-  fun qs_pf psqqs_pf =>
+theorem mul_pf_sum {ps qqs q qs psqqs : α} :
+    qqs = q + qs → ps * q + ps * qs = psqqs → ps * qqs = psqqs := fun qs_pf psqqs_pf =>
   calc
     ps * qqs = ps * (q + qs) := by rw [qs_pf]
     _ = ps * q + ps * qs := mul_add _ _ _
@@ -1029,7 +1051,9 @@ unsafe def mul : ex Sum → ex Sum → ring_exp_m (ex Sum)
     let psqs ← mul ps qs
     let psqqs ← add psq psqs
     let psqqs_o ← mul_orig ps qqs
-    let pf ← mk_proof `` mul_pf_sum [ps.orig, qqs.orig, q.orig, qs.orig, psqqs.pretty] [qqs.info, psqqs.info]
+    let pf ←
+      mk_proof `` mul_pf_sum [ps.orig, qqs.orig, q.orig, qs.orig, psqqs.pretty]
+          [qqs.info, psqqs.info]
     pure <| psqqs psqqs_o pf
 #align tactic.ring_exp.mul tactic.ring_exp.mul
 
@@ -1037,8 +1061,8 @@ end Multiplication
 
 section Exponentiation
 
-theorem pow_e_pf_exp {pps p : α} {ps qs psqs : ℕ} : pps = p ^ ps → ps * qs = psqs → pps ^ qs = p ^ psqs :=
-  fun pps_pf psqs_pf =>
+theorem pow_e_pf_exp {pps p : α} {ps qs psqs : ℕ} :
+    pps = p ^ ps → ps * qs = psqs → pps ^ qs = p ^ psqs := fun pps_pf psqs_pf =>
   calc
     pps ^ qs = (p ^ ps) ^ qs := by rw [pps_pf]
     _ = p ^ (ps * qs) := symm (pow_mul _ _ _)
@@ -1067,22 +1091,27 @@ unsafe def pow_e : ex exp → ex Prod → ring_exp_m (ex exp)
     let psqs ← in_exponent <| mul_pp ps qs
     let ppsqs ← ex_exp p psqs
     let ppsqs_o ← pow_orig pps qs
-    let pf ← mk_proof `` pow_e_pf_exp [pps.orig, p.pretty, ps.pretty, qs.orig, psqs.pretty] [pps.info, psqs.info]
+    let pf ←
+      mk_proof `` pow_e_pf_exp [pps.orig, p.pretty, ps.pretty, qs.orig, psqs.pretty]
+          [pps.info, psqs.info]
     pure <| ppsqs ppsqs_o pf
 #align tactic.ring_exp.pow_e tactic.ring_exp.pow_e
 
-theorem pow_pp_pf_one {ps : α} {qs : ℕ} : ps = 1 → ps ^ qs = 1 := fun ps_pf => by rw [ps_pf, one_pow]
+theorem pow_pp_pf_one {ps : α} {qs : ℕ} : ps = 1 → ps ^ qs = 1 := fun ps_pf => by
+  rw [ps_pf, one_pow]
 #align tactic.ring_exp.pow_pp_pf_one Tactic.RingExp.pow_pp_pf_one
 
-theorem pow_pf_c_c {ps ps' pq : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq := by cc
+theorem pow_pf_c_c {ps ps' pq : α} {qs qs' : ℕ} :
+    ps = ps' → qs = qs' → ps' ^ qs' = pq → ps ^ qs = pq := by cc
 #align tactic.ring_exp.pow_pf_c_c Tactic.RingExp.pow_pf_c_c
 
-theorem pow_pp_pf_c {ps ps' pqs : α} {qs qs' : ℕ} : ps = ps' → qs = qs' → ps' ^ qs' = pqs → ps ^ qs = pqs * 1 := by
-  simp <;> cc
+theorem pow_pp_pf_c {ps ps' pqs : α} {qs qs' : ℕ} :
+    ps = ps' → qs = qs' → ps' ^ qs' = pqs → ps ^ qs = pqs * 1 := by simp <;> cc
 #align tactic.ring_exp.pow_pp_pf_c Tactic.RingExp.pow_pp_pf_c
 
 theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
-    pps = p * ps → p ^ qs = pqs → ps ^ qs = psqs → pps ^ qs = pqs * psqs := fun pps_pf pqs_pf psqs_pf =>
+    pps = p * ps → p ^ qs = pqs → ps ^ qs = psqs → pps ^ qs = pqs * psqs :=
+  fun pps_pf pqs_pf psqs_pf =>
   calc
     pps ^ qs = (p * ps) ^ qs := by rw [pps_pf]
     _ = p ^ qs * ps ^ qs := mul_pow _ _ _
@@ -1114,8 +1143,8 @@ unsafe def pow_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
     let pqs ← ex_exp ps'' qs
     let pqs_o ← pow_orig ps qs
     let pf ←
-      mk_proof_or_refl pqs.pretty `` pow_pp_pf_c [ps.orig, ps.pretty, pqs.pretty, qs.orig, qs.pretty]
-          [ps.info, qs.info, pqs.info]
+      mk_proof_or_refl pqs.pretty `` pow_pp_pf_c
+          [ps.orig, ps.pretty, pqs.pretty, qs.orig, qs.pretty] [ps.info, qs.info, pqs.info]
     let pqs' ← exp_to_prod pqs
     pure <| pqs' pqs_o pf
   | pps@(ex.prod pps_i p ps), qs => do
@@ -1129,22 +1158,24 @@ unsafe def pow_pp : ex Prod → ex Prod → ring_exp_m (ex Prod)
     pure <| ppsqs ppsqs_o pf
 #align tactic.ring_exp.pow_pp tactic.ring_exp.pow_pp
 
-theorem pow_p_pf_one {ps ps' : α} {qs : ℕ} : ps = ps' → qs = succ zero → ps ^ qs = ps' := fun ps_pf qs_pf =>
+theorem pow_p_pf_one {ps ps' : α} {qs : ℕ} : ps = ps' → qs = succ zero → ps ^ qs = ps' :=
+  fun ps_pf qs_pf =>
   calc
     ps ^ qs = ps' ^ 1 := by rw [ps_pf, qs_pf]
     _ = ps' := pow_one _
     
 #align tactic.ring_exp.pow_p_pf_one Tactic.RingExp.pow_p_pf_one
 
-theorem pow_p_pf_zero {ps : α} {qs qs' : ℕ} : ps = 0 → qs = succ qs' → ps ^ qs = 0 := fun ps_pf qs_pf =>
+theorem pow_p_pf_zero {ps : α} {qs qs' : ℕ} : ps = 0 → qs = succ qs' → ps ^ qs = 0 :=
+  fun ps_pf qs_pf =>
   calc
     ps ^ qs = 0 ^ succ qs' := by rw [ps_pf, qs_pf]
     _ = 0 := zero_pow (succ_pos qs')
     
 #align tactic.ring_exp.pow_p_pf_zero Tactic.RingExp.pow_p_pf_zero
 
-theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} : qs = succ qs' → ps * ps ^ qs' = pqqs → ps ^ qs = pqqs :=
-  fun qs_pf pqqs_pf =>
+theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} :
+    qs = succ qs' → ps * ps ^ qs' = pqqs → ps ^ qs = pqqs := fun qs_pf pqqs_pf =>
   calc
     ps ^ qs = ps ^ succ qs' := by rw [qs_pf]
     _ = ps * ps ^ qs' := pow_succ _ _
@@ -1182,14 +1213,16 @@ unsafe def pow_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
   | pps@(ex.sum pps_i p (ex.zero _)), qqs => do
     let pqs ← pow_pp p qqs
     let pqs_o ← pow_orig pps qqs
-    let pf ← mk_proof `` pow_p_pf_singleton [pps.orig, p.pretty, pqs.pretty, qqs.orig] [pps.info, pqs.info]
+    let pf ←
+      mk_proof `` pow_p_pf_singleton [pps.orig, p.pretty, pqs.pretty, qqs.orig] [pps.info, pqs.info]
     prod_to_sum <| pqs pqs_o pf
   | ps, qs@(ex.coeff qs_i ⟨⟨Int.ofNat (succ n), 1, den_pos, _⟩⟩) => do
     let qs' ← in_exponent <| ex_coeff ⟨Int.ofNat n, 1, den_pos, coprime_one_right _⟩
     let pqs ← pow_p ps qs'
     let pqqs ← mul ps pqs
     let pqqs_o ← pow_orig ps qs
-    let pf ← mk_proof `` pow_p_pf_succ [ps.orig, pqqs.pretty, qs.orig, qs'.pretty] [qs.info, pqqs.info]
+    let pf ←
+      mk_proof `` pow_p_pf_succ [ps.orig, pqqs.pretty, qs.orig, qs'.pretty] [qs.info, pqqs.info]
     pure <| pqqs pqqs_o pf
   | pps, qqs => do
     let pps'
@@ -1199,7 +1232,8 @@ unsafe def pow_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let psqs ← ex_exp pps' qqs
     let psqs_o ← pow_orig pps qqs
     let pf ←
-      mk_proof_or_refl psqs.pretty `` pow_p_pf_cons [pps.orig, pps.pretty, qqs.orig, qqs.pretty] [pps.info, qqs.info]
+      mk_proof_or_refl psqs.pretty `` pow_p_pf_cons [pps.orig, pps.pretty, qqs.orig, qqs.pretty]
+          [pps.info, qqs.info]
     exp_to_prod (psqs psqs_o pf) >>= prod_to_sum
 #align tactic.ring_exp.pow_p tactic.ring_exp.pow_p
 
@@ -1210,8 +1244,8 @@ theorem pow_pf_zero {ps : α} {qs : ℕ} : qs = 0 → ps ^ qs = 1 := fun qs_pf =
     
 #align tactic.ring_exp.pow_pf_zero Tactic.RingExp.pow_pf_zero
 
-theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} : qqs = q + qs → ps ^ q * ps ^ qs = psqqs → ps ^ qqs = psqqs :=
-  fun qqs_pf psqqs_pf =>
+theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} :
+    qqs = q + qs → ps ^ q * ps ^ qs = psqqs → ps ^ qqs = psqqs := fun qqs_pf psqqs_pf =>
   calc
     ps ^ qqs = ps ^ (q + qs) := by rw [qqs_pf]
     _ = ps ^ q * ps ^ qs := pow_add _ _ _
@@ -1235,7 +1269,9 @@ unsafe def pow : ex Sum → ex Sum → ring_exp_m (ex Sum)
     let psqs ← pow ps qs
     let psqqs ← mul psq psqs
     let psqqs_o ← pow_orig ps qqs
-    let pf ← mk_proof `` pow_pf_sum [ps.orig, psqqs.pretty, qqs.orig, q.pretty, qs.pretty] [qqs.info, psqqs.info]
+    let pf ←
+      mk_proof `` pow_pf_sum [ps.orig, psqqs.pretty, qqs.orig, q.pretty, qs.pretty]
+          [qqs.info, psqqs.info]
     pure <| psqqs psqqs_o pf
 #align tactic.ring_exp.pow tactic.ring_exp.pow
 
@@ -1282,7 +1318,8 @@ unsafe def ex.simple : ∀ {et : ExType}, ex et → ring_exp_m (expr × expr)
       | none => Prod.mk pps <$> lift (mk_eq_refl pps)
       | some ringi => do
         let (p_p, p_pf) ← p
-        Prod.mk <$> lift (mk_app `` Neg.neg [p_p]) <*> mk_app_class `` simple_pf_prod_neg_one ringi [p, p_p, p_pf]
+        Prod.mk <$> lift (mk_app `` Neg.neg [p_p]) <*>
+            mk_app_class `` simple_pf_prod_neg_one ringi [p, p_p, p_pf]
   | Prod, ex.prod pps_i p ps => do
     let (p_p, p_pf) ← p.simple
     let (ps_p, ps_pf) ← ps.simple
@@ -1389,15 +1426,18 @@ unsafe def inverse (ps : ex Sum) : ring_exp_m (ex Sum) := do
   let ps_pf ← ps.proof_term
   let e''_pf ← e''.proof_term
   let pf ←
-    mk_app_class `` inverse_pf dri [ps.orig, ps.pretty, ps_simple, e', e''.pretty, ps_pf, ps_simple_pf, e_pf, e''_pf]
+    mk_app_class `` inverse_pf dri
+        [ps.orig, ps.pretty, ps_simple, e', e''.pretty, ps_pf, ps_simple_pf, e_pf, e''_pf]
   let e''_o ← lift <| mk_app `` Inv.inv [ps.orig]
   pure <| e'' e''_o pf
 #align tactic.ring_exp.inverse tactic.ring_exp.inverse
 
-theorem sub_pf {α} [Ring α] {ps qs psqs : α} (h : ps + -qs = psqs) : ps - qs = psqs := by rwa [sub_eq_add_neg]
+theorem sub_pf {α} [Ring α] {ps qs psqs : α} (h : ps + -qs = psqs) : ps - qs = psqs := by
+  rwa [sub_eq_add_neg]
 #align tactic.ring_exp.sub_pf Tactic.RingExp.sub_pf
 
-theorem div_pf {α} [DivisionRing α] {ps qs psqs : α} (h : ps * qs⁻¹ = psqs) : ps / qs = psqs := by rwa [div_eq_mul_inv]
+theorem div_pf {α} [DivisionRing α] {ps qs psqs : α} (h : ps * qs⁻¹ = psqs) : ps / qs = psqs := by
+  rwa [div_eq_mul_inv]
 #align tactic.ring_exp.div_pf Tactic.RingExp.div_pf
 
 end Operations
@@ -1435,7 +1475,10 @@ open ExType
       |
         ps_o @ q( Nat.succ $ ( p_o ) )
         =>
-        do let ps' ← eval q( $ ( p_o ) + 1 ) let pf ← lift <| mk_app ` ` Nat.succ_eq_add_one [ p_o ] rewrite ps_o ps' pf
+        do
+          let ps' ← eval q( $ ( p_o ) + 1 )
+            let pf ← lift <| mk_app ` ` Nat.succ_eq_add_one [ p_o ]
+            rewrite ps_o ps' pf
       |
         e @ q( $ ( ps ) - $ ( qs ) )
         =>
@@ -1448,7 +1491,8 @@ open ExType
                     match
                       ctx . info_b . ring_instance
                       with
-                      | none => lift <| fail "subtraction is not directly supported in a semiring" | some ri => pure ri
+                      | none => lift <| fail "subtraction is not directly supported in a semiring"
+                        | some ri => pure ri
                 let ps' ← eval ps
                 let qs' ← eval qs >>= negate
                 let psqs ← add ps' qs'
@@ -1472,7 +1516,8 @@ open ExType
                 match
                   ctx . info_b . dr_instance
                   with
-                  | none => lift <| fail "division is only directly supported in a division ring" | some dri => pure dri
+                  | none => lift <| fail "division is only directly supported in a division ring"
+                    | some dri => pure dri
             let ps' ← eval ps
             let qs' ← eval qs
             (
@@ -1502,7 +1547,10 @@ open ExType
                           hp_instance
                           with
                           | q( Monoid.hasPow ) => lift <| mk_eq_refl e
-                            | _ => lift <| fail "has_pow instance must be nat.has_pow or monoid.has_pow"
+                            |
+                              _
+                              =>
+                              lift <| fail "has_pow instance must be nat.has_pow or monoid.has_pow"
                     let pf ← lift <| mk_eq_trans has_pow_pf psqs_pf
                     pure <| psqs e pf
                 )
@@ -1588,7 +1636,8 @@ to determine equality of atoms.
 unsafe def ring_exp_eq (red : parse (tk "!")?) : tactic Unit := do
   let q(Eq $(ps) $(qs)) ← target >>= whnf
   let transp := if red.isSome then semireducible else reducible
-  let ((ps', ps_pf), (qs', qs_pf)) ← run_ring_exp transp ps <| Prod.mk <$> eval_with_proof ps <*> eval_with_proof qs
+  let ((ps', ps_pf), (qs', qs_pf)) ←
+    run_ring_exp transp ps <| Prod.mk <$> eval_with_proof ps <*> eval_with_proof qs
   if ps' qs' then do
       let qs_pf_inv ← mk_eq_symm qs_pf
       let pf ← mk_eq_trans ps_pf qs_pf_inv
@@ -1648,7 +1697,8 @@ local postfix:1024 "?" => optional
 -/
 unsafe def ring_exp (red : parse (lean.parser.tk "!")?) : conv Unit :=
   let transp := if red.isSome then semireducible else reducible
-  discharge_eq_lhs (ring_exp_eq red) <|> replace_lhs (normalize transp) <|> fail "ring_exp failed to simplify"
+  discharge_eq_lhs (ring_exp_eq red) <|>
+    replace_lhs (normalize transp) <|> fail "ring_exp failed to simplify"
 #align conv.interactive.ring_exp conv.interactive.ring_exp
 
 end Conv.Interactive

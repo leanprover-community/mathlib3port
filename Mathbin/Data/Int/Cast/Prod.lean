@@ -16,7 +16,8 @@ namespace Prod
 variable {α β : Type _} [AddGroupWithOne α] [AddGroupWithOne β]
 
 instance : AddGroupWithOne (α × β) :=
-  { Prod.addMonoidWithOne, Prod.addGroup with intCast := fun n => (n, n), int_cast_of_nat := fun _ => by simp <;> rfl,
+  { Prod.addMonoidWithOne, Prod.addGroup with intCast := fun n => (n, n),
+    int_cast_of_nat := fun _ => by simp <;> rfl,
     int_cast_neg_succ_of_nat := fun _ => by simp <;> rfl }
 
 @[simp]

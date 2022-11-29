@@ -57,19 +57,24 @@ instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) := by
   exact add_le_add le_rfl h3
 
 instance : OrderedAddCommGroup (lp E p μ) :=
-  { Subtype.partialOrder _, AddSubgroup.toAddCommGroup _ with add_le_add_left := fun f g => add_le_add_left }
+  { Subtype.partialOrder _, AddSubgroup.toAddCommGroup _ with
+    add_le_add_left := fun f g => add_le_add_left }
 
-theorem _root_.measure_theory.mem_ℒp.sup {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : Memℒp (f ⊔ g) p μ :=
-  Memℒp.mono' (hf.norm.add hg.norm) (hf.1.sup hg.1) (Filter.eventually_of_forall fun x => norm_sup_le_add (f x) (g x))
-#align measure_theory.Lp._root_.measure_theory.mem_ℒp.sup measure_theory.Lp._root_.measure_theory.mem_ℒp.sup
+theorem MeasureTheory.Memℒp.sup {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) :
+    Memℒp (f ⊔ g) p μ :=
+  Memℒp.mono' (hf.norm.add hg.norm) (hf.1.sup hg.1)
+    (Filter.eventually_of_forall fun x => norm_sup_le_add (f x) (g x))
+#align measure_theory.mem_ℒp.sup MeasureTheory.Memℒp.sup
 
-theorem _root_.measure_theory.mem_ℒp.inf {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : Memℒp (f ⊓ g) p μ :=
-  Memℒp.mono' (hf.norm.add hg.norm) (hf.1.inf hg.1) (Filter.eventually_of_forall fun x => norm_inf_le_add (f x) (g x))
-#align measure_theory.Lp._root_.measure_theory.mem_ℒp.inf measure_theory.Lp._root_.measure_theory.mem_ℒp.inf
+theorem MeasureTheory.Memℒp.inf {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) :
+    Memℒp (f ⊓ g) p μ :=
+  Memℒp.mono' (hf.norm.add hg.norm) (hf.1.inf hg.1)
+    (Filter.eventually_of_forall fun x => norm_inf_le_add (f x) (g x))
+#align measure_theory.mem_ℒp.inf MeasureTheory.Memℒp.inf
 
-theorem _root_.measure_theory.mem_ℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (|f|) p μ :=
+theorem MeasureTheory.Memℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (|f|) p μ :=
   hf.sup hf.neg
-#align measure_theory.Lp._root_.measure_theory.mem_ℒp.abs measure_theory.Lp._root_.measure_theory.mem_ℒp.abs
+#align measure_theory.mem_ℒp.abs MeasureTheory.Memℒp.abs
 
 instance : Lattice (lp E p μ) :=
   Subtype.lattice

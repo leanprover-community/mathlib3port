@@ -57,17 +57,16 @@ variable [CanonicallyOrderedAddMonoid α] [Sub α] [HasOrderedSub α]
 instance : HasOrderedSub (WithTop α) := by
   constructor
   rintro x y z
-  induction y using WithTop.recTopCoe
+  induction y using WithTop.recTopCoe;
   · simp
     
-  induction x using WithTop.recTopCoe
+  induction x using WithTop.recTopCoe;
   · simp
     
-  induction z using WithTop.recTopCoe
+  induction z using WithTop.recTopCoe;
   · simp
     
-  norm_cast
-  exact tsub_le_iff_right
+  norm_cast; exact tsub_le_iff_right
 
 end WithTop
 

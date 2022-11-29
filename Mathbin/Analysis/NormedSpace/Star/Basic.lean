@@ -63,7 +63,8 @@ def starNormedAddGroupHom : NormedAddGroupHom E E :=
 
 /-- The `star` map in a normed star group is an isometry -/
 theorem starIsometry : Isometry (star : E → E) :=
-  show Isometry starAddEquiv from AddMonoidHomClass.isometryOfNorm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
+  show Isometry starAddEquiv from
+    AddMonoidHomClass.isometryOfNorm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
 #align star_isometry starIsometry
 
 instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuousStar E :=
@@ -100,7 +101,8 @@ instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
     · simp only [htriv, star_zero]
       
     · have hnt : 0 < ‖x‖ := norm_pos_iff.mpr htriv
-      have hnt_star : 0 < ‖x⋆‖ := norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
+      have hnt_star : 0 < ‖x⋆‖ :=
+        norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
       have h₁ :=
         calc
           ‖x‖ * ‖x‖ = ‖x⋆ * x‖ := norm_star_mul_self.symm
@@ -137,7 +139,8 @@ theorem star_mul_self_eq_zero_iff (x : E) : star x * x = 0 ↔ x = 0 := by
   exact mul_self_eq_zero.trans norm_eq_zero
 #align cstar_ring.star_mul_self_eq_zero_iff CstarRing.star_mul_self_eq_zero_iff
 
-theorem star_mul_self_ne_zero_iff (x : E) : star x * x ≠ 0 ↔ x ≠ 0 := by simp only [Ne.def, star_mul_self_eq_zero_iff]
+theorem star_mul_self_ne_zero_iff (x : E) : star x * x ≠ 0 ↔ x ≠ 0 := by
+  simp only [Ne.def, star_mul_self_eq_zero_iff]
 #align cstar_ring.star_mul_self_ne_zero_iff CstarRing.star_mul_self_ne_zero_iff
 
 @[simp]
@@ -145,7 +148,8 @@ theorem mul_star_self_eq_zero_iff (x : E) : x * star x = 0 ↔ x = 0 := by
   simpa only [star_eq_zero, star_star] using @star_mul_self_eq_zero_iff _ _ _ _ (star x)
 #align cstar_ring.mul_star_self_eq_zero_iff CstarRing.mul_star_self_eq_zero_iff
 
-theorem mul_star_self_ne_zero_iff (x : E) : x * star x ≠ 0 ↔ x ≠ 0 := by simp only [Ne.def, mul_star_self_eq_zero_iff]
+theorem mul_star_self_ne_zero_iff (x : E) : x * star x ≠ 0 ↔ x ≠ 0 := by
+  simp only [Ne.def, mul_star_self_eq_zero_iff]
 #align cstar_ring.mul_star_self_ne_zero_iff CstarRing.mul_star_self_ne_zero_iff
 
 end NonUnital
@@ -162,13 +166,13 @@ variable [∀ i, NonUnitalNormedRing (R i)] [∀ i, StarRing (R i)]
 
 /-- This instance exists to short circuit type class resolution because of problems with
 inference involving Π-types. -/
-instance _root_.pi.star_ring' : StarRing (∀ i, R i) :=
+instance Pi.starRing' : StarRing (∀ i, R i) :=
   inferInstance
-#align cstar_ring._root_.pi.star_ring' cstar_ring._root_.pi.star_ring'
+#align pi.star_ring' Pi.starRing'
 
 variable [Fintype ι] [∀ i, CstarRing (R i)]
 
-instance _root_.prod.cstar_ring :
+instance Prod.cstarRing :
     CstarRing (R₁ × R₂) where norm_star_mul_self x := by
     unfold norm
     simp only [Prod.fst_mul, Prod.fst_star, Prod.snd_mul, Prod.snd_star, norm_star_mul_self, ← sq]
@@ -180,20 +184,20 @@ instance _root_.prod.cstar_ring :
     · rw [le_sup_iff]
       rcases le_total ‖x.fst‖ ‖x.snd‖ with (h | h) <;> simp [h]
       
-#align cstar_ring._root_.prod.cstar_ring cstar_ring._root_.prod.cstar_ring
+#align prod.cstar_ring Prod.cstarRing
 
-instance _root_.pi.cstar_ring :
+instance Pi.cstarRing :
     CstarRing (∀ i, R i) where norm_star_mul_self x := by
     simp only [norm, Pi.mul_apply, Pi.star_apply, nnnorm_star_mul_self, ← sq]
     norm_cast
     exact
       (Finset.comp_sup_eq_sup_comp_of_is_total (fun x : Nnreal => x ^ 2)
           (fun x y h => by simpa only [sq] using mul_le_mul' h h) (by simp)).symm
-#align cstar_ring._root_.pi.cstar_ring cstar_ring._root_.pi.cstar_ring
+#align pi.cstar_ring Pi.cstarRing
 
-instance _root_.pi.cstar_ring' : CstarRing (ι → R₁) :=
+instance Pi.cstarRing' : CstarRing (ι → R₁) :=
   Pi.cstarRing
-#align cstar_ring._root_.pi.cstar_ring' cstar_ring._root_.pi.cstar_ring'
+#align pi.cstar_ring' Pi.cstarRing'
 
 end ProdPi
 
@@ -212,8 +216,8 @@ instance (priority := 100) [Nontrivial E] : NormOneClass E :=
   ⟨norm_one⟩
 
 theorem norm_coe_unitary [Nontrivial E] (U : unitary E) : ‖(U : E)‖ = 1 := by
-  rw [← sq_eq_sq (norm_nonneg _) zero_le_one, one_pow 2, sq, ← CstarRing.norm_star_mul_self, unitary.coe_star_mul_self,
-    CstarRing.norm_one]
+  rw [← sq_eq_sq (norm_nonneg _) zero_le_one, one_pow 2, sq, ← CstarRing.norm_star_mul_self,
+    unitary.coe_star_mul_self, CstarRing.norm_one]
 #align cstar_ring.norm_coe_unitary CstarRing.norm_coe_unitary
 
 @[simp]
@@ -267,8 +271,8 @@ end Unital
 
 end CstarRing
 
-theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : IsSelfAdjoint x)
-    (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n := by
+theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E}
+    (hx : IsSelfAdjoint x) (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n := by
   induction' n with k hk
   · simp only [pow_zero, pow_one]
     
@@ -278,8 +282,8 @@ theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing 
     
 #align is_self_adjoint.nnnorm_pow_two_pow IsSelfAdjoint.nnnorm_pow_two_pow
 
-theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E) (n : ℕ) :
-    ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=
+theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E)
+    (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=
   x.Prop.nnnorm_pow_two_pow _
 #align self_adjoint.nnnorm_pow_two_pow selfAdjoint.nnnorm_pow_two_pow
 
@@ -328,11 +332,14 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ := by
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
     
   · rintro - ⟨x, hx, rfl⟩
-    exact ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans (op_norm_mul_apply_le 𝕜 E a)
+    exact
+      ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans
+        (op_norm_mul_apply_le 𝕜 E a)
     
   · have ha : 0 < ‖a‖₊ := zero_le'.trans_lt hr
     rw [← inv_inv ‖a‖₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
-    obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| Nnreal.inv_pos.2 ha)
+    obtain ⟨k, hk₁, hk₂⟩ :=
+      NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| Nnreal.inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩
     · simpa only [mem_closed_ball_zero_iff, norm_smul, one_mul, norm_star] using
         (Nnreal.le_inv_iff_mul_le ha.ne').1 (one_mul ‖a‖₊⁻¹ ▸ hk₂.le : ‖k‖₊ ≤ ‖a‖₊⁻¹)
@@ -350,8 +357,8 @@ theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ := by
   rw [← Sup_unit_ball_eq_nnnorm, ← nnnorm_star, ← @op_nnnorm_mul 𝕜 E, ← Sup_unit_ball_eq_nnnorm]
   congr 1
   simp only [mul_apply', flip_apply]
-  refine' Set.Subset.antisymm _ _ <;>
-    rintro - ⟨b, hb, rfl⟩ <;> refine' ⟨star b, by simpa only [norm_star, mem_ball_zero_iff] using hb, _⟩
+  refine' Set.Subset.antisymm _ _ <;> rintro - ⟨b, hb, rfl⟩ <;>
+    refine' ⟨star b, by simpa only [norm_star, mem_ball_zero_iff] using hb, _⟩
   · simp only [← star_mul, nnnorm_star]
     
   · simpa using (nnnorm_star (star b * a)).symm

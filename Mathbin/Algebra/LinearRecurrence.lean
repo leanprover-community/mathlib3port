@@ -82,11 +82,13 @@ def mkSol (init : Fin E.order → α) : ℕ → α
 #align linear_recurrence.mk_sol LinearRecurrence.mkSol
 
 /-- `E.mk_sol` indeed gives solutions to `E`. -/
-theorem is_sol_mk_sol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) := fun n => by rw [mk_sol] <;> simp
+theorem is_sol_mk_sol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) := fun n => by
+  rw [mk_sol] <;> simp
 #align linear_recurrence.is_sol_mk_sol LinearRecurrence.is_sol_mk_sol
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
-theorem mk_sol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n := fun n => by
+theorem mk_sol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n :=
+  fun n => by
   rw [mk_sol]
   simp only [n.is_lt, dif_pos, Fin.mk_coe, Fin.eta]
 #align linear_recurrence.mk_sol_eq_init LinearRecurrence.mk_sol_eq_init
@@ -96,7 +98,8 @@ theorem mk_sol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSo
 theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} (h : E.IsSolution u)
     (heq : ∀ n : Fin E.order, u n = init n) : ∀ n, u n = E.mkSol init n
   | n =>
-    if h' : n < E.order then by rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
+    if h' : n < E.order then by
+      rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
     else by
       rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
       simp [h']
@@ -157,8 +160,7 @@ theorem sol_eq_of_eq_init (u v : ℕ → α) (hu : E.IsSolution u) (hv : E.IsSol
   set u' : ↥E.sol_space := ⟨u, hu⟩
   set v' : ↥E.sol_space := ⟨v, hv⟩
   change u'.val = v'.val
-  suffices h' : u' = v'
-  exact h' ▸ rfl
+  suffices h' : u' = v'; exact h' ▸ rfl
   rw [← E.to_init.to_equiv.apply_eq_iff_eq, LinearEquiv.coe_to_equiv]
   ext x
   exact_mod_cast h (mem_range.mpr x.2)
@@ -207,9 +209,11 @@ def charPoly : α[X] :=
 
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
-theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q := by
+theorem geom_sol_iff_root_char_poly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=
+  by
   rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
-  simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial, Polynomial.eval₂_sub]
+  simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial,
+    Polynomial.eval₂_sub]
   constructor
   · intro h
     simpa [sub_eq_zero] using h 0

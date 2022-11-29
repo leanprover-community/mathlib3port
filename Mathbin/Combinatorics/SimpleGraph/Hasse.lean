@@ -68,7 +68,8 @@ variable [PartialOrder α] [PartialOrder β]
 @[simp]
 theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by
   ext (x y)
-  simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2, or_or_or_comm]
+  simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
+    or_or_or_comm]
 #align simple_graph.hasse_prod SimpleGraph.hasse_prod
 
 end PartialOrder
@@ -77,18 +78,20 @@ section LinearOrder
 
 variable [LinearOrder α]
 
-theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hasse α).Preconnected := fun a b => by
+theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hasse α).Preconnected :=
+  fun a b => by
   rw [reachable_iff_refl_trans_gen]
   exact
-    refl_trans_gen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max) fun c hc =>
-      Or.inr <| covby_succ_of_not_is_max hc.2.not_is_max
+    refl_trans_gen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max)
+      fun c hc => Or.inr <| covby_succ_of_not_is_max hc.2.not_is_max
 #align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
-theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected := fun a b => by
+theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected :=
+  fun a b => by
   rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
   exact
-    refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min) fun c hc =>
-      Or.inr <| pred_covby_of_not_is_min hc.1.not_is_min
+    refl_trans_gen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min)
+      fun c hc => Or.inr <| pred_covby_of_not_is_min hc.1.not_is_min
 #align simple_graph.hasse_preconnected_of_pred SimpleGraph.hasse_preconnected_of_pred
 
 end LinearOrder

@@ -30,8 +30,8 @@ then there exists a continuous function `f : X → ℝ` such that
 * `f` equals one on `t`;
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
-theorem exists_bounded_zero_one_of_closed {X : Type _} [TopologicalSpace X] [NormalSpace X] {s t : Set X}
-    (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
+theorem exists_bounded_zero_one_of_closed {X : Type _} [TopologicalSpace X] [NormalSpace X]
+    {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
     ∃ f : X →ᵇ ℝ, EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 :=
   let ⟨f, hfs, hft, hf⟩ := exists_continuous_zero_one_of_closed hs ht hd
   ⟨⟨f, 1, fun x y => Real.dist_le_of_mem_Icc_01 (hf _) (hf _)⟩, hfs, hft, hf⟩
@@ -44,11 +44,12 @@ and `a ≤ b` are two real numbers, then there exists a continuous function `f :
 * `f` equals `b` on `t`;
 * `a ≤ f x ≤ b` for all `x`.
 -/
-theorem exists_bounded_mem_Icc_of_closed_of_le {X : Type _} [TopologicalSpace X] [NormalSpace X] {s t : Set X}
-    (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) {a b : ℝ} (hle : a ≤ b) :
+theorem exists_bounded_mem_Icc_of_closed_of_le {X : Type _} [TopologicalSpace X] [NormalSpace X]
+    {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) {a b : ℝ} (hle : a ≤ b) :
     ∃ f : X →ᵇ ℝ, EqOn f (const X a) s ∧ EqOn f (const X b) t ∧ ∀ x, f x ∈ icc a b :=
   let ⟨f, hfs, hft, hf01⟩ := exists_bounded_zero_one_of_closed hs ht hd
-  ⟨BoundedContinuousFunction.const X a + (b - a) • f, fun x hx => by simp [hfs hx], fun x hx => by simp [hft hx],
-    fun x => ⟨by dsimp <;> nlinarith [(hf01 x).1], by dsimp <;> nlinarith [(hf01 x).2]⟩⟩
+  ⟨BoundedContinuousFunction.const X a + (b - a) • f, fun x hx => by simp [hfs hx], fun x hx => by
+    simp [hft hx], fun x =>
+    ⟨by dsimp <;> nlinarith [(hf01 x).1], by dsimp <;> nlinarith [(hf01 x).2]⟩⟩
 #align exists_bounded_mem_Icc_of_closed_of_le exists_bounded_mem_Icc_of_closed_of_le
 

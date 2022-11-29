@@ -82,8 +82,8 @@ end OrderIso
 
 /-- If a function `f` is strictly monotone on a set `s`, then it defines an order isomorphism
 between `s` and its image. -/
-protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrder α] [Preorder β] (f : α → β) (s : Set α)
-    (hf : StrictMonoOn f s) : s ≃o f '' s where
+protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrder α] [Preorder β] (f : α → β)
+    (s : Set α) (hf : StrictMonoOn f s) : s ≃o f '' s where
   toEquiv := hf.InjOn.bij_on_image.Equiv _
   map_rel_iff' x y := hf.le_iff_le x.2 y.2
 #align strict_mono_on.order_iso StrictMonoOn.orderIso
@@ -113,13 +113,17 @@ theorem coe_order_iso_of_surjective : (orderIsoOfSurjective f h_mono h_surj : α
 #align strict_mono.coe_order_iso_of_surjective StrictMono.coe_order_iso_of_surjective
 
 @[simp]
-theorem order_iso_of_surjective_symm_apply_self (a : α) : (orderIsoOfSurjective f h_mono h_surj).symm (f a) = a :=
+theorem order_iso_of_surjective_symm_apply_self (a : α) :
+    (orderIsoOfSurjective f h_mono h_surj).symm (f a) = a :=
   (orderIsoOfSurjective f h_mono h_surj).symm_apply_apply _
-#align strict_mono.order_iso_of_surjective_symm_apply_self StrictMono.order_iso_of_surjective_symm_apply_self
+#align
+  strict_mono.order_iso_of_surjective_symm_apply_self StrictMono.order_iso_of_surjective_symm_apply_self
 
-theorem order_iso_of_surjective_self_symm_apply (b : β) : f ((orderIsoOfSurjective f h_mono h_surj).symm b) = b :=
+theorem order_iso_of_surjective_self_symm_apply (b : β) :
+    f ((orderIsoOfSurjective f h_mono h_surj).symm b) = b :=
   (orderIsoOfSurjective f h_mono h_surj).apply_symm_apply _
-#align strict_mono.order_iso_of_surjective_self_symm_apply StrictMono.order_iso_of_surjective_self_symm_apply
+#align
+  strict_mono.order_iso_of_surjective_self_symm_apply StrictMono.order_iso_of_surjective_self_symm_apply
 
 end StrictMono
 

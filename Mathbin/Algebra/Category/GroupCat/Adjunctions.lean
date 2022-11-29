@@ -57,7 +57,8 @@ theorem free_obj_coe {α : Type u} : (free.obj α : Type u) = FreeAbelianGroup �
 #align AddCommGroup.free_obj_coe AddCommGroupCat.free_obj_coe
 
 @[simp]
-theorem free_map_coe {α β : Type u} {f : α → β} (x : FreeAbelianGroup α) : (free.map f) x = f <$> x :=
+theorem free_map_coe {α β : Type u} {f : α → β} (x : FreeAbelianGroup α) :
+    (free.map f) x = f <$> x :=
   rfl
 #align AddCommGroup.free_map_coe AddCommGroupCat.free_map_coe
 
@@ -124,7 +125,8 @@ section Abelianization
 def abelianize : GroupCat.{u} ⥤ CommGroupCat.{u} where
   obj G := { α := Abelianization G, str := by infer_instance }
   map G H f :=
-    Abelianization.lift { toFun := fun x => Abelianization.of (f x), map_one' := by simp, map_mul' := by simp }
+    Abelianization.lift
+      { toFun := fun x => Abelianization.of (f x), map_one' := by simp, map_mul' := by simp }
   map_id' := by
     intros
     simp only [MonoidHom.mk_coe, coe_id]
@@ -161,11 +163,13 @@ def MonCat.units : MonCat.{u} ⥤ GroupCat.{u} where
 def GroupCat.forget₂MonAdj : forget₂ GroupCat MonCat ⊣ MonCat.units.{u} where
   homEquiv X Y :=
     { toFun := fun f => MonoidHom.toHomUnits f, invFun := fun f => (Units.coeHom Y).comp f,
-      left_inv := fun f => MonoidHom.ext fun _ => rfl, right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
+      left_inv := fun f => MonoidHom.ext fun _ => rfl,
+      right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
   Unit :=
     { app := fun X => { (@toUnits X _).toMonoidHom with },
       naturality' := fun X Y f => MonoidHom.ext fun x => Units.ext rfl }
-  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
+  counit :=
+    { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
   hom_equiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
   hom_equiv_counit' X Y f := MonoidHom.ext fun _ => rfl
 #align Group.forget₂_Mon_adj GroupCat.forget₂MonAdj
@@ -186,11 +190,13 @@ def CommMonCat.units : CommMonCat.{u} ⥤ CommGroupCat.{u} where
 def CommGroupCat.forget₂CommMonAdj : forget₂ CommGroupCat CommMonCat ⊣ CommMonCat.units.{u} where
   homEquiv X Y :=
     { toFun := fun f => MonoidHom.toHomUnits f, invFun := fun f => (Units.coeHom Y).comp f,
-      left_inv := fun f => MonoidHom.ext fun _ => rfl, right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
+      left_inv := fun f => MonoidHom.ext fun _ => rfl,
+      right_inv := fun f => MonoidHom.ext fun _ => Units.ext rfl }
   Unit :=
     { app := fun X => { (@toUnits X _).toMonoidHom with },
       naturality' := fun X Y f => MonoidHom.ext fun x => Units.ext rfl }
-  counit := { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
+  counit :=
+    { app := fun X => Units.coeHom X, naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
   hom_equiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
   hom_equiv_counit' X Y f := MonoidHom.ext fun _ => rfl
 #align CommGroup.forget₂_CommMon_adj CommGroupCat.forget₂CommMonAdj

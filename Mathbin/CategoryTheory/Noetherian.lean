@@ -70,7 +70,8 @@ open Subobject
 
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
-theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : ∃ Y : Subobject X, Simple (Y : C) := by
+theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) :
+    ∃ Y : Subobject X, Simple (Y : C) := by
   haveI : Nontrivial (subobject X) := nontrivial_of_not_is_zero h
   haveI := is_atomic_of_order_bot_well_founded_lt (artinian_object.subobject_lt_well_founded X)
   have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)
@@ -84,7 +85,8 @@ noncomputable def simpleSubobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : 
 #align category_theory.simple_subobject CategoryTheory.simpleSubobject
 
 /-- The monomorphism from the arbitrary simple subobject of a non-zero artinian object. -/
-noncomputable def simpleSubobjectArrow {X : C} [ArtinianObject X] (h : ¬IsZero X) : simpleSubobject h ⟶ X :=
+noncomputable def simpleSubobjectArrow {X : C} [ArtinianObject X] (h : ¬IsZero X) :
+    simpleSubobject h ⟶ X :=
   (exists_simple_subobject h).some.arrow deriving Mono
 #align category_theory.simple_subobject_arrow CategoryTheory.simpleSubobjectArrow
 

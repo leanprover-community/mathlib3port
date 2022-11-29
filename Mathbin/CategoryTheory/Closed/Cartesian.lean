@@ -52,8 +52,8 @@ abbrev Exponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X : C)
 This isn't an instance because it's not usually how we want to construct exponentials, we'll usually
 prove all objects are exponential uniformly.
 -/
-def binaryProductExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] {X Y : C} (hX : Exponentiable X)
-    (hY : Exponentiable Y) : Exponentiable (X ⨯ Y) :=
+def binaryProductExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] {X Y : C}
+    (hX : Exponentiable X) (hY : Exponentiable Y) : Exponentiable (X ⨯ Y) :=
   tensorClosed hX hY
 #align category_theory.binary_product_exponentiable CategoryTheory.binaryProductExponentiable
 
@@ -61,7 +61,8 @@ def binaryProductExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts 
 This isn't an instance because most of the time we'll prove cartesian closed for all objects
 at once, rather than just for this one.
 -/
-def terminalExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] : Exponentiable (⊤_ C) :=
+def terminalExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] :
+    Exponentiable (⊤_ C) :=
   unit_closed
 #align category_theory.terminal_exponentiable CategoryTheory.terminalExponentiable
 
@@ -137,32 +138,43 @@ def uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X) :=
 @[simp]
 theorem hom_equiv_apply_eq (f : A ⨯ Y ⟶ X) : (exp.adjunction A).homEquiv _ _ f = curry f :=
   rfl
-#align category_theory.cartesian_closed.hom_equiv_apply_eq CategoryTheory.CartesianClosed.hom_equiv_apply_eq
+#align
+  category_theory.cartesian_closed.hom_equiv_apply_eq CategoryTheory.CartesianClosed.hom_equiv_apply_eq
 
 @[simp]
-theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟹ X) : ((exp.adjunction A).homEquiv _ _).symm f = uncurry f :=
+theorem hom_equiv_symm_apply_eq (f : Y ⟶ A ⟹ X) :
+    ((exp.adjunction A).homEquiv _ _).symm f = uncurry f :=
   rfl
-#align category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.hom_equiv_symm_apply_eq
+#align
+  category_theory.cartesian_closed.hom_equiv_symm_apply_eq CategoryTheory.CartesianClosed.hom_equiv_symm_apply_eq
 
 @[reassoc]
-theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) : curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
+theorem curry_natural_left (f : X ⟶ X') (g : A ⨯ X' ⟶ Y) :
+    curry (Limits.prod.map (𝟙 _) f ≫ g) = f ≫ curry g :=
   Adjunction.hom_equiv_naturality_left _ _ _
-#align category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
+#align
+  category_theory.cartesian_closed.curry_natural_left CategoryTheory.CartesianClosed.curry_natural_left
 
 @[reassoc]
-theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') : curry (f ≫ g) = curry f ≫ (exp _).map g :=
+theorem curry_natural_right (f : A ⨯ X ⟶ Y) (g : Y ⟶ Y') :
+    curry (f ≫ g) = curry f ≫ (exp _).map g :=
   Adjunction.hom_equiv_naturality_right _ _ _
-#align category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
+#align
+  category_theory.cartesian_closed.curry_natural_right CategoryTheory.CartesianClosed.curry_natural_right
 
 @[reassoc]
-theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') : uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
+theorem uncurry_natural_right (f : X ⟶ A ⟹ Y) (g : Y ⟶ Y') :
+    uncurry (f ≫ (exp _).map g) = uncurry f ≫ g :=
   Adjunction.hom_equiv_naturality_right_symm _ _ _
-#align category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
+#align
+  category_theory.cartesian_closed.uncurry_natural_right CategoryTheory.CartesianClosed.uncurry_natural_right
 
 @[reassoc]
-theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) : uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
+theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
+    uncurry (f ≫ g) = Limits.prod.map (𝟙 _) f ≫ uncurry g :=
   Adjunction.hom_equiv_naturality_left_symm _ _ _
-#align category_theory.cartesian_closed.uncurry_natural_left CategoryTheory.CartesianClosed.uncurry_natural_left
+#align
+  category_theory.cartesian_closed.uncurry_natural_left CategoryTheory.CartesianClosed.uncurry_natural_left
 
 @[simp]
 theorem uncurry_curry (f : A ⨯ X ⟶ Y) : uncurry (curry f) = f :=
@@ -193,20 +205,24 @@ theorem curry_eq (g : A ⨯ Y ⟶ X) : curry g = (exp.coev A).app Y ≫ (exp A).
 
 theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (exp.ev A).app X := by
   rw [uncurry_eq, prod.map_id_id, id_comp]
-#align category_theory.cartesian_closed.uncurry_id_eq_ev CategoryTheory.CartesianClosed.uncurry_id_eq_ev
+#align
+  category_theory.cartesian_closed.uncurry_id_eq_ev CategoryTheory.CartesianClosed.uncurry_id_eq_ev
 
 theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X := by
   rw [curry_eq, (exp A).map_id (A ⨯ _)]
   apply comp_id
-#align category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
+#align
+  category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
 
 theorem curry_injective : Function.Injective (curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X)) :=
   (Closed.isAdj.adj.homEquiv _ _).Injective
-#align category_theory.cartesian_closed.curry_injective CategoryTheory.CartesianClosed.curry_injective
+#align
+  category_theory.cartesian_closed.curry_injective CategoryTheory.CartesianClosed.curry_injective
 
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X)) :=
   (Closed.isAdj.adj.homEquiv _ _).symm.Injective
-#align category_theory.cartesian_closed.uncurry_injective CategoryTheory.CartesianClosed.uncurry_injective
+#align
+  category_theory.cartesian_closed.uncurry_injective CategoryTheory.CartesianClosed.uncurry_injective
 
 end CartesianClosed
 
@@ -238,7 +254,8 @@ def pre (f : B ⟶ A) [Exponentiable B] : exp A ⟶ exp B :=
 #align category_theory.pre CategoryTheory.pre
 
 theorem prod_map_pre_app_comp_ev (f : B ⟶ A) [Exponentiable B] (X : C) :
-    Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (exp.ev B).app X = Limits.prod.map f (𝟙 (A ⟹ X)) ≫ (exp.ev A).app X :=
+    Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (exp.ev B).app X =
+      Limits.prod.map f (𝟙 (A ⟹ X)) ≫ (exp.ev A).app X :=
   transfer_nat_trans_self_counit _ _ (prod.functor.map f) X
 #align category_theory.prod_map_pre_app_comp_ev CategoryTheory.prod_map_pre_app_comp_ev
 
@@ -248,7 +265,8 @@ theorem uncurry_pre (f : B ⟶ A) [Exponentiable B] (X : C) :
 #align category_theory.uncurry_pre CategoryTheory.uncurry_pre
 
 theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
-    (exp.coev A).app X ≫ (pre f).app (A ⨯ X) = (exp.coev B).app X ≫ (exp B).map (Limits.prod.map f (𝟙 _)) :=
+    (exp.coev A).app X ≫ (pre f).app (A ⨯ X) =
+      (exp.coev B).app X ≫ (exp B).map (Limits.prod.map f (𝟙 _)) :=
   unit_transfer_nat_trans_self _ _ (prod.functor.map f) X
 #align category_theory.coev_app_comp_pre_app CategoryTheory.coev_app_comp_pre_app
 
@@ -257,8 +275,9 @@ theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by simp [pre
 #align category_theory.pre_id CategoryTheory.pre_id
 
 @[simp]
-theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
-    pre (f ≫ g) = pre g ≫ pre f := by rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
+theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃]
+    (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) : pre (f ≫ g) = pre g ≫ pre f := by
+  rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
 #align category_theory.pre_map CategoryTheory.pre_map
 
 end Pre
@@ -305,9 +324,12 @@ def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C w
 -- TODO: Generalise the below to its commutated variants.
 -- TODO: Define a distributive category, so that zero_mul and friends can be derived from this.
 /-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
-def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) : (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
+def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) :
+    (Z ⨯ X) ⨿ Z ⨯ Y ≅ Z ⨯ X ⨿ Y where
   Hom := coprod.desc (Limits.prod.map (𝟙 _) coprod.inl) (Limits.prod.map (𝟙 _) coprod.inr)
-  inv := CartesianClosed.uncurry (coprod.desc (CartesianClosed.curry coprod.inl) (CartesianClosed.curry coprod.inr))
+  inv :=
+    CartesianClosed.uncurry
+      (coprod.desc (CartesianClosed.curry coprod.inl) (CartesianClosed.curry coprod.inr))
   hom_inv_id' := by
     apply coprod.hom_ext
     rw [coprod.inl_desc_assoc, comp_id, ← uncurry_natural_left, coprod.inl_desc, uncurry_curry]
@@ -315,8 +337,10 @@ def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) : 
   inv_hom_id' := by
     rw [← uncurry_natural_right, ← eq_curry_iff]
     apply coprod.hom_ext
-    rw [coprod.inl_desc_assoc, ← curry_natural_right, coprod.inl_desc, ← curry_natural_left, comp_id]
-    rw [coprod.inr_desc_assoc, ← curry_natural_right, coprod.inr_desc, ← curry_natural_left, comp_id]
+    rw [coprod.inl_desc_assoc, ← curry_natural_right, coprod.inl_desc, ← curry_natural_left,
+      comp_id]
+    rw [coprod.inr_desc_assoc, ← curry_natural_right, coprod.inr_desc, ← curry_natural_left,
+      comp_id]
 #align category_theory.prod_coprod_distrib CategoryTheory.prodCoprodDistrib
 
 /-- If an initial object `I` exists in a CCC then it is a strict initial object,
@@ -381,7 +405,10 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] :
             adjunction.left_adjoint_of_nat_iso this.symm
           have : is_left_adjoint (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
             adjunction.left_adjoint_of_comp e.inverse _
-          have : (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) ⋙ e.functor ≅ prod.functor.obj X := by
+          have :
+            (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) ⋙ e.functor ≅
+              prod.functor.obj X :=
+            by
             apply iso_whisker_right e.counit_iso (prod.functor.obj X ⋙ e.inverse ⋙ e.functor) ≪≫ _
             change prod.functor.obj X ⋙ e.inverse ⋙ e.functor ≅ prod.functor.obj X
             apply iso_whisker_left (prod.functor.obj X) e.counit_iso

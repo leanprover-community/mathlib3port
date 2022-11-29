@@ -74,7 +74,8 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 variable {D : Type u₂} [Category.{v₂} D]
 
-/-- A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
+/--
+A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
 is connected.
 
 See <https://stacks.math.columbia.edu/tag/04E6>
@@ -104,12 +105,14 @@ instance initial_op_of_final (F : C ⥤ D) [Final F] :
 
 theorem final_of_initial_op (F : C ⥤ D) [Initial F.op] : Final F :=
   { out := fun d =>
-      @is_connected_of_is_connected_op _ _ (is_connected_of_equivalent (structuredArrowOpEquivalence F d).symm) }
+      @is_connected_of_is_connected_op _ _
+        (is_connected_of_equivalent (structuredArrowOpEquivalence F d).symm) }
 #align category_theory.functor.final_of_initial_op CategoryTheory.Functor.final_of_initial_op
 
 theorem initial_of_final_op (F : C ⥤ D) [Final F.op] : Initial F :=
   { out := fun d =>
-      @is_connected_of_is_connected_op _ _ (is_connected_of_equivalent (costructuredArrowOpEquivalence F d).symm) }
+      @is_connected_of_is_connected_op _ _
+        (is_connected_of_equivalent (costructuredArrowOpEquivalence F d).symm) }
 #align category_theory.functor.initial_of_final_op CategoryTheory.Functor.initial_of_final_op
 
 /-- If a functor `R : D ⥤ C` is a right adjoint, it is final. -/
@@ -119,9 +122,11 @@ theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final 
       (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
-            (show Zag f u from Or.inr ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.Hom) (by simp)⟩))
+            (show Zag f u from
+              Or.inr ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.Hom) (by simp)⟩))
           (Relation.ReflTransGen.single
-            (show Zag u g from Or.inl ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.Hom) (by simp)⟩)) }
+            (show Zag u g from
+              Or.inl ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.Hom) (by simp)⟩)) }
 #align category_theory.functor.final_of_adjunction CategoryTheory.Functor.final_of_adjunction
 
 /-- If a functor `L : C ⥤ D` is a left adjoint, it is initial. -/
@@ -131,18 +136,23 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
       (@zigzag_is_connected _ _ ⟨u⟩) fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
-            (show Zag f u from Or.inl ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.Hom) (by simp)⟩))
+            (show Zag f u from
+              Or.inl ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.Hom) (by simp)⟩))
           (Relation.ReflTransGen.single
-            (show Zag u g from Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
+            (show Zag u g from
+              Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
 #align category_theory.functor.initial_of_adjunction CategoryTheory.Functor.initial_of_adjunction
 
 instance (priority := 100) final_of_is_right_adjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
   final_of_adjunction h.adj
-#align category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_is_right_adjoint
+#align
+  category_theory.functor.final_of_is_right_adjoint CategoryTheory.Functor.final_of_is_right_adjoint
 
-instance (priority := 100) initial_of_is_left_adjoint (F : C ⥤ D) [h : IsLeftAdjoint F] : Initial F :=
+instance (priority := 100) initial_of_is_left_adjoint (F : C ⥤ D) [h : IsLeftAdjoint F] :
+    Initial F :=
   initial_of_adjunction h.adj
-#align category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_is_left_adjoint
+#align
+  category_theory.functor.initial_of_is_left_adjoint CategoryTheory.Functor.initial_of_is_left_adjoint
 
 namespace Final
 
@@ -153,7 +163,8 @@ instance (d : D) : Nonempty (StructuredArrow d F) :=
 
 variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 
-/-- When `F : C ⥤ D` is cofinal, we denote by `lift F d` an arbitrary choice of object in `C` such that
+/--
+When `F : C ⥤ D` is cofinal, we denote by `lift F d` an arbitrary choice of object in `C` such that
 there exists a morphism `d ⟶ F.obj (lift F d)`.
 -/
 def lift (d : D) : C :=
@@ -176,12 +187,17 @@ and to show how to transport such a construction
 *both* directions along a morphism between such choices.
 -/
 def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
-    (h₁ : ∀ (X₁ X₂) (k₁ : d ⟶ F.obj X₁) (k₂ : d ⟶ F.obj X₂) (f : X₁ ⟶ X₂), k₁ ≫ F.map f = k₂ → Z X₁ k₁ → Z X₂ k₂)
-    (h₂ : ∀ (X₁ X₂) (k₁ : d ⟶ F.obj X₁) (k₂ : d ⟶ F.obj X₂) (f : X₁ ⟶ X₂), k₁ ≫ F.map f = k₂ → Z X₂ k₂ → Z X₁ k₁)
+    (h₁ :
+      ∀ (X₁ X₂) (k₁ : d ⟶ F.obj X₁) (k₂ : d ⟶ F.obj X₂) (f : X₁ ⟶ X₂),
+        k₁ ≫ F.map f = k₂ → Z X₁ k₁ → Z X₂ k₂)
+    (h₂ :
+      ∀ (X₁ X₂) (k₁ : d ⟶ F.obj X₁) (k₂ : d ⟶ F.obj X₂) (f : X₁ ⟶ X₂),
+        k₁ ≫ F.map f = k₂ → Z X₂ k₂ → Z X₁ k₁)
     {X₀ : C} {k₀ : d ⟶ F.obj X₀} (z : Z X₀ k₀) : Z (lift F d) (homToLift F d) := by
   apply Nonempty.some
   apply
-    @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _ { right := X₀, Hom := k₀ } z
+    @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _
+      { right := X₀, Hom := k₀ } z
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.right _ a
     convert f.w.symm
@@ -207,11 +223,12 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
       ι :=
         { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X),
           naturality' := fun X Y f => by
-            dsimp
-            simp
+            dsimp; simp
             -- This would be true if we'd chosen `lift F X` to be `lift F Y`
             -- and `hom_to_lift F X` to be `f ≫ hom_to_lift F Y`.
-            apply induction F fun Z k => G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
+            apply
+              induction F fun Z k =>
+                G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
             · intro Z₁ Z₂ k₁ k₂ g a z
               rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
               
@@ -242,7 +259,8 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
     
   · exact s.w (𝟙 _)
     
-#align category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
+#align
+  category_theory.functor.final.colimit_cocone_comp_aux CategoryTheory.Functor.Final.colimit_cocone_comp_aux
 
 variable (F G)
 
@@ -265,12 +283,14 @@ variable {G}
 -/
 def isColimitWhiskerEquiv (t : Cocone G) : IsColimit (t.whisker F) ≃ IsColimit t :=
   IsColimit.ofCoconeEquiv (coconesEquiv F G).symm
-#align category_theory.functor.final.is_colimit_whisker_equiv CategoryTheory.Functor.Final.isColimitWhiskerEquiv
+#align
+  category_theory.functor.final.is_colimit_whisker_equiv CategoryTheory.Functor.Final.isColimitWhiskerEquiv
 
 /-- When `F` is cofinal, and `t : cocone (F ⋙ G)`,
 `extend_cocone.obj t` is a colimit coconne exactly when `t` is.
 -/
-def isColimitExtendCoconeEquiv (t : Cocone (F ⋙ G)) : IsColimit (extendCocone.obj t) ≃ IsColimit t :=
+def isColimitExtendCoconeEquiv (t : Cocone (F ⋙ G)) :
+    IsColimit (extendCocone.obj t) ≃ IsColimit t :=
   IsColimit.ofCoconeEquiv (coconesEquiv F G)
 #align
   category_theory.functor.final.is_colimit_extend_cocone_equiv CategoryTheory.Functor.Final.isColimitExtendCoconeEquiv
@@ -280,7 +300,8 @@ def isColimitExtendCoconeEquiv (t : Cocone (F ⋙ G)) : IsColimit (extendCocone.
 def colimitCoconeComp (t : ColimitCocone G) : ColimitCocone (F ⋙ G) where
   Cocone := _
   IsColimit := (isColimitWhiskerEquiv F _).symm t.IsColimit
-#align category_theory.functor.final.colimit_cocone_comp CategoryTheory.Functor.Final.colimitCoconeComp
+#align
+  category_theory.functor.final.colimit_cocone_comp CategoryTheory.Functor.Final.colimitCoconeComp
 
 instance (priority := 100) comp_has_colimit [HasColimit G] : HasColimit (F ⋙ G) :=
   HasColimit.mk (colimitCoconeComp F (getColimitCocone G))
@@ -291,16 +312,17 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
   dsimp [is_colimit_whisker_equiv]
   apply P.hom_ext
   intro j
-  dsimp
-  simp
-#align category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_aux
+  dsimp; simp
+#align
+  category_theory.functor.final.colimit_pre_is_iso_aux CategoryTheory.Functor.Final.colimit_pre_is_iso_aux
 
 instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) := by
   rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
   erw [colimit_pre_is_iso_aux]
   dsimp
   infer_instance
-#align category_theory.functor.final.colimit_pre_is_iso CategoryTheory.Functor.Final.colimit_pre_is_iso
+#align
+  category_theory.functor.final.colimit_pre_is_iso CategoryTheory.Functor.Final.colimit_pre_is_iso
 
 section
 
@@ -322,7 +344,8 @@ end
 def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G where
   Cocone := extendCocone.obj t.Cocone
   IsColimit := (isColimitExtendCoconeEquiv F _).symm t.IsColimit
-#align category_theory.functor.final.colimit_cocone_of_comp CategoryTheory.Functor.Final.colimitCoconeOfComp
+#align
+  category_theory.functor.final.colimit_cocone_of_comp CategoryTheory.Functor.Final.colimitCoconeOfComp
 
 /-- When `F` is cofinal, and `F ⋙ G` has a colimit, then `G` has a colimit also.
 
@@ -331,7 +354,8 @@ We can't make this an instance, because `F` is not determined by the goal.
 -/
 theorem has_colimit_of_comp [HasColimit (F ⋙ G)] : HasColimit G :=
   HasColimit.mk (colimitCoconeOfComp F (getColimitCocone (F ⋙ G)))
-#align category_theory.functor.final.has_colimit_of_comp CategoryTheory.Functor.Final.has_colimit_of_comp
+#align
+  category_theory.functor.final.has_colimit_of_comp CategoryTheory.Functor.Final.has_colimit_of_comp
 
 section
 
@@ -364,7 +388,8 @@ then `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit`
 def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)] :
     colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit :=
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimitCoyonedaIso (op d)
-#align category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
+#align
+  category_theory.functor.final.colimit_comp_coyoneda_iso CategoryTheory.Functor.Final.colimitCompCoyonedaIso
 
 theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
     (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
@@ -373,10 +398,8 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
   case rel x y r =>
   obtain ⟨f, w⟩ := r
   fconstructor
-  swap
-  fconstructor
-  left
-  fconstructor
+  swap; fconstructor
+  left; fconstructor
   exact { right := f }
   case refl => fconstructor
   case symm x y h ih =>
@@ -384,13 +407,14 @@ theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶
   exact ih
   case trans x y z h₁ h₂ ih₁ ih₂ =>
   apply Relation.ReflTransGen.trans
-  exact ih₁
-  exact ih₂
-#align category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqv_gen_quot_rel
+  exact ih₁; exact ih₂
+#align
+  category_theory.functor.final.zigzag_of_eqv_gen_quot_rel CategoryTheory.Functor.Final.zigzag_of_eqv_gen_quot_rel
 
 /-- If `colimit (F ⋙ coyoneda.obj (op d)) ≅ punit` for all `d : D`, then `F` is cofinal.
 -/
-theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : Final F :=
+theorem cofinal_of_colimit_comp_coyoneda_iso_punit
+    (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : Final F :=
   ⟨fun d => by
     have : Nonempty (structured_arrow d F) := by
       have := (I d).inv PUnit.unit
@@ -421,7 +445,8 @@ instance (d : D) : Nonempty (CostructuredArrow F d) :=
 
 variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 
-/-- When `F : C ⥤ D` is initial, we denote by `lift F d` an arbitrary choice of object in `C` such that
+/--
+When `F : C ⥤ D` is initial, we denote by `lift F d` an arbitrary choice of object in `C` such that
 there exists a morphism `F.obj (lift F d) ⟶ d`.
 -/
 def lift (d : D) : C :=
@@ -444,12 +469,17 @@ and to show how to transport such a construction
 *both* directions along a morphism between such choices.
 -/
 def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
-    (h₁ : ∀ (X₁ X₂) (k₁ : F.obj X₁ ⟶ d) (k₂ : F.obj X₂ ⟶ d) (f : X₁ ⟶ X₂), F.map f ≫ k₂ = k₁ → Z X₁ k₁ → Z X₂ k₂)
-    (h₂ : ∀ (X₁ X₂) (k₁ : F.obj X₁ ⟶ d) (k₂ : F.obj X₂ ⟶ d) (f : X₁ ⟶ X₂), F.map f ≫ k₂ = k₁ → Z X₂ k₂ → Z X₁ k₁)
+    (h₁ :
+      ∀ (X₁ X₂) (k₁ : F.obj X₁ ⟶ d) (k₂ : F.obj X₂ ⟶ d) (f : X₁ ⟶ X₂),
+        F.map f ≫ k₂ = k₁ → Z X₁ k₁ → Z X₂ k₂)
+    (h₂ :
+      ∀ (X₁ X₂) (k₁ : F.obj X₁ ⟶ d) (k₂ : F.obj X₂ ⟶ d) (f : X₁ ⟶ X₂),
+        F.map f ≫ k₂ = k₁ → Z X₂ k₂ → Z X₁ k₁)
     {X₀ : C} {k₀ : F.obj X₀ ⟶ d} (z : Z X₀ k₀) : Z (lift F d) (homToLift F d) := by
   apply Nonempty.some
   apply
-    @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _ { left := X₀, Hom := k₀ } z
+    @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _
+      { left := X₀, Hom := k₀ } z
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.left _ a
     convert f.w
@@ -475,19 +505,21 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G where
       π :=
         { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d),
           naturality' := fun X Y f => by
-            dsimp
-            simp
+            dsimp; simp
             -- This would be true if we'd chosen `lift F Y` to be `lift F X`
             -- and `hom_to_lift F Y` to be `hom_to_lift F X ≫ f`.
             apply
               induction F fun Z k =>
-                (c.π.app Z ≫ G.map k : c.X ⟶ _) = c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
+                (c.π.app Z ≫ G.map k : c.X ⟶ _) =
+                  c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc, c.w] at z
+              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
+                c.w] at z
               rw [z, category.assoc]
               
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc, c.w, z, category.assoc]
+              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
+                c.w, z, category.assoc]
               
             · rw [← functor.map_comp]
                } }
@@ -512,7 +544,8 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
     
   · exact s.w (𝟙 _)
     
-#align category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
+#align
+  category_theory.functor.initial.limit_cone_comp_aux CategoryTheory.Functor.Initial.limit_cone_comp_aux
 
 variable (F G)
 
@@ -535,14 +568,16 @@ variable {G}
 -/
 def isLimitWhiskerEquiv (t : Cone G) : IsLimit (t.whisker F) ≃ IsLimit t :=
   IsLimit.ofConeEquiv (conesEquiv F G).symm
-#align category_theory.functor.initial.is_limit_whisker_equiv CategoryTheory.Functor.Initial.isLimitWhiskerEquiv
+#align
+  category_theory.functor.initial.is_limit_whisker_equiv CategoryTheory.Functor.Initial.isLimitWhiskerEquiv
 
 /-- When `F` is initial, and `t : cone (F ⋙ G)`,
 `extend_cone.obj t` is a limit cone exactly when `t` is.
 -/
 def isLimitExtendConeEquiv (t : Cone (F ⋙ G)) : IsLimit (extendCone.obj t) ≃ IsLimit t :=
   IsLimit.ofConeEquiv (conesEquiv F G)
-#align category_theory.functor.initial.is_limit_extend_cone_equiv CategoryTheory.Functor.Initial.isLimitExtendConeEquiv
+#align
+  category_theory.functor.initial.is_limit_extend_cone_equiv CategoryTheory.Functor.Initial.isLimitExtendConeEquiv
 
 /-- Given a limit cone over `G : D ⥤ E` we can construct a limit cone over `F ⋙ G`. -/
 @[simps]
@@ -561,14 +596,16 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
   apply P.hom_ext
   intro j
   simp
-#align category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_aux
+#align
+  category_theory.functor.initial.limit_pre_is_iso_aux CategoryTheory.Functor.Initial.limit_pre_is_iso_aux
 
 instance limit_pre_is_iso [HasLimit G] : IsIso (limit.pre G F) := by
   rw [limit.pre_eq (limit_cone_comp F (get_limit_cone G)) (get_limit_cone G)]
   erw [limit_pre_is_iso_aux]
   dsimp
   infer_instance
-#align category_theory.functor.initial.limit_pre_is_iso CategoryTheory.Functor.Initial.limit_pre_is_iso
+#align
+  category_theory.functor.initial.limit_pre_is_iso CategoryTheory.Functor.Initial.limit_pre_is_iso
 
 section
 
@@ -590,7 +627,8 @@ end
 def limitConeOfComp (t : LimitCone (F ⋙ G)) : LimitCone G where
   Cone := extendCone.obj t.Cone
   IsLimit := (isLimitExtendConeEquiv F _).symm t.IsLimit
-#align category_theory.functor.initial.limit_cone_of_comp CategoryTheory.Functor.Initial.limitConeOfComp
+#align
+  category_theory.functor.initial.limit_cone_of_comp CategoryTheory.Functor.Initial.limitConeOfComp
 
 /-- When `F` is initial, and `F ⋙ G` has a limit, then `G` has a limit also.
 
@@ -599,7 +637,8 @@ We can't make this an instance, because `F` is not determined by the goal.
 -/
 theorem has_limit_of_comp [HasLimit (F ⋙ G)] : HasLimit G :=
   HasLimit.mk (limitConeOfComp F (getLimitCone (F ⋙ G)))
-#align category_theory.functor.initial.has_limit_of_comp CategoryTheory.Functor.Initial.has_limit_of_comp
+#align
+  category_theory.functor.initial.has_limit_of_comp CategoryTheory.Functor.Initial.has_limit_of_comp
 
 section
 

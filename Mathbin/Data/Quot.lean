@@ -27,7 +27,8 @@ open Function
 namespace Setoid
 
 #print Setoid.ext /-
-theorem ext {α : Sort _} : ∀ {s t : Setoid α}, (∀ a b, @Setoid.r α s a b ↔ @Setoid.r α t a b) → s = t
+theorem ext {α : Sort _} :
+    ∀ {s t : Setoid α}, (∀ a b, @Setoid.r α s a b ↔ @Setoid.r α t a b) → s = t
   | ⟨r, _⟩, ⟨p, _⟩, Eq => by
     have : r = p := funext fun a => funext fun b => propext <| Eq a b
     subst this
@@ -52,8 +53,8 @@ instance [Subsingleton α] : Subsingleton (Quot ra) :=
 #print Quot.hrecOn₂ /-
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
-    (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b)) (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) :
-    φ qa qb :=
+    (ca : ∀ {b a₁ a₂}, ra a₁ a₂ → HEq (f a₁ b) (f a₂ b))
+    (cb : ∀ {a b₁ b₂}, rb b₁ b₂ → HEq (f a b₁) (f a b₂)) : φ qa qb :=
   (Quot.hrecOn qa fun a => Quot.hrecOn qb (f a) fun b₁ b₂ pb => cb pb) fun a₁ a₂ pa =>
     (Quot.induction_on qb) fun b =>
       calc
@@ -74,7 +75,8 @@ protected def map (f : α → β) (h : (ra ⇒ rb) f f) : Quot ra → Quot rb :=
 
 #print Quot.mapRight /-
 /-- If `ra` is a subrelation of `ra'`, then we have a natural map `quot ra → quot ra'`. -/
-protected def mapRight {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) : Quot ra → Quot ra' :=
+protected def mapRight {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) :
+    Quot ra → Quot ra' :=
   Quot.map id h
 #align quot.map_right Quot.mapRight
 -/
@@ -99,24 +101,29 @@ variable {γ : Sort _} {r : α → α → Prop} {s : β → β → Prop}
 Case conversion may be inaccurate. Consider using '#align quot.lift_mk Quot.lift_mkₓ'. -/
 #print Quot.lift_mk /-
 /-- **Alias** of `quot.lift_beta`. -/
-theorem lift_mk (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) (a : α) : Quot.lift f h (Quot.mk r a) = f a :=
+theorem lift_mk (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) (a : α) :
+    Quot.lift f h (Quot.mk r a) = f a :=
   rfl
 #align quot.lift_mk Quot.lift_mk
 -/
 
 #print Quot.liftOn_mk /-
 @[simp]
-theorem liftOn_mk (a : α) (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) : Quot.liftOn (Quot.mk r a) f h = f a :=
+theorem liftOn_mk (a : α) (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) :
+    Quot.liftOn (Quot.mk r a) f h = f a :=
   rfl
 #align quot.lift_on_mk Quot.liftOn_mk
 -/
 
+#print Quot.surjective_lift /-
 @[simp]
-theorem surjective_lift {f : α → γ} (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) : Surjective (lift f h) ↔ Surjective f :=
+theorem surjective_lift {f : α → γ} (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) :
+    Surjective (lift f h) ↔ Surjective f :=
   ⟨fun hf => hf.comp Quot.exists_rep, fun hf y =>
     let ⟨x, hx⟩ := hf y
     ⟨Quot.mk _ x, hx⟩⟩
 #align quot.surjective_lift Quot.surjective_lift
+-/
 
 #print Quot.lift₂ /-
 /-- Descends a function `f : α → β → γ` to quotients of `α` and `β`. -/
@@ -130,34 +137,36 @@ protected def lift₂ (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ 
 
 /- warning: quot.lift₂_mk -> Quot.lift₂_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_4}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_4} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_4} γ (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_4} γ (Quot.lift₂.{u_1 u_2 u_4} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) f hr hs (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b)) (f a b)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_4}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_4} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_4} γ (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_4} γ (Quot.lift₂.{u_1, u_2, u_4} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) f hr hs (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b)) (f a b)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_1} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_1} γ (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_1} γ (Quot.lift₂.{u_2 u_3 u_1} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) f hr hs (Quot.mk.{u_2} α r a) (Quot.mk.{u_3} β s b)) (f a b)
+  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_1} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_1} γ (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_1} γ (Quot.lift₂.{u_2, u_3, u_1} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) f hr hs (Quot.mk.{u_2} α r a) (Quot.mk.{u_3} β s b)) (f a b)
 Case conversion may be inaccurate. Consider using '#align quot.lift₂_mk Quot.lift₂_mkₓ'. -/
 @[simp]
-theorem lift₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂) (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b)
-    (a : α) (b : β) : Quot.lift₂ f hr hs (Quot.mk r a) (Quot.mk s b) = f a b :=
+theorem lift₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
+    (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) (a : α) (b : β) :
+    Quot.lift₂ f hr hs (Quot.mk r a) (Quot.mk s b) = f a b :=
   rfl
 #align quot.lift₂_mk Quot.lift₂_mk
 
 #print Quot.liftOn₂ /-
 /-- Descends a function `f : α → β → γ` to quotients of `α` and `β` and applies it. -/
 @[reducible, elab_as_elim]
-protected def liftOn₂ (p : Quot r) (q : Quot s) (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
-    (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) : γ :=
+protected def liftOn₂ (p : Quot r) (q : Quot s) (f : α → β → γ)
+    (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂) (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) : γ :=
   Quot.lift₂ f hr hs p q
 #align quot.lift_on₂ Quot.liftOn₂
 -/
 
 /- warning: quot.lift_on₂_mk -> Quot.liftOn₂_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_4}} {r : α -> α -> Prop} {s : β -> β -> Prop} (a : α) (b : β) (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_4} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_4} γ (f a₁ b) (f a₂ b))), Eq.{u_4} γ (Quot.liftOn₂.{u_1 u_2 u_4} α β γ r s (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b) f hr hs) (f a b)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_4}} {r : α -> α -> Prop} {s : β -> β -> Prop} (a : α) (b : β) (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_4} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_4} γ (f a₁ b) (f a₂ b))), Eq.{u_4} γ (Quot.liftOn₂.{u_1, u_2, u_4} α β γ r s (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b) f hr hs) (f a b)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (a : α) (b : β) (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_1} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_1} γ (f a₁ b) (f a₂ b))), Eq.{u_1} γ (Quot.liftOn₂.{u_2 u_3 u_1} α β γ r s (Quot.mk.{u_2} α r a) (Quot.mk.{u_3} β s b) f hr hs) (f a b)
+  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (a : α) (b : β) (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (Eq.{u_1} γ (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (Eq.{u_1} γ (f a₁ b) (f a₂ b))), Eq.{u_1} γ (Quot.liftOn₂.{u_2, u_3, u_1} α β γ r s (Quot.mk.{u_2} α r a) (Quot.mk.{u_3} β s b) f hr hs) (f a b)
 Case conversion may be inaccurate. Consider using '#align quot.lift_on₂_mk Quot.liftOn₂_mkₓ'. -/
 @[simp]
 theorem liftOn₂_mk (a : α) (b : β) (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
-    (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) : Quot.liftOn₂ (Quot.mk r a) (Quot.mk s b) f hr hs = f a b :=
+    (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) :
+    Quot.liftOn₂ (Quot.mk r a) (Quot.mk s b) f hr hs = f a b :=
   rfl
 #align quot.lift_on₂_mk Quot.liftOn₂_mk
 
@@ -175,9 +184,9 @@ protected def map₂ (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ �
 
 /- warning: quot.map₂_mk -> Quot.map₂_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_4}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (t (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (t (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_4} (Quot.{u_4} γ t) (Quot.map₂.{u_1 u_2 u_4} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) t f hr hs (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b)) (Quot.mk.{u_4} γ t (f a b))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_4}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (t (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (t (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_4} (Quot.{u_4} γ t) (Quot.map₂.{u_1, u_2, u_4} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) t f hr hs (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b)) (Quot.mk.{u_4} γ t (f a b))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (t (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (t (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_1} (Quot.{u_1} γ t) (Quot.map₂.{u_2 u_3 u_1} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) t f hr hs (Quot.mk.{u_2} α r a) (Quot.mk.{u_3} β s b)) (Quot.mk.{u_1} γ t (f a b))
+  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} (f : α -> β -> γ) (hr : forall (a : α) (b₁ : β) (b₂ : β), (s b₁ b₂) -> (t (f a b₁) (f a b₂))) (hs : forall (a₁ : α) (a₂ : α) (b : β), (r a₁ a₂) -> (t (f a₁ b) (f a₂ b))) (a : α) (b : β), Eq.{u_1} (Quot.{u_1} γ t) (Quot.map₂.{u_2, u_3, u_1} α β γ (fun (a₁ : α) (a₂ : α) => r a₁ a₂) (fun (b₁ : β) (b₂ : β) => s b₁ b₂) t f hr hs (Quot.mk.{u_2} α r a) (Quot.mk.{u_3} β s b)) (Quot.mk.{u_1} γ t (f a b))
 Case conversion may be inaccurate. Consider using '#align quot.map₂_mk Quot.map₂_mkₓ'. -/
 @[simp]
 theorem map₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → t (f a b₁) (f a b₂))
@@ -189,8 +198,9 @@ theorem map₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → 
 #print Quot.recOnSubsingleton₂ /-
 /-- A binary version of `quot.rec_on_subsingleton`. -/
 @[reducible, elab_as_elim]
-protected def recOnSubsingleton₂ {φ : Quot r → Quot s → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quot r)
-    (q₂ : Quot s) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧) : φ q₁ q₂ :=
+protected def recOnSubsingleton₂ {φ : Quot r → Quot s → Sort _}
+    [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quot r) (q₂ : Quot s) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧) :
+    φ q₁ q₂ :=
   (@Quot.recOnSubsingleton _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁) fun a =>
     (Quot.recOnSubsingleton q₂) fun b => f a b
 #align quot.rec_on_subsingleton₂ Quot.recOnSubsingleton₂
@@ -215,8 +225,8 @@ but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {r : α -> α -> Prop} {s : β -> β -> Prop} {t : γ -> γ -> Prop} {δ : (Quot.{u_1} α r) -> (Quot.{u_2} β s) -> (Quot.{u_3} γ t) -> Prop} (q₁ : Quot.{u_1} α r) (q₂ : Quot.{u_2} β s) (q₃ : Quot.{u_3} γ t), (forall (a : α) (b : β) (c : γ), δ (Quot.mk.{u_1} α r a) (Quot.mk.{u_2} β s b) (Quot.mk.{u_3} γ t c)) -> (δ q₁ q₂ q₃)
 Case conversion may be inaccurate. Consider using '#align quot.induction_on₃ Quot.induction_on₃ₓ'. -/
 @[elab_as_elim]
-protected theorem induction_on₃ {δ : Quot r → Quot s → Quot t → Prop} (q₁ : Quot r) (q₂ : Quot s) (q₃ : Quot t)
-    (h : ∀ a b c, δ (Quot.mk r a) (Quot.mk s b) (Quot.mk t c)) : δ q₁ q₂ q₃ :=
+protected theorem induction_on₃ {δ : Quot r → Quot s → Quot t → Prop} (q₁ : Quot r) (q₂ : Quot s)
+    (q₃ : Quot t) (h : ∀ a b c, δ (Quot.mk r a) (Quot.mk s b) (Quot.mk t c)) : δ q₁ q₂ q₃ :=
   Quot.ind (fun a₁ => Quot.ind (fun a₂ => Quot.ind (fun a₃ => h a₁ a₂ a₃) q₃) q₂) q₁
 #align quot.induction_on₃ Quot.induction_on₃
 
@@ -224,17 +234,18 @@ instance (r : α → α → Prop) (f : α → Prop) (h : ∀ a b, r a b → f a 
     DecidablePred (Quot.lift f h) := fun q => Quot.recOnSubsingleton q hf
 
 /-- Note that this provides `decidable_rel (quot.lift₂ f ha hb)` when `α = β`. -/
-instance (r : α → α → Prop) (s : β → β → Prop) (f : α → β → Prop) (ha : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
-    (hb : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) [hf : ∀ a, DecidablePred (f a)] (q₁ : Quot r) :
-    DecidablePred (Quot.lift₂ f ha hb q₁) := fun q₂ => Quot.recOnSubsingleton₂ q₁ q₂ hf
+instance (r : α → α → Prop) (s : β → β → Prop) (f : α → β → Prop)
+    (ha : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂) (hb : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b)
+    [hf : ∀ a, DecidablePred (f a)] (q₁ : Quot r) : DecidablePred (Quot.lift₂ f ha hb q₁) :=
+  fun q₂ => Quot.recOnSubsingleton₂ q₁ q₂ hf
 
-instance (r : α → α → Prop) (q : Quot r) (f : α → Prop) (h : ∀ a b, r a b → f a = f b) [DecidablePred f] :
-    Decidable (Quot.liftOn q f h) :=
+instance (r : α → α → Prop) (q : Quot r) (f : α → Prop) (h : ∀ a b, r a b → f a = f b)
+    [DecidablePred f] : Decidable (Quot.liftOn q f h) :=
   Quot.lift.decidablePred _ _ _ _
 
 instance (r : α → α → Prop) (s : β → β → Prop) (q₁ : Quot r) (q₂ : Quot s) (f : α → β → Prop)
-    (ha : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂) (hb : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) [∀ a, DecidablePred (f a)] :
-    Decidable (Quot.liftOn₂ q₁ q₂ f ha hb) :=
+    (ha : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂) (hb : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b)
+    [∀ a, DecidablePred (f a)] : Decidable (Quot.liftOn₂ q₁ q₂ f ha hb) :=
   Quot.lift₂.decidablePred _ _ _ _ _ _ _
 
 end Quot
@@ -260,7 +271,8 @@ instance {α : Type _} [Setoid α] : IsEquiv α (· ≈ ·) where
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quotient sa) (qb : Quotient sb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)
     (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) : φ qa qb :=
-  Quot.hrecOn₂ qa qb f (fun _ _ _ p => c _ _ _ _ p (Setoid.refl _)) fun _ _ _ p => c _ _ _ _ (Setoid.refl _) p
+  Quot.hrecOn₂ qa qb f (fun _ _ _ p => c _ _ _ _ p (Setoid.refl _)) fun _ _ _ p =>
+    c _ _ _ _ (Setoid.refl _) p
 #align quotient.hrec_on₂ Quotient.hrecOn₂
 -/
 
@@ -274,9 +286,9 @@ protected def map (f : α → β) (h : ((· ≈ ·) ⇒ (· ≈ ·)) f f) : Quot
 
 /- warning: quotient.map_mk -> Quotient.map_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] (f : α -> β) (h : Relator.LiftFun.{u_1 u_1 u_2 u_2} α α β β (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α sa)) (HasEquivₓ.Equiv.{u_2} β (setoidHasEquiv.{u_2} β sb)) f f) (x : α), Eq.{u_2} (Quotient.{u_2} β sb) (Quotient.map.{u_1 u_2} α β sa sb f h (Quotient.mk''.{u_1} α sa x)) (Quotient.mk''.{u_2} β sb (f x))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] (f : α -> β) (h : Relator.LiftFun.{u_1, u_1, u_2, u_2} α α β β (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α sa)) (HasEquivₓ.Equiv.{u_2} β (setoidHasEquiv.{u_2} β sb)) f f) (x : α), Eq.{u_2} (Quotient.{u_2} β sb) (Quotient.map.{u_1, u_2} α β sa sb f h (Quotient.mk''.{u_1} α sa x)) (Quotient.mk''.{u_2} β sb (f x))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] (f : α -> β) (h : Relator.LiftFun.{u_1 u_1 u_2 u_2} α α β β (fun (x._@.Mathlib.Data.Quot._hyg.4267 : α) (x._@.Mathlib.Data.Quot._hyg.4269 : α) => HasEquiv.Equiv.{u_1 0} α (instHasEquiv.{u_1} α sa) x._@.Mathlib.Data.Quot._hyg.4267 x._@.Mathlib.Data.Quot._hyg.4269) (fun (x._@.Mathlib.Data.Quot._hyg.4282 : β) (x._@.Mathlib.Data.Quot._hyg.4284 : β) => HasEquiv.Equiv.{u_2 0} β (instHasEquiv.{u_2} β sb) x._@.Mathlib.Data.Quot._hyg.4282 x._@.Mathlib.Data.Quot._hyg.4284) f f) (x : α), Eq.{u_2} (Quotient.{u_2} β sb) (Quotient.map.{u_1 u_2} α β sa sb f h (Quotient.mk.{u_1} α sa x)) (Quotient.mk.{u_2} β sb (f x))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] (f : α -> β) (h : Relator.LiftFun.{u_1, u_1, u_2, u_2} α α β β (fun (x._@.Mathlib.Data.Quot._hyg.4364 : α) (x._@.Mathlib.Data.Quot._hyg.4366 : α) => HasEquiv.Equiv.{u_1, 0} α (instHasEquiv.{u_1} α sa) x._@.Mathlib.Data.Quot._hyg.4364 x._@.Mathlib.Data.Quot._hyg.4366) (fun (x._@.Mathlib.Data.Quot._hyg.4379 : β) (x._@.Mathlib.Data.Quot._hyg.4381 : β) => HasEquiv.Equiv.{u_2, 0} β (instHasEquiv.{u_2} β sb) x._@.Mathlib.Data.Quot._hyg.4379 x._@.Mathlib.Data.Quot._hyg.4381) f f) (x : α), Eq.{u_2} (Quotient.{u_2} β sb) (Quotient.map.{u_1, u_2} α β sa sb f h (Quotient.mk.{u_1} α sa x)) (Quotient.mk.{u_2} β sb (f x))
 Case conversion may be inaccurate. Consider using '#align quotient.map_mk Quotient.map_mkₓ'. -/
 @[simp]
 theorem map_mk (f : α → β) (h : ((· ≈ ·) ⇒ (· ≈ ·)) f f) (x : α) :
@@ -290,16 +302,17 @@ variable {γ : Sort _} [sc : Setoid γ]
 /-- Map a function `f : α → β → γ` that sends equivalent elements to equivalent elements
 to a function `f : quotient sa → quotient sb → quotient sc`.
 Useful to define binary operations on quotients. -/
-protected def map₂ (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (· ≈ ·)) f f) : Quotient sa → Quotient sb → Quotient sc :=
+protected def map₂ (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (· ≈ ·)) f f) :
+    Quotient sa → Quotient sb → Quotient sc :=
   Quotient.lift₂ (fun x y => ⟦f x y⟧) fun x₁ y₁ x₂ y₂ h₁ h₂ => Quot.sound <| h h₁ h₂
 #align quotient.map₂ Quotient.map₂
 -/
 
 /- warning: quotient.map₂_mk -> Quotient.map₂_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] {γ : Sort.{u_4}} [sc : Setoid.{u_4} γ] (f : α -> β -> γ) (h : Relator.LiftFun.{u_1 u_1 (imax u_2 u_4) (imax u_2 u_4)} α α (β -> γ) (β -> γ) (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α sa)) (Relator.LiftFun.{u_2 u_2 u_4 u_4} β β γ γ (HasEquivₓ.Equiv.{u_2} β (setoidHasEquiv.{u_2} β sb)) (HasEquivₓ.Equiv.{u_4} γ (setoidHasEquiv.{u_4} γ sc))) f f) (x : α) (y : β), Eq.{u_4} (Quotient.{u_4} γ sc) (Quotient.map₂.{u_1 u_2 u_4} α β sa sb γ sc f h (Quotient.mk''.{u_1} α sa x) (Quotient.mk''.{u_2} β sb y)) (Quotient.mk''.{u_4} γ sc (f x y))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] {γ : Sort.{u_4}} [sc : Setoid.{u_4} γ] (f : α -> β -> γ) (h : Relator.LiftFun.{u_1, u_1, imax u_2 u_4, imax u_2 u_4} α α (β -> γ) (β -> γ) (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α sa)) (Relator.LiftFun.{u_2, u_2, u_4, u_4} β β γ γ (HasEquivₓ.Equiv.{u_2} β (setoidHasEquiv.{u_2} β sb)) (HasEquivₓ.Equiv.{u_4} γ (setoidHasEquiv.{u_4} γ sc))) f f) (x : α) (y : β), Eq.{u_4} (Quotient.{u_4} γ sc) (Quotient.map₂.{u_1, u_2, u_4} α β sa sb γ sc f h (Quotient.mk''.{u_1} α sa x) (Quotient.mk''.{u_2} β sb y)) (Quotient.mk''.{u_4} γ sc (f x y))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] {γ : Sort.{u_3}} [sc : Setoid.{u_3} γ] (f : α -> β -> γ) (h : Relator.LiftFun.{u_1 u_1 (imax u_2 u_3) (imax u_2 u_3)} α α (β -> γ) (β -> γ) (fun (x._@.Mathlib.Data.Quot._hyg.4496 : α) (x._@.Mathlib.Data.Quot._hyg.4498 : α) => HasEquiv.Equiv.{u_1 0} α (instHasEquiv.{u_1} α sa) x._@.Mathlib.Data.Quot._hyg.4496 x._@.Mathlib.Data.Quot._hyg.4498) (Relator.LiftFun.{u_2 u_2 u_3 u_3} β β γ γ (fun (x._@.Mathlib.Data.Quot._hyg.4514 : β) (x._@.Mathlib.Data.Quot._hyg.4516 : β) => HasEquiv.Equiv.{u_2 0} β (instHasEquiv.{u_2} β sb) x._@.Mathlib.Data.Quot._hyg.4514 x._@.Mathlib.Data.Quot._hyg.4516) (fun (x._@.Mathlib.Data.Quot._hyg.4529 : γ) (x._@.Mathlib.Data.Quot._hyg.4531 : γ) => HasEquiv.Equiv.{u_3 0} γ (instHasEquiv.{u_3} γ sc) x._@.Mathlib.Data.Quot._hyg.4529 x._@.Mathlib.Data.Quot._hyg.4531)) f f) (x : α) (y : β), Eq.{u_3} (Quotient.{u_3} γ sc) (Quotient.map₂.{u_1 u_2 u_3} α β sa sb γ sc f h (Quotient.mk.{u_1} α sa x) (Quotient.mk.{u_2} β sb y)) (Quotient.mk.{u_3} γ sc (f x y))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [sa : Setoid.{u_1} α] [sb : Setoid.{u_2} β] {γ : Sort.{u_3}} [sc : Setoid.{u_3} γ] (f : α -> β -> γ) (h : Relator.LiftFun.{u_1, u_1, imax u_2 u_3, imax u_2 u_3} α α (β -> γ) (β -> γ) (fun (x._@.Mathlib.Data.Quot._hyg.4593 : α) (x._@.Mathlib.Data.Quot._hyg.4595 : α) => HasEquiv.Equiv.{u_1, 0} α (instHasEquiv.{u_1} α sa) x._@.Mathlib.Data.Quot._hyg.4593 x._@.Mathlib.Data.Quot._hyg.4595) (Relator.LiftFun.{u_2, u_2, u_3, u_3} β β γ γ (fun (x._@.Mathlib.Data.Quot._hyg.4611 : β) (x._@.Mathlib.Data.Quot._hyg.4613 : β) => HasEquiv.Equiv.{u_2, 0} β (instHasEquiv.{u_2} β sb) x._@.Mathlib.Data.Quot._hyg.4611 x._@.Mathlib.Data.Quot._hyg.4613) (fun (x._@.Mathlib.Data.Quot._hyg.4626 : γ) (x._@.Mathlib.Data.Quot._hyg.4628 : γ) => HasEquiv.Equiv.{u_3, 0} γ (instHasEquiv.{u_3} γ sc) x._@.Mathlib.Data.Quot._hyg.4626 x._@.Mathlib.Data.Quot._hyg.4628)) f f) (x : α) (y : β), Eq.{u_3} (Quotient.{u_3} γ sc) (Quotient.map₂.{u_1, u_2, u_3} α β sa sb γ sc f h (Quotient.mk.{u_1} α sa x) (Quotient.mk.{u_2} β sb y)) (Quotient.mk.{u_3} γ sc (f x y))
 Case conversion may be inaccurate. Consider using '#align quotient.map₂_mk Quotient.map₂_mkₓ'. -/
 @[simp]
 theorem map₂_mk (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (· ≈ ·)) f f) (x : α) (y : β) :
@@ -309,14 +322,16 @@ theorem map₂_mk (f : α → β → γ) (h : ((· ≈ ·) ⇒ (· ≈ ·) ⇒ (
 
 include sa
 
-instance (f : α → Prop) (h : ∀ a b, a ≈ b → f a = f b) [DecidablePred f] : DecidablePred (Quotient.lift f h) :=
+instance (f : α → Prop) (h : ∀ a b, a ≈ b → f a = f b) [DecidablePred f] :
+    DecidablePred (Quotient.lift f h) :=
   Quot.lift.decidablePred _ _ _
 
 include sb
 
 /-- Note that this provides `decidable_rel (quotient.lift₂ f h)` when `α = β`. -/
-instance (f : α → β → Prop) (h : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ = f a₂ b₂) [hf : ∀ a, DecidablePred (f a)]
-    (q₁ : Quotient sa) : DecidablePred (Quotient.lift₂ f h q₁) := fun q₂ => Quotient.recOnSubsingleton₂ q₁ q₂ hf
+instance (f : α → β → Prop) (h : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ = f a₂ b₂)
+    [hf : ∀ a, DecidablePred (f a)] (q₁ : Quotient sa) : DecidablePred (Quotient.lift₂ f h q₁) :=
+  fun q₂ => Quotient.recOnSubsingleton₂ q₁ q₂ hf
 
 omit sb
 
@@ -332,7 +347,8 @@ instance (q₁ : Quotient sa) (q₂ : Quotient sb) (f : α → β → Prop)
 end Quotient
 
 #print Quot.eq /-
-theorem Quot.eq {α : Type _} {r : α → α → Prop} {x y : α} : Quot.mk r x = Quot.mk r y ↔ EqvGen r x y :=
+theorem Quot.eq {α : Type _} {r : α → α → Prop} {x y : α} :
+    Quot.mk r x = Quot.mk r y ↔ EqvGen r x y :=
   ⟨Quot.exact r, Quot.EqvGen_sound⟩
 #align quot.eq Quot.eq
 -/
@@ -353,9 +369,9 @@ theorem forall_quotient_iff {α : Type _} [r : Setoid α] {p : Quotient r → Pr
 
 /- warning: quotient.lift_mk -> Quotient.lift_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [s : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α s) a b) -> (Eq.{u_2} β (f a) (f b))) (x : α), Eq.{u_2} β (Quotient.lift.{u_1 u_2} α β s f h (Quotient.mk''.{u_1} α s x)) (f x)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [s : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α s) a b) -> (Eq.{u_2} β (f a) (f b))) (x : α), Eq.{u_2} β (Quotient.lift.{u_1, u_2} α β s f h (Quotient.mk''.{u_1} α s x)) (f x)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [s : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquiv.Equiv.{u_1 0} α (instHasEquiv.{u_1} α s) a b) -> (Eq.{u_2} β (f a) (f b))) (x : α), Eq.{u_2} β (Quotient.lift.{u_1 u_2} α β s f h (Quotient.mk.{u_1} α s x)) (f x)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [s : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquiv.Equiv.{u_1, 0} α (instHasEquiv.{u_1} α s) a b) -> (Eq.{u_2} β (f a) (f b))) (x : α), Eq.{u_2} β (Quotient.lift.{u_1, u_2} α β s f h (Quotient.mk.{u_1} α s x)) (f x)
 Case conversion may be inaccurate. Consider using '#align quotient.lift_mk Quotient.lift_mkₓ'. -/
 @[simp]
 theorem Quotient.lift_mk [s : Setoid α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) (x : α) :
@@ -365,9 +381,9 @@ theorem Quotient.lift_mk [s : Setoid α] (f : α → β) (h : ∀ a b : α, a �
 
 /- warning: quotient.lift_comp_mk -> Quotient.lift_comp_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α _inst_1) a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{(imax u_1 u_2)} (α -> β) (Function.comp.{u_1 u_1 u_2} α (Quotient.{u_1} α _inst_1) β (Quotient.lift.{u_1 u_2} α β _inst_1 f h) (Quotient.mk''.{u_1} α _inst_1)) f
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α _inst_1) a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{imax u_1 u_2} (α -> β) (Function.comp.{u_1, u_1, u_2} α (Quotient.{u_1} α _inst_1) β (Quotient.lift.{u_1, u_2} α β _inst_1 f h) (Quotient.mk''.{u_1} α _inst_1)) f
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Data.Quot._hyg.5023 : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquiv.Equiv.{u_1 0} α (instHasEquiv.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5023) a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{(imax u_1 u_2)} (α -> β) (Function.comp.{u_1 u_1 u_2} α (Quotient.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5023) β (Quotient.lift.{u_1 u_2} α β inst._@.Mathlib.Data.Quot._hyg.5023 f h) (Quotient.mk.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5023)) f
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [inst._@.Mathlib.Data.Quot._hyg.5120 : Setoid.{u_1} α] (f : α -> β) (h : forall (a : α) (b : α), (HasEquiv.Equiv.{u_1, 0} α (instHasEquiv.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5120) a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{imax u_1 u_2} (α -> β) (Function.comp.{u_1, u_1, u_2} α (Quotient.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5120) β (Quotient.lift.{u_1, u_2} α β inst._@.Mathlib.Data.Quot._hyg.5120 f h) (Quotient.mk.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5120)) f
 Case conversion may be inaccurate. Consider using '#align quotient.lift_comp_mk Quotient.lift_comp_mkₓ'. -/
 @[simp]
 theorem Quotient.lift_comp_mk [Setoid α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) :
@@ -377,14 +393,15 @@ theorem Quotient.lift_comp_mk [Setoid α] (f : α → β) (h : ∀ a b : α, a �
 
 /- warning: quotient.lift₂_mk -> Quotient.lift₂_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : Setoid.{u_1} α] [_inst_2 : Setoid.{u_2} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α _inst_1) a₁ b₁) -> (HasEquivₓ.Equiv.{u_2} β (setoidHasEquiv.{u_2} β _inst_2) a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.lift₂.{u_1 u_2 u_3} α β γ _inst_1 _inst_2 f h (Quotient.mk''.{u_1} α _inst_1 a) (Quotient.mk''.{u_2} β _inst_2 b)) (f a b)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : Setoid.{u_1} α] [_inst_2 : Setoid.{u_2} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (HasEquivₓ.Equiv.{u_1} α (setoidHasEquiv.{u_1} α _inst_1) a₁ b₁) -> (HasEquivₓ.Equiv.{u_2} β (setoidHasEquiv.{u_2} β _inst_2) a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.lift₂.{u_1, u_2, u_3} α β γ _inst_1 _inst_2 f h (Quotient.mk''.{u_1} α _inst_1 a) (Quotient.mk''.{u_2} β _inst_2 b)) (f a b)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [inst._@.Mathlib.Data.Quot._hyg.5072 : Setoid.{u_1} α] [inst._@.Mathlib.Data.Quot._hyg.5075 : Setoid.{u_2} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (HasEquiv.Equiv.{u_1 0} α (instHasEquiv.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5072) a₁ b₁) -> (HasEquiv.Equiv.{u_2 0} β (instHasEquiv.{u_2} β inst._@.Mathlib.Data.Quot._hyg.5075) a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.lift₂.{u_1 u_2 u_3} α β γ inst._@.Mathlib.Data.Quot._hyg.5072 inst._@.Mathlib.Data.Quot._hyg.5075 f h (Quotient.mk.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5072 a) (Quotient.mk.{u_2} β inst._@.Mathlib.Data.Quot._hyg.5075 b)) (f a b)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [inst._@.Mathlib.Data.Quot._hyg.5169 : Setoid.{u_1} α] [inst._@.Mathlib.Data.Quot._hyg.5172 : Setoid.{u_2} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (HasEquiv.Equiv.{u_1, 0} α (instHasEquiv.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5169) a₁ b₁) -> (HasEquiv.Equiv.{u_2, 0} β (instHasEquiv.{u_2} β inst._@.Mathlib.Data.Quot._hyg.5172) a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.lift₂.{u_1, u_2, u_3} α β γ inst._@.Mathlib.Data.Quot._hyg.5169 inst._@.Mathlib.Data.Quot._hyg.5172 f h (Quotient.mk.{u_1} α inst._@.Mathlib.Data.Quot._hyg.5169 a) (Quotient.mk.{u_2} β inst._@.Mathlib.Data.Quot._hyg.5172 b)) (f a b)
 Case conversion may be inaccurate. Consider using '#align quotient.lift₂_mk Quotient.lift₂_mkₓ'. -/
 @[simp]
-theorem Quotient.lift₂_mk {α : Sort _} {β : Sort _} {γ : Sort _} [Setoid α] [Setoid β] (f : α → β → γ)
-    (h : ∀ (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (a : α) (b : β) :
-    Quotient.lift₂ f h (Quotient.mk'' a) (Quotient.mk'' b) = f a b :=
+theorem Quotient.lift₂_mk {α : Sort _} {β : Sort _} {γ : Sort _} [Setoid α] [Setoid β]
+    (f : α → β → γ)
+    (h : ∀ (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (a : α)
+    (b : β) : Quotient.lift₂ f h (Quotient.mk'' a) (Quotient.mk'' b) = f a b :=
   rfl
 #align quotient.lift₂_mk Quotient.lift₂_mk
 
@@ -410,7 +427,8 @@ theorem surjective_quot_mk (r : α → α → Prop) : Surjective (Quot.mk r) :=
 
 #print surjective_quotient_mk /-
 /-- `quotient.mk` is a surjective function. -/
-theorem surjective_quotient_mk (α : Sort _) [s : Setoid α] : Surjective (Quotient.mk'' : α → Quotient s) :=
+theorem surjective_quotient_mk (α : Sort _) [s : Setoid α] :
+    Surjective (Quotient.mk'' : α → Quotient s) :=
   Quot.exists_rep
 #align surjective_quotient_mk surjective_quotient_mk
 -/
@@ -460,14 +478,16 @@ theorem Quotient.mk_out [s : Setoid α] (a : α) : ⟦a⟧.out ≈ a :=
 -/
 
 #print Quotient.mk_eq_iff_out /-
-theorem Quotient.mk_eq_iff_out [s : Setoid α] {x : α} {y : Quotient s} : ⟦x⟧ = y ↔ x ≈ Quotient.out y := by
+theorem Quotient.mk_eq_iff_out [s : Setoid α] {x : α} {y : Quotient s} :
+    ⟦x⟧ = y ↔ x ≈ Quotient.out y := by
   refine' Iff.trans _ Quotient.eq
   rw [Quotient.out_eq y]
 #align quotient.mk_eq_iff_out Quotient.mk_eq_iff_out
 -/
 
 #print Quotient.eq_mk_iff_out /-
-theorem Quotient.eq_mk_iff_out [s : Setoid α] {x : Quotient s} {y : α} : x = ⟦y⟧ ↔ Quotient.out x ≈ y := by
+theorem Quotient.eq_mk_iff_out [s : Setoid α] {x : Quotient s} {y : α} :
+    x = ⟦y⟧ ↔ Quotient.out x ≈ y := by
   refine' Iff.trans _ Quotient.eq
   rw [Quotient.out_eq x]
 #align quotient.eq_mk_iff_out Quotient.eq_mk_iff_out
@@ -498,24 +518,26 @@ section Pi
 #print piSetoid /-
 instance piSetoid {ι : Sort _} {α : ι → Sort _} [∀ i, Setoid (α i)] : Setoid (∀ i, α i) where
   R a b := ∀ i, a i ≈ b i
-  iseqv := ⟨fun a i => Setoid.refl _, fun a b h i => Setoid.symm (h _), fun a b c h₁ h₂ i => Setoid.trans (h₁ _) (h₂ _)⟩
+  iseqv :=
+    ⟨fun a i => Setoid.refl _, fun a b h i => Setoid.symm (h _), fun a b c h₁ h₂ i =>
+      Setoid.trans (h₁ _) (h₂ _)⟩
 #align pi_setoid piSetoid
 -/
 
 #print Quotient.choice /-
 /-- Given a function `f : Π i, quotient (S i)`, returns the class of functions `Π i, α i` sending
 each `i` to an element of the class `f i`. -/
-noncomputable def Quotient.choice {ι : Type _} {α : ι → Type _} [S : ∀ i, Setoid (α i)] (f : ∀ i, Quotient (S i)) :
-    @Quotient (∀ i, α i) (by infer_instance) :=
+noncomputable def Quotient.choice {ι : Type _} {α : ι → Type _} [S : ∀ i, Setoid (α i)]
+    (f : ∀ i, Quotient (S i)) : @Quotient (∀ i, α i) (by infer_instance) :=
   ⟦fun i => (f i).out⟧
 #align quotient.choice Quotient.choice
 -/
 
 /- warning: quotient.choice_eq -> Quotient.choice_eq is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : forall (i : ι), Setoid.{succ u_2} (α i)] (f : forall (i : ι), α i), Eq.{(max (succ u_1) (succ u_2))} (Quotient.{(max (succ u_1) (succ u_2))} (forall (i : ι), α i) (piSetoid.{succ u_1 succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (Quotient.choice.{u_1 u_2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (fun (i : ι) => Quotient.mk''.{succ u_2} (α i) (_inst_1 i) (f i))) (Quotient.mk''.{(max (succ u_1) (succ u_2))} (forall (i : ι), α i) (piSetoid.{succ u_1 succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) f)
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : forall (i : ι), Setoid.{succ u_2} (α i)] (f : forall (i : ι), α i), Eq.{max (succ u_1) (succ u_2)} (Quotient.{max (succ u_1) (succ u_2)} (forall (i : ι), α i) (piSetoid.{succ u_1, succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (Quotient.choice.{u_1, u_2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (fun (i : ι) => Quotient.mk''.{succ u_2} (α i) (_inst_1 i) (f i))) (Quotient.mk''.{max (succ u_1) (succ u_2)} (forall (i : ι), α i) (piSetoid.{succ u_1, succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) f)
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [inst._@.Mathlib.Data.Quot._hyg.5825 : forall (i : ι), Setoid.{succ u_2} (α i)] (f : forall (i : ι), α i), Eq.{(max (succ u_1) (succ u_2))} (Quotient.{(max (succ u_1) (succ u_2))} (forall (i : ι), α i) (inferInstance.{(max (succ u_1) (succ u_2))} (Setoid.{(max (succ u_1) (succ u_2))} (forall (i : ι), α i)) (piSetoid.{succ u_1 succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Data.Quot._hyg.5825 i)))) (Quotient.choice.{u_1 u_2} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Data.Quot._hyg.5825 i) (fun (i : ι) => Quotient.mk.{succ u_2} (α i) (inst._@.Mathlib.Data.Quot._hyg.5825 i) (f i))) (Quotient.mk.{(max (succ u_1) (succ u_2))} (forall (i : ι), α i) (inferInstance.{(max (succ u_1) (succ u_2))} (Setoid.{(max (succ u_1) (succ u_2))} (forall (i : ι), α i)) (piSetoid.{succ u_1 succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Data.Quot._hyg.5825 i))) f)
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [inst._@.Mathlib.Data.Quot._hyg.5922 : forall (i : ι), Setoid.{succ u_2} (α i)] (f : forall (i : ι), α i), Eq.{max (succ u_1) (succ u_2)} (Quotient.{max (succ u_1) (succ u_2)} (forall (i : ι), α i) (inferInstance.{max (succ u_1) (succ u_2)} (Setoid.{max (succ u_1) (succ u_2)} (forall (i : ι), α i)) (piSetoid.{succ u_1, succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Data.Quot._hyg.5922 i)))) (Quotient.choice.{u_1, u_2} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Data.Quot._hyg.5922 i) (fun (i : ι) => Quotient.mk.{succ u_2} (α i) (inst._@.Mathlib.Data.Quot._hyg.5922 i) (f i))) (Quotient.mk.{max (succ u_1) (succ u_2)} (forall (i : ι), α i) (inferInstance.{max (succ u_1) (succ u_2)} (Setoid.{max (succ u_1) (succ u_2)} (forall (i : ι), α i)) (piSetoid.{succ u_1, succ u_2} ι (fun (i : ι) => α i) (fun (i : ι) => inst._@.Mathlib.Data.Quot._hyg.5922 i))) f)
 Case conversion may be inaccurate. Consider using '#align quotient.choice_eq Quotient.choice_eqₓ'. -/
 @[simp]
 theorem Quotient.choice_eq {ι : Type _} {α : ι → Type _} [∀ i, Setoid (α i)] (f : ∀ i, α i) :
@@ -531,7 +553,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quotient.induction_on_pi Quotient.induction_on_piₓ'. -/
 @[elab_as_elim]
 theorem Quotient.induction_on_pi {ι : Type _} {α : ι → Sort _} [s : ∀ i, Setoid (α i)]
-    {p : (∀ i, Quotient (s i)) → Prop} (f : ∀ i, Quotient (s i)) (h : ∀ a : ∀ i, α i, p fun i => ⟦a i⟧) : p f := by
+    {p : (∀ i, Quotient (s i)) → Prop} (f : ∀ i, Quotient (s i))
+    (h : ∀ a : ∀ i, α i, p fun i => ⟦a i⟧) : p f := by
   rw [← (funext fun i => Quotient.out_eq (f i) : (fun i => ⟦(f i).out⟧) = f)]
   apply h
 #align quotient.induction_on_pi Quotient.induction_on_pi
@@ -665,8 +688,9 @@ variable {C : Trunc α → Sort _}
 #print Trunc.rec /-
 /-- Recursion/induction principle for `trunc`. -/
 @[reducible, elab_as_elim]
-protected def rec (f : ∀ a, C (mk a)) (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b)
-    (q : Trunc α) : C q :=
+protected def rec (f : ∀ a, C (mk a))
+    (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b) (q : Trunc α) :
+    C q :=
   Quot.rec f (fun a b _ => h a b) q
 #align trunc.rec Trunc.rec
 -/
@@ -683,7 +707,8 @@ protected def recOn (q : Trunc α) (f : ∀ a, C (mk a))
 #print Trunc.recOnSubsingleton /-
 /-- A version of `trunc.rec_on` assuming the codomain is a `subsingleton`. -/
 @[reducible, elab_as_elim]
-protected def recOnSubsingleton [∀ a, Subsingleton (C (mk a))] (q : Trunc α) (f : ∀ a, C (mk a)) : C q :=
+protected def recOnSubsingleton [∀ a, Subsingleton (C (mk a))] (q : Trunc α) (f : ∀ a, C (mk a)) :
+    C q :=
   Trunc.rec f (fun a b => Subsingleton.elim _ (f b)) q
 #align trunc.rec_on_subsingleton Trunc.recOnSubsingleton
 -/
@@ -741,21 +766,29 @@ theorem surjective_Quotient_mk'' : Surjective (Quotient.mk' : α → Quotient s�
 /-- A version of `quotient.lift_on` taking `{s : setoid α}` as an implicit argument instead of an
 instance argument. -/
 @[elab_as_elim, reducible]
-protected def liftOn' (q : Quotient s₁) (f : α → φ) (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b) : φ :=
+protected def liftOn' (q : Quotient s₁) (f : α → φ) (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b) :
+    φ :=
   Quotient.liftOn q f h
 #align quotient.lift_on' Quotient.liftOn'
 -/
 
 @[simp]
-protected theorem lift_on'_mk' (f : α → φ) (h) (x : α) : Quotient.liftOn' (@Quotient.mk' _ s₁ x) f h = f x :=
+protected theorem lift_on'_mk' (f : α → φ) (h) (x : α) :
+    Quotient.liftOn' (@Quotient.mk' _ s₁ x) f h = f x :=
   rfl
 #align quotient.lift_on'_mk' Quotient.lift_on'_mk'
 
+/- warning: quotient.surjective_lift_on' -> Quotient.surjective_liftOn' is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {φ : Sort.{u_4}} {s₁ : Setoid.{u_1} α} {f : α -> φ} (h : forall (a : α) (b : α), (Setoid.r.{u_1} α s₁ a b) -> (Eq.{u_4} φ (f a) (f b))), Iff (Function.Surjective.{u_1, u_4} (Quotient.{u_1} α s₁) φ (fun (x : Quotient.{u_1} α s₁) => Quotient.liftOn'.{u_1, u_4} α φ s₁ x f h)) (Function.Surjective.{u_1, u_4} α φ f)
+but is expected to have type
+  forall {α : Sort.{u_1}} {φ : Sort.{u_2}} {s₁ : Setoid.{u_1} α} {f : α -> φ} (h : forall (a : α) (b : α), (Setoid.r.{u_1} α s₁ a b) -> (Eq.{u_2} φ (f a) (f b))), Iff (Function.Surjective.{u_1, u_2} (Quotient.{u_1} α s₁) φ (fun (x : Quotient.{u_1} α s₁) => Quotient.liftOn'.{u_1, u_2} α φ s₁ x f h)) (Function.Surjective.{u_1, u_2} α φ f)
+Case conversion may be inaccurate. Consider using '#align quotient.surjective_lift_on' Quotient.surjective_liftOn'ₓ'. -/
 @[simp]
-theorem surjective_lift_on' {f : α → φ} (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b) :
+theorem surjective_liftOn' {f : α → φ} (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b) :
     (Surjective fun x => Quotient.liftOn' x f h) ↔ Surjective f :=
   Quot.surjective_lift _
-#align quotient.surjective_lift_on' Quotient.surjective_lift_on'
+#align quotient.surjective_lift_on' Quotient.surjective_liftOn'
 
 #print Quotient.liftOn₂' /-
 /-- A version of `quotient.lift_on₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit arguments
@@ -777,7 +810,8 @@ protected theorem lift_on₂'_mk' (f : α → β → γ) (h) (a : α) (b : β) :
 /-- A version of `quotient.ind` taking `{s : setoid α}` as an implicit argument instead of an
 instance argument. -/
 @[elab_as_elim]
-protected theorem ind' {p : Quotient s₁ → Prop} (h : ∀ a, p (Quotient.mk' a)) (q : Quotient s₁) : p q :=
+protected theorem ind' {p : Quotient s₁ → Prop} (h : ∀ a, p (Quotient.mk' a)) (q : Quotient s₁) :
+    p q :=
   Quotient.ind h q
 #align quotient.ind' Quotient.ind'
 -/
@@ -791,8 +825,9 @@ Case conversion may be inaccurate. Consider using '#align quotient.ind₂' Quoti
 /-- A version of `quotient.ind₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit arguments
 instead of instance arguments. -/
 @[elab_as_elim]
-protected theorem ind₂' {p : Quotient s₁ → Quotient s₂ → Prop} (h : ∀ a₁ a₂, p (Quotient.mk' a₁) (Quotient.mk' a₂))
-    (q₁ : Quotient s₁) (q₂ : Quotient s₂) : p q₁ q₂ :=
+protected theorem ind₂' {p : Quotient s₁ → Quotient s₂ → Prop}
+    (h : ∀ a₁ a₂, p (Quotient.mk' a₁) (Quotient.mk' a₂)) (q₁ : Quotient s₁) (q₂ : Quotient s₂) :
+    p q₁ q₂ :=
   Quotient.ind₂ h q₁ q₂
 #align quotient.ind₂' Quotient.ind₂'
 
@@ -800,7 +835,8 @@ protected theorem ind₂' {p : Quotient s₁ → Quotient s₂ → Prop} (h : �
 /-- A version of `quotient.induction_on` taking `{s : setoid α}` as an implicit argument instead
 of an instance argument. -/
 @[elab_as_elim]
-protected theorem inductionOn' {p : Quotient s₁ → Prop} (q : Quotient s₁) (h : ∀ a, p (Quotient.mk' a)) : p q :=
+protected theorem inductionOn' {p : Quotient s₁ → Prop} (q : Quotient s₁)
+    (h : ∀ a, p (Quotient.mk' a)) : p q :=
   Quotient.induction_on q h
 #align quotient.induction_on' Quotient.inductionOn'
 -/
@@ -814,8 +850,8 @@ Case conversion may be inaccurate. Consider using '#align quotient.induction_on�
 /-- A version of `quotient.induction_on₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit
 arguments instead of instance arguments. -/
 @[elab_as_elim]
-protected theorem inductionOn₂' {p : Quotient s₁ → Quotient s₂ → Prop} (q₁ : Quotient s₁) (q₂ : Quotient s₂)
-    (h : ∀ a₁ a₂, p (Quotient.mk' a₁) (Quotient.mk' a₂)) : p q₁ q₂ :=
+protected theorem inductionOn₂' {p : Quotient s₁ → Quotient s₂ → Prop} (q₁ : Quotient s₁)
+    (q₂ : Quotient s₂) (h : ∀ a₁ a₂, p (Quotient.mk' a₁) (Quotient.mk' a₂)) : p q₁ q₂ :=
   Quotient.induction_on₂ q₁ q₂ h
 #align quotient.induction_on₂' Quotient.inductionOn₂'
 
@@ -828,9 +864,9 @@ Case conversion may be inaccurate. Consider using '#align quotient.induction_on�
 /-- A version of `quotient.induction_on₃` taking `{s₁ : setoid α} {s₂ : setoid β} {s₃ : setoid γ}`
 as implicit arguments instead of instance arguments. -/
 @[elab_as_elim]
-protected theorem inductionOn₃' {p : Quotient s₁ → Quotient s₂ → Quotient s₃ → Prop} (q₁ : Quotient s₁)
-    (q₂ : Quotient s₂) (q₃ : Quotient s₃) (h : ∀ a₁ a₂ a₃, p (Quotient.mk' a₁) (Quotient.mk' a₂) (Quotient.mk' a₃)) :
-    p q₁ q₂ q₃ :=
+protected theorem inductionOn₃' {p : Quotient s₁ → Quotient s₂ → Quotient s₃ → Prop}
+    (q₁ : Quotient s₁) (q₂ : Quotient s₂) (q₃ : Quotient s₃)
+    (h : ∀ a₁ a₂ a₃, p (Quotient.mk' a₁) (Quotient.mk' a₂) (Quotient.mk' a₃)) : p q₁ q₂ q₃ :=
   Quotient.induction_on₃ q₁ q₂ q₃ h
 #align quotient.induction_on₃' Quotient.inductionOn₃'
 
@@ -838,8 +874,8 @@ protected theorem inductionOn₃' {p : Quotient s₁ → Quotient s₂ → Quoti
 /-- A version of `quotient.rec_on_subsingleton` taking `{s₁ : setoid α}` as an implicit argument
 instead of an instance argument. -/
 @[elab_as_elim]
-protected def recOnSubsingleton' {φ : Quotient s₁ → Sort _} [h : ∀ a, Subsingleton (φ ⟦a⟧)] (q : Quotient s₁)
-    (f : ∀ a, φ (Quotient.mk' a)) : φ q :=
+protected def recOnSubsingleton' {φ : Quotient s₁ → Sort _} [h : ∀ a, Subsingleton (φ ⟦a⟧)]
+    (q : Quotient s₁) (f : ∀ a, φ (Quotient.mk' a)) : φ q :=
   Quotient.recOnSubsingleton q f
 #align quotient.rec_on_subsingleton' Quotient.recOnSubsingleton'
 -/
@@ -848,8 +884,9 @@ protected def recOnSubsingleton' {φ : Quotient s₁ → Sort _} [h : ∀ a, Sub
 /-- A version of `quotient.rec_on_subsingleton₂` taking `{s₁ : setoid α} {s₂ : setoid α}`
 as implicit arguments instead of instance arguments. -/
 @[reducible, elab_as_elim]
-protected def recOnSubsingleton₂' {φ : Quotient s₁ → Quotient s₂ → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)]
-    (q₁ : Quotient s₁) (q₂ : Quotient s₂) (f : ∀ a₁ a₂, φ (Quotient.mk' a₁) (Quotient.mk' a₂)) : φ q₁ q₂ :=
+protected def recOnSubsingleton₂' {φ : Quotient s₁ → Quotient s₂ → Sort _}
+    [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quotient s₁) (q₂ : Quotient s₂)
+    (f : ∀ a₁ a₂, φ (Quotient.mk' a₁) (Quotient.mk' a₂)) : φ q₁ q₂ :=
   Quotient.recOnSubsingleton₂ q₁ q₂ f
 #align quotient.rec_on_subsingleton₂' Quotient.recOnSubsingleton₂'
 -/
@@ -863,22 +900,23 @@ protected def hrecOn' {φ : Quotient s₁ → Sort _} (qa : Quotient s₁) (f : 
 -/
 
 @[simp]
-theorem hrec_on'_mk' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk' a)) (c : ∀ a₁ a₂, a₁ ≈ a₂ → HEq (f a₁) (f a₂))
-    (x : α) : (Quotient.mk' x).hrecOn' f c = f x :=
+theorem hrec_on'_mk' {φ : Quotient s₁ → Sort _} (f : ∀ a, φ (Quotient.mk' a))
+    (c : ∀ a₁ a₂, a₁ ≈ a₂ → HEq (f a₁) (f a₂)) (x : α) : (Quotient.mk' x).hrecOn' f c = f x :=
   rfl
 #align quotient.hrec_on'_mk' Quotient.hrec_on'_mk'
 
 #print Quotient.hrecOn₂' /-
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
-protected def hrecOn₂' {φ : Quotient s₁ → Quotient s₂ → Sort _} (qa : Quotient s₁) (qb : Quotient s₂)
-    (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b)) (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) :
-    φ qa qb :=
+protected def hrecOn₂' {φ : Quotient s₁ → Quotient s₂ → Sort _} (qa : Quotient s₁)
+    (qb : Quotient s₂) (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b))
+    (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) : φ qa qb :=
   Quotient.hrecOn₂ qa qb f c
 #align quotient.hrec_on₂' Quotient.hrecOn₂'
 -/
 
 @[simp]
-theorem hrec_on₂'_mk' {φ : Quotient s₁ → Quotient s₂ → Sort _} (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b))
+theorem hrec_on₂'_mk' {φ : Quotient s₁ → Quotient s₂ → Sort _}
+    (f : ∀ a b, φ (Quotient.mk' a) (Quotient.mk' b))
     (c : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → HEq (f a₁ b₁) (f a₂ b₂)) (x : α) (qb : Quotient s₂) :
     (Quotient.mk' x).hrecOn₂' qb f c = qb.hrecOn' (f x) fun b₁ b₂ => c _ _ _ _ (Setoid.refl _) :=
   rfl
@@ -900,14 +938,16 @@ theorem map'_mk' (f : α → β) (h) (x : α) :
 
 #print Quotient.map₂' /-
 /-- A version of `quotient.map₂` using curly braces and unification. -/
-protected def map₂' (f : α → β → γ) (h : (s₁.R ⇒ s₂.R ⇒ s₃.R) f f) : Quotient s₁ → Quotient s₂ → Quotient s₃ :=
+protected def map₂' (f : α → β → γ) (h : (s₁.R ⇒ s₂.R ⇒ s₃.R) f f) :
+    Quotient s₁ → Quotient s₂ → Quotient s₃ :=
   Quotient.map₂ f h
 #align quotient.map₂' Quotient.map₂'
 -/
 
 @[simp]
 theorem map₂'_mk' (f : α → β → γ) (h) (x : α) :
-    (Quotient.mk' x : Quotient s₁).map₂' f h = (Quotient.map' (f x) (h (Setoid.refl x)) : Quotient s₂ → Quotient s₃) :=
+    (Quotient.mk' x : Quotient s₁).map₂' f h =
+      (Quotient.map' (f x) (h (Setoid.refl x)) : Quotient s₂ → Quotient s₃) :=
   rfl
 #align quotient.map₂'_mk' Quotient.map₂'_mk'
 
@@ -961,9 +1001,9 @@ protected theorem mk'_eq_mk (x : α) : Quotient.mk' x = ⟦x⟧ :=
 
 /- warning: quotient.lift_on'_mk -> Quotient.liftOn'_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Setoid.{u_1} α] (x : α) (f : α -> β) (h : forall (a : α) (b : α), (Setoid.r.{u_1} α _inst_1 a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{u_2} β (Quotient.liftOn'.{u_1 u_2} α β _inst_1 (Quotient.mk''.{u_1} α _inst_1 x) f h) (f x)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [_inst_1 : Setoid.{u_1} α] (x : α) (f : α -> β) (h : forall (a : α) (b : α), (Setoid.r.{u_1} α _inst_1 a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{u_2} β (Quotient.liftOn'.{u_1, u_2} α β _inst_1 (Quotient.mk''.{u_1} α _inst_1 x) f h) (f x)
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [s : Setoid.{u_1} α] (x : α) (f : α -> β) (h : forall (a : α) (b : α), (Setoid.r.{u_1} α s a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{u_2} β (Quotient.liftOn'.{u_1 u_2} α β s (Quotient.mk.{u_1} α s x) f h) (f x)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} [s : Setoid.{u_1} α] (x : α) (f : α -> β) (h : forall (a : α) (b : α), (Setoid.r.{u_1} α s a b) -> (Eq.{u_2} β (f a) (f b))), Eq.{u_2} β (Quotient.liftOn'.{u_1, u_2} α β s (Quotient.mk.{u_1} α s x) f h) (f x)
 Case conversion may be inaccurate. Consider using '#align quotient.lift_on'_mk Quotient.liftOn'_mkₓ'. -/
 @[simp]
 protected theorem liftOn'_mk (x : α) (f : α → β) (h) : ⟦x⟧.liftOn' f h = f x :=
@@ -972,12 +1012,13 @@ protected theorem liftOn'_mk (x : α) (f : α → β) (h) : ⟦x⟧.liftOn' f h 
 
 /- warning: quotient.lift_on₂'_mk -> Quotient.liftOn₂'_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : Setoid.{u_1} α] [_inst_2 : Setoid.{u_2} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (Setoid.r.{u_1} α _inst_1 a₁ b₁) -> (Setoid.r.{u_2} β _inst_2 a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.liftOn₂'.{u_1 u_2 u_3} α β γ _inst_1 _inst_2 (Quotient.mk''.{u_1} α _inst_1 a) (Quotient.mk''.{u_2} β _inst_2 b) f h) (f a b)
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : Setoid.{u_1} α] [_inst_2 : Setoid.{u_2} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (Setoid.r.{u_1} α _inst_1 a₁ b₁) -> (Setoid.r.{u_2} β _inst_2 a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.liftOn₂'.{u_1, u_2, u_3} α β γ _inst_1 _inst_2 (Quotient.mk''.{u_1} α _inst_1 a) (Quotient.mk''.{u_2} β _inst_2 b) f h) (f a b)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {γ : Sort.{u_3}} [s : Setoid.{u_2} α] [t : Setoid.{u_1} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (Setoid.r.{u_2} α s a₁ b₁) -> (Setoid.r.{u_1} β t a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.liftOn₂'.{u_2 u_1 u_3} α β γ s t (Quotient.mk.{u_2} α s a) (Quotient.mk.{u_1} β t b) f h) (f a b)
+  forall {α : Sort.{u_2}} {β : Sort.{u_1}} {γ : Sort.{u_3}} [s : Setoid.{u_2} α] [t : Setoid.{u_1} β] (f : α -> β -> γ) (h : forall (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), (Setoid.r.{u_2} α s a₁ b₁) -> (Setoid.r.{u_1} β t a₂ b₂) -> (Eq.{u_3} γ (f a₁ a₂) (f b₁ b₂))) (a : α) (b : β), Eq.{u_3} γ (Quotient.liftOn₂'.{u_2, u_1, u_3} α β γ s t (Quotient.mk.{u_2} α s a) (Quotient.mk.{u_1} β t b) f h) (f a b)
 Case conversion may be inaccurate. Consider using '#align quotient.lift_on₂'_mk Quotient.liftOn₂'_mkₓ'. -/
 @[simp]
-protected theorem liftOn₂'_mk [Setoid β] (f : α → β → γ) (h) (a : α) (b : β) : Quotient.liftOn₂' ⟦a⟧ ⟦b⟧ f h = f a b :=
+protected theorem liftOn₂'_mk [Setoid β] (f : α → β → γ) (h) (a : α) (b : β) :
+    Quotient.liftOn₂' ⟦a⟧ ⟦b⟧ f h = f a b :=
   Quotient.lift_on₂'_mk' _ _ _ _
 #align quotient.lift_on₂'_mk Quotient.liftOn₂'_mk
 
@@ -990,13 +1031,13 @@ theorem map'_mk [Setoid β] (f : α → β) (h) (x : α) : ⟦x⟧.map' f h = �
 
 end
 
-instance (q : Quotient s₁) (f : α → Prop) (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b) [DecidablePred f] :
-    Decidable (Quotient.liftOn' q f h) :=
+instance (q : Quotient s₁) (f : α → Prop) (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b)
+    [DecidablePred f] : Decidable (Quotient.liftOn' q f h) :=
   Quotient.lift.decidablePred _ _ q
 
 instance (q₁ : Quotient s₁) (q₂ : Quotient s₂) (f : α → β → Prop)
-    (h : ∀ a₁ b₁ a₂ b₂, @Setoid.r α s₁ a₁ a₂ → @Setoid.r β s₂ b₁ b₂ → f a₁ b₁ = f a₂ b₂) [∀ a, DecidablePred (f a)] :
-    Decidable (Quotient.liftOn₂' q₁ q₂ f h) :=
+    (h : ∀ a₁ b₁ a₂ b₂, @Setoid.r α s₁ a₁ a₂ → @Setoid.r β s₂ b₁ b₂ → f a₁ b₁ = f a₂ b₂)
+    [∀ a, DecidablePred (f a)] : Decidable (Quotient.liftOn₂' q₁ q₂ f h) :=
   Quotient.lift₂.decidablePred _ _ _ _
 
 end Quotient

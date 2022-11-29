@@ -68,7 +68,8 @@ instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
   | cons _ _, nil => isFalse (by cc)
 
 /-- Traversal of lazy lists using an applicative effect. -/
-protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} (f : α → m β) : LazyList α → m (LazyList β)
+protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} (f : α → m β) :
+    LazyList α → m (LazyList β)
   | LazyList.nil => pure LazyList.nil
   | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.mk <$> traverse (xs ())
 #align lazy_list.traverse LazyList.traverse
@@ -124,7 +125,8 @@ def find {α} (p : α → Prop) [DecidablePred p] : LazyList α → Option α
 def interleave {α} : LazyList α → LazyList α → LazyList α
   | LazyList.nil, xs => xs
   | a@(LazyList.cons x xs), LazyList.nil => a
-  | LazyList.cons x xs, LazyList.cons y ys => LazyList.cons x (LazyList.cons y (interleave (xs ()) (ys ())))
+  | LazyList.cons x xs, LazyList.cons y ys =>
+    LazyList.cons x (LazyList.cons y (interleave (xs ()) (ys ())))
 #align lazy_list.interleave LazyList.interleave
 
 /-- `interleave_all (xs::ys::zs::xss)` creates a list where elements of `xs`, `ys`
@@ -154,15 +156,13 @@ instance : Monad LazyList where
   bind := @LazyList.bind
 
 theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs := by
-  induction xs
-  rfl
+  induction xs; rfl
   simp [LazyList.append, xs_ih]
-  ext
-  congr
+  ext; congr
 #align lazy_list.append_nil LazyList.append_nil
 
-theorem append_assoc {α} (xs ys zs : LazyList α) : (xs.append ys).append zs = xs.append (ys.append zs) := by
-  induction xs <;> simp [append, *]
+theorem append_assoc {α} (xs ys zs : LazyList α) :
+    (xs.append ys).append zs = xs.append (ys.append zs) := by induction xs <;> simp [append, *]
 #align lazy_list.append_assoc LazyList.append_assoc
 
 theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : α → LazyList β) :
@@ -182,14 +182,13 @@ instance : LawfulMonad LazyList where
     intros
     simp [(· <$> ·)]
     induction x <;> simp [LazyList.bind, *, singleton, append]
-    ext ⟨⟩
-    rfl
+    ext ⟨⟩; rfl
 
 /- warning: lazy_list.mfirst -> LazyList.mfirst is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Alternative.{u_1 u_2} m] {α : Type.{u_3}} {β : Type.{u_1}}, (α -> (m β)) -> (LazyList.{u_3} α) -> (m β)
+  forall {m : Type.{u_1} -> Type.{u_2}} [_inst_1 : Alternative.{u_1, u_2} m] {α : Type.{u_3}} {β : Type.{u_1}}, (α -> (m β)) -> (LazyList.{u_3} α) -> (m β)
 but is expected to have type
-  forall {m : Type.{_aux_param_2} -> Type.{_aux_param_1}} [_inst_1 : Alternative.{_aux_param_2 _aux_param_1} m] {α : Type.{_aux_param_0}} {β : Type.{_aux_param_2}}, (α -> (m β)) -> (LazyList.{_aux_param_0} α) -> (m β)
+  forall {m : Type.{_aux_param_2} -> Type.{_aux_param_1}} [_inst_1 : Alternative.{_aux_param_2, _aux_param_1} m] {α : Type.{_aux_param_0}} {β : Type.{_aux_param_2}}, (α -> (m β)) -> (LazyList.{_aux_param_0} α) -> (m β)
 Case conversion may be inaccurate. Consider using '#align lazy_list.mfirst LazyList.mfirstₓ'. -/
 /-- Try applying function `f` to every element of a `lazy_list` and
 return the result of the first attempt that succeeds. -/
@@ -220,7 +219,8 @@ theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
 #align lazy_list.mem_nil LazyList.mem_nil
 
 @[simp]
-theorem mem_cons {α} (x y : α) (ys : Thunk (LazyList α)) : x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
+theorem mem_cons {α} (x y : α) (ys : Thunk (LazyList α)) :
+    x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
   Iff.rfl
 #align lazy_list.mem_cons LazyList.mem_cons
 
@@ -239,7 +239,8 @@ theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk (LazyList α)
 @[simp]
 def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α, (∀ a ∈ l, p a) → LazyList β
   | LazyList.nil, H => LazyList.nil
-  | LazyList.cons x xs, H => LazyList.cons (f x (forall_mem_cons.1 H).1) (pmap (xs ()) (forall_mem_cons.1 H).2)
+  | LazyList.cons x xs, H =>
+    LazyList.cons (f x (forall_mem_cons.1 H).1) (pmap (xs ()) (forall_mem_cons.1 H).2)
 #align lazy_list.pmap LazyList.pmap
 
 /-- "Attach" the proof that the elements of `l` are in `l` to produce a new `lazy_list`

@@ -38,7 +38,8 @@ any `b' < b` also belongs to the range). The type of these embeddings from `r` t
 -/
 
 
-variable {α : Type _} {β : Type _} {γ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
+variable {α : Type _} {β : Type _} {γ : Type _} {r : α → α → Prop} {s : β → β → Prop}
+  {t : γ → γ → Prop}
 
 open Function
 
@@ -105,10 +106,8 @@ instance (r : α → α → Prop) : Inhabited (r ≼i r) :=
 protected def trans (f : r ≼i s) (g : s ≼i t) : r ≼i t :=
   ⟨f.1.trans g.1, fun a c h => by
     simp at h⊢
-    rcases g.2 _ _ h with ⟨b, rfl⟩
-    have h := g.1.map_rel_iff.1 h
-    rcases f.2 _ _ h with ⟨a', rfl⟩
-    exact ⟨a', rfl⟩⟩
+    rcases g.2 _ _ h with ⟨b, rfl⟩; have h := g.1.map_rel_iff.1 h
+    rcases f.2 _ _ h with ⟨a', rfl⟩; exact ⟨a', rfl⟩⟩
 #align initial_seg.trans InitialSeg.trans
 
 @[simp]
@@ -121,7 +120,8 @@ theorem trans_apply (f : r ≼i s) (g : s ≼i t) (a : α) : (f.trans g) a = g (
   rfl
 #align initial_seg.trans_apply InitialSeg.trans_apply
 
-theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] : WellFounded r → Subsingleton (r ≼i s)
+theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
+    WellFounded r → Subsingleton (r ≼i s)
   | ⟨h⟩ =>
     ⟨fun f g => by
       suffices (f : α → β) = g by
@@ -145,9 +145,11 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
 
 instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a =>
-    @Subsingleton.elim _ (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
+    @Subsingleton.elim _
+      (unique_of_trichotomous_of_irrefl (@RelEmbedding.well_founded _ _ r s a IsWellFounded.wf)) a⟩
 
-protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by rw [Subsingleton.elim f g]
+protected theorem eq [IsWellOrder β s] (f g : r ≼i s) (a) : f a = g a := by
+  rw [Subsingleton.elim f g]
 #align initial_seg.eq InitialSeg.eq
 
 theorem Antisymm.aux [IsWellOrder α r] (f : r ≼i s) (g : s ≼i r) : LeftInverse g f :=
@@ -172,7 +174,8 @@ theorem antisymm_symm [IsWellOrder α r] [IsWellOrder β s] (f : r ≼i s) (g : 
   RelIso.coe_fn_injective rfl
 #align initial_seg.antisymm_symm InitialSeg.antisymm_symm
 
-theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
+theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) :
+    Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
   or_iff_not_imp_right.2 fun h b =>
     (Acc.recOn (IsWellFounded.wf.apply b : Acc s b)) fun x H IH =>
       not_forall_not.1 fun hn =>
@@ -180,7 +183,9 @@ theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : Surjective f ∨ ∃
           ⟨x, fun y =>
             ⟨IH _, fun ⟨a, e⟩ => by
               rw [← e] <;>
-                exact (trichotomous _ _).resolve_right (not_or_of_not (hn a) fun hl => not_exists.2 hn (f.init' hl))⟩⟩
+                exact
+                  (trichotomous _ _).resolve_right
+                    (not_or_of_not (hn a) fun hl => not_exists.2 hn (f.init' hl))⟩⟩
 #align initial_seg.eq_or_principal InitialSeg.eq_or_principal
 
 /-- Restrict the codomain of an initial segment -/
@@ -295,8 +300,8 @@ instance (r : α → α → Prop) [IsWellOrder α r] : IsEmpty (r ≺i r) :=
 /-- Composition of a principal segment with an initial segment, as a principal segment -/
 def ltLe (f : r ≺i s) (g : s ≼i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g f.top, fun a => by
-    simp only [g.init_iff, f.down', exists_and_distrib_left.symm, exists_swap, RelEmbedding.trans_apply,
-        exists_eq_right'] <;>
+    simp only [g.init_iff, f.down', exists_and_distrib_left.symm, exists_swap,
+        RelEmbedding.trans_apply, exists_eq_right'] <;>
       rfl⟩
 #align principal_seg.lt_le PrincipalSeg.ltLe
 
@@ -330,17 +335,17 @@ theorem trans_top [IsTrans γ t] (f : r ≺i s) (g : s ≺i t) : (f.trans g).top
 def equivLt (f : r ≃r s) (g : s ≺i t) : r ≺i t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g.top, fun c =>
     suffices (∃ a : β, g a = c) ↔ ∃ a : α, g (f a) = c by simpa [g.down]
-    ⟨fun ⟨b, h⟩ => ⟨f.symm b, by simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩, fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
+    ⟨fun ⟨b, h⟩ => ⟨f.symm b, by simp only [h, RelIso.apply_symm_apply, RelIso.coe_coe_fn]⟩,
+      fun ⟨a, h⟩ => ⟨f a, h⟩⟩⟩
 #align principal_seg.equiv_lt PrincipalSeg.equivLt
 
 /-- Composition of a principal segment with an order isomorphism, as a principal segment -/
-def ltEquiv {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} (f : PrincipalSeg r s) (g : s ≃r t) :
-    PrincipalSeg r t :=
+def ltEquiv {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} (f : PrincipalSeg r s)
+    (g : s ≃r t) : PrincipalSeg r t :=
   ⟨@RelEmbedding.trans _ _ _ r s t f g, g f.top, by
     intro x
     rw [← g.apply_symm_apply x, g.map_rel_iff, f.down', exists_congr]
-    intro y
-    exact ⟨congr_arg g, fun h => g.to_equiv.bijective.1 h⟩⟩
+    intro y; exact ⟨congr_arg g, fun h => g.to_equiv.bijective.1 h⟩⟩
 #align principal_seg.lt_equiv PrincipalSeg.ltEquiv
 
 @[simp]
@@ -371,8 +376,8 @@ theorem top_eq [IsWellOrder γ t] (e : r ≃r s) (f : r ≺i t) (g : s ≺i t) :
   rw [Subsingleton.elim f (PrincipalSeg.equivLt e g)] <;> rfl
 #align principal_seg.top_eq PrincipalSeg.top_eq
 
-theorem top_lt_top {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t] (f : PrincipalSeg r s)
-    (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
+theorem top_lt_top {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} [IsWellOrder γ t]
+    (f : PrincipalSeg r s) (g : PrincipalSeg s t) (h : PrincipalSeg r t) : t h.top g.top := by
   rw [Subsingleton.elim h (f.trans g)]
   apply PrincipalSeg.lt_top
 #align principal_seg.top_lt_top PrincipalSeg.top_lt_top
@@ -395,7 +400,8 @@ theorem of_element_top {α : Type _} (r : α → α → Prop) (a : α) : (ofElem
 /-- Restrict the codomain of a principal segment -/
 def codRestrict (p : Set β) (f : r ≺i s) (H : ∀ a, f a ∈ p) (H₂ : f.top ∈ p) : r ≺i Subrel s p :=
   ⟨RelEmbedding.codRestrict p f H, ⟨f.top, H₂⟩, fun ⟨b, h⟩ =>
-    f.down.trans <| exists_congr fun a => show (⟨f a, H a⟩ : p).1 = _ ↔ _ from ⟨Subtype.eq, congr_arg _⟩⟩
+    f.down.trans <|
+      exists_congr fun a => show (⟨f a, H a⟩ : p).1 = _ ↔ _ from ⟨Subtype.eq, congr_arg _⟩⟩
 #align principal_seg.cod_restrict PrincipalSeg.codRestrict
 
 @[simp]
@@ -414,7 +420,8 @@ def ofIsEmpty (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b'
 #align principal_seg.of_is_empty PrincipalSeg.ofIsEmpty
 
 @[simp]
-theorem of_is_empty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) : (ofIsEmpty r H).top = b :=
+theorem of_is_empty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ b', ¬s b' b) :
+    (ofIsEmpty r H).top = b :=
   rfl
 #align principal_seg.of_is_empty_top PrincipalSeg.of_is_empty_top
 
@@ -441,16 +448,19 @@ noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r �
     
 #align initial_seg.lt_or_eq InitialSeg.ltOrEq
 
-theorem InitialSeg.lt_or_eq_apply_left [IsWellOrder β s] (f : r ≼i s) (g : r ≺i s) (a : α) : g a = f a :=
+theorem InitialSeg.lt_or_eq_apply_left [IsWellOrder β s] (f : r ≼i s) (g : r ≺i s) (a : α) :
+    g a = f a :=
   @InitialSeg.eq α β r s _ g f a
 #align initial_seg.lt_or_eq_apply_left InitialSeg.lt_or_eq_apply_left
 
-theorem InitialSeg.lt_or_eq_apply_right [IsWellOrder β s] (f : r ≼i s) (g : r ≃r s) (a : α) : g a = f a :=
+theorem InitialSeg.lt_or_eq_apply_right [IsWellOrder β s] (f : r ≼i s) (g : r ≃r s) (a : α) :
+    g a = f a :=
   InitialSeg.eq (InitialSeg.ofIso g) f a
 #align initial_seg.lt_or_eq_apply_right InitialSeg.lt_or_eq_apply_right
 
 /-- Composition of an initial segment taking values in a well order and a principal segment. -/
-noncomputable def InitialSeg.leLt [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) : r ≺i t :=
+noncomputable def InitialSeg.leLt [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) :
+    r ≺i t :=
   match f.lt_or_eq with
   | Sum.inl f' => f'.trans g
   | Sum.inr f' => PrincipalSeg.equivLt f' g
@@ -459,8 +469,7 @@ noncomputable def InitialSeg.leLt [IsWellOrder β s] [IsTrans γ t] (f : r ≼i 
 @[simp]
 theorem InitialSeg.le_lt_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
     (f.leLt g) a = g (f a) := by
-  delta InitialSeg.leLt
-  cases' h : f.lt_or_eq with f' f'
+  delta InitialSeg.leLt; cases' h : f.lt_or_eq with f' f'
   · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
     
   · simp only [PrincipalSeg.equiv_lt_apply, f.lt_or_eq_apply_right]
@@ -476,23 +485,25 @@ noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬
   (RelEmbedding.well_founded f <| IsWellFounded.wf).fix fun a IH => by
     let S := { b | ∀ a h, s (IH a h).1 b }
     have : f a ∈ S := fun a' h =>
-      ((trichotomous _ _).resolve_left fun h' => (IH a' h).2 <| trans (f.map_rel_iff.2 h) h').resolve_left fun h' =>
-        (IH a' h).2 <| h' ▸ f.map_rel_iff.2 h
+      ((trichotomous _ _).resolve_left fun h' =>
+            (IH a' h).2 <| trans (f.map_rel_iff.2 h) h').resolve_left
+        fun h' => (IH a' h).2 <| h' ▸ f.map_rel_iff.2 h
     exact ⟨is_well_founded.wf.min S ⟨_, this⟩, is_well_founded.wf.not_lt_min _ _ this⟩
 #align rel_embedding.collapse_F RelEmbedding.collapseF
 
-theorem collapseF.lt [IsWellOrder β s] (f : r ↪r s) {a : α} : ∀ {a'}, r a' a → s (collapseF f a').1 (collapseF f a).1 :=
+theorem collapseF.lt [IsWellOrder β s] (f : r ↪r s) {a : α} :
+    ∀ {a'}, r a' a → s (collapseF f a').1 (collapseF f a).1 :=
   show (collapseF f a).1 ∈ { b | ∀ (a') (h : r a' a), s (collapseF f a').1 b } by
-    unfold collapse_F
-    rw [WellFounded.fix_eq]
+    unfold collapse_F; rw [WellFounded.fix_eq]
     apply WellFounded.min_mem _ _
 #align rel_embedding.collapse_F.lt RelEmbedding.collapseF.lt
 
-theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b} (h : ∀ (a') (h : r a' a), s (collapseF f a').1 b) :
-    ¬s b (collapseF f a).1 := by
-  unfold collapse_F
-  rw [WellFounded.fix_eq]
-  exact WellFounded.not_lt_min _ _ _ (show b ∈ { b | ∀ (a') (h : r a' a), s (collapse_F f a').1 b } from h)
+theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b}
+    (h : ∀ (a') (h : r a' a), s (collapseF f a').1 b) : ¬s b (collapseF f a).1 := by
+  unfold collapse_F; rw [WellFounded.fix_eq]
+  exact
+    WellFounded.not_lt_min _ _ _
+      (show b ∈ { b | ∀ (a') (h : r a' a), s (collapse_F f a').1 b } from h)
 #align rel_embedding.collapse_F.not_lt RelEmbedding.collapseF.not_lt
 
 /-- Construct an initial segment from an order embedding into a well order, by collapsing it

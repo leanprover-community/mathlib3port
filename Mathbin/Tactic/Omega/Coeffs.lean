@@ -31,7 +31,9 @@ def valBetween (v : Nat → Int) (as : List Int) (l : Nat) : Nat → Int
 @[simp]
 theorem val_between_nil {l : Nat} : ∀ m, valBetween v [] l m = 0
   | 0 => by simp only [val_between]
-  | m + 1 => by simp only [val_between_nil m, Omega.Coeffs.valBetween, get_nil, zero_add, zero_mul, Int.default_eq_zero]
+  | m + 1 => by
+    simp only [val_between_nil m, Omega.Coeffs.valBetween, get_nil, zero_add, zero_mul,
+      Int.default_eq_zero]
 #align omega.coeffs.val_between_nil Omega.Coeffs.val_between_nil
 
 /-- Evaluation of the nonconstant component of a normalized linear arithmetic term. -/
@@ -57,16 +59,15 @@ theorem val_between_eq_of_le {as : List Int} {l : Nat} :
     have h2 : List.length as ≤ l + m := by
       rw [← Nat.lt_succ_iff]
       apply h1
-    simpa [get_eq_default_of_le _ h2, zero_mul, add_zero, val_between] using val_between_eq_of_le _ h2
+    simpa [get_eq_default_of_le _ h2, zero_mul, add_zero, val_between] using
+      val_between_eq_of_le _ h2
 #align omega.coeffs.val_between_eq_of_le Omega.Coeffs.val_between_eq_of_le
 
-theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = valBetween v as 0 k := by
-  intro h1
-  unfold val
-  rw [val_between_eq_of_le k _]
-  rfl
-  rw [zero_add]
-  exact h1
+theorem val_eq_of_le {as : List Int} {k : Nat} : as.length ≤ k → val v as = valBetween v as 0 k :=
+  by
+  intro h1; unfold val
+  rw [val_between_eq_of_le k _]; rfl
+  rw [zero_add]; exact h1
 #align omega.coeffs.val_eq_of_le Omega.Coeffs.val_eq_of_le
 
 theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : Nat} :
@@ -90,10 +91,9 @@ theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : N
 
 open List.Func
 
-theorem val_between_set {a : Int} {l n : Nat} : ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
-  | 0, h1, h2 => by
-    exfalso
-    apply lt_irrefl l (lt_of_le_of_lt h1 h2)
+theorem val_between_set {a : Int} {l n : Nat} :
+    ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
+  | 0, h1, h2 => by exfalso; apply lt_irrefl l (lt_of_le_of_lt h1 h2)
   | m + 1, h1, h2 => by
     rw [← add_assoc, Nat.lt_succ_iff, le_iff_eq_or_lt] at h2
     cases h2 <;> unfold val_between
@@ -125,7 +125,8 @@ theorem val_set {m : Nat} {a : Int} : val v ([] {m ↦ a}) = a * v m := by
   exact lt_max_of_lt_right (lt_add_one _)
 #align omega.coeffs.val_set Omega.Coeffs.val_set
 
-theorem val_between_neg {as : List Int} {l : Nat} : ∀ {o}, valBetween v (neg as) l o = -valBetween v as l o
+theorem val_between_neg {as : List Int} {l : Nat} :
+    ∀ {o}, valBetween v (neg as) l o = -valBetween v as l o
   | 0 => rfl
   | o + 1 => by
     unfold val_between
@@ -137,7 +138,8 @@ theorem val_between_neg {as : List Int} {l : Nat} : ∀ {o}, valBetween v (neg a
 #align omega.coeffs.val_between_neg Omega.Coeffs.val_between_neg
 
 @[simp]
-theorem val_neg {as : List Int} : val v (neg as) = -val v as := by simpa only [val, length_neg] using val_between_neg
+theorem val_neg {as : List Int} : val v (neg as) = -val v as := by
+  simpa only [val, length_neg] using val_between_neg
 #align omega.coeffs.val_neg Omega.Coeffs.val_neg
 
 theorem val_between_add {is js : List Int} {l : Nat} :
@@ -151,10 +153,9 @@ theorem val_between_add {is js : List Int} {l : Nat} :
 @[simp]
 theorem val_add {is js : List Int} : val v (add is js) = val v is + val v js := by
   unfold val
-  rw [val_between_add]
+  rw [val_between_add];
   apply fun_mono_2 <;> apply val_between_eq_of_le <;> rw [zero_add, length_add]
-  apply le_max_left
-  apply le_max_right
+  apply le_max_left; apply le_max_right
 #align omega.coeffs.val_add Omega.Coeffs.val_add
 
 theorem val_between_sub {is js : List Int} {l : Nat} :
@@ -181,30 +182,33 @@ def valExcept (k : Nat) (v : Nat → Int) (as) :=
   valBetween v as 0 k + valBetween v as (k + 1) (as.length - (k + 1))
 #align omega.coeffs.val_except Omega.Coeffs.valExcept
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » k) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » k) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » k) -/
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
-    (∀ (x) (_ : x ≠ k), v x = w x) → (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
+    (∀ (x) (_ : x ≠ k), v x = w x) →
+      (∀ (x) (_ : x ≠ k), get x is = get x js) → valExcept k v is = valExcept k w js :=
   by
-  intro h1 h2
-  unfold val_except
+  intro h1 h2; unfold val_except
   apply fun_mono_2
-  · apply val_between_eq_val_between <;>
-      intro x h3 h4 <;>
-          [· apply h1
-            ,
-          · apply h2
-            ] <;>
-        apply ne_of_lt <;> rw [zero_add] at h4 <;> apply h4
-    
-  · repeat' rw [← val_between_eq_of_le (max is.length js.length - (k + 1))]
-    · apply val_between_eq_val_between <;>
-        intro x h3 h4 <;>
+  · apply val_between_eq_val_between <;> intro x h3 h4 <;>
             [· apply h1
               ,
             · apply h2
               ] <;>
-          apply Ne.symm <;> apply ne_of_lt <;> rw [Nat.lt_iff_add_one_le] <;> exact h3
+          apply ne_of_lt <;>
+        rw [zero_add] at h4 <;>
+      apply h4
+    
+  · repeat' rw [← val_between_eq_of_le (max is.length js.length - (k + 1))]
+    · apply val_between_eq_val_between <;> intro x h3 h4 <;>
+                [· apply h1
+                  ,
+                · apply h2
+                  ] <;>
+              apply Ne.symm <;>
+            apply ne_of_lt <;>
+          rw [Nat.lt_iff_add_one_le] <;>
+        exact h3
       
     · refine' le_trans (le_max_right _ _) le_add_tsub
       
@@ -231,12 +235,14 @@ theorem val_between_add_val_between {as : List Int} {l m : Nat} :
     ring
 #align omega.coeffs.val_between_add_val_between Omega.Coeffs.val_between_add_val_between
 
-theorem val_except_add_eq (n : Nat) {as : List Int} : valExcept n v as + get n as * v n = val v as := by
+theorem val_except_add_eq (n : Nat) {as : List Int} :
+    valExcept n v as + get n as * v n = val v as := by
   unfold val_except
   unfold val
   cases' le_total (n + 1) as.length with h1 h1
   · have h4 := @val_between_add_val_between v as 0 (n + 1) (as.length - (n + 1))
-    have h5 : n + 1 + (as.length - (n + 1)) = as.length := by rw [add_comm, tsub_add_cancel_of_le h1]
+    have h5 : n + 1 + (as.length - (n + 1)) = as.length := by
+      rw [add_comm, tsub_add_cancel_of_le h1]
     rw [h5] at h4
     apply Eq.trans _ h4
     simp only [val_between, zero_add]
@@ -263,13 +269,15 @@ theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
     rw [get_eq_default_of_le, get_eq_default_of_le] <;> try simp <;> apply h1
 #align omega.coeffs.val_between_map_mul Omega.Coeffs.val_between_map_mul
 
-theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} : (∀ x ∈ as, i ∣ x) → ∀ n, i ∣ get n as
+theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} :
+    (∀ x ∈ as, i ∣ x) → ∀ n, i ∣ get n as
   | h1, n => by
     apply forall_val_of_forall_mem _ h1
     apply dvd_zero
 #align omega.coeffs.forall_val_dvd_of_forall_mem_dvd Omega.Coeffs.forall_val_dvd_of_forall_mem_dvd
 
-theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀ x ∈ as, i ∣ x) → i ∣ valBetween v as l m
+theorem dvd_val_between {i} {as : List Int} {l : Nat} :
+    ∀ {m}, (∀ x ∈ as, i ∣ x) → i ∣ valBetween v as l m
   | 0, h1 => dvd_zero _
   | m + 1, h1 => by
     unfold val_between
@@ -280,11 +288,11 @@ theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀ x ∈ as, 
     · rw [h2]
       apply dvd_zero
       
-    apply h1
-    apply mem_get_of_ne_zero h2
+    apply h1; apply mem_get_of_ne_zero h2
 #align omega.coeffs.dvd_val_between Omega.Coeffs.dvd_val_between
 
-theorem dvd_val {as : List Int} {i : Int} : (∀ x ∈ as, i ∣ x) → i ∣ val v as := by apply dvd_val_between
+theorem dvd_val {as : List Int} {i : Int} : (∀ x ∈ as, i ∣ x) → i ∣ val v as := by
+  apply dvd_val_between
 #align omega.coeffs.dvd_val Omega.Coeffs.dvd_val
 
 @[simp]
@@ -297,7 +305,9 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ 
     apply fun_mono_2 rfl
     · apply
         calc
-          get (l + m) (List.map (fun x : ℤ => x / i) as) * v (l + m) = get (l + m) as / i * v (l + m) := by
+          get (l + m) (List.map (fun x : ℤ => x / i) as) * v (l + m) =
+              get (l + m) as / i * v (l + m) :=
+            by
             apply fun_mono_2 _ rfl
             rw [get_map']
             apply Int.zero_div
@@ -318,14 +328,16 @@ theorem val_map_div {as : List Int} {i : Int} :
   simpa only [val, List.length_map] using val_between_map_div h1
 #align omega.coeffs.val_map_div Omega.Coeffs.val_map_div
 
-theorem val_between_eq_zero {is : List Int} {l : Nat} : ∀ {m}, (∀ x : Int, x ∈ is → x = 0) → valBetween v is l m = 0
+theorem val_between_eq_zero {is : List Int} {l : Nat} :
+    ∀ {m}, (∀ x : Int, x ∈ is → x = 0) → valBetween v is l m = 0
   | 0, h1 => rfl
   | m + 1, h1 => by
     have h2 := @forall_val_of_forall_mem _ _ is (fun x => x = 0) rfl h1
     simpa only [val_between, h2 (l + m), zero_mul, add_zero] using @val_between_eq_zero m h1
 #align omega.coeffs.val_between_eq_zero Omega.Coeffs.val_between_eq_zero
 
-theorem val_eq_zero {is : List Int} : (∀ x : Int, x ∈ is → x = 0) → val v is = 0 := by apply val_between_eq_zero
+theorem val_eq_zero {is : List Int} : (∀ x : Int, x ∈ is → x = 0) → val v is = 0 := by
+  apply val_between_eq_zero
 #align omega.coeffs.val_eq_zero Omega.Coeffs.val_eq_zero
 
 end Coeffs

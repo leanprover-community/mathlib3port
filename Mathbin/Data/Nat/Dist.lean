@@ -45,8 +45,7 @@ theorem dist_eq_sub_of_le {n m : ℕ} (h : n ≤ m) : dist n m = m - n := by
   rw [dist.def, tsub_eq_zero_iff_le.mpr h, zero_add]
 #align nat.dist_eq_sub_of_le Nat.dist_eq_sub_of_le
 
-theorem dist_eq_sub_of_le_right {n m : ℕ} (h : m ≤ n) : dist n m = n - m := by
-  rw [dist_comm]
+theorem dist_eq_sub_of_le_right {n m : ℕ} (h : m ≤ n) : dist n m = n - m := by rw [dist_comm];
   apply dist_eq_sub_of_le h
 #align nat.dist_eq_sub_of_le_right Nat.dist_eq_sub_of_le_right
 
@@ -80,8 +79,7 @@ theorem dist_add_add_right (n k m : ℕ) : dist (n + k) (m + k) = dist n m :=
 #align nat.dist_add_add_right Nat.dist_add_add_right
 
 theorem dist_add_add_left (k n m : ℕ) : dist (k + n) (k + m) = dist n m := by
-  rw [add_comm k n, add_comm k m]
-  apply dist_add_add_right
+  rw [add_comm k n, add_comm k m]; apply dist_add_add_right
 #align nat.dist_add_add_left Nat.dist_add_add_left
 
 theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m :=
@@ -93,7 +91,8 @@ theorem dist_eq_intro {n m k l : ℕ} (h : n + m = k + l) : dist n k = dist l m 
 #align nat.dist_eq_intro Nat.dist_eq_intro
 
 theorem dist.triangle_inequality (n m k : ℕ) : dist n k ≤ dist n m + dist m k := by
-  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by simp [dist.def, add_comm, add_left_comm]
+  have : dist n m + dist m k = n - m + (m - k) + (k - m + (m - n)) := by
+    simp [dist.def, add_comm, add_left_comm]
   rw [this, dist.def]
   exact add_le_add tsub_le_tsub_add_tsub tsub_le_tsub_add_tsub
 #align nat.dist.triangle_inequality Nat.dist.triangle_inequality
@@ -116,17 +115,15 @@ or.elim (lt_or_ge i j)
   (assume : i ≥ j,
     by rw [max_eq_left this , min_eq_right this, dist_eq_sub_of_le_right this])
 -/
-theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by simp [dist.def, succ_sub_succ]
+theorem dist_succ_succ {i j : Nat} : dist (succ i) (succ j) = dist i j := by
+  simp [dist.def, succ_sub_succ]
 #align nat.dist_succ_succ Nat.dist_succ_succ
 
 theorem dist_pos_of_ne {i j : Nat} : i ≠ j → 0 < dist i j := fun hne =>
   Nat.ltByCases
-    (fun this : i < j => by
-      rw [dist_eq_sub_of_le (le_of_lt this)]
-      apply tsub_pos_of_lt this)
+    (fun this : i < j => by rw [dist_eq_sub_of_le (le_of_lt this)]; apply tsub_pos_of_lt this)
     (fun this : i = j => by contradiction) fun this : i > j => by
-    rw [dist_eq_sub_of_le_right (le_of_lt this)]
-    apply tsub_pos_of_lt this
+    rw [dist_eq_sub_of_le_right (le_of_lt this)]; apply tsub_pos_of_lt this
 #align nat.dist_pos_of_ne Nat.dist_pos_of_ne
 
 end Nat

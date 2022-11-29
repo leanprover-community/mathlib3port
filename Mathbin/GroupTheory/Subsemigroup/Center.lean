@@ -38,8 +38,8 @@ theorem mem_center_iff [Mul M] {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g
   Iff.rfl
 #align set.mem_center_iff Set.mem_center_iff
 
-instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) := fun _ =>
-  decidable_of_iff' _ (mem_center_iff M)
+instance decidableMemCenter [Mul M] [DecidableEq M] [Fintype M] : DecidablePred (· ∈ center M) :=
+  fun _ => decidable_of_iff' _ (mem_center_iff M)
 #align set.decidable_mem_center Set.decidableMemCenter
 
 @[simp, to_additive zero_mem_add_center]
@@ -53,8 +53,8 @@ theorem zero_mem_center [MulZeroClass M] : (0 : M) ∈ Set.center M := by simp [
 variable {M}
 
 @[simp, to_additive add_mem_add_center]
-theorem mul_mem_center [Semigroup M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) : a * b ∈ Set.center M :=
-  fun g => by rw [mul_assoc, ← hb g, ← mul_assoc, ha g, mul_assoc]
+theorem mul_mem_center [Semigroup M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
+    a * b ∈ Set.center M := fun g => by rw [mul_assoc, ← hb g, ← mul_assoc, ha g, mul_assoc]
 #align set.mul_mem_center Set.mul_mem_center
 
 @[simp, to_additive neg_mem_add_center]
@@ -63,8 +63,8 @@ theorem inv_mem_center [Group M] {a : M} (ha : a ∈ Set.center M) : a⁻¹ ∈ 
 #align set.inv_mem_center Set.inv_mem_center
 
 @[simp]
-theorem add_mem_center [Distrib M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) : a + b ∈ Set.center M :=
-  fun c => by rw [add_mul, mul_add, ha c, hb c]
+theorem add_mem_center [Distrib M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
+    a + b ∈ Set.center M := fun c => by rw [add_mul, mul_add, ha c, hb c]
 #align set.add_mem_center Set.add_mem_center
 
 @[simp]
@@ -73,10 +73,12 @@ theorem neg_mem_center [Ring M] {a : M} (ha : a ∈ Set.center M) : -a ∈ Set.c
 #align set.neg_mem_center Set.neg_mem_center
 
 @[to_additive subset_add_center_add_units]
-theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ Set.center Mˣ := fun a ha b => Units.ext <| ha _
+theorem subset_center_units [Monoid M] : (coe : Mˣ → M) ⁻¹' center M ⊆ Set.center Mˣ :=
+  fun a ha b => Units.ext <| ha _
 #align set.subset_center_units Set.subset_center_units
 
-theorem center_units_subset [GroupWithZero M] : Set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M := fun a ha b => by
+theorem center_units_subset [GroupWithZero M] : Set.center Mˣ ⊆ (coe : Mˣ → M) ⁻¹' center M :=
+  fun a ha b => by
   obtain rfl | hb := eq_or_ne b 0
   · rw [zero_mul, mul_zero]
     
@@ -96,19 +98,20 @@ theorem inv_mem_center₀ [GroupWithZero M] {a : M} (ha : a ∈ Set.center M) : 
     exact zero_mem_center M
     
   rcases IsUnit.mk0 _ ha0 with ⟨a, rfl⟩
-  rw [← Units.coe_inv]
+  rw [← Units.val_inv_eq_inv_val]
   exact center_units_subset (inv_mem_center (subset_center_units ha))
 #align set.inv_mem_center₀ Set.inv_mem_center₀
 
 @[simp, to_additive sub_mem_add_center]
-theorem div_mem_center [Group M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) : a / b ∈ Set.center M := by
+theorem div_mem_center [Group M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
+    a / b ∈ Set.center M := by
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center hb)
 #align set.div_mem_center Set.div_mem_center
 
 @[simp]
-theorem div_mem_center₀ [GroupWithZero M] {a b : M} (ha : a ∈ Set.center M) (hb : b ∈ Set.center M) :
-    a / b ∈ Set.center M := by
+theorem div_mem_center₀ [GroupWithZero M] {a b : M} (ha : a ∈ Set.center M)
+    (hb : b ∈ Set.center M) : a / b ∈ Set.center M := by
   rw [div_eq_mul_inv]
   exact mul_mem_center ha (inv_mem_center₀ hb)
 #align set.div_mem_center₀ Set.div_mem_center₀
@@ -129,7 +132,8 @@ section
 variable (M) [Semigroup M]
 
 /-- The center of a semigroup `M` is the set of elements that commute with everything in `M` -/
-@[to_additive "The center of a semigroup `M` is the set of elements that commute with everything in\n`M`"]
+@[to_additive
+      "The center of a semigroup `M` is the set of elements that commute with everything in\n`M`"]
 def center : Subsemigroup M where
   carrier := Set.center M
   mul_mem' a b := Set.mul_mem_center

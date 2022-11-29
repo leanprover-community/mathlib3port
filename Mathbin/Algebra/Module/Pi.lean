@@ -27,23 +27,25 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
-    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_fun h i : _)
-#align pi._root_.is_smul_regular.pi pi._root_.is_smul_regular.pi
+theorem IsSmulRegular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α}
+    (hk : ∀ i, IsSmulRegular (f i) k) : IsSmulRegular (∀ i, f i) k := fun _ _ h =>
+  funext fun i => hk i (congr_fun h i : _)
+#align is_smul_regular.pi IsSmulRegular.pi
 
-instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
+instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] :
+    SmulWithZero α (∀ i, f i) :=
   { Pi.hasSmul with smul_zero := fun _ => funext fun _ => smul_zero _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero Pi.smulWithZero
 
-instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
-    SmulWithZero (∀ i, g i) (∀ i, f i) :=
+instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)]
+    [∀ i, SmulWithZero (g i) (f i)] : SmulWithZero (∀ i, g i) (∀ i, f i) :=
   { Pi.hasSmul' with smul_zero := fun _ => funext fun _ => smul_zero _,
     zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero' Pi.smulWithZero'
 
-instance mulActionWithZero (α) [MonoidWithZero α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
-    MulActionWithZero α (∀ i, f i) :=
+instance mulActionWithZero (α) [MonoidWithZero α] [∀ i, Zero (f i)]
+    [∀ i, MulActionWithZero α (f i)] : MulActionWithZero α (∀ i, f i) :=
   { Pi.mulAction _, Pi.smulWithZero _ with }
 #align pi.mul_action_with_zero Pi.mulActionWithZero
 
@@ -70,14 +72,15 @@ See: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Typecl
 -/
 /-- A special case of `pi.module` for non-dependent types. Lean struggles to elaborate
 definitions elsewhere in the library without this. -/
-instance _root_.function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Module α β] : Module α (I → β) :=
+instance Function.module (α β : Type _) [Semiring α] [AddCommMonoid β] [Module α β] :
+    Module α (I → β) :=
   Pi.module _ _ _
-#align pi._root_.function.module pi._root_.function.module
+#align function.module Function.module
 
 variable {I f}
 
-instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddCommMonoid (g i)} [∀ i, Module (f i) (g i)] :
-    Module (∀ i, f i) (∀ i, g i) where
+instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddCommMonoid (g i)}
+    [∀ i, Module (f i) (g i)] : Module (∀ i, f i) (∀ i, g i) where
   add_smul := by
     intros
     ext1
@@ -90,14 +93,16 @@ instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddC
 
 instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i]
     [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
-  ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
+  ⟨fun c x h =>
+    or_iff_not_imp_left.mpr fun hc =>
+      funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 
 /-- A special case of `pi.no_zero_smul_divisors` for non-dependent types. Lean struggles to
 synthesize this instance by itself elsewhere in the library. -/
-instance _root_.function.no_zero_smul_divisors {ι α β : Type _} {r : Semiring α} {m : AddCommMonoid β} [Module α β]
-    [NoZeroSmulDivisors α β] : NoZeroSmulDivisors α (ι → β) :=
+instance Function.no_zero_smul_divisors {ι α β : Type _} {r : Semiring α} {m : AddCommMonoid β}
+    [Module α β] [NoZeroSmulDivisors α β] : NoZeroSmulDivisors α (ι → β) :=
   Pi.no_zero_smul_divisors _
-#align pi._root_.function.no_zero_smul_divisors pi._root_.function.no_zero_smul_divisors
+#align function.no_zero_smul_divisors Function.no_zero_smul_divisors
 
 end Pi
 

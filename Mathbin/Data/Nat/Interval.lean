@@ -87,9 +87,9 @@ theorem Iio_eq_range : Iio = range := by
 theorem Ico_zero_eq_range : ico 0 = range := by rw [← bot_eq_zero, ← Iio_eq_Ico, Iio_eq_range]
 #align nat.Ico_zero_eq_range Nat.Ico_zero_eq_range
 
-theorem _root_.finset.range_eq_Ico : range = ico 0 :=
+theorem Finset.range_eq_Ico : range = ico 0 :=
   Ico_zero_eq_range.symm
-#align nat._root_.finset.range_eq_Ico nat._root_.finset.range_eq_Ico
+#align finset.range_eq_Ico Finset.range_eq_Ico
 
 @[simp]
 theorem card_Icc : (icc a b).card = b + 1 - a :=
@@ -120,23 +120,28 @@ theorem card_Iio : (iio b).card = b := by rw [Iio_eq_Ico, card_Ico, bot_eq_zero,
 #align nat.card_Iio Nat.card_Iio
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.icc a b) = b + 1 - a := by rw [Fintype.card_of_finset, card_Icc]
+theorem card_fintype_Icc : Fintype.card (Set.icc a b) = b + 1 - a := by
+  rw [Fintype.card_of_finset, card_Icc]
 #align nat.card_fintype_Icc Nat.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.ico a b) = b - a := by rw [Fintype.card_of_finset, card_Ico]
+theorem card_fintype_Ico : Fintype.card (Set.ico a b) = b - a := by
+  rw [Fintype.card_of_finset, card_Ico]
 #align nat.card_fintype_Ico Nat.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = b - a := by rw [Fintype.card_of_finset, card_Ioc]
+theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = b - a := by
+  rw [Fintype.card_of_finset, card_Ioc]
 #align nat.card_fintype_Ioc Nat.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = b - a - 1 := by rw [Fintype.card_of_finset, card_Ioo]
+theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = b - a - 1 := by
+  rw [Fintype.card_of_finset, card_Ioo]
 #align nat.card_fintype_Ioo Nat.card_fintype_Ioo
 
 @[simp]
-theorem card_fintype_Iic : Fintype.card (Set.iic b) = b + 1 := by rw [Fintype.card_of_finset, card_Iic]
+theorem card_fintype_Iic : Fintype.card (Set.iic b) = b + 1 := by
+  rw [Fintype.card_of_finset, card_Iic]
 #align nat.card_fintype_Iic Nat.card_fintype_Iic
 
 @[simp]
@@ -174,7 +179,8 @@ theorem Ico_succ_singleton : ico a (a + 1) = {a} := by rw [Ico_succ_right, Icc_s
 #align nat.Ico_succ_singleton Nat.Ico_succ_singleton
 
 @[simp]
-theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : ico (a - 1) a = {a - 1} := by rw [← Icc_pred_right _ h, Icc_self]
+theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : ico (a - 1) a = {a - 1} := by
+  rw [← Icc_pred_right _ h, Icc_self]
 #align nat.Ico_pred_singleton Nat.Ico_pred_singleton
 
 @[simp]
@@ -191,7 +197,8 @@ theorem Ico_insert_succ_left (h : a < b) : insert a (ico a.succ b) = ico a b := 
   rw [Ico_succ_left, ← Ioo_insert_left h]
 #align nat.Ico_insert_succ_left Nat.Ico_insert_succ_left
 
-theorem image_sub_const_Ico (h : c ≤ a) : ((ico a b).image fun x => x - c) = ico (a - c) (b - c) := by
+theorem image_sub_const_Ico (h : c ≤ a) : ((ico a b).image fun x => x - c) = ico (a - c) (b - c) :=
+  by
   ext x
   rw [mem_image]
   constructor
@@ -206,13 +213,17 @@ theorem image_sub_const_Ico (h : c ≤ a) : ((ico a b).image fun x => x - c) = i
     
 #align nat.image_sub_const_Ico Nat.image_sub_const_Ico
 
-theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).image fun x => c - x) = ico (c + 1 - b) (c + 1 - a) := by
+theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) :
+    ((ico a b).image fun x => c - x) = ico (c + 1 - b) (c + 1 - a) := by
   ext x
   rw [mem_image, mem_Ico]
   constructor
   · rintro ⟨x, hx, rfl⟩
     rw [mem_Ico] at hx
-    refine' ⟨_, ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt ((tsub_lt_tsub_iff_right hac).2 (Nat.lt_succ_self _))⟩
+    refine'
+      ⟨_,
+        ((tsub_le_tsub_iff_left hac).2 hx.1).trans_lt
+          ((tsub_lt_tsub_iff_right hac).2 (Nat.lt_succ_self _))⟩
     cases lt_or_le c b
     · rw [tsub_eq_zero_iff_le.mpr (succ_le_of_lt h)]
       exact zero_le _
@@ -226,14 +237,17 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).image fun x => c
     have hx : x ≤ c := (Nat.le_add_left _ _).trans ha
     refine' ⟨c - x, _, tsub_tsub_cancel_of_le hx⟩
     · rw [mem_Ico]
-      exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2 <| succ_le_iff.1 <| tsub_le_iff_right.1 hb⟩
+      exact
+        ⟨le_tsub_of_add_le_right ha,
+          (tsub_lt_iff_left hx).2 <| succ_le_iff.1 <| tsub_le_iff_right.1 hb⟩
       
     
 #align nat.Ico_image_const_sub_eq_Ico Nat.Ico_image_const_sub_eq_Ico
 
 theorem Ico_succ_left_eq_erase_Ico : ico a.succ b = erase (ico a b) a := by
   ext x
-  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc', ne_comm, and_comm' (a ≠ x), lt_iff_le_and_ne]
+  rw [Ico_succ_left, mem_erase, mem_Ico, mem_Ioo, ← and_assoc', ne_comm, and_comm' (a ≠ x),
+    lt_iff_le_and_ne]
 #align nat.Ico_succ_left_eq_erase_Ico Nat.Ico_succ_left_eq_erase_Ico
 
 theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) := by
@@ -320,7 +334,8 @@ end Nat
 
 namespace Finset
 
-theorem range_image_pred_top_sub (n : ℕ) : ((Finset.range n).image fun j => n - 1 - j) = Finset.range n := by
+theorem range_image_pred_top_sub (n : ℕ) :
+    ((Finset.range n).image fun j => n - 1 - j) = Finset.range n := by
   cases n
   · rw [range_zero, image_empty]
     
@@ -352,27 +367,28 @@ theorem Nat.decreasing_induction_of_infinite (hP : { x | P x }.Infinite) (n : �
   Nat.decreasing_induction_of_not_bdd_above h (mt BddAbove.finite hP) n
 #align nat.decreasing_induction_of_infinite Nat.decreasing_induction_of_infinite
 
-theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x → P x → ∃ y, x < y ∧ P y) (n : ℕ) : P n := by
+theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x → P x → ∃ y, x < y ∧ P y)
+    (n : ℕ) : P n := by
   apply Nat.decreasing_induction_of_infinite h fun hf => _
   obtain ⟨m, hP, hm⟩ := hf.exists_maximal_wrt id _ ⟨seed, hs⟩
   obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt fun hl => hl.Ne <| hm seed hs hl.le) hP
   exact hl.ne (hm y hy hl.le)
 #align nat.cauchy_induction' Nat.cauchy_induction'
 
-theorem Nat.cauchy_induction (seed : ℕ) (hs : P seed) (f : ℕ → ℕ) (hf : ∀ x, seed ≤ x → P x → x < f x ∧ P (f x))
-    (n : ℕ) : P n :=
+theorem Nat.cauchy_induction (seed : ℕ) (hs : P seed) (f : ℕ → ℕ)
+    (hf : ∀ x, seed ≤ x → P x → x < f x ∧ P (f x)) (n : ℕ) : P n :=
   seed.cauchy_induction' h hs (fun x hl hx => ⟨f x, hf x hl hx⟩) n
 #align nat.cauchy_induction Nat.cauchy_induction
 
-theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ) (hm : ∀ x, seed < x → P x → P (k * x))
-    (n : ℕ) : P n := by
+theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ)
+    (hm : ∀ x, seed < x → P x → P (k * x)) (n : ℕ) : P n := by
   apply Nat.cauchy_induction h _ hs ((· * ·) k) fun x hl hP => ⟨_, hm x hl hP⟩
   convert (mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
   rw [one_mul]
 #align nat.cauchy_induction_mul Nat.cauchy_induction_mul
 
-theorem Nat.cauchy_induction_two_mul (seed : ℕ) (hs : P seed.succ) (hm : ∀ x, seed < x → P x → P (2 * x)) (n : ℕ) :
-    P n :=
+theorem Nat.cauchy_induction_two_mul (seed : ℕ) (hs : P seed.succ)
+    (hm : ∀ x, seed < x → P x → P (2 * x)) (n : ℕ) : P n :=
   Nat.cauchy_induction_mul h 2 seed one_lt_two hs hm n
 #align nat.cauchy_induction_two_mul Nat.cauchy_induction_two_mul
 

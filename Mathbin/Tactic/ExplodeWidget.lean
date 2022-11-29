@@ -34,7 +34,8 @@ open Widget.Html Widget.Attr
 /-- Redefine some of the style attributes for better formatting. -/
 unsafe def get_block_attrs {γ} : sf → tactic (sf × List (attr γ))
   | sf.block i a => do
-    let s : attr γ := style [("display", "inline-block"), ("white-space", "pre-wrap"), ("vertical-align", "top")]
+    let s : attr γ :=
+      style [("display", "inline-block"), ("white-space", "pre-wrap"), ("vertical-align", "top")]
     let (a, rest) ← get_block_attrs a
     pure (a, s :: rest)
   | sf.highlight c a => do
@@ -50,7 +51,8 @@ unsafe def insert_explode {γ} : expr → tactic (List (html (action γ)))
         pure <|
             [h "button"
                 [cn "pointer ba br3 mr1",
-                  on_click fun _ => action.effect <| widget.effect.insert_text ("#explode_widget " ++ n),
+                  on_click fun _ =>
+                    action.effect <| widget.effect.insert_text ("#explode_widget " ++ n),
                   attr.val "title" "explode"]
                 ["💥"]]) <|>
       pure []
@@ -59,8 +61,9 @@ unsafe def insert_explode {γ} : expr → tactic (List (html (action γ)))
 
 /-- Render a subexpression as a list of html elements.
 -/
-unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address : Option Expr.Address)
-    (select_address : Option Expr.Address) : subexpr → sf → tactic (List (html (action γ)))
+unsafe def view {γ} (tooltip_component : tc subexpr (action γ))
+    (click_address : Option Expr.Address) (select_address : Option Expr.Address) :
+    subexpr → sf → tactic (List (html (action γ)))
   | ⟨ce, current_address⟩, sf.tag_expr ea e m => do
     let new_address := current_address ++ ea
     let select_attrs : List (attr (action γ)) :=
@@ -77,11 +80,13 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
                     [h "div" [cn "fr"]
                         (gd_btn ++ epld_btn ++
                           [h "button"
-                              [cn "pointer ba br3 mr1", on_click fun _ => action.effect <| widget.effect.copy_text efmt,
+                              [cn "pointer ba br3 mr1",
+                                on_click fun _ => action.effect <| widget.effect.copy_text efmt,
                                 attr.val "title" "copy expression to clipboard"]
                               ["📋"],
                             h "button"
-                              [cn "pointer ba br3", on_click fun _ => action.on_close_tooltip, attr.val "title" "close"]
+                              [cn "pointer ba br3", on_click fun _ => action.on_close_tooltip,
+                                attr.val "title" "close"]
                               ["×"]]),
                       content]]
         else pure []
@@ -92,7 +97,9 @@ unsafe def view {γ} (tooltip_component : tc subexpr (action γ)) (click_address
   | ca, sf.compose x y => pure (· ++ ·) <*> view ca x <*> view ca y
   | ca, sf.of_string s =>
     pure
-      [h "span" [on_mouse_enter fun _ => action.on_mouse_enter ca, on_click fun _ => action.on_click ca, key s]
+      [h "span"
+          [on_mouse_enter fun _ => action.on_mouse_enter ca, on_click fun _ => action.on_click ca,
+            key s]
           [html.of_string s]]
   | ca, b@(sf.block _ _) => do
     let (a, attrs) ← get_block_attrs b
@@ -109,7 +116,8 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
   let tooltip_comp :=
     (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2) <|
       component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ (a : Sum γ widget.effect) => Sum.casesOn a some fun _ => none) <|
+  (component.filter_map_action fun _ (a : Sum γ widget.effect) =>
+      Sum.casesOn a some fun _ => none) <|
     (component.with_effects fun _ (a : Sum γ widget.effect) =>
         match a with
         | Sum.inl g => []
@@ -120,7 +128,8 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
             match act with
             | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)
             | action.on_mouse_leave_all => ((ca, none), none)
-            | action.on_click ⟨e, ea⟩ => if some (e, ea) = ca then ((none, sa), none) else ((some (e, ea), sa), none)
+            | action.on_click ⟨e, ea⟩ =>
+              if some (e, ea) = ca then ((none, sa), none) else ((some (e, ea), sa), none)
             | action.on_tooltip_action g => ((none, sa), some <| Sum.inl g)
             | action.on_close_tooltip => ((none, sa), none)
             | action.effect e => ((ca, sa), some <| Sum.inr <| e))
@@ -130,7 +139,10 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
         let m := m.flatten
         let m := m.tag_expr [] e
         let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m
-        pure <| [h "span" [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <| v]
+        pure <|
+            [h "span"
+                  [className "expr", key e, on_mouse_leave fun _ => action.on_mouse_leave_all] <|
+                v]
 #align tactic.explode_widget.mk tactic.explode_widget.mk
 
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
@@ -150,7 +162,9 @@ unsafe def type_tooltip : tc subexpr Empty :=
     let y ← tactic.infer_type e
     let y_comp ← mk type_tooltip y
     let implicit_args ← implicit_arg_list type_tooltip e
-    pure [h "div" [style [("minWidth", "12rem")]] [h "div" [cn "pl1"] [y_comp], h "hr" [] [], implicit_args]]
+    pure
+        [h "div" [style [("minWidth", "12rem")]]
+            [h "div" [cn "pl1"] [y_comp], h "hr" [] [], implicit_args]]
 #align tactic.explode_widget.type_tooltip tactic.explode_widget.type_tooltip
 
 /-- Component that shows a type.
@@ -206,14 +220,17 @@ arguments.
 -/
 unsafe def proof_row {γ} (args : List (html γ)) : List (html γ) :=
   [h "td" [cn "ba bg-dark-green tc"] "Proofs",
-    h "td" [cn "ba tc"] [h "details" [] <| h "summary" [attr.style [("color", "orange")]] "Details" :: args]]
+    h "td" [cn "ba tc"]
+      [h "details" [] <| h "summary" [attr.style [("color", "orange")]] "Details" :: args]]
 #align tactic.explode_widget.proof_row tactic.explode_widget.proof_row
 
 /-- Combine the goal row, id row, rule row and proof row to make them a table.
 -/
 unsafe def assemble_table {γ} (gr ir rr) : List (html γ) → html γ
   | [] => h "table" [cn "collapse"] [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr]]
-  | pr => h "table" [cn "collapse"] [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr, h "tr" [] pr]]
+  | pr =>
+    h "table" [cn "collapse"]
+      [h "tbody" [] [h "tr" [] gr, h "tr" [] ir, h "tr" [] rr, h "tr" [] pr]]
 #align tactic.explode_widget.assemble_table tactic.explode_widget.assemble_table
 
 /-- Render a table for a given entry.

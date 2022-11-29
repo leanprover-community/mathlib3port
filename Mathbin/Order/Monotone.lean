@@ -295,13 +295,15 @@ protected theorem StrictAnti.dual (hf : StrictAnti f) : StrictAnti (to_dual ∘ 
 -/
 
 #print StrictMonoOn.dual /-
-protected theorem StrictMonoOn.dual (hf : StrictMonoOn f s) : StrictMonoOn (to_dual ∘ f ∘ of_dual) s :=
+protected theorem StrictMonoOn.dual (hf : StrictMonoOn f s) :
+    StrictMonoOn (to_dual ∘ f ∘ of_dual) s :=
   swap₂ hf
 #align strict_mono_on.dual StrictMonoOn.dual
 -/
 
 #print StrictAntiOn.dual /-
-protected theorem StrictAntiOn.dual (hf : StrictAntiOn f s) : StrictAntiOn (to_dual ∘ f ∘ of_dual) s :=
+protected theorem StrictAntiOn.dual (hf : StrictAntiOn f s) :
+    StrictAntiOn (to_dual ∘ f ∘ of_dual) s :=
   swap₂ hf
 #align strict_anti_on.dual StrictAntiOn.dual
 -/
@@ -348,8 +350,8 @@ section Preorder
 variable [Preorder α]
 
 #print Monotone.comp_le_comp_left /-
-theorem Monotone.comp_le_comp_left [Preorder β] {f : β → α} {g h : γ → β} (hf : Monotone f) (le_gh : g ≤ h) :
-    LE.le.{max w u} (f ∘ g) (f ∘ h) := fun x => hf (le_gh x)
+theorem Monotone.comp_le_comp_left [Preorder β] {f : β → α} {g h : γ → β} (hf : Monotone f)
+    (le_gh : g ≤ h) : LE.le.{max w u} (f ∘ g) (f ∘ h) := fun x => hf (le_gh x)
 #align monotone.comp_le_comp_left Monotone.comp_le_comp_left
 -/
 
@@ -357,47 +359,51 @@ variable [Preorder γ]
 
 /- warning: monotone_lam -> monotone_lam is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Monotone.{u w} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Monotone.{u (max v w)} α (β -> γ) _inst_1 (Pi.preorder.{v w} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Monotone.{u, w} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Monotone.{u, max v w} α (β -> γ) _inst_1 (Pi.preorder.{v, w} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1468 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1471 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Monotone.{u w} α γ inst._@.Mathlib.Order.Monotone._hyg.1468 inst._@.Mathlib.Order.Monotone._hyg.1471 (fun (a : α) => f a b)) -> (Monotone.{u (max v w)} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1468 (instPreorderForAll.{v w} β (fun (a._@.Mathlib.Order.Monotone._hyg.1476 : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1471)) f)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1588 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1591 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Monotone.{u, w} α γ inst._@.Mathlib.Order.Monotone._hyg.1588 inst._@.Mathlib.Order.Monotone._hyg.1591 (fun (a : α) => f a b)) -> (Monotone.{u, max v w} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1588 (instPreorderForAll.{v, w} β (fun (a._@.Mathlib.Order.Monotone._hyg.1596 : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1591)) f)
 Case conversion may be inaccurate. Consider using '#align monotone_lam monotone_lamₓ'. -/
-theorem monotone_lam {f : α → β → γ} (hf : ∀ b, Monotone fun a => f a b) : Monotone f := fun a a' h b => hf b h
+theorem monotone_lam {f : α → β → γ} (hf : ∀ b, Monotone fun a => f a b) : Monotone f :=
+  fun a a' h b => hf b h
 #align monotone_lam monotone_lam
 
 /- warning: monotone_app -> monotone_app is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Monotone.{u (max v w)} α (β -> γ) _inst_1 (Pi.preorder.{v w} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Monotone.{u w} α γ _inst_1 _inst_2 (f b))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Monotone.{u, max v w} α (β -> γ) _inst_1 (Pi.preorder.{v, w} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Monotone.{u, w} α γ _inst_1 _inst_2 (f b))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1516 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1519 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Monotone.{u (max v w)} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1516 (instPreorderForAll.{v w} β (fun (b : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1519)) (fun (a : α) (b : β) => f b a)) -> (Monotone.{u w} α γ inst._@.Mathlib.Order.Monotone._hyg.1516 inst._@.Mathlib.Order.Monotone._hyg.1519 (f b))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1636 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1639 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Monotone.{u, max v w} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1636 (instPreorderForAll.{v, w} β (fun (b : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1639)) (fun (a : α) (b : β) => f b a)) -> (Monotone.{u, w} α γ inst._@.Mathlib.Order.Monotone._hyg.1636 inst._@.Mathlib.Order.Monotone._hyg.1639 (f b))
 Case conversion may be inaccurate. Consider using '#align monotone_app monotone_appₓ'. -/
-theorem monotone_app (f : β → α → γ) (b : β) (hf : Monotone fun a b => f b a) : Monotone (f b) := fun a a' h => hf h b
+theorem monotone_app (f : β → α → γ) (b : β) (hf : Monotone fun a b => f b a) : Monotone (f b) :=
+  fun a a' h => hf h b
 #align monotone_app monotone_app
 
 /- warning: antitone_lam -> antitone_lam is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Antitone.{u w} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Antitone.{u (max v w)} α (β -> γ) _inst_1 (Pi.preorder.{v w} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Antitone.{u, w} α γ _inst_1 _inst_2 (fun (a : α) => f a b)) -> (Antitone.{u, max v w} α (β -> γ) _inst_1 (Pi.preorder.{v, w} β (fun (ᾰ : β) => γ) (fun (i : β) => _inst_2)) f)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1565 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1568 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Antitone.{u w} α γ inst._@.Mathlib.Order.Monotone._hyg.1565 inst._@.Mathlib.Order.Monotone._hyg.1568 (fun (a : α) => f a b)) -> (Antitone.{u (max v w)} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1565 (instPreorderForAll.{v w} β (fun (a._@.Mathlib.Order.Monotone._hyg.1573 : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1568)) f)
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1685 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1688 : Preorder.{w} γ] {f : α -> β -> γ}, (forall (b : β), Antitone.{u, w} α γ inst._@.Mathlib.Order.Monotone._hyg.1685 inst._@.Mathlib.Order.Monotone._hyg.1688 (fun (a : α) => f a b)) -> (Antitone.{u, max v w} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1685 (instPreorderForAll.{v, w} β (fun (a._@.Mathlib.Order.Monotone._hyg.1693 : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1688)) f)
 Case conversion may be inaccurate. Consider using '#align antitone_lam antitone_lamₓ'. -/
-theorem antitone_lam {f : α → β → γ} (hf : ∀ b, Antitone fun a => f a b) : Antitone f := fun a a' h b => hf b h
+theorem antitone_lam {f : α → β → γ} (hf : ∀ b, Antitone fun a => f a b) : Antitone f :=
+  fun a a' h b => hf b h
 #align antitone_lam antitone_lam
 
 /- warning: antitone_app -> antitone_app is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Antitone.{u (max v w)} α (β -> γ) _inst_1 (Pi.preorder.{v w} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Antitone.{u w} α γ _inst_1 _inst_2 (f b))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Antitone.{u, max v w} α (β -> γ) _inst_1 (Pi.preorder.{v, w} β (fun (b : β) => γ) (fun (i : β) => _inst_2)) (fun (a : α) (b : β) => f b a)) -> (Antitone.{u, w} α γ _inst_1 _inst_2 (f b))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1613 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1616 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Antitone.{u (max v w)} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1613 (instPreorderForAll.{v w} β (fun (b : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1616)) (fun (a : α) (b : β) => f b a)) -> (Antitone.{u w} α γ inst._@.Mathlib.Order.Monotone._hyg.1613 inst._@.Mathlib.Order.Monotone._hyg.1616 (f b))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} [inst._@.Mathlib.Order.Monotone._hyg.1733 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.1736 : Preorder.{w} γ] (f : β -> α -> γ) (b : β), (Antitone.{u, max v w} α (β -> γ) inst._@.Mathlib.Order.Monotone._hyg.1733 (instPreorderForAll.{v, w} β (fun (b : β) => γ) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.1736)) (fun (a : α) (b : β) => f b a)) -> (Antitone.{u, w} α γ inst._@.Mathlib.Order.Monotone._hyg.1733 inst._@.Mathlib.Order.Monotone._hyg.1736 (f b))
 Case conversion may be inaccurate. Consider using '#align antitone_app antitone_appₓ'. -/
-theorem antitone_app (f : β → α → γ) (b : β) (hf : Antitone fun a b => f b a) : Antitone (f b) := fun a a' h => hf h b
+theorem antitone_app (f : β → α → γ) (b : β) (hf : Antitone fun a b => f b a) : Antitone (f b) :=
+  fun a a' h => hf h b
 #align antitone_app antitone_app
 
 end Preorder
 
 /- warning: function.monotone_eval -> Function.monotone_eval is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [_inst_1 : forall (i : ι), Preorder.{v} (α i)] (i : ι), Monotone.{(max u v) v} (forall (x : ι), α x) (α i) (Pi.preorder.{u v} ι (fun (x : ι) => α x) (fun (i : ι) => _inst_1 i)) (_inst_1 i) (Function.eval.{succ u succ v} ι (fun (i : ι) => α i) i)
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [_inst_1 : forall (i : ι), Preorder.{v} (α i)] (i : ι), Monotone.{max u v, v} (forall (x : ι), α x) (α i) (Pi.preorder.{u, v} ι (fun (x : ι) => α x) (fun (i : ι) => _inst_1 i)) (_inst_1 i) (Function.eval.{succ u, succ v} ι (fun (i : ι) => α i) i)
 but is expected to have type
-  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.1670 : forall (i : ι), Preorder.{v} (α i)] (i : ι), Monotone.{(max u v) v} (forall (x : ι), α x) (α i) (instPreorderForAll.{u v} ι (fun (x : ι) => α x) (fun (i : ι) => inst._@.Mathlib.Order.Monotone._hyg.1670 i)) (inst._@.Mathlib.Order.Monotone._hyg.1670 i) (Function.eval.{succ u succ v} ι (fun (i : ι) => α i) i)
+  forall {ι : Type.{u}} {α : ι -> Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.1790 : forall (i : ι), Preorder.{v} (α i)] (i : ι), Monotone.{max u v, v} (forall (x : ι), α x) (α i) (instPreorderForAll.{u, v} ι (fun (x : ι) => α x) (fun (i : ι) => inst._@.Mathlib.Order.Monotone._hyg.1790 i)) (inst._@.Mathlib.Order.Monotone._hyg.1790 i) (Function.eval.{succ u, succ v} ι (fun (i : ι) => α i) i)
 Case conversion may be inaccurate. Consider using '#align function.monotone_eval Function.monotone_evalₓ'. -/
 theorem Function.monotone_eval {ι : Type u} {α : ι → Type v} [∀ i, Preorder (α i)] (i : ι) :
     Monotone (Function.eval i : (∀ i, α i) → α i) := fun f g H => H i
@@ -445,10 +451,12 @@ theorem StrictAnti.imp (hf : StrictAnti f) (h : a < b) : f b < f a :=
 #align strict_anti.imp StrictAnti.imp
 -/
 
-protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : MonotoneOn f s := fun a _ b _ => hf.imp
+protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : MonotoneOn f s :=
+  fun a _ b _ => hf.imp
 #align monotone.monotone_on Monotone.monotone_on
 
-protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : AntitoneOn f s := fun a _ b _ => hf.imp
+protected theorem Antitone.antitone_on (hf : Antitone f) (s : Set α) : AntitoneOn f s :=
+  fun a _ b _ => hf.imp
 #align antitone.antitone_on Antitone.antitone_on
 
 #print monotoneOn_univ /-
@@ -464,12 +472,14 @@ theorem antitoneOn_univ : AntitoneOn f Set.univ ↔ Antitone f :=
 -/
 
 #print StrictMono.strictMonoOn /-
-protected theorem StrictMono.strictMonoOn (hf : StrictMono f) (s : Set α) : StrictMonoOn f s := fun a _ b _ => hf.imp
+protected theorem StrictMono.strictMonoOn (hf : StrictMono f) (s : Set α) : StrictMonoOn f s :=
+  fun a _ b _ => hf.imp
 #align strict_mono.strict_mono_on StrictMono.strictMonoOn
 -/
 
 #print StrictAnti.strictAntiOn /-
-protected theorem StrictAnti.strictAntiOn (hf : StrictAnti f) (s : Set α) : StrictAntiOn f s := fun a _ b _ => hf.imp
+protected theorem StrictAnti.strictAntiOn (hf : StrictAnti f) (s : Set α) : StrictAntiOn f s :=
+  fun a _ b _ => hf.imp
 #align strict_anti.strict_anti_on StrictAnti.strictAntiOn
 -/
 
@@ -492,14 +502,14 @@ section PartialOrder
 variable [PartialOrder β] {f : α → β}
 
 #print Monotone.strictMono_of_injective /-
-theorem Monotone.strictMono_of_injective (h₁ : Monotone f) (h₂ : Injective f) : StrictMono f := fun a b h =>
-  (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H
+theorem Monotone.strictMono_of_injective (h₁ : Monotone f) (h₂ : Injective f) : StrictMono f :=
+  fun a b h => (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H
 #align monotone.strict_mono_of_injective Monotone.strictMono_of_injective
 -/
 
 #print Antitone.strictAnti_of_injective /-
-theorem Antitone.strictAnti_of_injective (h₁ : Antitone f) (h₂ : Injective f) : StrictAnti f := fun a b h =>
-  (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H.symm
+theorem Antitone.strictAnti_of_injective (h₁ : Antitone f) (h₂ : Injective f) : StrictAnti f :=
+  fun a b h => (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H.symm
 #align antitone.strict_anti_of_injective Antitone.strictAnti_of_injective
 -/
 
@@ -513,25 +523,31 @@ variable [PartialOrder α] [Preorder β] {f : α → β} {s : Set α}
 
 #print monotone_iff_forall_lt /-
 theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤ f b :=
-  forall₂_congr fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) hf⟩
+  forall₂_congr fun a b =>
+    ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) hf⟩
 #align monotone_iff_forall_lt monotone_iff_forall_lt
 -/
 
 #print antitone_iff_forall_lt /-
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
-  forall₂_congr fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).ge) hf⟩
+  forall₂_congr fun a b =>
+    ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).ge) hf⟩
 #align antitone_iff_forall_lt antitone_iff_forall_lt
 -/
 
 #print monotoneOn_iff_forall_lt /-
-theorem monotoneOn_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a ≤ f b :=
-  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) (hf ha hb)⟩
+theorem monotoneOn_iff_forall_lt :
+    MonotoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a ≤ f b :=
+  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h =>
+    h.eq_or_lt.elim (fun H => (congr_arg _ H).le) (hf ha hb)⟩
 #align monotone_on_iff_forall_lt monotoneOn_iff_forall_lt
 -/
 
 #print antitoneOn_iff_forall_lt /-
-theorem antitoneOn_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b ≤ f a :=
-  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).ge) (hf ha hb)⟩
+theorem antitoneOn_iff_forall_lt :
+    AntitoneOn f s ↔ ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b ≤ f a :=
+  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h =>
+    h.eq_or_lt.elim (fun H => (congr_arg _ H).ge) (hf ha hb)⟩
 #align antitone_on_iff_forall_lt antitoneOn_iff_forall_lt
 -/
 
@@ -583,12 +599,14 @@ protected theorem antitone [Subsingleton α] (f : α → β) : Antitone f := fun
 -/
 
 #print Subsingleton.monotone' /-
-theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elim _ _).le
+theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ =>
+  (Subsingleton.elim _ _).le
 #align subsingleton.monotone' Subsingleton.monotone'
 -/
 
 #print Subsingleton.antitone' /-
-theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ => (Subsingleton.elim _ _).le
+theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ =>
+  (Subsingleton.elim _ _).le
 #align subsingleton.antitone' Subsingleton.antitone'
 -/
 
@@ -630,41 +648,46 @@ theorem strictMonoOn_id [Preorder α] {s : Set α} : StrictMonoOn id s := fun a 
 -/
 
 #print monotone_const /-
-theorem monotone_const [Preorder α] [Preorder β] {c : β} : Monotone fun a : α => c := fun a b _ => le_rfl
+theorem monotone_const [Preorder α] [Preorder β] {c : β} : Monotone fun a : α => c := fun a b _ =>
+  le_rfl
 #align monotone_const monotone_const
 -/
 
 #print monotoneOn_const /-
-theorem monotoneOn_const [Preorder α] [Preorder β] {c : β} {s : Set α} : MonotoneOn (fun a : α => c) s :=
-  fun a _ b _ _ => le_rfl
+theorem monotoneOn_const [Preorder α] [Preorder β] {c : β} {s : Set α} :
+    MonotoneOn (fun a : α => c) s := fun a _ b _ _ => le_rfl
 #align monotone_on_const monotoneOn_const
 -/
 
 #print antitone_const /-
-theorem antitone_const [Preorder α] [Preorder β] {c : β} : Antitone fun a : α => c := fun a b _ => le_refl c
+theorem antitone_const [Preorder α] [Preorder β] {c : β} : Antitone fun a : α => c := fun a b _ =>
+  le_refl c
 #align antitone_const antitone_const
 -/
 
 #print antitoneOn_const /-
-theorem antitoneOn_const [Preorder α] [Preorder β] {c : β} {s : Set α} : AntitoneOn (fun a : α => c) s :=
-  fun a _ b _ _ => le_rfl
+theorem antitoneOn_const [Preorder α] [Preorder β] {c : β} {s : Set α} :
+    AntitoneOn (fun a : α => c) s := fun a _ b _ _ => le_rfl
 #align antitone_on_const antitoneOn_const
 -/
 
 #print strictMono_of_le_iff_le /-
-theorem strictMono_of_le_iff_le [Preorder α] [Preorder β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f x ≤ f y) : StrictMono f :=
-  fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
+theorem strictMono_of_le_iff_le [Preorder α] [Preorder β] {f : α → β}
+    (h : ∀ x y, x ≤ y ↔ f x ≤ f y) : StrictMono f := fun a b =>
+  (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 #align strict_mono_of_le_iff_le strictMono_of_le_iff_le
 -/
 
 #print strictAnti_of_le_iff_le /-
-theorem strictAnti_of_le_iff_le [Preorder α] [Preorder β] {f : α → β} (h : ∀ x y, x ≤ y ↔ f y ≤ f x) : StrictAnti f :=
-  fun a b => (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
+theorem strictAnti_of_le_iff_le [Preorder α] [Preorder β] {f : α → β}
+    (h : ∀ x y, x ≤ y ↔ f y ≤ f x) : StrictAnti f := fun a b =>
+  (lt_iff_lt_of_le_iff_le' (h _ _) (h _ _)).1
 #align strict_anti_of_le_iff_le strictAnti_of_le_iff_le
 -/
 
 #print injective_of_lt_imp_ne /-
-theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) : Injective f := by
+theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x < y → f x ≠ f y) :
+    Injective f := by
   intro x y hxy
   contrapose hxy
   cases' Ne.lt_or_lt hxy with hxy hxy
@@ -673,8 +696,8 @@ theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x 
 -/
 
 #print injective_of_le_imp_le /-
-theorem injective_of_le_imp_le [PartialOrder α] [Preorder β] (f : α → β) (h : ∀ {x y}, f x ≤ f y → x ≤ y) :
-    Injective f := fun x y hxy => (h hxy.le).antisymm (h hxy.ge)
+theorem injective_of_le_imp_le [PartialOrder α] [Preorder β] (f : α → β)
+    (h : ∀ {x y}, f x ≤ f y → x ≤ y) : Injective f := fun x y hxy => (h hxy.le).antisymm (h hxy.ge)
 #align injective_of_le_imp_le injective_of_le_imp_le
 -/
 
@@ -715,8 +738,9 @@ theorem StrictAnti.isMin_of_apply (hf : StrictAnti f) (ha : IsMax (f a)) : IsMin
 -/
 
 #print StrictMono.ite' /-
-protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
-    (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → f x < g y) :
+protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
+    [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x)
+    (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → f x < g y) :
     StrictMono fun x => if p x then f x else g x := by
   intro x y h
   by_cases hy : p y
@@ -732,23 +756,26 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
 -/
 
 #print StrictMono.ite /-
-protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop} [DecidablePred p]
-    (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) : StrictMono fun x => if p x then f x else g x :=
+protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
+    [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) :
+    StrictMono fun x => if p x then f x else g x :=
   (hf.ite' hg hp) fun x y hx hy h => (hf h).trans_le (hfg y)
 #align strict_mono.ite StrictMono.ite
 -/
 
 #print StrictAnti.ite' /-
-protected theorem StrictAnti.ite' (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop} [DecidablePred p]
-    (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → g y < f x) :
+protected theorem StrictAnti.ite' (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop}
+    [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x)
+    (hfg : ∀ ⦃x y⦄, p x → ¬p y → x < y → g y < f x) :
     StrictAnti fun x => if p x then f x else g x :=
   (StrictMono.ite' hf.dual_right hg.dual_right hp hfg).dual_right
 #align strict_anti.ite' StrictAnti.ite'
 -/
 
 #print StrictAnti.ite /-
-protected theorem StrictAnti.ite (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop} [DecidablePred p]
-    (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, g x ≤ f x) : StrictAnti fun x => if p x then f x else g x :=
+protected theorem StrictAnti.ite (hf : StrictAnti f) (hg : StrictAnti g) {p : α → Prop}
+    [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, g x ≤ f x) :
+    StrictAnti fun x => if p x then f x else g x :=
   (hf.ite' hg hp) fun x y hx hy h => (hfg y).trans_lt (hf h)
 #align strict_anti.ite StrictAnti.ite
 -/
@@ -763,22 +790,26 @@ section Composition
 variable [Preorder α] [Preorder β] [Preorder γ] {g : β → γ} {f : α → β} {s : Set α}
 
 #print Monotone.comp /-
-protected theorem Monotone.comp (hg : Monotone g) (hf : Monotone f) : Monotone (g ∘ f) := fun a b h => hg (hf h)
+protected theorem Monotone.comp (hg : Monotone g) (hf : Monotone f) : Monotone (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align monotone.comp Monotone.comp
 -/
 
 #print Monotone.comp_antitone /-
-theorem Monotone.comp_antitone (hg : Monotone g) (hf : Antitone f) : Antitone (g ∘ f) := fun a b h => hg (hf h)
+theorem Monotone.comp_antitone (hg : Monotone g) (hf : Antitone f) : Antitone (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align monotone.comp_antitone Monotone.comp_antitone
 -/
 
 #print Antitone.comp /-
-protected theorem Antitone.comp (hg : Antitone g) (hf : Antitone f) : Monotone (g ∘ f) := fun a b h => hg (hf h)
+protected theorem Antitone.comp (hg : Antitone g) (hf : Antitone f) : Monotone (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align antitone.comp Antitone.comp
 -/
 
 #print Antitone.comp_monotone /-
-theorem Antitone.comp_monotone (hg : Antitone g) (hf : Monotone f) : Antitone (g ∘ f) := fun a b h => hg (hf h)
+theorem Antitone.comp_monotone (hg : Antitone g) (hf : Monotone f) : Antitone (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align antitone.comp_monotone Antitone.comp_monotone
 -/
 
@@ -789,48 +820,50 @@ protected theorem Monotone.iterate {f : α → α} (hf : Monotone f) (n : ℕ) :
 -/
 
 #print Monotone.comp_monotoneOn /-
-protected theorem Monotone.comp_monotoneOn (hg : Monotone g) (hf : MonotoneOn f s) : MonotoneOn (g ∘ f) s :=
-  fun a ha b hb h => hg (hf ha hb h)
+protected theorem Monotone.comp_monotoneOn (hg : Monotone g) (hf : MonotoneOn f s) :
+    MonotoneOn (g ∘ f) s := fun a ha b hb h => hg (hf ha hb h)
 #align monotone.comp_monotone_on Monotone.comp_monotoneOn
 -/
 
 #print Monotone.comp_antitoneOn /-
-theorem Monotone.comp_antitoneOn (hg : Monotone g) (hf : AntitoneOn f s) : AntitoneOn (g ∘ f) s := fun a ha b hb h =>
-  hg (hf ha hb h)
+theorem Monotone.comp_antitoneOn (hg : Monotone g) (hf : AntitoneOn f s) : AntitoneOn (g ∘ f) s :=
+  fun a ha b hb h => hg (hf ha hb h)
 #align monotone.comp_antitone_on Monotone.comp_antitoneOn
 -/
 
 #print Antitone.comp_antitoneOn /-
-protected theorem Antitone.comp_antitoneOn (hg : Antitone g) (hf : AntitoneOn f s) : MonotoneOn (g ∘ f) s :=
-  fun a ha b hb h => hg (hf ha hb h)
+protected theorem Antitone.comp_antitoneOn (hg : Antitone g) (hf : AntitoneOn f s) :
+    MonotoneOn (g ∘ f) s := fun a ha b hb h => hg (hf ha hb h)
 #align antitone.comp_antitone_on Antitone.comp_antitoneOn
 -/
 
 #print Antitone.comp_monotoneOn /-
-theorem Antitone.comp_monotoneOn (hg : Antitone g) (hf : MonotoneOn f s) : AntitoneOn (g ∘ f) s := fun a ha b hb h =>
-  hg (hf ha hb h)
+theorem Antitone.comp_monotoneOn (hg : Antitone g) (hf : MonotoneOn f s) : AntitoneOn (g ∘ f) s :=
+  fun a ha b hb h => hg (hf ha hb h)
 #align antitone.comp_monotone_on Antitone.comp_monotoneOn
 -/
 
 #print StrictMono.comp /-
-protected theorem StrictMono.comp (hg : StrictMono g) (hf : StrictMono f) : StrictMono (g ∘ f) := fun a b h => hg (hf h)
+protected theorem StrictMono.comp (hg : StrictMono g) (hf : StrictMono f) : StrictMono (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align strict_mono.comp StrictMono.comp
 -/
 
 #print StrictMono.comp_strictAnti /-
-theorem StrictMono.comp_strictAnti (hg : StrictMono g) (hf : StrictAnti f) : StrictAnti (g ∘ f) := fun a b h =>
-  hg (hf h)
+theorem StrictMono.comp_strictAnti (hg : StrictMono g) (hf : StrictAnti f) : StrictAnti (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align strict_mono.comp_strict_anti StrictMono.comp_strictAnti
 -/
 
 #print StrictAnti.comp /-
-protected theorem StrictAnti.comp (hg : StrictAnti g) (hf : StrictAnti f) : StrictMono (g ∘ f) := fun a b h => hg (hf h)
+protected theorem StrictAnti.comp (hg : StrictAnti g) (hf : StrictAnti f) : StrictMono (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align strict_anti.comp StrictAnti.comp
 -/
 
 #print StrictAnti.comp_strictMono /-
-theorem StrictAnti.comp_strictMono (hg : StrictAnti g) (hf : StrictMono f) : StrictAnti (g ∘ f) := fun a b h =>
-  hg (hf h)
+theorem StrictAnti.comp_strictMono (hg : StrictAnti g) (hf : StrictMono f) : StrictAnti (g ∘ f) :=
+  fun a b h => hg (hf h)
 #align strict_anti.comp_strict_mono StrictAnti.comp_strictMono
 -/
 
@@ -841,26 +874,26 @@ protected theorem StrictMono.iterate {f : α → α} (hf : StrictMono f) (n : �
 -/
 
 #print StrictMono.comp_strictMonoOn /-
-protected theorem StrictMono.comp_strictMonoOn (hg : StrictMono g) (hf : StrictMonoOn f s) : StrictMonoOn (g ∘ f) s :=
-  fun a ha b hb h => hg (hf ha hb h)
+protected theorem StrictMono.comp_strictMonoOn (hg : StrictMono g) (hf : StrictMonoOn f s) :
+    StrictMonoOn (g ∘ f) s := fun a ha b hb h => hg (hf ha hb h)
 #align strict_mono.comp_strict_mono_on StrictMono.comp_strictMonoOn
 -/
 
 #print StrictMono.comp_strictAntiOn /-
-theorem StrictMono.comp_strictAntiOn (hg : StrictMono g) (hf : StrictAntiOn f s) : StrictAntiOn (g ∘ f) s :=
-  fun a ha b hb h => hg (hf ha hb h)
+theorem StrictMono.comp_strictAntiOn (hg : StrictMono g) (hf : StrictAntiOn f s) :
+    StrictAntiOn (g ∘ f) s := fun a ha b hb h => hg (hf ha hb h)
 #align strict_mono.comp_strict_anti_on StrictMono.comp_strictAntiOn
 -/
 
 #print StrictAnti.comp_strictAntiOn /-
-protected theorem StrictAnti.comp_strictAntiOn (hg : StrictAnti g) (hf : StrictAntiOn f s) : StrictMonoOn (g ∘ f) s :=
-  fun a ha b hb h => hg (hf ha hb h)
+protected theorem StrictAnti.comp_strictAntiOn (hg : StrictAnti g) (hf : StrictAntiOn f s) :
+    StrictMonoOn (g ∘ f) s := fun a ha b hb h => hg (hf ha hb h)
 #align strict_anti.comp_strict_anti_on StrictAnti.comp_strictAntiOn
 -/
 
 #print StrictAnti.comp_strictMonoOn /-
-theorem StrictAnti.comp_strictMonoOn (hg : StrictAnti g) (hf : StrictMonoOn f s) : StrictAntiOn (g ∘ f) s :=
-  fun a ha b hb h => hg (hf ha hb h)
+theorem StrictAnti.comp_strictMonoOn (hg : StrictAnti g) (hf : StrictMonoOn f s) :
+    StrictAntiOn (g ∘ f) s := fun a ha b hb h => hg (hf ha hb h)
 #align strict_anti.comp_strict_mono_on StrictAnti.comp_strictMonoOn
 -/
 
@@ -871,8 +904,8 @@ namespace List
 section Fold
 
 #print List.foldl_monotone /-
-theorem foldl_monotone [Preorder α] {f : α → β → α} (H : ∀ b, Monotone fun a => f a b) (l : List β) :
-    Monotone fun a => l.foldl f a :=
+theorem foldl_monotone [Preorder α] {f : α → β → α} (H : ∀ b, Monotone fun a => f a b)
+    (l : List β) : Monotone fun a => l.foldl f a :=
   List.recOn l (fun _ _ => id) fun i l hl _ _ h => hl (H _ h)
 #align list.foldl_monotone List.foldl_monotone
 -/
@@ -884,8 +917,8 @@ theorem foldr_monotone [Preorder β] {f : α → β → β} (H : ∀ a, Monotone
 -/
 
 #print List.foldl_strictMono /-
-theorem foldl_strictMono [Preorder α] {f : α → β → α} (H : ∀ b, StrictMono fun a => f a b) (l : List β) :
-    StrictMono fun a => l.foldl f a :=
+theorem foldl_strictMono [Preorder α] {f : α → β → α} (H : ∀ b, StrictMono fun a => f a b)
+    (l : List β) : StrictMono fun a => l.foldl f a :=
   List.recOn l (fun _ _ => id) fun i l hl _ _ h => hl (H _ h)
 #align list.foldl_strict_mono List.foldl_strictMono
 -/
@@ -926,32 +959,37 @@ theorem Antitone.reflect_lt (hf : Antitone f) {a b : α} (h : f a < f b) : b < a
 -/
 
 #print MonotoneOn.reflect_lt /-
-theorem MonotoneOn.reflect_lt (hf : MonotoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : f a < f b) : a < b :=
+theorem MonotoneOn.reflect_lt (hf : MonotoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
+    (h : f a < f b) : a < b :=
   lt_of_not_ge fun h' => h.not_le <| hf hb ha h'
 #align monotone_on.reflect_lt MonotoneOn.reflect_lt
 -/
 
 #print AntitoneOn.reflect_lt /-
-theorem AntitoneOn.reflect_lt (hf : AntitoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : f a < f b) : b < a :=
+theorem AntitoneOn.reflect_lt (hf : AntitoneOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
+    (h : f a < f b) : b < a :=
   lt_of_not_ge fun h' => h.not_le <| hf ha hb h'
 #align antitone_on.reflect_lt AntitoneOn.reflect_lt
 -/
 
 #print StrictMonoOn.le_iff_le /-
-theorem StrictMonoOn.le_iff_le (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ a ≤ b :=
+theorem StrictMonoOn.le_iff_le (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    f a ≤ f b ↔ a ≤ b :=
   ⟨fun h => le_of_not_gt fun h' => (hf hb ha h').not_le h, fun h =>
     h.lt_or_eq_dec.elim (fun h' => (hf ha hb h').le) fun h' => h' ▸ le_rfl⟩
 #align strict_mono_on.le_iff_le StrictMonoOn.le_iff_le
 -/
 
 #print StrictAntiOn.le_iff_le /-
-theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a ≤ f b ↔ b ≤ a :=
+theorem StrictAntiOn.le_iff_le (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    f a ≤ f b ↔ b ≤ a :=
   hf.dual_right.le_iff_le hb ha
 #align strict_anti_on.le_iff_le StrictAntiOn.le_iff_le
 -/
 
 #print StrictMonoOn.eq_iff_eq /-
-theorem StrictMonoOn.eq_iff_eq (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a = f b ↔ a = b :=
+theorem StrictMonoOn.eq_iff_eq (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    f a = f b ↔ a = b :=
   ⟨fun h => le_antisymm ((hf.le_iff_le ha hb).mp h.le) ((hf.le_iff_le hb ha).mp h.ge), by
     rintro rfl
     rfl⟩
@@ -959,19 +997,22 @@ theorem StrictMonoOn.eq_iff_eq (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s)
 -/
 
 #print StrictAntiOn.eq_iff_eq /-
-theorem StrictAntiOn.eq_iff_eq (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a = f b ↔ b = a :=
+theorem StrictAntiOn.eq_iff_eq (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    f a = f b ↔ b = a :=
   (hf.dual_right.eq_iff_eq ha hb).trans eq_comm
 #align strict_anti_on.eq_iff_eq StrictAntiOn.eq_iff_eq
 -/
 
 #print StrictMonoOn.lt_iff_lt /-
-theorem StrictMonoOn.lt_iff_lt (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a < f b ↔ a < b := by
+theorem StrictMonoOn.lt_iff_lt (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    f a < f b ↔ a < b := by
   rw [lt_iff_le_not_le, lt_iff_le_not_le, hf.le_iff_le ha hb, hf.le_iff_le hb ha]
 #align strict_mono_on.lt_iff_lt StrictMonoOn.lt_iff_lt
 -/
 
 #print StrictAntiOn.lt_iff_lt /-
-theorem StrictAntiOn.lt_iff_lt (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : f a < f b ↔ b < a :=
+theorem StrictAntiOn.lt_iff_lt (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
+    f a < f b ↔ b < a :=
   hf.dual_right.lt_iff_lt hb ha
 #align strict_anti_on.lt_iff_lt StrictAntiOn.lt_iff_lt
 -/
@@ -1001,17 +1042,19 @@ theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < 
 -/
 
 #print StrictMonoOn.compares /-
-protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
-    ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
+protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s)
+    (hb : b ∈ s) : ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
   | Ordering.lt => hf.lt_iff_lt ha hb
-  | Ordering.eq => ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le), congr_arg _⟩
+  | Ordering.eq =>
+    ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le),
+      congr_arg _⟩
   | Ordering.gt => hf.lt_iff_lt hb ha
 #align strict_mono_on.compares StrictMonoOn.compares
 -/
 
 #print StrictAntiOn.compares /-
-protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) {o : Ordering} :
-    o.Compares (f a) (f b) ↔ o.Compares b a :=
+protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
+    {o : Ordering} : o.Compares (f a) (f b) ↔ o.Compares b a :=
   toDual_compares_toDual.trans <| hf.dual_right.Compares hb ha
 #align strict_anti_on.compares StrictAntiOn.compares
 -/
@@ -1031,7 +1074,8 @@ protected theorem StrictAnti.compares (hf : StrictAnti f) {a b : α} {o : Orderi
 -/
 
 #print StrictMono.injective /-
-theorem StrictMono.injective (hf : StrictMono f) : Injective f := fun x y h => show Compares Eq x y from hf.Compares.1 h
+theorem StrictMono.injective (hf : StrictMono f) : Injective f := fun x y h =>
+  show Compares Eq x y from hf.Compares.1 h
 #align strict_mono.injective StrictMono.injective
 -/
 
@@ -1042,25 +1086,29 @@ theorem StrictAnti.injective (hf : StrictAnti f) : Injective f := fun x y h =>
 -/
 
 #print StrictMono.maximal_of_maximal_image /-
-theorem StrictMono.maximal_of_maximal_image (hf : StrictMono f) {a} (hmax : ∀ p, p ≤ f a) (x : α) : x ≤ a :=
+theorem StrictMono.maximal_of_maximal_image (hf : StrictMono f) {a} (hmax : ∀ p, p ≤ f a) (x : α) :
+    x ≤ a :=
   hf.le_iff_le.mp (hmax (f x))
 #align strict_mono.maximal_of_maximal_image StrictMono.maximal_of_maximal_image
 -/
 
 #print StrictMono.minimal_of_minimal_image /-
-theorem StrictMono.minimal_of_minimal_image (hf : StrictMono f) {a} (hmin : ∀ p, f a ≤ p) (x : α) : a ≤ x :=
+theorem StrictMono.minimal_of_minimal_image (hf : StrictMono f) {a} (hmin : ∀ p, f a ≤ p) (x : α) :
+    a ≤ x :=
   hf.le_iff_le.mp (hmin (f x))
 #align strict_mono.minimal_of_minimal_image StrictMono.minimal_of_minimal_image
 -/
 
 #print StrictAnti.minimal_of_maximal_image /-
-theorem StrictAnti.minimal_of_maximal_image (hf : StrictAnti f) {a} (hmax : ∀ p, p ≤ f a) (x : α) : a ≤ x :=
+theorem StrictAnti.minimal_of_maximal_image (hf : StrictAnti f) {a} (hmax : ∀ p, p ≤ f a) (x : α) :
+    a ≤ x :=
   hf.le_iff_le.mp (hmax (f x))
 #align strict_anti.minimal_of_maximal_image StrictAnti.minimal_of_maximal_image
 -/
 
 #print StrictAnti.maximal_of_minimal_image /-
-theorem StrictAnti.maximal_of_minimal_image (hf : StrictAnti f) {a} (hmin : ∀ p, f a ≤ p) (x : α) : x ≤ a :=
+theorem StrictAnti.maximal_of_minimal_image (hf : StrictAnti f) {a} (hmin : ∀ p, f a ≤ p) (x : α) :
+    x ≤ a :=
   hf.le_iff_le.mp (hmin (f x))
 #align strict_anti.maximal_of_minimal_image StrictAnti.maximal_of_minimal_image
 -/
@@ -1093,7 +1141,8 @@ end PartialOrder
 variable [LinearOrder β] {f : α → β} {s : Set α} {x y : α}
 
 #print StrictMonoOn.cmp_map_eq /-
-theorem StrictMonoOn.cmp_map_eq (hf : StrictMonoOn f s) (hx : x ∈ s) (hy : y ∈ s) : cmp (f x) (f y) = cmp x y :=
+theorem StrictMonoOn.cmp_map_eq (hf : StrictMonoOn f s) (hx : x ∈ s) (hy : y ∈ s) :
+    cmp (f x) (f y) = cmp x y :=
   ((hf.Compares hx hy).2 (cmp_compares x y)).cmp_eq
 #align strict_mono_on.cmp_map_eq StrictMonoOn.cmp_map_eq
 -/
@@ -1105,7 +1154,8 @@ theorem StrictMono.cmp_map_eq (hf : StrictMono f) (x y : α) : cmp (f x) (f y) =
 -/
 
 #print StrictAntiOn.cmp_map_eq /-
-theorem StrictAntiOn.cmp_map_eq (hf : StrictAntiOn f s) (hx : x ∈ s) (hy : y ∈ s) : cmp (f x) (f y) = cmp y x :=
+theorem StrictAntiOn.cmp_map_eq (hf : StrictAntiOn f s) (hx : x ∈ s) (hy : y ∈ s) :
+    cmp (f x) (f y) = cmp y x :=
   hf.dual_right.cmp_map_eq hy hx
 #align strict_anti_on.cmp_map_eq StrictAntiOn.cmp_map_eq
 -/
@@ -1127,22 +1177,24 @@ variable [Preorder α]
 
 #print Nat.rel_of_forall_rel_succ_of_le_of_lt /-
 theorem Nat.rel_of_forall_rel_succ_of_le_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} {a : ℕ}
-    (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b < c) : r (f b) (f c) := by
+    (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b < c) : r (f b) (f c) :=
+  by
   induction' hbc with k b_lt_k r_b_k
   exacts[h _ hab, trans r_b_k (h _ (hab.trans_lt b_lt_k).le)]
 #align nat.rel_of_forall_rel_succ_of_le_of_lt Nat.rel_of_forall_rel_succ_of_le_of_lt
 -/
 
 #print Nat.rel_of_forall_rel_succ_of_le_of_le /-
-theorem Nat.rel_of_forall_rel_succ_of_le_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℕ → β} {a : ℕ}
-    (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b) (hbc : b ≤ c) : r (f b) (f c) :=
+theorem Nat.rel_of_forall_rel_succ_of_le_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r]
+    {f : ℕ → β} {a : ℕ} (h : ∀ n, a ≤ n → r (f n) (f (n + 1))) ⦃b c : ℕ⦄ (hab : a ≤ b)
+    (hbc : b ≤ c) : r (f b) (f c) :=
   hbc.eq_or_lt.elim (fun h => h ▸ refl _) (Nat.rel_of_forall_rel_succ_of_le_of_lt r h hab)
 #align nat.rel_of_forall_rel_succ_of_le_of_le Nat.rel_of_forall_rel_succ_of_le_of_le
 -/
 
 #print Nat.rel_of_forall_rel_succ_of_lt /-
-theorem Nat.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β} (h : ∀ n, r (f n) (f (n + 1)))
-    ⦃a b : ℕ⦄ (hab : a < b) : r (f a) (f b) :=
+theorem Nat.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℕ → β}
+    (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℕ⦄ (hab : a < b) : r (f a) (f b) :=
   Nat.rel_of_forall_rel_succ_of_le_of_lt r (fun n _ => h n) le_rfl hab
 #align nat.rel_of_forall_rel_succ_of_lt Nat.rel_of_forall_rel_succ_of_lt
 -/
@@ -1156,9 +1208,9 @@ theorem Nat.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] 
 
 /- warning: monotone_nat_of_le_succ -> monotone_nat_of_le_succ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (Monotone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (Monotone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8506 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.8506) (f n) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (Monotone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8506 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8626 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.8626) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (Monotone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8626 f)
 Case conversion may be inaccurate. Consider using '#align monotone_nat_of_le_succ monotone_nat_of_le_succₓ'. -/
 theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Nat.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
@@ -1166,9 +1218,9 @@ theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1))
 
 /- warning: antitone_nat_of_succ_le -> antitone_nat_of_succ_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f n)) -> (Antitone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (f n)) -> (Antitone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8560 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.8560) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n)) -> (Antitone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8560 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8680 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.8680) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f n)) -> (Antitone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8680 f)
 Case conversion may be inaccurate. Consider using '#align antitone_nat_of_succ_le antitone_nat_of_succ_leₓ'. -/
 theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   @monotone_nat_of_le_succ αᵒᵈ _ _ hf
@@ -1176,9 +1228,9 @@ theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n + 1) ≤ f n)
 
 /- warning: strict_mono_nat_of_lt_succ -> strictMono_nat_of_lt_succ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (StrictMono.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (StrictMono.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8604 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8604) (f n) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (StrictMono.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8604 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8724 : Preorder.{u} α] {f : Nat -> α}, (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8724) (f n) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (StrictMono.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8724 f)
 Case conversion may be inaccurate. Consider using '#align strict_mono_nat_of_lt_succ strictMono_nat_of_lt_succₓ'. -/
 theorem strictMono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Nat.rel_of_forall_rel_succ_of_lt (· < ·) hf
@@ -1192,9 +1244,9 @@ namespace Nat
 
 /- warning: nat.exists_strict_mono' -> Nat.exists_strictMono' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] [_inst_2 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)] (a : α), Exists.{(max 1 (succ u))} (Nat -> α) (fun (f : Nat -> α) => And (StrictMono.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a))
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] [_inst_2 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)] (a : α), Exists.{max 1 (succ u)} (Nat -> α) (fun (f : Nat -> α) => And (StrictMono.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8702 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8705 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8702)] (a : α), Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => And (StrictMono.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8702 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a))
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8822 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8825 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8822)] (a : α), Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => And (StrictMono.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8822 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a))
 Case conversion may be inaccurate. Consider using '#align nat.exists_strict_mono' Nat.exists_strictMono'ₓ'. -/
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly monotone function
 `ℕ → α` with any prescribed value of `f 0`. -/
@@ -1206,9 +1258,9 @@ theorem exists_strictMono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, Strict
 
 /- warning: nat.exists_strict_anti' -> Nat.exists_strictAnti' is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] [_inst_2 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)] (a : α), Exists.{(max 1 (succ u))} (Nat -> α) (fun (f : Nat -> α) => And (StrictAnti.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a))
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] [_inst_2 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)] (a : α), Exists.{max 1 (succ u)} (Nat -> α) (fun (f : Nat -> α) => And (StrictAnti.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) a))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8787 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8790 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8787)] (a : α), Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => And (StrictAnti.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8787 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a))
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.8907 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8910 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8907)] (a : α), Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => And (StrictAnti.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8907 f) (Eq.{succ u} α (f (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) a))
 Case conversion may be inaccurate. Consider using '#align nat.exists_strict_anti' Nat.exists_strictAnti'ₓ'. -/
 /-- If `α` is a preorder with no maximal elements, then there exists a strictly antitone function
 `ℕ → α` with any prescribed value of `f 0`. -/
@@ -1220,9 +1272,9 @@ variable (α)
 
 /- warning: nat.exists_strict_mono -> Nat.exists_strictMono is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{(max 1 (succ u))} (Nat -> α) (fun (f : Nat -> α) => StrictMono.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
+  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{max 1 (succ u)} (Nat -> α) (fun (f : Nat -> α) => StrictMono.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.8847 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8850 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.8853 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8847)], Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => StrictMono.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8847 f)
+  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.8967 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8970 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.8973 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8967)], Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => StrictMono.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8967 f)
 Case conversion may be inaccurate. Consider using '#align nat.exists_strict_mono Nat.exists_strictMonoₓ'. -/
 /-- If `α` is a nonempty preorder with no maximal elements, then there exists a strictly monotone
 function `ℕ → α`. -/
@@ -1234,9 +1286,9 @@ theorem exists_strictMono [Nonempty α] [NoMaxOrder α] : ∃ f : ℕ → α, St
 
 /- warning: nat.exists_strict_anti -> Nat.exists_strictAnti is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{(max 1 (succ u))} (Nat -> α) (fun (f : Nat -> α) => StrictAnti.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
+  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{max 1 (succ u)} (Nat -> α) (fun (f : Nat -> α) => StrictAnti.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.8936 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.8939 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.8942 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.8936)], Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => StrictAnti.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.8936 f)
+  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.9056 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.9059 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.9062 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9056)], Exists.{succ u} (Nat -> α) (fun (f : Nat -> α) => StrictAnti.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.9056 f)
 Case conversion may be inaccurate. Consider using '#align nat.exists_strict_anti Nat.exists_strictAntiₓ'. -/
 /-- If `α` is a nonempty preorder with no minimal elements, then there exists a strictly antitone
 function `ℕ → α`. -/
@@ -1247,10 +1299,9 @@ theorem exists_strictAnti [Nonempty α] [NoMinOrder α] : ∃ f : ℕ → α, St
 end Nat
 
 #print Int.rel_of_forall_rel_succ_of_lt /-
-theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β} (h : ∀ n, r (f n) (f (n + 1)))
-    ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) := by
-  rcases hab.dest with ⟨n, rfl⟩
-  clear hab
+theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β}
+    (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) := by
+  rcases hab.dest with ⟨n, rfl⟩; clear hab
   induction' n with n ihn
   · rw [Int.ofNat_one]
     apply h
@@ -1270,9 +1321,9 @@ theorem Int.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] 
 
 /- warning: monotone_int_of_le_succ -> monotone_int_of_le_succ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))) -> (Monotone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))) -> (Monotone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9232 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.9232) (f n) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))) -> (Monotone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9232 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9352 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.9352) (f n) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))) -> (Monotone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9352 f)
 Case conversion may be inaccurate. Consider using '#align monotone_int_of_le_succ monotone_int_of_le_succₓ'. -/
 theorem monotone_int_of_le_succ {f : ℤ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Int.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
@@ -1280,9 +1331,9 @@ theorem monotone_int_of_le_succ {f : ℤ → α} (hf : ∀ n, f n ≤ f (n + 1))
 
 /- warning: antitone_int_of_succ_le -> antitone_int_of_succ_le is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))) (f n)) -> (Antitone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))) (f n)) -> (Antitone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9285 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.9285) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) (f n)) -> (Antitone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9285 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9405 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LE.le.{u} α (Preorder.toLE.{u} α inst._@.Mathlib.Order.Monotone._hyg.9405) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) (f n)) -> (Antitone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9405 f)
 Case conversion may be inaccurate. Consider using '#align antitone_int_of_succ_le antitone_int_of_succ_leₓ'. -/
 theorem antitone_int_of_succ_le {f : ℤ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   Int.rel_of_forall_rel_succ_of_le (· ≥ ·) hf
@@ -1290,9 +1341,9 @@ theorem antitone_int_of_succ_le {f : ℤ → α} (hf : ∀ n, f (n + 1) ≤ f n)
 
 /- warning: strict_mono_int_of_lt_succ -> strictMono_int_of_lt_succ is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))) -> (StrictMono.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))) -> (StrictMono.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9338 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9338) (f n) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))) -> (StrictMono.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9338 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9458 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9458) (f n) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))) -> (StrictMono.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9458 f)
 Case conversion may be inaccurate. Consider using '#align strict_mono_int_of_lt_succ strictMono_int_of_lt_succₓ'. -/
 theorem strictMono_int_of_lt_succ {f : ℤ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Int.rel_of_forall_rel_succ_of_lt (· < ·) hf
@@ -1300,9 +1351,9 @@ theorem strictMono_int_of_lt_succ {f : ℤ → α} (hf : ∀ n, f n < f (n + 1))
 
 /- warning: strict_anti_int_of_succ_lt -> strictAnti_int_of_succ_lt is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))) (f n)) -> (StrictAnti.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))) (f n)) -> (StrictAnti.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9392 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9392) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) (f n)) -> (StrictAnti.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9392 f)
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9512 : Preorder.{u} α] {f : Int -> α}, (forall (n : Int), LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9512) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) (f n)) -> (StrictAnti.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9512 f)
 Case conversion may be inaccurate. Consider using '#align strict_anti_int_of_succ_lt strictAnti_int_of_succ_ltₓ'. -/
 theorem strictAnti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   Int.rel_of_forall_rel_succ_of_lt (· > ·) hf
@@ -1314,9 +1365,9 @@ variable (α) [Nonempty α] [NoMinOrder α] [NoMaxOrder α]
 
 /- warning: int.exists_strict_mono -> Int.exists_strictMono is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)] [_inst_4 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{(max 1 (succ u))} (Int -> α) (fun (f : Int -> α) => StrictMono.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
+  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)] [_inst_4 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{max 1 (succ u)} (Int -> α) (fun (f : Int -> α) => StrictMono.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.9480 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.9483 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.9486 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9480)] [inst._@.Mathlib.Order.Monotone._hyg.9489 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9480)], Exists.{succ u} (Int -> α) (fun (f : Int -> α) => StrictMono.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9480 f)
+  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.9600 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.9603 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.9606 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9600)] [inst._@.Mathlib.Order.Monotone._hyg.9609 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9600)], Exists.{succ u} (Int -> α) (fun (f : Int -> α) => StrictMono.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9600 f)
 Case conversion may be inaccurate. Consider using '#align int.exists_strict_mono Int.exists_strictMonoₓ'. -/
 /-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
 monotone function `f : ℤ → α`. -/
@@ -1338,9 +1389,9 @@ theorem exists_strictMono : ∃ f : ℤ → α, StrictMono f := by
 
 /- warning: int.exists_strict_anti -> Int.exists_strictAnti is a dubious translation:
 lean 3 declaration is
-  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)] [_inst_4 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{(max 1 (succ u))} (Int -> α) (fun (f : Int -> α) => StrictAnti.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
+  forall (α : Type.{u}) [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ u} α] [_inst_3 : NoMinOrder.{u} α (Preorder.toLT.{u} α _inst_1)] [_inst_4 : NoMaxOrder.{u} α (Preorder.toLT.{u} α _inst_1)], Exists.{max 1 (succ u)} (Int -> α) (fun (f : Int -> α) => StrictAnti.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f)
 but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.9648 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.9651 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.9654 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9648)] [inst._@.Mathlib.Order.Monotone._hyg.9657 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9648)], Exists.{succ u} (Int -> α) (fun (f : Int -> α) => StrictAnti.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9648 f)
+  forall (α : Type.{u}) [inst._@.Mathlib.Order.Monotone._hyg.9768 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.9771 : Nonempty.{succ u} α] [inst._@.Mathlib.Order.Monotone._hyg.9774 : NoMinOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9768)] [inst._@.Mathlib.Order.Monotone._hyg.9777 : NoMaxOrder.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9768)], Exists.{succ u} (Int -> α) (fun (f : Int -> α) => StrictAnti.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9768 f)
 Case conversion may be inaccurate. Consider using '#align int.exists_strict_anti Int.exists_strictAntiₓ'. -/
 /-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
 antitone function `f : ℤ → α`. -/
@@ -1352,66 +1403,66 @@ end Int
 
 /- warning: monotone.ne_of_lt_of_lt_nat -> Monotone.ne_of_lt_of_lt_nat is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (Monotone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (Monotone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))))) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9694 : Preorder.{u} α] {f : Nat -> α}, (Monotone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.9694 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9694) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9694) x (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9814 : Preorder.{u} α] {f : Nat -> α}, (Monotone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.9814 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9814) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9814) x (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
 Case conversion may be inaccurate. Consider using '#align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_natₓ'. -/
 -- TODO@Yael: Generalize the following four to succ orders
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
-theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
-    (a : ℕ) : f a ≠ x := by
+theorem Monotone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Monotone f) (n : ℕ) {x : α} (h1 : f n < x)
+    (h2 : x < f (n + 1)) (a : ℕ) : f a ≠ x := by
   rintro rfl
   exact (hf.reflect_lt h1).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_nat Monotone.ne_of_lt_of_lt_nat
 
 /- warning: antitone.ne_of_lt_of_lt_nat -> Antitone.ne_of_lt_of_lt_nat is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (Antitone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f n)) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Nat -> α}, (Antitone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f n)) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9767 : Preorder.{u} α] {f : Nat -> α}, (Antitone.{0 u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.9767 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9767) (f (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9767) x (f n)) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9887 : Preorder.{u} α] {f : Nat -> α}, (Antitone.{0, u} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Monotone._hyg.9887 f) -> (forall (n : Nat) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9887) (f (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9887) x (f n)) -> (forall (a : Nat), Ne.{succ u} α (f a) x))
 Case conversion may be inaccurate. Consider using '#align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_natₓ'. -/
 /-- If `f` is an antitone function from `ℕ` to a preorder such that `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
-theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α} (h1 : f (n + 1) < x) (h2 : x < f n)
-    (a : ℕ) : f a ≠ x := by
+theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ) {x : α}
+    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℕ) : f a ≠ x := by
   rintro rfl
   exact (hf.reflect_lt h2).not_le (Nat.le_of_lt_succ <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_nat
 
 /- warning: monotone.ne_of_lt_of_lt_int -> Monotone.ne_of_lt_of_lt_int is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (Monotone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))) -> (forall (a : Int), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (Monotone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))))) -> (forall (a : Int), Ne.{succ u} α (f a) x))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9840 : Preorder.{u} α] {f : Int -> α}, (Monotone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9840 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9840) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9840) x (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))) -> (forall (a : Int), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9960 : Preorder.{u} α] {f : Int -> α}, (Monotone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9960 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9960) (f n) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9960) x (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))) -> (forall (a : Int), Ne.{succ u} α (f a) x))
 Case conversion may be inaccurate. Consider using '#align monotone.ne_of_lt_of_lt_int Monotone.ne_of_lt_of_lt_intₓ'. -/
 /-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
-theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x) (h2 : x < f (n + 1))
-    (a : ℤ) : f a ≠ x := by
+theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x)
+    (h2 : x < f (n + 1)) (a : ℤ) : f a ≠ x := by
   rintro rfl
   exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_int Monotone.ne_of_lt_of_lt_int
 
 /- warning: antitone.ne_of_lt_of_lt_int -> Antitone.ne_of_lt_of_lt_int is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (Antitone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f n)) -> (forall (a : Int), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [_inst_1 : Preorder.{u} α] {f : Int -> α}, (Antitone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) _inst_1 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α _inst_1) x (f n)) -> (forall (a : Int), Ne.{succ u} α (f a) x))
 but is expected to have type
-  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.9913 : Preorder.{u} α] {f : Int -> α}, (Antitone.{0 u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.9913 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9913) (f (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.9913) x (f n)) -> (forall (a : Int), Ne.{succ u} α (f a) x))
+  forall {α : Type.{u}} [inst._@.Mathlib.Order.Monotone._hyg.10033 : Preorder.{u} α] {f : Int -> α}, (Antitone.{0, u} Int α (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) inst._@.Mathlib.Order.Monotone._hyg.10033 f) -> (forall (n : Int) {x : α}, (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.10033) (f (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) x) -> (LT.lt.{u} α (Preorder.toLT.{u} α inst._@.Mathlib.Order.Monotone._hyg.10033) x (f n)) -> (forall (a : Int), Ne.{succ u} α (f a) x))
 Case conversion may be inaccurate. Consider using '#align antitone.ne_of_lt_of_lt_int Antitone.ne_of_lt_of_lt_intₓ'. -/
 /-- If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
-theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α} (h1 : f (n + 1) < x) (h2 : x < f n)
-    (a : ℤ) : f a ≠ x := by
+theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α}
+    (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℤ) : f a ≠ x := by
   rintro rfl
   exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_int Antitone.ne_of_lt_of_lt_int
 
 /- warning: strict_mono.id_le -> StrictMono.id_le is a dubious translation:
 lean 3 declaration is
-  forall {φ : Nat -> Nat}, (StrictMono.{0 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) φ) -> (forall (n : Nat), LE.le.{0} Nat Nat.hasLe n (φ n))
+  forall {φ : Nat -> Nat}, (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) φ) -> (forall (n : Nat), LE.le.{0} Nat Nat.hasLe n (φ n))
 but is expected to have type
-  forall {φ : Nat -> Nat}, (StrictMono.{0 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) φ) -> (forall (n : Nat), LE.le.{0} Nat instLENat n (φ n))
+  forall {φ : Nat -> Nat}, (StrictMono.{0, 0} Nat Nat (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) φ) -> (forall (n : Nat), LE.le.{0} Nat instLENat n (φ n))
 Case conversion may be inaccurate. Consider using '#align strict_mono.id_le StrictMono.id_leₓ'. -/
 theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ φ n := fun n =>
   Nat.recOn n (Nat.zero_le _) fun n hn => Nat.succ_le_of_lt (hn.trans_lt <| h <| Nat.lt_succ_self n)
@@ -1425,7 +1476,8 @@ theorem Subtype.mono_coe [Preorder α] (t : Set α) : Monotone (coe : Subtype t 
 -/
 
 #print Subtype.strictMono_coe /-
-theorem Subtype.strictMono_coe [Preorder α] (t : Set α) : StrictMono (coe : Subtype t → α) := fun x y => id
+theorem Subtype.strictMono_coe [Preorder α] (t : Set α) : StrictMono (coe : Subtype t → α) :=
+  fun x y => id
 #align subtype.strict_mono_coe Subtype.strictMono_coe
 -/
 
@@ -1435,38 +1487,40 @@ variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] {f : α → γ}
 
 /- warning: monotone_fst -> monotone_fst is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β], Monotone.{(max u v) u} (Prod.{u v} α β) α (Prod.preorder.{u v} α β _inst_1 _inst_2) _inst_1 (Prod.fst.{u v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β], Monotone.{max u v, u} (Prod.{u, v} α β) α (Prod.preorder.{u, v} α β _inst_1 _inst_2) _inst_1 (Prod.fst.{u, v} α β)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10174 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10177 : Preorder.{v} β], Monotone.{(max u v) u} (Prod.{u v} α β) α (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Monotone._hyg.10174 inst._@.Mathlib.Order.Monotone._hyg.10177) inst._@.Mathlib.Order.Monotone._hyg.10174 (Prod.fst.{u v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10294 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10297 : Preorder.{v} β], Monotone.{max u v, u} (Prod.{u, v} α β) α (Prod.instPreorderProd.{u, v} α β inst._@.Mathlib.Order.Monotone._hyg.10294 inst._@.Mathlib.Order.Monotone._hyg.10297) inst._@.Mathlib.Order.Monotone._hyg.10294 (Prod.fst.{u, v} α β)
 Case conversion may be inaccurate. Consider using '#align monotone_fst monotone_fstₓ'. -/
 theorem monotone_fst : Monotone (@Prod.fst α β) := fun a b => And.left
 #align monotone_fst monotone_fst
 
 /- warning: monotone_snd -> monotone_snd is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β], Monotone.{(max u v) v} (Prod.{u v} α β) β (Prod.preorder.{u v} α β _inst_1 _inst_2) _inst_2 (Prod.snd.{u v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β], Monotone.{max u v, v} (Prod.{u, v} α β) β (Prod.preorder.{u, v} α β _inst_1 _inst_2) _inst_2 (Prod.snd.{u, v} α β)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10219 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10222 : Preorder.{v} β], Monotone.{(max u v) v} (Prod.{u v} α β) β (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Monotone._hyg.10219 inst._@.Mathlib.Order.Monotone._hyg.10222) inst._@.Mathlib.Order.Monotone._hyg.10222 (Prod.snd.{u v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10339 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10342 : Preorder.{v} β], Monotone.{max u v, v} (Prod.{u, v} α β) β (Prod.instPreorderProd.{u, v} α β inst._@.Mathlib.Order.Monotone._hyg.10339 inst._@.Mathlib.Order.Monotone._hyg.10342) inst._@.Mathlib.Order.Monotone._hyg.10342 (Prod.snd.{u, v} α β)
 Case conversion may be inaccurate. Consider using '#align monotone_snd monotone_sndₓ'. -/
 theorem monotone_snd : Monotone (@Prod.snd α β) := fun a b => And.right
 #align monotone_snd monotone_snd
 
 /- warning: monotone.prod_map -> Monotone.prod_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Monotone.{u w} α γ _inst_1 _inst_3 f) -> (Monotone.{v u_1} β δ _inst_2 _inst_4 g) -> (Monotone.{(max u v) (max w u_1)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.preorder.{u v} α β _inst_1 _inst_2) (Prod.preorder.{w u_1} γ δ _inst_3 _inst_4) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Monotone.{u, w} α γ _inst_1 _inst_3 f) -> (Monotone.{v, u_1} β δ _inst_2 _inst_4 g) -> (Monotone.{max u v, max w u_1} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.preorder.{u, v} α β _inst_1 _inst_2) (Prod.preorder.{w, u_1} γ δ _inst_3 _inst_4) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10267 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10270 : Preorder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10273 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10276 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Monotone.{u w} α γ inst._@.Mathlib.Order.Monotone._hyg.10267 inst._@.Mathlib.Order.Monotone._hyg.10273 f) -> (Monotone.{v u_1} β δ inst._@.Mathlib.Order.Monotone._hyg.10270 inst._@.Mathlib.Order.Monotone._hyg.10276 g) -> (Monotone.{(max v u) (max u_1 w)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Monotone._hyg.10267 inst._@.Mathlib.Order.Monotone._hyg.10270) (Prod.instPreorderProd.{w u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10273 inst._@.Mathlib.Order.Monotone._hyg.10276) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10387 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10390 : Preorder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10393 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10396 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Monotone.{u, w} α γ inst._@.Mathlib.Order.Monotone._hyg.10387 inst._@.Mathlib.Order.Monotone._hyg.10393 f) -> (Monotone.{v, u_1} β δ inst._@.Mathlib.Order.Monotone._hyg.10390 inst._@.Mathlib.Order.Monotone._hyg.10396 g) -> (Monotone.{max v u, max u_1 w} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.instPreorderProd.{u, v} α β inst._@.Mathlib.Order.Monotone._hyg.10387 inst._@.Mathlib.Order.Monotone._hyg.10390) (Prod.instPreorderProd.{w, u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10393 inst._@.Mathlib.Order.Monotone._hyg.10396) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align monotone.prod_map Monotone.prod_mapₓ'. -/
-theorem Monotone.prod_map (hf : Monotone f) (hg : Monotone g) : Monotone (Prod.map f g) := fun a b h => ⟨hf h.1, hg h.2⟩
+theorem Monotone.prod_map (hf : Monotone f) (hg : Monotone g) : Monotone (Prod.map f g) :=
+  fun a b h => ⟨hf h.1, hg h.2⟩
 #align monotone.prod_map Monotone.prod_map
 
 /- warning: antitone.prod_map -> Antitone.prod_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Antitone.{u w} α γ _inst_1 _inst_3 f) -> (Antitone.{v u_1} β δ _inst_2 _inst_4 g) -> (Antitone.{(max u v) (max w u_1)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.preorder.{u v} α β _inst_1 _inst_2) (Prod.preorder.{w u_1} γ δ _inst_3 _inst_4) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : Preorder.{u} α] [_inst_2 : Preorder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Antitone.{u, w} α γ _inst_1 _inst_3 f) -> (Antitone.{v, u_1} β δ _inst_2 _inst_4 g) -> (Antitone.{max u v, max w u_1} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.preorder.{u, v} α β _inst_1 _inst_2) (Prod.preorder.{w, u_1} γ δ _inst_3 _inst_4) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10326 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10329 : Preorder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10332 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10335 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Antitone.{u w} α γ inst._@.Mathlib.Order.Monotone._hyg.10326 inst._@.Mathlib.Order.Monotone._hyg.10332 f) -> (Antitone.{v u_1} β δ inst._@.Mathlib.Order.Monotone._hyg.10329 inst._@.Mathlib.Order.Monotone._hyg.10335 g) -> (Antitone.{(max v u) (max u_1 w)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.instPreorderProd.{u v} α β inst._@.Mathlib.Order.Monotone._hyg.10326 inst._@.Mathlib.Order.Monotone._hyg.10329) (Prod.instPreorderProd.{w u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10332 inst._@.Mathlib.Order.Monotone._hyg.10335) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10446 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10449 : Preorder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10452 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10455 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (Antitone.{u, w} α γ inst._@.Mathlib.Order.Monotone._hyg.10446 inst._@.Mathlib.Order.Monotone._hyg.10452 f) -> (Antitone.{v, u_1} β δ inst._@.Mathlib.Order.Monotone._hyg.10449 inst._@.Mathlib.Order.Monotone._hyg.10455 g) -> (Antitone.{max v u, max u_1 w} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.instPreorderProd.{u, v} α β inst._@.Mathlib.Order.Monotone._hyg.10446 inst._@.Mathlib.Order.Monotone._hyg.10449) (Prod.instPreorderProd.{w, u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10452 inst._@.Mathlib.Order.Monotone._hyg.10455) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align antitone.prod_map Antitone.prod_mapₓ'. -/
-theorem Antitone.prod_map (hf : Antitone f) (hg : Antitone g) : Antitone (Prod.map f g) := fun a b h => ⟨hf h.1, hg h.2⟩
+theorem Antitone.prod_map (hf : Antitone f) (hg : Antitone g) : Antitone (Prod.map f g) :=
+  fun a b h => ⟨hf h.1, hg h.2⟩
 #align antitone.prod_map Antitone.prod_map
 
 end Preorder
@@ -1477,22 +1531,24 @@ variable [PartialOrder α] [PartialOrder β] [Preorder γ] [Preorder δ] {f : α
 
 /- warning: strict_mono.prod_map -> StrictMono.prod_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : PartialOrder.{u} α] [_inst_2 : PartialOrder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictMono.{u w} α γ (PartialOrder.toPreorder.{u} α _inst_1) _inst_3 f) -> (StrictMono.{v u_1} β δ (PartialOrder.toPreorder.{v} β _inst_2) _inst_4 g) -> (StrictMono.{(max u v) (max w u_1)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.preorder.{u v} α β (PartialOrder.toPreorder.{u} α _inst_1) (PartialOrder.toPreorder.{v} β _inst_2)) (Prod.preorder.{w u_1} γ δ _inst_3 _inst_4) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : PartialOrder.{u} α] [_inst_2 : PartialOrder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictMono.{u, w} α γ (PartialOrder.toPreorder.{u} α _inst_1) _inst_3 f) -> (StrictMono.{v, u_1} β δ (PartialOrder.toPreorder.{v} β _inst_2) _inst_4 g) -> (StrictMono.{max u v, max w u_1} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.preorder.{u, v} α β (PartialOrder.toPreorder.{u} α _inst_1) (PartialOrder.toPreorder.{v} β _inst_2)) (Prod.preorder.{w, u_1} γ δ _inst_3 _inst_4) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10421 : PartialOrder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10424 : PartialOrder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10427 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10430 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictMono.{u w} α γ (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10421) inst._@.Mathlib.Order.Monotone._hyg.10427 f) -> (StrictMono.{v u_1} β δ (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10424) inst._@.Mathlib.Order.Monotone._hyg.10430 g) -> (StrictMono.{(max v u) (max u_1 w)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.instPreorderProd.{u v} α β (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10421) (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10424)) (Prod.instPreorderProd.{w u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10427 inst._@.Mathlib.Order.Monotone._hyg.10430) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10541 : PartialOrder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10544 : PartialOrder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10547 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10550 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictMono.{u, w} α γ (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10541) inst._@.Mathlib.Order.Monotone._hyg.10547 f) -> (StrictMono.{v, u_1} β δ (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10544) inst._@.Mathlib.Order.Monotone._hyg.10550 g) -> (StrictMono.{max v u, max u_1 w} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.instPreorderProd.{u, v} α β (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10541) (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10544)) (Prod.instPreorderProd.{w, u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10547 inst._@.Mathlib.Order.Monotone._hyg.10550) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align strict_mono.prod_map StrictMono.prod_mapₓ'. -/
-theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) := fun a b => by
+theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) :=
+  fun a b => by
   simp_rw [Prod.lt_iff]
   exact Or.imp (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
 #align strict_mono.prod_map StrictMono.prod_map
 
 /- warning: strict_anti.prod_map -> StrictAnti.prod_map is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : PartialOrder.{u} α] [_inst_2 : PartialOrder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictAnti.{u w} α γ (PartialOrder.toPreorder.{u} α _inst_1) _inst_3 f) -> (StrictAnti.{v u_1} β δ (PartialOrder.toPreorder.{v} β _inst_2) _inst_4 g) -> (StrictAnti.{(max u v) (max w u_1)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.preorder.{u v} α β (PartialOrder.toPreorder.{u} α _inst_1) (PartialOrder.toPreorder.{v} β _inst_2)) (Prod.preorder.{w u_1} γ δ _inst_3 _inst_4) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [_inst_1 : PartialOrder.{u} α] [_inst_2 : PartialOrder.{v} β] [_inst_3 : Preorder.{w} γ] [_inst_4 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictAnti.{u, w} α γ (PartialOrder.toPreorder.{u} α _inst_1) _inst_3 f) -> (StrictAnti.{v, u_1} β δ (PartialOrder.toPreorder.{v} β _inst_2) _inst_4 g) -> (StrictAnti.{max u v, max w u_1} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.preorder.{u, v} α β (PartialOrder.toPreorder.{u} α _inst_1) (PartialOrder.toPreorder.{v} β _inst_2)) (Prod.preorder.{w, u_1} γ δ _inst_3 _inst_4) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10485 : PartialOrder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10488 : PartialOrder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10491 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10494 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictAnti.{u w} α γ (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10485) inst._@.Mathlib.Order.Monotone._hyg.10491 f) -> (StrictAnti.{v u_1} β δ (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10488) inst._@.Mathlib.Order.Monotone._hyg.10494 g) -> (StrictAnti.{(max v u) (max u_1 w)} (Prod.{u v} α β) (Prod.{w u_1} γ δ) (Prod.instPreorderProd.{u v} α β (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10485) (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10488)) (Prod.instPreorderProd.{w u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10491 inst._@.Mathlib.Order.Monotone._hyg.10494) (Prod.map.{u w v u_1} α γ β δ f g))
+  forall {α : Type.{u}} {β : Type.{v}} {γ : Type.{w}} {δ : Type.{u_1}} [inst._@.Mathlib.Order.Monotone._hyg.10605 : PartialOrder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10608 : PartialOrder.{v} β] [inst._@.Mathlib.Order.Monotone._hyg.10611 : Preorder.{w} γ] [inst._@.Mathlib.Order.Monotone._hyg.10614 : Preorder.{u_1} δ] {f : α -> γ} {g : β -> δ}, (StrictAnti.{u, w} α γ (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10605) inst._@.Mathlib.Order.Monotone._hyg.10611 f) -> (StrictAnti.{v, u_1} β δ (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10608) inst._@.Mathlib.Order.Monotone._hyg.10614 g) -> (StrictAnti.{max v u, max u_1 w} (Prod.{u, v} α β) (Prod.{w, u_1} γ δ) (Prod.instPreorderProd.{u, v} α β (PartialOrder.toPreorder.{u} α inst._@.Mathlib.Order.Monotone._hyg.10605) (PartialOrder.toPreorder.{v} β inst._@.Mathlib.Order.Monotone._hyg.10608)) (Prod.instPreorderProd.{w, u_1} γ δ inst._@.Mathlib.Order.Monotone._hyg.10611 inst._@.Mathlib.Order.Monotone._hyg.10614) (Prod.map.{u, w, v, u_1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align strict_anti.prod_map StrictAnti.prod_mapₓ'. -/
-theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) := fun a b => by
+theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) :=
+  fun a b => by
   simp_rw [Prod.lt_iff]
   exact Or.imp (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
 #align strict_anti.prod_map StrictAnti.prod_map
@@ -1505,20 +1561,21 @@ variable [Preorder α]
 
 /- warning: function.const_mono -> Function.const_mono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α], Monotone.{u (max v u)} α (β -> α) _inst_1 (Pi.preorder.{v u} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u succ v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α], Monotone.{u, max v u} α (β -> α) _inst_1 (Pi.preorder.{v, u} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u, succ v} α β)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10562 : Preorder.{u} α], Monotone.{u (max u v)} α (β -> α) inst._@.Mathlib.Order.Monotone._hyg.10562 (instPreorderForAll.{v u} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.10562)) (Function.const.{succ u succ v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10682 : Preorder.{u} α], Monotone.{u, max u v} α (β -> α) inst._@.Mathlib.Order.Monotone._hyg.10682 (instPreorderForAll.{v, u} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.10682)) (Function.const.{succ u, succ v} α β)
 Case conversion may be inaccurate. Consider using '#align function.const_mono Function.const_monoₓ'. -/
 theorem const_mono : Monotone (const β : α → β → α) := fun a b h i => h
 #align function.const_mono Function.const_mono
 
 /- warning: function.const_strict_mono -> Function.const_strictMono is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ v} β], StrictMono.{u (max v u)} α (β -> α) _inst_1 (Pi.preorder.{v u} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u succ v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [_inst_1 : Preorder.{u} α] [_inst_2 : Nonempty.{succ v} β], StrictMono.{u, max v u} α (β -> α) _inst_1 (Pi.preorder.{v, u} β (fun (ᾰ : β) => α) (fun (i : β) => _inst_1)) (Function.const.{succ u, succ v} α β)
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10597 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10600 : Nonempty.{succ v} β], StrictMono.{u (max u v)} α (β -> α) inst._@.Mathlib.Order.Monotone._hyg.10597 (instPreorderForAll.{v u} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.10597)) (Function.const.{succ u succ v} α β)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Mathlib.Order.Monotone._hyg.10717 : Preorder.{u} α] [inst._@.Mathlib.Order.Monotone._hyg.10720 : Nonempty.{succ v} β], StrictMono.{u, max u v} α (β -> α) inst._@.Mathlib.Order.Monotone._hyg.10717 (instPreorderForAll.{v, u} β (fun (a._@.Init.Prelude._hyg.54 : β) => α) (fun (i : β) => inst._@.Mathlib.Order.Monotone._hyg.10717)) (Function.const.{succ u, succ v} α β)
 Case conversion may be inaccurate. Consider using '#align function.const_strict_mono Function.const_strictMonoₓ'. -/
-theorem const_strictMono [Nonempty β] : StrictMono (const β : α → β → α) := fun a b => const_lt_const.2
+theorem const_strictMono [Nonempty β] : StrictMono (const β : α → β → α) := fun a b =>
+  const_lt_const.2
 #align function.const_strict_mono Function.const_strictMono
 
 end Function

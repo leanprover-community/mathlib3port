@@ -31,15 +31,18 @@ unsafe def pi_instance_derive_field : tactic Unit := do
       hs fun h =>
           try <|
             () <$ (to_expr ``(congr_fun $(h) $(xv)) >>= apply) <|>
-              () <$ apply (h xv) <|> () <$ (to_expr ``(Set.mem_image_of_mem _ $(h)) >>= apply) <|> () <$ solve_by_elim
+              () <$ apply (h xv) <|>
+                () <$ (to_expr ``(Set.mem_image_of_mem _ $(h)) >>= apply) <|> () <$ solve_by_elim
       return ()
     else
-      focus1 <| do
+      focus1 do
         let expl_arity ← mk_const field >>= get_expl_arity
         let xs ← (List.iota expl_arity).mmap fun _ => intro1
         let x ← intro1
         applyc field
-        (xs fun h => try <| () <$ (apply (h x) <|> apply h) <|> refine ``(Set.image (· <| $(x)) $(h))) <|> fail "args"
+        (xs fun h =>
+              try <| () <$ (apply (h x) <|> apply h) <|> refine ``(Set.image (· <| $(x)) $(h))) <|>
+            fail "args"
         return ()
 #align tactic.pi_instance_derive_field tactic.pi_instance_derive_field
 
@@ -49,15 +52,16 @@ it defaults to `pi.partial_order`. Any field of the instance that
 `pi_instance` cannot construct is left untouched and generated as a new goal.
 -/
 unsafe def pi_instance : tactic Unit :=
-  andthen (refine_struct ``({ Pi.partialOrder with .. })) (propagate_tags (try <| pi_instance_derive_field >> done))
+  andthen (refine_struct ``({ Pi.partialOrder with .. }))
+    (propagate_tags (try <| pi_instance_derive_field >> done))
 #align tactic.pi_instance tactic.pi_instance
 
 run_cmd
   add_interactive [`pi_instance]
 
 add_tactic_doc
-  { Name := "pi_instance", category := DocCategory.tactic, declNames := [`tactic.interactive.pi_instance],
-    tags := ["type class"] }
+  { Name := "pi_instance", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.pi_instance], tags := ["type class"] }
 
 end Tactic
 

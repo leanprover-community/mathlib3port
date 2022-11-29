@@ -42,7 +42,8 @@ variable {C D : Type _} [Category C] [Category D]
 
 variable (F : C ⥤ Cat)
 
-/-- The Grothendieck construction (often written as `∫ F` in mathematics) for a functor `F : C ⥤ Cat`
+/--
+The Grothendieck construction (often written as `∫ F` in mathematics) for a functor `F : C ⥤ Cat`
 gives a category whose
 * objects `X` consist of `X.base : C` and `X.fiber : F.obj base`
 * morphisms `f : X ⟶ Y` consist of
@@ -96,7 +97,8 @@ instance (X : Grothendieck F) : Inhabited (Hom X X) :=
 @[simps]
 def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where
   base := f.base ≫ g.base
-  fiber := eqToHom (by erw [functor.map_comp, functor.comp_obj]) ≫ (F.map g.base).map f.fiber ≫ g.fiber
+  fiber :=
+    eqToHom (by erw [functor.map_comp, functor.comp_obj]) ≫ (F.map g.base).map f.fiber ≫ g.fiber
 #align category_theory.grothendieck.comp CategoryTheory.Grothendieck.comp
 
 attribute [local simp] eq_to_hom_map
@@ -117,8 +119,7 @@ instance : Category (Grothendieck F) where
       
   id_comp' X Y f := by ext <;> simp
   assoc' W X Y Z f g h := by
-    ext
-    swap
+    ext; swap
     · simp
       
     · dsimp
@@ -133,7 +134,8 @@ theorem id_fiber' (X : Grothendieck F) :
   id_fiber X
 #align category_theory.grothendieck.id_fiber' CategoryTheory.Grothendieck.id_fiber'
 
-theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) : f.fiber = eqToHom (by subst h) ≫ g.fiber := by
+theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) :
+    f.fiber = eqToHom (by subst h) ≫ g.fiber := by
   subst h
   dsimp
   simp
@@ -207,7 +209,8 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
     dsimp
     simp
     rfl
-#align category_theory.grothendieck.grothendieck_Type_to_Cat CategoryTheory.Grothendieck.grothendieckTypeToCat
+#align
+  category_theory.grothendieck.grothendieck_Type_to_Cat CategoryTheory.Grothendieck.grothendieckTypeToCat
 
 end Grothendieck
 

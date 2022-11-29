@@ -40,14 +40,16 @@ This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction M (Subring R) where
   smul a S := S.map (MulSemiringAction.toRingHom _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (RingHom.ext <| one_smul M)).trans S.map_id
-  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
+  mul_smul a₁ a₂ S :=
+    (congr_arg (fun f => S.map f) (RingHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 #align subring.pointwise_mul_action Subring.pointwiseMulAction
 
 scoped[Pointwise] attribute [instance] Subring.pointwiseMulAction
 
 open Pointwise
 
-theorem pointwise_smul_def {a : M} (S : Subring R) : a • S = S.map (MulSemiringAction.toRingHom _ _ a) :=
+theorem pointwise_smul_def {a : M} (S : Subring R) :
+    a • S = S.map (MulSemiringAction.toRingHom _ _ a) :=
   rfl
 #align subring.pointwise_smul_def Subring.pointwise_smul_def
 
@@ -57,12 +59,14 @@ theorem coe_pointwise_smul (m : M) (S : Subring R) : ↑(m • S) = m • (S : S
 #align subring.coe_pointwise_smul Subring.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_add_subgroup (m : M) (S : Subring R) : (m • S).toAddSubgroup = m • S.toAddSubgroup :=
+theorem pointwise_smul_to_add_subgroup (m : M) (S : Subring R) :
+    (m • S).toAddSubgroup = m • S.toAddSubgroup :=
   rfl
 #align subring.pointwise_smul_to_add_subgroup Subring.pointwise_smul_to_add_subgroup
 
 @[simp]
-theorem pointwise_smul_to_subsemiring (m : M) (S : Subring R) : (m • S).toSubsemiring = m • S.toSubsemiring :=
+theorem pointwise_smul_to_subsemiring (m : M) (S : Subring R) :
+    (m • S).toSubsemiring = m • S.toSubsemiring :=
   rfl
 #align subring.pointwise_smul_to_subsemiring Subring.pointwise_smul_to_subsemiring
 
@@ -70,11 +74,13 @@ theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subring R) : r ∈ S → m 
   (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))
 #align subring.smul_mem_pointwise_smul Subring.smul_mem_pointwise_smul
 
-theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) : r ∈ m • S ↔ ∃ s : R, s ∈ S ∧ m • s = r :=
+theorem mem_smul_pointwise_iff_exists (m : M) (r : R) (S : Subring R) :
+    r ∈ m • S ↔ ∃ s : R, s ∈ S ∧ m • s = r :=
   (Set.mem_smul_set : r ∈ m • (S : Set R) ↔ _)
 #align subring.mem_smul_pointwise_iff_exists Subring.mem_smul_pointwise_iff_exists
 
-instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] : IsCentralScalar M (Subring R) :=
+instance pointwise_central_scalar [MulSemiringAction Mᵐᵒᵖ R] [IsCentralScalar M R] :
+    IsCentralScalar M (Subring R) :=
   ⟨fun a S => (congr_arg fun f => S.map f) <| RingHom.ext <| op_smul_eq_smul _⟩
 #align subring.pointwise_central_scalar Subring.pointwise_central_scalar
 
@@ -91,7 +97,8 @@ theorem smul_mem_pointwise_smul_iff {a : M} {S : Subring R} {x : R} : a • x �
   smul_mem_smul_set_iff
 #align subring.smul_mem_pointwise_smul_iff Subring.smul_mem_pointwise_smul_iff
 
-theorem mem_pointwise_smul_iff_inv_smul_mem {a : M} {S : Subring R} {x : R} : x ∈ a • S ↔ a⁻¹ • x ∈ S :=
+theorem mem_pointwise_smul_iff_inv_smul_mem {a : M} {S : Subring R} {x : R} :
+    x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem
 #align subring.mem_pointwise_smul_iff_inv_smul_mem Subring.mem_pointwise_smul_iff_inv_smul_mem
 
@@ -124,20 +131,24 @@ variable [GroupWithZero M] [Ring R] [MulSemiringAction M R]
 open Pointwise
 
 @[simp]
-theorem smul_mem_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) : a • x ∈ a • S ↔ x ∈ S :=
+theorem smul_mem_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) :
+    a • x ∈ a • S ↔ x ∈ S :=
   smul_mem_smul_set_iff₀ ha (S : Set R) x
 #align subring.smul_mem_pointwise_smul_iff₀ Subring.smul_mem_pointwise_smul_iff₀
 
-theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) : x ∈ a • S ↔ a⁻¹ • x ∈ S :=
+theorem mem_pointwise_smul_iff_inv_smul_mem₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) :
+    x ∈ a • S ↔ a⁻¹ • x ∈ S :=
   mem_smul_set_iff_inv_smul_mem₀ ha (S : Set R) x
 #align subring.mem_pointwise_smul_iff_inv_smul_mem₀ Subring.mem_pointwise_smul_iff_inv_smul_mem₀
 
-theorem mem_inv_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) : x ∈ a⁻¹ • S ↔ a • x ∈ S :=
+theorem mem_inv_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) :
+    x ∈ a⁻¹ • S ↔ a • x ∈ S :=
   mem_inv_smul_set_iff₀ ha (S : Set R) x
 #align subring.mem_inv_pointwise_smul_iff₀ Subring.mem_inv_pointwise_smul_iff₀
 
 @[simp]
-theorem pointwise_smul_le_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) {S T : Subring R} : a • S ≤ a • T ↔ S ≤ T :=
+theorem pointwise_smul_le_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) {S T : Subring R} :
+    a • S ≤ a • T ↔ S ≤ T :=
   set_smul_subset_set_smul_iff₀ ha
 #align subring.pointwise_smul_le_pointwise_smul_iff₀ Subring.pointwise_smul_le_pointwise_smul_iff₀
 

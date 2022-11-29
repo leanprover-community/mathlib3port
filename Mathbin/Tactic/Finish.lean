@@ -91,7 +91,9 @@ theorem by_contradiction_trick (p : Prop) (h : ∀ f : Prop, (p → f) → f) : 
 unsafe def preprocess_goal : tactic Unit := do
   repeat (intro1 >> skip)
   let tgt ← target >>= whnf_reducible
-  if ¬is_false tgt then ((mk_mapp `` Classical.by_contradiction [some tgt] >>= apply) >> intro1) >> skip else skip
+  if ¬is_false tgt then
+      ((mk_mapp `` Classical.by_contradiction [some tgt] >>= apply) >> intro1) >> skip
+    else skip
 #align auto.preprocess_goal auto.preprocess_goal
 
 /-!
@@ -149,8 +151,8 @@ theorem Classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
 end
 
 def commonNormalizeLemmaNames : List Name :=
-  [`` bex_def, `` forall_and, `` exists_imp, `` or_assoc, `` or_comm, `` or_left_comm, `` and_assoc, `` and_comm,
-    `` and_left_comm]
+  [`` bex_def, `` forall_and, `` exists_imp, `` or_assoc, `` or_comm, `` or_left_comm, `` and_assoc,
+    `` and_comm, `` and_left_comm]
 #align auto.common_normalize_lemma_names Auto.commonNormalizeLemmaNames
 
 def classicalNormalizeLemmaNames : List Name :=
@@ -176,16 +178,22 @@ def classicalNormalizeLemmaNames : List Name :=
                     match
                       Ne
                       with
-                      | q( ¬ $ ( a ) ) => do let pr ← mk_app ` ` not_not_eq [ a ] return ( some ( a , pr ) )
+                      |
+                          q( ¬ $ ( a ) )
+                          =>
+                          do let pr ← mk_app ` ` not_not_eq [ a ] return ( some ( a , pr ) )
                         |
                           q( $ ( a ) ∧ $ ( b ) )
                           =>
                           do
-                            let pr ← mk_app ` ` not_and_eq [ a , b ] return ( some ( q( ¬ $ ( a ) ∨ ¬ $ ( b ) ) , pr ) )
+                            let pr ← mk_app ` ` not_and_eq [ a , b ]
+                              return ( some ( q( ¬ $ ( a ) ∨ ¬ $ ( b ) ) , pr ) )
                         |
                           q( $ ( a ) ∨ $ ( b ) )
                           =>
-                          do let pr ← mk_app ` ` not_or_eq [ a , b ] return ( some ( q( ¬ $ ( a ) ∧ ¬ $ ( b ) ) , pr ) )
+                          do
+                            let pr ← mk_app ` ` not_or_eq [ a , b ]
+                              return ( some ( q( ¬ $ ( a ) ∧ ¬ $ ( b ) ) , pr ) )
                         |
                           q( Exists $ ( p ) )
                           =>
@@ -200,7 +208,11 @@ def classicalNormalizeLemmaNames : List Name :=
                             p
                             then
                             do
-                              let pr ← mk_app ` ` not_forall_eq [ lam n bi d ( expr.abstract_local p n ) ]
+                              let
+                                  pr
+                                    ←
+                                    mk_app
+                                      ` ` not_forall_eq [ lam n bi d ( expr.abstract_local p n ) ]
                                 let q( $ ( _ ) = $ ( e' ) ) ← infer_type pr
                                 return ( some ( e' , pr ) )
                             else
@@ -213,7 +225,8 @@ def classicalNormalizeLemmaNames : List Name :=
 #align auto.transform_negation_step auto.transform_negation_step
 
 /-- given an expr `e`, returns a new expression and a proof of equality -/
-private unsafe def transform_negation (cfg : AutoConfig) : expr → tactic (Option (expr × expr)) := fun e => do
+private unsafe def transform_negation (cfg : AutoConfig) : expr → tactic (Option (expr × expr)) :=
+  fun e => do
   let opr ← transform_negation_step cfg e
   match opr with
     | some (e', pr) => do
@@ -411,8 +424,8 @@ private unsafe def report_invalid_em_lemma {α : Type} (n : Name) : smt_tactic �
   fail f! "invalid ematch lemma '{n}'"
 #align auto.report_invalid_em_lemma auto.report_invalid_em_lemma
 
-private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bool) (n : Name) (hs : hinst_lemmas)
-    (ref : pexpr) : smt_tactic hinst_lemmas := do
+private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bool) (n : Name)
+    (hs : hinst_lemmas) (ref : pexpr) : smt_tactic hinst_lemmas := do
   let p ← resolve_name n
   match p with
     | expr.const n _ =>
@@ -434,8 +447,8 @@ private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bo
         report_invalid_em_lemma n
 #align auto.add_hinst_lemma_from_name auto.add_hinst_lemma_from_name
 
-private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : Bool) (hs : hinst_lemmas) :
-    pexpr → smt_tactic hinst_lemmas
+private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : Bool)
+    (hs : hinst_lemmas) : pexpr → smt_tactic hinst_lemmas
   | p@(expr.const c []) => add_hinst_lemma_from_name md lhs_lemma c hs p
   | p@(expr.local_const c _ _ _) => add_hinst_lemma_from_name md lhs_lemma c hs p
   | p => do
@@ -444,8 +457,8 @@ private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : B
     return <| hs h
 #align auto.add_hinst_lemma_from_pexpr auto.add_hinst_lemma_from_pexpr
 
-private unsafe def add_hinst_lemmas_from_pexprs (md : Transparency) (lhs_lemma : Bool) (ps : List pexpr)
-    (hs : hinst_lemmas) : smt_tactic hinst_lemmas :=
+private unsafe def add_hinst_lemmas_from_pexprs (md : Transparency) (lhs_lemma : Bool)
+    (ps : List pexpr) (hs : hinst_lemmas) : smt_tactic hinst_lemmas :=
   List.foldlM (add_hinst_lemma_from_pexpr md lhs_lemma) hs ps
 #align auto.add_hinst_lemmas_from_pexprs auto.add_hinst_lemmas_from_pexprs
 
@@ -456,14 +469,15 @@ universally quantified assumptions, and the supplied lemmas `ps`) and congruence
 unsafe def done (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit := do
   trace_state_if_enabled `auto.done "entering done"
   contradiction <|>
-      (solve1 <| do
+      solve1 do
         revert_all
         using_smt do
             smt_tactic.intros
             let ctx ← local_context
             let hs ← mk_hinst_lemmas ctx
             let hs' ← add_hinst_lemmas_from_pexprs reducible ff ps hs
-            smt_tactic.iterate_at_most cfg (smt_tactic.ematch_using hs' >> smt_tactic.try smt_tactic.close))
+            smt_tactic.iterate_at_most cfg
+                (smt_tactic.ematch_using hs' >> smt_tactic.try smt_tactic.close)
 #align auto.done auto.done
 
 /-!
@@ -503,10 +517,15 @@ unsafe
     :=
       do
         let t ← infer_type h
-          match t with | q( $ ( a ) ∨ $ ( b ) ) => ( cases h >> case_cont s cont ) >> return tt | _ => return ff
+          match
+            t
+            with
+            | q( $ ( a ) ∨ $ ( b ) ) => ( cases h >> case_cont s cont ) >> return tt
+              | _ => return ff
 #align auto.case_hyp auto.case_hyp
 
-unsafe def case_some_hyp_aux (s : CaseOption) (cont : CaseOption → tactic Unit) : List expr → tactic Bool
+unsafe def case_some_hyp_aux (s : CaseOption) (cont : CaseOption → tactic Unit) :
+    List expr → tactic Bool
   | [] => return false
   | h :: hs => condM (case_hyp h s cont) (return true) (case_some_hyp_aux hs)
 #align auto.case_some_hyp_aux auto.case_some_hyp_aux
@@ -535,9 +554,9 @@ it will:
 - (if `opt` is `case_option.at_most_one`) fail if it produces more than one goal, and
 - (if `opt` is `case_option.accept`) ignore the number of goals it produces.
 -/
-unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig) : CaseOption → tactic Unit :=
-  fun co =>
-  focus1 <| do
+unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig) :
+    CaseOption → tactic Unit := fun co =>
+  focus1 do
     trace_state_if_enabled `auto.finish "entering safe_core"
     if cfg then do
         trace_if_enabled `auto.finish "simplifying hypotheses"
@@ -559,21 +578,24 @@ unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : Aut
 /-- `clarify` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.at_most_one`.
 -/
-unsafe def clarify (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit :=
+unsafe def clarify (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) :
+    tactic Unit :=
   safe_core s ps cfg CaseOption.at_most_one
 #align auto.clarify auto.clarify
 
 /-- `safe` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.accept`.
 -/
-unsafe def safe (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit :=
+unsafe def safe (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) :
+    tactic Unit :=
   safe_core s ps cfg CaseOption.accept
 #align auto.safe auto.safe
 
 /-- `finish` is `safe_core`, but with the `(opt : case_option)`
 parameter fixed at `case_option.force`.
 -/
-unsafe def finish (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit :=
+unsafe def finish (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig := {  }) :
+    tactic Unit :=
   safe_core s ps cfg CaseOption.force
 #align auto.finish auto.finish
 
@@ -604,8 +626,9 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `clarify` will fail if it produces more than one goal.
 -/
-unsafe def clarify (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr)))
-    (cfg : AutoConfig := {  }) : tactic Unit := do
+unsafe def clarify (hs : parse simp_arg_list)
+    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := {  }) :
+    tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.clarify s (ps []) cfg
 #align tactic.interactive.clarify tactic.interactive.clarify
@@ -625,8 +648,9 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `safe` ignores the number of goals it produces, and should never fail.
 -/
-unsafe def safe (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr)))
-    (cfg : AutoConfig := {  }) : tactic Unit := do
+unsafe def safe (hs : parse simp_arg_list)
+    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := {  }) :
+    tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.safe s (ps []) cfg
 #align tactic.interactive.safe tactic.interactive.safe
@@ -646,15 +670,17 @@ Either of the supplied simp lemmas or the supplied ematch lemmas are optional.
 
 `finish` will fail if it does not close the goal.
 -/
-unsafe def finish (hs : parse simp_arg_list) (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr)))
-    (cfg : AutoConfig := {  }) : tactic Unit := do
+unsafe def finish (hs : parse simp_arg_list)
+    (ps : parse (parser.optional (tk "using" *> pexpr_list_or_texpr))) (cfg : AutoConfig := {  }) :
+    tactic Unit := do
   let s ← mk_simp_set false [] hs
   auto.finish s (ps []) cfg
 #align tactic.interactive.finish tactic.interactive.finish
 
 add_hint_tactic finish
 
-/-- These tactics do straightforward things: they call the simplifier, split conjunctive assumptions,
+/--
+These tactics do straightforward things: they call the simplifier, split conjunctive assumptions,
 eliminate existential quantifiers on the left, and look for contradictions. They rely on ematching
 and congruence closure to try to finish off a goal at the end.
 
@@ -671,7 +697,8 @@ list of `ematch` lemmas, which must be preceded by `using`.
 -/
 add_tactic_doc
   { Name := "finish / clarify / safe", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.finish, `tactic.interactive.clarify, `tactic.interactive.safe],
+    declNames :=
+      [`tactic.interactive.finish, `tactic.interactive.clarify, `tactic.interactive.safe],
     tags := ["logic", "finishing"] }
 
 end Interactive

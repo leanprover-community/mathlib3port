@@ -46,8 +46,8 @@ private def bracket' : A ⊗[R] L →ₗ[R] A ⊗[R] L →ₗ[R] A ⊗[R] L :=
 #align lie_algebra.extend_scalars.bracket' lie_algebra.extend_scalars.bracket'
 
 @[simp]
-private theorem bracket'_tmul (s t : A) (x y : L) : bracket' R A L (s ⊗ₜ[R] x) (t ⊗ₜ[R] y) = (s * t) ⊗ₜ ⁅x, y⁆ := by
-  simp [bracket']
+private theorem bracket'_tmul (s t : A) (x y : L) :
+    bracket' R A L (s ⊗ₜ[R] x) (t ⊗ₜ[R] y) = (s * t) ⊗ₜ ⁅x, y⁆ := by simp [bracket']
 #align lie_algebra.extend_scalars.bracket'_tmul lie_algebra.extend_scalars.bracket'_tmul
 
 instance : Bracket (A ⊗[R] L) (A ⊗[R] L) where bracket x y := bracket' R A L x y
@@ -71,8 +71,8 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
     
   · intro z₁ z₂ h₁ h₂
     suffices bracket' R A L z₁ z₂ + bracket' R A L z₂ z₁ = 0 by
-      rw [LinearMap.map_add, LinearMap.map_add, LinearMap.add_apply, LinearMap.add_apply, h₁, h₂, zero_add, add_zero,
-        add_comm, this]
+      rw [LinearMap.map_add, LinearMap.map_add, LinearMap.add_apply, LinearMap.add_apply, h₁, h₂,
+        zero_add, add_zero, add_comm, this]
     apply z₁.induction_on
     · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
       
@@ -81,7 +81,8 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
       · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
         
       · intro a₂ l₂
-        simp only [← lie_skew l₂ l₁, mul_comm a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul, add_right_neg]
+        simp only [← lie_skew l₂ l₁, mul_comm a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul,
+          add_right_neg]
         
       · intro y₁ y₂ hy₁ hy₂
         simp only [hy₁, hy₂, add_add_add_comm, add_zero, LinearMap.add_apply, LinearMap.map_add]
@@ -93,7 +94,8 @@ private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
     
 #align lie_algebra.extend_scalars.bracket_lie_self lie_algebra.extend_scalars.bracket_lie_self
 
-private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ = ⁅⁅x, y⁆, z⁆ + ⁅y, ⁅x, z⁆⁆ := by
+private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x, ⁅y, z⁆⁆ = ⁅⁅x, y⁆, z⁆ + ⁅y, ⁅x, z⁆⁆ :=
+  by
   simp only [bracket_def]
   apply x.induction_on
   · simp only [LinearMap.map_zero, add_zero, eq_self_iff_true, LinearMap.zero_apply]
@@ -138,9 +140,10 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ =
     · simp only [lie_zero, smul_zero]
       
     · intro a₂ l₂
-      simp only [bracket_def, bracket', TensorProduct.smul_tmul', mul_left_comm a₁ a a₂, TensorProduct.curry_apply,
-        LinearMap.mul'_apply, Algebra.id.smul_eq_mul, Function.comp_apply, LinearEquiv.coe_coe, LinearMap.coe_comp,
-        TensorProduct.map_tmul, TensorProduct.tensor_tensor_tensor_comm_tmul]
+      simp only [bracket_def, bracket', TensorProduct.smul_tmul', mul_left_comm a₁ a a₂,
+        TensorProduct.curry_apply, LinearMap.mul'_apply, Algebra.id.smul_eq_mul,
+        Function.comp_apply, LinearEquiv.coe_coe, LinearMap.coe_comp, TensorProduct.map_tmul,
+        TensorProduct.tensor_tensor_tensor_comm_tmul]
       
     · intro z₁ z₂ h₁ h₂
       simp only [h₁, h₂, smul_add, lie_add]
@@ -173,7 +176,9 @@ instance lieAlgebra [CommRing R] [Algebra R A] :
     LieAlgebra R
       (RestrictScalars R A
         L) where lie_smul t x y :=
-    (lie_smul (algebraMap R A t) (RestrictScalars.addEquiv R A L x) (RestrictScalars.addEquiv R A L y) : _)
+    (lie_smul (algebraMap R A t) (RestrictScalars.addEquiv R A L x)
+        (RestrictScalars.addEquiv R A L y) :
+      _)
 #align lie_algebra.restrict_scalars.lie_algebra LieAlgebra.RestrictScalars.lieAlgebra
 
 end RestrictScalars

@@ -75,7 +75,8 @@ def dual : PartialOrderCat ⥤ PartialOrderCat where
 /-- The equivalence between `PartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PartialOrderCat ≌ PartialOrderCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align PartialOrder.dual_equiv PartialOrderCat.dualEquiv
 
@@ -101,14 +102,17 @@ def preorderToPartialOrder : PreorderCat.{u} ⥤ PartialOrderCat where
 
 /-- `Preorder_to_PartialOrder` is left adjoint to the forgetful functor, meaning it is the free
 functor from `Preorder` to `PartialOrder`. -/
-def preorderToPartialOrderForgetAdjunction : preorderToPartialOrder.{u} ⊣ forget₂ PartialOrderCat PreorderCat :=
+def preorderToPartialOrderForgetAdjunction :
+    preorderToPartialOrder.{u} ⊣ forget₂ PartialOrderCat PreorderCat :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
-        { toFun := fun f => ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp to_antisymmetrization_mono⟩,
+        { toFun := fun f =>
+            ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp to_antisymmetrization_mono⟩,
           invFun := fun f =>
-            ⟨fun a => (Quotient.liftOn' a f) fun a b h => (AntisymmRel.image h f.mono).Eq, fun a b =>
-              (Quotient.inductionOn₂' a b) fun a b h => f.mono h⟩,
-          left_inv := fun f => OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl,
+            ⟨fun a => (Quotient.liftOn' a f) fun a b h => (AntisymmRel.image h f.mono).Eq,
+              fun a b => (Quotient.inductionOn₂' a b) fun a b h => f.mono h⟩,
+          left_inv := fun f =>
+            OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl,
           right_inv := fun f => OrderHom.ext _ _ <| funext fun x => rfl },
       hom_equiv_naturality_left_symm' := fun X Y Z f g =>
         OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl,
@@ -119,8 +123,8 @@ def preorderToPartialOrderForgetAdjunction : preorderToPartialOrder.{u} ⊣ forg
 @[simps]
 def preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder :
     preorderToPartialOrder.{u} ⋙ PartialOrderCat.dual ≅ PreorderCat.dual ⋙ preorderToPartialOrder :=
-  (NatIso.ofComponents fun X => PartialOrderCat.Iso.mk <| OrderIso.dualAntisymmetrization _) fun X Y f =>
-    OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
+  (NatIso.ofComponents fun X => PartialOrderCat.Iso.mk <| OrderIso.dualAntisymmetrization _)
+    fun X Y f => OrderHom.ext _ _ <| funext fun x => (Quotient.inductionOn' x) fun x => rfl
 #align
   Preorder_to_PartialOrder_comp_to_dual_iso_to_dual_comp_Preorder_to_PartialOrder preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder
 

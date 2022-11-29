@@ -49,7 +49,8 @@ instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (LiftRel r s) :=
   ⟨by rintro _ (⟨h⟩ | ⟨h⟩) <;> exact irrefl _ h⟩
 
 @[trans]
-theorem LiftRel.trans [IsTrans α r] [IsTrans β s] : ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
+theorem LiftRel.trans [IsTrans α r] [IsTrans β s] :
+    ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
   | _, _, _, lift_rel.inl hab, lift_rel.inl hbc => lift_rel.inl <| trans hab hbc
   | _, _, _, lift_rel.inr hab, lift_rel.inr hbc => lift_rel.inr <| trans hab hbc
 #align sum.lift_rel.trans Sum.LiftRel.trans
@@ -258,7 +259,8 @@ theorem no_max_order_iff [LT α] [LT β] : NoMaxOrder (Sum α β) ↔ NoMaxOrder
     fun h => @Sum.no_max_order _ _ _ _ h.1 h.2⟩
 #align sum.no_max_order_iff Sum.no_max_order_iff
 
-instance densely_ordered [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β] : DenselyOrdered (Sum α β) :=
+instance densely_ordered [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β] :
+    DenselyOrdered (Sum α β) :=
   ⟨fun a b h =>
     match a, b, h with
     | inl a, inl b, lift_rel.inl h =>
@@ -270,7 +272,8 @@ instance densely_ordered [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β]
 #align sum.densely_ordered Sum.densely_ordered
 
 @[simp]
-theorem densely_ordered_iff [LT α] [LT β] : DenselyOrdered (Sum α β) ↔ DenselyOrdered α ∧ DenselyOrdered β :=
+theorem densely_ordered_iff [LT α] [LT β] :
+    DenselyOrdered (Sum α β) ↔ DenselyOrdered α ∧ DenselyOrdered β :=
   ⟨fun _ =>
     ⟨⟨fun a b h => by
         obtain ⟨c | c, ha, hb⟩ := @exists_between (Sum α β) _ _ _ _ (inl_lt_inl_iff.2 h)
@@ -310,15 +313,15 @@ notation:30 α " ⊕ₗ " β:29 => Lex (Sum α β)
 --TODO: Can we make `inlₗ`, `inrₗ` `local notation`?
 /-- Lexicographical `sum.inl`. Only used for pattern matching. -/
 @[match_pattern]
-abbrev _root_.sum.inlₗ (x : α) : α ⊕ₗ β :=
+abbrev Sum.inlₗ (x : α) : α ⊕ₗ β :=
   toLex (Sum.inl x)
-#align sum.lex._root_.sum.inlₗ sum.lex._root_.sum.inlₗ
+#align sum.inlₗ Sum.inlₗ
 
 /-- Lexicographical `sum.inr`. Only used for pattern matching. -/
 @[match_pattern]
-abbrev _root_.sum.inrₗ (x : β) : α ⊕ₗ β :=
+abbrev Sum.inrₗ (x : β) : α ⊕ₗ β :=
   toLex (Sum.inr x)
-#align sum.lex._root_.sum.inrₗ sum.lex._root_.sum.inrₗ
+#align sum.inrₗ Sum.inrₗ
 
 /-- The linear/lexicographical `≤` on a sum. -/
 instance hasLe [LE α] [LE β] : LE (α ⊕ₗ β) :=
@@ -331,12 +334,14 @@ instance hasLt [LT α] [LT β] : LT (α ⊕ₗ β) :=
 #align sum.lex.has_lt Sum.Lex.hasLt
 
 @[simp]
-theorem to_lex_le_to_lex [LE α] [LE β] {a b : Sum α β} : toLex a ≤ toLex b ↔ Lex (· ≤ ·) (· ≤ ·) a b :=
+theorem to_lex_le_to_lex [LE α] [LE β] {a b : Sum α β} :
+    toLex a ≤ toLex b ↔ Lex (· ≤ ·) (· ≤ ·) a b :=
   Iff.rfl
 #align sum.lex.to_lex_le_to_lex Sum.Lex.to_lex_le_to_lex
 
 @[simp]
-theorem to_lex_lt_to_lex [LT α] [LT β] {a b : Sum α β} : toLex a < toLex b ↔ Lex (· < ·) (· < ·) a b :=
+theorem to_lex_lt_to_lex [LT α] [LT β] {a b : Sum α β} :
+    toLex a < toLex b ↔ Lex (· < ·) (· < ·) a b :=
   Iff.rfl
 #align sum.lex.to_lex_lt_to_lex Sum.Lex.to_lex_lt_to_lex
 
@@ -444,8 +449,8 @@ instance partialOrder [PartialOrder α] [PartialOrder β] : PartialOrder (α ⊕
 #align sum.lex.partial_order Sum.Lex.partialOrder
 
 instance linearOrder [LinearOrder α] [LinearOrder β] : LinearOrder (α ⊕ₗ β) :=
-  { Lex.partialOrder with le_total := total_of (Lex (· ≤ ·) (· ≤ ·)), decidableLe := Lex.decidableRel,
-    DecidableEq := Sum.decidableEq _ _ }
+  { Lex.partialOrder with le_total := total_of (Lex (· ≤ ·) (· ≤ ·)),
+    decidableLe := Lex.decidableRel, DecidableEq := Sum.decidableEq _ _ }
 #align sum.lex.linear_order Sum.Lex.linearOrder
 
 /-- The lexicographical bottom of a sum is the bottom of the left component. -/
@@ -524,8 +529,8 @@ instance no_max_order_of_nonempty [LT α] [LT β] [NoMaxOrder β] [Nonempty β] 
       ⟨toLex (inr b), inr_lt_inr_iff.2 h⟩⟩
 #align sum.lex.no_max_order_of_nonempty Sum.Lex.no_max_order_of_nonempty
 
-instance densely_ordered_of_no_max_order [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β] [NoMaxOrder α] :
-    DenselyOrdered (α ⊕ₗ β) :=
+instance densely_ordered_of_no_max_order [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β]
+    [NoMaxOrder α] : DenselyOrdered (α ⊕ₗ β) :=
   ⟨fun a b h =>
     match a, b, h with
     | inl a, inl b, lex.inl h =>
@@ -539,8 +544,8 @@ instance densely_ordered_of_no_max_order [LT α] [LT β] [DenselyOrdered α] [De
       ⟨toLex (inr c), inr_lt_inr_iff.2 ha, inr_lt_inr_iff.2 hb⟩⟩
 #align sum.lex.densely_ordered_of_no_max_order Sum.Lex.densely_ordered_of_no_max_order
 
-instance densely_ordered_of_no_min_order [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β] [NoMinOrder β] :
-    DenselyOrdered (α ⊕ₗ β) :=
+instance densely_ordered_of_no_min_order [LT α] [LT β] [DenselyOrdered α] [DenselyOrdered β]
+    [NoMinOrder β] : DenselyOrdered (α ⊕ₗ β) :=
   ⟨fun a b h =>
     match a, b, h with
     | inl a, inl b, lex.inl h =>
@@ -574,7 +579,8 @@ def sumComm (α β : Type _) [LE α] [LE β] : Sum α β ≃o Sum β α :=
 #align order_iso.sum_comm OrderIso.sumComm
 
 @[simp]
-theorem sum_comm_symm (α β : Type _) [LE α] [LE β] : (OrderIso.sumComm α β).symm = OrderIso.sumComm β α :=
+theorem sum_comm_symm (α β : Type _) [LE α] [LE β] :
+    (OrderIso.sumComm α β).symm = OrderIso.sumComm β α :=
   rfl
 #align order_iso.sum_comm_symm OrderIso.sum_comm_symm
 
@@ -673,7 +679,8 @@ def sumLexAssoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) ⊕
 #align order_iso.sum_lex_assoc OrderIso.sumLexAssoc
 
 @[simp]
-theorem sum_lex_assoc_apply_inl_inl : sumLexAssoc α β γ (toLex <| inl <| toLex <| inl a) = toLex (inl a) :=
+theorem sum_lex_assoc_apply_inl_inl :
+    sumLexAssoc α β γ (toLex <| inl <| toLex <| inl a) = toLex (inl a) :=
   rfl
 #align order_iso.sum_lex_assoc_apply_inl_inl OrderIso.sum_lex_assoc_apply_inl_inl
 
@@ -684,7 +691,8 @@ theorem sum_lex_assoc_apply_inl_inr :
 #align order_iso.sum_lex_assoc_apply_inl_inr OrderIso.sum_lex_assoc_apply_inl_inr
 
 @[simp]
-theorem sum_lex_assoc_apply_inr : sumLexAssoc α β γ (toLex <| inr c) = toLex (inr <| toLex <| inr c) :=
+theorem sum_lex_assoc_apply_inr :
+    sumLexAssoc α β γ (toLex <| inr c) = toLex (inr <| toLex <| inr c) :=
   rfl
 #align order_iso.sum_lex_assoc_apply_inr OrderIso.sum_lex_assoc_apply_inr
 
@@ -707,37 +715,44 @@ theorem sum_lex_assoc_symm_apply_inr_inr : (sumLexAssoc α β γ).symm (inr (inr
 def sumLexDualAntidistrib (α β : Type _) [LE α] [LE β] : (α ⊕ₗ β)ᵒᵈ ≃o βᵒᵈ ⊕ₗ αᵒᵈ :=
   { Equiv.sumComm α β with
     map_rel_iff' := by
-      rintro (a | a) (b | b)
-      simp
-      · change toLex (inr <| to_dual a) ≤ toLex (inr <| to_dual b) ↔ to_dual (toLex <| inl a) ≤ to_dual (toLex <| inl b)
+      rintro (a | a) (b | b); simp
+      · change
+          toLex (inr <| to_dual a) ≤ toLex (inr <| to_dual b) ↔
+            to_dual (toLex <| inl a) ≤ to_dual (toLex <| inl b)
         simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
         
       · exact iff_of_false lex.not_inr_le_inl lex.not_inr_le_inl
         
       · exact iff_of_true (lex.inl_le_inr _ _) (lex.inl_le_inr _ _)
         
-      · change toLex (inl <| to_dual a) ≤ toLex (inl <| to_dual b) ↔ to_dual (toLex <| inr a) ≤ to_dual (toLex <| inr b)
+      · change
+          toLex (inl <| to_dual a) ≤ toLex (inl <| to_dual b) ↔
+            to_dual (toLex <| inr a) ≤ to_dual (toLex <| inr b)
         simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
          }
 #align order_iso.sum_lex_dual_antidistrib OrderIso.sumLexDualAntidistrib
 
 @[simp]
-theorem sum_lex_dual_antidistrib_inl : sumLexDualAntidistrib α β (toDual (inl a)) = inr (toDual a) :=
+theorem sum_lex_dual_antidistrib_inl :
+    sumLexDualAntidistrib α β (toDual (inl a)) = inr (toDual a) :=
   rfl
 #align order_iso.sum_lex_dual_antidistrib_inl OrderIso.sum_lex_dual_antidistrib_inl
 
 @[simp]
-theorem sum_lex_dual_antidistrib_inr : sumLexDualAntidistrib α β (toDual (inr b)) = inl (toDual b) :=
+theorem sum_lex_dual_antidistrib_inr :
+    sumLexDualAntidistrib α β (toDual (inr b)) = inl (toDual b) :=
   rfl
 #align order_iso.sum_lex_dual_antidistrib_inr OrderIso.sum_lex_dual_antidistrib_inr
 
 @[simp]
-theorem sum_lex_dual_antidistrib_symm_inl : (sumLexDualAntidistrib α β).symm (inl (toDual b)) = toDual (inr b) :=
+theorem sum_lex_dual_antidistrib_symm_inl :
+    (sumLexDualAntidistrib α β).symm (inl (toDual b)) = toDual (inr b) :=
   rfl
 #align order_iso.sum_lex_dual_antidistrib_symm_inl OrderIso.sum_lex_dual_antidistrib_symm_inl
 
 @[simp]
-theorem sum_lex_dual_antidistrib_symm_inr : (sumLexDualAntidistrib α β).symm (inr (toDual a)) = toDual (inl a) :=
+theorem sum_lex_dual_antidistrib_symm_inr :
+    (sumLexDualAntidistrib α β).symm (inr (toDual a)) = toDual (inl a) :=
   rfl
 #align order_iso.sum_lex_dual_antidistrib_symm_inr OrderIso.sum_lex_dual_antidistrib_symm_inr
 
@@ -750,7 +765,7 @@ namespace WithBot
 /-- `with_bot α` is order-isomorphic to `punit ⊕ₗ α`, by sending `⊥` to `punit.star` and `↑a` to
 `a`. -/
 def orderIsoPunitSumLex : WithBot α ≃o PUnit ⊕ₗ α :=
-  ⟨(Equiv.optionEquivSumPunit α).trans <| (Equiv.sumComm _ _).trans toLex, by
+  ⟨(Equiv.optionEquivSumPUnit α).trans <| (Equiv.sumComm _ _).trans toLex, by
     rintro (a | _) (b | _) <;> simp <;> exact not_coe_le_bot _⟩
 #align with_bot.order_iso_punit_sum_lex WithBot.orderIsoPunitSumLex
 
@@ -765,7 +780,8 @@ theorem order_iso_punit_sum_lex_coe (a : α) : orderIsoPunitSumLex ↑a = toLex 
 #align with_bot.order_iso_punit_sum_lex_coe WithBot.order_iso_punit_sum_lex_coe
 
 @[simp]
-theorem order_iso_punit_sum_lex_symm_inl (x : PUnit) : (@orderIsoPunitSumLex α _).symm (toLex <| inl x) = ⊥ :=
+theorem order_iso_punit_sum_lex_symm_inl (x : PUnit) :
+    (@orderIsoPunitSumLex α _).symm (toLex <| inl x) = ⊥ :=
   rfl
 #align with_bot.order_iso_punit_sum_lex_symm_inl WithBot.order_iso_punit_sum_lex_symm_inl
 
@@ -781,7 +797,8 @@ namespace WithTop
 /-- `with_top α` is order-isomorphic to `α ⊕ₗ punit`, by sending `⊤` to `punit.star` and `↑a` to
 `a`. -/
 def orderIsoSumLexPunit : WithTop α ≃o α ⊕ₗ PUnit :=
-  ⟨(Equiv.optionEquivSumPunit α).trans toLex, by rintro (a | _) (b | _) <;> simp <;> exact not_top_le_coe _⟩
+  ⟨(Equiv.optionEquivSumPUnit α).trans toLex, by
+    rintro (a | _) (b | _) <;> simp <;> exact not_top_le_coe _⟩
 #align with_top.order_iso_sum_lex_punit WithTop.orderIsoSumLexPunit
 
 @[simp]
@@ -795,7 +812,8 @@ theorem order_iso_sum_lex_punit_coe (a : α) : orderIsoSumLexPunit ↑a = toLex 
 #align with_top.order_iso_sum_lex_punit_coe WithTop.order_iso_sum_lex_punit_coe
 
 @[simp]
-theorem order_iso_sum_lex_punit_symm_inr (x : PUnit) : (@orderIsoSumLexPunit α _).symm (toLex <| inr x) = ⊤ :=
+theorem order_iso_sum_lex_punit_symm_inr (x : PUnit) :
+    (@orderIsoSumLexPunit α _).symm (toLex <| inr x) = ⊤ :=
   rfl
 #align with_top.order_iso_sum_lex_punit_symm_inr WithTop.order_iso_sum_lex_punit_symm_inr
 

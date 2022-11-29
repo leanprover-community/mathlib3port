@@ -58,20 +58,23 @@ theorem nat_abs_le_iff_sq_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a ^ 2 ≤ b
   exact nat_abs_le_iff_mul_self_le
 #align int.nat_abs_le_iff_sq_le Int.nat_abs_le_iff_sq_le
 
-theorem nat_abs_inj_of_nonneg_of_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) : natAbs a = natAbs b ↔ a = b := by
-  rw [← sq_eq_sq ha hb, ← nat_abs_eq_iff_sq_eq]
+theorem nat_abs_inj_of_nonneg_of_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
+    natAbs a = natAbs b ↔ a = b := by rw [← sq_eq_sq ha hb, ← nat_abs_eq_iff_sq_eq]
 #align int.nat_abs_inj_of_nonneg_of_nonneg Int.nat_abs_inj_of_nonneg_of_nonneg
 
-theorem nat_abs_inj_of_nonpos_of_nonpos {a b : ℤ} (ha : a ≤ 0) (hb : b ≤ 0) : natAbs a = natAbs b ↔ a = b := by
+theorem nat_abs_inj_of_nonpos_of_nonpos {a b : ℤ} (ha : a ≤ 0) (hb : b ≤ 0) :
+    natAbs a = natAbs b ↔ a = b := by
   simpa only [Int.natAbs_neg, neg_inj] using
     nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) (neg_nonneg_of_nonpos hb)
 #align int.nat_abs_inj_of_nonpos_of_nonpos Int.nat_abs_inj_of_nonpos_of_nonpos
 
-theorem nat_abs_inj_of_nonneg_of_nonpos {a b : ℤ} (ha : 0 ≤ a) (hb : b ≤ 0) : natAbs a = natAbs b ↔ a = -b := by
+theorem nat_abs_inj_of_nonneg_of_nonpos {a b : ℤ} (ha : 0 ≤ a) (hb : b ≤ 0) :
+    natAbs a = natAbs b ↔ a = -b := by
   simpa only [Int.natAbs_neg] using nat_abs_inj_of_nonneg_of_nonneg ha (neg_nonneg_of_nonpos hb)
 #align int.nat_abs_inj_of_nonneg_of_nonpos Int.nat_abs_inj_of_nonneg_of_nonpos
 
-theorem nat_abs_inj_of_nonpos_of_nonneg {a b : ℤ} (ha : a ≤ 0) (hb : 0 ≤ b) : natAbs a = natAbs b ↔ -a = b := by
+theorem nat_abs_inj_of_nonpos_of_nonneg {a b : ℤ} (ha : a ≤ 0) (hb : 0 ≤ b) :
+    natAbs a = natAbs b ↔ -a = b := by
   simpa only [Int.natAbs_neg] using nat_abs_inj_of_nonneg_of_nonneg (neg_nonneg_of_nonpos ha) hb
 #align int.nat_abs_inj_of_nonpos_of_nonneg Int.nat_abs_inj_of_nonpos_of_nonneg
 
@@ -84,7 +87,8 @@ theorem strict_mono_on_nat_abs : StrictMonoOn natAbs (ici 0) := fun a ha b hb ha
 #align int.strict_mono_on_nat_abs Int.strict_mono_on_nat_abs
 
 theorem strict_anti_on_nat_abs : StrictAntiOn natAbs (iic 0) := fun a ha b hb hab => by
-  simpa [Int.natAbs_neg] using nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
+  simpa [Int.natAbs_neg] using
+    nat_abs_lt_nat_abs_of_nonneg_of_lt (right.nonneg_neg_iff.mpr hb) (neg_lt_neg_iff.mpr hab)
 #align int.strict_anti_on_nat_abs Int.strict_anti_on_nat_abs
 
 theorem inj_on_nat_abs_Ici : InjOn natAbs (ici 0) :=

@@ -69,7 +69,8 @@ inductive LintVerbosity
 If `use_only` is true, it only uses the linters in `extra`.
 Otherwise, it uses all linters in the environment tagged with `@[linter]`.
 If `slow` is false, it only uses the fast default tests. -/
-unsafe def get_checks (slow : Bool) (extra : List Name) (use_only : Bool) : tactic (List (Name × linter)) := do
+unsafe def get_checks (slow : Bool) (extra : List Name) (use_only : Bool) :
+    tactic (List (Name × linter)) := do
   let default ← if use_only then return [] else attribute.get_instances `linter >>= get_linters
   let default := if slow then default else default.filter fun l => l.2.is_fast
   List.append default <$> get_linters extra
@@ -93,7 +94,8 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
           Prod.mk decl <|
             match linter decl s with
             | result.success w _ => w
-            | result.exception msg _ _ => some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => toString <| msg ()
+            | result.exception msg _ _ =>
+              some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => toString <| msg ()
       let results :=
         results
           (fun (results : rb_map Name String) warning =>
@@ -136,8 +138,8 @@ This enables CI to tag the parts of the file where linting failed with annotatio
 easier for mathlib contributors to see what needs fixing.
 See https://docs.github.com/en/actions/learn-github-actions/workflow-commands-for-github-actions#setting-an-error-message
 -/
-unsafe def print_workflow_command (env : environment) (linter_name decl_name : Name) (warning : String) :
-    Option String := do
+unsafe def print_workflow_command (env : environment) (linter_name decl_name : Name)
+    (warning : String) : Option String := do
   let po ← env.decl_pos decl_name
   let ol ← env.decl_olean decl_name
   return <|
@@ -153,7 +155,8 @@ unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (l
   format.intercalate format.line <|
     (sort_results env results).map fun ⟨decl_name, warning⟩ =>
       let form := print_warning decl_name warning
-      if emit_workflow_commands then form ++ (print_workflow_command env linter_name decl_name warning).getOrElse ""
+      if emit_workflow_commands then
+        form ++ (print_workflow_command env linter_name decl_name warning).getOrElse ""
       else form
 #align print_warnings print_warnings
 
@@ -174,9 +177,10 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) 
 
 /-- Formats the linter results as Lean code with comments and `#check` commands.
 -/
-unsafe def format_linter_results (env : environment) (results : List (Name × linter × rb_map Name String))
-    (decls non_auto_decls : List declaration) (group_by_filename : Option ℕ) (where_desc : String) (slow : Bool)
-    (verbose : LintVerbosity) (num_linters : ℕ)
+unsafe def format_linter_results (env : environment)
+    (results : List (Name × linter × rb_map Name String)) (decls non_auto_decls : List declaration)
+    (group_by_filename : Option ℕ) (where_desc : String) (slow : Bool) (verbose : LintVerbosity)
+    (num_linters : ℕ)
     -- whether to include codes understood by github to create file annotations
     (emit_workflow_commands : Bool := false) :
     format := do
@@ -188,9 +192,12 @@ unsafe def format_linter_results (env : environment) (results : List (Name × li
           match group_by_filename with
           | none => print_warnings env emit_workflow_commands linter_name results
           | some dropped =>
-            grouped_by_filename env results dropped (print_warnings env emit_workflow_commands linter_name)
+            grouped_by_filename env results dropped
+              (print_warnings env emit_workflow_commands linter_name)
         report_str ++ "/- " ++ linter.errors_found ++ " -/\n" ++ warnings ++ "\n"
-      else if verbose = LintVerbosity.high then "/- OK: " ++ linter.no_errors_found ++ " -/" else format.nil
+      else
+        if verbose = LintVerbosity.high then "/- OK: " ++ linter.no_errors_found ++ " -/"
+        else format.nil
   let s := format.intercalate "\n" (formatted_results.filter fun f => ¬f.is_nil)
   let s :=
     if verbose = LintVerbosity.low then s
@@ -213,12 +220,15 @@ By setting `checks` you can customize which checks are performed.
 
 Returns a `name_set` containing the names of all declarations that fail any check in `check`,
 and a `format` object describing the failures. -/
-unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) (where_desc : String) (slow : Bool)
-    (verbose : LintVerbosity) (checks : List (Name × linter)) : tactic (name_set × format) := do
+unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) (where_desc : String)
+    (slow : Bool) (verbose : LintVerbosity) (checks : List (Name × linter)) :
+    tactic (name_set × format) := do
   let e ← get_env
   let non_auto_decls := decls.filter fun d => ¬d.is_auto_or_internal e
   let results ← lint_core decls non_auto_decls checks
-  let s := format_linter_results e results decls non_auto_decls group_by_filename where_desc slow verbose checks.length
+  let s :=
+    format_linter_results e results decls non_auto_decls group_by_filename where_desc slow verbose
+      checks.length
   let ns :=
     name_set.of_list do
       let (_, _, rs) ← results
@@ -227,8 +237,8 @@ unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) 
 #align lint_aux lint_aux
 
 /-- Return the message printed by `#lint` and a `name_set` containing all declarations that fail. -/
-unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.medium) (extra : List Name := [])
-    (use_only : Bool := false) : tactic (name_set × format) := do
+unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.medium)
+    (extra : List Name := []) (use_only : Bool := false) : tactic (name_set × format) := do
   let checks ← get_checks slow extra use_only
   let e ← get_env
   let l := e.filter fun d => e.in_current_file d.to_name
@@ -256,8 +266,8 @@ the number of characters in the filename of `n` *after* the `src/` directory
 Warning: the linter will not work in the file where `n` is declared.
 -/
 unsafe def lint_project (proj_folder proj_name : String) (slow : Bool := true)
-    (verbose : LintVerbosity := LintVerbosity.medium) (extra : List Name := []) (use_only : Bool := false) :
-    tactic (name_set × format) := do
+    (verbose : LintVerbosity := LintVerbosity.medium) (extra : List Name := [])
+    (use_only : Bool := false) : tactic (name_set × format) := do
   let checks ← get_checks slow extra use_only
   let decls ← lint_project_decls proj_folder
   lint_aux decls proj_folder ("in " ++ proj_name ++ " (only in imported files)") slow verbose checks
@@ -265,8 +275,8 @@ unsafe def lint_project (proj_folder proj_name : String) (slow : Bool := true)
 
 /-- Return the message printed by `#lint_all` and a `name_set` containing all declarations
 that fail. -/
-unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.medium) (extra : List Name := [])
-    (use_only : Bool := false) : tactic (name_set × format) := do
+unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.medium)
+    (extra : List Name := []) (use_only : Bool := false) : tactic (name_set × format) := do
   let checks ← get_checks slow extra use_only
   let e ← get_env
   let l := e.get_decls
@@ -288,7 +298,8 @@ unsafe def parse_verbosity : parser (Option LintVerbosity) :=
 #align parse_verbosity parse_verbosity
 
 /-- The common denominator of `lint_cmd`, `lint_mathlib_cmd`, `lint_all_cmd` -/
-unsafe def lint_cmd_aux (scope : Bool → LintVerbosity → List Name → Bool → tactic (name_set × format)) : parser Unit :=
+unsafe def lint_cmd_aux
+    (scope : Bool → LintVerbosity → List Name → Bool → tactic (name_set × format)) : parser Unit :=
   do
   let verbosity ← parse_verbosity
   let fast_only ← optional (tk "*")
@@ -364,5 +375,7 @@ unsafe def lint_hole_cmd : hole_command where
     return [(s, "")]
 #align lint_hole_cmd lint_hole_cmd
 
-add_tactic_doc { Name := "Lint", category := DocCategory.hole_cmd, declNames := [`lint_hole_cmd], tags := ["linting"] }
+add_tactic_doc
+  { Name := "Lint", category := DocCategory.hole_cmd, declNames := [`lint_hole_cmd],
+    tags := ["linting"] }
 

@@ -291,7 +291,8 @@ def andCounterExample {p q : Prop} : TestResult p → TestResult q → TestResul
 
 /-- Combine the test result for properties `p` and `q` to create a test for their disjunction -/
 def orCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult (p ∨ q)
-  | failure Hce xs n, failure Hce' ys n' => failure (fun h => or_iff_not_and_not.1 h ⟨Hce, Hce'⟩) (xs ++ ys) (n + n')
+  | failure Hce xs n, failure Hce' ys n' =>
+    failure (fun h => or_iff_not_and_not.1 h ⟨Hce, Hce'⟩) (xs ++ ys) (n + n')
   | success xs, _ => success <| combine (PSum.inr Or.inl) xs
   | _, success ys => success <| combine (PSum.inr Or.inr) ys
   | gave_up n, gave_up m => gave_up <| n + m
@@ -382,14 +383,17 @@ instance iffTestable (p q : Prop) [Testable (p ∧ q ∨ ¬p ∧ ¬q)] : Testabl
 
 open PrintableProp
 
-instance (priority := 1000) decGuardTestable (p : Prop) [PrintableProp p] [Decidable p] (β : p → Prop)
-    [∀ h, Testable (β h)] : Testable (NamedBinder var <| ∀ h, β h) :=
+instance (priority := 1000) decGuardTestable (p : Prop) [PrintableProp p] [Decidable p]
+    (β : p → Prop) [∀ h, Testable (β h)] : Testable (NamedBinder var <| ∀ h, β h) :=
   ⟨fun cfg min => do
     if h : p then
         match print_prop p with
-        | none => (fun r => convert_counter_example (· <| h) r (PSum.inr fun q _ => q)) <$> testable.run (β h) cfg min
+        | none =>
+          (fun r => convert_counter_example (· <| h) r (PSum.inr fun q _ => q)) <$>
+            testable.run (β h) cfg min
         | some str =>
-          (fun r => add_to_counter_example (s! "guard: {str}") (· <| h) r (PSum.inr fun q _ => q)) <$>
+          (fun r =>
+              add_to_counter_example (s! "guard: {str}") (· <| h) r (PSum.inr fun q _ => q)) <$>
             testable.run (β h) cfg min
       else
         if cfg ∨ cfg then
@@ -416,7 +420,8 @@ def UseHasToString.mk {α} (x : α) : UseHasToString α :=
 instance [ToString α] : Repr (UseHasToString α) :=
   ⟨@toString α _⟩
 
-instance (priority := 2000) allTypesTestable [Testable (f ℤ)] : Testable (NamedBinder var <| ∀ x, f x) :=
+instance (priority := 2000) allTypesTestable [Testable (f ℤ)] :
+    Testable (NamedBinder var <| ∀ x, f x) :=
   ⟨fun cfg min => do
     let r ← Testable.run (f ℤ) cfg min
     return <| add_var_to_counter_example var (use_has_to_string.mk "ℤ") (· <| ℤ) r⟩
@@ -429,7 +434,8 @@ but is expected to have type
   forall {p : Prop} {α : Type.{_aux_param_1}} {β : Type.{_aux_param_0}} [_inst_1 : Repr.{_aux_param_1} α], Bool -> String -> α -> (SlimCheck.TestResult p) -> (Thunkₓ.{_aux_param_0} β) -> β
 Case conversion may be inaccurate. Consider using '#align slim_check.trace_if_giveup SlimCheck.traceIfGiveupₓ'. -/
 /-- Trace the value of sampled variables if the sample is discarded. -/
-def traceIfGiveup {p α β} [Repr α] (tracing_enabled : Bool) (var : String) (val : α) : TestResult p → Thunk β → β
+def traceIfGiveup {p α β} [Repr α] (tracing_enabled : Bool) (var : String) (val : α) :
+    TestResult p → Thunk β → β
   | test_result.gave_up _ => if tracing_enabled then trace s! " {var } := {repr val}" else (· <| ())
   | _ => (· <| ())
 #align slim_check.trace_if_giveup SlimCheck.traceIfGiveup
@@ -553,24 +559,32 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
       (SampleableExt.shrink x).mfirst fun ⟨a, h⟩ => do
           let ⟨r⟩ ←
             monadLift
-                (Uliftable.up <| Testable.run (β (interp α a)) cfg true : Gen (ULift <| test_result <| β <| interp α a))
-          if is_failure r then pure (⟨a, r, ⟨h⟩⟩ : Σa, test_result (β (interp α a)) × PLift (sizeof_lt a x))
+                (Uliftable.up <| Testable.run (β (interp α a)) cfg true :
+                  Gen (ULift <| test_result <| β <| interp α a))
+          if is_failure r then
+              pure (⟨a, r, ⟨h⟩⟩ : Σa, test_result (β (interp α a)) × PLift (sizeof_lt a x))
             else failure
-    if cfg then return <| trace ((s! "{var } := {repr y}") ++ format_failure' "Shrink counter-example:" r) ()
+    if cfg then
+        return <|
+          trace ((s! "{var } := {repr y}") ++ format_failure' "Shrink counter-example:" r) ()
       else pure ()
     f_rec y h₁ (n + 1) <|> pure ⟨y, add_shrinks (n + 1) r⟩
 #align slim_check.minimize_aux SlimCheck.minimizeAux
 
 /-- Once a property fails to hold on an example, look for smaller counter-examples
 to show the user. -/
-def minimize [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg) (var : String) (x : ProxyRepr α)
-    (r : TestResult (β (interp α x))) : Gen (Σx, TestResult (β (interp α x))) := do
-  if cfg then return <| trace ((s! "{var } := {repr x}") ++ format_failure' "Shrink counter-example:" r) () else pure ()
+def minimize [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg) (var : String)
+    (x : ProxyRepr α) (r : TestResult (β (interp α x))) : Gen (Σx, TestResult (β (interp α x))) :=
+  do
+  if cfg then
+      return <| trace ((s! "{var } := {repr x}") ++ format_failure' "Shrink counter-example:" r) ()
+    else pure ()
   let x' ← OptionT.run <| minimizeAux α _ cfg var x 0
   pure <| x' ⟨x, r⟩
 #align slim_check.minimize SlimCheck.minimize
 
-instance (priority := 2000) existsTestable (p : Prop) [Testable (NamedBinder var (∀ x, NamedBinder var' <| β x → p))] :
+instance (priority := 2000) existsTestable (p : Prop)
+    [Testable (NamedBinder var (∀ x, NamedBinder var' <| β x → p))] :
     Testable (NamedBinder var' (NamedBinder var (∃ x, β x) → p)) :=
   ⟨fun cfg min => do
     let x ← Testable.run (NamedBinder var (∀ x, NamedBinder var' <| β x → p)) cfg min
@@ -579,7 +593,8 @@ instance (priority := 2000) existsTestable (p : Prop) [Testable (NamedBinder var
 
 /-- Test a universal property by creating a sample of the right type and instantiating the
 bound variable with it -/
-instance varTestable [SampleableExt α] [∀ x, Testable (β x)] : Testable (NamedBinder var <| ∀ x : α, β x) :=
+instance varTestable [SampleableExt α] [∀ x, Testable (β x)] :
+    Testable (NamedBinder var <| ∀ x : α, β x) :=
   ⟨fun cfg min => do
     (Uliftable.adaptDown (sampleable_ext.sample α)) fun x => do
         let r ← testable.run (β (sampleable_ext.interp α x)) cfg ff
@@ -587,14 +602,17 @@ instance varTestable [SampleableExt α] [∀ x, Testable (β x)] : Testable (Nam
               (if is_failure r ∧ min then minimize _ _ cfg var x r
               else if cfg then (trace s! "  {var } := {repr x}") <| pure ⟨x, r⟩ else pure ⟨x, r⟩))
             fun ⟨x, r⟩ =>
-            return <| trace_if_giveup cfg var x r (add_var_to_counter_example var x (· <| sampleable_ext.interp α x) r)⟩
+            return <|
+              trace_if_giveup cfg var x r
+                (add_var_to_counter_example var x (· <| sampleable_ext.interp α x) r)⟩
 #align slim_check.var_testable SlimCheck.varTestable
 
 /-- Test a universal property about propositions -/
 instance propVarTestable (β : Prop → Prop) [I : ∀ b : Bool, Testable (β b)] :
     Testable (NamedBinder var <| ∀ p : Prop, β p) :=
   ⟨fun cfg min => do
-    (convert_counter_example fun h (b : Bool) => h b) <$> @testable.run (named_binder var <| ∀ b : Bool, β b) _ cfg min⟩
+    (convert_counter_example fun h (b : Bool) => h b) <$>
+        @testable.run (named_binder var <| ∀ b : Bool, β b) _ cfg min⟩
 #align slim_check.prop_var_testable SlimCheck.propVarTestable
 
 instance (priority := 3000) unusedVarTestable (β) [Inhabited α] [Testable β] :
@@ -604,20 +622,25 @@ instance (priority := 3000) unusedVarTestable (β) [Inhabited α] [Testable β] 
     pure <| convert_counter_example (· <| default) r (PSum.inr fun x _ => x)⟩
 #align slim_check.unused_var_testable SlimCheck.unusedVarTestable
 
-instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, PrintableProp (p x)] [∀ x, Testable (β x)]
-    [I : SampleableExt (Subtype p)] : Testable (NamedBinder var <| ∀ x : α, NamedBinder var' <| p x → β x) :=
+instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, PrintableProp (p x)]
+    [∀ x, Testable (β x)] [I : SampleableExt (Subtype p)] :
+    Testable (NamedBinder var <| ∀ x : α, NamedBinder var' <| p x → β x) :=
   ⟨fun cfg min => do
     let test (x : Subtype p) : Testable (β x) :=
       ⟨fun cfg min => do
         let r ← Testable.run (β x.val) cfg min
         match print_prop (p x) with
           | none => pure r
-          | some str => pure <| add_to_counter_example (s! "guard: {str} (by construction)") id r (PSum.inr id)⟩
+          | some str =>
+            pure <| add_to_counter_example (s! "guard: {str} (by construction)") id r (PSum.inr id)⟩
     let r ← @Testable.run (∀ x : Subtype p, β x.val) (@SlimCheck.varTestable var _ _ I test) cfg min
-    pure <| convert_counter_example' ⟨fun (h : ∀ x : Subtype p, β x) x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
+    pure <|
+        convert_counter_example'
+          ⟨fun (h : ∀ x : Subtype p, β x) x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
 #align slim_check.subtype_var_testable SlimCheck.subtypeVarTestable
 
-instance (priority := 100) decidableTestable (p : Prop) [PrintableProp p] [Decidable p] : Testable p :=
+instance (priority := 100) decidableTestable (p : Prop) [PrintableProp p] [Decidable p] :
+    Testable p :=
   ⟨fun cfg min =>
     return <|
       if h : p then success (PSum.inr h)
@@ -652,7 +675,8 @@ instance Perm.printableProp {α} [Repr α] (xs ys : List α) : PrintableProp (xs
 #align slim_check.perm.printable_prop SlimCheck.Perm.printableProp
 
 #print SlimCheck.And.printableProp /-
-instance And.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : PrintableProp (x ∧ y) :=
+instance And.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] :
+    PrintableProp (x ∧ y) :=
   ⟨do
     let x' ← printProp x
     let y' ← printProp y
@@ -661,7 +685,8 @@ instance And.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pr
 -/
 
 #print SlimCheck.Or.printableProp /-
-instance Or.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : PrintableProp (x ∨ y) :=
+instance Or.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] :
+    PrintableProp (x ∨ y) :=
   ⟨do
     let x' ← printProp x
     let y' ← printProp y
@@ -670,7 +695,8 @@ instance Or.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pri
 -/
 
 #print SlimCheck.Iff.printableProp /-
-instance Iff.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : PrintableProp (x ↔ y) :=
+instance Iff.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] :
+    PrintableProp (x ↔ y) :=
   ⟨do
     let x' ← printProp x
     let y' ← printProp y
@@ -679,7 +705,8 @@ instance Iff.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : Pr
 -/
 
 #print SlimCheck.Imp.printableProp /-
-instance Imp.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] : PrintableProp (x → y) :=
+instance Imp.printableProp (x y : Prop) [PrintableProp x] [PrintableProp y] :
+    PrintableProp (x → y) :=
   ⟨do
     let x' ← printProp x
     let y' ← printProp y
@@ -751,7 +778,7 @@ variable [Testable p]
 lean 3 declaration is
   forall (p : Prop) [_inst_1 : SlimCheck.Testable p], SlimCheck.SlimCheckCfg -> (SlimCheck.TestResult p) -> Nat -> (Rand.{0} (SlimCheck.TestResult p))
 but is expected to have type
-  forall (p : Prop) [inst._@.Mathlib.Testing.SlimCheck.Testable._hyg.5507 : SlimCheck.Testable p], SlimCheck.Configuration -> (SlimCheck.TestResult p) -> Nat -> (Rand.{0} (SlimCheck.TestResult p))
+  forall (p : Prop) [inst._@.Mathlib.Testing.SlimCheck.Testable._hyg.5508 : SlimCheck.Testable p], SlimCheck.Configuration -> (SlimCheck.TestResult p) -> Nat -> (Rand.{0} (SlimCheck.TestResult p))
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.run_suite_aux SlimCheck.Testable.runSuiteAuxₓ'. -/
 /-- Try `n` times to find a counter-example for `p`. -/
 def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (TestResult p)
@@ -771,7 +798,7 @@ def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (T
 lean 3 declaration is
   forall (p : Prop) [_inst_1 : SlimCheck.Testable p], (optParam.{1} SlimCheck.SlimCheckCfg (SlimCheck.SlimCheckCfg.mk (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))) (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))) Bool.false Bool.false Bool.false Bool.false (Option.none.{0} Nat) Bool.false)) -> (Rand.{0} (SlimCheck.TestResult p))
 but is expected to have type
-  forall (p : Prop) [inst._@.Mathlib.Testing.SlimCheck.Testable._hyg.5785 : SlimCheck.Testable p], (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (Rand.{0} (SlimCheck.TestResult p))
+  forall (p : Prop) [inst._@.Mathlib.Testing.SlimCheck.Testable._hyg.5786 : SlimCheck.Testable p], (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (Rand.{0} (SlimCheck.TestResult p))
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.run_suite SlimCheck.Testable.runSuiteₓ'. -/
 /-- Try to find a counter-example of `p`. -/
 def Testable.runSuite (cfg : SlimCheckCfg := {  }) : Rand (TestResult p) :=
@@ -821,7 +848,9 @@ unsafe def add_decorations : expr → expr
       match e with
       | pi n bi d b =>
         let n := toString n
-        some <| const `` named_binder [] (q(n) : expr) (pi n bi (add_existential_decorations d) (add_decorations b))
+        some <|
+          const `` named_binder [] (q(n) : expr)
+            (pi n bi (add_existential_decorations d) (add_decorations b))
       | e => none
 #align slim_check.tactic.add_decorations slim_check.tactic.add_decorations
 
@@ -857,9 +886,9 @@ end Tactic
 lean 3 declaration is
   forall (p : Prop), (optParam.{1} SlimCheck.SlimCheckCfg (SlimCheck.SlimCheckCfg.mk (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))) (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))) Bool.false Bool.false Bool.false Bool.false (Option.none.{0} Nat) Bool.false)) -> (forall (p' : autoParamₓ.{1} (SlimCheck.Tactic.DecorationsOf p) (Name.mk_string (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str String.empty (Char.ofNat (OfNat.ofNat.{0} Nat 109 (OfNat.mk.{0} Nat 109 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 107 (OfNat.mk.{0} Nat 107 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 95 (OfNat.mk.{0} Nat 95 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 100 (OfNat.mk.{0} Nat 100 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 101 (OfNat.mk.{0} Nat 101 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 99 (OfNat.mk.{0} Nat 99 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 111 (OfNat.mk.{0} Nat 111 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 114 (OfNat.mk.{0} Nat 114 (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 97 (OfNat.mk.{0} Nat 97 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 116 (OfNat.mk.{0} Nat 116 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 105 (OfNat.mk.{0} Nat 105 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 111 (OfNat.mk.{0} Nat 111 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 110 (OfNat.mk.{0} Nat 110 (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 115 (OfNat.mk.{0} Nat 115 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Name.mk_string (String.str (String.str (String.str (String.str (String.str (String.str String.empty (Char.ofNat (OfNat.ofNat.{0} Nat 116 (OfNat.mk.{0} Nat 116 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 97 (OfNat.mk.{0} Nat 97 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 99 (OfNat.mk.{0} Nat 99 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 116 (OfNat.mk.{0} Nat 116 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 105 (OfNat.mk.{0} Nat 105 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 99 (OfNat.mk.{0} Nat 99 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Name.mk_string (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str (String.str String.empty (Char.ofNat (OfNat.ofNat.{0} Nat 115 (OfNat.mk.{0} Nat 115 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 108 (OfNat.mk.{0} Nat 108 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 105 (OfNat.mk.{0} Nat 105 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 109 (OfNat.mk.{0} Nat 109 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 95 (OfNat.mk.{0} Nat 95 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 99 (OfNat.mk.{0} Nat 99 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 104 (OfNat.mk.{0} Nat 104 (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 101 (OfNat.mk.{0} Nat 101 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 99 (OfNat.mk.{0} Nat 99 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) (Char.ofNat (OfNat.ofNat.{0} Nat 107 (OfNat.mk.{0} Nat 107 (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (bit0.{0} Nat Nat.hasAdd (bit1.{0} Nat Nat.hasOne Nat.hasAdd (One.one.{0} Nat Nat.hasOne))))))))))) Name.anonymous)))) [_inst_2 : SlimCheck.Testable p'], Io PUnit.{1})
 but is expected to have type
-  forall (p : Prop), (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (forall (p' : autoParam.{1} (SlimCheck.Decorations.DecorationsOf p) _auto._@.Mathlib.Testing.SlimCheck.Testable._hyg.6229) [inst._@.Mathlib.Testing.SlimCheck.Testable._hyg.6262 : SlimCheck.Testable p'], IO PUnit.{1})
+  forall (p : Prop), (optParam.{1} SlimCheck.Configuration (SlimCheck.Configuration.mk ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 100 (instOfNatNat 100)]) ([mdata structInstDefault:1 OfNat.ofNat.{0} Nat 10 (instOfNatNat 10)]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Bool.false]) ([mdata structInstDefault:1 Option.none.{0} Nat]) ([mdata structInstDefault:1 Bool.false]))) -> (forall (p' : autoParam.{1} (SlimCheck.Decorations.DecorationsOf p) _auto._@.Mathlib.Testing.SlimCheck.Testable._hyg.6230) [inst._@.Mathlib.Testing.SlimCheck.Testable._hyg.6263 : SlimCheck.Testable p'], IO PUnit.{1})
 Case conversion may be inaccurate. Consider using '#align slim_check.testable.check SlimCheck.Testable.checkₓ'. -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.mk_decorations -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic tactic.mk_decorations -/
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testable.check (p : Prop) (cfg : SlimCheckCfg := {  })
     (p' : Tactic.DecorationsOf p := by

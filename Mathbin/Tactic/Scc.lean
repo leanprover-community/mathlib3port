@@ -157,7 +157,13 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
           if
             e₂ ≠ e₃
             then
-            do if n₂ < n₃ then do let p ← mk_app ` ` Iff.symm [ p ] cl p e₃ p₃ e₂ p₂ else cl p e₂ p₂ e₃ p₃
+            do
+              if
+                n₂ < n₃
+                then
+                do let p ← mk_app ` ` Iff.symm [ p ] cl p e₃ p₃ e₂ p₂
+                else
+                cl p e₂ p₂ e₃ p₃
             else
             pure ( )
 #align tactic.closure.merge tactic.closure.merge
@@ -261,9 +267,12 @@ unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := d
   let p₂ ← mk_mapp `` id [e]
   let path := (e, p₁) :: path
   let (_, ls) ←
-    path.mmapAccuml (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, p'.1, none, p, p'.2] <*> pure p) p₂
+    path.mmapAccuml
+        (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, p'.1, none, p, p'.2] <*> pure p) p₂
   let (_, rs) ←
-    path.mmapAccumr (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p') p₂
+    path.mmapAccumr
+        (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p')
+        p₂
   let ps ← mzipWith (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.init
   ps cl
 #align tactic.impl_graph.merge_path tactic.impl_graph.merge_path
@@ -349,7 +358,9 @@ unsafe
   def
     interactive.scc
     : tactic Unit
-    := closure.with_new_closure fun cl => do impl_graph.mk_scc cl let q( $ ( p ) ↔ $ ( q ) ) ← target cl p q >>= exact
+    :=
+      closure.with_new_closure
+        fun cl => do impl_graph.mk_scc cl let q( $ ( p ) ↔ $ ( q ) ) ← target cl p q >>= exact
 #align tactic.interactive.scc tactic.interactive.scc
 
 /-- Collect all the available equivalences and implications and
@@ -377,8 +388,8 @@ The variant `scc'` populates the local context with all equivalences that `scc` 
 This is mostly useful for testing purposes.
 -/
 add_tactic_doc
-  { Name := "scc", category := DocCategory.tactic, declNames := [`` interactive.scc, `` interactive.scc'],
-    tags := ["logic"] }
+  { Name := "scc", category := DocCategory.tactic,
+    declNames := [`` interactive.scc, `` interactive.scc'], tags := ["logic"] }
 
 end Tactic
 

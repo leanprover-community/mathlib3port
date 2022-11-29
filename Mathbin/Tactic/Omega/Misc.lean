@@ -12,16 +12,16 @@ variable {α β γ : Type}
 
 namespace Omega
 
-theorem fun_mono_2 {p : α → β → γ} {a1 a2 : α} {b1 b2 : β} : a1 = a2 → b1 = b2 → p a1 b1 = p a2 b2 := fun h1 h2 => by
-  rw [h1, h2]
+theorem fun_mono_2 {p : α → β → γ} {a1 a2 : α} {b1 b2 : β} :
+    a1 = a2 → b1 = b2 → p a1 b1 = p a2 b2 := fun h1 h2 => by rw [h1, h2]
 #align omega.fun_mono_2 Omega.fun_mono_2
 
-theorem pred_mono_2 {p : α → β → Prop} {a1 a2 : α} {b1 b2 : β} : a1 = a2 → b1 = b2 → (p a1 b1 ↔ p a2 b2) := fun h1 h2 =>
-  by rw [h1, h2]
+theorem pred_mono_2 {p : α → β → Prop} {a1 a2 : α} {b1 b2 : β} :
+    a1 = a2 → b1 = b2 → (p a1 b1 ↔ p a2 b2) := fun h1 h2 => by rw [h1, h2]
 #align omega.pred_mono_2 Omega.pred_mono_2
 
-theorem pred_mono_2' {c : Prop → Prop → Prop} {a1 a2 b1 b2 : Prop} : (a1 ↔ a2) → (b1 ↔ b2) → (c a1 b1 ↔ c a2 b2) :=
-  fun h1 h2 => by rw [h1, h2]
+theorem pred_mono_2' {c : Prop → Prop → Prop} {a1 a2 b1 b2 : Prop} :
+    (a1 ↔ a2) → (b1 ↔ b2) → (c a1 b1 ↔ c a2 b2) := fun h1 h2 => by rw [h1, h2]
 #align omega.pred_mono_2' Omega.pred_mono_2'
 
 /-- Update variable assignment for a specific variable
@@ -33,10 +33,12 @@ def update (m : Nat) (a : α) (v : Nat → α) : Nat → α
 -- mathport name: omega.update
 scoped notation v " ⟨" m " ↦ " a "⟩" => Omega.update m a v
 
-theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a := by simp only [update, if_pos rfl]
+theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a := by
+  simp only [update, if_pos rfl]
 #align omega.update_eq Omega.update_eq
 
-theorem update_eq_of_ne {m : Nat} {a : α} {v : Nat → α} (k : Nat) : k ≠ m → update m a v k = v k := by
+theorem update_eq_of_ne {m : Nat} {a : α} {v : Nat → α} (k : Nat) : k ≠ m → update m a v k = v k :=
+  by
   intro h1
   unfold update
   rw [if_neg h1]

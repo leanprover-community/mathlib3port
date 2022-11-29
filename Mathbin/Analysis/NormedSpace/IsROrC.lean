@@ -44,7 +44,8 @@ theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) •
 #align norm_smul_inv_norm norm_smul_inv_norm
 
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
-theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) : ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r := by
+theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) :
+    ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r := by
   have : ‖x‖ ≠ 0 := by simp [hx]
   field_simp [norm_smul, IsROrC.norm_eq_abs, r_nonneg, is_R_or_C_simps]
 #align norm_smul_inv_norm' norm_smul_inv_norm'
@@ -65,8 +66,8 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
     rw [hz₁, LinearMap.map_smul, smul_eq_mul]
     rw [← mul_assoc, ← mul_assoc, div_mul_cancel _ r_ne_zero, mul_inv_cancel, one_mul]
     simp only [z_zero, IsROrC.of_real_eq_zero, norm_eq_zero, Ne.def, not_false_iff]
-  rw [Eq, norm_mul, norm_div, IsROrC.norm_coe_norm, IsROrC.norm_of_nonneg r_pos.le, div_mul_eq_mul_div,
-    div_mul_eq_mul_div, mul_comm]
+  rw [Eq, norm_mul, norm_div, IsROrC.norm_coe_norm, IsROrC.norm_of_nonneg r_pos.le,
+    div_mul_eq_mul_div, div_mul_eq_mul_div, mul_comm]
   apply div_le_div _ _ r_pos rfl.ge
   · exact mul_nonneg ((norm_nonneg _).trans norm_f_z₁) (norm_nonneg z)
     
@@ -80,21 +81,25 @@ theorem LinearMap.bound_of_ball_bound' {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : 
   f.bound_of_sphere_bound r_pos c (fun z hz => h z hz.le) z
 #align linear_map.bound_of_ball_bound' LinearMap.bound_of_ball_bound'
 
-theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →L[𝕜] 𝕜)
-    (h : ∀ z ∈ closedBall (0 : E) r, ‖f z‖ ≤ c) : ‖f‖ ≤ c / r := by
+theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ)
+    (f : E →L[𝕜] 𝕜) (h : ∀ z ∈ closedBall (0 : E) r, ‖f z‖ ≤ c) : ‖f‖ ≤ c / r := by
   apply ContinuousLinearMap.op_norm_le_bound
   · apply div_nonneg _ r_pos.le
-    exact (norm_nonneg _).trans (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
+    exact
+      (norm_nonneg _).trans
+        (h 0 (by simp only [norm_zero, mem_closed_ball, dist_zero_left, r_pos.le]))
     
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
-#align continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.op_norm_bound_of_ball_bound
+#align
+  continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.op_norm_bound_of_ball_bound
 
 variable (𝕜)
 
 include 𝕜
 
-theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (sphere (0 : E) r) :=
+theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) :
+    Nonempty (sphere (0 : E) r) :=
   letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
   (normed_space.sphere_nonempty.mpr hr).coeSort
 #align normed_space.sphere_nonempty_is_R_or_C NormedSpace.sphere_nonempty_is_R_or_C

@@ -27,7 +27,8 @@ open TopologicalSpace
 namespace MulOpposite
 
 /-- Put the same topological space structure on the opposite monoid as on the original space. -/
-@[to_additive "Put the same topological space structure on the opposite monoid as on the original\nspace."]
+@[to_additive
+      "Put the same topological space structure on the opposite monoid as on the original\nspace."]
 instance [TopologicalSpace M] : TopologicalSpace Mᵐᵒᵖ :=
   TopologicalSpace.induced (unop : Mᵐᵒᵖ → M) ‹_›
 
@@ -84,7 +85,8 @@ open MulOpposite
 variable [TopologicalSpace M] [Monoid M] [TopologicalSpace X]
 
 /-- The units of a monoid are equipped with a topology, via the embedding into `M × M`. -/
-@[to_additive "The additive units of a monoid are equipped with a topology, via the embedding into\n`M × M`."]
+@[to_additive
+      "The additive units of a monoid are equipped with a topology, via the embedding into\n`M × M`."]
 instance : TopologicalSpace Mˣ :=
   Prod.topologicalSpace.induced (embedProduct M)
 
@@ -111,8 +113,9 @@ theorem continuous_coe : Continuous (coe : Mˣ → M) :=
 @[to_additive]
 protected theorem continuous_iff {f : X → Mˣ} :
     Continuous f ↔ Continuous (coe ∘ f : X → M) ∧ Continuous (fun x => ↑(f x)⁻¹ : X → M) := by
-  simp only [inducing_embed_product.continuous_iff, embed_product_apply, (· ∘ ·), continuous_prod_mk,
-    op_homeomorph.symm.inducing.continuous_iff, op_homeomorph_symm_apply, unop_op]
+  simp only [inducing_embed_product.continuous_iff, embed_product_apply, (· ∘ ·),
+    continuous_prod_mk, op_homeomorph.symm.inducing.continuous_iff, op_homeomorph_symm_apply,
+    unop_op]
 #align units.continuous_iff Units.continuous_iff
 
 @[to_additive]

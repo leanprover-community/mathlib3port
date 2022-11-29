@@ -39,7 +39,8 @@ variable {X : C}
 
 namespace CategoryTheory.Over
 
-instance has_colimit_of_has_colimit_comp_forget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] : HasColimit F :=
+instance has_colimit_of_has_colimit_comp_forget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] :
+    HasColimit F :=
   @CostructuredArrow.has_colimit _ _ _ _ i _
 #align
   category_theory.over.has_colimit_of_has_colimit_comp_forget CategoryTheory.Over.has_colimit_of_has_colimit_comp_forget
@@ -79,27 +80,28 @@ by pulling back a morphism along `f`. -/
 @[simps]
 def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X where
   obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
-  map g h k := Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition])) (by tidy)
+  map g h k :=
+    Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition]))
+      (by tidy)
 #align category_theory.over.pullback CategoryTheory.Over.pullback
 
 /-- `over.map f` is left adjoint to `over.pullback f`. -/
 def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun g h =>
-        { toFun := fun X => Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _),
+        { toFun := fun X =>
+            Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _),
           invFun := fun Y => by
             refine' over.hom_mk _ _
             refine' Y.left ≫ pullback.fst
             dsimp
-            rw [← over.w Y, category.assoc, pullback.condition, category.assoc]
-            rfl,
+            rw [← over.w Y, category.assoc, pullback.condition, category.assoc]; rfl,
           left_inv := fun X => by
             ext
             dsimp
             simp,
           right_inv := fun Y => by
-            ext
-            dsimp
+            ext; dsimp
             simp only [pullback.lift_fst]
             dsimp
             rw [pullback.lift_snd, ← over.w Y]
@@ -127,9 +129,11 @@ end CategoryTheory.Over
 
 namespace CategoryTheory.Under
 
-instance has_limit_of_has_limit_comp_forget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] : HasLimit F :=
+instance has_limit_of_has_limit_comp_forget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] :
+    HasLimit F :=
   @StructuredArrow.has_limit _ _ _ _ i _
-#align category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.has_limit_of_has_limit_comp_forget
+#align
+  category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.has_limit_of_has_limit_comp_forget
 
 instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) where
 
@@ -164,7 +168,9 @@ by pushing a morphism forward along `f`. -/
 @[simps]
 def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y where
   obj g := Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
-  map g h k := Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition])) (by tidy)
+  map g h k :=
+    Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition]))
+      (by tidy)
 #align category_theory.under.pushout CategoryTheory.Under.pushout
 
 end

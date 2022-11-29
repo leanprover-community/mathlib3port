@@ -42,6 +42,7 @@ lemmas in this section formalize this fact for different inequalities made stric
 -/
 
 
+#print Monotone.seq_le_seq /-
 theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k < n, x (k + 1) ≤ f (x k))
     (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n ≤ y n := by
   induction' n with n ihn
@@ -52,35 +53,45 @@ theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k 
     exact fun k hk => hy _ (hk.trans n.lt_succ_self)
     
 #align monotone.seq_le_seq Monotone.seq_le_seq
+-/
 
+#print Monotone.seq_pos_lt_seq_of_lt_of_le /-
 theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
     (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
-  induction' n with n ihn
+  induction' n with n ihn;
   · exact hn.false.elim
     
   suffices : x n ≤ y n
   exact (hx n n.lt_succ_self).trans_le ((hf this).trans <| hy n n.lt_succ_self)
-  cases n
+  cases n;
   · exact h₀
     
-  refine' (ihn n.zero_lt_succ (fun k hk => hx _ _) fun k hk => hy _ _).le <;> exact hk.trans n.succ.lt_succ_self
+  refine' (ihn n.zero_lt_succ (fun k hk => hx _ _) fun k hk => hy _ _).le <;>
+    exact hk.trans n.succ.lt_succ_self
 #align monotone.seq_pos_lt_seq_of_lt_of_le Monotone.seq_pos_lt_seq_of_lt_of_le
+-/
 
+#print Monotone.seq_pos_lt_seq_of_le_of_lt /-
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
     (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
   hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
 #align monotone.seq_pos_lt_seq_of_le_of_lt Monotone.seq_pos_lt_seq_of_le_of_lt
+-/
 
-theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k < n, x (k + 1) < f (x k))
-    (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
+#print Monotone.seq_lt_seq_of_lt_of_le /-
+theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
+    (hx : ∀ k < n, x (k + 1) < f (x k)) (hy : ∀ k < n, f (y k) ≤ y (k + 1)) : x n < y n := by
   cases n
   exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 #align monotone.seq_lt_seq_of_lt_of_le Monotone.seq_lt_seq_of_lt_of_le
+-/
 
-theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k < n, x (k + 1) ≤ f (x k))
-    (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
+#print Monotone.seq_lt_seq_of_le_of_lt /-
+theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0)
+    (hx : ∀ k < n, x (k + 1) ≤ f (x k)) (hy : ∀ k < n, f (y k) < y (k + 1)) : x n < y n :=
   hf.dual.seq_lt_seq_of_lt_of_le n h₀ hy hx
 #align monotone.seq_lt_seq_of_le_of_lt Monotone.seq_lt_seq_of_le_of_lt
+-/
 
 /-!
 ### Iterates of two functions
@@ -97,23 +108,41 @@ variable {g : β → β} {h : β → α}
 
 open Function
 
-theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : ℕ) : h ∘ g^[n] ≤ f^[n] ∘ h := fun x => by
+/- warning: monotone.le_iterate_comp_of_le -> Monotone.le_iterate_comp_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Preorder.{u_1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u_1, u_1} α α _inst_1 _inst_1 f) -> (LE.le.{max u_2 u_1} (β -> α) (Pi.hasLe.{u_2, u_1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α _inst_1)) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h g) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α f h)) -> (forall (n : Nat), LE.le.{max u_2 u_1} (β -> α) (Pi.hasLe.{u_2, u_1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α _inst_1)) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h (Nat.iterate.{succ u_2} β g n)) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α (Nat.iterate.{succ u_1} α f n) h))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Iterate._hyg.803 : Preorder.{u_1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u_1, u_1} α α inst._@.Mathlib.Order.Iterate._hyg.803 inst._@.Mathlib.Order.Iterate._hyg.803 f) -> (LE.le.{max u_1 u_2} (β -> α) (instLEForAll.{u_2, u_1} β (fun (a._@.Init.Prelude._hyg.25 : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.803)) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h g) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α f h)) -> (forall (n : Nat), LE.le.{max u_1 u_2} (β -> α) (instLEForAll.{u_2, u_1} β (fun (a._@.Init.Prelude._hyg.25 : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.803)) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h (Nat.iterate.{succ u_2} β g n)) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α (Nat.iterate.{succ u_1} α f n) h))
+Case conversion may be inaccurate. Consider using '#align monotone.le_iterate_comp_of_le Monotone.le_iterate_comp_of_leₓ'. -/
+theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : ℕ) :
+    h ∘ g^[n] ≤ f^[n] ∘ h := fun x => by
   refine' hf.seq_le_seq n _ (fun k hk => _) fun k hk => _ <;> simp [iterate_succ', H _]
 #align monotone.le_iterate_comp_of_le Monotone.le_iterate_comp_of_le
 
-theorem iterate_comp_le_of_le (hf : Monotone f) (H : f ∘ h ≤ h ∘ g) (n : ℕ) : f^[n] ∘ h ≤ h ∘ g^[n] :=
+/- warning: monotone.iterate_comp_le_of_le -> Monotone.iterate_comp_le_of_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Preorder.{u_1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u_1, u_1} α α _inst_1 _inst_1 f) -> (LE.le.{max u_2 u_1} (β -> α) (Pi.hasLe.{u_2, u_1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α _inst_1)) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α f h) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h g)) -> (forall (n : Nat), LE.le.{max u_2 u_1} (β -> α) (Pi.hasLe.{u_2, u_1} β (fun (ᾰ : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α _inst_1)) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α (Nat.iterate.{succ u_1} α f n) h) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h (Nat.iterate.{succ u_2} β g n)))
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Order.Iterate._hyg.942 : Preorder.{u_1} α] {f : α -> α} {g : β -> β} {h : β -> α}, (Monotone.{u_1, u_1} α α inst._@.Mathlib.Order.Iterate._hyg.942 inst._@.Mathlib.Order.Iterate._hyg.942 f) -> (LE.le.{max u_1 u_2} (β -> α) (instLEForAll.{u_2, u_1} β (fun (a._@.Init.Prelude._hyg.25 : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.942)) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α f h) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h g)) -> (forall (n : Nat), LE.le.{max u_1 u_2} (β -> α) (instLEForAll.{u_2, u_1} β (fun (a._@.Init.Prelude._hyg.25 : β) => α) (fun (i : β) => Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.942)) (Function.comp.{succ u_2, succ u_1, succ u_1} β α α (Nat.iterate.{succ u_1} α f n) h) (Function.comp.{succ u_2, succ u_2, succ u_1} β β α h (Nat.iterate.{succ u_2} β g n)))
+Case conversion may be inaccurate. Consider using '#align monotone.iterate_comp_le_of_le Monotone.iterate_comp_le_of_leₓ'. -/
+theorem iterate_comp_le_of_le (hf : Monotone f) (H : f ∘ h ≤ h ∘ g) (n : ℕ) :
+    f^[n] ∘ h ≤ h ∘ g^[n] :=
   hf.dual.le_iterate_comp_of_le H n
 #align monotone.iterate_comp_le_of_le Monotone.iterate_comp_le_of_le
 
+#print Monotone.iterate_le_of_le /-
 /-- If `f ≤ g` and `f` is monotone, then `f^[n] ≤ g^[n]`. -/
 theorem iterate_le_of_le {g : α → α} (hf : Monotone f) (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   hf.iterate_comp_le_of_le h n
 #align monotone.iterate_le_of_le Monotone.iterate_le_of_le
+-/
 
+#print Monotone.le_iterate_of_le /-
 /-- If `f ≤ g` and `g` is monotone, then `f^[n] ≤ g^[n]`. -/
 theorem le_iterate_of_le {g : α → α} (hg : Monotone g) (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   hg.dual.iterate_le_of_le h n
 #align monotone.le_iterate_of_le Monotone.le_iterate_of_le
+-/
 
 end Monotone
 
@@ -131,22 +160,38 @@ section Preorder
 
 variable [Preorder α] {f : α → α}
 
+#print Function.id_le_iterate_of_id_le /-
 /-- If $x ≤ f x$ for all $x$ (we write this as `id ≤ f`), then the same is true for any iterate
 `f^[n]` of `f`. -/
 theorem id_le_iterate_of_id_le (h : id ≤ f) (n : ℕ) : id ≤ f^[n] := by
   simpa only [iterate_id] using monotone_id.iterate_le_of_le h n
 #align function.id_le_iterate_of_id_le Function.id_le_iterate_of_id_le
+-/
 
+#print Function.iterate_le_id_of_le_id /-
 theorem iterate_le_id_of_le_id (h : f ≤ id) (n : ℕ) : f^[n] ≤ id :=
   @id_le_iterate_of_id_le αᵒᵈ _ f h n
 #align function.iterate_le_id_of_le_id Function.iterate_le_id_of_le_id
+-/
 
+/- warning: function.monotone_iterate_of_id_le -> Function.monotone_iterate_of_id_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Preorder.{u_1} α] {f : α -> α}, (LE.le.{u_1} (α -> α) (Pi.hasLe.{u_1, u_1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u_1} α _inst_1)) (id.{succ u_1} α) f) -> (Monotone.{0, u_1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u_1, u_1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u_1} α f m))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Iterate._hyg.1281 : Preorder.{u_1} α] {f : α -> α}, (LE.le.{u_1} (α -> α) (instLEForAll.{u_1, u_1} α (fun (a : α) => α) (fun (i : α) => Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.1281)) (id.{succ u_1} α) f) -> (Monotone.{0, u_1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (instPreorderForAll.{u_1, u_1} α (fun (a._@.Mathlib.Init.Data.Nat.Lemmas._hyg.278 : α) => α) (fun (i : α) => inst._@.Mathlib.Order.Iterate._hyg.1281)) (fun (m : Nat) => Nat.iterate.{succ u_1} α f m))
+Case conversion may be inaccurate. Consider using '#align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_leₓ'. -/
 theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
   monotone_nat_of_le_succ fun n x => by
     rw [iterate_succ_apply']
     exact h _
 #align function.monotone_iterate_of_id_le Function.monotone_iterate_of_id_le
 
+/- warning: function.antitone_iterate_of_le_id -> Function.antitone_iterate_of_le_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Preorder.{u_1} α] {f : α -> α}, (LE.le.{u_1} (α -> α) (Pi.hasLe.{u_1, u_1} α (fun (ᾰ : α) => α) (fun (i : α) => Preorder.toLE.{u_1} α _inst_1)) f (id.{succ u_1} α)) -> (Antitone.{0, u_1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (Pi.preorder.{u_1, u_1} α (fun (ᾰ : α) => α) (fun (i : α) => _inst_1)) (fun (m : Nat) => Nat.iterate.{succ u_1} α f m))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Iterate._hyg.1348 : Preorder.{u_1} α] {f : α -> α}, (LE.le.{u_1} (α -> α) (instLEForAll.{u_1, u_1} α (fun (a._@.Mathlib.Order.Iterate._hyg.1351 : α) => α) (fun (i : α) => Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.1348)) f (id.{succ u_1} α)) -> (Antitone.{0, u_1} Nat (α -> α) (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (instPreorderForAll.{u_1, u_1} α (fun (a._@.Mathlib.Init.Data.Nat.Lemmas._hyg.278 : α) => α) (fun (i : α) => inst._@.Mathlib.Order.Iterate._hyg.1348)) (fun (m : Nat) => Nat.iterate.{succ u_1} α f m))
+Case conversion may be inaccurate. Consider using '#align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_idₓ'. -/
 theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
   @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
 #align function.antitone_iterate_of_le_id Function.antitone_iterate_of_le_id
@@ -168,29 +213,36 @@ section Preorder
 
 variable [Preorder α] {f g : α → α}
 
-theorem iterate_le_of_map_le (h : Commute f g) (hf : Monotone f) (hg : Monotone g) {x} (hx : f x ≤ g x) (n : ℕ) :
-    (f^[n]) x ≤ (g^[n]) x := by
+#print Function.Commute.iterate_le_of_map_le /-
+theorem iterate_le_of_map_le (h : Commute f g) (hf : Monotone f) (hg : Monotone g) {x}
+    (hx : f x ≤ g x) (n : ℕ) : (f^[n]) x ≤ (g^[n]) x := by
   refine' hf.seq_le_seq n _ (fun k hk => _) fun k hk => _ <;>
     simp [iterate_succ' f, h.iterate_right _ _, hg.iterate _ hx]
 #align function.commute.iterate_le_of_map_le Function.Commute.iterate_le_of_map_le
+-/
 
-theorem iterate_pos_lt_of_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x} (hx : f x < g x) {n}
-    (hn : 0 < n) : (f^[n]) x < (g^[n]) x := by
+#print Function.Commute.iterate_pos_lt_of_map_lt /-
+theorem iterate_pos_lt_of_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x}
+    (hx : f x < g x) {n} (hn : 0 < n) : (f^[n]) x < (g^[n]) x := by
   refine' hf.seq_pos_lt_seq_of_le_of_lt hn _ (fun k hk => _) fun k hk => _ <;>
     simp [iterate_succ' f, h.iterate_right _ _, hg.iterate _ hx]
 #align function.commute.iterate_pos_lt_of_map_lt Function.Commute.iterate_pos_lt_of_map_lt
+-/
 
-theorem iterate_pos_lt_of_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x} (hx : f x < g x) {n}
-    (hn : 0 < n) : (f^[n]) x < (g^[n]) x :=
+#print Function.Commute.iterate_pos_lt_of_map_lt' /-
+theorem iterate_pos_lt_of_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x}
+    (hx : f x < g x) {n} (hn : 0 < n) : (f^[n]) x < (g^[n]) x :=
   @iterate_pos_lt_of_map_lt αᵒᵈ _ g f h.symm hg.dual hf.dual x hx n hn
 #align function.commute.iterate_pos_lt_of_map_lt' Function.Commute.iterate_pos_lt_of_map_lt'
+-/
 
 end Preorder
 
 variable [LinearOrder α] {f g : α → α}
 
-theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n} (hn : 0 < n) :
-    (f^[n]) x < (g^[n]) x ↔ f x < g x := by
+#print Function.Commute.iterate_pos_lt_iff_map_lt /-
+theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
+    (hn : 0 < n) : (f^[n]) x < (g^[n]) x ↔ f x < g x := by
   rcases lt_trichotomy (f x) (g x) with (H | H | H)
   · simp only [*, iterate_pos_lt_of_map_lt]
     
@@ -199,26 +251,36 @@ theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : Stri
   · simp only [lt_asymm H, lt_asymm (h.symm.iterate_pos_lt_of_map_lt' hg hf H hn)]
     
 #align function.commute.iterate_pos_lt_iff_map_lt Function.Commute.iterate_pos_lt_iff_map_lt
+-/
 
-theorem iterate_pos_lt_iff_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n} (hn : 0 < n) :
-    (f^[n]) x < (g^[n]) x ↔ f x < g x :=
+#print Function.Commute.iterate_pos_lt_iff_map_lt' /-
+theorem iterate_pos_lt_iff_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n}
+    (hn : 0 < n) : (f^[n]) x < (g^[n]) x ↔ f x < g x :=
   @iterate_pos_lt_iff_map_lt αᵒᵈ _ _ _ h.symm hg.dual hf.dual x n hn
 #align function.commute.iterate_pos_lt_iff_map_lt' Function.Commute.iterate_pos_lt_iff_map_lt'
+-/
 
-theorem iterate_pos_le_iff_map_le (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n} (hn : 0 < n) :
-    (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by
+#print Function.Commute.iterate_pos_le_iff_map_le /-
+theorem iterate_pos_le_iff_map_le (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
+    (hn : 0 < n) : (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by
   simpa only [not_lt] using not_congr (h.symm.iterate_pos_lt_iff_map_lt' hg hf hn)
 #align function.commute.iterate_pos_le_iff_map_le Function.Commute.iterate_pos_le_iff_map_le
+-/
 
-theorem iterate_pos_le_iff_map_le' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n} (hn : 0 < n) :
-    (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by
+#print Function.Commute.iterate_pos_le_iff_map_le' /-
+theorem iterate_pos_le_iff_map_le' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n}
+    (hn : 0 < n) : (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by
   simpa only [not_lt] using not_congr (h.symm.iterate_pos_lt_iff_map_lt hg hf hn)
 #align function.commute.iterate_pos_le_iff_map_le' Function.Commute.iterate_pos_le_iff_map_le'
+-/
 
-theorem iterate_pos_eq_iff_map_eq (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n} (hn : 0 < n) :
-    (f^[n]) x = (g^[n]) x ↔ f x = g x := by
-  simp only [le_antisymm_iff, h.iterate_pos_le_iff_map_le hf hg hn, h.symm.iterate_pos_le_iff_map_le' hg hf hn]
+#print Function.Commute.iterate_pos_eq_iff_map_eq /-
+theorem iterate_pos_eq_iff_map_eq (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n}
+    (hn : 0 < n) : (f^[n]) x = (g^[n]) x ↔ f x = g x := by
+  simp only [le_antisymm_iff, h.iterate_pos_le_iff_map_le hf hg hn,
+    h.symm.iterate_pos_le_iff_map_le' hg hf hn]
 #align function.commute.iterate_pos_eq_iff_map_eq Function.Commute.iterate_pos_eq_iff_map_eq
+-/
 
 end Commute
 
@@ -228,6 +290,12 @@ namespace Monotone
 
 variable [Preorder α] {f : α → α} {x : α}
 
+/- warning: monotone.monotone_iterate_of_le_map -> Monotone.monotone_iterate_of_le_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Preorder.{u_1} α] {f : α -> α} {x : α}, (Monotone.{u_1, u_1} α α _inst_1 _inst_1 f) -> (LE.le.{u_1} α (Preorder.toLE.{u_1} α _inst_1) x (f x)) -> (Monotone.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Iterate._hyg.2210 : Preorder.{u_1} α] {f : α -> α} {x : α}, (Monotone.{u_1, u_1} α α inst._@.Mathlib.Order.Iterate._hyg.2210 inst._@.Mathlib.Order.Iterate._hyg.2210 f) -> (LE.le.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.2210) x (f x)) -> (Monotone.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Iterate._hyg.2210 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+Case conversion may be inaccurate. Consider using '#align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_mapₓ'. -/
 /-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
 a monotone sequence. -/
 theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone fun n => (f^[n]) x :=
@@ -236,6 +304,12 @@ theorem monotone_iterate_of_le_map (hf : Monotone f) (hx : x ≤ f x) : Monotone
     exact hf.iterate n hx
 #align monotone.monotone_iterate_of_le_map Monotone.monotone_iterate_of_le_map
 
+/- warning: monotone.antitone_iterate_of_map_le -> Monotone.antitone_iterate_of_map_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Preorder.{u_1} α] {f : α -> α} {x : α}, (Monotone.{u_1, u_1} α α _inst_1 _inst_1 f) -> (LE.le.{u_1} α (Preorder.toLE.{u_1} α _inst_1) (f x) x) -> (Antitone.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Iterate._hyg.2285 : Preorder.{u_1} α] {f : α -> α} {x : α}, (Monotone.{u_1, u_1} α α inst._@.Mathlib.Order.Iterate._hyg.2285 inst._@.Mathlib.Order.Iterate._hyg.2285 f) -> (LE.le.{u_1} α (Preorder.toLE.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.2285) (f x) x) -> (Antitone.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Iterate._hyg.2285 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+Case conversion may be inaccurate. Consider using '#align monotone.antitone_iterate_of_map_le Monotone.antitone_iterate_of_map_leₓ'. -/
 /-- If `f` is a monotone map and `f x ≤ x` at some point `x`, then the iterates `f^[n] x` form
 a antitone sequence. -/
 theorem antitone_iterate_of_map_le (hf : Monotone f) (hx : f x ≤ x) : Antitone fun n => (f^[n]) x :=
@@ -248,19 +322,33 @@ namespace StrictMono
 
 variable [Preorder α] {f : α → α} {x : α}
 
+/- warning: strict_mono.strict_mono_iterate_of_lt_map -> StrictMono.strictMono_iterate_of_lt_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Preorder.{u_1} α] {f : α -> α} {x : α}, (StrictMono.{u_1, u_1} α α _inst_1 _inst_1 f) -> (LT.lt.{u_1} α (Preorder.toLT.{u_1} α _inst_1) x (f x)) -> (StrictMono.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Iterate._hyg.2336 : Preorder.{u_1} α] {f : α -> α} {x : α}, (StrictMono.{u_1, u_1} α α inst._@.Mathlib.Order.Iterate._hyg.2336 inst._@.Mathlib.Order.Iterate._hyg.2336 f) -> (LT.lt.{u_1} α (Preorder.toLT.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.2336) x (f x)) -> (StrictMono.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Iterate._hyg.2336 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+Case conversion may be inaccurate. Consider using '#align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_mapₓ'. -/
 /-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
 form a strictly monotone sequence. -/
-theorem strict_mono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) : StrictMono fun n => (f^[n]) x :=
+theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
+    StrictMono fun n => (f^[n]) x :=
   strictMono_nat_of_lt_succ fun n => by
     rw [iterate_succ_apply]
     exact hf.iterate n hx
-#align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strict_mono_iterate_of_lt_map
+#align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strictMono_iterate_of_lt_map
 
+/- warning: strict_mono.strict_anti_iterate_of_map_lt -> StrictMono.strictAnti_iterate_of_map_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Preorder.{u_1} α] {f : α -> α} {x : α}, (StrictMono.{u_1, u_1} α α _inst_1 _inst_1 f) -> (LT.lt.{u_1} α (Preorder.toLT.{u_1} α _inst_1) (f x) x) -> (StrictAnti.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) _inst_1 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Iterate._hyg.2411 : Preorder.{u_1} α] {f : α -> α} {x : α}, (StrictMono.{u_1, u_1} α α inst._@.Mathlib.Order.Iterate._hyg.2411 inst._@.Mathlib.Order.Iterate._hyg.2411 f) -> (LT.lt.{u_1} α (Preorder.toLT.{u_1} α inst._@.Mathlib.Order.Iterate._hyg.2411) (f x) x) -> (StrictAnti.{0, u_1} Nat α (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) inst._@.Mathlib.Order.Iterate._hyg.2411 (fun (n : Nat) => Nat.iterate.{succ u_1} α f n x))
+Case conversion may be inaccurate. Consider using '#align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strictAnti_iterate_of_map_ltₓ'. -/
 /-- If `f` is a strictly antitone map and `f x < x` at some point `x`, then the iterates `f^[n] x`
 form a strictly antitone sequence. -/
-theorem strict_anti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) : StrictAnti fun n => (f^[n]) x :=
+theorem strictAnti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) :
+    StrictAnti fun n => (f^[n]) x :=
   hf.dual.strict_mono_iterate_of_lt_map hx
-#align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strict_anti_iterate_of_map_lt
+#align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strictAnti_iterate_of_map_lt
 
 end StrictMono
 

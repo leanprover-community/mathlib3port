@@ -91,17 +91,20 @@ open SlashInvariantForm
 variable {F : Type _} {Γ : outParam <| Subgroup SL(2, ℤ)} {k : outParam ℤ}
 
 @[nolint dangerous_instance]
-instance (priority := 100) SlashInvariantFormClass.coeToFun [SlashInvariantFormClass F Γ k] : CoeFun F fun _ => ℍ → ℂ :=
+instance (priority := 100) SlashInvariantFormClass.coeToFun [SlashInvariantFormClass F Γ k] :
+    CoeFun F fun _ => ℍ → ℂ :=
   FunLike.hasCoeToFun
-#align slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
+#align
+  slash_invariant_form.slash_invariant_form_class.coe_to_fun SlashInvariantForm.SlashInvariantFormClass.coeToFun
 
 @[simp]
-theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) : SlashAction.map ℂ k γ ⇑f = ⇑f :=
+theorem slash_action_eqn [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) :
+    SlashAction.map ℂ k γ ⇑f = ⇑f :=
   SlashInvariantFormClass.slash_action_eq f γ
 #align slash_invariant_form.slash_action_eqn SlashInvariantForm.slash_action_eqn
 
-theorem slash_action_eqn' (k : ℤ) (Γ : Subgroup SL(2, ℤ)) [SlashInvariantFormClass F Γ k] (f : F) (γ : Γ) (z : ℍ) :
-    f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z := by
+theorem slash_action_eqn' (k : ℤ) (Γ : Subgroup SL(2, ℤ)) [SlashInvariantFormClass F Γ k] (f : F)
+    (γ : Γ) (z : ℍ) : f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z := by
   rw [← ModularForm.slash_action_eq'_iff]
   simp
 #align slash_invariant_form.slash_action_eqn' SlashInvariantForm.slash_action_eqn'
@@ -113,11 +116,13 @@ instance [SlashInvariantFormClass F Γ k] : CoeTC F (SlashInvariantForm Γ k) :=
 theorem SlashInvariantFormClass.coe_coe [SlashInvariantFormClass F Γ k] (f : F) :
     ((f : SlashInvariantForm Γ k) : ℍ → ℂ) = f :=
   rfl
-#align slash_invariant_form.slash_invariant_form_class.coe_coe SlashInvariantForm.SlashInvariantFormClass.coe_coe
+#align
+  slash_invariant_form.slash_invariant_form_class.coe_coe SlashInvariantForm.SlashInvariantFormClass.coe_coe
 
 instance hasAdd : Add (SlashInvariantForm Γ k) :=
   ⟨fun f g =>
-    { toFun := f + g, slash_action_eq' := fun γ => by convert SlashAction.add_action k γ (f : ℍ → ℂ) g <;> simp }⟩
+    { toFun := f + g,
+      slash_action_eq' := fun γ => by convert SlashAction.add_action k γ (f : ℍ → ℂ) g <;> simp }⟩
 #align slash_invariant_form.has_add SlashInvariantForm.hasAdd
 
 @[simp]

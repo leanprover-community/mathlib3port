@@ -58,15 +58,18 @@ def dualTensorHom : Module.Dual R M ⊗ N →ₗ[R] M →ₗ[R] N :=
 variable {R M N P Q}
 
 @[simp]
-theorem contract_left_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m := by apply uncurry_apply
+theorem contract_left_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m := by
+  apply uncurry_apply
 #align contract_left_apply contract_left_apply
 
 @[simp]
-theorem contract_right_apply (f : Module.Dual R M) (m : M) : contractRight R M (m ⊗ₜ f) = f m := by apply uncurry_apply
+theorem contract_right_apply (f : Module.Dual R M) (m : M) : contractRight R M (m ⊗ₜ f) = f m := by
+  apply uncurry_apply
 #align contract_right_apply contract_right_apply
 
 @[simp]
-theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) : dualTensorHom R M N (f ⊗ₜ n) m = f m • n := by
+theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) :
+    dualTensorHom R M N (f ⊗ₜ n) m = f m • n := by
   dsimp only [dualTensorHom]
   rw [uncurry_apply]
   rfl
@@ -76,8 +79,8 @@ theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) : dualTensor
 theorem transpose_dual_tensor_hom (f : Module.Dual R M) (m : M) :
     Dual.transpose (dualTensorHom R M M (f ⊗ₜ m)) = dualTensorHom R _ _ (Dual.eval R M m ⊗ₜ f) := by
   ext (f' m')
-  simp only [dual.transpose_apply, coe_comp, Function.comp_apply, dual_tensor_hom_apply, LinearMap.map_smulₛₗ,
-    RingHom.id_apply, Algebra.id.smul_eq_mul, dual.eval_apply, smul_apply]
+  simp only [dual.transpose_apply, coe_comp, Function.comp_apply, dual_tensor_hom_apply,
+    LinearMap.map_smulₛₗ, RingHom.id_apply, Algebra.id.smul_eq_mul, dual.eval_apply, smul_apply]
   exact mul_comm _ _
 #align transpose_dual_tensor_hom transpose_dual_tensor_hom
 
@@ -87,8 +90,8 @@ theorem dual_tensor_hom_prod_map_zero (f : Module.Dual R M) (p : P) :
       dualTensorHom R (M × N) (P × Q) ((f ∘ₗ fst R M N) ⊗ₜ inl R P Q p) :=
   by
   ext <;>
-    simp only [coe_comp, coe_inl, Function.comp_apply, prod_map_apply, dual_tensor_hom_apply, fst_apply, Prod.smul_mk,
-      zero_apply, smul_zero]
+    simp only [coe_comp, coe_inl, Function.comp_apply, prod_map_apply, dual_tensor_hom_apply,
+      fst_apply, Prod.smul_mk, zero_apply, smul_zero]
 #align dual_tensor_hom_prod_map_zero dual_tensor_hom_prod_map_zero
 
 @[simp]
@@ -97,35 +100,38 @@ theorem zero_prod_map_dual_tensor_hom (g : Module.Dual R N) (q : Q) :
       dualTensorHom R (M × N) (P × Q) ((g ∘ₗ snd R M N) ⊗ₜ inr R P Q q) :=
   by
   ext <;>
-    simp only [coe_comp, coe_inr, Function.comp_apply, prod_map_apply, dual_tensor_hom_apply, snd_apply, Prod.smul_mk,
-      zero_apply, smul_zero]
+    simp only [coe_comp, coe_inr, Function.comp_apply, prod_map_apply, dual_tensor_hom_apply,
+      snd_apply, Prod.smul_mk, zero_apply, smul_zero]
 #align zero_prod_map_dual_tensor_hom zero_prod_map_dual_tensor_hom
 
 theorem map_dual_tensor_hom (f : Module.Dual R M) (p : P) (g : Module.Dual R N) (q : Q) :
     TensorProduct.map (dualTensorHom R M P (f ⊗ₜ[R] p)) (dualTensorHom R N Q (g ⊗ₜ[R] q)) =
       dualTensorHom R (M ⊗[R] N) (P ⊗[R] Q) (dualDistrib R M N (f ⊗ₜ g) ⊗ₜ[R] p ⊗ₜ[R] q) :=
-  by
-  ext (m n)
-  simp only [compr₂_apply, mk_apply, map_tmul, dual_tensor_hom_apply, dual_distrib_apply, ← smul_tmul_smul]
+  by ext (m n);
+  simp only [compr₂_apply, mk_apply, map_tmul, dual_tensor_hom_apply, dual_distrib_apply, ←
+    smul_tmul_smul]
 #align map_dual_tensor_hom map_dual_tensor_hom
 
 @[simp]
 theorem comp_dual_tensor_hom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (p : P) :
-    dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) = g n • dualTensorHom R M P (f ⊗ₜ p) := by
-  ext m
-  simp only [coe_comp, Function.comp_apply, dual_tensor_hom_apply, LinearMap.map_smul, RingHom.id_apply, smul_apply]
+    dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) =
+      g n • dualTensorHom R M P (f ⊗ₜ p) :=
+  by
+  ext m;
+  simp only [coe_comp, Function.comp_apply, dual_tensor_hom_apply, LinearMap.map_smul,
+    RingHom.id_apply, smul_apply]
   rw [smul_comm]
 #align comp_dual_tensor_hom comp_dual_tensor_hom
 
 /-- As a matrix, `dual_tensor_hom` evaluated on a basis element of `M* ⊗ N` is a matrix with a
 single one and zeros elsewhere -/
-theorem to_matrix_dual_tensor_hom {m : Type _} {n : Type _} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (bM : Basis m R M) (bN : Basis n R N) (j : m) (i : n) :
+theorem to_matrix_dual_tensor_hom {m : Type _} {n : Type _} [Fintype m] [Fintype n] [DecidableEq m]
+    [DecidableEq n] (bM : Basis m R M) (bN : Basis n R N) (j : m) (i : n) :
     toMatrix bM bN (dualTensorHom R M N (bM.Coord j ⊗ₜ bN i)) = stdBasisMatrix i j 1 := by
   ext (i' j')
-  by_cases hij : i = i' ∧ j = j' <;> simp [LinearMap.to_matrix_apply, Finsupp.single_eq_pi_single, hij]
-  rw [and_iff_not_or_not, not_not] at hij
-  cases hij <;> simp [hij]
+  by_cases hij : i = i' ∧ j = j' <;>
+    simp [LinearMap.to_matrix_apply, Finsupp.single_eq_pi_single, hij]
+  rw [and_iff_not_or_not, not_not] at hij; cases hij <;> simp [hij]
 #align to_matrix_dual_tensor_hom to_matrix_dual_tensor_hom
 
 end CommSemiring
@@ -146,22 +152,24 @@ variable {R M N P Q}
 provides this equivalence in return for a basis of `M`. -/
 @[simps apply]
 noncomputable def dualTensorHomEquivOfBasis : Module.Dual R M ⊗[R] N ≃ₗ[R] M →ₗ[R] N :=
-  LinearEquiv.ofLinear (dualTensorHom R M N) (∑ i, TensorProduct.mk R _ N (b.dualBasis i) ∘ₗ LinearMap.applyₗ (b i))
+  LinearEquiv.ofLinear (dualTensorHom R M N)
+    (∑ i, TensorProduct.mk R _ N (b.dualBasis i) ∘ₗ LinearMap.applyₗ (b i))
     (by
       ext (f m)
-      simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def, Fintype.sum_apply,
-        Function.comp_apply, Basis.coe_dual_basis, coe_comp, Basis.coord_apply, ← f.map_smul,
-        (dualTensorHom R M N).map_sum, ← f.map_sum, b.sum_repr])
+      simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def,
+        Fintype.sum_apply, Function.comp_apply, Basis.coe_dual_basis, coe_comp, Basis.coord_apply, ←
+        f.map_smul, (dualTensorHom R M N).map_sum, ← f.map_sum, b.sum_repr])
     (by
       ext (f m)
-      simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def, Fintype.sum_apply,
-        Function.comp_apply, Basis.coe_dual_basis, coe_comp, compr₂_apply, tmul_smul, smul_tmul', ← sum_tmul,
-        Basis.sum_dual_apply_smul_coord])
+      simp only [applyₗ_apply_apply, coe_fn_sum, dual_tensor_hom_apply, mk_apply, id_coe, id.def,
+        Fintype.sum_apply, Function.comp_apply, Basis.coe_dual_basis, coe_comp, compr₂_apply,
+        tmul_smul, smul_tmul', ← sum_tmul, Basis.sum_dual_apply_smul_coord])
 #align dual_tensor_hom_equiv_of_basis dualTensorHomEquivOfBasis
 
 @[simp]
 theorem dual_tensor_hom_equiv_of_basis_to_linear_map :
-    (dualTensorHomEquivOfBasis b : Module.Dual R M ⊗[R] N ≃ₗ[R] M →ₗ[R] N).toLinearMap = dualTensorHom R M N :=
+    (dualTensorHomEquivOfBasis b : Module.Dual R M ⊗[R] N ≃ₗ[R] M →ₗ[R] N).toLinearMap =
+      dualTensorHom R M N :=
   rfl
 #align dual_tensor_hom_equiv_of_basis_to_linear_map dual_tensor_hom_equiv_of_basis_to_linear_map
 
@@ -169,13 +177,15 @@ theorem dual_tensor_hom_equiv_of_basis_to_linear_map :
 theorem dual_tensor_hom_equiv_of_basis_symm_cancel_left (x : Module.Dual R M ⊗[R] N) :
     (dualTensorHomEquivOfBasis b).symm (dualTensorHom R M N x) = x := by
   rw [← dual_tensor_hom_equiv_of_basis_apply b, LinearEquiv.symm_apply_apply]
-#align dual_tensor_hom_equiv_of_basis_symm_cancel_left dual_tensor_hom_equiv_of_basis_symm_cancel_left
+#align
+  dual_tensor_hom_equiv_of_basis_symm_cancel_left dual_tensor_hom_equiv_of_basis_symm_cancel_left
 
 @[simp]
 theorem dual_tensor_hom_equiv_of_basis_symm_cancel_right (x : M →ₗ[R] N) :
     dualTensorHom R M N ((dualTensorHomEquivOfBasis b).symm x) = x := by
   rw [← dual_tensor_hom_equiv_of_basis_apply b, LinearEquiv.apply_symm_apply]
-#align dual_tensor_hom_equiv_of_basis_symm_cancel_right dual_tensor_hom_equiv_of_basis_symm_cancel_right
+#align
+  dual_tensor_hom_equiv_of_basis_symm_cancel_right dual_tensor_hom_equiv_of_basis_symm_cancel_right
 
 variable (R M N P Q)
 
@@ -215,7 +225,8 @@ that `ltensor_hom_equiv_hom_ltensor` is not defined directly in terms of
 `ltensor_hom_to_hom_ltensor`, but the equivalence between the two is given by
 `ltensor_hom_equiv_hom_ltensor_to_linear_map` and `ltensor_hom_equiv_hom_ltensor_apply`. -/
 noncomputable def ltensorHomEquivHomLtensor : P ⊗[R] (M →ₗ[R] Q) ≃ₗ[R] M →ₗ[R] P ⊗[R] Q :=
-  congr (LinearEquiv.refl R P) (dualTensorHomEquiv R M Q).symm ≪≫ₗ TensorProduct.leftComm R P _ Q ≪≫ₗ
+  congr (LinearEquiv.refl R P) (dualTensorHomEquiv R M Q).symm ≪≫ₗ
+      TensorProduct.leftComm R P _ Q ≪≫ₗ
     dualTensorHomEquiv R M _
 #align ltensor_hom_equiv_hom_ltensor ltensorHomEquivHomLtensor
 
@@ -237,9 +248,9 @@ theorem ltensor_hom_equiv_hom_ltensor_to_linear_map :
   ext (p f q m)
   simp only [ltensorHomEquivHomLtensor, dualTensorHomEquiv, compr₂_apply, mk_apply, coe_comp,
     LinearEquiv.coe_to_linear_map, Function.comp_apply, map_tmul, LinearEquiv.coe_coe,
-    dual_tensor_hom_equiv_of_basis_apply, LinearEquiv.trans_apply, congr_tmul, LinearEquiv.refl_apply,
-    dual_tensor_hom_equiv_of_basis_symm_cancel_left, left_comm_tmul, dual_tensor_hom_apply,
-    ltensor_hom_to_hom_ltensor_apply, tmul_smul]
+    dual_tensor_hom_equiv_of_basis_apply, LinearEquiv.trans_apply, congr_tmul,
+    LinearEquiv.refl_apply, dual_tensor_hom_equiv_of_basis_symm_cancel_left, left_comm_tmul,
+    dual_tensor_hom_apply, ltensor_hom_to_hom_ltensor_apply, tmul_smul]
 #align ltensor_hom_equiv_hom_ltensor_to_linear_map ltensor_hom_equiv_hom_ltensor_to_linear_map
 
 @[simp]
@@ -252,8 +263,8 @@ theorem rtensor_hom_equiv_hom_rtensor_to_linear_map :
   simp only [rtensorHomEquivHomRtensor, dualTensorHomEquiv, compr₂_apply, mk_apply, coe_comp,
     LinearEquiv.coe_to_linear_map, Function.comp_apply, map_tmul, LinearEquiv.coe_coe,
     dual_tensor_hom_equiv_of_basis_apply, LinearEquiv.trans_apply, congr_tmul,
-    dual_tensor_hom_equiv_of_basis_symm_cancel_left, LinearEquiv.refl_apply, assoc_tmul, dual_tensor_hom_apply,
-    rtensor_hom_to_hom_rtensor_apply, smul_tmul']
+    dual_tensor_hom_equiv_of_basis_symm_cancel_left, LinearEquiv.refl_apply, assoc_tmul,
+    dual_tensor_hom_apply, rtensor_hom_to_hom_rtensor_apply, smul_tmul']
 #align rtensor_hom_equiv_hom_rtensor_to_linear_map rtensor_hom_equiv_hom_rtensor_to_linear_map
 
 variable {R M N P Q}
@@ -277,16 +288,19 @@ variable (R M N P Q)
 between the two is given by `hom_tensor_hom_equiv_to_linear_map` and `hom_tensor_hom_equiv_apply`.
 -/
 noncomputable def homTensorHomEquiv : (M →ₗ[R] P) ⊗[R] (N →ₗ[R] Q) ≃ₗ[R] M ⊗[R] N →ₗ[R] P ⊗[R] Q :=
-  rtensorHomEquivHomRtensor R M P _ ≪≫ₗ (LinearEquiv.refl R M).arrowCongr (ltensorHomEquivHomLtensor R N _ Q) ≪≫ₗ
+  rtensorHomEquivHomRtensor R M P _ ≪≫ₗ
+      (LinearEquiv.refl R M).arrowCongr (ltensorHomEquivHomLtensor R N _ Q) ≪≫ₗ
     lift.equiv R M N _
 #align hom_tensor_hom_equiv homTensorHomEquiv
 
 @[simp]
-theorem hom_tensor_hom_equiv_to_linear_map : (homTensorHomEquiv R M N P Q).toLinearMap = homTensorHomMap R M N P Q := by
+theorem hom_tensor_hom_equiv_to_linear_map :
+    (homTensorHomEquiv R M N P Q).toLinearMap = homTensorHomMap R M N P Q := by
   ext (f g m n)
-  simp only [homTensorHomEquiv, compr₂_apply, mk_apply, LinearEquiv.coe_to_linear_map, LinearEquiv.trans_apply,
-    lift.equiv_apply, LinearEquiv.arrow_congr_apply, LinearEquiv.refl_symm, LinearEquiv.refl_apply,
-    rtensor_hom_equiv_hom_rtensor_apply, ltensor_hom_equiv_hom_ltensor_apply, ltensor_hom_to_hom_ltensor_apply,
+  simp only [homTensorHomEquiv, compr₂_apply, mk_apply, LinearEquiv.coe_to_linear_map,
+    LinearEquiv.trans_apply, lift.equiv_apply, LinearEquiv.arrow_congr_apply, LinearEquiv.refl_symm,
+    LinearEquiv.refl_apply, rtensor_hom_equiv_hom_rtensor_apply,
+    ltensor_hom_equiv_hom_ltensor_apply, ltensor_hom_to_hom_ltensor_apply,
     rtensor_hom_to_hom_rtensor_apply, hom_tensor_hom_map_apply, map_tmul]
 #align hom_tensor_hom_equiv_to_linear_map hom_tensor_hom_equiv_to_linear_map
 

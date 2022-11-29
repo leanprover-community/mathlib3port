@@ -65,7 +65,8 @@ sum of the face maps -/
 @[simp]
 def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
   ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
-#align algebraic_topology.alternating_face_map_complex.obj_d AlgebraicTopology.AlternatingFaceMapComplex.objD
+#align
+  algebraic_topology.alternating_face_map_complex.obj_d AlgebraicTopology.AlternatingFaceMapComplex.objD
 
 /-- ## The chain complex relation `d ≫ d`
 -/
@@ -75,7 +76,8 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   rw [comp_sum]
   let d_l := fun j : Fin (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
   let d_r := fun i : Fin (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
-  rw [show (fun i => (∑ j : Fin (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Fin (n + 3), d_l j ≫ d_r i by
+  rw [show (fun i => (∑ j : Fin (n + 3), d_l j) ≫ d_r i) = fun i => ∑ j : Fin (n + 3), d_l j ≫ d_r i
+      by
       ext i
       rw [sum_comp]]
   rw [← Finset.sum_product']
@@ -83,7 +85,8 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   let P := Fin (n + 2) × Fin (n + 3)
   let S := finset.univ.filter fun ij : P => (ij.2 : ℕ) ≤ (ij.1 : ℕ)
   let term := fun ij : P => d_l ij.2 ≫ d_r ij.1
-  erw [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by rw [Finset.sum_add_sum_compl]]
+  erw [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by
+      rw [Finset.sum_add_sum_compl]]
   rw [← eq_neg_iff_add_eq_zero, ← Finset.sum_neg_distrib]
   /- we are reduced to showing that two sums are equal, and this is obtained
     by constructing a bijection φ : S -> Sᶜ, which maps (i,j) to (j,i+1),
@@ -93,14 +96,14 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   apply Finset.sum_bij φ
   · -- φ(S) is contained in Sᶜ
     intro ij hij
-    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.coe_succ, Fin.coe_cast_lt] at
-      hij⊢
+    simp only [Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff, Fin.coe_succ,
+      Fin.coe_cast_lt] at hij⊢
     linarith
     
   · -- identification of corresponding terms in both sums
     rintro ⟨i, j⟩ hij
-    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul, mul_one,
-      Fin.coe_cast_lt, Fin.coe_succ, pow_one, mul_neg, neg_neg]
+    simp only [term, d_l, d_r, φ, comp_zsmul, zsmul_comp, ← neg_smul, ← mul_smul, pow_add, neg_mul,
+      mul_one, Fin.coe_cast_lt, Fin.coe_succ, pow_one, mul_neg, neg_neg]
     let jj : Fin (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by
       rw [← Fin.coe_fin_le]
@@ -116,19 +119,21 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
-    simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at hij'
+    simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at
+      hij'
     refine' ⟨(j'.pred _, Fin.castSucc i'), _, _⟩
     · intro H
       simpa only [H, Nat.not_lt_zero, Fin.coe_zero] using hij'
       
-    · simpa only [true_and_iff, Finset.mem_univ, Fin.coe_cast_succ, Fin.coe_pred, Finset.mem_filter] using
-        Nat.le_pred_of_lt hij'
+    · simpa only [true_and_iff, Finset.mem_univ, Fin.coe_cast_succ, Fin.coe_pred,
+        Finset.mem_filter] using Nat.le_pred_of_lt hij'
       
     · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.cast_lt_cast_succ]
       constructor <;> rfl
       
     
-#align algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
+#align
+  algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
 
 /-!
 ## Construction of the alternating face map complex functor
@@ -138,18 +143,21 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
 /-- The alternating face map complex, on objects -/
 def obj : ChainComplex C ℕ :=
   ChainComplex.of (fun n => X _[n]) (objD X) (d_squared X)
-#align algebraic_topology.alternating_face_map_complex.obj AlgebraicTopology.AlternatingFaceMapComplex.obj
+#align
+  algebraic_topology.alternating_face_map_complex.obj AlgebraicTopology.AlternatingFaceMapComplex.obj
 
 @[simp]
 theorem obj_X (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.obj X).x n = X _[n] :=
   rfl
-#align algebraic_topology.alternating_face_map_complex.obj_X AlgebraicTopology.AlternatingFaceMapComplex.obj_X
+#align
+  algebraic_topology.alternating_face_map_complex.obj_X AlgebraicTopology.AlternatingFaceMapComplex.obj_X
 
 @[simp]
 theorem obj_d_eq (X : SimplicialObject C) (n : ℕ) :
-    (AlternatingFaceMapComplex.obj X).d (n + 1) n = ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i := by
-  apply ChainComplex.of_d
-#align algebraic_topology.alternating_face_map_complex.obj_d_eq AlgebraicTopology.AlternatingFaceMapComplex.obj_d_eq
+    (AlternatingFaceMapComplex.obj X).d (n + 1) n = ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i :=
+  by apply ChainComplex.of_d
+#align
+  algebraic_topology.alternating_face_map_complex.obj_d_eq AlgebraicTopology.AlternatingFaceMapComplex.obj_d_eq
 
 variable {X} {Y}
 
@@ -163,12 +171,14 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
     congr 1
     symm
     apply f.naturality
-#align algebraic_topology.alternating_face_map_complex.map AlgebraicTopology.AlternatingFaceMapComplex.map
+#align
+  algebraic_topology.alternating_face_map_complex.map AlgebraicTopology.AlternatingFaceMapComplex.map
 
 @[simp]
 theorem map_f (f : X ⟶ Y) (n : ℕ) : (map f).f n = f.app (op [n]) :=
   rfl
-#align algebraic_topology.alternating_face_map_complex.map_f AlgebraicTopology.AlternatingFaceMapComplex.map_f
+#align
+  algebraic_topology.alternating_face_map_complex.map_f AlgebraicTopology.AlternatingFaceMapComplex.map_f
 
 end AlternatingFaceMapComplex
 
@@ -186,20 +196,25 @@ variable {C}
 theorem alternating_face_map_complex_obj_X (X : SimplicialObject C) (n : ℕ) :
     ((alternatingFaceMapComplex C).obj X).x n = X _[n] :=
   rfl
-#align algebraic_topology.alternating_face_map_complex_obj_X AlgebraicTopology.alternating_face_map_complex_obj_X
+#align
+  algebraic_topology.alternating_face_map_complex_obj_X AlgebraicTopology.alternating_face_map_complex_obj_X
 
 @[simp]
 theorem alternating_face_map_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
-    ((alternatingFaceMapComplex C).obj X).d (n + 1) n = AlternatingFaceMapComplex.objD X n := by apply ChainComplex.of_d
-#align algebraic_topology.alternating_face_map_complex_obj_d AlgebraicTopology.alternating_face_map_complex_obj_d
+    ((alternatingFaceMapComplex C).obj X).d (n + 1) n = AlternatingFaceMapComplex.objD X n := by
+  apply ChainComplex.of_d
+#align
+  algebraic_topology.alternating_face_map_complex_obj_d AlgebraicTopology.alternating_face_map_complex_obj_d
 
 @[simp]
 theorem alternating_face_map_complex_map_f {X Y : SimplicialObject C} (f : X ⟶ Y) (n : ℕ) :
     ((alternatingFaceMapComplex C).map f).f n = f.app (op [n]) :=
   rfl
-#align algebraic_topology.alternating_face_map_complex_map_f AlgebraicTopology.alternating_face_map_complex_map_f
+#align
+  algebraic_topology.alternating_face_map_complex_map_f AlgebraicTopology.alternating_face_map_complex_map_f
 
-theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive D] (F : C ⥤ D) [F.Additive] :
+theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive D] (F : C ⥤ D)
+    [F.Additive] :
     alternatingFaceMapComplex C ⋙ F.mapHomologicalComplex _ =
       (SimplicialObject.whiskering C D).obj F ⋙ alternatingFaceMapComplex D :=
   by
@@ -207,21 +222,23 @@ theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive 
   · intro X Y f
     ext n
     simp only [functor.comp_map, HomologicalComplex.comp_f, alternating_face_map_complex_map_f,
-      functor.map_homological_complex_map_f, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl, comp_id, id_comp,
-      simplicial_object.whiskering_obj_map_app]
+      functor.map_homological_complex_map_f, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl,
+      comp_id, id_comp, simplicial_object.whiskering_obj_map_app]
     
   · intro X
     apply HomologicalComplex.ext
     · rintro i j (rfl : j + 1 = i)
       dsimp only [functor.comp_obj]
-      simpa only [functor.map_homological_complex_obj_d, alternating_face_map_complex_obj_d, eq_to_hom_refl, id_comp,
-        comp_id, alternating_face_map_complex.obj_d, functor.map_sum, functor.map_zsmul]
+      simpa only [functor.map_homological_complex_obj_d, alternating_face_map_complex_obj_d,
+        eq_to_hom_refl, id_comp, comp_id, alternating_face_map_complex.obj_d, functor.map_sum,
+        functor.map_zsmul]
       
     · ext n
       rfl
       
     
-#align algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternating_face_map_complex
+#align
+  algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternating_face_map_complex
 
 namespace AlternatingFaceMapComplex
 
@@ -235,13 +252,14 @@ def ε [Limits.HasZeroObject C] :
     equiv_rw ChainComplex.toSingle₀Equiv _ _
     refine' ⟨X.hom.app (op [0]), _⟩
     dsimp
-    simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero, one_zsmul,
-      Fin.coe_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
+    simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
+      one_zsmul, Fin.coe_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
     apply add_right_neg
   naturality' X Y f := by
     ext
     exact congr_app f.w _
-#align algebraic_topology.alternating_face_map_complex.ε AlgebraicTopology.alternatingFaceMapComplex.ε
+#align
+  algebraic_topology.alternating_face_map_complex.ε AlgebraicTopology.alternatingFaceMapComplex.ε
 
 end AlternatingFaceMapComplex
 
@@ -262,9 +280,12 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
              zero on the normalized_Moore_complex -/
     simp only [alternating_face_map_complex.obj_d]
     rw [comp_sum]
-    let t := fun j : Fin (n + 2) => (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
+    let t := fun j : Fin (n + 2) =>
+      (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
     have def_t :
-      ∀ j : Fin (n + 2), t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) := by
+      ∀ j : Fin (n + 2),
+        t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) :=
+      by
       intro j
       rfl
     rw [Fin.sum_univ_succ t]
@@ -273,7 +294,9 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
       rw [def_t, comp_zsmul, ← zsmul_zero ((-1 : ℤ) ^ (j.succ : ℕ))]
       apply congr_arg
       rw [normalized_Moore_complex.obj_X]
-      rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ]))]
+      rw [←
+        factor_thru_arrow _ _
+          (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ]))]
       slice_lhs 2 3 => rw [kernel_subobject_arrow_comp (X.δ j.succ)]
       simp only [comp_zero]
     rw [Fintype.sum_eq_zero _ null]
@@ -284,13 +307,15 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     rw [one_smul] at eq
     rw [Eq]
     cases n <;> dsimp <;> simp
-#align algebraic_topology.inclusion_of_Moore_complex_map AlgebraicTopology.inclusionOfMooreComplexMap
+#align
+  algebraic_topology.inclusion_of_Moore_complex_map AlgebraicTopology.inclusionOfMooreComplexMap
 
 @[simp]
 theorem inclusion_of_Moore_complex_map_f (X : SimplicialObject A) (n : ℕ) :
     (inclusionOfMooreComplexMap X).f n = (NormalizedMooreComplex.objX X n).arrow :=
   ChainComplex.of_hom_f _ _ _ _ _ _ _ _ n
-#align algebraic_topology.inclusion_of_Moore_complex_map_f AlgebraicTopology.inclusion_of_Moore_complex_map_f
+#align
+  algebraic_topology.inclusion_of_Moore_complex_map_f AlgebraicTopology.inclusion_of_Moore_complex_map_f
 
 variable (A)
 
@@ -310,11 +335,14 @@ sum of the coface maps -/
 @[simp]
 def objD (n : ℕ) : X.obj [n] ⟶ X.obj [n + 1] :=
   ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
-#align algebraic_topology.alternating_coface_map_complex.obj_d AlgebraicTopology.AlternatingCofaceMapComplex.objD
+#align
+  algebraic_topology.alternating_coface_map_complex.obj_d AlgebraicTopology.AlternatingCofaceMapComplex.objD
 
 theorem d_eq_unop_d (n : ℕ) :
-    objD X n = (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).Functor.obj (op X)) n).unop := by
-  simpa only [obj_d, alternating_face_map_complex.obj_d, unop_sum, unop_zsmul]
+    objD X n =
+      (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).Functor.obj (op X))
+          n).unop :=
+  by simpa only [obj_d, alternating_face_map_complex.obj_d, unop_sum, unop_zsmul]
 #align
   algebraic_topology.alternating_coface_map_complex.d_eq_unop_d AlgebraicTopology.AlternatingCofaceMapComplex.d_eq_unop_d
 
@@ -326,7 +354,8 @@ theorem d_squared (n : ℕ) : objD X n ≫ objD X (n + 1) = 0 := by
 /-- The alternating coface map complex, on objects -/
 def obj : CochainComplex C ℕ :=
   CochainComplex.of (fun n => X.obj [n]) (objD X) (d_squared X)
-#align algebraic_topology.alternating_coface_map_complex.obj AlgebraicTopology.AlternatingCofaceMapComplex.obj
+#align
+  algebraic_topology.alternating_coface_map_complex.obj AlgebraicTopology.AlternatingCofaceMapComplex.obj
 
 variable {X} {Y}
 
@@ -341,7 +370,8 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
     congr 1
     symm
     apply f.naturality
-#align algebraic_topology.alternating_coface_map_complex.map AlgebraicTopology.AlternatingCofaceMapComplex.map
+#align
+  algebraic_topology.alternating_coface_map_complex.map AlgebraicTopology.AlternatingCofaceMapComplex.map
 
 end AlternatingCofaceMapComplex
 
@@ -352,7 +382,8 @@ variable (C)
 def alternatingCofaceMapComplex : CosimplicialObject C ⥤ CochainComplex C ℕ where
   obj := AlternatingCofaceMapComplex.obj
   map X Y f := AlternatingCofaceMapComplex.map f
-#align algebraic_topology.alternating_coface_map_complex AlgebraicTopology.alternatingCofaceMapComplex
+#align
+  algebraic_topology.alternating_coface_map_complex AlgebraicTopology.alternatingCofaceMapComplex
 
 end AlgebraicTopology
 

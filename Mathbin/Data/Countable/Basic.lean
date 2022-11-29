@@ -59,7 +59,7 @@ instance [Countable α] [Countable β] : Countable (Sum α β) := by
   exact (equiv.nat_sum_nat_equiv_nat.injective.comp <| hf.sum_map hg).Countable
 
 instance [Countable α] : Countable (Option α) :=
-  Countable.of_equiv _ (Equiv.optionEquivSumPunit α).symm
+  Countable.of_equiv _ (Equiv.optionEquivSumPUnit α).symm
 
 instance [Countable α] [Countable β] : Countable (α × β) := by
   rcases exists_injective_nat α with ⟨f, hf⟩

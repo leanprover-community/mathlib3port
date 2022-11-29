@@ -80,9 +80,12 @@ variable {m n : ℕ}
 #eval ![1, 2] + ![3, 4] -- ![4, 6]
 ```
 -/
-instance _root_.pi_fin.has_repr [Repr α] :
-    Repr (Fin n → α) where repr f := "![" ++ String.intercalate ", " ((List.finRange n).map fun n => repr (f n)) ++ "]"
-#align matrix._root_.pi_fin.has_repr matrix._root_.pi_fin.has_repr
+instance PiFin.hasRepr [Repr α] :
+    Repr
+      (Fin n →
+        α) where repr f :=
+    "![" ++ String.intercalate ", " ((List.finRange n).map fun n => repr (f n)) ++ "]"
+#align pi_fin.has_repr PiFin.hasRepr
 
 end MatrixNotation
 
@@ -109,12 +112,14 @@ theorem cons_val_zero' (h : 0 < m.succ) (x : α) (u : Fin m → α) : vecCons x 
 #align matrix.cons_val_zero' Matrix.cons_val_zero'
 
 @[simp]
-theorem cons_val_succ (x : α) (u : Fin m → α) (i : Fin m) : vecCons x u i.succ = u i := by simp [vec_cons]
+theorem cons_val_succ (x : α) (u : Fin m → α) (i : Fin m) : vecCons x u i.succ = u i := by
+  simp [vec_cons]
 #align matrix.cons_val_succ Matrix.cons_val_succ
 
 @[simp]
 theorem cons_val_succ' {i : ℕ} (h : i.succ < m.succ) (x : α) (u : Fin m → α) :
-    vecCons x u ⟨i.succ, h⟩ = u ⟨i, Nat.lt_of_succ_lt_succ h⟩ := by simp only [vec_cons, Fin.cons, Fin.cases_succ']
+    vecCons x u ⟨i.succ, h⟩ = u ⟨i, Nat.lt_of_succ_lt_succ h⟩ := by
+  simp only [vec_cons, Fin.cons, Fin.cases_succ']
 #align matrix.cons_val_succ' Matrix.cons_val_succ'
 
 @[simp]
@@ -178,27 +183,31 @@ theorem cons_fin_one (x : α) (u : Fin 0 → α) : vecCons x u = fun _ => x :=
   funext (cons_val_fin_one x u)
 #align matrix.cons_fin_one Matrix.cons_fin_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
 unsafe instance _root_.pi_fin.reflect [reflected_univ.{u}] [reflected _ α] [has_reflect α] :
     ∀ {n}, has_reflect (Fin n → α)
   | 0, v =>
     (Subsingleton.elim vecEmpty v).rec
-      ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+      ((by
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecEmpty.{u}).subst
         q(α))
   | n + 1, v =>
     (cons_head_tail v).rec <|
-      (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+      (by
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
             reflected _ @vecCons.{u}).subst₄
         q(α) q(n) q(_) (_root_.pi_fin.reflect _)
-#align matrix._root_.pi_fin.reflect matrix._root_.pi_fin.reflect
+#align pi_fin.reflect pi_fin.reflect
 
 /-- Convert a vector of pexprs to the pexpr constructing that vector.-/
 unsafe def _root_.pi_fin.to_pexpr : ∀ {n}, (Fin n → pexpr) → pexpr
   | 0, v => ``(![])
   | n + 1, v => ``(vecCons $(v 0) $(_root_.pi_fin.to_pexpr <| vecTail v))
-#align matrix._root_.pi_fin.to_pexpr matrix._root_.pi_fin.to_pexpr
+#align pi_fin.to_pexpr pi_fin.to_pexpr
 
 /-! ### Numeral (`bit0` and `bit1`) indices
 The following definitions and `simp` lemmas are to allow any
@@ -219,7 +228,9 @@ theorem empty_append (v : Fin n → α) : Fin.append (zero_add _).symm ![] v = v
 @[simp]
 theorem cons_append (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v : Fin n → α) :
     Fin.append ho (vecCons x u) v =
-      vecCons x (Fin.append (by rwa [add_assoc, add_comm 1, ← add_assoc, add_right_cancel_iff] at ho) u v) :=
+      vecCons x
+        (Fin.append (by rwa [add_assoc, add_comm 1, ← add_assoc, add_right_cancel_iff] at ho) u
+          v) :=
   by
   ext i
   simp_rw [Fin.append]
@@ -283,7 +294,8 @@ theorem vec_alt1_append (v : Fin (n + 1) → α) : vecAlt1 rfl (Fin.append rfl v
       rw [Nat.mod_eq_of_lt h]
       
     · rw [Fin.coe_mk, not_lt] at h
-      simp only [Fin.ext_iff, Fin.coe_add, Fin.coe_mk, Nat.mod_add_mod, Fin.coe_one, Nat.mod_eq_sub_mod h]
+      simp only [Fin.ext_iff, Fin.coe_add, Fin.coe_mk, Nat.mod_add_mod, Fin.coe_one,
+        Nat.mod_eq_sub_mod h]
       refine' (Nat.mod_eq_of_lt _).symm
       rw [tsub_lt_iff_left h]
       exact Nat.add_succ_lt_add i.property i.property
@@ -292,23 +304,26 @@ theorem vec_alt1_append (v : Fin (n + 1) → α) : vecAlt1 rfl (Fin.append rfl v
 #align matrix.vec_alt1_append Matrix.vec_alt1_append
 
 @[simp]
-theorem vec_head_vec_alt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) : vecHead (vecAlt0 hm v) = v 0 :=
+theorem vec_head_vec_alt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) :
+    vecHead (vecAlt0 hm v) = v 0 :=
   rfl
 #align matrix.vec_head_vec_alt0 Matrix.vec_head_vec_alt0
 
 @[simp]
-theorem vec_head_vec_alt1 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) : vecHead (vecAlt1 hm v) = v 1 := by
-  simp [vec_head, vec_alt1]
+theorem vec_head_vec_alt1 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) :
+    vecHead (vecAlt1 hm v) = v 1 := by simp [vec_head, vec_alt1]
 #align matrix.vec_head_vec_alt1 Matrix.vec_head_vec_alt1
 
 @[simp]
 theorem cons_vec_bit0_eq_alt0 (x : α) (u : Fin n → α) (i : Fin (n + 1)) :
-    vecCons x u (bit0 i) = vecAlt0 rfl (Fin.append rfl (vecCons x u) (vecCons x u)) i := by rw [vec_alt0_append]
+    vecCons x u (bit0 i) = vecAlt0 rfl (Fin.append rfl (vecCons x u) (vecCons x u)) i := by
+  rw [vec_alt0_append]
 #align matrix.cons_vec_bit0_eq_alt0 Matrix.cons_vec_bit0_eq_alt0
 
 @[simp]
 theorem cons_vec_bit1_eq_alt1 (x : α) (u : Fin n → α) (i : Fin (n + 1)) :
-    vecCons x u (bit1 i) = vecAlt1 rfl (Fin.append rfl (vecCons x u) (vecCons x u)) i := by rw [vec_alt1_append]
+    vecCons x u (bit1 i) = vecAlt1 rfl (Fin.append rfl (vecCons x u) (vecCons x u)) i := by
+  rw [vec_alt1_append]
 #align matrix.cons_vec_bit1_eq_alt1 Matrix.cons_vec_bit1_eq_alt1
 
 @[simp]
@@ -316,7 +331,9 @@ theorem cons_vec_alt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Fin m �
     vecAlt0 h (vecCons x (vecCons y u)) =
       vecCons x
         (vecAlt0
-          (by rwa [add_assoc n, add_comm 1, ← add_assoc, ← add_assoc, add_right_cancel_iff, add_right_cancel_iff] at h)
+          (by
+            rwa [add_assoc n, add_comm 1, ← add_assoc, ← add_assoc, add_right_cancel_iff,
+              add_right_cancel_iff] at h)
           u) :=
   by
   ext i
@@ -339,7 +356,9 @@ theorem cons_vec_alt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Fin m �
     vecAlt1 h (vecCons x (vecCons y u)) =
       vecCons y
         (vecAlt1
-          (by rwa [add_assoc n, add_comm 1, ← add_assoc, ← add_assoc, add_right_cancel_iff, add_right_cancel_iff] at h)
+          (by
+            rwa [add_assoc n, add_comm 1, ← add_assoc, ← add_assoc, add_right_cancel_iff,
+              add_right_cancel_iff] at h)
           u) :=
   by
   ext i
@@ -496,7 +515,8 @@ theorem cons_eq_zero_iff {v : Fin n → α} {x : α} : vecCons x v = 0 ↔ x = 0
 open Classical
 
 theorem cons_nonzero_iff {v : Fin n → α} {x : α} : vecCons x v ≠ 0 ↔ x ≠ 0 ∨ v ≠ 0 :=
-  ⟨fun h => not_and_or.mp (h ∘ cons_eq_zero_iff.mpr), fun h => mt cons_eq_zero_iff.mp (not_and_or.mpr h)⟩
+  ⟨fun h => not_and_or.mp (h ∘ cons_eq_zero_iff.mpr), fun h =>
+    mt cons_eq_zero_iff.mp (not_and_or.mpr h)⟩
 #align matrix.cons_nonzero_iff Matrix.cons_nonzero_iff
 
 end Zero

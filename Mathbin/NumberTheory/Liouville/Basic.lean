@@ -46,16 +46,16 @@ theorem irrational {x : ℝ} (h : Liouville x) : Irrational x := by
   have b0 : (b : ℝ) ≠ 0 := ne_of_gt (nat.cast_pos.mpr bN0)
   have bq0 : (0 : ℝ) < b * q := mul_pos (nat.cast_pos.mpr bN0) qR0
   -- At a1, clear denominators...
-  replace a1 : |a * q - b * p| * q ^ (b + 1) < b * q
-  · rwa [div_sub_div _ _ b0 (ne_of_gt qR0), abs_div, div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _),
-      abs_of_pos bq0, one_mul,
+  replace a1 : |a * q - b * p| * q ^ (b + 1) < b * q;
+  · rwa [div_sub_div _ _ b0 (ne_of_gt qR0), abs_div,
+      div_lt_div_iff (abs_pos.mpr (ne_of_gt bq0)) (pow_pos qR0 _), abs_of_pos bq0, one_mul,
       ←-- ... and revert to integers
       Int.cast_pow,
-      ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ← Int.cast_abs, ← Int.cast_mul,
-      Int.cast_lt] at a1
+      ← Int.cast_mul, ← Int.cast_ofNat, ← Int.cast_mul, ← Int.cast_mul, ← Int.cast_sub, ←
+      Int.cast_abs, ← Int.cast_mul, Int.cast_lt] at a1
     
   -- At a0, clear denominators...
-  replace a0 : ¬a * q - ↑b * p = 0
+  replace a0 : ¬a * q - ↑b * p = 0;
   · rwa [Ne.def, div_eq_div_iff b0 (ne_of_gt qR0), mul_comm ↑p, ← sub_eq_zero,
       ←-- ... and revert to integers
       Int.cast_ofNat,
@@ -96,8 +96,8 @@ It is stated in more general form than needed: in the intended application, `Z =
 root of `f`, `ε` is small, `M` is a bound on the Lipschitz constant of `f` near `α`, `n` is
 the degree of the polynomial `f`.
 -/
-theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N → ℝ} {j : Z → N → R} {f : R → R}
-    {α : R} {ε M : ℝ}
+theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N → ℝ}
+    {j : Z → N → R} {f : R → R} {α : R} {ε M : ℝ}
     -- denominators are positive
     (d0 : ∀ a : N, 1 ≤ d a)
     (e0 : 0 < ε)
@@ -128,12 +128,14 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
 
 theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : ℤ[X]} (f0 : f ≠ 0)
     (fa : eval α (map (algebraMap ℤ ℝ) f) = 0) :
-    ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.natDegree * (|α - a / (b + 1)| * A) := by
+    ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.natDegree * (|α - a / (b + 1)| * A) :=
+  by
   -- `fR` is `f` viewed as a polynomial with `ℝ` coefficients.
   set fR : ℝ[X] := map (algebraMap ℤ ℝ) f
   -- `fR` is non-zero, since `f` is non-zero.
   obtain fR0 : fR ≠ 0 := fun fR0 =>
-    (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).Ne f0 (fR0.trans (Polynomial.map_zero _).symm)
+    (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).Ne f0
+      (fR0.trans (Polynomial.map_zero _).symm)
   -- reformulating assumption `fa`: `α` is a root of `fR`.
   have ar : α ∈ (fR.roots.to_finset : Set ℝ) :=
     finset.mem_coe.mpr (multiset.mem_to_finset.mpr ((mem_roots fR0).mpr (is_root.def.mpr fa)))
@@ -145,12 +147,13 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   obtain ⟨xm, -, hM⟩ :
     ∃ (xm : ℝ)(H : xm ∈ Icc (α - ζ) (α + ζ)),
       ∀ y : ℝ, y ∈ Icc (α - ζ) (α + ζ) → |fR.derivative.eval y| ≤ |fR.derivative.eval xm| :=
-    IsCompact.exists_forall_ge is_compact_Icc ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩
+    IsCompact.exists_forall_ge is_compact_Icc
+      ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩
       (continuous_abs.comp fR.derivative.continuous_aeval).ContinuousOn
   -- Use the key lemma `exists_one_le_pow_mul_dist`: we are left to show that ...
   refine'
-    @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ (|fR.derivative.eval xm|) _ z0 (fun y hy => _)
-      fun z a hq => _
+    @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ (|fR.derivative.eval xm|) _ z0
+      (fun y hy => _) fun z a hq => _
   -- 1: the denominators are positive -- essentially by definition;
   · exact fun a => one_le_pow_of_one_le ((le_add_iff_nonneg_left 1).mpr a.cast_nonneg) _
     
@@ -189,18 +192,20 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
   -- non-zero (`f0`) polynomial `f`
   rintro ⟨f : ℤ[X], f0, ef0⟩
   -- Change `aeval x f = 0` to `eval (map _ f) = 0`, who knew.
-  replace ef0 : (f.map (algebraMap ℤ ℝ)).eval x = 0
+  replace ef0 : (f.map (algebraMap ℤ ℝ)).eval x = 0;
   · rwa [aeval_def, ← eval_map] at ef0
     
   -- There is a "large" real number `A` such that `(b + 1) ^ (deg f) * |f (x - a / (b + 1))| * A`
   -- is at least one.  This is obtained from lemma `exists_pos_real_of_irrational_root`.
-  obtain ⟨A, hA, h⟩ : ∃ A : ℝ, 0 < A ∧ ∀ (a : ℤ) (b : ℕ), (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (|x - a / (b + 1)| * A) :=
+  obtain ⟨A, hA, h⟩ :
+    ∃ A : ℝ,
+      0 < A ∧ ∀ (a : ℤ) (b : ℕ), (1 : ℝ) ≤ (b + 1) ^ f.nat_degree * (|x - a / (b + 1)| * A) :=
     exists_pos_real_of_irrational_root lx.irrational f0 ef0
   -- Since the real numbers are Archimedean, a power of `2` exceeds `A`: `hn : A < 2 ^ r`.
   rcases pow_unbounded_of_one_lt A (lt_add_one 1) with ⟨r, hn⟩
   -- Use the Liouville property, with exponent `r +  deg f`.
-  obtain ⟨a, b, b1, -, a1⟩ : ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) :=
-    lx (r + f.nat_degree)
+  obtain ⟨a, b, b1, -, a1⟩ :
+    ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ (r + f.nat_degree) := lx (r + f.nat_degree)
   have b0 : (0 : ℝ) < b :=
     zero_lt_one.trans
       (by
@@ -225,7 +230,8 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
   -- at ratios of integers.
   · lift b to ℕ using zero_le_one.trans b1.le
     specialize h a b.pred
-    rwa [← Nat.cast_succ, Nat.succ_pred_eq_of_pos (zero_lt_one.trans _), ← mul_assoc, ← div_le_iff hA] at h
+    rwa [← Nat.cast_succ, Nat.succ_pred_eq_of_pos (zero_lt_one.trans _), ← mul_assoc, ←
+      div_le_iff hA] at h
     exact int.coe_nat_lt.mp b1
     
 #align liouville.transcendental Liouville.transcendental

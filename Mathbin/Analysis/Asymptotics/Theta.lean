@@ -19,13 +19,15 @@ open TopologicalSpace
 
 namespace Asymptotics
 
-variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' : Type _} {F' : Type _} {G' : Type _}
-  {E'' : Type _} {F'' : Type _} {G'' : Type _} {R : Type _} {R' : Type _} {𝕜 : Type _} {𝕜' : Type _}
+variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' : Type _}
+  {F' : Type _} {G' : Type _} {E'' : Type _} {F'' : Type _} {G'' : Type _} {R : Type _}
+  {R' : Type _} {𝕜 : Type _} {𝕜' : Type _}
 
 variable [HasNorm E] [HasNorm F] [HasNorm G]
 
-variable [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F'] [SeminormedAddCommGroup G'] [NormedAddCommGroup E'']
-  [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SemiNormedRing R] [SemiNormedRing R']
+variable [SeminormedAddCommGroup E'] [SeminormedAddCommGroup F'] [SeminormedAddCommGroup G']
+  [NormedAddCommGroup E''] [NormedAddCommGroup F''] [NormedAddCommGroup G''] [SemiNormedRing R]
+  [SemiNormedRing R']
 
 variable [NormedField 𝕜] [NormedField 𝕜']
 
@@ -69,17 +71,20 @@ theorem is_Theta_comm : f =Θ[l] g ↔ g =Θ[l] f :=
 #align asymptotics.is_Theta_comm Asymptotics.is_Theta_comm
 
 @[trans]
-theorem IsTheta.trans {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =Θ[l] k) : f =Θ[l] k :=
+theorem IsTheta.trans {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =Θ[l] k) :
+    f =Θ[l] k :=
   ⟨h₁.1.trans h₂.1, h₂.2.trans h₁.2⟩
 #align asymptotics.is_Theta.trans Asymptotics.IsTheta.trans
 
 @[trans]
-theorem IsO.trans_is_Theta {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =O[l] g) (h₂ : g =Θ[l] k) : f =O[l] k :=
+theorem IsO.trans_is_Theta {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =O[l] g) (h₂ : g =Θ[l] k) :
+    f =O[l] k :=
   h₁.trans h₂.1
 #align asymptotics.is_O.trans_is_Theta Asymptotics.IsO.trans_is_Theta
 
 @[trans]
-theorem IsTheta.trans_is_O {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =O[l] k) : f =O[l] k :=
+theorem IsTheta.trans_is_O {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =O[l] k) :
+    f =O[l] k :=
   h₁.1.trans h₂
 #align asymptotics.is_Theta.trans_is_O Asymptotics.IsTheta.trans_is_O
 
@@ -87,26 +92,29 @@ theorem IsTheta.trans_is_O {f : α → E} {g : α → F'} {k : α → G} (h₁ :
 Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_is_Thetaₓ'. -/
 #print Asymptotics.IsO.trans_is_Theta /-
 @[trans]
-theorem IsO.trans_is_Theta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g) (h₂ : g =Θ[l] k) : f =o[l] k :=
+theorem IsO.trans_is_Theta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g) (h₂ : g =Θ[l] k) :
+    f =o[l] k :=
   h₁.trans_is_O h₂.1
 #align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_is_Theta
 -/
 
 @[trans]
-theorem IsTheta.trans_is_o {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =o[l] k) : f =o[l] k :=
+theorem IsTheta.trans_is_o {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =o[l] k) :
+    f =o[l] k :=
   h₁.1.trans_is_o h₂
 #align asymptotics.is_Theta.trans_is_o Asymptotics.IsTheta.trans_is_o
 
 @[trans]
-theorem IsTheta.trans_eventually_eq {f : α → E} {g₁ g₂ : α → F} (h : f =Θ[l] g₁) (hg : g₁ =ᶠ[l] g₂) : f =Θ[l] g₂ :=
+theorem IsTheta.trans_eventually_eq {f : α → E} {g₁ g₂ : α → F} (h : f =Θ[l] g₁)
+    (hg : g₁ =ᶠ[l] g₂) : f =Θ[l] g₂ :=
   ⟨h.1.trans_eventually_eq hg, hg.symm.trans_is_O h.2⟩
 #align asymptotics.is_Theta.trans_eventually_eq Asymptotics.IsTheta.trans_eventually_eq
 
 @[trans]
-theorem _root_.filter.eventually_eq.trans_is_Theta {f₁ f₂ : α → E} {g : α → F} (hf : f₁ =ᶠ[l] f₂) (h : f₂ =Θ[l] g) :
-    f₁ =Θ[l] g :=
+theorem Filter.EventuallyEq.trans_is_Theta {f₁ f₂ : α → E} {g : α → F} (hf : f₁ =ᶠ[l] f₂)
+    (h : f₂ =Θ[l] g) : f₁ =Θ[l] g :=
   ⟨hf.trans_is_O h.1, h.2.trans_eventually_eq hf.symm⟩
-#align asymptotics._root_.filter.eventually_eq.trans_is_Theta asymptotics._root_.filter.eventually_eq.trans_is_Theta
+#align filter.eventually_eq.trans_is_Theta Filter.EventuallyEq.trans_is_Theta
 
 @[simp]
 theorem is_Theta_norm_left : (fun x => ‖f' x‖) =Θ[l] g ↔ f' =Θ[l] g := by simp [is_Theta]
@@ -121,7 +129,8 @@ alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 
 theorem is_Theta_of_norm_eventually_eq (h : (fun x => ‖f x‖) =ᶠ[l] fun x => ‖g x‖) : f =Θ[l] g :=
-  ⟨IsO.of_bound 1 <| by simpa only [one_mul] using h.le, IsO.of_bound 1 <| by simpa only [one_mul] using h.symm.le⟩
+  ⟨IsO.of_bound 1 <| by simpa only [one_mul] using h.le,
+    IsO.of_bound 1 <| by simpa only [one_mul] using h.symm.le⟩
 #align asymptotics.is_Theta_of_norm_eventually_eq Asymptotics.is_Theta_of_norm_eventually_eq
 
 theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ‖f' x‖) =ᶠ[l] g) : f' =Θ[l] g :=
@@ -161,12 +170,13 @@ theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ 
   h.1.eq_zero_imp.mp <| h.2.eq_zero_imp.mono fun x => Iff.intro
 #align asymptotics.is_Theta.eq_zero_iff Asymptotics.IsTheta.eq_zero_iff
 
-theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) := by
-  simp only [← is_o_one_iff ℝ, h.is_o_congr_left]
+theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) :=
+  by simp only [← is_o_one_iff ℝ, h.is_o_congr_left]
 #align asymptotics.is_Theta.tendsto_zero_iff Asymptotics.IsTheta.tendsto_zero_iff
 
-theorem IsTheta.tendsto_norm_at_top_iff (h : f' =Θ[l] g') : Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop :=
-  by simp only [← is_o_const_left_of_ne (one_ne_zero' ℝ), h.is_o_congr_right]
+theorem IsTheta.tendsto_norm_at_top_iff (h : f' =Θ[l] g') :
+    Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop := by
+  simp only [← is_o_const_left_of_ne (one_ne_zero' ℝ), h.is_o_congr_right]
 #align asymptotics.is_Theta.tendsto_norm_at_top_iff Asymptotics.IsTheta.tendsto_norm_at_top_iff
 
 theorem IsTheta.is_bounded_under_le_iff (h : f' =Θ[l] g') :
@@ -174,8 +184,9 @@ theorem IsTheta.is_bounded_under_le_iff (h : f' =Θ[l] g') :
   simp only [← is_O_const_of_ne (one_ne_zero' ℝ), h.is_O_congr_left]
 #align asymptotics.is_Theta.is_bounded_under_le_iff Asymptotics.IsTheta.is_bounded_under_le_iff
 
-theorem IsTheta.smul [NormedSpace 𝕜 E'] [NormedSpace 𝕜' F'] {f₁ : α → 𝕜} {f₂ : α → 𝕜'} {g₁ : α → E'} {g₂ : α → F'}
-    (hf : f₁ =Θ[l] f₂) (hg : g₁ =Θ[l] g₂) : (fun x => f₁ x • g₁ x) =Θ[l] fun x => f₂ x • g₂ x :=
+theorem IsTheta.smul [NormedSpace 𝕜 E'] [NormedSpace 𝕜' F'] {f₁ : α → 𝕜} {f₂ : α → 𝕜'} {g₁ : α → E'}
+    {g₂ : α → F'} (hf : f₁ =Θ[l] f₂) (hg : g₁ =Θ[l] g₂) :
+    (fun x => f₁ x • g₁ x) =Θ[l] fun x => f₂ x • g₂ x :=
   ⟨hf.1.smul hg.1, hf.2.smul hg.2⟩
 #align asymptotics.is_Theta.smul Asymptotics.IsTheta.smul
 
@@ -184,24 +195,29 @@ theorem IsTheta.mul {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ :
   h₁.smul h₂
 #align asymptotics.is_Theta.mul Asymptotics.IsTheta.mul
 
-theorem IsTheta.inv {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) : (fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹ :=
+theorem IsTheta.inv {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) :
+    (fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹ :=
   ⟨h.2.inv_rev h.1.eq_zero_imp, h.1.inv_rev h.2.eq_zero_imp⟩
 #align asymptotics.is_Theta.inv Asymptotics.IsTheta.inv
 
 @[simp]
-theorem is_Theta_inv {f : α → 𝕜} {g : α → 𝕜'} : ((fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹) ↔ f =Θ[l] g :=
+theorem is_Theta_inv {f : α → 𝕜} {g : α → 𝕜'} :
+    ((fun x => (f x)⁻¹) =Θ[l] fun x => (g x)⁻¹) ↔ f =Θ[l] g :=
   ⟨fun h => by simpa only [inv_inv] using h.inv, IsTheta.inv⟩
 #align asymptotics.is_Theta_inv Asymptotics.is_Theta_inv
 
 theorem IsTheta.div {f₁ f₂ : α → 𝕜} {g₁ g₂ : α → 𝕜'} (h₁ : f₁ =Θ[l] g₁) (h₂ : f₂ =Θ[l] g₂) :
-    (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
+    (fun x => f₁ x / f₂ x) =Θ[l] fun x => g₁ x / g₂ x := by
+  simpa only [div_eq_mul_inv] using h₁.mul h₂.inv
 #align asymptotics.is_Theta.div Asymptotics.IsTheta.div
 
-theorem IsTheta.pow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℕ) : (fun x => f x ^ n) =Θ[l] fun x => g x ^ n :=
+theorem IsTheta.pow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℕ) :
+    (fun x => f x ^ n) =Θ[l] fun x => g x ^ n :=
   ⟨h.1.pow n, h.2.pow n⟩
 #align asymptotics.is_Theta.pow Asymptotics.IsTheta.pow
 
-theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℤ) : (fun x => f x ^ n) =Θ[l] fun x => g x ^ n := by
+theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : ℤ) :
+    (fun x => f x ^ n) =Θ[l] fun x => g x ^ n := by
   cases n
   · simpa only [zpow_of_nat] using h.pow _
     
@@ -209,7 +225,8 @@ theorem IsTheta.zpow {f : α → 𝕜} {g : α → 𝕜'} (h : f =Θ[l] g) (n : 
     
 #align asymptotics.is_Theta.zpow Asymptotics.IsTheta.zpow
 
-theorem is_Theta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ : c₂ ≠ 0) : (fun x : α => c₁) =Θ[l] fun x => c₂ :=
+theorem is_Theta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ : c₂ ≠ 0) :
+    (fun x : α => c₁) =Θ[l] fun x => c₂ :=
   ⟨is_O_const_const _ h₂ _, is_O_const_const _ h₁ _⟩
 #align asymptotics.is_Theta_const_const Asymptotics.is_Theta_const_const
 
@@ -229,25 +246,29 @@ theorem is_Theta_zero_right : (f'' =Θ[l] fun x => (0 : F')) ↔ f'' =ᶠ[l] 0 :
   is_Theta_comm.trans is_Theta_zero_left
 #align asymptotics.is_Theta_zero_right Asymptotics.is_Theta_zero_right
 
-theorem is_Theta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0) : (fun x => c • f' x) =Θ[l] g ↔ f' =Θ[l] g :=
+theorem is_Theta_const_smul_left [NormedSpace 𝕜 E'] {c : 𝕜} (hc : c ≠ 0) :
+    (fun x => c • f' x) =Θ[l] g ↔ f' =Θ[l] g :=
   and_congr (is_O_const_smul_left hc) (is_O_const_smul_right hc)
 #align asymptotics.is_Theta_const_smul_left Asymptotics.is_Theta_const_smul_left
 
 alias is_Theta_const_smul_left ↔ is_Theta.of_const_smul_left is_Theta.const_smul_left
 
-theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0) : (f =Θ[l] fun x => c • g' x) ↔ f =Θ[l] g' :=
+theorem is_Theta_const_smul_right [NormedSpace 𝕜 F'] {c : 𝕜} (hc : c ≠ 0) :
+    (f =Θ[l] fun x => c • g' x) ↔ f =Θ[l] g' :=
   and_congr (is_O_const_smul_right hc) (is_O_const_smul_left hc)
 #align asymptotics.is_Theta_const_smul_right Asymptotics.is_Theta_const_smul_right
 
 alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_smul_right
 
-theorem is_Theta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) : (fun x => c * f x) =Θ[l] g ↔ f =Θ[l] g := by
+theorem is_Theta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) :
+    (fun x => c * f x) =Θ[l] g ↔ f =Θ[l] g := by
   simpa only [← smul_eq_mul] using is_Theta_const_smul_left hc
 #align asymptotics.is_Theta_const_mul_left Asymptotics.is_Theta_const_mul_left
 
 alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_left
 
-theorem is_Theta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) : (f =Θ[l] fun x => c * g x) ↔ f =Θ[l] g := by
+theorem is_Theta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) :
+    (f =Θ[l] fun x => c * g x) ↔ f =Θ[l] g := by
   simpa only [← smul_eq_mul] using is_Theta_const_smul_right hc
 #align asymptotics.is_Theta_const_mul_right Asymptotics.is_Theta_const_mul_right
 

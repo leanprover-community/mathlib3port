@@ -49,8 +49,9 @@ namespace Caratheodory
 
 /-- If `x` is in the convex hull of some finset `t` whose elements are not affine-independent,
 then it is in the convex hull of a strict subset of `t`. -/
-theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coe : t → E)) {x : E}
-    (m : x ∈ convexHull 𝕜 (↑t : Set E)) : ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) := by
+theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E}
+    (h : ¬AffineIndependent 𝕜 (coe : t → E)) {x : E} (m : x ∈ convexHull 𝕜 (↑t : Set E)) :
+    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) := by
   simp only [Finset.convex_hull_eq, mem_set_of_eq] at m⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m
   obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h
@@ -103,8 +104,8 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
       _ = ∑ e in t, (f e - f i₀ / g i₀ * g e) • e := rfl
       _ = t.center_mass f id := _
       
-    simp only [sub_smul, mul_smul, sum_sub_distrib, ← smul_sum, gcombo, smul_zero, sub_zero, center_mass, fsum, inv_one,
-      one_smul, id.def]
+    simp only [sub_smul, mul_smul, sum_sub_distrib, ← smul_sum, gcombo, smul_zero, sub_zero,
+      center_mass, fsum, inv_one, one_smul, id.def]
     
 #align caratheodory.mem_convex_hull_erase Caratheodory.mem_convex_hull_erase
 
@@ -116,21 +117,28 @@ include hx
 cardinality, whose convex hull contains `x`. -/
 noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
   Function.argminOn Finset.card Nat.lt_wfRel { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
-    (by simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
+    (by
+      simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using
+        hx)
 #align caratheodory.min_card_finset_of_mem_convex_hull Caratheodory.minCardFinsetOfMemConvexHull
 
 theorem min_card_finset_of_mem_convex_hull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
   (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).1
-#align caratheodory.min_card_finset_of_mem_convex_hull_subseteq Caratheodory.min_card_finset_of_mem_convex_hull_subseteq
+#align
+  caratheodory.min_card_finset_of_mem_convex_hull_subseteq Caratheodory.min_card_finset_of_mem_convex_hull_subseteq
 
-theorem mem_min_card_finset_of_mem_convex_hull : x ∈ convexHull 𝕜 (minCardFinsetOfMemConvexHull hx : Set E) :=
+theorem mem_min_card_finset_of_mem_convex_hull :
+    x ∈ convexHull 𝕜 (minCardFinsetOfMemConvexHull hx : Set E) :=
   (Function.argmin_on_mem _ _ { t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) } _).2
-#align caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_min_card_finset_of_mem_convex_hull
+#align
+  caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_min_card_finset_of_mem_convex_hull
 
-theorem min_card_finset_of_mem_convex_hull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty := by
+theorem min_card_finset_of_mem_convex_hull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty :=
+  by
   rw [← Finset.coe_nonempty, ← @convex_hull_nonempty_iff 𝕜]
   exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
-#align caratheodory.min_card_finset_of_mem_convex_hull_nonempty Caratheodory.min_card_finset_of_mem_convex_hull_nonempty
+#align
+  caratheodory.min_card_finset_of_mem_convex_hull_nonempty Caratheodory.min_card_finset_of_mem_convex_hull_nonempty
 
 theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
     (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
@@ -142,7 +150,8 @@ theorem affine_independent_min_card_finset_of_mem_convex_hull :
     AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) := by
   let k := (min_card_finset_of_mem_convex_hull hx).card - 1
   have hk : (min_card_finset_of_mem_convex_hull hx).card = k + 1 :=
-    (Nat.succ_pred_eq_of_pos (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
+    (Nat.succ_pred_eq_of_pos
+        (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
   classical
   by_contra
   obtain ⟨p, hp⟩ := mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)
@@ -164,18 +173,19 @@ variable {s : Set E}
 
 /-- **Carathéodory's convexity theorem** -/
 theorem convex_hull_eq_union :
-    convexHull 𝕜 s = ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 ↑t := by
+    convexHull 𝕜 s =
+      ⋃ (t : Finset E) (hss : ↑t ⊆ s) (hai : AffineIndependent 𝕜 (coe : t → E)), convexHull 𝕜 ↑t :=
+  by
   apply Set.Subset.antisymm
   · intro x hx
     simp only [exists_prop, Set.mem_Union]
     exact
-      ⟨Caratheodory.minCardFinsetOfMemConvexHull hx, Caratheodory.min_card_finset_of_mem_convex_hull_subseteq hx,
+      ⟨Caratheodory.minCardFinsetOfMemConvexHull hx,
+        Caratheodory.min_card_finset_of_mem_convex_hull_subseteq hx,
         Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull hx,
         Caratheodory.mem_min_card_finset_of_mem_convex_hull hx⟩
     
-  · iterate 3 
-    convert Set.Union_subset _
-    intro
+  · iterate 3 convert Set.Union_subset _; intro
     exact convex_hull_mono ‹_›
     
 #align convex_hull_eq_union convex_hull_eq_union
@@ -183,8 +193,8 @@ theorem convex_hull_eq_union :
 /-- A more explicit version of `convex_hull_eq_union`. -/
 theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull 𝕜 s) :
     ∃ (ι : Sort (u + 1))(_ : Fintype ι),
-      ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw : ∀ i, 0 < w i),
-        (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
+      ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw :
+        ∀ i, 0 < w i), (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
   by
   rw [convex_hull_eq_union] at hx
   simp only [exists_prop, Set.mem_Union] at hx
@@ -198,7 +208,8 @@ theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull �
     
   · exact ht₂.comp_embedding ⟨_, inclusion_injective (Finset.filter_subset (fun i => w i ≠ 0) t)⟩
     
-  · exact fun i => (hw₁ _ (finset.mem_filter.mp i.2).1).lt_of_ne (finset.mem_filter.mp i.property).2.symm
+  · exact fun i =>
+      (hw₁ _ (finset.mem_filter.mp i.2).1).lt_of_ne (finset.mem_filter.mp i.property).2.symm
     
   · erw [Finset.sum_attach, Finset.sum_filter_ne_zero, hw₂]
     

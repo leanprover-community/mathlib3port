@@ -42,7 +42,7 @@ open Nnreal Classical Ennreal TopologicalSpace
 
 namespace Vitali
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
 is any fixed number.
@@ -55,9 +55,12 @@ element `b` of `u` of size larger than that of `a` up to `τ`, i.e., `δ b ≥ �
 We state the lemma slightly more generally, with an indexed family of sets `B a` for `a ∈ t`, for
 wider applicability.
 -/
-theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : Set ι) (δ : ι → ℝ) (τ : ℝ) (hτ : 1 < τ)
-    (δnonneg : ∀ a ∈ t, 0 ≤ δ a) (R : ℝ) (δle : ∀ a ∈ t, δ a ≤ R) (hne : ∀ a ∈ t, (B a).Nonempty) :
-    ∃ (u : _)(_ : u ⊆ t), u.PairwiseDisjoint B ∧ ∀ a ∈ t, ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ δ a ≤ τ * δ b := by
+theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : Set ι) (δ : ι → ℝ)
+    (τ : ℝ) (hτ : 1 < τ) (δnonneg : ∀ a ∈ t, 0 ≤ δ a) (R : ℝ) (δle : ∀ a ∈ t, δ a ≤ R)
+    (hne : ∀ a ∈ t, (B a).Nonempty) :
+    ∃ (u : _)(_ : u ⊆ t),
+      u.PairwiseDisjoint B ∧ ∀ a ∈ t, ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ δ a ≤ τ * δ b :=
+  by
   /- The proof could be formulated as a transfinite induction. First pick an element of `t` with `δ`
     as large as possible (up to a factor of `τ`). Then among the remaining elements not intersecting
     the already chosen one, pick another element with large `δ`. Go on forever (transfinitely) until
@@ -74,16 +77,19 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   let T : Set (Set ι) :=
     { u |
       u ⊆ t ∧
-        u.PairwiseDisjoint B ∧ ∀ a ∈ t, ∀ b ∈ u, (B a ∩ B b).Nonempty → ∃ c ∈ u, (B a ∩ B c).Nonempty ∧ δ a ≤ τ * δ c }
+        u.PairwiseDisjoint B ∧
+          ∀ a ∈ t, ∀ b ∈ u, (B a ∩ B b).Nonempty → ∃ c ∈ u, (B a ∩ B c).Nonempty ∧ δ a ≤ τ * δ c }
   -- By Zorn, choose a maximal family in the good set `T` of disjoint families.
   obtain ⟨u, uT, hu⟩ : ∃ u ∈ T, ∀ v ∈ T, u ⊆ v → v = u := by
     refine' zorn_subset _ fun U UT hU => _
     refine' ⟨⋃₀U, _, fun s hs => subset_sUnion_of_mem hs⟩
-    simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion, Set.mem_set_of_eq]
+    simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion,
+      Set.mem_set_of_eq]
     refine'
       ⟨fun u hu => (UT hu).1, (pairwise_disjoint_sUnion hU.directed_on).2 fun u hu => (UT hu).2.1,
         fun a hat b u uU hbu hab => _⟩
-    obtain ⟨c, cu, ac, hc⟩ : ∃ (c : ι)(H : c ∈ u), (B a ∩ B c).Nonempty ∧ δ a ≤ τ * δ c := (UT uU).2.2 a hat b hbu hab
+    obtain ⟨c, cu, ac, hc⟩ : ∃ (c : ι)(H : c ∈ u), (B a ∩ B c).Nonempty ∧ δ a ≤ τ * δ c :=
+      (UT uU).2.2 a hat b hbu hab
     exact ⟨c, ⟨u, uU, cu⟩, ac, hc⟩
   -- the only nontrivial bit is to check that every `a ∈ t` intersects an element `b ∈ u` with
   -- comparatively large `δ b`. Assume this is not the case, then we will contradict the maximality.
@@ -93,7 +99,8 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     intro c hc
     by_contra
     rw [not_disjoint_iff_nonempty_inter] at h
-    obtain ⟨d, du, ad, hd⟩ : ∃ (d : ι)(H : d ∈ u), (B a ∩ B d).Nonempty ∧ δ a ≤ τ * δ d := uT.2.2 a hat c hc h
+    obtain ⟨d, du, ad, hd⟩ : ∃ (d : ι)(H : d ∈ u), (B a ∩ B d).Nonempty ∧ δ a ≤ τ * δ d :=
+      uT.2.2 a hat c hc h
     exact lt_irrefl _ ((hu d du ad).trans_le hd)
   -- Let `A` be all the elements of `t` which do not intersect the family `u`. It is nonempty as it
   -- contains `a`. We will pick an element `a'` of `A` with `δ a'` almost as large as possible.
@@ -160,14 +167,15 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
         
       
     
-#align vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
+#align
+  vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
-theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace α] (t : Set ι) (x : ι → α) (r : ι → ℝ)
-    (R : ℝ) (hr : ∀ a ∈ t, r a ≤ R) :
+theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace α] (t : Set ι)
+    (x : ι → α) (r : ι → ℝ) (R : ℝ) (hr : ∀ a ∈ t, r a ≤ R) :
     ∃ (u : _)(_ : u ⊆ t),
       (u.PairwiseDisjoint fun a => closedBall (x a) (r a)) ∧
         ∀ a ∈ t, ∃ b ∈ u, closedBall (x a) (r a) ⊆ closedBall (x b) (5 * r b) :=
@@ -183,8 +191,9 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
     
   push_neg  at ht
   let t' := { a ∈ t | 0 ≤ r a }
-  rcases exists_disjoint_subfamily_covering_enlargment (fun a => closed_ball (x a) (r a)) t' r 2 one_lt_two
-      (fun a ha => ha.2) R (fun a ha => hr a ha.1) fun a ha => ⟨x a, mem_closed_ball_self ha.2⟩ with
+  rcases exists_disjoint_subfamily_covering_enlargment (fun a => closed_ball (x a) (r a)) t' r 2
+      one_lt_two (fun a ha => ha.2) R (fun a ha => hr a ha.1) fun a ha =>
+      ⟨x a, mem_closed_ball_self ha.2⟩ with
     ⟨u, ut', u_disj, hu⟩
   have A : ∀ a ∈ t', ∃ b ∈ u, closed_ball (x a) (r a) ⊆ closed_ball (x b) (5 * r b) := by
     intro a ha
@@ -204,8 +213,8 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
 #align
   vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊆ » t') -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » t') -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊆ » t) -/
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
 proportion of the ball `B (x, 3 r)` for a given measure `μ` (think of the situation where `μ` is
@@ -216,10 +225,11 @@ Then one can extract from `t` a disjoint subfamily that covers almost all `s`.
 For more flexibility, we give a statement with a parameterized family of sets.
 -/
 theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
-    [SecondCountableTopology α] (μ : Measure α) [IsLocallyFiniteMeasure μ] (s : Set α) (t : Set ι) (C : ℝ≥0) (r : ι → ℝ)
-    (c : ι → α) (B : ι → Set α) (hB : ∀ a ∈ t, B a ⊆ closedBall (c a) (r a))
-    (μB : ∀ a ∈ t, μ (closedBall (c a) (3 * r a)) ≤ C * μ (B a)) (ht : ∀ a ∈ t, (interior (B a)).Nonempty)
-    (h't : ∀ a ∈ t, IsClosed (B a)) (hf : ∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ t, r a ≤ ε ∧ c a = x) :
+    [SecondCountableTopology α] (μ : Measure α) [IsLocallyFiniteMeasure μ] (s : Set α) (t : Set ι)
+    (C : ℝ≥0) (r : ι → ℝ) (c : ι → α) (B : ι → Set α) (hB : ∀ a ∈ t, B a ⊆ closedBall (c a) (r a))
+    (μB : ∀ a ∈ t, μ (closedBall (c a) (3 * r a)) ≤ C * μ (B a))
+    (ht : ∀ a ∈ t, (interior (B a)).Nonempty) (h't : ∀ a ∈ t, IsClosed (B a))
+    (hf : ∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ t, r a ≤ ε ∧ c a = x) :
     ∃ (u : _)(_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint B ∧ μ (s \ ⋃ a ∈ u, B a) = 0 := by
   /- The idea of the proof is the following. Assume for simplicity that `μ` is finite. Applying the
     abstract Vitali covering theorem with `δ = r` given by `hf`, one obtains a disjoint subfamily `u`,
@@ -251,7 +261,8 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     · apply lt_of_le_of_lt (measure_mono _) μR
       apply closed_ball_subset_closed_ball
       calc
-        20 * min 1 (R / 20) ≤ 20 * (R / 20) := mul_le_mul_of_nonneg_left (min_le_right _ _) (by norm_num)
+        20 * min 1 (R / 20) ≤ 20 * (R / 20) :=
+          mul_le_mul_of_nonneg_left (min_le_right _ _) (by norm_num)
         _ = R := by ring
         
       
@@ -261,11 +272,14 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   let t' := { a ∈ t | r a ≤ R (c a) }
   -- extract a disjoint subfamily `u` of `t'` thanks to the abstract Vitali covering theorem.
   obtain ⟨u, ut', u_disj, hu⟩ :
-    ∃ (u : _)(_ : u ⊆ t'), u.PairwiseDisjoint B ∧ ∀ a ∈ t', ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b := by
+    ∃ (u : _)(_ : u ⊆ t'),
+      u.PairwiseDisjoint B ∧ ∀ a ∈ t', ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b :=
+    by
     have A : ∀ a ∈ t', r a ≤ 1 := by
       intro a ha
       apply ha.2.trans (hR1 (c a))
-    have A' : ∀ a ∈ t', (B a).Nonempty := fun a hat' => Set.Nonempty.mono interior_subset (ht a hat'.1)
+    have A' : ∀ a ∈ t', (B a).Nonempty := fun a hat' =>
+      Set.Nonempty.mono interior_subset (ht a hat'.1)
     refine' exists_disjoint_subfamily_covering_enlargment B t' r 2 one_lt_two (fun a ha => _) 1 A A'
     exact nonempty_closed_ball.1 ((A' a ha).mono (hB a ha.1))
   have ut : u ⊆ t := fun a hau => (ut' hau).1
@@ -280,7 +294,8 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   let v := { a ∈ u | (B a ∩ ball x (R x)).Nonempty }
   have vu : v ⊆ u := fun a ha => ha.1
   -- they are all contained in a fixed ball of finite measure, thanks to our choice of `t'`
-  obtain ⟨K, μK, hK⟩ : ∃ K, μ (closed_ball x K) < ∞ ∧ ∀ a ∈ u, (B a ∩ ball x (R x)).Nonempty → B a ⊆ closed_ball x K :=
+  obtain ⟨K, μK, hK⟩ :
+    ∃ K, μ (closed_ball x K) < ∞ ∧ ∀ a ∈ u, (B a ∩ ball x (R x)).Nonempty → B a ⊆ closed_ball x K :=
     by
     have Idist_v : ∀ a ∈ v, dist (c a) x ≤ r a + R x := by
       intro a hav
@@ -342,19 +357,22 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   -- add up to an arbitrarily small number, say `ε / C`.
   obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ (B a)) < ε / C :=
     haveI : 0 < ε / C := by
-      simp only [Ennreal.div_pos_iff, εpos.ne', Ennreal.coe_ne_top, Ne.def, not_false_iff, and_self_iff]
+      simp only [Ennreal.div_pos_iff, εpos.ne', Ennreal.coe_ne_top, Ne.def, not_false_iff,
+        and_self_iff]
     ((tendsto_order.1 (Ennreal.tendsto_tsum_compl_at_top_zero I.ne)).2 _ this).exists
   -- main property: the points `z` of `s` which are not covered by `u` are contained in the
   -- enlargements of the elements not in `w`.
-  have M : (s \ ⋃ a ∈ u, B a) ∩ ball x (R x) ⊆ ⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a) := by
+  have M : (s \ ⋃ a ∈ u, B a) ∩ ball x (R x) ⊆ ⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a) :=
+    by
     intro z hz
     set k := ⋃ (a : v) (ha : a ∈ w), B a with hk
     have k_closed : IsClosed k := isClosedBUnion w.finite_to_set fun i hi => h't _ (ut (vu i.2))
     have z_notmem_k : z ∉ k := by
-      simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index, SetCoe.exists, not_and,
-        exists_and_right, Subtype.coe_mk]
+      simp only [not_exists, exists_prop, mem_Union, mem_sep_iff, forall_exists_index,
+        SetCoe.exists, not_and, exists_and_right, Subtype.coe_mk]
       intro b hbv h'b h'z
-      have : z ∈ (s \ ⋃ a ∈ u, B a) ∩ ⋃ a ∈ u, B a := mem_inter (mem_of_mem_inter_left hz) (mem_bUnion (vu hbv) h'z)
+      have : z ∈ (s \ ⋃ a ∈ u, B a) ∩ ⋃ a ∈ u, B a :=
+        mem_inter (mem_of_mem_inter_left hz) (mem_bUnion (vu hbv) h'z)
       simpa only [diff_inter_self]
     -- since the elements of `w` are closed and finitely many, one can find a small ball around `z`
     -- not intersecting them
@@ -404,7 +422,8 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   -- in `ball x (r x)` not covered by `u`.
   haveI : Encodable v := (u_count.mono vu).toEncodable
   calc
-    μ ((s \ ⋃ a ∈ u, B a) ∩ ball x (R x)) ≤ μ (⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a)) := measure_mono M
+    μ ((s \ ⋃ a ∈ u, B a) ∩ ball x (R x)) ≤ μ (⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a)) :=
+      measure_mono M
     _ ≤ ∑' a : { a // a ∉ w }, μ (closed_ball (c a) (3 * r a)) := measure_Union_le _
     _ ≤ ∑' a : { a // a ∉ w }, C * μ (B a) := Ennreal.tsum_le_tsum fun a => μB a (ut (vu a.1.2))
     _ = C * ∑' a : { a // a ∉ w }, μ (B a) := Ennreal.tsum_mul_left
@@ -417,16 +436,22 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
 doubling. Then the set of closed sets `a` with nonempty interior contained in `closed_ball x r` and
 covering a fixed proportion `1/C` of the ball `closed_ball x (3 * r)` forms a Vitali family.
 This is essentially a restatement of the measurable Vitali theorem. -/
-protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α] [SecondCountableTopology α]
-    (μ : Measure α) [IsLocallyFiniteMeasure μ] (C : ℝ≥0)
-    (h : ∀ x, ∃ᶠ r in 𝓝[>] 0, μ (closedBall x (3 * r)) ≤ C * μ (closedBall x r)) : VitaliFamily μ where
-  setsAt x := { a | IsClosed a ∧ (interior a).Nonempty ∧ ∃ r, a ⊆ closedBall x r ∧ μ (closedBall x (3 * r)) ≤ C * μ a }
+protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
+    [SecondCountableTopology α] (μ : Measure α) [IsLocallyFiniteMeasure μ] (C : ℝ≥0)
+    (h : ∀ x, ∃ᶠ r in 𝓝[>] 0, μ (closedBall x (3 * r)) ≤ C * μ (closedBall x r)) :
+    VitaliFamily μ where
+  setsAt x :=
+    { a |
+      IsClosed a ∧
+        (interior a).Nonempty ∧ ∃ r, a ⊆ closedBall x r ∧ μ (closedBall x (3 * r)) ≤ C * μ a }
   MeasurableSet' x a ha := ha.1.MeasurableSet
   nonempty_interior x a ha := ha.2.1
   Nontrivial x ε εpos := by
-    obtain ⟨r, μr, rpos, rε⟩ : ∃ r, μ (closed_ball x (3 * r)) ≤ C * μ (closed_ball x r) ∧ r ∈ Ioc (0 : ℝ) ε :=
+    obtain ⟨r, μr, rpos, rε⟩ :
+      ∃ r, μ (closed_ball x (3 * r)) ≤ C * μ (closed_ball x r) ∧ r ∈ Ioc (0 : ℝ) ε :=
       ((h x).and_eventually (Ioc_mem_nhds_within_Ioi ⟨le_rfl, εpos⟩)).exists
-    refine' ⟨closed_ball x r, ⟨is_closed_ball, _, ⟨r, subset.rfl, μr⟩⟩, closed_ball_subset_closed_ball rε⟩
+    refine'
+      ⟨closed_ball x r, ⟨is_closed_ball, _, ⟨r, subset.rfl, μr⟩⟩, closed_ball_subset_closed_ball rε⟩
     exact (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball
   covering := by
     intro s f fsubset ffine
@@ -445,8 +470,9 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
       · apply le_trans (measure_mono (closed_ball_subset_closed_ball _)) μr
         exact mul_le_mul_of_nonneg_left (min_le_left _ _) zero_le_three
         
-    rcases exists_disjoint_covering_ae μ s t C (fun p => p.1) (fun p => p.2.1) (fun p => p.2.2) (fun p hp => hp.1)
-        (fun p hp => hp.2.1) (fun p hp => hp.2.2.1) (fun p hp => hp.2.2.2.1) A with
+    rcases exists_disjoint_covering_ae μ s t C (fun p => p.1) (fun p => p.2.1) (fun p => p.2.2)
+        (fun p hp => hp.1) (fun p hp => hp.2.1) (fun p hp => hp.2.2.1) (fun p hp => hp.2.2.2.1)
+        A with
       ⟨t', t't, t'_count, t'_disj, μt'⟩
     refine' ⟨(fun p : ℝ × α × Set α => p.2) '' t', _, _, _, _⟩
     · rintro - ⟨q, hq, rfl⟩

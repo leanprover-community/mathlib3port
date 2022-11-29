@@ -52,7 +52,8 @@ theorem next_or_self_cons_cons (xs : List α) (x y d : α) : nextOr (x :: y :: x
   if_pos rfl
 #align list.next_or_self_cons_cons List.next_or_self_cons_cons
 
-theorem next_or_cons_of_ne (xs : List α) (y x d : α) (h : x ≠ y) : nextOr (y :: xs) x d = nextOr xs x d := by
+theorem next_or_cons_of_ne (xs : List α) (y x d : α) (h : x ≠ y) :
+    nextOr (y :: xs) x d = nextOr xs x d := by
   cases' xs with z zs
   · rfl
     
@@ -104,7 +105,8 @@ theorem next_or_concat {xs : List α} {x : α} (d : α) (h : x ∉ xs) : nextOr 
 
 theorem next_or_mem {xs : List α} {x d : α} (hd : d ∈ xs) : nextOr xs x d ∈ xs := by
   revert hd
-  suffices ∀ (xs' : List α) (h : ∀ x ∈ xs, x ∈ xs') (hd : d ∈ xs'), next_or xs x d ∈ xs' by exact this xs fun _ => id
+  suffices ∀ (xs' : List α) (h : ∀ x ∈ xs, x ∈ xs') (hd : d ∈ xs'), next_or xs x d ∈ xs' by
+    exact this xs fun _ => id
   intro xs' hxs' hd
   induction' xs with y ys ih
   · exact hd
@@ -165,8 +167,8 @@ theorem prev_singleton (x y : α) (h : x ∈ [y]) : prev [y] x h = y :=
   rfl
 #align list.prev_singleton List.prev_singleton
 
-theorem next_cons_cons_eq' (y z : α) (h : x ∈ y :: z :: l) (hx : x = y) : next (y :: z :: l) x h = z := by
-  rw [next, next_or, if_pos hx]
+theorem next_cons_cons_eq' (y z : α) (h : x ∈ y :: z :: l) (hx : x = y) :
+    next (y :: z :: l) x h = z := by rw [next, next_or, if_pos hx]
 #align list.next_cons_cons_eq' List.next_cons_cons_eq'
 
 @[simp]
@@ -174,7 +176,8 @@ theorem next_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) : next (x :: z :: l) 
   next_cons_cons_eq' l x x z h rfl
 #align list.next_cons_cons_eq List.next_cons_cons_eq
 
-theorem next_ne_head_ne_last (y : α) (h : x ∈ y :: l) (hy : x ≠ y) (hx : x ≠ last (y :: l) (cons_ne_nil _ _)) :
+theorem next_ne_head_ne_last (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
+    (hx : x ≠ last (y :: l) (cons_ne_nil _ _)) :
     next (y :: l) x h = next l x (by simpa [hy] using h) := by
   rw [next, next, next_or_cons_of_ne _ _ _ _ hy, next_or_eq_next_or_of_mem_of_ne]
   · rwa [last_cons] at hx
@@ -184,7 +187,8 @@ theorem next_ne_head_ne_last (y : α) (h : x ∈ y :: l) (hy : x ≠ y) (hx : x 
 #align list.next_ne_head_ne_last List.next_ne_head_ne_last
 
 theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
-    (h : x ∈ y :: l ++ [x] := mem_append_right _ (mem_singleton_self x)) : next (y :: l ++ [x]) x h = y := by
+    (h : x ∈ y :: l ++ [x] := mem_append_right _ (mem_singleton_self x)) :
+    next (y :: l ++ [x]) x h = y := by
   rw [next, next_or_concat]
   · rfl
     
@@ -192,8 +196,8 @@ theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
     
 #align list.next_cons_concat List.next_cons_concat
 
-theorem next_last_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y) (hx : x = last (y :: l) (cons_ne_nil _ _)) (hl : Nodup l) :
-    next (y :: l) x h = y := by
+theorem next_last_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
+    (hx : x = last (y :: l) (cons_ne_nil _ _)) (hl : Nodup l) : next (y :: l) x h = y := by
   rw [next, nth_le, ← init_append_last (cons_ne_nil y l), hx, next_or_concat]
   subst hx
   intro H
@@ -211,8 +215,8 @@ theorem next_last_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y) (hx : x = last
     
 #align list.next_last_cons List.next_last_cons
 
-theorem prev_last_cons' (y : α) (h : x ∈ y :: l) (hx : x = y) : prev (y :: l) x h = last (y :: l) (cons_ne_nil _ _) :=
-  by cases l <;> simp [prev, hx]
+theorem prev_last_cons' (y : α) (h : x ∈ y :: l) (hx : x = y) :
+    prev (y :: l) x h = last (y :: l) (cons_ne_nil _ _) := by cases l <;> simp [prev, hx]
 #align list.prev_last_cons' List.prev_last_cons'
 
 @[simp]
@@ -225,12 +229,13 @@ theorem prev_cons_cons_eq' (y z : α) (h : x ∈ y :: z :: l) (hx : x = y) :
 #align list.prev_cons_cons_eq' List.prev_cons_cons_eq'
 
 @[simp]
-theorem prev_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) : prev (x :: z :: l) x h = last (z :: l) (cons_ne_nil _ _) :=
+theorem prev_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) :
+    prev (x :: z :: l) x h = last (z :: l) (cons_ne_nil _ _) :=
   prev_cons_cons_eq' l x x z h rfl
 #align list.prev_cons_cons_eq List.prev_cons_cons_eq
 
-theorem prev_cons_cons_of_ne' (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) (hz : x = z) : prev (y :: z :: l) x h = y :=
-  by
+theorem prev_cons_cons_of_ne' (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) (hz : x = z) :
+    prev (y :: z :: l) x h = y := by
   cases l
   · simp [prev, hy, hz]
     
@@ -238,7 +243,8 @@ theorem prev_cons_cons_of_ne' (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) 
     
 #align list.prev_cons_cons_of_ne' List.prev_cons_cons_of_ne'
 
-theorem prev_cons_cons_of_ne (y : α) (h : x ∈ y :: x :: l) (hy : x ≠ y) : prev (y :: x :: l) x h = y :=
+theorem prev_cons_cons_of_ne (y : α) (h : x ∈ y :: x :: l) (hy : x ≠ y) :
+    prev (y :: x :: l) x h = y :=
   prev_cons_cons_of_ne' _ _ _ _ _ hy rfl
 #align list.prev_cons_cons_of_ne List.prev_cons_cons_of_ne
 
@@ -279,7 +285,9 @@ theorem prev_mem : l.prev x h ∈ l := by
 #align list.prev_mem List.prev_mem
 
 theorem next_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
-    next l (l.nthLe n hn) (nth_le_mem _ _ _) = l.nthLe ((n + 1) % l.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) := by
+    next l (l.nthLe n hn) (nth_le_mem _ _ _) =
+      l.nthLe ((n + 1) % l.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) :=
+  by
   cases' l with x l
   · simpa using hn
     
@@ -356,8 +364,8 @@ theorem prev_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
         simp only [Nat.add_succ_sub_one, add_zero, length]
         simp only [length, Nat.succ_lt_succ_iff] at hn
         set k := l.length
-        rw [Nat.succ_add, ← Nat.add_succ, Nat.add_mod_right, Nat.succ_add, ← Nat.add_succ _ k, Nat.add_mod_right,
-          Nat.mod_eq_of_lt, Nat.mod_eq_of_lt]
+        rw [Nat.succ_add, ← Nat.add_succ, Nat.add_mod_right, Nat.succ_add, ← Nat.add_succ _ k,
+          Nat.add_mod_right, Nat.mod_eq_of_lt, Nat.mod_eq_of_lt]
         · exact Nat.lt_succ_of_lt hn
           
         · exact Nat.succ_lt_succ (Nat.lt_succ_of_lt hn)
@@ -388,7 +396,8 @@ theorem pmap_next_eq_rotate_one (h : Nodup l) : (l.pmap l.next fun _ h => h) = l
     
 #align list.pmap_next_eq_rotate_one List.pmap_next_eq_rotate_one
 
-theorem pmap_prev_eq_rotate_length_sub_one (h : Nodup l) : (l.pmap l.prev fun _ h => h) = l.rotate (l.length - 1) := by
+theorem pmap_prev_eq_rotate_length_sub_one (h : Nodup l) :
+    (l.pmap l.prev fun _ h => h) = l.rotate (l.length - 1) := by
   apply List.ext_le
   · simp
     
@@ -397,7 +406,8 @@ theorem pmap_prev_eq_rotate_length_sub_one (h : Nodup l) : (l.pmap l.prev fun _ 
     
 #align list.pmap_prev_eq_rotate_length_sub_one List.pmap_prev_eq_rotate_length_sub_one
 
-theorem prev_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) : prev l (next l x hx) (next_mem _ _ _) = x := by
+theorem prev_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
+    prev l (next l x hx) (next_mem _ _ _) = x := by
   obtain ⟨n, hn, rfl⟩ := nth_le_of_mem hx
   simp only [next_nth_le, prev_nth_le, h, Nat.mod_add_mod]
   cases' l with hd tl
@@ -408,7 +418,8 @@ theorem prev_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) : prev l (
     
 #align list.prev_next List.prev_next
 
-theorem next_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) : next l (prev l x hx) (prev_mem _ _ _) = x := by
+theorem next_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
+    next l (prev l x hx) (prev_mem _ _ _) = x := by
   obtain ⟨n, hn, rfl⟩ := nth_le_of_mem hx
   simp only [next_nth_le, prev_nth_le, h, Nat.mod_add_mod]
   cases' l with hd tl
@@ -423,12 +434,14 @@ theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l)
     prev l.reverse x (mem_reverse.mpr hx) = next l x hx := by
   obtain ⟨k, hk, rfl⟩ := nth_le_of_mem hx
   have lpos : 0 < l.length := k.zero_le.trans_lt hk
-  have key : l.length - 1 - k < l.length := (Nat.sub_le _ _).trans_lt (tsub_lt_self lpos Nat.succ_pos')
+  have key : l.length - 1 - k < l.length :=
+    (Nat.sub_le _ _).trans_lt (tsub_lt_self lpos Nat.succ_pos')
   rw [← nth_le_pmap l.next (fun _ h => h) (by simpa using hk)]
   simp_rw [← nth_le_reverse l k (key.trans_le (by simp)), pmap_next_eq_rotate_one _ h]
   rw [← nth_le_pmap l.reverse.prev fun _ h => h]
-  · simp_rw [pmap_prev_eq_rotate_length_sub_one _ (nodup_reverse.mpr h), rotate_reverse, length_reverse,
-      Nat.mod_eq_of_lt (tsub_lt_self lpos Nat.succ_pos'), tsub_tsub_cancel_of_le (Nat.succ_le_of_lt lpos)]
+  · simp_rw [pmap_prev_eq_rotate_length_sub_one _ (nodup_reverse.mpr h), rotate_reverse,
+      length_reverse, Nat.mod_eq_of_lt (tsub_lt_self lpos Nat.succ_pos'),
+      tsub_tsub_cancel_of_le (Nat.succ_le_of_lt lpos)]
     rw [← nth_le_reverse]
     · simp [tsub_tsub_cancel_of_le (Nat.le_pred_of_lt hk)]
       
@@ -527,8 +540,8 @@ instance : Inhabited (Cycle α) :=
 
 /-- An induction principle for `cycle`. Use as `induction s using cycle.induction_on`. -/
 @[elab_as_elim]
-theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) :
-    C s :=
+theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil)
+    (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) : C s :=
   (Quotient.inductionOn' s) fun l => by
     apply List.recOn l <;> simp
     assumption'
@@ -621,10 +634,11 @@ theorem subsingleton_reverse_iff {s : Cycle α} : s.reverse.Subsingleton ↔ s.S
   simp [length_subsingleton_iff]
 #align cycle.subsingleton_reverse_iff Cycle.subsingleton_reverse_iff
 
-theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y := by
+theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) :
+    ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y := by
   induction' s using Quot.induction_on with l
-  simp only [length_subsingleton_iff, length_coe, mk_eq_coe, le_iff_lt_or_eq, Nat.lt_add_one_iff, length_eq_zero,
-    length_eq_one, Nat.not_lt_zero, false_or_iff] at h
+  simp only [length_subsingleton_iff, length_coe, mk_eq_coe, le_iff_lt_or_eq, Nat.lt_add_one_iff,
+    length_eq_zero, length_eq_one, Nat.not_lt_zero, false_or_iff] at h
   rcases h with (rfl | ⟨z, rfl⟩) <;> simp
 #align cycle.subsingleton.congr Cycle.Subsingleton.congr
 
@@ -634,14 +648,16 @@ def Nontrivial (s : Cycle α) : Prop :=
 #align cycle.nontrivial Cycle.Nontrivial
 
 @[simp]
-theorem nontrivial_coe_nodup_iff {l : List α} (hl : l.Nodup) : Nontrivial (l : Cycle α) ↔ 2 ≤ l.length := by
+theorem nontrivial_coe_nodup_iff {l : List α} (hl : l.Nodup) :
+    Nontrivial (l : Cycle α) ↔ 2 ≤ l.length := by
   rw [Nontrivial]
   rcases l with (_ | ⟨hd, _ | ⟨hd', tl⟩⟩)
   · simp
     
   · simp
     
-  · simp only [mem_cons_iff, exists_prop, mem_coe_iff, List.length, Ne.def, Nat.succ_le_succ_iff, zero_le, iff_true_iff]
+  · simp only [mem_cons_iff, exists_prop, mem_coe_iff, List.length, Ne.def, Nat.succ_le_succ_iff,
+      zero_le, iff_true_iff]
     refine' ⟨hd, hd', _, by simp⟩
     simp only [not_or, mem_cons_iff, nodup_cons] at hl
     exact hl.left.left
@@ -649,7 +665,8 @@ theorem nontrivial_coe_nodup_iff {l : List α} (hl : l.Nodup) : Nontrivial (l : 
 #align cycle.nontrivial_coe_nodup_iff Cycle.nontrivial_coe_nodup_iff
 
 @[simp]
-theorem nontrivial_reverse_iff {s : Cycle α} : s.reverse.Nontrivial ↔ s.Nontrivial := by simp [Nontrivial]
+theorem nontrivial_reverse_iff {s : Cycle α} : s.reverse.Nontrivial ↔ s.Nontrivial := by
+  simp [Nontrivial]
 #align cycle.nontrivial_reverse_iff Cycle.nontrivial_reverse_iff
 
 theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s := by
@@ -767,7 +784,8 @@ theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l
 #align cycle.mem_lists_iff_coe_eq Cycle.mem_lists_iff_coe_eq
 
 @[simp]
-theorem lists_nil : lists (@nil α) = [([] : List α)] := by rw [nil, lists_coe, cyclic_permutations_nil]
+theorem lists_nil : lists (@nil α) = [([] : List α)] := by
+  rw [nil, lists_coe, cyclic_permutations_nil]
 #align cycle.lists_nil Cycle.lists_nil
 
 section Decidable
@@ -781,7 +799,8 @@ def decidableNontrivialCoe : ∀ l : List α, Decidable (Nontrivial (l : Cycle �
   | [x] => isFalse (by simp [Nontrivial])
   | x :: y :: l =>
     if h : x = y then
-      @decidable_of_iff' _ (Nontrivial (x :: l : Cycle α)) (by simp [h, Nontrivial]) (decidable_nontrivial_coe (x :: l))
+      @decidable_of_iff' _ (Nontrivial (x :: l : Cycle α)) (by simp [h, Nontrivial])
+        (decidable_nontrivial_coe (x :: l))
     else isTrue ⟨x, y, h, by simp, by simp⟩
 #align cycle.decidable_nontrivial_coe Cycle.decidableNontrivialCoe
 
@@ -792,14 +811,17 @@ instance {s : Cycle α} : Decidable (Nodup s) :=
   Quot.recOnSubsingleton s List.nodupDecidable
 
 instance fintypeNodupCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
-  Fintype.ofSurjective (fun l : { l : List α // l.Nodup } => ⟨l.val, by simpa using l.prop⟩) fun ⟨s, hs⟩ => by
+  Fintype.ofSurjective (fun l : { l : List α // l.Nodup } => ⟨l.val, by simpa using l.prop⟩)
+    fun ⟨s, hs⟩ => by
     induction s using Quotient.inductionOn'
     exact ⟨⟨s, hs⟩, by simp⟩
 #align cycle.fintype_nodup_cycle Cycle.fintypeNodupCycle
 
-instance fintypeNodupNontrivialCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup ∧ s.Nontrivial } :=
+instance fintypeNodupNontrivialCycle [Fintype α] :
+    Fintype { s : Cycle α // s.Nodup ∧ s.Nontrivial } :=
   Fintype.subtype
-    (((Finset.univ : Finset { s : Cycle α // s.Nodup }).map (Function.Embedding.subtype _)).filter Cycle.Nontrivial)
+    (((Finset.univ : Finset { s : Cycle α // s.Nodup }).map (Function.Embedding.subtype _)).filter
+      Cycle.Nontrivial)
     (by simp)
 #align cycle.fintype_nodup_nontrivial_cycle Cycle.fintypeNodupNontrivialCycle
 
@@ -920,7 +942,8 @@ def Chain (r : α → α → Prop) (c : Cycle α) : Prop :=
           · simp only [rotate_singleton] at hn
             rw [hn.1, hn.2]
             
-          · rw [Nat.succ_eq_one_add, ← rotate_rotate, rotate_cons_succ, rotate_zero, cons_append] at hn
+          · rw [Nat.succ_eq_one_add, ← rotate_rotate, rotate_cons_succ, rotate_zero, cons_append] at
+              hn
             rw [← hd c _ _ _ hn]
             simp [and_comm]
             
@@ -933,7 +956,8 @@ theorem Chain.nil (r : α → α → Prop) : Cycle.Chain r (@nil α) := by trivi
 #align cycle.chain.nil Cycle.Chain.nil
 
 @[simp]
-theorem chain_coe_cons (r : α → α → Prop) (a : α) (l : List α) : Chain r (a :: l) ↔ List.Chain r a (l ++ [a]) :=
+theorem chain_coe_cons (r : α → α → Prop) (a : α) (l : List α) :
+    Chain r (a :: l) ↔ List.Chain r a (l ++ [a]) :=
   Iff.rfl
 #align cycle.chain_coe_cons Cycle.chain_coe_cons
 
@@ -942,7 +966,8 @@ theorem chain_singleton (r : α → α → Prop) (a : α) : Chain r [a] ↔ r a 
   rw [chain_coe_cons, nil_append, chain_singleton]
 #align cycle.chain_singleton Cycle.chain_singleton
 
-theorem chain_ne_nil (r : α → α → Prop) {l : List α} : ∀ hl : l ≠ [], Chain r l ↔ List.Chain r (last l hl) l := by
+theorem chain_ne_nil (r : α → α → Prop) {l : List α} :
+    ∀ hl : l ≠ [], Chain r l ↔ List.Chain r (last l hl) l := by
   apply l.reverse_rec_on
   exact fun hm => hm.irrefl.elim
   intro m a H _
@@ -959,7 +984,8 @@ theorem chain_map {β : Type _} {r : α → α → Prop} (f : β → α) {s : Cy
     rfl
 #align cycle.chain_map Cycle.chain_map
 
-theorem chain_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) : Chain r (List.range n.succ) ↔ r n 0 ∧ ∀ m < n, r m m.succ := by
+theorem chain_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) :
+    Chain r (List.range n.succ) ↔ r n 0 ∧ ∀ m < n, r m m.succ := by
   rw [range_succ, ← coe_cons_eq_coe_append, chain_coe_cons, ← range_succ, chain_range_succ]
 #align cycle.chain_range_succ Cycle.chain_range_succ
 
@@ -977,8 +1003,8 @@ theorem chain_of_pairwise : (∀ a ∈ s, ∀ b ∈ s, r a b) → Chain r s := b
   refine'
     ⟨fun b hb => _,
       pairwise_append.2
-        ⟨pairwise_of_forall_mem_list fun b hb c hc => hs b (Hl hb) c (Hl hc), pairwise_singleton r a, fun b hb c hc =>
-          _⟩⟩
+        ⟨pairwise_of_forall_mem_list fun b hb c hc => hs b (Hl hb) c (Hl hc),
+          pairwise_singleton r a, fun b hb c hc => _⟩⟩
   · rw [mem_append] at hb
     cases hb
     · exact hs a Ha b (Hl hb)
@@ -1000,8 +1026,8 @@ theorem chain_iff_pairwise [IsTrans α r] : Chain r s ↔ ∀ a ∈ s, ∀ b ∈
     exact fun _ b hb => hb.elim
     intro hs b hb c hc
     rw [Cycle.chain_coe_cons, chain_iff_pairwise] at hs
-    simp only [pairwise_append, pairwise_cons, mem_append, mem_singleton, List.not_mem_nil, IsEmpty.forall_iff,
-      imp_true_iff, pairwise.nil, forall_eq, true_and_iff] at hs
+    simp only [pairwise_append, pairwise_cons, mem_append, mem_singleton, List.not_mem_nil,
+      IsEmpty.forall_iff, imp_true_iff, pairwise.nil, forall_eq, true_and_iff] at hs
     simp only [mem_coe_iff, mem_cons_iff] at hb hc
     rcases hb with (rfl | hb) <;> rcases hc with (rfl | hc)
     · exact hs.1 c (Or.inr rfl)
@@ -1015,8 +1041,8 @@ theorem chain_iff_pairwise [IsTrans α r] : Chain r s ↔ ∀ a ∈ s, ∀ b ∈
     Cycle.chain_of_pairwise⟩
 #align cycle.chain_iff_pairwise Cycle.chain_iff_pairwise
 
-theorem forall_eq_of_chain [IsTrans α r] [IsAntisymm α r] (hs : Chain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
-    a = b := by
+theorem forall_eq_of_chain [IsTrans α r] [IsAntisymm α r] (hs : Chain r s) {a b : α} (ha : a ∈ s)
+    (hb : b ∈ s) : a = b := by
   rw [chain_iff_pairwise] at hs
   exact antisymm (hs a ha b hb) (hs b hb a ha)
 #align cycle.forall_eq_of_chain Cycle.forall_eq_of_chain

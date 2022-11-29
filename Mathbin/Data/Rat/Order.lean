@@ -39,9 +39,7 @@ protected def Nonneg (r : ℚ) : Prop :=
 
 @[simp]
 theorem mk_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a := by
-  generalize ha : a /. b = x
-  cases' x with n₁ d₁ h₁ c₁
-  rw [num_denom'] at ha
+  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   simp [Rat.Nonneg]
   have d0 := Int.coe_nat_lt.2 h₁
   have := (mk_eq (ne_of_gt h) (ne_of_gt d0)).1 ha
@@ -63,10 +61,9 @@ protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonne
       have d₂0 : 0 < (d₂ : ℤ) := Int.coe_nat_pos.2 (Nat.pos_of_ne_zero h₂)
       simp [d₁0, d₂0, h₁, h₂, mul_pos d₁0 d₂0]
       intro n₁0 n₂0
-      apply add_nonneg <;>
-        apply mul_nonneg <;>
-          · first |assumption|apply Int.ofNat_zero_le
-            
+      apply add_nonneg <;> apply mul_nonneg <;>
+        · first |assumption|apply Int.ofNat_zero_le
+          
 #align rat.nonneg_add Rat.nonneg_add
 
 protected theorem nonneg_mul {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a * b) :=
@@ -88,7 +85,8 @@ protected theorem nonneg_total : Rat.Nonneg a ∨ Rat.Nonneg (-a) := by
   cases' a with n <;> exact Or.imp_right neg_nonneg_of_nonpos (le_total 0 n)
 #align rat.nonneg_total Rat.nonneg_total
 
-instance decidableNonneg : Decidable (Rat.Nonneg a) := by cases a <;> unfold Rat.Nonneg <;> infer_instance
+instance decidableNonneg : Decidable (Rat.Nonneg a) := by
+  cases a <;> unfold Rat.Nonneg <;> infer_instance
 #align rat.decidable_nonneg Rat.decidableNonneg
 
 /-- Relation `a ≤ b` on `ℚ` defined as `a ≤ b ↔ rat.nonneg (b - a)`. Use `a ≤ b` instead of
@@ -104,7 +102,8 @@ instance decidableLe : DecidableRel ((· ≤ ·) : ℚ → ℚ → Prop)
   | a, b => show Decidable (Rat.Nonneg (b - a)) by infer_instance
 #align rat.decidable_le Rat.decidableLe
 
-protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) : a /. b ≤ c /. d ↔ a * d ≤ c * b := by
+protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) :
+    a /. b ≤ c /. d ↔ a * d ≤ c * b := by
   show Rat.Nonneg _ ↔ _
   rw [← sub_nonneg]
   simp [sub_eq_add_neg, ne_of_gt b0, ne_of_gt d0, mul_pos d0 b0]
@@ -114,7 +113,8 @@ protected theorem le_refl : a ≤ a :=
   show Rat.Nonneg (a - a) by rw [sub_self] <;> exact le_refl (0 : ℤ)
 #align rat.le_refl Rat.le_refl
 
-protected theorem le_total : a ≤ b ∨ b ≤ a := by have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this
+protected theorem le_total : a ≤ b ∨ b ≤ a := by
+  have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this
 #align rat.le_total Rat.le_total
 
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
@@ -216,11 +216,12 @@ instance : OrderedCancelAddCommMonoid ℚ := by infer_instance
 instance : OrderedAddCommMonoid ℚ := by infer_instance
 
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
-  lt_iff_lt_of_le_iff_le <| by simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
+  lt_iff_lt_of_le_iff_le <| by
+    simpa [(by cases a <;> rfl : (-a).num = -a.num)] using @num_nonneg_iff_zero_le (-a)
 #align rat.num_pos_iff_pos Rat.num_pos_iff_pos
 
-theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) : (a : ℚ) / b < c / d ↔ a * d < c * b :=
-  by
+theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d) :
+    (a : ℚ) / b < c / d ↔ a * d < c * b := by
   simp only [lt_iff_le_not_le]
   apply and_congr
   · simp [div_num_denom, Rat.le_def b_pos d_pos]
@@ -236,11 +237,13 @@ theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by simp
 theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom := by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
-    rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one, zero_mul] at hq
+    rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,
+      zero_mul] at hq
     rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
     
   · rw [abs_of_nonneg hq]
-    rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one, zero_mul] at hq
+    rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one,
+      zero_mul] at hq
     rw [Int.natAbs_of_nonneg hq, num_denom]
     
 #align rat.abs_def Rat.abs_def

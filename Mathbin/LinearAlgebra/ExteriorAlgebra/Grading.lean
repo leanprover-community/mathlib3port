@@ -45,7 +45,8 @@ theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebr
 
 /-- `exterior_algebra.graded_algebra.ι` lifted to exterior algebra. This is
 primarily an auxiliary construction used to provide `exterior_algebra.graded_algebra`. -/
-def GradedAlgebra.liftι : ExteriorAlgebra R M →ₐ[R] ⨁ i : ℕ, ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M)) :=
+def GradedAlgebra.liftι :
+    ExteriorAlgebra R M →ₐ[R] ⨁ i : ℕ, ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M)) :=
   lift R ⟨by apply graded_algebra.ι R M, GradedAlgebra.ι_sq_zero R M⟩
 #align exterior_algebra.graded_algebra.lift_ι ExteriorAlgebra.GradedAlgebra.liftι
 
@@ -53,10 +54,14 @@ variable (R M)
 
 theorem GradedAlgebra.lift_ι_eq (i : ℕ)
     (x : ((ι R : M →ₗ[R] ExteriorAlgebra R M).range ^ i : Submodule R (ExteriorAlgebra R M))) :
-    GradedAlgebra.liftι R M x = DirectSum.of (fun i => ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) i x := by
+    GradedAlgebra.liftι R M x =
+      DirectSum.of (fun i => ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) i x :=
+  by
   cases' x with x hx
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
-  refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
+  refine'
+    Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _)
+      (fun m hm i x hx ih => _) hx
   · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
     rfl
     
@@ -64,21 +69,23 @@ theorem GradedAlgebra.lift_ι_eq (i : ℕ)
     rfl
     
   · obtain ⟨_, rfl⟩ := hm
-    rw [AlgHom.map_mul, ih, graded_algebra.lift_ι, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
+    rw [AlgHom.map_mul, ih, graded_algebra.lift_ι, lift_ι_apply, graded_algebra.ι_apply R M,
+      DirectSum.of_mul_of]
     exact DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
     
 #align exterior_algebra.graded_algebra.lift_ι_eq ExteriorAlgebra.GradedAlgebra.lift_ι_eq
 
 /-- The exterior algebra is graded by the powers of the submodule `(exterior_algebra.ι R).range`. -/
-instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] ExteriorAlgebra R M).range : ℕ → Submodule R _) :=
+instance gradedAlgebra :
+    GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] ExteriorAlgebra R M).range : ℕ → Submodule R _) :=
   GradedAlgebra.ofAlgHom _
     (-- while not necessary, the `by apply` makes this elaborate faster
     by apply graded_algebra.lift_ι R M)
     (-- the proof from here onward is identical to the `tensor_algebra` case
     by
       ext m
-      dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply,
-        graded_algebra.lift_ι]
+      dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply,
+        AlgHom.id_apply, graded_algebra.lift_ι]
       rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     (by apply graded_algebra.lift_ι_eq R M)
 #align exterior_algebra.graded_algebra ExteriorAlgebra.gradedAlgebra

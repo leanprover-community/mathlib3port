@@ -41,8 +41,8 @@ instance KleisliCat.categoryStruct {m} [Monad.{u, v} m] : CategoryStruct (Kleisl
 #align category_theory.Kleisli.category_struct CategoryTheory.KleisliCat.categoryStruct
 
 instance KleisliCat.category {m} [Monad.{u, v} m] [LawfulMonad m] : Category (KleisliCat m) := by
-  refine' { id_comp' := _, comp_id' := _, assoc' := _ } <;>
-    intros <;> ext <;> unfold_projs <;> simp only [(· >=> ·), functor_norm]
+  refine' { id_comp' := _, comp_id' := _, assoc' := _ } <;> intros <;> ext <;> unfold_projs <;>
+    simp only [(· >=> ·), functor_norm]
 #align category_theory.Kleisli.category CategoryTheory.KleisliCat.category
 
 @[simp]

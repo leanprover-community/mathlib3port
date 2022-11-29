@@ -38,7 +38,8 @@ open TensorProduct
 /-- Homogenous tensor powers $M^{\otimes n}$. `⨂[R]^n M` is a shorthand for
 `⨂[R] (i : fin n), M`. -/
 @[reducible]
-protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiring R] [AddCommMonoid M] [Module R M] : Type _ :=
+protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiring R] [AddCommMonoid M]
+    [Module R M] : Type _ :=
   ⨂[R] i : Fin n, M
 #align tensor_power TensorPower
 

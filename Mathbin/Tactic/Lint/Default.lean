@@ -98,7 +98,8 @@ add_tactic_doc
 unsafe def mathlib_linters : List Name := by
   run_tac
     let ls ← get_checks true [] false
-    let ls := (ls.map fun ⟨n, _⟩ => `linter ++ n) ++ [`assert_not_exists.linter, `assert_no_instance.linter]
+    let ls :=
+      (ls.map fun ⟨n, _⟩ => `linter ++ n) ++ [`assert_not_exists.linter, `assert_no_instance.linter]
     exact (reflect ls)
 #align mathlib_linters mathlib_linters
 

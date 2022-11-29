@@ -75,19 +75,21 @@ theorem shadow_singleton_empty : (∂ ) ({∅} : Finset (Finset α)) = ∅ :=
 --TODO: Prove `∂ {{a}} = {∅}` quickly using `covers` and `grade_order`
 /-- The shadow is monotone. -/
 @[mono]
-theorem shadow_monotone : Monotone (shadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ => sup_mono
+theorem shadow_monotone : Monotone (shadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ =>
+  sup_mono
 #align finset.shadow_monotone Finset.shadow_monotone
 
 /-- `s` is in the shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element to
 get `s`. -/
-theorem mem_shadow_iff : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ a ∈ t, erase t a = s := by simp only [shadow, mem_sup, mem_image]
+theorem mem_shadow_iff : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ a ∈ t, erase t a = s := by
+  simp only [shadow, mem_sup, mem_image]
 #align finset.mem_shadow_iff Finset.mem_shadow_iff
 
 theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ ) 𝒜 :=
   mem_shadow_iff.2 ⟨s, hs, a, ha, rfl⟩
 #align finset.erase_mem_shadow Finset.erase_mem_shadow
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
 theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 := by
@@ -102,27 +104,30 @@ theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ 
 #align finset.mem_shadow_iff_insert_mem Finset.mem_shadow_iff_insert_mem
 
 /-- The shadow of a family of `r`-sets is a family of `r - 1`-sets. -/
-protected theorem _root_.set.sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
+protected theorem Set.Sized.shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     ((∂ ) 𝒜 : Set (Finset α)).Sized (r - 1) := by
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_shadow_iff.1 h
   rw [card_erase_of_mem hi, h𝒜 hA]
-#align finset._root_.set.sized.shadow finset._root_.set.sized.shadow
+#align set.sized.shadow Set.Sized.shadow
 
-theorem sized_shadow_iff (h : ∅ ∉ 𝒜) : ((∂ ) 𝒜 : Set (Finset α)).Sized r ↔ (𝒜 : Set (Finset α)).Sized (r + 1) := by
+theorem sized_shadow_iff (h : ∅ ∉ 𝒜) :
+    ((∂ ) 𝒜 : Set (Finset α)).Sized r ↔ (𝒜 : Set (Finset α)).Sized (r + 1) := by
   refine' ⟨fun h𝒜 s hs => _, Set.Sized.shadow⟩
   obtain ⟨a, ha⟩ := nonempty_iff_ne_empty.2 (ne_of_mem_of_not_mem hs h)
   rw [← h𝒜 (erase_mem_shadow hs ha), card_erase_add_one ha]
 #align finset.sized_shadow_iff Finset.sized_shadow_iff
 
 /-- `s ∈ ∂ 𝒜` iff `s` is exactly one element less than something from `𝒜` -/
-theorem mem_shadow_iff_exists_mem_card_add_one : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + 1 := by
+theorem mem_shadow_iff_exists_mem_card_add_one :
+    s ∈ (∂ ) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + 1 := by
   refine' mem_shadow_iff_insert_mem.trans ⟨_, _⟩
   · rintro ⟨a, ha, hs⟩
     exact ⟨insert a s, hs, subset_insert _ _, card_insert_of_not_mem ha⟩
     
   · rintro ⟨t, ht, hst, h⟩
-    obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} := card_eq_one.1 (by rw [card_sdiff hst, h, add_tsub_cancel_left])
+    obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} :=
+      card_eq_one.1 (by rw [card_sdiff hst, h, add_tsub_cancel_left])
     exact
       ⟨a, fun hat => not_mem_sdiff_of_mem_right hat ((ha.ge : _ ⊆ _) <| mem_singleton_self a), by
         rwa [insert_eq a s, ← ha, sdiff_union_of_subset hst]⟩
@@ -136,7 +141,8 @@ theorem exists_subset_of_mem_shadow (hs : s ∈ (∂ ) 𝒜) : ∃ t ∈ 𝒜, s
 #align finset.exists_subset_of_mem_shadow Finset.exists_subset_of_mem_shadow
 
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements less than something in `𝒜`. -/
-theorem mem_shadow_iff_exists_mem_card_add : s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k := by
+theorem mem_shadow_iff_exists_mem_card_add :
+    s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k := by
   induction' k with k ih generalizing 𝒜 s
   · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
@@ -192,10 +198,11 @@ theorem up_shadow_empty : (∂⁺ ) (∅ : Finset (Finset α)) = ∅ :=
 
 /-- The upper shadow is monotone. -/
 @[mono]
-theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (Finset α)) := fun 𝒜 ℬ => sup_mono
+theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset (Finset α)) :=
+  fun 𝒜 ℬ => sup_mono
 #align finset.up_shadow_monotone Finset.up_shadow_monotone
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » t) -/
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
 theorem mem_up_shadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
@@ -207,12 +214,12 @@ theorem insert_mem_up_shadow (hs : s ∈ 𝒜) (ha : a ∉ s) : insert a s ∈ (
 #align finset.insert_mem_up_shadow Finset.insert_mem_up_shadow
 
 /-- The upper shadow of a family of `r`-sets is a family of `r + 1`-sets. -/
-protected theorem _root_.set.sized.up_shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
+protected theorem Set.Sized.up_shadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) := by
   intro A h
   obtain ⟨A, hA, i, hi, rfl⟩ := mem_up_shadow_iff.1 h
   rw [card_insert_of_not_mem hi, h𝒜 hA]
-#align finset._root_.set.sized.up_shadow finset._root_.set.sized.up_shadow
+#align set.sized.up_shadow Set.Sized.up_shadow
 
 /-- `t` is in the upper shadow of `𝒜` iff we can remove an element from it so that the resulting
 finset is in `𝒜`. -/
@@ -228,17 +235,20 @@ theorem mem_up_shadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.er
 #align finset.mem_up_shadow_iff_erase_mem Finset.mem_up_shadow_iff_erase_mem
 
 /-- `s ∈ ∂⁺ 𝒜` iff `s` is exactly one element less than something from `𝒜`. -/
-theorem mem_up_shadow_iff_exists_mem_card_add_one : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + 1 = s.card := by
+theorem mem_up_shadow_iff_exists_mem_card_add_one :
+    s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + 1 = s.card := by
   refine' mem_up_shadow_iff_erase_mem.trans ⟨_, _⟩
   · rintro ⟨a, ha, hs⟩
     exact ⟨s.erase a, hs, erase_subset _ _, card_erase_add_one ha⟩
     
   · rintro ⟨t, ht, hts, h⟩
-    obtain ⟨a, ha⟩ : ∃ a, s \ t = {a} := card_eq_one.1 (by rw [card_sdiff hts, ← h, add_tsub_cancel_left])
+    obtain ⟨a, ha⟩ : ∃ a, s \ t = {a} :=
+      card_eq_one.1 (by rw [card_sdiff hts, ← h, add_tsub_cancel_left])
     refine' ⟨a, sdiff_subset _ _ ((ha.ge : _ ⊆ _) <| mem_singleton_self a), _⟩
     rwa [← sdiff_singleton_eq_erase, ← ha, sdiff_sdiff_eq_self hts]
     
-#align finset.mem_up_shadow_iff_exists_mem_card_add_one Finset.mem_up_shadow_iff_exists_mem_card_add_one
+#align
+  finset.mem_up_shadow_iff_exists_mem_card_add_one Finset.mem_up_shadow_iff_exists_mem_card_add_one
 
 /-- Being in the upper shadow of `𝒜` means we have a superset in `𝒜`. -/
 theorem exists_subset_of_mem_up_shadow (hs : s ∈ (∂⁺ ) 𝒜) : ∃ t ∈ 𝒜, t ⊆ s :=
@@ -247,7 +257,8 @@ theorem exists_subset_of_mem_up_shadow (hs : s ∈ (∂⁺ ) 𝒜) : ∃ t ∈ �
 #align finset.exists_subset_of_mem_up_shadow Finset.exists_subset_of_mem_up_shadow
 
 /-- `t ∈ ∂^k 𝒜` iff `t` is exactly `k` elements more than something in `𝒜`. -/
-theorem mem_up_shadow_iff_exists_mem_card_add : s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + k = s.card := by
+theorem mem_up_shadow_iff_exists_mem_card_add :
+    s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + k = s.card := by
   induction' k with k ih generalizing 𝒜 s
   · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩

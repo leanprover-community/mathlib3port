@@ -31,7 +31,8 @@ namespace CategoryTheory
 
 variable (C : Type u₁) [Category.{v} C]
 
-/-- A category (with morphisms in `Type v`) is well-powered if `subobject X` is `v`-small for every `X`.
+/--
+A category (with morphisms in `Type v`) is well-powered if `subobject X` is `v`-small for every `X`.
 
 We show in `well_powered_of_mono_over_essentially_small` and `mono_over_essentially_small`
 that this is the case if and only if `mono_over X` is `v`-essentially small for every `X`.
@@ -44,7 +45,8 @@ instance small_subobject [WellPowered C] (X : C) : Small.{v} (Subobject X) :=
   WellPowered.subobject_small X
 #align category_theory.small_subobject CategoryTheory.small_subobject
 
-instance (priority := 100) well_powered_of_small_category (C : Type u₁) [SmallCategory C] : WellPowered C where
+instance (priority := 100) well_powered_of_small_category (C : Type u₁) [SmallCategory C] :
+    WellPowered C where
 #align category_theory.well_powered_of_small_category CategoryTheory.well_powered_of_small_category
 
 variable {C}
@@ -55,7 +57,8 @@ theorem essentially_small_mono_over_iff_small_subobject (X : C) :
 #align
   category_theory.essentially_small_mono_over_iff_small_subobject CategoryTheory.essentially_small_mono_over_iff_small_subobject
 
-theorem well_powered_of_essentially_small_mono_over (h : ∀ X : C, EssentiallySmall.{v} (MonoOver X)) : WellPowered C :=
+theorem well_powered_of_essentially_small_mono_over
+    (h : ∀ X : C, EssentiallySmall.{v} (MonoOver X)) : WellPowered C :=
   { subobject_small := fun X => (essentially_small_mono_over_iff_small_subobject X).mp (h X) }
 #align
   category_theory.well_powered_of_essentially_small_mono_over CategoryTheory.well_powered_of_essentially_small_mono_over

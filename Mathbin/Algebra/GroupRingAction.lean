@@ -34,7 +34,8 @@ open BigOperators
 /-- Typeclass for multiplicative actions by monoids on semirings.
 
 This combines `distrib_mul_action` with `mul_distrib_mul_action`. -/
-class MulSemiringAction (M : Type u) (R : Type v) [Monoid M] [Semiring R] extends DistribMulAction M R where
+class MulSemiringAction (M : Type u) (R : Type v) [Monoid M] [Semiring R] extends
+  DistribMulAction M R where
   smul_one : ∀ g : M, (g • 1 : R) = 1
   smul_mul : ∀ (g : M) (x y : R), g • (x * y) = g • x * g • y
 #align mul_semiring_action MulSemiringAction
@@ -86,23 +87,26 @@ section
 variable {M G R}
 
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
-instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) : MulSemiringAction H R :=
+instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) :
+    MulSemiringAction H R :=
   { H.MulDistribMulAction, H.DistribMulAction with smul := (· • ·) }
 #align submonoid.mul_semiring_action Submonoid.mulSemiringAction
 
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
-instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) : MulSemiringAction H R :=
+instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) :
+    MulSemiringAction H R :=
   H.toSubmonoid.MulSemiringAction
 #align subgroup.mul_semiring_action Subgroup.mulSemiringAction
 
 /-- A stronger version of `subsemiring.distrib_mul_action`. -/
-instance Subsemiring.mulSemiringAction {R'} [Semiring R'] [MulSemiringAction R' R] (H : Subsemiring R') :
-    MulSemiringAction H R :=
+instance Subsemiring.mulSemiringAction {R'} [Semiring R'] [MulSemiringAction R' R]
+    (H : Subsemiring R') : MulSemiringAction H R :=
   H.toSubmonoid.MulSemiringAction
 #align subsemiring.mul_semiring_action Subsemiring.mulSemiringAction
 
 /-- A stronger version of `subring.distrib_mul_action`. -/
-instance Subring.mulSemiringAction {R'} [Ring R'] [MulSemiringAction R' R] (H : Subring R') : MulSemiringAction H R :=
+instance Subring.mulSemiringAction {R'} [Ring R'] [MulSemiringAction R' R] (H : Subring R') :
+    MulSemiringAction H R :=
   H.toSubsemiring.MulSemiringAction
 #align subring.mul_semiring_action Subring.mulSemiringAction
 
@@ -138,7 +142,8 @@ class IsInvariantSubring : Prop where
   smul_mem : ∀ (m : M) {x : R}, x ∈ S → m • x ∈ S
 #align is_invariant_subring IsInvariantSubring
 
-instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSemiringAction M S where
+instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] :
+    MulSemiringAction M S where
   smul m x := ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
   one_smul s := Subtype.eq <| one_smul M s
   mul_smul m₁ m₂ s := Subtype.eq <| mul_smul m₁ m₂ s

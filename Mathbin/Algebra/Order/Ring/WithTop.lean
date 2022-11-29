@@ -33,7 +33,8 @@ instance : MulZeroClass (WithTop α) where
   zero_mul a := if_pos <| Or.inl rfl
   mul_zero a := if_pos <| Or.inr rfl
 
-theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
+theorem mul_def {a b : WithTop α} :
+    a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
   rfl
 #align with_top.mul_def WithTop.mul_def
 
@@ -65,7 +66,8 @@ theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
 #align with_top.coe_mul WithTop.coe_mul
 
 theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind fun a : α => ↑(a * b)
-  | none => show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by simp [hb]
+  | none =>
+    show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by simp [hb]
   | some a => show ↑a * ↑b = ↑(a * b) from coe_mul.symm
 #align with_top.mul_coe WithTop.mul_coe
 
@@ -90,16 +92,16 @@ theorem mul_lt_top [Preorder α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠
 
 @[simp]
 theorem untop'_zero_mul (a b : WithTop α) : (a * b).untop' 0 = a.untop' 0 * b.untop' 0 := by
-  by_cases ha : a = 0
+  by_cases ha : a = 0;
   · rw [ha, zero_mul, ← coe_zero, untop'_coe, zero_mul]
     
-  by_cases hb : b = 0
+  by_cases hb : b = 0;
   · rw [hb, mul_zero, ← coe_zero, untop'_coe, mul_zero]
     
-  induction a using WithTop.recTopCoe
+  induction a using WithTop.recTopCoe;
   · rw [top_mul hb, untop'_top, zero_mul]
     
-  induction b using WithTop.recTopCoe
+  induction b using WithTop.recTopCoe;
   · rw [mul_top ha, untop'_top, mul_zero]
     
   rw [← coe_mul, untop'_coe, untop'_coe, untop'_coe]
@@ -121,12 +123,13 @@ instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
 
 /-- A version of `with_top.map` for `monoid_with_zero_hom`s. -/
 @[simps (config := { fullyApplied := false })]
-protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOneClass R] [DecidableEq R] [Nontrivial R]
-    [MulZeroOneClass S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S) (hf : Function.Injective f) :
-    WithTop R →*₀ WithTop S :=
+protected def MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneClass R] [DecidableEq R]
+    [Nontrivial R] [MulZeroOneClass S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S)
+    (hf : Function.Injective f) : WithTop R →*₀ WithTop S :=
   { f.toZeroHom.with_top_map, f.toMonoidHom.toOneHom.with_top_map with toFun := WithTop.map f,
     map_mul' := fun x y => by
-      have : ∀ z, map f z = 0 ↔ z = 0 := fun z => (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
+      have : ∀ z, map f z = 0 ↔ z = 0 := fun z =>
+        (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
       rcases eq_or_ne x 0 with (rfl | hx)
       · simp
         
@@ -141,31 +144,32 @@ protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOn
         simp [hx, this]
         
       simp [← coe_mul] }
-#align with_top._root_.monoid_with_zero_hom.with_top_map with_top._root_.monoid_with_zero_hom.with_top_map
+#align monoid_with_zero_hom.with_top_map MonoidWithZeroHom.withTopMap
 
 instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   ⟨fun a b => by
-    cases a <;> cases b <;> dsimp [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
+    cases a <;> cases b <;> dsimp [mul_def] <;> split_ifs <;>
+      simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
   { WithTop.mulZeroClass with mul := (· * ·), zero := 0,
     mul_assoc := fun a b c => by
-      rcases eq_or_ne a 0 with (rfl | ha)
+      rcases eq_or_ne a 0 with (rfl | ha);
       · simp only [zero_mul]
         
-      rcases eq_or_ne b 0 with (rfl | hb)
+      rcases eq_or_ne b 0 with (rfl | hb);
       · simp only [zero_mul, mul_zero]
         
-      rcases eq_or_ne c 0 with (rfl | hc)
+      rcases eq_or_ne c 0 with (rfl | hc);
       · simp only [mul_zero]
         
-      induction a using WithTop.recTopCoe
+      induction a using WithTop.recTopCoe;
       · simp [hb, hc]
         
-      induction b using WithTop.recTopCoe
+      induction b using WithTop.recTopCoe;
       · simp [ha, hc]
         
-      induction c using WithTop.recTopCoe
+      induction c using WithTop.recTopCoe;
       · simp [ha, hb]
         
       simp only [← coe_mul, mul_assoc] }
@@ -173,7 +177,8 @@ instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop
 instance [MonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZero (WithTop α) :=
   { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with }
 
-instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithTop α) :=
+instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
+    CommMonoidWithZero (WithTop α) :=
   { WithTop.monoidWithZero with mul := (· * ·), zero := 0,
     mul_comm := fun a b => by simp only [or_comm', mul_def, Option.bind_comm a b, mul_comm] }
 
@@ -206,11 +211,12 @@ instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
 
 /-- A version of `with_top.map` for `ring_hom`s. -/
 @[simps (config := { fullyApplied := false })]
-protected def _root_.ring_hom.with_top_map {R S : Type _} [CanonicallyOrderedCommSemiring R] [DecidableEq R]
+protected def RingHom.withTopMap {R S : Type _} [CanonicallyOrderedCommSemiring R] [DecidableEq R]
     [Nontrivial R] [CanonicallyOrderedCommSemiring S] [DecidableEq S] [Nontrivial S] (f : R →+* S)
     (hf : Function.Injective f) : WithTop R →+* WithTop S :=
-  { f.toMonoidWithZeroHom.with_top_map hf, f.toAddMonoidHom.with_top_map with toFun := WithTop.map f }
-#align with_top._root_.ring_hom.with_top_map with_top._root_.ring_hom.with_top_map
+  { f.toMonoidWithZeroHom.with_top_map hf, f.toAddMonoidHom.with_top_map with
+    toFun := WithTop.map f }
+#align ring_hom.with_top_map RingHom.withTopMap
 
 end WithTop
 
@@ -228,7 +234,8 @@ variable [Zero α] [Mul α]
 instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass
 
-theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
+theorem mul_def {a b : WithBot α} :
+    a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
   rfl
 #align with_bot.mul_def WithBot.mul_def
 
@@ -291,29 +298,29 @@ instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithBot
 instance [MonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZero (WithBot α) :=
   WithTop.monoidWithZero
 
-instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithBot α) :=
+instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
+    CommMonoidWithZero (WithBot α) :=
   WithTop.commMonoidWithZero
 
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiring (WithBot α) :=
   WithTop.commSemiring
 
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : PosMulMono (WithBot α) :=
-  pos_mul_mono_iff_covariant_pos.2
+  posMulMono_iff_covariant_pos.2
     ⟨by
-      rintro ⟨x, x0⟩ a b h
-      simp only [Subtype.coe_mk]
+      rintro ⟨x, x0⟩ a b h; simp only [Subtype.coe_mk]
       lift x to α using x0.ne_bot
-      induction a using WithBot.recBotCoe
+      induction a using WithBot.recBotCoe;
       · simp_rw [mul_bot x0.ne.symm, bot_le]
         
-      induction b using WithBot.recBotCoe
+      induction b using WithBot.recBotCoe;
       · exact absurd h (bot_lt_coe a).not_le
         
       simp only [← coe_mul, coe_le_coe] at *
       exact mul_le_mul_left' h x⟩
 
 instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : MulPosMono (WithBot α) :=
-  pos_mul_mono_iff_mul_pos_mono.mp inferInstance
+  posMulMono_iff_mulPosMono.mp inferInstance
 
 end WithBot
 

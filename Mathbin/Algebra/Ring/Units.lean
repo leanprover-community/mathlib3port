@@ -44,7 +44,7 @@ protected theorem coe_neg_one : ((-1 : αˣ) : α) = -1 :=
 #align units.coe_neg_one Units.coe_neg_one
 
 instance : HasDistribNeg αˣ :=
-  Units.ext.HasDistribNeg _ Units.coe_neg Units.coe_mul
+  Units.ext.HasDistribNeg _ Units.coe_neg Units.val_mul
 
 @[field_simps]
 theorem neg_divp (a : α) (u : αˣ) : -(a /ₚ u) = -a /ₚ u := by simp only [divp, neg_mul]
@@ -57,7 +57,8 @@ section Ring
 variable [Ring α] {a b : α}
 
 @[field_simps]
-theorem divp_add_divp_same (a b : α) (u : αˣ) : a /ₚ u + b /ₚ u = (a + b) /ₚ u := by simp only [divp, add_mul]
+theorem divp_add_divp_same (a b : α) (u : αˣ) : a /ₚ u + b /ₚ u = (a + b) /ₚ u := by
+  simp only [divp, add_mul]
 #align units.divp_add_divp_same Units.divp_add_divp_same
 
 @[field_simps]
@@ -106,14 +107,16 @@ theorem IsUnit.sub_iff [Ring α] {x y : α} : IsUnit (x - y) ↔ IsUnit (y - x) 
 namespace Units
 
 @[field_simps]
-theorem divp_add_divp [CommRing α] (a b : α) (u₁ u₂ : αˣ) : a /ₚ u₁ + b /ₚ u₂ = (a * u₂ + u₁ * b) /ₚ (u₁ * u₂) := by
+theorem divp_add_divp [CommRing α] (a b : α) (u₁ u₂ : αˣ) :
+    a /ₚ u₁ + b /ₚ u₂ = (a * u₂ + u₁ * b) /ₚ (u₁ * u₂) := by
   simp only [divp, add_mul, mul_inv_rev, coe_mul]
   rw [mul_comm (↑u₁ * b), mul_comm b]
   assoc_rw [mul_inv, mul_inv, mul_one, mul_one]
 #align units.divp_add_divp Units.divp_add_divp
 
 @[field_simps]
-theorem divp_sub_divp [CommRing α] (a b : α) (u₁ u₂ : αˣ) : a /ₚ u₁ - b /ₚ u₂ = (a * u₂ - u₁ * b) /ₚ (u₁ * u₂) := by
+theorem divp_sub_divp [CommRing α] (a b : α) (u₁ u₂ : αˣ) :
+    a /ₚ u₁ - b /ₚ u₂ = (a * u₂ - u₁ * b) /ₚ (u₁ * u₂) := by
   simp_rw [sub_eq_add_neg, neg_divp, divp_add_divp, mul_neg]
 #align units.divp_sub_divp Units.divp_sub_divp
 

@@ -45,7 +45,8 @@ hence `a_i = b_j`. We need to take care when there are `p_i` and `p_j` with `p_i
 
 TODO: this is a variant of `compact_relation` in `coinductive_predicates.lean`, export it there.
 -/
-unsafe def compact_relation : List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
+unsafe def compact_relation :
+    List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
   | [], ps => ([], ps)
   | b :: bs, ps =>
     match ps.span fun ap : expr × expr => ¬ap.2 == b with
@@ -134,8 +135,8 @@ def listOptionMerge {α : Type _} {β : Type _} : List (Option α) → List β �
 
 -- TODO: document
 @[nolint doc_blame]
-unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Option expr) × Sum expr ℕ)) (h : expr) :
-    tactic Unit :=
+unsafe def to_inductive (cs : List Name) (gs : List expr)
+    (s : List (List (Option expr) × Sum expr ℕ)) (h : expr) : tactic Unit :=
   match s.length with
   | 0 => induction h >> skip
   | n + 1 => do
@@ -249,18 +250,20 @@ For example, `mk_iff_of_inductive_prop` on `list.chain` produces:
 See also the `mk_iff` user attribute.
 -/
 @[user_command]
-unsafe def mk_iff_of_inductive_prop_cmd (_ : parse (tk "mk_iff_of_inductive_prop")) : parser Unit := do
+unsafe def mk_iff_of_inductive_prop_cmd (_ : parse (tk "mk_iff_of_inductive_prop")) : parser Unit :=
+  do
   let i ← ident
   let r ← ident
   tactic.mk_iff_of_inductive_prop i r
 #align mk_iff_of_inductive_prop_cmd mk_iff_of_inductive_prop_cmd
 
 add_tactic_doc
-  { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd, declNames := [`` mk_iff_of_inductive_prop_cmd],
-    tags := ["logic", "environment"] }
+  { Name := "mk_iff_of_inductive_prop", category := DocCategory.cmd,
+    declNames := [`` mk_iff_of_inductive_prop_cmd], tags := ["logic", "environment"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
-/-- Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
+/--
+Applying the `mk_iff` attribute to an inductively-defined proposition `mk_iff` makes an `iff` rule
 `r` with the shape `∀ps is, i as ↔ ⋁_j, ∃cs, is = cs`, where `ps` are the type parameters, `is` are
 the indices, `j` ranges over all possible constructors, the `cs` are the parameters for each of the
 constructors, and the equalities `is = cs` are the instantiations for each constructor for each of
@@ -308,7 +311,8 @@ unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
 #align mk_iff_attr mk_iff_attr
 
 add_tactic_doc
-  { Name := "mk_iff", category := DocCategory.attr, declNames := [`mk_iff_attr], tags := ["logic", "environment"] }
+  { Name := "mk_iff", category := DocCategory.attr, declNames := [`mk_iff_attr],
+    tags := ["logic", "environment"] }
 
 end
 

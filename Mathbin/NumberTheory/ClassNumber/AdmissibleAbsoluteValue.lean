@@ -55,9 +55,10 @@ variable {abv}
 
 /-- For all `ε > 0` and finite families `A`, we can partition the remainders of `A` mod `b`
 into `abv.card ε` sets, such that all elements in each part of remainders are close together. -/
-theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : ι → R)
-    (h : abv.IsAdmissible) :
-    ∃ t : ι → Fin (h.card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε := by
+theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0)
+    (A : ι → R) (h : abv.IsAdmissible) :
+    ∃ t : ι → Fin (h.card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε :=
+  by
   let e := Fintype.equivFin ι
   obtain ⟨t, ht⟩ := h.exists_partition' (Fintype.card ι) hε hb (A ∘ e.symm)
   refine' ⟨t ∘ e, fun i₀ i₁ h => _⟩
@@ -89,14 +90,16 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     -- We can partition the `A`s into `M` subsets where
     -- the first components lie close together:
     obtain ⟨t, ht⟩ :
-      ∃ t : Fin (M ^ n.succ).succ → Fin M, ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ 0 % b - A i₀ 0 % b) : ℝ) < abv b • ε :=
+      ∃ t : Fin (M ^ n.succ).succ → Fin M,
+        ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ 0 % b - A i₀ 0 % b) : ℝ) < abv b • ε :=
       h.exists_partition hε hb fun x => A x 0
     -- Since the `M` subsets contain more than `M * M^n` elements total,
     -- there must be a subset that contains more than `M^n` elements.
     obtain ⟨s, hs⟩ :=
       @Fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M ^ n)
         (by simpa only [Fintype.card_fin, pow_succ] using Nat.lt_succ_self (M ^ n.succ))
-    refine' ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
+    refine'
+      ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
     · refine' i.2.trans_le _
       rwa [Finset.length_to_list]
       
@@ -104,7 +107,11 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
       ext
       exact list.nodup_iff_nth_le_inj.mp (Finset.nodup_to_list _) _ _ _ _ h
       
-    have : ∀ i h, (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈ finset.univ.filter fun x => t x = s := by
+    have :
+      ∀ i h,
+        (finset.univ.filter fun x => t x = s).toList.nthLe i h ∈
+          finset.univ.filter fun x => t x = s :=
+      by
       intro i h
       exact finset.mem_to_list.mp (List.nth_le_mem _ _ _)
     obtain ⟨_, h₀⟩ := finset.mem_filter.mp (this i₀ _)
@@ -122,8 +129,8 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
 
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/
-theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (h : abv.IsAdmissible)
-    (A : Fin (h.card ε ^ Fintype.card ι).succ → ι → R) :
+theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0)
+    (h : abv.IsAdmissible) (A : Fin (h.card ε ^ Fintype.card ι).succ → ι → R) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε := by
   let e := Fintype.equivFin ι
   obtain ⟨i₀, i₁, ne, h⟩ := h.exists_approx_aux (Fintype.card ι) hε hb fun x y => A x (e.symm y)

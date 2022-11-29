@@ -28,7 +28,8 @@ unsafe def desugar :=
   sorry
 #align omega.int.desugar omega.int.desugar
 
-theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) : Clauses.Unsat (dnf (¬* p)) → UnivClose p (fun x => 0) m
+theorem univ_close_of_unsat_clausify (m : Nat) (p : Preform) :
+    Clauses.Unsat (dnf (¬* p)) → UnivClose p (fun x => 0) m
   | h1 => by
     apply univ_close_of_valid
     apply valid_of_unsat_not
@@ -54,8 +55,14 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
           <|>
           ( return <| exprterm.exp ( - 1 : Int ) x )
       | q( $ ( mx ) * $ ( zx ) ) => do let z ← eval_expr' Int zx return ( exprterm.exp z mx )
-      | q( $ ( t1x ) + $ ( t2x ) ) => do let t1 ← to_exprterm t1x let t2 ← to_exprterm t2x return ( exprterm.add t1 t2 )
-      | x => ( do let z ← eval_expr' Int x return ( exprterm.cst z ) ) <|> ( return <| exprterm.exp 1 x )
+      |
+        q( $ ( t1x ) + $ ( t2x ) )
+        =>
+        do let t1 ← to_exprterm t1x let t2 ← to_exprterm t2x return ( exprterm.add t1 t2 )
+      |
+        x
+        =>
+        ( do let z ← eval_expr' Int x return ( exprterm.cst z ) ) <|> ( return <| exprterm.exp 1 x )
 #align omega.int.to_exprterm omega.int.to_exprterm
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -63,11 +70,23 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   def
     to_exprform
     : expr → tactic exprform
-    | q( $ ( tx1 ) = $ ( tx2 ) ) => do let t1 ← to_exprterm tx1 let t2 ← to_exprterm tx2 return ( exprform.eq t1 t2 )
-      | q( $ ( tx1 ) ≤ $ ( tx2 ) ) => do let t1 ← to_exprterm tx1 let t2 ← to_exprterm tx2 return ( exprform.le t1 t2 )
+    |
+        q( $ ( tx1 ) = $ ( tx2 ) )
+        =>
+        do let t1 ← to_exprterm tx1 let t2 ← to_exprterm tx2 return ( exprform.eq t1 t2 )
+      |
+        q( $ ( tx1 ) ≤ $ ( tx2 ) )
+        =>
+        do let t1 ← to_exprterm tx1 let t2 ← to_exprterm tx2 return ( exprform.le t1 t2 )
       | q( ¬ $ ( px ) ) => do let p ← to_exprform px return ( exprform.not p )
-      | q( $ ( px ) ∨ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.or p q )
-      | q( $ ( px ) ∧ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.and p q )
+      |
+        q( $ ( px ) ∨ $ ( qx ) )
+        =>
+        do let p ← to_exprform px let q ← to_exprform qx return ( exprform.or p q )
+      |
+        q( $ ( px ) ∧ $ ( qx ) )
+        =>
+        do let p ← to_exprform px let q ← to_exprform qx return ( exprform.and p q )
       | q( _ → $ ( px ) ) => to_exprform px
       | x => ( trace "Cannot reify expr : " >> trace x ) >> failed
 #align omega.int.to_exprform omega.int.to_exprform
@@ -158,7 +177,10 @@ unsafe def eq_int (x : expr) : tactic Unit :=
       |
         q( $ ( expr.pi _ _ px qx ) )
         =>
-        Monad.cond ( if expr.has_var px then return true else is_prop px ) ( wff px >> wff qx ) ( eq_int px >> wff qx )
+        Monad.cond
+          ( if expr.has_var px then return true else is_prop px )
+            ( wff px >> wff qx )
+            ( eq_int px >> wff qx )
       | q( @ LT.lt $ ( dx ) $ ( h ) _ _ ) => eq_int dx
       | q( @ LE.le $ ( dx ) $ ( h ) _ _ ) => eq_int dx
       | q( @ Eq $ ( dx ) _ _ ) => eq_int dx

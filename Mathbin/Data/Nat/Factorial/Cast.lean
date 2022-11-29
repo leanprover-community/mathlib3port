@@ -32,7 +32,8 @@ theorem cast_asc_factorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a +
   rw [← pochhammer_nat_eq_asc_factorial, pochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
 #align nat.cast_asc_factorial Nat.cast_asc_factorial
 
-theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) := by
+theorem cast_desc_factorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) :=
+  by
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_desc_factorial]
   cases b
   · simp_rw [desc_factorial_zero]
@@ -63,8 +64,9 @@ theorem cast_desc_factorial_two : (a.descFactorial 2 : S) = a * (a - 1) := by
   cases a
   · rw [zero_tsub, cast_zero, pochhammer_ne_zero_eval_zero _ two_ne_zero, zero_mul]
     
-  · rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, pochhammer_succ_right, pochhammer_one, Polynomial.X_mul,
-      Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one, Polynomial.eval_one]
+  · rw [succ_sub_succ, tsub_zero, cast_succ, add_sub_cancel, pochhammer_succ_right, pochhammer_one,
+      Polynomial.X_mul, Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one,
+      Polynomial.eval_one]
     
 #align nat.cast_desc_factorial_two Nat.cast_desc_factorial_two
 

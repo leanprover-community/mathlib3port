@@ -21,8 +21,10 @@ variable (C : Type _) [Category C] [Preadditive C]
 
 instance : Preadditive Cᵒᵖ where
   homGroup X Y := Equiv.addCommGroup (opEquiv X Y)
-  add_comp' X Y Z f f' g := congr_arg Quiver.Hom.op (Preadditive.comp_add _ _ _ g.unop f.unop f'.unop)
-  comp_add' X Y Z f g g' := congr_arg Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)
+  add_comp' X Y Z f f' g :=
+    congr_arg Quiver.Hom.op (Preadditive.comp_add _ _ _ g.unop f.unop f'.unop)
+  comp_add' X Y Z f g g' :=
+    congr_arg Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)
 
 instance moduleEndLeft {X : Cᵒᵖ} {Y : C} : Module (EndCat X) (unop X ⟶ Y) where
   smul_add r f g := Preadditive.comp_add _ _ _ _ _ _
@@ -92,7 +94,8 @@ def opHom (X Y : C) : (X ⟶ Y) →+ (Opposite.op Y ⟶ Opposite.op X) :=
 #align category_theory.op_hom CategoryTheory.opHom
 
 @[simp]
-theorem op_sum (X Y : C) {ι : Type _} (s : Finset ι) (f : ι → (X ⟶ Y)) : (s.Sum f).op = s.Sum fun i => (f i).op :=
+theorem op_sum (X Y : C) {ι : Type _} (s : Finset ι) (f : ι → (X ⟶ Y)) :
+    (s.Sum f).op = s.Sum fun i => (f i).op :=
   (opHom X Y).map_sum _ _
 #align category_theory.op_sum CategoryTheory.op_sum
 

@@ -45,13 +45,15 @@ open Classical TopologicalSpace
 
 universe u v
 
-variable {α : Type u} {β : Type v} {ι : Type _} {π : ι → Type _} [TopologicalSpace α] {s t u v : Set α}
+variable {α : Type u} {β : Type v} {ι : Type _} {π : ι → Type _} [TopologicalSpace α]
+  {s t u v : Set α}
 
 section Preconnected
 
 /-- A preconnected set is one where there is no non-trivial open partition. -/
 def IsPreconnected (s : Set α) : Prop :=
-  ∀ u v : Set α, IsOpen u → IsOpen v → s ⊆ u ∪ v → (s ∩ u).Nonempty → (s ∩ v).Nonempty → (s ∩ (u ∩ v)).Nonempty
+  ∀ u v : Set α,
+    IsOpen u → IsOpen v → s ⊆ u ∪ v → (s ∩ u).Nonempty → (s ∩ v).Nonempty → (s ∩ (u ∩ v)).Nonempty
 #align is_preconnected IsPreconnected
 
 /-- A connected set is one that is nonempty and where there is no non-trivial open partition. -/
@@ -67,8 +69,8 @@ theorem IsConnected.is_preconnected {s : Set α} (h : IsConnected s) : IsPreconn
   h.2
 #align is_connected.is_preconnected IsConnected.is_preconnected
 
-theorem IsPreirreducible.is_preconnected {s : Set α} (H : IsPreirreducible s) : IsPreconnected s := fun _ _ hu hv _ =>
-  H _ _ hu hv
+theorem IsPreirreducible.is_preconnected {s : Set α} (H : IsPreirreducible s) : IsPreconnected s :=
+  fun _ _ hu hv _ => H _ _ hu hv
 #align is_preirreducible.is_preconnected IsPreirreducible.is_preconnected
 
 theorem IsIrreducible.is_connected {s : Set α} (H : IsIrreducible s) : IsConnected s :=
@@ -91,7 +93,7 @@ theorem Set.Subsingleton.is_preconnected {s : Set α} (hs : s.Subsingleton) : Is
   hs.induction_on is_preconnected_empty fun x => is_preconnected_singleton
 #align set.subsingleton.is_preconnected Set.Subsingleton.is_preconnected
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any point of a set is joined to a fixed point by a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall {s : Set α} (x : α)
@@ -106,27 +108,27 @@ theorem is_preconnected_of_forall {s : Set α} (x : α)
   exact this.imp fun z hz => ⟨ts hz.1, hz.2⟩
 #align is_preconnected_of_forall is_preconnected_of_forall
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any two points of a set are contained in a preconnected subset,
 then the original set is preconnected as well. -/
 theorem is_preconnected_of_forall_pair {s : Set α}
-    (H : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), ∃ (t : _)(_ : t ⊆ s), x ∈ t ∧ y ∈ t ∧ IsPreconnected t) : IsPreconnected s :=
-  by
+    (H : ∀ (x y) (_ : x ∈ s) (_ : y ∈ s), ∃ (t : _)(_ : t ⊆ s), x ∈ t ∧ y ∈ t ∧ IsPreconnected t) :
+    IsPreconnected s := by
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, hx⟩)
   exacts[is_preconnected_empty, (is_preconnected_of_forall x) fun y => H x hx y]
 #align is_preconnected_of_forall_pair is_preconnected_of_forall_pair
 
 /-- A union of a family of preconnected sets with a common point is preconnected as well. -/
-theorem is_preconnected_sUnion (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x ∈ s) (H2 : ∀ s ∈ c, IsPreconnected s) :
-    IsPreconnected (⋃₀c) := by
+theorem is_preconnected_sUnion (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x ∈ s)
+    (H2 : ∀ s ∈ c, IsPreconnected s) : IsPreconnected (⋃₀c) := by
   apply is_preconnected_of_forall x
   rintro y ⟨s, sc, ys⟩
   exact ⟨s, subset_sUnion_of_mem sc, H1 s sc, ys, H2 s sc⟩
 #align is_preconnected_sUnion is_preconnected_sUnion
 
-theorem is_preconnected_Union {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty) (h₂ : ∀ i, IsPreconnected (s i)) :
-    IsPreconnected (⋃ i, s i) :=
+theorem is_preconnected_Union {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty)
+    (h₂ : ∀ i, IsPreconnected (s i)) : IsPreconnected (⋃ i, s i) :=
   (Exists.elim h₁) fun f hf => is_preconnected_sUnion f _ hf (forall_range_iff.2 h₂)
 #align is_preconnected_Union is_preconnected_Union
 
@@ -137,23 +139,24 @@ theorem IsPreconnected.union (x : α) {s t : Set α} (H1 : x ∈ s) (H2 : x ∈ 
       (by rintro r (rfl | rfl | h) <;> assumption)
 #align is_preconnected.union IsPreconnected.union
 
-theorem IsPreconnected.union' {s t : Set α} (H : (s ∩ t).Nonempty) (hs : IsPreconnected s) (ht : IsPreconnected t) :
-    IsPreconnected (s ∪ t) := by
+theorem IsPreconnected.union' {s t : Set α} (H : (s ∩ t).Nonempty) (hs : IsPreconnected s)
+    (ht : IsPreconnected t) : IsPreconnected (s ∪ t) := by
   rcases H with ⟨x, hxs, hxt⟩
   exact hs.union x hxs hxt ht
 #align is_preconnected.union' IsPreconnected.union'
 
-theorem IsConnected.union {s t : Set α} (H : (s ∩ t).Nonempty) (Hs : IsConnected s) (Ht : IsConnected t) :
-    IsConnected (s ∪ t) := by
+theorem IsConnected.union {s t : Set α} (H : (s ∩ t).Nonempty) (Hs : IsConnected s)
+    (Ht : IsConnected t) : IsConnected (s ∪ t) := by
   rcases H with ⟨x, hx⟩
   refine' ⟨⟨x, mem_union_left t (mem_of_mem_inter_left hx)⟩, _⟩
   exact
-    IsPreconnected.union x (mem_of_mem_inter_left hx) (mem_of_mem_inter_right hx) Hs.is_preconnected Ht.is_preconnected
+    IsPreconnected.union x (mem_of_mem_inter_left hx) (mem_of_mem_inter_right hx) Hs.is_preconnected
+      Ht.is_preconnected
 #align is_connected.union IsConnected.union
 
 /-- The directed sUnion of a set S of preconnected subsets is preconnected. -/
-theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· ⊆ ·) S) (H : ∀ s ∈ S, IsPreconnected s) :
-    IsPreconnected (⋃₀S) := by
+theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· ⊆ ·) S)
+    (H : ∀ s ∈ S, IsPreconnected s) : IsPreconnected (⋃₀S) := by
   rintro u v hu hv Huv ⟨a, ⟨s, hsS, has⟩, hau⟩ ⟨b, ⟨t, htS, hbt⟩, hbv⟩
   obtain ⟨r, hrS, hsr, htr⟩ : ∃ r ∈ S, s ⊆ r ∧ t ⊆ r := K s hsS t htS
   have Hnuv : (r ∩ (u ∩ v)).Nonempty :=
@@ -162,14 +165,16 @@ theorem IsPreconnected.sUnion_directed {S : Set (Set α)} (K : DirectedOn (· �
   exact Hnuv.mono Kruv
 #align is_preconnected.sUnion_directed IsPreconnected.sUnion_directed
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i j «expr ∈ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p «expr ⊆ » t) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
 theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (H : ∀ i ∈ t, IsPreconnected (s i))
-    (K : ∀ (i j) (_ : i ∈ t) (_ : j ∈ t), ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
+    (K :
+      ∀ (i j) (_ : i ∈ t) (_ : j ∈ t),
+        ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
     IsPreconnected (⋃ n ∈ t, s n) := by
   let R := fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t
   have P :
@@ -198,12 +203,14 @@ theorem IsPreconnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : 
   exact ⟨⋃ j ∈ p, s j, bUnion_subset_bUnion_left hpt, mem_bUnion hip hxi, mem_bUnion hjp hyj, hp⟩
 #align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bUnion_of_refl_trans_gen
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i j «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
-theorem IsConnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α} (ht : t.Nonempty)
-    (H : ∀ i ∈ t, IsConnected (s i))
-    (K : ∀ (i j) (_ : i ∈ t) (_ : j ∈ t), ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
+theorem IsConnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι → Set α}
+    (ht : t.Nonempty) (H : ∀ i ∈ t, IsConnected (s i))
+    (K :
+      ∀ (i j) (_ : i ∈ t) (_ : j ∈ t),
+        ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
     IsConnected (⋃ n ∈ t, s n) :=
   ⟨nonempty_bUnion.2 <| ⟨ht.some, ht.some_mem, (H _ ht.some_mem).Nonempty⟩,
     IsPreconnected.bUnion_of_refl_trans_gen (fun i hi => (H i hi).IsPreconnected) K⟩
@@ -212,13 +219,18 @@ theorem IsConnected.bUnion_of_refl_trans_gen {ι : Type _} {t : Set ι} {s : ι 
 /-- Preconnectedness of the Union of a family of preconnected sets
 indexed by the vertices of a preconnected graph,
 where two vertices are joined when the corresponding sets intersect. -/
-theorem IsPreconnected.Union_of_refl_trans_gen {ι : Type _} {s : ι → Set α} (H : ∀ i, IsPreconnected (s i))
-    (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) : IsPreconnected (⋃ n, s n) := by
+theorem IsPreconnected.Union_of_refl_trans_gen {ι : Type _} {s : ι → Set α}
+    (H : ∀ i, IsPreconnected (s i))
+    (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) :
+    IsPreconnected (⋃ n, s n) := by
   rw [← bUnion_univ]
-  exact IsPreconnected.bUnion_of_refl_trans_gen (fun i _ => H i) fun i _ j _ => by simpa [mem_univ] using K i j
+  exact
+    IsPreconnected.bUnion_of_refl_trans_gen (fun i _ => H i) fun i _ j _ => by
+      simpa [mem_univ] using K i j
 #align is_preconnected.Union_of_refl_trans_gen IsPreconnected.Union_of_refl_trans_gen
 
-theorem IsConnected.Union_of_refl_trans_gen {ι : Type _} [Nonempty ι] {s : ι → Set α} (H : ∀ i, IsConnected (s i))
+theorem IsConnected.Union_of_refl_trans_gen {ι : Type _} [Nonempty ι] {s : ι → Set α}
+    (H : ∀ i, IsConnected (s i))
     (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) : IsConnected (⋃ n, s n) :=
   ⟨nonempty_Union.2 <| (Nonempty.elim ‹_›) fun i : ι => ⟨i, (H _).Nonempty⟩,
     IsPreconnected.Union_of_refl_trans_gen (fun i => (H i).IsPreconnected) K⟩
@@ -253,14 +265,15 @@ theorem IsConnected.Union_of_chain [Nonempty β] {s : β → Set α} (H : ∀ n,
 /-- The Union of preconnected sets indexed by a subset of a type with an archimedean successor
   (like `ℕ` or `ℤ`) such that any two neighboring sets meet is preconnected. -/
 theorem IsPreconnected.bUnion_of_chain {s : β → Set α} {t : Set β} (ht : OrdConnected t)
-    (H : ∀ n ∈ t, IsPreconnected (s n)) (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) :
+    (H : ∀ n ∈ t, IsPreconnected (s n))
+    (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) :
     IsPreconnected (⋃ n ∈ t, s n) := by
   have h1 : ∀ {i j k : β}, i ∈ t → j ∈ t → k ∈ Ico i j → k ∈ t := fun i j k hi hj hk =>
     ht.out hi hj (Ico_subset_Icc_self hk)
   have h2 : ∀ {i j k : β}, i ∈ t → j ∈ t → k ∈ Ico i j → succ k ∈ t := fun i j k hi hj hk =>
     ht.out hi hj ⟨hk.1.trans <| le_succ k, succ_le_of_lt hk.2⟩
-  have h3 : ∀ {i j k : β}, i ∈ t → j ∈ t → k ∈ Ico i j → (s k ∩ s (succ k)).Nonempty := fun i j k hi hj hk =>
-    K _ (h1 hi hj hk) (h2 hi hj hk)
+  have h3 : ∀ {i j k : β}, i ∈ t → j ∈ t → k ∈ Ico i j → (s k ∩ s (succ k)).Nonempty :=
+    fun i j k hi hj hk => K _ (h1 hi hj hk) (h2 hi hj hk)
   refine' IsPreconnected.bUnion_of_refl_trans_gen H fun i hi j hj => _
   exact
     refl_trans_gen_of_succ _ (fun k hk => ⟨h3 hi hj hk, h1 hi hj hk⟩) fun k hk =>
@@ -271,9 +284,9 @@ theorem IsPreconnected.bUnion_of_chain {s : β → Set α} {t : Set β} (ht : Or
 
 /-- The Union of connected sets indexed by a subset of a type with an archimedean successor
   (like `ℕ` or `ℤ`) such that any two neighboring sets meet is preconnected. -/
-theorem IsConnected.bUnion_of_chain {s : β → Set α} {t : Set β} (hnt : t.Nonempty) (ht : OrdConnected t)
-    (H : ∀ n ∈ t, IsConnected (s n)) (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) :
-    IsConnected (⋃ n ∈ t, s n) :=
+theorem IsConnected.bUnion_of_chain {s : β → Set α} {t : Set β} (hnt : t.Nonempty)
+    (ht : OrdConnected t) (H : ∀ n ∈ t, IsConnected (s n))
+    (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) : IsConnected (⋃ n ∈ t, s n) :=
   ⟨nonempty_bUnion.2 <| ⟨hnt.some, hnt.some_mem, (H _ hnt.some_mem).Nonempty⟩,
     IsPreconnected.bUnion_of_chain ht (fun i hi => (H i hi).IsPreconnected) K⟩
 #align is_connected.bUnion_of_chain IsConnected.bUnion_of_chain
@@ -291,8 +304,8 @@ theorem IsPreconnected.subset_closure {s : Set α} {t : Set α} (H : IsPreconnec
   ⟨r, Kst hrs, hruv⟩
 #align is_preconnected.subset_closure IsPreconnected.subset_closure
 
-theorem IsConnected.subset_closure {s : Set α} {t : Set α} (H : IsConnected s) (Kst : s ⊆ t) (Ktcs : t ⊆ closure s) :
-    IsConnected t :=
+theorem IsConnected.subset_closure {s : Set α} {t : Set α} (H : IsConnected s) (Kst : s ⊆ t)
+    (Ktcs : t ⊆ closure s) : IsConnected t :=
   let hsne := H.left
   let ht := Kst
   let htne := Nonempty.mono ht hsne
@@ -326,19 +339,22 @@ theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnec
   obtain ⟨z, hz⟩ : (s ∩ (u' ∩ v')).Nonempty := by
     refine' H u' v' hu' hv' huv ⟨x, _⟩ ⟨y, _⟩ <;> rw [inter_comm]
     exacts[u'_eq ▸ ⟨xu, xs⟩, v'_eq ▸ ⟨yv, ys⟩]
-  rw [← inter_self s, inter_assoc, inter_left_comm s u', ← inter_assoc, inter_comm s, inter_comm s, ← u'_eq, ← v'_eq] at
-    hz
+  rw [← inter_self s, inter_assoc, inter_left_comm s u', ← inter_assoc, inter_comm s, inter_comm s,
+    ← u'_eq, ← v'_eq] at hz
   exact ⟨f z, ⟨z, hz.1.2, rfl⟩, hz.1.1, hz.2.1⟩
 #align is_preconnected.image IsPreconnected.image
 
-theorem IsConnected.image [TopologicalSpace β] {s : Set α} (H : IsConnected s) (f : α → β) (hf : ContinuousOn f s) :
-    IsConnected (f '' s) :=
+theorem IsConnected.image [TopologicalSpace β] {s : Set α} (H : IsConnected s) (f : α → β)
+    (hf : ContinuousOn f s) : IsConnected (f '' s) :=
   ⟨nonempty_image_iff.mpr H.Nonempty, H.IsPreconnected.image f hf⟩
 #align is_connected.image IsConnected.image
 
 theorem is_preconnected_closed_iff {s : Set α} :
     IsPreconnected s ↔
-      ∀ t t', IsClosed t → IsClosed t' → s ⊆ t ∪ t' → (s ∩ t).Nonempty → (s ∩ t').Nonempty → (s ∩ (t ∩ t')).Nonempty :=
+      ∀ t t',
+        IsClosed t →
+          IsClosed t' →
+            s ⊆ t ∪ t' → (s ∩ t).Nonempty → (s ∩ t').Nonempty → (s ∩ (t ∩ t')).Nonempty :=
   ⟨by
     rintro h t t' ht ht' htt' ⟨x, xs, xt⟩ ⟨y, ys, yt'⟩
     rw [← not_disjoint_iff_nonempty_inter, ← subset_compl_iff_disjoint_right, compl_inter]
@@ -358,13 +374,13 @@ theorem is_preconnected_closed_iff {s : Set α} :
     exact this.ne_empty huv.disjoint_compl_right.inter_eq⟩
 #align is_preconnected_closed_iff is_preconnected_closed_iff
 
-theorem Inducing.is_preconnected_image [TopologicalSpace β] {s : Set α} {f : α → β} (hf : Inducing f) :
-    IsPreconnected (f '' s) ↔ IsPreconnected s := by
+theorem Inducing.is_preconnected_image [TopologicalSpace β] {s : Set α} {f : α → β}
+    (hf : Inducing f) : IsPreconnected (f '' s) ↔ IsPreconnected s := by
   refine' ⟨fun h => _, fun h => h.image _ hf.continuous.continuous_on⟩
   rintro u v hu' hv' huv ⟨x, hxs, hxu⟩ ⟨y, hys, hyv⟩
   rcases hf.is_open_iff.1 hu' with ⟨u, hu, rfl⟩
   rcases hf.is_open_iff.1 hv' with ⟨v, hv, rfl⟩
-  replace huv : f '' s ⊆ u ∪ v
+  replace huv : f '' s ⊆ u ∪ v;
   · rwa [image_subset_iff]
     
   rcases h u v hu hv huv ⟨f x, mem_image_of_mem _ hxs, hxu⟩ ⟨f y, mem_image_of_mem _ hys, hyv⟩ with
@@ -374,9 +390,9 @@ theorem Inducing.is_preconnected_image [TopologicalSpace β] {s : Set α} {f : �
 
 /- TODO: The following lemmas about connection of preimages hold more generally for strict maps
 (the quotient and subspace topologies of the image agree) whose fibers are preconnected. -/
-theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsPreconnected s) {f : α → β}
-    (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) : IsPreconnected (f ⁻¹' s) :=
-  fun u v hu hv hsuv hsu hsv => by
+theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsPreconnected s)
+    {f : α → β} (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) :
+    IsPreconnected (f ⁻¹' s) := fun u v hu hv hsuv hsu hsv => by
   obtain ⟨b, hbs, hbu, hbv⟩ := hs (f '' u) (f '' v) (hf u hu) (hf v hv) _ _ _
   obtain ⟨a, rfl⟩ := hsf hbs
   rw [hinj.mem_set_image] at hbu hbv
@@ -392,10 +408,12 @@ theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (
     
 #align is_preconnected.preimage_of_open_map IsPreconnected.preimage_of_open_map
 
-theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β} (hs : IsPreconnected s) {f : α → β}
-    (hinj : Function.Injective f) (hf : IsClosedMap f) (hsf : s ⊆ range f) : IsPreconnected (f ⁻¹' s) :=
+theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β}
+    (hs : IsPreconnected s) {f : α → β} (hinj : Function.Injective f) (hf : IsClosedMap f)
+    (hsf : s ⊆ range f) : IsPreconnected (f ⁻¹' s) :=
   is_preconnected_closed_iff.2 fun u v hu hv hsuv hsu hsv => by
-    obtain ⟨b, hbs, hbu, hbv⟩ := is_preconnected_closed_iff.1 hs (f '' u) (f '' v) (hf u hu) (hf v hv) _ _ _
+    obtain ⟨b, hbs, hbu, hbv⟩ :=
+      is_preconnected_closed_iff.1 hs (f '' u) (f '' v) (hf u hu) (hf v hv) _ _ _
     obtain ⟨a, rfl⟩ := hsf hbs
     rw [hinj.mem_set_image] at hbu hbv
     exact ⟨a, hbs, hbu, hbv⟩
@@ -410,30 +428,34 @@ theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β}
       
 #align is_preconnected.preimage_of_closed_map IsPreconnected.preimage_of_closed_map
 
-theorem IsConnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s) {f : α → β}
-    (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) : IsConnected (f ⁻¹' s) :=
+theorem IsConnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
+    {f : α → β} (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) :
+    IsConnected (f ⁻¹' s) :=
   ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_open_map hinj hf hsf⟩
 #align is_connected.preimage_of_open_map IsConnected.preimage_of_open_map
 
-theorem IsConnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s) {f : α → β}
-    (hinj : Function.Injective f) (hf : IsClosedMap f) (hsf : s ⊆ range f) : IsConnected (f ⁻¹' s) :=
+theorem IsConnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
+    {f : α → β} (hinj : Function.Injective f) (hf : IsClosedMap f) (hsf : s ⊆ range f) :
+    IsConnected (f ⁻¹' s) :=
   ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_closed_map hinj hf hsf⟩
 #align is_connected.preimage_of_closed_map IsConnected.preimage_of_closed_map
 
-theorem IsPreconnected.subset_or_subset (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v) (hsuv : s ⊆ u ∪ v)
-    (hs : IsPreconnected s) : s ⊆ u ∨ s ⊆ v := by
+theorem IsPreconnected.subset_or_subset (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v)
+    (hsuv : s ⊆ u ∪ v) (hs : IsPreconnected s) : s ⊆ u ∨ s ⊆ v := by
   specialize hs u v hu hv hsuv
   obtain hsu | hsu := (s ∩ u).eq_empty_or_nonempty
   · exact Or.inr ((Set.disjoint_iff_inter_eq_empty.2 hsu).subset_right_of_subset_union hsuv)
     
   · replace hs := mt (hs hsu)
-    simp_rw [Set.not_nonempty_iff_eq_empty, ← Set.disjoint_iff_inter_eq_empty, disjoint_iff_inter_eq_empty.1 huv] at hs
+    simp_rw [Set.not_nonempty_iff_eq_empty, ← Set.disjoint_iff_inter_eq_empty,
+      disjoint_iff_inter_eq_empty.1 huv] at hs
     exact Or.inl ((hs s.disjoint_empty).subset_left_of_subset_union hsuv)
     
 #align is_preconnected.subset_or_subset IsPreconnected.subset_or_subset
 
-theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v)
-    (hsuv : s ⊆ u ∪ v) (hsu : (s ∩ u).Nonempty) (hs : IsPreconnected s) : s ⊆ u :=
+theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen v)
+    (huv : Disjoint u v) (hsuv : s ⊆ u ∪ v) (hsu : (s ∩ u).Nonempty) (hs : IsPreconnected s) :
+    s ⊆ u :=
   Disjoint.subset_left_of_subset_union hsuv
     (by
       by_contra hsv
@@ -442,15 +464,16 @@ theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen 
       exact Set.disjoint_iff.1 huv hx)
 #align is_preconnected.subset_left_of_subset_union IsPreconnected.subset_left_of_subset_union
 
-theorem IsPreconnected.subset_right_of_subset_union (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v)
-    (hsuv : s ⊆ u ∪ v) (hsv : (s ∩ v).Nonempty) (hs : IsPreconnected s) : s ⊆ v :=
+theorem IsPreconnected.subset_right_of_subset_union (hu : IsOpen u) (hv : IsOpen v)
+    (huv : Disjoint u v) (hsuv : s ⊆ u ∪ v) (hsv : (s ∩ v).Nonempty) (hs : IsPreconnected s) :
+    s ⊆ v :=
   hs.subset_left_of_subset_union hv hu huv.symm (union_comm u v ▸ hsuv) hsv
 #align is_preconnected.subset_right_of_subset_union IsPreconnected.subset_right_of_subset_union
 
 /-- If a preconnected set `s` intersects an open set `u`, and limit points of `u` inside `s` are
 contained in `u`, then the whole set `s` is contained in `u`. -/
-theorem IsPreconnected.subset_of_closure_inter_subset (hs : IsPreconnected s) (hu : IsOpen u) (h'u : (s ∩ u).Nonempty)
-    (h : closure u ∩ s ⊆ u) : s ⊆ u := by
+theorem IsPreconnected.subset_of_closure_inter_subset (hs : IsPreconnected s) (hu : IsOpen u)
+    (h'u : (s ∩ u).Nonempty) (h : closure u ∩ s ⊆ u) : s ⊆ u := by
   have A : s ⊆ u ∪ closure uᶜ := by
     intro x hx
     by_cases xu : x ∈ u
@@ -469,7 +492,8 @@ theorem IsPreconnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs 
     (ht : IsPreconnected t) : IsPreconnected (s ×ˢ t) := by
   apply is_preconnected_of_forall_pair
   rintro ⟨a₁, b₁⟩ ⟨ha₁, hb₁⟩ ⟨a₂, b₂⟩ ⟨ha₂, hb₂⟩
-  refine' ⟨Prod.mk a₁ '' t ∪ flip Prod.mk b₂ '' s, _, Or.inl ⟨b₁, hb₁, rfl⟩, Or.inr ⟨a₂, ha₂, rfl⟩, _⟩
+  refine'
+    ⟨Prod.mk a₁ '' t ∪ flip Prod.mk b₂ '' s, _, Or.inl ⟨b₁, hb₁, rfl⟩, Or.inr ⟨a₂, ha₂, rfl⟩, _⟩
   · rintro _ (⟨y, hy, rfl⟩ | ⟨x, hx, rfl⟩)
     exacts[⟨ha₁, hy⟩, ⟨hx, hb₂⟩]
     
@@ -480,13 +504,13 @@ theorem IsPreconnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs 
 #align is_preconnected.prod IsPreconnected.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem IsConnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs : IsConnected s) (ht : IsConnected t) :
-    IsConnected (s ×ˢ t) :=
+theorem IsConnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs : IsConnected s)
+    (ht : IsConnected t) : IsConnected (s ×ˢ t) :=
   ⟨hs.1.Prod ht.1, hs.2.Prod ht.2⟩
 #align is_connected.prod IsConnected.prod
 
-theorem is_preconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (π i)} (hs : ∀ i, IsPreconnected (s i)) :
-    IsPreconnected (pi univ s) := by
+theorem is_preconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (π i)}
+    (hs : ∀ i, IsPreconnected (s i)) : IsPreconnected (pi univ s) := by
   rintro u v uo vo hsuv ⟨f, hfs, hfu⟩ ⟨g, hgs, hgv⟩
   rcases exists_finset_piecewise_mem_of_mem_nhds (uo.mem_nhds hfu) g with ⟨I, hI⟩
   induction' I using Finset.induction_on with i I hi ihI
@@ -501,7 +525,8 @@ theorem is_preconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set
       refine' image_subset_iff.2 fun z hz => _
       rwa [update_preimage_univ_pi]
       exact fun j hj => this j trivial
-    have hconn : IsPreconnected S := (hs i).image _ (continuous_const.update i continuous_id).ContinuousOn
+    have hconn : IsPreconnected S :=
+      (hs i).image _ (continuous_const.update i continuous_id).ContinuousOn
     have hSu : (S ∩ u).Nonempty := ⟨_, mem_image_of_mem _ (hfs _ trivial), hI⟩
     have hSv : (S ∩ v).Nonempty := ⟨_, ⟨_, this _ trivial, update_eq_self _ _⟩, h⟩
     refine' (hconn u v uo vo (hsub.trans hsuv) hSu hSv).mono _
@@ -540,8 +565,8 @@ theorem Sigma.is_connected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σi, �
     
 #align sigma.is_connected_iff Sigma.is_connected_iff
 
-theorem Sigma.is_preconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (π i)] {s : Set (Σi, π i)} :
-    IsPreconnected s ↔ ∃ i t, IsPreconnected t ∧ s = Sigma.mk i '' t := by
+theorem Sigma.is_preconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (π i)]
+    {s : Set (Σi, π i)} : IsPreconnected s ↔ ∃ i t, IsPreconnected t ∧ s = Sigma.mk i '' t := by
   refine' ⟨fun hs => _, _⟩
   · obtain rfl | h := s.eq_empty_or_nonempty
     · exact ⟨Classical.choice hι, ∅, is_preconnected_empty, (Set.image_empty _).symm⟩
@@ -556,7 +581,9 @@ theorem Sigma.is_preconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (
 #align sigma.is_preconnected_iff Sigma.is_preconnected_iff
 
 theorem Sum.is_connected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
-    IsConnected s ↔ (∃ t, IsConnected t ∧ s = Sum.inl '' t) ∨ ∃ t, IsConnected t ∧ s = Sum.inr '' t := by
+    IsConnected s ↔
+      (∃ t, IsConnected t ∧ s = Sum.inl '' t) ∨ ∃ t, IsConnected t ∧ s = Sum.inr '' t :=
+  by
   refine' ⟨fun hs => _, _⟩
   · let u : Set (Sum α β) := range Sum.inl
     let v : Set (Sum α β) := range Sum.inr
@@ -590,7 +617,9 @@ theorem Sum.is_connected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
 #align sum.is_connected_iff Sum.is_connected_iff
 
 theorem Sum.is_preconnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
-    IsPreconnected s ↔ (∃ t, IsPreconnected t ∧ s = Sum.inl '' t) ∨ ∃ t, IsPreconnected t ∧ s = Sum.inr '' t := by
+    IsPreconnected s ↔
+      (∃ t, IsPreconnected t ∧ s = Sum.inl '' t) ∨ ∃ t, IsPreconnected t ∧ s = Sum.inr '' t :=
+  by
   refine' ⟨fun hs => _, _⟩
   · obtain rfl | h := s.eq_empty_or_nonempty
     · exact Or.inl ⟨∅, is_preconnected_empty, (Set.image_empty _).symm⟩
@@ -628,7 +657,8 @@ theorem connected_component_in_eq_image {F : Set α} {x : α} (h : x ∈ F) :
   dif_pos h
 #align connected_component_in_eq_image connected_component_in_eq_image
 
-theorem connected_component_in_eq_empty {F : Set α} {x : α} (h : x ∉ F) : connectedComponentIn F x = ∅ :=
+theorem connected_component_in_eq_empty {F : Set α} {x : α} (h : x ∉ F) :
+    connectedComponentIn F x = ∅ :=
   dif_neg h
 #align connected_component_in_eq_empty connected_component_in_eq_empty
 
@@ -636,7 +666,8 @@ theorem mem_connected_component {x : α} : x ∈ connectedComponent x :=
   mem_sUnion_of_mem (mem_singleton x) ⟨is_connected_singleton.IsPreconnected, mem_singleton x⟩
 #align mem_connected_component mem_connected_component
 
-theorem mem_connected_component_in {x : α} {F : Set α} (hx : x ∈ F) : x ∈ connectedComponentIn F x := by
+theorem mem_connected_component_in {x : α} {F : Set α} (hx : x ∈ F) :
+    x ∈ connectedComponentIn F x := by
   simp [connected_component_in_eq_image hx, mem_connected_component, hx]
 #align mem_connected_component_in mem_connected_component_in
 
@@ -644,7 +675,8 @@ theorem connected_component_nonempty {x : α} : (connectedComponent x).Nonempty 
   ⟨x, mem_connected_component⟩
 #align connected_component_nonempty connected_component_nonempty
 
-theorem connected_component_in_nonempty_iff {x : α} {F : Set α} : (connectedComponentIn F x).Nonempty ↔ x ∈ F := by
+theorem connected_component_in_nonempty_iff {x : α} {F : Set α} :
+    (connectedComponentIn F x).Nonempty ↔ x ∈ F := by
   rw [connectedComponentIn]
   split_ifs <;> simp [connected_component_nonempty, h]
 #align connected_component_in_nonempty_iff connected_component_in_nonempty_iff
@@ -658,10 +690,12 @@ theorem is_preconnected_connected_component {x : α} : IsPreconnected (connected
   is_preconnected_sUnion x _ (fun _ => And.right) fun _ => And.left
 #align is_preconnected_connected_component is_preconnected_connected_component
 
-theorem is_preconnected_connected_component_in {x : α} {F : Set α} : IsPreconnected (connectedComponentIn F x) := by
-  rw [connectedComponentIn]
-  split_ifs
-  · exact embedding_subtype_coe.to_inducing.is_preconnected_image.mpr is_preconnected_connected_component
+theorem is_preconnected_connected_component_in {x : α} {F : Set α} :
+    IsPreconnected (connectedComponentIn F x) := by
+  rw [connectedComponentIn]; split_ifs
+  · exact
+      embedding_subtype_coe.to_inducing.is_preconnected_image.mpr
+        is_preconnected_connected_component
     
   · exact is_preconnected_empty
     
@@ -671,16 +705,18 @@ theorem is_connected_connected_component {x : α} : IsConnected (connectedCompon
   ⟨⟨x, mem_connected_component⟩, is_preconnected_connected_component⟩
 #align is_connected_connected_component is_connected_connected_component
 
-theorem is_connected_connected_component_in_iff {x : α} {F : Set α} : IsConnected (connectedComponentIn F x) ↔ x ∈ F :=
-  by simp_rw [← connected_component_in_nonempty_iff, IsConnected, is_preconnected_connected_component_in, and_true_iff]
+theorem is_connected_connected_component_in_iff {x : α} {F : Set α} :
+    IsConnected (connectedComponentIn F x) ↔ x ∈ F := by
+  simp_rw [← connected_component_in_nonempty_iff, IsConnected,
+    is_preconnected_connected_component_in, and_true_iff]
 #align is_connected_connected_component_in_iff is_connected_connected_component_in_iff
 
-theorem IsPreconnected.subset_connected_component {x : α} {s : Set α} (H1 : IsPreconnected s) (H2 : x ∈ s) :
-    s ⊆ connectedComponent x := fun z hz => mem_sUnion_of_mem hz ⟨H1, H2⟩
+theorem IsPreconnected.subset_connected_component {x : α} {s : Set α} (H1 : IsPreconnected s)
+    (H2 : x ∈ s) : s ⊆ connectedComponent x := fun z hz => mem_sUnion_of_mem hz ⟨H1, H2⟩
 #align is_preconnected.subset_connected_component IsPreconnected.subset_connected_component
 
-theorem IsPreconnected.subset_connected_component_in {x : α} {F : Set α} (hs : IsPreconnected s) (hxs : x ∈ s)
-    (hsF : s ⊆ F) : s ⊆ connectedComponentIn F x := by
+theorem IsPreconnected.subset_connected_component_in {x : α} {F : Set α} (hs : IsPreconnected s)
+    (hxs : x ∈ s) (hsF : s ⊆ F) : s ⊆ connectedComponentIn F x := by
   have : IsPreconnected ((coe : F → α) ⁻¹' s) := by
     refine' embedding_subtype_coe.to_inducing.is_preconnected_image.mp _
     rwa [Subtype.image_preimage_coe, inter_eq_left_iff_subset.mpr hsF]
@@ -693,17 +729,18 @@ theorem IsPreconnected.subset_connected_component_in {x : α} {F : Set α} (hs :
   rw [Subtype.image_preimage_coe, inter_eq_left_iff_subset.mpr hsF]
 #align is_preconnected.subset_connected_component_in IsPreconnected.subset_connected_component_in
 
-theorem IsConnected.subset_connected_component {x : α} {s : Set α} (H1 : IsConnected s) (H2 : x ∈ s) :
-    s ⊆ connectedComponent x :=
+theorem IsConnected.subset_connected_component {x : α} {s : Set α} (H1 : IsConnected s)
+    (H2 : x ∈ s) : s ⊆ connectedComponent x :=
   H1.2.subset_connected_component H2
 #align is_connected.subset_connected_component IsConnected.subset_connected_component
 
-theorem IsPreconnected.connected_component_in {x : α} {F : Set α} (h : IsPreconnected F) (hx : x ∈ F) :
-    connectedComponentIn F x = F :=
+theorem IsPreconnected.connected_component_in {x : α} {F : Set α} (h : IsPreconnected F)
+    (hx : x ∈ F) : connectedComponentIn F x = F :=
   (connected_component_in_subset F x).antisymm (h.subset_connected_component_in hx subset_rfl)
 #align is_preconnected.connected_component_in IsPreconnected.connected_component_in
 
-theorem connected_component_eq {x y : α} (h : y ∈ connectedComponent x) : connectedComponent x = connectedComponent y :=
+theorem connected_component_eq {x y : α} (h : y ∈ connectedComponent x) :
+    connectedComponent x = connectedComponent y :=
   eq_of_subset_of_subset (is_connected_connected_component.subset_connected_component h)
     (is_connected_connected_component.subset_connected_component
       (Set.mem_of_mem_of_subset mem_connected_component
@@ -720,34 +757,41 @@ theorem connected_component_in_eq {x y : α} {F : Set α} (h : y ∈ connectedCo
 
 theorem connected_component_in_univ (x : α) : connectedComponentIn univ x = connectedComponent x :=
   subset_antisymm
-    (is_preconnected_connected_component_in.subset_connected_component <| mem_connected_component_in trivial)
-    (is_preconnected_connected_component.subset_connected_component_in mem_connected_component <| subset_univ _)
+    (is_preconnected_connected_component_in.subset_connected_component <|
+      mem_connected_component_in trivial)
+    (is_preconnected_connected_component.subset_connected_component_in mem_connected_component <|
+      subset_univ _)
 #align connected_component_in_univ connected_component_in_univ
 
 theorem connected_component_disjoint {x y : α} (h : connectedComponent x ≠ connectedComponent y) :
     Disjoint (connectedComponent x) (connectedComponent y) :=
-  Set.disjoint_left.2 fun a h1 h2 => h ((connected_component_eq h1).trans (connected_component_eq h2).symm)
+  Set.disjoint_left.2 fun a h1 h2 =>
+    h ((connected_component_eq h1).trans (connected_component_eq h2).symm)
 #align connected_component_disjoint connected_component_disjoint
 
 theorem isClosedConnectedComponent {x : α} : IsClosed (connectedComponent x) :=
   closure_subset_iff_is_closed.1 <|
-    is_connected_connected_component.closure.subset_connected_component <| subset_closure mem_connected_component
+    is_connected_connected_component.closure.subset_connected_component <|
+      subset_closure mem_connected_component
 #align is_closed_connected_component isClosedConnectedComponent
 
-theorem Continuous.image_connected_component_subset [TopologicalSpace β] {f : α → β} (h : Continuous f) (a : α) :
-    f '' connectedComponent a ⊆ connectedComponent (f a) :=
+theorem Continuous.image_connected_component_subset [TopologicalSpace β] {f : α → β}
+    (h : Continuous f) (a : α) : f '' connectedComponent a ⊆ connectedComponent (f a) :=
   (is_connected_connected_component.image f h.ContinuousOn).subset_connected_component
     ((mem_image f (connectedComponent a) (f a)).2 ⟨a, mem_connected_component, rfl⟩)
 #align continuous.image_connected_component_subset Continuous.image_connected_component_subset
 
-theorem Continuous.maps_to_connected_component [TopologicalSpace β] {f : α → β} (h : Continuous f) (a : α) :
-    MapsTo f (connectedComponent a) (connectedComponent (f a)) :=
+theorem Continuous.maps_to_connected_component [TopologicalSpace β] {f : α → β} (h : Continuous f)
+    (a : α) : MapsTo f (connectedComponent a) (connectedComponent (f a)) :=
   maps_to'.2 <| h.image_connected_component_subset a
 #align continuous.maps_to_connected_component Continuous.maps_to_connected_component
 
-theorem irreducible_component_subset_connected_component {x : α} : irreducibleComponent x ⊆ connectedComponent x :=
-  is_irreducible_irreducible_component.IsConnected.subset_connected_component mem_irreducible_component
-#align irreducible_component_subset_connected_component irreducible_component_subset_connected_component
+theorem irreducible_component_subset_connected_component {x : α} :
+    irreducibleComponent x ⊆ connectedComponent x :=
+  is_irreducible_irreducible_component.IsConnected.subset_connected_component
+    mem_irreducible_component
+#align
+  irreducible_component_subset_connected_component irreducible_component_subset_connected_component
 
 @[mono]
 theorem connected_component_in_mono (x : α) {F G : Set α} (h : F ⊆ G) :
@@ -781,8 +825,8 @@ theorem is_connected_univ [ConnectedSpace α] : IsConnected (univ : Set α) :=
   ⟨univ_nonempty, is_preconnected_univ⟩
 #align is_connected_univ is_connected_univ
 
-theorem is_preconnected_range [TopologicalSpace β] [PreconnectedSpace α] {f : α → β} (h : Continuous f) :
-    IsPreconnected (range f) :=
+theorem is_preconnected_range [TopologicalSpace β] [PreconnectedSpace α] {f : α → β}
+    (h : Continuous f) : IsPreconnected (range f) :=
   @image_univ _ _ f ▸ is_preconnected_univ.image _ h.ContinuousOn
 #align is_preconnected_range is_preconnected_range
 
@@ -791,15 +835,17 @@ theorem is_connected_range [TopologicalSpace β] [ConnectedSpace α] {f : α →
   ⟨range_nonempty f, is_preconnected_range h⟩
 #align is_connected_range is_connected_range
 
-theorem DenseRange.preconnected_space [TopologicalSpace β] [PreconnectedSpace α] {f : α → β} (hf : DenseRange f)
-    (hc : Continuous f) : PreconnectedSpace β :=
+theorem DenseRange.preconnected_space [TopologicalSpace β] [PreconnectedSpace α] {f : α → β}
+    (hf : DenseRange f) (hc : Continuous f) : PreconnectedSpace β :=
   ⟨hf.closure_eq ▸ (is_preconnected_range hc).closure⟩
 #align dense_range.preconnected_space DenseRange.preconnected_space
 
-theorem connected_space_iff_connected_component : ConnectedSpace α ↔ ∃ x : α, connectedComponent x = univ := by
+theorem connected_space_iff_connected_component :
+    ConnectedSpace α ↔ ∃ x : α, connectedComponent x = univ := by
   constructor
   · rintro ⟨⟨x⟩⟩
-    exact ⟨x, eq_univ_of_univ_subset <| is_preconnected_univ.subset_connected_component (mem_univ x)⟩
+    exact
+      ⟨x, eq_univ_of_univ_subset <| is_preconnected_univ.subset_connected_component (mem_univ x)⟩
     
   · rintro ⟨x, h⟩
     haveI : PreconnectedSpace α :=
@@ -810,7 +856,8 @@ theorem connected_space_iff_connected_component : ConnectedSpace α ↔ ∃ x : 
     
 #align connected_space_iff_connected_component connected_space_iff_connected_component
 
-theorem preconnected_space_iff_connected_component : PreconnectedSpace α ↔ ∀ x : α, connectedComponent x = univ := by
+theorem preconnected_space_iff_connected_component :
+    PreconnectedSpace α ↔ ∀ x : α, connectedComponent x = univ := by
   constructor
   · intro h x
     exact eq_univ_of_univ_subset <| is_preconnected_univ.subset_connected_component (mem_univ x)
@@ -831,12 +878,13 @@ theorem preconnected_space_iff_connected_component : PreconnectedSpace α ↔ �
 #align preconnected_space_iff_connected_component preconnected_space_iff_connected_component
 
 @[simp]
-theorem PreconnectedSpace.connected_component_eq_univ {X : Type _} [TopologicalSpace X] [h : PreconnectedSpace X]
-    (x : X) : connectedComponent x = univ :=
+theorem PreconnectedSpace.connected_component_eq_univ {X : Type _} [TopologicalSpace X]
+    [h : PreconnectedSpace X] (x : X) : connectedComponent x = univ :=
   preconnected_space_iff_connected_component.mp h x
 #align preconnected_space.connected_component_eq_univ PreconnectedSpace.connected_component_eq_univ
 
-instance [TopologicalSpace β] [PreconnectedSpace α] [PreconnectedSpace β] : PreconnectedSpace (α × β) :=
+instance [TopologicalSpace β] [PreconnectedSpace α] [PreconnectedSpace β] :
+    PreconnectedSpace (α × β) :=
   ⟨by
     rw [← univ_prod_univ]
     exact is_preconnected_univ.prod is_preconnected_univ⟩
@@ -844,7 +892,8 @@ instance [TopologicalSpace β] [PreconnectedSpace α] [PreconnectedSpace β] : P
 instance [TopologicalSpace β] [ConnectedSpace α] [ConnectedSpace β] : ConnectedSpace (α × β) :=
   ⟨Prod.nonempty⟩
 
-instance [∀ i, TopologicalSpace (π i)] [∀ i, PreconnectedSpace (π i)] : PreconnectedSpace (∀ i, π i) :=
+instance [∀ i, TopologicalSpace (π i)] [∀ i, PreconnectedSpace (π i)] :
+    PreconnectedSpace (∀ i, π i) :=
   ⟨by
     rw [← pi_univ univ]
     exact is_preconnected_univ_pi fun i => is_preconnected_univ⟩
@@ -859,8 +908,8 @@ instance (priority := 100) PreirreducibleSpace.preconnected_space (α : Type u) 
 #align preirreducible_space.preconnected_space PreirreducibleSpace.preconnected_space
 
 -- see Note [lower instance priority]
-instance (priority := 100) IrreducibleSpace.connected_space (α : Type u) [TopologicalSpace α] [IrreducibleSpace α] :
-    ConnectedSpace α where to_nonempty := IrreducibleSpace.to_nonempty α
+instance (priority := 100) IrreducibleSpace.connected_space (α : Type u) [TopologicalSpace α]
+    [IrreducibleSpace α] : ConnectedSpace α where to_nonempty := IrreducibleSpace.to_nonempty α
 #align irreducible_space.connected_space IrreducibleSpace.connected_space
 
 theorem nonempty_inter [PreconnectedSpace α] {s t : Set α} :
@@ -872,7 +921,8 @@ theorem is_clopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = �
   ⟨fun hs =>
     Classical.by_contradiction fun h =>
       have h1 : s ≠ ∅ ∧ sᶜ ≠ ∅ :=
-        ⟨mt Or.inl h, mt (fun h2 => Or.inr <| (by rw [← compl_compl s, h2, compl_empty] : s = univ)) h⟩
+        ⟨mt Or.inl h,
+          mt (fun h2 => Or.inr <| (by rw [← compl_compl s, h2, compl_empty] : s = univ)) h⟩
       let ⟨_, h2, h3⟩ :=
         nonempty_inter hs.1 hs.2.is_open_compl (union_compl_self s) (ne_empty_iff_nonempty.1 h1.1)
           (ne_empty_iff_nonempty.1 h1.2)
@@ -880,35 +930,42 @@ theorem is_clopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = �
     by rintro (rfl | rfl) <;> [exact is_clopen_empty, exact is_clopen_univ]⟩
 #align is_clopen_iff is_clopen_iff
 
-theorem IsClopen.eq_univ [PreconnectedSpace α] {s : Set α} (h' : IsClopen s) (h : s.Nonempty) : s = univ :=
+theorem IsClopen.eq_univ [PreconnectedSpace α] {s : Set α} (h' : IsClopen s) (h : s.Nonempty) :
+    s = univ :=
   (is_clopen_iff.mp h').resolve_left h.ne_empty
 #align is_clopen.eq_univ IsClopen.eq_univ
 
-theorem frontier_eq_empty_iff [PreconnectedSpace α] {s : Set α} : frontier s = ∅ ↔ s = ∅ ∨ s = univ :=
+theorem frontier_eq_empty_iff [PreconnectedSpace α] {s : Set α} :
+    frontier s = ∅ ↔ s = ∅ ∨ s = univ :=
   is_clopen_iff_frontier_eq_empty.symm.trans is_clopen_iff
 #align frontier_eq_empty_iff frontier_eq_empty_iff
 
-theorem nonempty_frontier_iff [PreconnectedSpace α] {s : Set α} : (frontier s).Nonempty ↔ s.Nonempty ∧ s ≠ univ := by
+theorem nonempty_frontier_iff [PreconnectedSpace α] {s : Set α} :
+    (frontier s).Nonempty ↔ s.Nonempty ∧ s ≠ univ := by
   simp only [← ne_empty_iff_nonempty, Ne.def, frontier_eq_empty_iff, not_or]
 #align nonempty_frontier_iff nonempty_frontier_iff
 
 theorem Subtype.preconnected_space {s : Set α} (h : IsPreconnected s) : PreconnectedSpace s :=
   { is_preconnected_univ := by
-      rwa [← embedding_subtype_coe.to_inducing.is_preconnected_image, image_univ, Subtype.range_coe] }
+      rwa [← embedding_subtype_coe.to_inducing.is_preconnected_image, image_univ,
+        Subtype.range_coe] }
 #align subtype.preconnected_space Subtype.preconnected_space
 
 theorem Subtype.connected_space {s : Set α} (h : IsConnected s) : ConnectedSpace s :=
-  { to_preconnected_space := Subtype.preconnected_space h.IsPreconnected, to_nonempty := h.Nonempty.to_subtype }
+  { to_preconnected_space := Subtype.preconnected_space h.IsPreconnected,
+    to_nonempty := h.Nonempty.to_subtype }
 #align subtype.connected_space Subtype.connected_space
 
-theorem is_preconnected_iff_preconnected_space {s : Set α} : IsPreconnected s ↔ PreconnectedSpace s :=
+theorem is_preconnected_iff_preconnected_space {s : Set α} :
+    IsPreconnected s ↔ PreconnectedSpace s :=
   ⟨Subtype.preconnected_space, by
     intro
     simpa using is_preconnected_univ.image (coe : s → α) continuous_subtype_coe.continuous_on⟩
 #align is_preconnected_iff_preconnected_space is_preconnected_iff_preconnected_space
 
 theorem is_connected_iff_connected_space {s : Set α} : IsConnected s ↔ ConnectedSpace s :=
-  ⟨Subtype.connected_space, fun h => ⟨nonempty_subtype.mp h.2, is_preconnected_iff_preconnected_space.mpr h.1⟩⟩
+  ⟨Subtype.connected_space, fun h =>
+    ⟨nonempty_subtype.mp h.2, is_preconnected_iff_preconnected_space.mpr h.1⟩⟩
 #align is_connected_iff_connected_space is_connected_iff_connected_space
 
 /-- A set `s` is preconnected if and only if
@@ -916,7 +973,8 @@ for every cover by two open sets that are disjoint on `s`,
 it is contained in one of the two covering sets. -/
 theorem is_preconnected_iff_subset_of_disjoint {s : Set α} :
     IsPreconnected s ↔
-      ∀ (u v : Set α) (hu : IsOpen u) (hv : IsOpen v) (hs : s ⊆ u ∪ v) (huv : s ∩ (u ∩ v) = ∅), s ⊆ u ∨ s ⊆ v :=
+      ∀ (u v : Set α) (hu : IsOpen u) (hv : IsOpen v) (hs : s ⊆ u ∪ v) (huv : s ∩ (u ∩ v) = ∅),
+        s ⊆ u ∨ s ⊆ v :=
   by
   constructor <;> intro h
   · intro u v hu hv hs huv
@@ -1024,8 +1082,8 @@ theorem is_connected_iff_sUnion_disjoint_open {s : Set α} :
 #align is_connected_iff_sUnion_disjoint_open is_connected_iff_sUnion_disjoint_open
 
 /-- Preconnected sets are either contained in or disjoint to any given clopen set. -/
-theorem IsPreconnected.subset_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t) (hne : (s ∩ t).Nonempty) :
-    s ⊆ t := by
+theorem IsPreconnected.subset_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t)
+    (hne : (s ∩ t).Nonempty) : s ⊆ t := by
   by_contra h
   have : (s ∩ tᶜ).Nonempty := inter_compl_nonempty_iff.2 h
   obtain ⟨x, -, hx, hx'⟩ : (s ∩ (t ∩ tᶜ)).Nonempty
@@ -1034,7 +1092,8 @@ theorem IsPreconnected.subset_clopen {s t : Set α} (hs : IsPreconnected s) (ht 
 #align is_preconnected.subset_clopen IsPreconnected.subset_clopen
 
 /-- Preconnected sets are either contained in or disjoint to any given clopen set. -/
-theorem disjoint_or_subset_of_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t) : Disjoint s t ∨ s ⊆ t :=
+theorem disjoint_or_subset_of_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t) :
+    Disjoint s t ∨ s ⊆ t :=
   (disjoint_or_nonempty_inter s t).imp_right <| hs.subset_clopen ht
 #align disjoint_or_subset_of_clopen disjoint_or_subset_of_clopen
 
@@ -1043,7 +1102,8 @@ for every cover by two closed sets that are disjoint on `s`,
 it is contained in one of the two covering sets. -/
 theorem is_preconnected_iff_subset_of_disjoint_closed :
     IsPreconnected s ↔
-      ∀ (u v : Set α) (hu : IsClosed u) (hv : IsClosed v) (hs : s ⊆ u ∪ v) (huv : s ∩ (u ∩ v) = ∅), s ⊆ u ∨ s ⊆ v :=
+      ∀ (u v : Set α) (hu : IsClosed u) (hv : IsClosed v) (hs : s ⊆ u ∪ v) (huv : s ∩ (u ∩ v) = ∅),
+        s ⊆ u ∨ s ⊆ v :=
   by
   constructor <;> intro h
   · intro u v hu hv hs huv
@@ -1079,7 +1139,8 @@ for every cover by two closed sets that are disjoint,
 it is contained in one of the two covering sets. -/
 theorem is_preconnected_iff_subset_of_fully_disjoint_closed {s : Set α} (hs : IsClosed s) :
     IsPreconnected s ↔
-      ∀ (u v : Set α) (hu : IsClosed u) (hv : IsClosed v) (hss : s ⊆ u ∪ v) (huv : Disjoint u v), s ⊆ u ∨ s ⊆ v :=
+      ∀ (u v : Set α) (hu : IsClosed u) (hv : IsClosed v) (hss : s ⊆ u ∪ v) (huv : Disjoint u v),
+        s ⊆ u ∨ s ⊆ v :=
   by
   constructor
   · intro h u v hu hv hss huv
@@ -1098,9 +1159,11 @@ theorem is_preconnected_iff_subset_of_fully_disjoint_closed {s : Set α} (hs : I
     
   · rwa [disjoint_iff_inter_eq_empty, ← inter_inter_distrib_right, inter_comm]
     
-#align is_preconnected_iff_subset_of_fully_disjoint_closed is_preconnected_iff_subset_of_fully_disjoint_closed
+#align
+  is_preconnected_iff_subset_of_fully_disjoint_closed is_preconnected_iff_subset_of_fully_disjoint_closed
 
-theorem IsClopen.connected_component_subset {x} (hs : IsClopen s) (hx : x ∈ s) : connectedComponent x ⊆ s :=
+theorem IsClopen.connected_component_subset {x} (hs : IsClopen s) (hx : x ∈ s) :
+    connectedComponent x ⊆ s :=
   is_preconnected_connected_component.subset_clopen hs ⟨x, mem_connected_component, hx⟩
 #align is_clopen.connected_component_subset IsClopen.connected_component_subset
 
@@ -1112,7 +1175,8 @@ theorem connected_component_subset_Inter_clopen {x : α} :
 #align connected_component_subset_Inter_clopen connected_component_subset_Inter_clopen
 
 /-- A clopen set is the union of its connected components. -/
-theorem IsClopen.bUnion_connected_component_eq {Z : Set α} (h : IsClopen Z) : (⋃ x ∈ Z, connectedComponent x) = Z :=
+theorem IsClopen.bUnion_connected_component_eq {Z : Set α} (h : IsClopen Z) :
+    (⋃ x ∈ Z, connectedComponent x) = Z :=
   (Subset.antisymm (Union₂_subset fun x => h.connected_component_subset)) fun x hx =>
     mem_Union₂_of_mem hx mem_connected_component
 #align is_clopen.bUnion_connected_component_eq IsClopen.bUnion_connected_component_eq
@@ -1120,7 +1184,8 @@ theorem IsClopen.bUnion_connected_component_eq {Z : Set α} (h : IsClopen Z) : (
 /-- The preimage of a connected component is preconnected if the function has connected fibers
 and a subset is closed iff the preimage is. -/
 theorem preimage_connected_component_connected [TopologicalSpace β] {f : α → β}
-    (connected_fibers : ∀ t : β, IsConnected (f ⁻¹' {t})) (hcl : ∀ T : Set β, IsClosed T ↔ IsClosed (f ⁻¹' T)) (t : β) :
+    (connected_fibers : ∀ t : β, IsConnected (f ⁻¹' {t}))
+    (hcl : ∀ T : Set β, IsClosed T ↔ IsClosed (f ⁻¹' T)) (t : β) :
     IsConnected (f ⁻¹' connectedComponent t) := by
   -- The following proof is essentially https://stacks.math.columbia.edu/tag/0377
   -- although the statement is slightly different
@@ -1131,7 +1196,8 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     rw [mem_preimage, hs]
     exact mem_connected_component
     
-  have hT : IsClosed (f ⁻¹' connectedComponent t) := (hcl (connectedComponent t)).1 isClosedConnectedComponent
+  have hT : IsClosed (f ⁻¹' connectedComponent t) :=
+    (hcl (connectedComponent t)).1 isClosedConnectedComponent
   -- To show it's preconnected we decompose (f ⁻¹' connected_component t) as a subset of two
   -- closed disjoint sets in α. We want to show that it's a subset of either.
   rw [is_preconnected_iff_subset_of_fully_disjoint_closed hT]
@@ -1196,7 +1262,8 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     exact ⟨ht', htv⟩
   have T_disjoint : Disjoint T₁ T₂ := by
     refine' Disjoint.of_preimage hf _
-    rw [T₁_u, T₂_v, disjoint_iff_inter_eq_empty, ← inter_inter_distrib_left, uv_disj.inter_eq, inter_empty]
+    rw [T₁_u, T₂_v, disjoint_iff_inter_eq_empty, ← inter_inter_distrib_left, uv_disj.inter_eq,
+      inter_empty]
   -- Now we do cases on whether (connected_component t) is a subset of T₁ or T₂ to show
   -- that the preimage is a subset of u or v.
   cases
@@ -1215,15 +1282,18 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
   exact preimage_mono h
 #align preimage_connected_component_connected preimage_connected_component_connected
 
-theorem QuotientMap.preimage_connected_component [TopologicalSpace β] {f : α → β} (hf : QuotientMap f)
-    (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) : f ⁻¹' connectedComponent (f a) = connectedComponent a :=
-  ((preimage_connected_component_connected h_fibers (fun _ => hf.isClosedPreimage.symm) _).subset_connected_component
+theorem QuotientMap.preimage_connected_component [TopologicalSpace β] {f : α → β}
+    (hf : QuotientMap f) (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) :
+    f ⁻¹' connectedComponent (f a) = connectedComponent a :=
+  ((preimage_connected_component_connected h_fibers (fun _ => hf.isClosedPreimage.symm)
+            _).subset_connected_component
         mem_connected_component).antisymm
     (hf.Continuous.maps_to_connected_component a)
 #align quotient_map.preimage_connected_component QuotientMap.preimage_connected_component
 
 theorem QuotientMap.image_connected_component [TopologicalSpace β] {f : α → β} (hf : QuotientMap f)
-    (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) : f '' connectedComponent a = connectedComponent (f a) := by
+    (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) :
+    f '' connectedComponent a = connectedComponent (f a) := by
   rw [← hf.preimage_connected_component h_fibers, image_preimage_eq _ hf.surjective]
 #align quotient_map.image_connected_component QuotientMap.image_connected_component
 
@@ -1240,17 +1310,21 @@ class LocallyConnectedSpace (α : Type _) [TopologicalSpace α] : Prop where
 #align locally_connected_space LocallyConnectedSpace
 
 theorem locally_connected_space_iff_open_connected_basis :
-    LocallyConnectedSpace α ↔ ∀ x, (𝓝 x).HasBasis (fun s : Set α => IsOpen s ∧ x ∈ s ∧ IsConnected s) id :=
+    LocallyConnectedSpace α ↔
+      ∀ x, (𝓝 x).HasBasis (fun s : Set α => IsOpen s ∧ x ∈ s ∧ IsConnected s) id :=
   ⟨@LocallyConnectedSpace.open_connected_basis _ _, LocallyConnectedSpace.mk⟩
-#align locally_connected_space_iff_open_connected_basis locally_connected_space_iff_open_connected_basis
+#align
+  locally_connected_space_iff_open_connected_basis locally_connected_space_iff_open_connected_basis
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (V «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (V «expr ⊆ » U) -/
 theorem locally_connected_space_iff_open_connected_subsets :
-    LocallyConnectedSpace α ↔ ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ (V : _)(_ : V ⊆ U), IsOpen V ∧ x ∈ V ∧ IsConnected V := by
+    LocallyConnectedSpace α ↔
+      ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ (V : _)(_ : V ⊆ U), IsOpen V ∧ x ∈ V ∧ IsConnected V :=
+  by
   rw [locally_connected_space_iff_open_connected_basis]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   constructor
   · intro h U hU
     rcases h.mem_iff.mp hU with ⟨V, hV, hVU⟩
@@ -1263,34 +1337,40 @@ theorem locally_connected_space_iff_open_connected_subsets :
           ⟨V, hV, hVU⟩,
           fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
     
-#align locally_connected_space_iff_open_connected_subsets locally_connected_space_iff_open_connected_subsets
+#align
+  locally_connected_space_iff_open_connected_subsets locally_connected_space_iff_open_connected_subsets
 
-theorem connected_component_in_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α} (h : F ∈ 𝓝 x) :
-    connectedComponentIn F x ∈ 𝓝 x := by
+theorem connected_component_in_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α}
+    (h : F ∈ 𝓝 x) : connectedComponentIn F x ∈ 𝓝 x := by
   rw [(LocallyConnectedSpace.open_connected_basis x).mem_iff] at h
   rcases h with ⟨s, ⟨h1s, hxs, h2s⟩, hsF⟩
   exact mem_nhds_iff.mpr ⟨s, h2s.is_preconnected.subset_connected_component_in hxs hsF, h1s, hxs⟩
 #align connected_component_in_mem_nhds connected_component_in_mem_nhds
 
-theorem IsOpen.connected_component_in [LocallyConnectedSpace α] {F : Set α} {x : α} (hF : IsOpen F) :
-    IsOpen (connectedComponentIn F x) := by
+theorem IsOpen.connected_component_in [LocallyConnectedSpace α] {F : Set α} {x : α}
+    (hF : IsOpen F) : IsOpen (connectedComponentIn F x) := by
   rw [is_open_iff_mem_nhds]
   intro y hy
   rw [connected_component_in_eq hy]
-  exact connected_component_in_mem_nhds (is_open_iff_mem_nhds.mp hF y <| connected_component_in_subset F x hy)
+  exact
+    connected_component_in_mem_nhds
+      (is_open_iff_mem_nhds.mp hF y <| connected_component_in_subset F x hy)
 #align is_open.connected_component_in IsOpen.connected_component_in
 
-theorem is_open_connected_component [LocallyConnectedSpace α] {x : α} : IsOpen (connectedComponent x) := by
+theorem is_open_connected_component [LocallyConnectedSpace α] {x : α} :
+    IsOpen (connectedComponent x) := by
   rw [← connected_component_in_univ]
   exact is_open_univ.connected_component_in
 #align is_open_connected_component is_open_connected_component
 
-theorem is_clopen_connected_component [LocallyConnectedSpace α] {x : α} : IsClopen (connectedComponent x) :=
+theorem is_clopen_connected_component [LocallyConnectedSpace α] {x : α} :
+    IsClopen (connectedComponent x) :=
   ⟨is_open_connected_component, isClosedConnectedComponent⟩
 #align is_clopen_connected_component is_clopen_connected_component
 
 theorem locally_connected_space_iff_connected_component_in_open :
-    LocallyConnectedSpace α ↔ ∀ F : Set α, IsOpen F → ∀ x ∈ F, IsOpen (connectedComponentIn F x) := by
+    LocallyConnectedSpace α ↔ ∀ F : Set α, IsOpen F → ∀ x ∈ F, IsOpen (connectedComponentIn F x) :=
+  by
   constructor
   · intro h
     exact fun F hF x _ => hF.connectedComponentIn
@@ -1298,11 +1378,13 @@ theorem locally_connected_space_iff_connected_component_in_open :
   · intro h
     rw [locally_connected_space_iff_open_connected_subsets]
     refine' fun x U hU =>
-        ⟨connectedComponentIn (interior U) x, (connected_component_in_subset _ _).trans interior_subset,
-          h _ is_open_interior x _, mem_connected_component_in _, is_connected_connected_component_in_iff.mpr _⟩ <;>
+        ⟨connectedComponentIn (interior U) x,
+          (connected_component_in_subset _ _).trans interior_subset, h _ is_open_interior x _,
+          mem_connected_component_in _, is_connected_connected_component_in_iff.mpr _⟩ <;>
       exact mem_interior_iff_mem_nhds.mpr hU
     
-#align locally_connected_space_iff_connected_component_in_open locally_connected_space_iff_connected_component_in_open
+#align
+  locally_connected_space_iff_connected_component_in_open locally_connected_space_iff_connected_component_in_open
 
 theorem locally_connected_space_iff_connected_subsets :
     LocallyConnectedSpace α ↔ ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ V ∈ 𝓝 x, IsPreconnected V ∧ V ⊆ U := by
@@ -1320,21 +1402,24 @@ theorem locally_connected_space_iff_connected_subsets :
     
 #align locally_connected_space_iff_connected_subsets locally_connected_space_iff_connected_subsets
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 theorem locally_connected_space_iff_connected_basis :
-    LocallyConnectedSpace α ↔ ∀ x, (𝓝 x).HasBasis (fun s : Set α => s ∈ 𝓝 x ∧ IsPreconnected s) id := by
+    LocallyConnectedSpace α ↔
+      ∀ x, (𝓝 x).HasBasis (fun s : Set α => s ∈ 𝓝 x ∧ IsPreconnected s) id :=
+  by
   rw [locally_connected_space_iff_connected_subsets]
   trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   exact filter.has_basis_self.symm
 #align locally_connected_space_iff_connected_basis locally_connected_space_iff_connected_basis
 
-theorem locally_connected_space_of_connected_bases {ι : Type _} (b : α → ι → Set α) (p : α → ι → Prop)
-    (hbasis : ∀ x, (𝓝 x).HasBasis (p x) (b x)) (hconnected : ∀ x i, p x i → IsPreconnected (b x i)) :
-    LocallyConnectedSpace α := by
+theorem locally_connected_space_of_connected_bases {ι : Type _} (b : α → ι → Set α)
+    (p : α → ι → Prop) (hbasis : ∀ x, (𝓝 x).HasBasis (p x) (b x))
+    (hconnected : ∀ x i, p x i → IsPreconnected (b x i)) : LocallyConnectedSpace α := by
   rw [locally_connected_space_iff_connected_basis]
   exact fun x =>
-    (hbasis x).to_has_basis (fun i hi => ⟨b x i, ⟨(hbasis x).mem_of_mem hi, hconnected x i hi⟩, subset_rfl⟩) fun s hs =>
+    (hbasis x).to_has_basis
+      (fun i hi => ⟨b x i, ⟨(hbasis x).mem_of_mem hi, hconnected x i hi⟩, subset_rfl⟩) fun s hs =>
       ⟨(hbasis x).index s hs.1, ⟨(hbasis x).property_index hs.1, (hbasis x).set_index_subset hs.1⟩⟩
 #align locally_connected_space_of_connected_bases locally_connected_space_of_connected_bases
 
@@ -1348,7 +1433,8 @@ def IsTotallyDisconnected (s : Set α) : Prop :=
   ∀ t, t ⊆ s → IsPreconnected t → t.Subsingleton
 #align is_totally_disconnected IsTotallyDisconnected
 
-theorem is_totally_disconnected_empty : IsTotallyDisconnected (∅ : Set α) := fun _ ht _ _ x_in _ _ => (ht x_in).elim
+theorem is_totally_disconnected_empty : IsTotallyDisconnected (∅ : Set α) :=
+  fun _ ht _ _ x_in _ _ => (ht x_in).elim
 #align is_totally_disconnected_empty is_totally_disconnected_empty
 
 theorem is_totally_disconnected_singleton {x} : IsTotallyDisconnected ({x} : Set α) := fun _ ht _ =>
@@ -1360,12 +1446,14 @@ class TotallyDisconnectedSpace (α : Type u) [TopologicalSpace α] : Prop where
   is_totally_disconnected_univ : IsTotallyDisconnected (univ : Set α)
 #align totally_disconnected_space TotallyDisconnectedSpace
 
-theorem IsPreconnected.subsingleton [TotallyDisconnectedSpace α] {s : Set α} (h : IsPreconnected s) : s.Subsingleton :=
+theorem IsPreconnected.subsingleton [TotallyDisconnectedSpace α] {s : Set α}
+    (h : IsPreconnected s) : s.Subsingleton :=
   TotallyDisconnectedSpace.is_totally_disconnected_univ s (subset_univ s) h
 #align is_preconnected.subsingleton IsPreconnected.subsingleton
 
-instance Pi.totally_disconnected_space {α : Type _} {β : α → Type _} [t₂ : ∀ a, TopologicalSpace (β a)]
-    [∀ a, TotallyDisconnectedSpace (β a)] : TotallyDisconnectedSpace (∀ a : α, β a) :=
+instance Pi.totally_disconnected_space {α : Type _} {β : α → Type _}
+    [t₂ : ∀ a, TopologicalSpace (β a)] [∀ a, TotallyDisconnectedSpace (β a)] :
+    TotallyDisconnectedSpace (∀ a : α, β a) :=
   ⟨fun t h1 h2 =>
     have this : ∀ a, IsPreconnected ((fun x : ∀ a, β a => x a) '' t) := fun a =>
       h2.image (fun x => x a) (continuous_apply a).ContinuousOn
@@ -1377,7 +1465,9 @@ instance Prod.totally_disconnected_space [TopologicalSpace β] [TotallyDisconnec
   ⟨fun t h1 h2 =>
     have H1 : IsPreconnected (Prod.fst '' t) := h2.image Prod.fst continuous_fst.ContinuousOn
     have H2 : IsPreconnected (Prod.snd '' t) := h2.image Prod.snd continuous_snd.ContinuousOn
-    fun x hx y hy => Prod.ext (H1.Subsingleton ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩) (H2.Subsingleton ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩)⟩
+    fun x hx y hy =>
+    Prod.ext (H1.Subsingleton ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩)
+      (H2.Subsingleton ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩)⟩
 #align prod.totally_disconnected_space Prod.totally_disconnected_space
 
 instance [TopologicalSpace β] [TotallyDisconnectedSpace α] [TotallyDisconnectedSpace β] :
@@ -1389,7 +1479,8 @@ instance [TopologicalSpace β] [TotallyDisconnectedSpace α] [TotallyDisconnecte
   · exact ht.subsingleton.image _
     
 
-instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i)] : TotallyDisconnectedSpace (Σi, π i) := by
+instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i)] :
+    TotallyDisconnectedSpace (Σi, π i) := by
   refine' ⟨fun s _ hs => _⟩
   obtain rfl | h := s.eq_empty_or_nonempty
   · exact subsingleton_empty
@@ -1408,7 +1499,8 @@ theorem is_totally_disconnected_of_clopen_set {X : Type _} [TopologicalSpace X]
   by_contra' h_contra
   rcases h_contra with ⟨x, hx, y, hy, hxy⟩
   obtain ⟨U, h_clopen, hxU, hyU⟩ := hX hxy
-  specialize hS U (Uᶜ) h_clopen.1 h_clopen.compl.1 (fun a ha => em (a ∈ U)) ⟨x, hx, hxU⟩ ⟨y, hy, hyU⟩
+  specialize
+    hS U (Uᶜ) h_clopen.1 h_clopen.compl.1 (fun a ha => em (a ∈ U)) ⟨x, hx, hxU⟩ ⟨y, hy, hyU⟩
   rw [inter_compl_self, Set.inter_empty] at hS
   exact Set.not_nonempty_empty hS
 #align is_totally_disconnected_of_clopen_set is_totally_disconnected_of_clopen_set
@@ -1423,8 +1515,7 @@ theorem totally_disconnected_space_iff_connected_component_subsingleton :
       
     exact is_preconnected_connected_component
     
-  intro h
-  constructor
+  intro h; constructor
   intro s s_sub hs
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, x_in⟩)
   · exact subsingleton_empty
@@ -1446,29 +1537,37 @@ theorem totally_disconnected_space_iff_connected_component_singleton :
 
 /-- The image of a connected component in a totally disconnected space is a singleton. -/
 @[simp]
-theorem Continuous.image_connected_component_eq_singleton {β : Type _} [TopologicalSpace β] [TotallyDisconnectedSpace β]
-    {f : α → β} (h : Continuous f) (a : α) : f '' connectedComponent a = {f a} :=
+theorem Continuous.image_connected_component_eq_singleton {β : Type _} [TopologicalSpace β]
+    [TotallyDisconnectedSpace β] {f : α → β} (h : Continuous f) (a : α) :
+    f '' connectedComponent a = {f a} :=
   (Set.subsingleton_iff_singleton <| mem_image_of_mem f mem_connected_component).mp
     (is_preconnected_connected_component.image f h.ContinuousOn).Subsingleton
-#align continuous.image_connected_component_eq_singleton Continuous.image_connected_component_eq_singleton
+#align
+  continuous.image_connected_component_eq_singleton Continuous.image_connected_component_eq_singleton
 
-theorem is_totally_disconnected_of_totally_disconnected_space [TotallyDisconnectedSpace α] (s : Set α) :
-    IsTotallyDisconnected s := fun t hts ht => TotallyDisconnectedSpace.is_totally_disconnected_univ _ t.subset_univ ht
-#align is_totally_disconnected_of_totally_disconnected_space is_totally_disconnected_of_totally_disconnected_space
+theorem is_totally_disconnected_of_totally_disconnected_space [TotallyDisconnectedSpace α]
+    (s : Set α) : IsTotallyDisconnected s := fun t hts ht =>
+  TotallyDisconnectedSpace.is_totally_disconnected_univ _ t.subset_univ ht
+#align
+  is_totally_disconnected_of_totally_disconnected_space is_totally_disconnected_of_totally_disconnected_space
 
-theorem is_totally_disconnected_of_image [TopologicalSpace β] {f : α → β} (hf : ContinuousOn f s) (hf' : Injective f)
-    (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s := fun t hts ht x x_in y y_in =>
-  hf' <| h _ (image_subset f hts) (ht.image f <| hf.mono hts) (mem_image_of_mem f x_in) (mem_image_of_mem f y_in)
+theorem is_totally_disconnected_of_image [TopologicalSpace β] {f : α → β} (hf : ContinuousOn f s)
+    (hf' : Injective f) (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s :=
+  fun t hts ht x x_in y y_in =>
+  hf' <|
+    h _ (image_subset f hts) (ht.image f <| hf.mono hts) (mem_image_of_mem f x_in)
+      (mem_image_of_mem f y_in)
 #align is_totally_disconnected_of_image is_totally_disconnected_of_image
 
-theorem Embedding.is_totally_disconnected [TopologicalSpace β] {f : α → β} (hf : Embedding f) {s : Set α}
-    (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s :=
+theorem Embedding.is_totally_disconnected [TopologicalSpace β] {f : α → β} (hf : Embedding f)
+    {s : Set α} (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s :=
   is_totally_disconnected_of_image hf.Continuous.ContinuousOn hf.inj h
 #align embedding.is_totally_disconnected Embedding.is_totally_disconnected
 
 instance Subtype.totally_disconnected_space {α : Type _} {p : α → Prop} [TopologicalSpace α]
     [TotallyDisconnectedSpace α] : TotallyDisconnectedSpace (Subtype p) :=
-  ⟨embedding_subtype_coe.IsTotallyDisconnected (is_totally_disconnected_of_totally_disconnected_space _)⟩
+  ⟨embedding_subtype_coe.IsTotallyDisconnected
+      (is_totally_disconnected_of_totally_disconnected_space _)⟩
 #align subtype.totally_disconnected_space Subtype.totally_disconnected_space
 
 end TotallyDisconnected
@@ -1478,25 +1577,29 @@ section TotallySeparated
 /-- A set `s` is called totally separated if any two points of this set can be separated
 by two disjoint open sets covering `s`. -/
 def IsTotallySeparated (s : Set α) : Prop :=
-  ∀ x ∈ s, ∀ y ∈ s, x ≠ y → ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ s ⊆ u ∪ v ∧ Disjoint u v
+  ∀ x ∈ s,
+    ∀ y ∈ s, x ≠ y → ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ s ⊆ u ∪ v ∧ Disjoint u v
 #align is_totally_separated IsTotallySeparated
 
 theorem is_totally_separated_empty : IsTotallySeparated (∅ : Set α) := fun x => False.elim
 #align is_totally_separated_empty is_totally_separated_empty
 
-theorem is_totally_separated_singleton {x} : IsTotallySeparated ({x} : Set α) := fun p hp q hq hpq =>
-  (hpq <| (eq_of_mem_singleton hp).symm ▸ (eq_of_mem_singleton hq).symm).elim
+theorem is_totally_separated_singleton {x} : IsTotallySeparated ({x} : Set α) :=
+  fun p hp q hq hpq => (hpq <| (eq_of_mem_singleton hp).symm ▸ (eq_of_mem_singleton hq).symm).elim
 #align is_totally_separated_singleton is_totally_separated_singleton
 
 theorem is_totally_disconnected_of_is_totally_separated {s : Set α} (H : IsTotallySeparated s) :
     IsTotallyDisconnected s := by
   intro t hts ht x x_in y y_in
   by_contra h
-  obtain ⟨u : Set α, v : Set α, hu : IsOpen u, hv : IsOpen v, hxu : x ∈ u, hyv : y ∈ v, hs : s ⊆ u ∪ v, huv⟩ :=
+  obtain
+    ⟨u : Set α, v : Set α, hu : IsOpen u, hv : IsOpen v, hxu : x ∈ u, hyv : y ∈ v, hs : s ⊆ u ∪ v,
+      huv⟩ :=
     H x (hts x_in) y (hts y_in) h
   refine' (ht _ _ hu hv (hts.trans hs) ⟨x, x_in, hxu⟩ ⟨y, y_in, hyv⟩).ne_empty _
   rw [huv.inter_eq, inter_empty]
-#align is_totally_disconnected_of_is_totally_separated is_totally_disconnected_of_is_totally_separated
+#align
+  is_totally_disconnected_of_is_totally_separated is_totally_disconnected_of_is_totally_separated
 
 alias is_totally_disconnected_of_is_totally_separated ← IsTotallySeparated.is_totally_disconnected
 
@@ -1508,19 +1611,22 @@ class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where
 #align totally_separated_space TotallySeparatedSpace
 
 -- see Note [lower instance priority]
-instance (priority := 100) TotallySeparatedSpace.totally_disconnected_space (α : Type u) [TopologicalSpace α]
-    [TotallySeparatedSpace α] : TotallyDisconnectedSpace α :=
-  ⟨is_totally_disconnected_of_is_totally_separated <| TotallySeparatedSpace.is_totally_separated_univ α⟩
-#align totally_separated_space.totally_disconnected_space TotallySeparatedSpace.totally_disconnected_space
+instance (priority := 100) TotallySeparatedSpace.totally_disconnected_space (α : Type u)
+    [TopologicalSpace α] [TotallySeparatedSpace α] : TotallyDisconnectedSpace α :=
+  ⟨is_totally_disconnected_of_is_totally_separated <|
+      TotallySeparatedSpace.is_totally_separated_univ α⟩
+#align
+  totally_separated_space.totally_disconnected_space TotallySeparatedSpace.totally_disconnected_space
 
 -- see Note [lower instance priority]
-instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
-    TotallySeparatedSpace α :=
+instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α]
+    [DiscreteTopology α] : TotallySeparatedSpace α :=
   ⟨fun a _ b _ h => ⟨{b}ᶜ, {b}, is_open_discrete _, is_open_discrete _, by simpa⟩⟩
 #align totally_separated_space.of_discrete TotallySeparatedSpace.of_discrete
 
-theorem exists_clopen_of_totally_separated {α : Type _} [TopologicalSpace α] [TotallySeparatedSpace α] {x y : α}
-    (hxy : x ≠ y) : ∃ (U : Set α)(hU : IsClopen U), x ∈ U ∧ y ∈ Uᶜ := by
+theorem exists_clopen_of_totally_separated {α : Type _} [TopologicalSpace α]
+    [TotallySeparatedSpace α] {x y : α} (hxy : x ≠ y) :
+    ∃ (U : Set α)(hU : IsClopen U), x ∈ U ∧ y ∈ Uᶜ := by
   obtain ⟨U, V, hU, hV, Ux, Vy, f, disj⟩ :=
     TotallySeparatedSpace.is_totally_separated_univ α x (Set.mem_univ x) y (Set.mem_univ y) hxy
   have clopen_U := is_clopen_inter_of_disjoint_cover_clopen is_clopen_univ f hU hV disj
@@ -1550,11 +1656,13 @@ instance : CoeTC α (ConnectedComponents α) :=
 namespace ConnectedComponents
 
 @[simp]
-theorem coe_eq_coe {x y : α} : (x : ConnectedComponents α) = y ↔ connectedComponent x = connectedComponent y :=
+theorem coe_eq_coe {x y : α} :
+    (x : ConnectedComponents α) = y ↔ connectedComponent x = connectedComponent y :=
   Quotient.eq'
 #align connected_components.coe_eq_coe ConnectedComponents.coe_eq_coe
 
-theorem coe_ne_coe {x y : α} : (x : ConnectedComponents α) ≠ y ↔ connectedComponent x ≠ connectedComponent y :=
+theorem coe_ne_coe {x y : α} :
+    (x : ConnectedComponents α) ≠ y ↔ connectedComponent x ≠ connectedComponent y :=
   not_congr coe_eq_coe
 #align connected_components.coe_ne_coe ConnectedComponents.coe_ne_coe
 
@@ -1593,27 +1701,33 @@ variable [TopologicalSpace β] [TotallyDisconnectedSpace β] {f : α → β}
 theorem Continuous.image_eq_of_connected_component_eq (h : Continuous f) (a b : α)
     (hab : connectedComponent a = connectedComponent b) : f a = f b :=
   singleton_eq_singleton_iff.1 <|
-    h.image_connected_component_eq_singleton a ▸ h.image_connected_component_eq_singleton b ▸ hab ▸ rfl
+    h.image_connected_component_eq_singleton a ▸
+      h.image_connected_component_eq_singleton b ▸ hab ▸ rfl
 #align continuous.image_eq_of_connected_component_eq Continuous.image_eq_of_connected_component_eq
 
-/-- The lift to `connected_components α` of a continuous map from `α` to a totally disconnected space
+/--
+The lift to `connected_components α` of a continuous map from `α` to a totally disconnected space
 -/
 def Continuous.connectedComponentsLift (h : Continuous f) : ConnectedComponents α → β := fun x =>
   Quotient.liftOn' x f h.image_eq_of_connected_component_eq
 #align continuous.connected_components_lift Continuous.connectedComponentsLift
 
 @[continuity]
-theorem Continuous.connected_components_lift_continuous (h : Continuous f) : Continuous h.connectedComponentsLift :=
+theorem Continuous.connected_components_lift_continuous (h : Continuous f) :
+    Continuous h.connectedComponentsLift :=
   h.quotient_lift_on' h.image_eq_of_connected_component_eq
-#align continuous.connected_components_lift_continuous Continuous.connected_components_lift_continuous
+#align
+  continuous.connected_components_lift_continuous Continuous.connected_components_lift_continuous
 
 @[simp]
-theorem Continuous.connected_components_lift_apply_coe (h : Continuous f) (x : α) : h.connectedComponentsLift x = f x :=
+theorem Continuous.connected_components_lift_apply_coe (h : Continuous f) (x : α) :
+    h.connectedComponentsLift x = f x :=
   rfl
 #align continuous.connected_components_lift_apply_coe Continuous.connected_components_lift_apply_coe
 
 @[simp]
-theorem Continuous.connected_components_lift_comp_coe (h : Continuous f) : h.connectedComponentsLift ∘ coe = f :=
+theorem Continuous.connected_components_lift_comp_coe (h : Continuous f) :
+    h.connectedComponentsLift ∘ coe = f :=
   rfl
 #align continuous.connected_components_lift_comp_coe Continuous.connected_components_lift_comp_coe
 
@@ -1622,8 +1736,8 @@ theorem connected_components_lift_unique' {β : Sort _} {g₁ g₂ : ConnectedCo
   ConnectedComponents.surjective_coe.injective_comp_right hg
 #align connected_components_lift_unique' connected_components_lift_unique'
 
-theorem Continuous.connected_components_lift_unique (h : Continuous f) (g : ConnectedComponents α → β)
-    (hg : g ∘ coe = f) : g = h.connectedComponentsLift :=
+theorem Continuous.connected_components_lift_unique (h : Continuous f)
+    (g : ConnectedComponents α → β) (hg : g ∘ coe = f) : g = h.connectedComponentsLift :=
   connected_components_lift_unique' <| hg.trans h.connected_components_lift_comp_coe.symm
 #align continuous.connected_components_lift_unique Continuous.connected_components_lift_unique
 
@@ -1642,19 +1756,21 @@ theorem connected_components_preimage_image (U : Set α) :
   simp only [connected_components_preimage_singleton, preimage_Union₂, image_eq_Union]
 #align connected_components_preimage_image connected_components_preimage_image
 
-instance ConnectedComponents.totally_disconnected_space : TotallyDisconnectedSpace (ConnectedComponents α) := by
+instance ConnectedComponents.totally_disconnected_space :
+    TotallyDisconnectedSpace (ConnectedComponents α) := by
   rw [totally_disconnected_space_iff_connected_component_singleton]
   refine' connected_components.surjective_coe.forall.2 fun x => _
-  rw [← connected_components.quotient_map_coe.image_connected_component, ← connected_components_preimage_singleton,
-    image_preimage_eq _ ConnectedComponents.surjective_coe]
+  rw [← connected_components.quotient_map_coe.image_connected_component, ←
+    connected_components_preimage_singleton, image_preimage_eq _ ConnectedComponents.surjective_coe]
   refine' connected_components.surjective_coe.forall.2 fun y => _
   rw [connected_components_preimage_singleton]
   exact is_connected_connected_component
-#align connected_components.totally_disconnected_space ConnectedComponents.totally_disconnected_space
+#align
+  connected_components.totally_disconnected_space ConnectedComponents.totally_disconnected_space
 
 /-- Functoriality of `connected_components` -/
-def Continuous.connectedComponentsMap {β : Type _} [TopologicalSpace β] {f : α → β} (h : Continuous f) :
-    ConnectedComponents α → ConnectedComponents β :=
+def Continuous.connectedComponentsMap {β : Type _} [TopologicalSpace β] {f : α → β}
+    (h : Continuous f) : ConnectedComponents α → ConnectedComponents β :=
   Continuous.connectedComponentsLift (continuous_quotient_mk.comp h)
 #align continuous.connected_components_map Continuous.connectedComponentsMap
 
@@ -1668,7 +1784,8 @@ end connectedComponentSetoid
 /-- A preconnected set `s` has the property that every map to a
 discrete space that is continuous on `s` is constant on `s` -/
 theorem IsPreconnected.constant {Y : Type _} [TopologicalSpace Y] [DiscreteTopology Y] {s : Set α}
-    (hs : IsPreconnected s) {f : α → Y} (hf : ContinuousOn f s) {x y : α} (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
+    (hs : IsPreconnected s) {f : α → Y} (hf : ContinuousOn f s) {x y : α} (hx : x ∈ s)
+    (hy : y ∈ s) : f x = f y :=
   (hs.image f hf).Subsingleton (mem_image_of_mem f hx) (mem_image_of_mem f hy)
 #align is_preconnected.constant IsPreconnected.constant
 
@@ -1693,14 +1810,15 @@ theorem is_preconnected_of_forall_constant {s : Set α}
 #align is_preconnected_of_forall_constant is_preconnected_of_forall_constant
 
 /-- A `preconnected_space` version of `is_preconnected.constant` -/
-theorem PreconnectedSpace.constant {Y : Type _} [TopologicalSpace Y] [DiscreteTopology Y] (hp : PreconnectedSpace α)
-    {f : α → Y} (hf : Continuous f) {x y : α} : f x = f y :=
+theorem PreconnectedSpace.constant {Y : Type _} [TopologicalSpace Y] [DiscreteTopology Y]
+    (hp : PreconnectedSpace α) {f : α → Y} (hf : Continuous f) {x y : α} : f x = f y :=
   IsPreconnected.constant hp.is_preconnected_univ (Continuous.continuous_on hf) trivial trivial
 #align preconnected_space.constant PreconnectedSpace.constant
 
 /-- A `preconnected_space` version of `is_preconnected_of_forall_constant` -/
-theorem preconnected_space_of_forall_constant (hs : ∀ f : α → Bool, Continuous f → ∀ x y, f x = f y) :
-    PreconnectedSpace α :=
-  ⟨is_preconnected_of_forall_constant fun f hf x hx y hy => hs f (continuous_iff_continuous_on_univ.mpr hf) x y⟩
+theorem preconnected_space_of_forall_constant
+    (hs : ∀ f : α → Bool, Continuous f → ∀ x y, f x = f y) : PreconnectedSpace α :=
+  ⟨is_preconnected_of_forall_constant fun f hf x hx y hy =>
+      hs f (continuous_iff_continuous_on_univ.mpr hf) x y⟩
 #align preconnected_space_of_forall_constant preconnected_space_of_forall_constant
 

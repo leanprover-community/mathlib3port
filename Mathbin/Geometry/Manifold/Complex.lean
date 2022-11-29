@@ -47,10 +47,12 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℂ F] [StrictConvexSpace ℝ F]
 
-variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M] [SmoothManifoldWithCorners 𝓘(ℂ, E) M]
+variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M]
+  [SmoothManifoldWithCorners 𝓘(ℂ, E) M]
 
 /-- A holomorphic function on a compact complex manifold is locally constant. -/
-protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : IsLocallyConstant f := by
+protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
+    IsLocallyConstant f := by
   haveI : LocallyConnectedSpace M := ChartedSpace.locally_connected_space E M
   apply IsLocallyConstant.of_constant_on_preconnected_clopens
   intro s hs₂ hs₃ a ha b hb
@@ -93,7 +95,8 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   -- so by the maximum principle `f` is equal to `f p` near `p`
   obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_is_local_max_norm hf' hf'').exists_mem
   have H₁ : chart_at E p ⁻¹' U ∈ 𝓝 p := (chart_at E p).ContinuousAt (mem_chart_source E p) hU
-  have H₂ : (chart_at E p).source ∈ 𝓝 p := (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
+  have H₂ : (chart_at E p).source ∈ 𝓝 p :=
+    (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
   apply Filter.mem_of_superset (Filter.inter_mem hps' (Filter.inter_mem H₁ H₂))
   rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩
@@ -101,17 +104,18 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
 #align mdifferentiable.is_locally_constant Mdifferentiable.is_locally_constant
 
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
-theorem apply_eq_of_compact_space [PreconnectedSpace M] {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) :
-    f a = f b :=
+theorem apply_eq_of_compact_space [PreconnectedSpace M] {f : M → F}
+    (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
   hf.IsLocallyConstant.apply_eq_of_preconnected_space _ _
 #align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compact_space
 
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,
 for some value `v`. -/
-theorem exists_eq_const_of_compact_space [PreconnectedSpace M] {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
-    ∃ v : F, f = Function.const M v :=
+theorem exists_eq_const_of_compact_space [PreconnectedSpace M] {f : M → F}
+    (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
   hf.IsLocallyConstant.exists_eq_const
-#align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compact_space
+#align
+  mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compact_space
 
 end Mdifferentiable
 

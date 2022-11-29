@@ -54,7 +54,8 @@ def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v} where
   obj Y := preadditiveYonedaObj Y ⋙ forget₂ _ _
   map Y Y' f :=
     { app := fun X =>
-        { toFun := fun g => g ≫ f, map_zero' := Limits.zero_comp, map_add' := fun g g' => add_comp _ _ _ _ _ _ },
+        { toFun := fun g => g ≫ f, map_zero' := Limits.zero_comp,
+          map_add' := fun g g' => add_comp _ _ _ _ _ _ },
       naturality' := fun X X' g => (AddCommGroupCat.ext _ _ _ _) fun x => Category.assoc _ _ _ }
   map_id' X := by
     ext
@@ -84,8 +85,10 @@ def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v} where
   obj X := preadditiveCoyonedaObj X ⋙ forget₂ _ _
   map X X' f :=
     { app := fun Y =>
-        { toFun := fun g => f.unop ≫ g, map_zero' := Limits.comp_zero, map_add' := fun g g' => comp_add _ _ _ _ _ _ },
-      naturality' := fun Y Y' g => (AddCommGroupCat.ext _ _ _ _) fun x => Eq.symm <| Category.assoc _ _ _ }
+        { toFun := fun g => f.unop ≫ g, map_zero' := Limits.comp_zero,
+          map_add' := fun g g' => comp_add _ _ _ _ _ _ },
+      naturality' := fun Y Y' g =>
+        (AddCommGroupCat.ext _ _ _ _) fun x => Eq.symm <| Category.assoc _ _ _ }
   map_id' X := by
     ext
     simp
@@ -111,7 +114,9 @@ Yoneda embedding.
 -/
 @[simp]
 theorem whiskering_preadditive_yoneda :
-    preadditive_yoneda ⋙ (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) = yoneda :=
+    preadditive_yoneda ⋙
+        (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) =
+      yoneda :=
   rfl
 #align category_theory.whiskering_preadditive_yoneda CategoryTheory.whiskering_preadditive_yoneda
 
@@ -120,13 +125,18 @@ Yoneda embedding.
 -/
 @[simp]
 theorem whiskering_preadditive_coyoneda :
-    preadditive_coyoneda ⋙ (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) = coyoneda :=
+    preadditive_coyoneda ⋙
+        (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) =
+      coyoneda :=
   rfl
-#align category_theory.whiskering_preadditive_coyoneda CategoryTheory.whiskering_preadditive_coyoneda
+#align
+  category_theory.whiskering_preadditive_coyoneda CategoryTheory.whiskering_preadditive_coyoneda
 
 instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
   let yoneda_full :
-    Full (preadditive_yoneda ⋙ (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
+    Full
+      (preadditive_yoneda ⋙
+        (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     yoneda.yonedaFull
   full.of_comp_faithful preadditive_yoneda
     ((whiskering_right Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
@@ -134,7 +144,9 @@ instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ Add
 
 instance preadditiveCoyonedaFull : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
   let coyoneda_full :
-    Full (preadditive_coyoneda ⋙ (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
+    Full
+      (preadditive_coyoneda ⋙
+        (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     coyoneda.coyonedaFull
   full.of_comp_faithful preadditive_coyoneda
     ((whiskering_right C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
@@ -144,27 +156,36 @@ instance preadditive_yoneda_faithful : Faithful (preadditiveYoneda : C ⥤ Cᵒ�
   Faithful.of_comp_eq whiskering_preadditive_yoneda
 #align category_theory.preadditive_yoneda_faithful CategoryTheory.preadditive_yoneda_faithful
 
-instance preadditive_coyoneda_faithful : Faithful (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
+instance preadditive_coyoneda_faithful :
+    Faithful (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
   Faithful.of_comp_eq whiskering_preadditive_coyoneda
 #align category_theory.preadditive_coyoneda_faithful CategoryTheory.preadditive_coyoneda_faithful
 
 instance preservesLimitsPreadditiveYonedaObj (X : C) : PreservesLimits (preadditiveYonedaObj X) :=
-  have : PreservesLimits (preadditiveYonedaObj X ⋙ forget _) := (inferInstance : PreservesLimits (yoneda.obj X))
+  have : PreservesLimits (preadditiveYonedaObj X ⋙ forget _) :=
+    (inferInstance : PreservesLimits (yoneda.obj X))
   preserves_limits_of_reflects_of_preserves _ (forget _)
-#align category_theory.preserves_limits_preadditive_yoneda_obj CategoryTheory.preservesLimitsPreadditiveYonedaObj
+#align
+  category_theory.preserves_limits_preadditive_yoneda_obj CategoryTheory.preservesLimitsPreadditiveYonedaObj
 
-instance preservesLimitsPreadditiveCoyonedaObj (X : Cᵒᵖ) : PreservesLimits (preadditiveCoyonedaObj X) :=
-  have : PreservesLimits (preadditiveCoyonedaObj X ⋙ forget _) := (inferInstance : PreservesLimits (coyoneda.obj X))
+instance preservesLimitsPreadditiveCoyonedaObj (X : Cᵒᵖ) :
+    PreservesLimits (preadditiveCoyonedaObj X) :=
+  have : PreservesLimits (preadditiveCoyonedaObj X ⋙ forget _) :=
+    (inferInstance : PreservesLimits (coyoneda.obj X))
   preserves_limits_of_reflects_of_preserves _ (forget _)
-#align category_theory.preserves_limits_preadditive_coyoneda_obj CategoryTheory.preservesLimitsPreadditiveCoyonedaObj
+#align
+  category_theory.preserves_limits_preadditive_coyoneda_obj CategoryTheory.preservesLimitsPreadditiveCoyonedaObj
 
 instance PreservesLimitsPreadditiveYoneda.obj (X : C) : PreservesLimits (preadditiveYoneda.obj X) :=
   show PreservesLimits (preadditiveYonedaObj X ⋙ forget₂ _ _) from inferInstance
-#align category_theory.preserves_limits_preadditive_yoneda.obj CategoryTheory.PreservesLimitsPreadditiveYoneda.obj
+#align
+  category_theory.preserves_limits_preadditive_yoneda.obj CategoryTheory.PreservesLimitsPreadditiveYoneda.obj
 
-instance PreservesLimitsPreadditiveCoyoneda.obj (X : Cᵒᵖ) : PreservesLimits (preadditiveCoyoneda.obj X) :=
+instance PreservesLimitsPreadditiveCoyoneda.obj (X : Cᵒᵖ) :
+    PreservesLimits (preadditiveCoyoneda.obj X) :=
   show PreservesLimits (preadditiveCoyonedaObj X ⋙ forget₂ _ _) from inferInstance
-#align category_theory.preserves_limits_preadditive_coyoneda.obj CategoryTheory.PreservesLimitsPreadditiveCoyoneda.obj
+#align
+  category_theory.preserves_limits_preadditive_coyoneda.obj CategoryTheory.PreservesLimitsPreadditiveCoyoneda.obj
 
 end CategoryTheory
 

@@ -110,7 +110,8 @@ namespace CategoryTheory
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
-/-- In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
+/--
+In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
 Tensor product does not need to be strictly associative on objects, but there is a
 specified associator, `α_ X Y Z : (X ⊗ Y) ⊗ Z ≅ X ⊗ (Y ⊗ Z)`. There is a tensor unit `𝟙_ C`,
 with specified left and right unitor isomorphisms `λ_ X : 𝟙_ C ⊗ X ≅ X` and `ρ_ X : X ⊗ 𝟙_ C ≅ X`.
@@ -143,11 +144,15 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
   -- left unitor:
   leftUnitor : ∀ X : C, tensor_obj («expr𝟙_») X ≅ X
   left_unitor_naturality' :
-    ∀ {X Y : C} (f : X ⟶ Y), «expr ⊗' » (𝟙 («expr𝟙_»)) f ≫ ((«exprλ_») Y).Hom = ((«exprλ_») X).Hom ≫ f := by obviously
+    ∀ {X Y : C} (f : X ⟶ Y),
+      «expr ⊗' » (𝟙 («expr𝟙_»)) f ≫ ((«exprλ_») Y).Hom = ((«exprλ_») X).Hom ≫ f := by
+    obviously
   -- right unitor:
   rightUnitor : ∀ X : C, tensor_obj X («expr𝟙_») ≅ X
   right_unitor_naturality' :
-    ∀ {X Y : C} (f : X ⟶ Y), «expr ⊗' » f (𝟙 («expr𝟙_»)) ≫ ((exprρ_) Y).Hom = ((exprρ_) X).Hom ≫ f := by obviously
+    ∀ {X Y : C} (f : X ⟶ Y),
+      «expr ⊗' » f (𝟙 («expr𝟙_»)) ≫ ((exprρ_) Y).Hom = ((exprρ_) X).Hom ≫ f := by
+    obviously
   -- pentagon identity:
   pentagon' :
     ∀ W X Y Z : C,
@@ -158,7 +163,8 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
   -- triangle identity:
   triangle' :
     ∀ X Y : C,
-      ((exprα_) X («expr𝟙_») Y).Hom ≫ «expr ⊗' » (𝟙 X) ((«exprλ_») Y).Hom = «expr ⊗' » ((exprρ_) X).Hom (𝟙 Y) := by
+      ((exprα_) X («expr𝟙_») Y).Hom ≫ «expr ⊗' » (𝟙 X) ((«exprλ_») Y).Hom =
+        «expr ⊗' » ((exprρ_) X).Hom (𝟙 Y) := by
     obviously
 #align category_theory.monoidal_category CategoryTheory.MonoidalCategory
 
@@ -219,8 +225,8 @@ notation "ρ_" => rightUnitor
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The tensor product of two isomorphisms is an isomorphism. -/
 @[simps]
-def tensorIso {C : Type u} {X Y X' Y' : C} [Category.{v} C] [MonoidalCategory.{v} C] (f : X ≅ Y) (g : X' ≅ Y') :
-    X ⊗ X' ≅ Y ⊗ Y' where
+def tensorIso {C : Type u} {X Y X' Y' : C} [Category.{v} C] [MonoidalCategory.{v} C] (f : X ≅ Y)
+    (g : X' ≅ Y') : X ⊗ X' ≅ Y ⊗ Y' where
   Hom := f.Hom ⊗ g.Hom
   inv := f.inv ⊗ g.inv
   hom_inv_id' := by rw [← tensor_comp, iso.hom_inv_id, iso.hom_inv_id, ← tensor_id]
@@ -245,7 +251,8 @@ instance tensor_is_iso {W X Y Z : C} (f : W ⟶ X) [IsIso f] (g : Y ⟶ Z) [IsIs
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem inv_tensor {W X Y Z : C} (f : W ⟶ X) [IsIso f] (g : Y ⟶ Z) [IsIso g] : inv (f ⊗ g) = inv f ⊗ inv g := by
+theorem inv_tensor {W X Y Z : C} (f : W ⟶ X) [IsIso f] (g : Y ⟶ Z) [IsIso g] :
+    inv (f ⊗ g) = inv f ⊗ inv g := by
   ext
   simp [← tensor_comp]
 #align category_theory.monoidal_category.inv_tensor CategoryTheory.MonoidalCategory.inv_tensor
@@ -255,15 +262,17 @@ variable {U V W X Y Z : C}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem tensor_dite {P : Prop} [Decidable P] {W X Y Z : C} (f : W ⟶ X) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
-    (f ⊗ if h : P then g h else g' h) = if h : P then f ⊗ g h else f ⊗ g' h := by split_ifs <;> rfl
+theorem tensor_dite {P : Prop} [Decidable P] {W X Y Z : C} (f : W ⟶ X) (g : P → (Y ⟶ Z))
+    (g' : ¬P → (Y ⟶ Z)) : (f ⊗ if h : P then g h else g' h) = if h : P then f ⊗ g h else f ⊗ g' h :=
+  by split_ifs <;> rfl
 #align category_theory.monoidal_category.tensor_dite CategoryTheory.MonoidalCategory.tensor_dite
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem dite_tensor {P : Prop} [Decidable P] {W X Y Z : C} (f : W ⟶ X) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
-    (if h : P then g h else g' h) ⊗ f = if h : P then g h ⊗ f else g' h ⊗ f := by split_ifs <;> rfl
+theorem dite_tensor {P : Prop} [Decidable P] {W X Y Z : C} (f : W ⟶ X) (g : P → (Y ⟶ Z))
+    (g' : ¬P → (Y ⟶ Z)) : (if h : P then g h else g' h) ⊗ f = if h : P then g h ⊗ f else g' h ⊗ f :=
+  by split_ifs <;> rfl
 #align category_theory.monoidal_category.dite_tensor CategoryTheory.MonoidalCategory.dite_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -273,7 +282,8 @@ theorem dite_tensor {P : Prop} [Decidable P] {W X Y Z : C} (f : W ⟶ X) (g : P 
 theorem comp_tensor_id (f : W ⟶ X) (g : X ⟶ Y) : f ≫ g ⊗ 𝟙 Z = (f ⊗ 𝟙 Z) ≫ (g ⊗ 𝟙 Z) := by
   rw [← tensor_comp]
   simp
-#align category_theory.monoidal_category.comp_tensor_id CategoryTheory.MonoidalCategory.comp_tensor_id
+#align
+  category_theory.monoidal_category.comp_tensor_id CategoryTheory.MonoidalCategory.comp_tensor_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -282,7 +292,8 @@ theorem comp_tensor_id (f : W ⟶ X) (g : X ⟶ Y) : f ≫ g ⊗ 𝟙 Z = (f ⊗
 theorem id_tensor_comp (f : W ⟶ X) (g : X ⟶ Y) : 𝟙 Z ⊗ f ≫ g = (𝟙 Z ⊗ f) ≫ (𝟙 Z ⊗ g) := by
   rw [← tensor_comp]
   simp
-#align category_theory.monoidal_category.id_tensor_comp CategoryTheory.MonoidalCategory.id_tensor_comp
+#align
+  category_theory.monoidal_category.id_tensor_comp CategoryTheory.MonoidalCategory.id_tensor_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -306,38 +317,45 @@ theorem tensor_id_comp_id_tensor (f : W ⟶ X) (g : Y ⟶ Z) : (g ⊗ 𝟙 W) �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_unitor_conjugation {X Y : C} (f : X ⟶ Y) : f ⊗ 𝟙 (𝟙_ C) = (ρ_ X).Hom ≫ f ≫ (ρ_ Y).inv := by
+theorem right_unitor_conjugation {X Y : C} (f : X ⟶ Y) :
+    f ⊗ 𝟙 (𝟙_ C) = (ρ_ X).Hom ≫ f ≫ (ρ_ Y).inv := by
   rw [← right_unitor_naturality_assoc, iso.hom_inv_id, category.comp_id]
 #align
   category_theory.monoidal_category.right_unitor_conjugation CategoryTheory.MonoidalCategory.right_unitor_conjugation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_unitor_conjugation {X Y : C} (f : X ⟶ Y) : 𝟙 (𝟙_ C) ⊗ f = (λ_ X).Hom ≫ f ≫ (λ_ Y).inv := by
+theorem left_unitor_conjugation {X Y : C} (f : X ⟶ Y) :
+    𝟙 (𝟙_ C) ⊗ f = (λ_ X).Hom ≫ f ≫ (λ_ Y).inv := by
   rw [← left_unitor_naturality_assoc, iso.hom_inv_id, category.comp_id]
-#align category_theory.monoidal_category.left_unitor_conjugation CategoryTheory.MonoidalCategory.left_unitor_conjugation
+#align
+  category_theory.monoidal_category.left_unitor_conjugation CategoryTheory.MonoidalCategory.left_unitor_conjugation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc]
-theorem left_unitor_inv_naturality {X X' : C} (f : X ⟶ X') : f ≫ (λ_ X').inv = (λ_ X).inv ≫ (𝟙 _ ⊗ f) := by simp
+theorem left_unitor_inv_naturality {X X' : C} (f : X ⟶ X') :
+    f ≫ (λ_ X').inv = (λ_ X).inv ≫ (𝟙 _ ⊗ f) := by simp
 #align
   category_theory.monoidal_category.left_unitor_inv_naturality CategoryTheory.MonoidalCategory.left_unitor_inv_naturality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc]
-theorem right_unitor_inv_naturality {X X' : C} (f : X ⟶ X') : f ≫ (ρ_ X').inv = (ρ_ X).inv ≫ (f ⊗ 𝟙 _) := by simp
+theorem right_unitor_inv_naturality {X X' : C} (f : X ⟶ X') :
+    f ≫ (ρ_ X').inv = (ρ_ X).inv ≫ (f ⊗ 𝟙 _) := by simp
 #align
   category_theory.monoidal_category.right_unitor_inv_naturality CategoryTheory.MonoidalCategory.right_unitor_inv_naturality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensor_left_iff {X Y : C} (f g : X ⟶ Y) : 𝟙 (𝟙_ C) ⊗ f = 𝟙 (𝟙_ C) ⊗ g ↔ f = g := by simp
-#align category_theory.monoidal_category.tensor_left_iff CategoryTheory.MonoidalCategory.tensor_left_iff
+#align
+  category_theory.monoidal_category.tensor_left_iff CategoryTheory.MonoidalCategory.tensor_left_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem tensor_right_iff {X Y : C} (f g : X ⟶ Y) : f ⊗ 𝟙 (𝟙_ C) = g ⊗ 𝟙 (𝟙_ C) ↔ f = g := by simp
-#align category_theory.monoidal_category.tensor_right_iff CategoryTheory.MonoidalCategory.tensor_right_iff
+#align
+  category_theory.monoidal_category.tensor_right_iff CategoryTheory.MonoidalCategory.tensor_right_iff
 
 /-! The lemmas in the next section are true by coherence,
 but we prove them directly as they are used in proving the coherence theorem. -/
@@ -360,22 +378,28 @@ theorem pentagon_inv (W X Y Z : C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc, simp]
-theorem right_unitor_tensor (X Y : C) : (ρ_ (X ⊗ Y)).Hom = (α_ X Y (𝟙_ C)).Hom ≫ (𝟙 X ⊗ (ρ_ Y).Hom) := by
-  rw [← tensor_right_iff, comp_tensor_id, ← cancel_mono (α_ X Y (𝟙_ C)).Hom, assoc, associator_naturality, ←
-    triangle_assoc, ← triangle, id_tensor_comp, pentagon_assoc, ← associator_naturality, tensor_id]
-#align category_theory.monoidal_category.right_unitor_tensor CategoryTheory.MonoidalCategory.right_unitor_tensor
+theorem right_unitor_tensor (X Y : C) :
+    (ρ_ (X ⊗ Y)).Hom = (α_ X Y (𝟙_ C)).Hom ≫ (𝟙 X ⊗ (ρ_ Y).Hom) := by
+  rw [← tensor_right_iff, comp_tensor_id, ← cancel_mono (α_ X Y (𝟙_ C)).Hom, assoc,
+    associator_naturality, ← triangle_assoc, ← triangle, id_tensor_comp, pentagon_assoc, ←
+    associator_naturality, tensor_id]
+#align
+  category_theory.monoidal_category.right_unitor_tensor CategoryTheory.MonoidalCategory.right_unitor_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc, simp]
-theorem right_unitor_tensor_inv (X Y : C) : (ρ_ (X ⊗ Y)).inv = (𝟙 X ⊗ (ρ_ Y).inv) ≫ (α_ X Y (𝟙_ C)).inv :=
+theorem right_unitor_tensor_inv (X Y : C) :
+    (ρ_ (X ⊗ Y)).inv = (𝟙 X ⊗ (ρ_ Y).inv) ≫ (α_ X Y (𝟙_ C)).inv :=
   eq_of_inv_eq_inv (by simp)
-#align category_theory.monoidal_category.right_unitor_tensor_inv CategoryTheory.MonoidalCategory.right_unitor_tensor_inv
+#align
+  category_theory.monoidal_category.right_unitor_tensor_inv CategoryTheory.MonoidalCategory.right_unitor_tensor_inv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
-theorem triangle_assoc_comp_right (X Y : C) : (α_ X (𝟙_ C) Y).inv ≫ ((ρ_ X).Hom ⊗ 𝟙 Y) = 𝟙 X ⊗ (λ_ Y).Hom := by
+theorem triangle_assoc_comp_right (X Y : C) :
+    (α_ X (𝟙_ C) Y).inv ≫ ((ρ_ X).Hom ⊗ 𝟙 Y) = 𝟙 X ⊗ (λ_ Y).Hom := by
   rw [← triangle, iso.inv_hom_id_assoc]
 #align
   category_theory.monoidal_category.triangle_assoc_comp_right CategoryTheory.MonoidalCategory.triangle_assoc_comp_right
@@ -384,7 +408,8 @@ theorem triangle_assoc_comp_right (X Y : C) : (α_ X (𝟙_ C) Y).inv ≫ ((ρ_ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
-theorem triangle_assoc_comp_left_inv (X Y : C) : (𝟙 X ⊗ (λ_ Y).inv) ≫ (α_ X (𝟙_ C) Y).inv = (ρ_ X).inv ⊗ 𝟙 Y := by
+theorem triangle_assoc_comp_left_inv (X Y : C) :
+    (𝟙 X ⊗ (λ_ Y).inv) ≫ (α_ X (𝟙_ C) Y).inv = (ρ_ X).inv ⊗ 𝟙 Y := by
   apply (cancel_mono ((ρ_ X).Hom ⊗ 𝟙 Y)).1
   simp only [triangle_assoc_comp_right, assoc]
   rw [← id_tensor_comp, iso.inv_hom_id, ← comp_tensor_id, iso.inv_hom_id]
@@ -413,7 +438,8 @@ theorem associator_inv_naturality {X Y Z X' Y' Z' : C} (f : X ⟶ X') (g : Y ⟶
 theorem associator_conjugation {X X' Y Y' Z Z' : C} (f : X ⟶ X') (g : Y ⟶ Y') (h : Z ⟶ Z') :
     (f ⊗ g) ⊗ h = (α_ X Y Z).Hom ≫ (f ⊗ g ⊗ h) ≫ (α_ X' Y' Z').inv := by
   rw [associator_inv_naturality, hom_inv_id_assoc]
-#align category_theory.monoidal_category.associator_conjugation CategoryTheory.MonoidalCategory.associator_conjugation
+#align
+  category_theory.monoidal_category.associator_conjugation CategoryTheory.MonoidalCategory.associator_conjugation
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -421,7 +447,8 @@ theorem associator_conjugation {X X' Y Y' Z Z' : C} (f : X ⟶ X') (g : Y ⟶ Y'
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[reassoc]
 theorem associator_inv_conjugation {X X' Y Y' Z Z' : C} (f : X ⟶ X') (g : Y ⟶ Y') (h : Z ⟶ Z') :
-    f ⊗ g ⊗ h = (α_ X Y Z).inv ≫ ((f ⊗ g) ⊗ h) ≫ (α_ X' Y' Z').Hom := by rw [associator_naturality, inv_hom_id_assoc]
+    f ⊗ g ⊗ h = (α_ X Y Z).inv ≫ ((f ⊗ g) ⊗ h) ≫ (α_ X' Y' Z').Hom := by
+  rw [associator_naturality, inv_hom_id_assoc]
 #align
   category_theory.monoidal_category.associator_inv_conjugation CategoryTheory.MonoidalCategory.associator_inv_conjugation
 
@@ -433,7 +460,8 @@ theorem associator_inv_conjugation {X X' Y Y' Z Z' : C} (f : X ⟶ X') (g : Y �
 -- (replacing their usages by their proofs).
 @[reassoc]
 theorem id_tensor_associator_naturality {X Y Z Z' : C} (h : Z ⟶ Z') :
-    (𝟙 (X ⊗ Y) ⊗ h) ≫ (α_ X Y Z').Hom = (α_ X Y Z).Hom ≫ (𝟙 X ⊗ 𝟙 Y ⊗ h) := by rw [← tensor_id, associator_naturality]
+    (𝟙 (X ⊗ Y) ⊗ h) ≫ (α_ X Y Z').Hom = (α_ X Y Z).Hom ≫ (𝟙 X ⊗ 𝟙 Y ⊗ h) := by
+  rw [← tensor_id, associator_naturality]
 #align
   category_theory.monoidal_category.id_tensor_associator_naturality CategoryTheory.MonoidalCategory.id_tensor_associator_naturality
 
@@ -454,8 +482,10 @@ theorem id_tensor_associator_inv_naturality {X Y Z X' : C} (f : X ⟶ X') :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem hom_inv_id_tensor {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (f.Hom ⊗ g) ≫ (f.inv ⊗ h) = (𝟙 V ⊗ g) ≫ (𝟙 V ⊗ h) := by rw [← tensor_comp, f.hom_inv_id, id_tensor_comp]
-#align category_theory.monoidal_category.hom_inv_id_tensor CategoryTheory.MonoidalCategory.hom_inv_id_tensor
+    (f.Hom ⊗ g) ≫ (f.inv ⊗ h) = (𝟙 V ⊗ g) ≫ (𝟙 V ⊗ h) := by
+  rw [← tensor_comp, f.hom_inv_id, id_tensor_comp]
+#align
+  category_theory.monoidal_category.hom_inv_id_tensor CategoryTheory.MonoidalCategory.hom_inv_id_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -463,8 +493,10 @@ theorem hom_inv_id_tensor {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem inv_hom_id_tensor {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (f.inv ⊗ g) ≫ (f.Hom ⊗ h) = (𝟙 W ⊗ g) ≫ (𝟙 W ⊗ h) := by rw [← tensor_comp, f.inv_hom_id, id_tensor_comp]
-#align category_theory.monoidal_category.inv_hom_id_tensor CategoryTheory.MonoidalCategory.inv_hom_id_tensor
+    (f.inv ⊗ g) ≫ (f.Hom ⊗ h) = (𝟙 W ⊗ g) ≫ (𝟙 W ⊗ h) := by
+  rw [← tensor_comp, f.inv_hom_id, id_tensor_comp]
+#align
+  category_theory.monoidal_category.inv_hom_id_tensor CategoryTheory.MonoidalCategory.inv_hom_id_tensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -472,8 +504,10 @@ theorem inv_hom_id_tensor {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem tensor_hom_inv_id {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (g ⊗ f.Hom) ≫ (h ⊗ f.inv) = (g ⊗ 𝟙 V) ≫ (h ⊗ 𝟙 V) := by rw [← tensor_comp, f.hom_inv_id, comp_tensor_id]
-#align category_theory.monoidal_category.tensor_hom_inv_id CategoryTheory.MonoidalCategory.tensor_hom_inv_id
+    (g ⊗ f.Hom) ≫ (h ⊗ f.inv) = (g ⊗ 𝟙 V) ≫ (h ⊗ 𝟙 V) := by
+  rw [← tensor_comp, f.hom_inv_id, comp_tensor_id]
+#align
+  category_theory.monoidal_category.tensor_hom_inv_id CategoryTheory.MonoidalCategory.tensor_hom_inv_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -481,8 +515,10 @@ theorem tensor_hom_inv_id {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem tensor_inv_hom_id {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (g ⊗ f.inv) ≫ (h ⊗ f.Hom) = (g ⊗ 𝟙 W) ≫ (h ⊗ 𝟙 W) := by rw [← tensor_comp, f.inv_hom_id, comp_tensor_id]
-#align category_theory.monoidal_category.tensor_inv_hom_id CategoryTheory.MonoidalCategory.tensor_inv_hom_id
+    (g ⊗ f.inv) ≫ (h ⊗ f.Hom) = (g ⊗ 𝟙 W) ≫ (h ⊗ 𝟙 W) := by
+  rw [← tensor_comp, f.inv_hom_id, comp_tensor_id]
+#align
+  category_theory.monoidal_category.tensor_inv_hom_id CategoryTheory.MonoidalCategory.tensor_inv_hom_id
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -490,8 +526,10 @@ theorem tensor_inv_hom_id {V W X Y Z : C} (f : V ≅ W) (g : X ⟶ Y) (h : Y ⟶
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem hom_inv_id_tensor' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (f ⊗ g) ≫ (inv f ⊗ h) = (𝟙 V ⊗ g) ≫ (𝟙 V ⊗ h) := by rw [← tensor_comp, is_iso.hom_inv_id, id_tensor_comp]
-#align category_theory.monoidal_category.hom_inv_id_tensor' CategoryTheory.MonoidalCategory.hom_inv_id_tensor'
+    (f ⊗ g) ≫ (inv f ⊗ h) = (𝟙 V ⊗ g) ≫ (𝟙 V ⊗ h) := by
+  rw [← tensor_comp, is_iso.hom_inv_id, id_tensor_comp]
+#align
+  category_theory.monoidal_category.hom_inv_id_tensor' CategoryTheory.MonoidalCategory.hom_inv_id_tensor'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -499,8 +537,10 @@ theorem hom_inv_id_tensor' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem inv_hom_id_tensor' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (inv f ⊗ g) ≫ (f ⊗ h) = (𝟙 W ⊗ g) ≫ (𝟙 W ⊗ h) := by rw [← tensor_comp, is_iso.inv_hom_id, id_tensor_comp]
-#align category_theory.monoidal_category.inv_hom_id_tensor' CategoryTheory.MonoidalCategory.inv_hom_id_tensor'
+    (inv f ⊗ g) ≫ (f ⊗ h) = (𝟙 W ⊗ g) ≫ (𝟙 W ⊗ h) := by
+  rw [← tensor_comp, is_iso.inv_hom_id, id_tensor_comp]
+#align
+  category_theory.monoidal_category.inv_hom_id_tensor' CategoryTheory.MonoidalCategory.inv_hom_id_tensor'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -508,8 +548,10 @@ theorem inv_hom_id_tensor' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem tensor_hom_inv_id' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (g ⊗ f) ≫ (h ⊗ inv f) = (g ⊗ 𝟙 V) ≫ (h ⊗ 𝟙 V) := by rw [← tensor_comp, is_iso.hom_inv_id, comp_tensor_id]
-#align category_theory.monoidal_category.tensor_hom_inv_id' CategoryTheory.MonoidalCategory.tensor_hom_inv_id'
+    (g ⊗ f) ≫ (h ⊗ inv f) = (g ⊗ 𝟙 V) ≫ (h ⊗ 𝟙 V) := by
+  rw [← tensor_comp, is_iso.hom_inv_id, comp_tensor_id]
+#align
+  category_theory.monoidal_category.tensor_hom_inv_id' CategoryTheory.MonoidalCategory.tensor_hom_inv_id'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -517,8 +559,10 @@ theorem tensor_hom_inv_id' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, reassoc]
 theorem tensor_inv_hom_id' {V W X Y Z : C} (f : V ⟶ W) [IsIso f] (g : X ⟶ Y) (h : Y ⟶ Z) :
-    (g ⊗ inv f) ≫ (h ⊗ f) = (g ⊗ 𝟙 W) ≫ (h ⊗ 𝟙 W) := by rw [← tensor_comp, is_iso.inv_hom_id, comp_tensor_id]
-#align category_theory.monoidal_category.tensor_inv_hom_id' CategoryTheory.MonoidalCategory.tensor_inv_hom_id'
+    (g ⊗ inv f) ≫ (h ⊗ f) = (g ⊗ 𝟙 W) ≫ (h ⊗ 𝟙 W) := by
+  rw [← tensor_comp, is_iso.inv_hom_id, comp_tensor_id]
+#align
+  category_theory.monoidal_category.tensor_inv_hom_id' CategoryTheory.MonoidalCategory.tensor_inv_hom_id'
 
 end
 
@@ -543,21 +587,25 @@ def tensor : C × C ⥤ C where
 def leftAssocTensor : C × C × C ⥤ C where
   obj X := (X.1 ⊗ X.2.1) ⊗ X.2.2
   map {X Y : C × C × C} (f : X ⟶ Y) := (f.1 ⊗ f.2.1) ⊗ f.2.2
-#align category_theory.monoidal_category.left_assoc_tensor CategoryTheory.MonoidalCategory.leftAssocTensor
+#align
+  category_theory.monoidal_category.left_assoc_tensor CategoryTheory.MonoidalCategory.leftAssocTensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem left_assoc_tensor_obj (X) : (leftAssocTensor C).obj X = (X.1 ⊗ X.2.1) ⊗ X.2.2 :=
   rfl
-#align category_theory.monoidal_category.left_assoc_tensor_obj CategoryTheory.MonoidalCategory.left_assoc_tensor_obj
+#align
+  category_theory.monoidal_category.left_assoc_tensor_obj CategoryTheory.MonoidalCategory.left_assoc_tensor_obj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem left_assoc_tensor_map {X Y} (f : X ⟶ Y) : (leftAssocTensor C).map f = (f.1 ⊗ f.2.1) ⊗ f.2.2 :=
+theorem left_assoc_tensor_map {X Y} (f : X ⟶ Y) :
+    (leftAssocTensor C).map f = (f.1 ⊗ f.2.1) ⊗ f.2.2 :=
   rfl
-#align category_theory.monoidal_category.left_assoc_tensor_map CategoryTheory.MonoidalCategory.left_assoc_tensor_map
+#align
+  category_theory.monoidal_category.left_assoc_tensor_map CategoryTheory.MonoidalCategory.left_assoc_tensor_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -567,21 +615,25 @@ theorem left_assoc_tensor_map {X Y} (f : X ⟶ Y) : (leftAssocTensor C).map f = 
 def rightAssocTensor : C × C × C ⥤ C where
   obj X := X.1 ⊗ X.2.1 ⊗ X.2.2
   map {X Y : C × C × C} (f : X ⟶ Y) := f.1 ⊗ f.2.1 ⊗ f.2.2
-#align category_theory.monoidal_category.right_assoc_tensor CategoryTheory.MonoidalCategory.rightAssocTensor
+#align
+  category_theory.monoidal_category.right_assoc_tensor CategoryTheory.MonoidalCategory.rightAssocTensor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem right_assoc_tensor_obj (X) : (rightAssocTensor C).obj X = X.1 ⊗ X.2.1 ⊗ X.2.2 :=
   rfl
-#align category_theory.monoidal_category.right_assoc_tensor_obj CategoryTheory.MonoidalCategory.right_assoc_tensor_obj
+#align
+  category_theory.monoidal_category.right_assoc_tensor_obj CategoryTheory.MonoidalCategory.right_assoc_tensor_obj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem right_assoc_tensor_map {X Y} (f : X ⟶ Y) : (rightAssocTensor C).map f = f.1 ⊗ f.2.1 ⊗ f.2.2 :=
+theorem right_assoc_tensor_map {X Y} (f : X ⟶ Y) :
+    (rightAssocTensor C).map f = f.1 ⊗ f.2.1 ⊗ f.2.2 :=
   rfl
-#align category_theory.monoidal_category.right_assoc_tensor_map CategoryTheory.MonoidalCategory.right_assoc_tensor_map
+#align
+  category_theory.monoidal_category.right_assoc_tensor_map CategoryTheory.MonoidalCategory.right_assoc_tensor_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -589,7 +641,8 @@ theorem right_assoc_tensor_map {X Y} (f : X ⟶ Y) : (rightAssocTensor C).map f 
 def tensorUnitLeft : C ⥤ C where
   obj X := 𝟙_ C ⊗ X
   map {X Y : C} (f : X ⟶ Y) := 𝟙 (𝟙_ C) ⊗ f
-#align category_theory.monoidal_category.tensor_unit_left CategoryTheory.MonoidalCategory.tensorUnitLeft
+#align
+  category_theory.monoidal_category.tensor_unit_left CategoryTheory.MonoidalCategory.tensorUnitLeft
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -597,7 +650,8 @@ def tensorUnitLeft : C ⥤ C where
 def tensorUnitRight : C ⥤ C where
   obj X := X ⊗ 𝟙_ C
   map {X Y : C} (f : X ⟶ Y) := f ⊗ 𝟙 (𝟙_ C)
-#align category_theory.monoidal_category.tensor_unit_right CategoryTheory.MonoidalCategory.tensorUnitRight
+#align
+  category_theory.monoidal_category.tensor_unit_right CategoryTheory.MonoidalCategory.tensorUnitRight
 
 -- We can express the associator and the unitors, given componentwise above,
 -- as natural isomorphisms.
@@ -611,7 +665,8 @@ def associatorNatIso : leftAssocTensor C ≅ rightAssocTensor C :=
     (by
       intros
       apply monoidal_category.associator_naturality)
-#align category_theory.monoidal_category.associator_nat_iso CategoryTheory.MonoidalCategory.associatorNatIso
+#align
+  category_theory.monoidal_category.associator_nat_iso CategoryTheory.MonoidalCategory.associatorNatIso
 
 /-- The left unitor as a natural isomorphism. -/
 @[simps]
@@ -623,7 +678,8 @@ def leftUnitorNatIso : tensorUnitLeft C ≅ 𝟭 C :=
     (by
       intros
       apply monoidal_category.left_unitor_naturality)
-#align category_theory.monoidal_category.left_unitor_nat_iso CategoryTheory.MonoidalCategory.leftUnitorNatIso
+#align
+  category_theory.monoidal_category.left_unitor_nat_iso CategoryTheory.MonoidalCategory.leftUnitorNatIso
 
 /-- The right unitor as a natural isomorphism. -/
 @[simps]
@@ -635,7 +691,8 @@ def rightUnitorNatIso : tensorUnitRight C ≅ 𝟭 C :=
     (by
       intros
       apply monoidal_category.right_unitor_naturality)
-#align category_theory.monoidal_category.right_unitor_nat_iso CategoryTheory.MonoidalCategory.rightUnitorNatIso
+#align
+  category_theory.monoidal_category.right_unitor_nat_iso CategoryTheory.MonoidalCategory.rightUnitorNatIso
 
 section
 
@@ -659,17 +716,19 @@ def tensorLeftTensor (X Y : C) : tensorLeft (X ⊗ Y) ≅ tensorLeft Y ⋙ tenso
     dsimp
     rw [← tensor_id]
     apply associator_naturality
-#align category_theory.monoidal_category.tensor_left_tensor CategoryTheory.MonoidalCategory.tensorLeftTensor
+#align
+  category_theory.monoidal_category.tensor_left_tensor CategoryTheory.MonoidalCategory.tensorLeftTensor
 
 @[simp]
-theorem tensor_left_tensor_hom_app (X Y Z : C) : (tensorLeftTensor X Y).Hom.app Z = (associator X Y Z).Hom :=
+theorem tensor_left_tensor_hom_app (X Y Z : C) :
+    (tensorLeftTensor X Y).Hom.app Z = (associator X Y Z).Hom :=
   rfl
 #align
   category_theory.monoidal_category.tensor_left_tensor_hom_app CategoryTheory.MonoidalCategory.tensor_left_tensor_hom_app
 
 @[simp]
-theorem tensor_left_tensor_inv_app (X Y Z : C) : (tensorLeftTensor X Y).inv.app Z = (associator X Y Z).inv := by
-  simp [tensor_left_tensor]
+theorem tensor_left_tensor_inv_app (X Y Z : C) :
+    (tensorLeftTensor X Y).inv.app Z = (associator X Y Z).inv := by simp [tensor_left_tensor]
 #align
   category_theory.monoidal_category.tensor_left_tensor_inv_app CategoryTheory.MonoidalCategory.tensor_left_tensor_inv_app
 
@@ -693,7 +752,8 @@ TODO: show this is a op-monoidal functor.
 def tensoringLeft : C ⥤ C ⥤ C where
   obj := tensorLeft
   map X Y f := { app := fun Z => f ⊗ 𝟙 Z }
-#align category_theory.monoidal_category.tensoring_left CategoryTheory.MonoidalCategory.tensoringLeft
+#align
+  category_theory.monoidal_category.tensoring_left CategoryTheory.MonoidalCategory.tensoringLeft
 
 instance :
     Faithful (tensoringLeft C) where map_injective' X Y f g h := by
@@ -710,7 +770,8 @@ We later show this is a monoidal functor.
 def tensoringRight : C ⥤ C ⥤ C where
   obj := tensorRight
   map X Y f := { app := fun Z => 𝟙 Z ⊗ f }
-#align category_theory.monoidal_category.tensoring_right CategoryTheory.MonoidalCategory.tensoringRight
+#align
+  category_theory.monoidal_category.tensoring_right CategoryTheory.MonoidalCategory.tensoringRight
 
 instance :
     Faithful (tensoringRight C) where map_injective' X Y f g h := by
@@ -729,17 +790,19 @@ def tensorRightTensor (X Y : C) : tensorRight (X ⊗ Y) ≅ tensorRight X ⋙ te
     dsimp
     rw [← tensor_id]
     apply associator_inv_naturality
-#align category_theory.monoidal_category.tensor_right_tensor CategoryTheory.MonoidalCategory.tensorRightTensor
+#align
+  category_theory.monoidal_category.tensor_right_tensor CategoryTheory.MonoidalCategory.tensorRightTensor
 
 @[simp]
-theorem tensor_right_tensor_hom_app (X Y Z : C) : (tensorRightTensor X Y).Hom.app Z = (associator Z X Y).inv :=
+theorem tensor_right_tensor_hom_app (X Y Z : C) :
+    (tensorRightTensor X Y).Hom.app Z = (associator Z X Y).inv :=
   rfl
 #align
   category_theory.monoidal_category.tensor_right_tensor_hom_app CategoryTheory.MonoidalCategory.tensor_right_tensor_hom_app
 
 @[simp]
-theorem tensor_right_tensor_inv_app (X Y Z : C) : (tensorRightTensor X Y).inv.app Z = (associator Z X Y).Hom := by
-  simp [tensor_right_tensor]
+theorem tensor_right_tensor_inv_app (X Y Z : C) :
+    (tensorRightTensor X Y).inv.app Z = (associator Z X Y).Hom := by simp [tensor_right_tensor]
 #align
   category_theory.monoidal_category.tensor_right_tensor_inv_app CategoryTheory.MonoidalCategory.tensor_right_tensor_inv_app
 
@@ -773,7 +836,8 @@ instance prodMonoidal : MonoidalCategory (C₁ × C₂) where
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_left_unitor_hom_fst (X : C₁ × C₂) : ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).1 = (λ_ X.1).Hom := by
+theorem prod_monoidal_left_unitor_hom_fst (X : C₁ × C₂) :
+    ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).1 = (λ_ X.1).Hom := by
   cases X
   rfl
 #align
@@ -781,7 +845,8 @@ theorem prod_monoidal_left_unitor_hom_fst (X : C₁ × C₂) : ((λ_ X).Hom : �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_left_unitor_hom_snd (X : C₁ × C₂) : ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).2 = (λ_ X.2).Hom := by
+theorem prod_monoidal_left_unitor_hom_snd (X : C₁ × C₂) :
+    ((λ_ X).Hom : 𝟙_ _ ⊗ X ⟶ X).2 = (λ_ X.2).Hom := by
   cases X
   rfl
 #align
@@ -789,7 +854,8 @@ theorem prod_monoidal_left_unitor_hom_snd (X : C₁ × C₂) : ((λ_ X).Hom : �
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_left_unitor_inv_fst (X : C₁ × C₂) : ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).1 = (λ_ X.1).inv := by
+theorem prod_monoidal_left_unitor_inv_fst (X : C₁ × C₂) :
+    ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).1 = (λ_ X.1).inv := by
   cases X
   rfl
 #align
@@ -797,7 +863,8 @@ theorem prod_monoidal_left_unitor_inv_fst (X : C₁ × C₂) : ((λ_ X).inv : X 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_left_unitor_inv_snd (X : C₁ × C₂) : ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).2 = (λ_ X.2).inv := by
+theorem prod_monoidal_left_unitor_inv_snd (X : C₁ × C₂) :
+    ((λ_ X).inv : X ⟶ 𝟙_ _ ⊗ X).2 = (λ_ X.2).inv := by
   cases X
   rfl
 #align
@@ -805,7 +872,8 @@ theorem prod_monoidal_left_unitor_inv_snd (X : C₁ × C₂) : ((λ_ X).inv : X 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_right_unitor_hom_fst (X : C₁ × C₂) : ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).1 = (ρ_ X.1).Hom := by
+theorem prod_monoidal_right_unitor_hom_fst (X : C₁ × C₂) :
+    ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).1 = (ρ_ X.1).Hom := by
   cases X
   rfl
 #align
@@ -813,7 +881,8 @@ theorem prod_monoidal_right_unitor_hom_fst (X : C₁ × C₂) : ((ρ_ X).Hom : X
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_right_unitor_hom_snd (X : C₁ × C₂) : ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).2 = (ρ_ X.2).Hom := by
+theorem prod_monoidal_right_unitor_hom_snd (X : C₁ × C₂) :
+    ((ρ_ X).Hom : X ⊗ 𝟙_ _ ⟶ X).2 = (ρ_ X.2).Hom := by
   cases X
   rfl
 #align
@@ -821,7 +890,8 @@ theorem prod_monoidal_right_unitor_hom_snd (X : C₁ × C₂) : ((ρ_ X).Hom : X
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_right_unitor_inv_fst (X : C₁ × C₂) : ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).1 = (ρ_ X.1).inv := by
+theorem prod_monoidal_right_unitor_inv_fst (X : C₁ × C₂) :
+    ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).1 = (ρ_ X.1).inv := by
   cases X
   rfl
 #align
@@ -829,7 +899,8 @@ theorem prod_monoidal_right_unitor_inv_fst (X : C₁ × C₂) : ((ρ_ X).inv : X
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_monoidal_right_unitor_inv_snd (X : C₁ × C₂) : ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).2 = (ρ_ X.2).inv := by
+theorem prod_monoidal_right_unitor_inv_snd (X : C₁ × C₂) :
+    ((ρ_ X).inv : X ⟶ X ⊗ 𝟙_ _).2 = (ρ_ X.2).inv := by
   cases X
   rfl
 #align

@@ -71,7 +71,8 @@ variable [CancelMonoid α]
 -- not generalised.
 @[simp]
 theorem is_conj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
-  ⟨fun ⟨c, hc⟩ => mul_right_cancel (hc.symm.trans ((mul_one _).trans (one_mul _).symm)), fun h => by rw [h]⟩
+  ⟨fun ⟨c, hc⟩ => mul_right_cancel (hc.symm.trans ((mul_one _).trans (one_mul _).symm)), fun h => by
+    rw [h]⟩
 #align is_conj_one_right is_conj_one_right
 
 @[simp]
@@ -132,11 +133,11 @@ end Group
 theorem is_conj_iff₀ [GroupWithZero α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ =>
     ⟨c, by
-      rw [← Units.coe_inv, Units.mul_inv_eq_iff_eq_mul]
+      rw [← Units.val_inv_eq_inv_val, Units.mul_inv_eq_iff_eq_mul]
       exact ⟨c.ne_zero, hc⟩⟩,
     fun ⟨c, c0, hc⟩ =>
     ⟨Units.mk0 c c0, by
-      rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.coe_inv, Units.coe_mk0]
+      rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.val_inv_eq_inv_val, Units.coe_mk0]
       exact hc⟩⟩
 #align is_conj_iff₀ is_conj_iff₀
 
@@ -209,7 +210,8 @@ def map (f : α →* β) : ConjClasses α → ConjClasses β :=
   Quotient.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab)
 #align conj_classes.map ConjClasses.map
 
-theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.Surjective (ConjClasses.map f) := by
+theorem map_surjective {f : α →* β} (hf : Function.Surjective f) :
+    Function.Surjective (ConjClasses.map f) := by
   intro b
   obtain ⟨b, rfl⟩ := ConjClasses.mk_surjective b
   obtain ⟨a, rfl⟩ := hf b
@@ -329,7 +331,8 @@ theorem mem_carrier_mk {a : α} : a ∈ carrier (ConjClasses.mk a) :=
   IsConj.refl _
 #align conj_classes.mem_carrier_mk ConjClasses.mem_carrier_mk
 
-theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b ↔ ConjClasses.mk a = b := by
+theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b ↔ ConjClasses.mk a = b :=
+  by
   revert b
   rw [forall_is_conj]
   intro b

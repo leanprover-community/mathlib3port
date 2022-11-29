@@ -55,9 +55,9 @@ open List
 
 /- warning: list.tprod.mk -> List.Tprod.mk is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), α i) -> (List.Tprod.{u_1 u_2 u_3} ι α l)
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), α i) -> (List.Tprod.{u_1, u_2, u_3} ι α l)
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), α i) -> (List.Tprod.{u_1 u_2 _aux_param_0} ι α l)
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), α i) -> (List.Tprod.{u_1, u_2, _aux_param_0} ι α l)
 Case conversion may be inaccurate. Consider using '#align list.tprod.mk List.Tprod.mkₓ'. -/
 /-- Turning a function `f : Π i, α i` into an element of the iterated product `tprod α l`. -/
 protected def mk : ∀ (l : List ι) (f : ∀ i, α i), Tprod α l
@@ -82,9 +82,9 @@ variable [DecidableEq ι]
 
 /- warning: list.tprod.elim -> List.Tprod.elim is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] {l : List.{u_1} ι}, (List.Tprod.{u_1 u_2 u_3} ι α l) -> (forall {i : ι}, (Membership.Mem.{u_1 u_1} ι (List.{u_1} ι) (List.hasMem.{u_1} ι) i l) -> (α i))
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] {l : List.{u_1} ι}, (List.Tprod.{u_1, u_2, u_3} ι α l) -> (forall {i : ι}, (Membership.Mem.{u_1, u_1} ι (List.{u_1} ι) (List.hasMem.{u_1} ι) i l) -> (α i))
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] {l : List.{u_1} ι}, (List.Tprod.{u_1 u_2 _aux_param_0} ι α l) -> (forall {i : ι}, (Membership.Mem.{u_1 u_1} ι (List.{u_1} ι) (List.hasMem.{u_1} ι) i l) -> (α i))
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} [_inst_1 : DecidableEq.{succ u_1} ι] {l : List.{u_1} ι}, (List.Tprod.{u_1, u_2, _aux_param_0} ι α l) -> (forall {i : ι}, (Membership.Mem.{u_1, u_1} ι (List.{u_1} ι) (List.hasMem.{u_1} ι) i l) -> (α i))
 Case conversion may be inaccurate. Consider using '#align list.tprod.elim List.Tprod.elimₓ'. -/
 /-- Given an element of the iterated product `l.prod α`, take a projection into direction `i`.
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
@@ -124,11 +124,12 @@ theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (
 #align list.tprod.elim_mk List.Tprod.elim_mk
 
 @[ext.1]
-theorem ext : ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l} (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
+theorem ext :
+    ∀ {l : List ι} (hl : l.Nodup) {v w : Tprod α l}
+      (hvw : ∀ (i) (hi : i ∈ l), v.elim hi = w.elim hi), v = w
   | [], hl, v, w, hvw => PUnit.ext
   | i :: is, hl, v, w, hvw => by
-    ext
-    rw [← elim_self v, hvw, elim_self]
+    ext; rw [← elim_self v, hvw, elim_self]
     refine' ext (nodup_cons.mp hl).2 fun j hj => _
     rw [← elim_of_mem hl, hvw, elim_of_mem hl]
 #align list.tprod.ext List.Tprod.ext
@@ -159,9 +160,9 @@ open List
 
 /- warning: set.tprod -> Set.tprod is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{(max u_2 u_3)} (List.Tprod.{u_1 u_2 u_3} ι α l))
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{max u_2 u_3} (List.Tprod.{u_1, u_2, u_3} ι α l))
 but is expected to have type
-  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{(max u_2 _aux_param_0)} (List.Tprod.{u_1 u_2 _aux_param_0} ι α l))
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} (l : List.{u_1} ι), (forall (i : ι), Set.{u_2} (α i)) -> (Set.{max u_2 _aux_param_0} (List.Tprod.{u_1, u_2, _aux_param_0} ι α l))
 Case conversion may be inaccurate. Consider using '#align set.tprod Set.tprodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A product of sets in `tprod α l`. -/
@@ -171,11 +172,13 @@ protected def tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (Tprod α l
   | i :: is, t => t i ×ˢ tprod is t
 #align set.tprod Set.tprod
 
-theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.tprod l t = { i | i ∈ l }.pi t
+theorem mk_preimage_tprod :
+    ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk l ⁻¹' Set.tprod l t = { i | i ∈ l }.pi t
   | [], t => by simp [Set.tprod]
   | i :: l, t => by
     ext f
-    have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by rw [mk_preimage_tprod l t]
+    have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by
+      rw [mk_preimage_tprod l t]
     change tprod.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
     -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
     rw [Set.tprod, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
@@ -184,8 +187,8 @@ theorem mk_preimage_tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Tprod.mk 
     exact fun _ => this
 #align set.mk_preimage_tprod Set.mk_preimage_tprod
 
-theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l) (t : ∀ i, Set (α i)) :
-    Tprod.elim' h ⁻¹' pi univ t = Set.tprod l t := by
+theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l)
+    (t : ∀ i, Set (α i)) : Tprod.elim' h ⁻¹' pi univ t = Set.tprod l t := by
   have : { i | i ∈ l } = univ := by
     ext i
     simp [h]

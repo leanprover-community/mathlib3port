@@ -89,15 +89,17 @@ section Basic
 /-- A reformulation of `is_cyclotomic_extension` that uses `⊤`. -/
 theorem iff_adjoin_eq_top :
     IsCyclotomicExtension S A B ↔
-      (∀ n : ℕ+, n ∈ S → ∃ r : B, IsPrimitiveRoot r n) ∧ adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 } = ⊤ :=
+      (∀ n : ℕ+, n ∈ S → ∃ r : B, IsPrimitiveRoot r n) ∧
+        adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 } = ⊤ :=
   ⟨fun h => ⟨fun _ => h.exists_prim_root, Algebra.eq_top_iff.2 h.adjoin_roots⟩, fun h =>
     ⟨h.1, Algebra.eq_top_iff.1 h.2⟩⟩
 #align is_cyclotomic_extension.iff_adjoin_eq_top IsCyclotomicExtension.iff_adjoin_eq_top
 
 /-- A reformulation of `is_cyclotomic_extension` in the case `S` is a singleton. -/
 theorem iff_singleton :
-    IsCyclotomicExtension {n} A B ↔ (∃ r : B, IsPrimitiveRoot r n) ∧ ∀ x, x ∈ adjoin A { b : B | b ^ (n : ℕ) = 1 } := by
-  simp [is_cyclotomic_extension_iff]
+    IsCyclotomicExtension {n} A B ↔
+      (∃ r : B, IsPrimitiveRoot r n) ∧ ∀ x, x ∈ adjoin A { b : B | b ^ (n : ℕ) = 1 } :=
+  by simp [is_cyclotomic_extension_iff]
 #align is_cyclotomic_extension.iff_singleton IsCyclotomicExtension.iff_singleton
 
 /-- If `is_cyclotomic_extension ∅ A B`, then the image of `A` in `B` equals `B`. -/
@@ -107,24 +109,28 @@ theorem empty [h : IsCyclotomicExtension ∅ A B] : (⊥ : Subalgebra A B) = ⊤
 
 /-- If `is_cyclotomic_extension {1} A B`, then the image of `A` in `B` equals `B`. -/
 theorem singleton_one [h : IsCyclotomicExtension {1} A B] : (⊥ : Subalgebra A B) = ⊤ :=
-  Algebra.eq_top_iff.2 fun x => by simpa [adjoin_singleton_one] using ((is_cyclotomic_extension_iff _ _ _).1 h).2 x
+  Algebra.eq_top_iff.2 fun x => by
+    simpa [adjoin_singleton_one] using ((is_cyclotomic_extension_iff _ _ _).1 h).2 x
 #align is_cyclotomic_extension.singleton_one IsCyclotomicExtension.singleton_one
 
 variable {A B}
 
 /-- If `(⊥ : subalgebra A B) = ⊤`, then `is_cyclotomic_extension ∅ A B`. -/
-theorem singleton_zero_of_bot_eq_top (h : (⊥ : Subalgebra A B) = ⊤) : IsCyclotomicExtension ∅ A B := by
-  refine' (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => by simpa using hs, _root_.eq_top_iff.2 fun x hx => _⟩
+theorem singleton_zero_of_bot_eq_top (h : (⊥ : Subalgebra A B) = ⊤) : IsCyclotomicExtension ∅ A B :=
+  by
+  refine'
+    (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => by simpa using hs, _root_.eq_top_iff.2 fun x hx => _⟩
   rw [← h] at hx
   simpa using hx
-#align is_cyclotomic_extension.singleton_zero_of_bot_eq_top IsCyclotomicExtension.singleton_zero_of_bot_eq_top
+#align
+  is_cyclotomic_extension.singleton_zero_of_bot_eq_top IsCyclotomicExtension.singleton_zero_of_bot_eq_top
 
 variable (A B)
 
 /-- Transitivity of cyclotomic extensions. -/
 theorem trans (C : Type w) [CommRing C] [Algebra A C] [Algebra B C] [IsScalarTower A B C]
-    [hS : IsCyclotomicExtension S A B] [hT : IsCyclotomicExtension T B C] (h : Function.Injective (algebraMap B C)) :
-    IsCyclotomicExtension (S ∪ T) A C := by
+    [hS : IsCyclotomicExtension S A B] [hT : IsCyclotomicExtension T B C]
+    (h : Function.Injective (algebraMap B C)) : IsCyclotomicExtension (S ∪ T) A C := by
   refine' ⟨fun n hn => _, fun x => _⟩
   · cases hn
     · obtain ⟨b, hb⟩ := ((is_cyclotomic_extension_iff _ _ _).1 hS).1 hn
@@ -175,7 +181,8 @@ theorem union_right [h : IsCyclotomicExtension (S ∪ T) A B] :
     IsCyclotomicExtension T (adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 }) B := by
   have :
     { b : B | ∃ n : ℕ+, n ∈ S ∪ T ∧ b ^ (n : ℕ) = 1 } =
-      { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 } ∪ { b : B | ∃ n : ℕ+, n ∈ T ∧ b ^ (n : ℕ) = 1 } :=
+      { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 } ∪
+        { b : B | ∃ n : ℕ+, n ∈ T ∧ b ^ (n : ℕ) = 1 } :=
     by
     refine' le_antisymm (fun x hx => _) fun x hx => _
     · rcases hx with ⟨n, hn₁ | hn₂, hnpow⟩
@@ -192,7 +199,8 @@ theorem union_right [h : IsCyclotomicExtension (S ∪ T) A B] :
       · exact ⟨n, Or.inr hn.1, hn.2⟩
         
       
-  refine' ⟨fun n hn => ((is_cyclotomic_extension_iff _ _ _).1 h).1 (mem_union_right S hn), fun b => _⟩
+  refine'
+    ⟨fun n hn => ((is_cyclotomic_extension_iff _ _ _).1 h).1 (mem_union_right S hn), fun b => _⟩
   replace h := ((is_cyclotomic_extension_iff _ _ _).1 h).2 b
   rwa [this, adjoin_union_eq_adjoin_adjoin, Subalgebra.mem_restrict_scalars] at h
 #align is_cyclotomic_extension.union_right IsCyclotomicExtension.union_right
@@ -245,7 +253,8 @@ theorem of_union_of_dvd (h : ∀ s ∈ S, n ∣ s) (hS : S.Nonempty) [H : IsCycl
 `is_cyclotomic_extension (S ∪ {n}) A B`. -/
 theorem iff_union_of_dvd (h : ∀ s ∈ S, n ∣ s) (hS : S.Nonempty) :
     IsCyclotomicExtension S A B ↔ IsCyclotomicExtension (S ∪ {n}) A B := by
-  refine' ⟨fun H => of_union_of_dvd A B h hS, fun H => (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => _, _⟩⟩
+  refine'
+    ⟨fun H => of_union_of_dvd A B h hS, fun H => (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => _, _⟩⟩
   · exact H.exists_prim_root (subset_union_left _ _ hs)
     
   · rw [_root_.eq_top_iff, ← ((iff_adjoin_eq_top _ A B).1 H).2]
@@ -265,7 +274,8 @@ theorem iff_union_of_dvd (h : ∀ s ∈ S, n ∣ s) (hS : S.Nonempty) :
 variable (n S)
 
 /-- `is_cyclotomic_extension S A B` is equivalent to `is_cyclotomic_extension (S ∪ {1}) A B`. -/
-theorem iff_union_singleton_one : IsCyclotomicExtension S A B ↔ IsCyclotomicExtension (S ∪ {1}) A B := by
+theorem iff_union_singleton_one :
+    IsCyclotomicExtension S A B ↔ IsCyclotomicExtension (S ∪ {1}) A B := by
   obtain hS | rfl := S.eq_empty_or_nonempty.symm
   · exact iff_union_of_dvd _ _ (fun s hs => one_dvd _) hS
     
@@ -282,10 +292,12 @@ theorem iff_union_singleton_one : IsCyclotomicExtension S A B ↔ IsCyclotomicEx
 variable {A B}
 
 /-- If `(⊥ : subalgebra A B) = ⊤`, then `is_cyclotomic_extension {1} A B`. -/
-theorem singleton_one_of_bot_eq_top (h : (⊥ : Subalgebra A B) = ⊤) : IsCyclotomicExtension {1} A B := by
+theorem singleton_one_of_bot_eq_top (h : (⊥ : Subalgebra A B) = ⊤) :
+    IsCyclotomicExtension {1} A B := by
   convert (iff_union_singleton_one _ _ _).1 (singleton_zero_of_bot_eq_top h)
   simp
-#align is_cyclotomic_extension.singleton_one_of_bot_eq_top IsCyclotomicExtension.singleton_one_of_bot_eq_top
+#align
+  is_cyclotomic_extension.singleton_one_of_bot_eq_top IsCyclotomicExtension.singleton_one_of_bot_eq_top
 
 /-- If `function.surjective (algebra_map A B)`, then `is_cyclotomic_extension {1} A B`. -/
 theorem singleton_one_of_algebra_map_bijective (h : Function.Surjective (algebraMap A B)) :
@@ -299,8 +311,8 @@ variable (A B)
 /-- Given `(f : B ≃ₐ[A] C)`, if `is_cyclotomic_extension S A B` then
 `is_cyclotomic_extension S A C`. -/
 @[protected]
-theorem equiv {C : Type _} [CommRing C] [Algebra A C] [h : IsCyclotomicExtension S A B] (f : B ≃ₐ[A] C) :
-    IsCyclotomicExtension S A C := by
+theorem equiv {C : Type _} [CommRing C] [Algebra A C] [h : IsCyclotomicExtension S A B]
+    (f : B ≃ₐ[A] C) : IsCyclotomicExtension S A C := by
   letI : Algebra B C := f.to_alg_hom.to_ring_hom.to_algebra
   haveI : IsCyclotomicExtension {1} B C := singleton_one_of_algebra_map_bijective f.surjective
   haveI : IsScalarTower A B C := IsScalarTower.of_ring_hom f.to_alg_hom
@@ -323,7 +335,8 @@ end Basic
 
 section Fintype
 
-theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Module.Finite A B := by classical
+theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Module.Finite A B :=
+  by classical
   rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
   refine' fg_adjoin_of_finite _ fun b hb => _
   · simp only [mem_singleton_iff, exists_eq_left]
@@ -339,7 +352,8 @@ theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : M
 
 /-- If `S` is finite and `is_cyclotomic_extension S A B`, then `B` is a finite `A`-algebra. -/
 @[protected]
-theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A B] : Module.Finite A B := by
+theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A B] :
+    Module.Finite A B := by
   cases' nonempty_fintype S with h
   revert h₂ A B
   refine' Set.Finite.induction_on (Set.Finite.intro h) (fun A B => _) fun n S hn hS H A B => _
@@ -364,14 +378,15 @@ theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L]
   { to_char_zero := char_zero_of_injective_algebra_map (algebraMap K L).Injective,
     toFiniteDimensional :=
       @Module.Finite.trans _ K L _ _ _ _
-        (@algebraRat L _ (char_zero_of_injective_algebra_map (algebraMap K L).Injective)) _ _ h.toFiniteDimensional
-        (Finite S K L) }
+        (@algebraRat L _ (char_zero_of_injective_algebra_map (algebraMap K L).Injective)) _ _
+        h.toFiniteDimensional (Finite S K L) }
 #align is_cyclotomic_extension.number_field IsCyclotomicExtension.numberField
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField
 
 /-- A finite cyclotomic extension of an integral noetherian domain is integral -/
-theorem integral [IsDomain B] [IsNoetherianRing A] [Finite S] [IsCyclotomicExtension S A B] : Algebra.IsIntegral A B :=
+theorem integral [IsDomain B] [IsNoetherianRing A] [Finite S] [IsCyclotomicExtension S A B] :
+    Algebra.IsIntegral A B :=
   is_integral_of_noetherian <| is_noetherian_of_fg_of_noetherian' <| (Finite S A B).out
 #align is_cyclotomic_extension.integral IsCyclotomicExtension.integral
 
@@ -396,7 +411,8 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B]
   by
   simp only [mem_singleton_iff, exists_eq_left, map_cyclotomic]
   refine' le_antisymm (adjoin_mono fun x hx => _) (adjoin_le fun x hx => _)
-  · simp only [Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic, mem_roots (cyclotomic_ne_zero n B)] at hx
+  · simp only [Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic,
+      mem_roots (cyclotomic_ne_zero n B)] at hx
     simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq]
     rw [is_root_of_unity_iff n.pos]
     exact ⟨n, Nat.mem_divisors_self n n.ne_zero, hx⟩
@@ -410,8 +426,8 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B]
 #align
   is_cyclotomic_extension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots
 
-theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableEq B] [IsDomain B] {ζ : B}
-    (hζ : IsPrimitiveRoot ζ n) :
+theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableEq B] [IsDomain B]
+    {ζ : B} (hζ : IsPrimitiveRoot ζ n) :
     adjoin A ((map (algebraMap A B) (cyclotomic n A)).roots.toFinset : Set B) = adjoin A {ζ} := by
   refine' le_antisymm (adjoin_le fun x hx => _) (adjoin_mono fun x hx => _)
   · suffices hx : x ^ ↑n = 1
@@ -419,32 +435,36 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableE
     exact SetLike.mem_coe.2 (Subalgebra.pow_mem _ (subset_adjoin <| mem_singleton ζ) _)
     rw [is_root_of_unity_iff n.pos]
     refine' ⟨n, Nat.mem_divisors_self n n.ne_zero, _⟩
-    rwa [Finset.mem_coe, Multiset.mem_to_finset, map_cyclotomic, mem_roots <| cyclotomic_ne_zero n B] at hx
+    rwa [Finset.mem_coe, Multiset.mem_to_finset, map_cyclotomic,
+      mem_roots <| cyclotomic_ne_zero n B] at hx
     
   · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hx
-    simpa only [hx, Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic, mem_roots (cyclotomic_ne_zero n B)] using
-      hζ.is_root_cyclotomic n.pos
+    simpa only [hx, Multiset.mem_to_finset, Finset.mem_coe, map_cyclotomic,
+      mem_roots (cyclotomic_ne_zero n B)] using hζ.is_root_cyclotomic n.pos
     
 #align
   is_cyclotomic_extension.adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic
 
-theorem adjoin_primitive_root_eq_top {n : ℕ+} [IsDomain B] [h : IsCyclotomicExtension {n} A B] {ζ : B}
-    (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by classical
+theorem adjoin_primitive_root_eq_top {n : ℕ+} [IsDomain B] [h : IsCyclotomicExtension {n} A B]
+    {ζ : B} (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by classical
   rw [← adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic hζ]
   rw [adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ]
   exact ((iff_adjoin_eq_top {n} A B).mp h).2
-#align is_cyclotomic_extension.adjoin_primitive_root_eq_top IsCyclotomicExtension.adjoin_primitive_root_eq_top
+#align
+  is_cyclotomic_extension.adjoin_primitive_root_eq_top IsCyclotomicExtension.adjoin_primitive_root_eq_top
 
 variable (A)
 
-theorem _root_.is_primitive_root.adjoin_is_cyclotomic_extension {ζ : B} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
+theorem IsPrimitiveRoot.adjoin_is_cyclotomic_extension {ζ : B} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
     IsCyclotomicExtension {n} A (adjoin A ({ζ} : Set B)) :=
   { exists_prim_root := fun i hi => by
       rw [Set.mem_singleton_iff] at hi
       refine' ⟨⟨ζ, subset_adjoin <| Set.mem_singleton ζ⟩, _⟩
       rwa [← IsPrimitiveRoot.coe_submonoid_class_iff, Subtype.coe_mk, hi],
     adjoin_roots := fun x => by
-      refine' adjoin_induction' (fun b hb => _) (fun a => _) (fun b₁ b₂ hb₁ hb₂ => _) (fun b₁ b₂ hb₁ hb₂ => _) x
+      refine'
+        adjoin_induction' (fun b hb => _) (fun a => _) (fun b₁ b₂ hb₁ hb₂ => _)
+          (fun b₁ b₂ hb₁ hb₂ => _) x
       · rw [Set.mem_singleton_iff] at hb
         refine' subset_adjoin _
         simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq, hb]
@@ -458,7 +478,7 @@ theorem _root_.is_primitive_root.adjoin_is_cyclotomic_extension {ζ : B} {n : �
       · exact Subalgebra.mul_mem _ hb₁ hb₂
          }
 #align
-  is_cyclotomic_extension._root_.is_primitive_root.adjoin_is_cyclotomic_extension is_cyclotomic_extension._root_.is_primitive_root.adjoin_is_cyclotomic_extension
+  is_primitive_root.adjoin_is_cyclotomic_extension IsPrimitiveRoot.adjoin_is_cyclotomic_extension
 
 end
 
@@ -467,15 +487,17 @@ section Field
 variable {n S}
 
 /-- A cyclotomic extension splits `X ^ n - 1` if `n ∈ S`.-/
-theorem splitsXPowSubOne [H : IsCyclotomicExtension S K L] (hS : n ∈ S) : Splits (algebraMap K L) (X ^ (n : ℕ) - 1) :=
-  by
-  rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow, Polynomial.map_X]
+theorem splitsXPowSubOne [H : IsCyclotomicExtension S K L] (hS : n ∈ S) :
+    Splits (algebraMap K L) (X ^ (n : ℕ) - 1) := by
+  rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow,
+    Polynomial.map_X]
   obtain ⟨z, hz⟩ := ((is_cyclotomic_extension_iff _ _ _).1 H).1 hS
   exact X_pow_sub_one_splits hz
 #align is_cyclotomic_extension.splits_X_pow_sub_one IsCyclotomicExtension.splitsXPowSubOne
 
 /-- A cyclotomic extension splits `cyclotomic n K` if `n ∈ S` and `ne_zero (n : K)`.-/
-theorem splitsCyclotomic [IsCyclotomicExtension S K L] (hS : n ∈ S) : Splits (algebraMap K L) (cyclotomic n K) := by
+theorem splitsCyclotomic [IsCyclotomicExtension S K L] (hS : n ∈ S) :
+    Splits (algebraMap K L) (cyclotomic n K) := by
   refine' splits_of_splits_of_dvd _ (X_pow_sub_C_ne_zero n.pos _) (splits_X_pow_sub_one K L hS) _
   use ∏ i : ℕ in (n : ℕ).properDivisors, Polynomial.cyclotomic i K
   rw [(eq_cyclotomic_iff n.pos _).1 rfl, RingHom.map_one]
@@ -494,17 +516,20 @@ theorem splittingFieldXPowSubOne : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
       congr
       refine' Set.ext fun x => _
-      simp only [Polynomial.map_pow, mem_singleton_iff, Multiset.mem_to_finset, exists_eq_left, mem_set_of_eq,
-        Polynomial.map_X, Polynomial.map_one, Finset.mem_coe, Polynomial.map_sub]
-      rwa [← RingHom.map_one C, mem_roots (@X_pow_sub_C_ne_zero L _ _ _ n.pos _), is_root.def, eval_sub, eval_pow,
-        eval_C, eval_X, sub_eq_zero] }
-#align is_cyclotomic_extension.splitting_field_X_pow_sub_one IsCyclotomicExtension.splittingFieldXPowSubOne
+      simp only [Polynomial.map_pow, mem_singleton_iff, Multiset.mem_to_finset, exists_eq_left,
+        mem_set_of_eq, Polynomial.map_X, Polynomial.map_one, Finset.mem_coe, Polynomial.map_sub]
+      rwa [← RingHom.map_one C, mem_roots (@X_pow_sub_C_ne_zero L _ _ _ n.pos _), is_root.def,
+        eval_sub, eval_pow, eval_C, eval_X, sub_eq_zero] }
+#align
+  is_cyclotomic_extension.splitting_field_X_pow_sub_one IsCyclotomicExtension.splittingFieldXPowSubOne
 
 /-- Any two `n`-th cyclotomic extensions are isomorphic. -/
-def algEquiv (L' : Type _) [Field L'] [Algebra K L'] [IsCyclotomicExtension {n} K L'] : L ≃ₐ[K] L' :=
+def algEquiv (L' : Type _) [Field L'] [Algebra K L'] [IsCyclotomicExtension {n} K L'] :
+    L ≃ₐ[K] L' :=
   let _ := splittingFieldXPowSubOne n K L
   let _ := splittingFieldXPowSubOne n K L'
-  (is_splitting_field.alg_equiv L (X ^ (n : ℕ) - 1)).trans (is_splitting_field.alg_equiv L' (X ^ (n : ℕ) - 1)).symm
+  (is_splitting_field.alg_equiv L (X ^ (n : ℕ) - 1)).trans
+    (is_splitting_field.alg_equiv L' (X ^ (n : ℕ) - 1)).symm
 #align is_cyclotomic_extension.alg_equiv IsCyclotomicExtension.algEquiv
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splittingFieldXPowSubOne
@@ -526,7 +551,8 @@ theorem splittingFieldCyclotomic : IsSplittingField K L (cyclotomic n K) :=
       letI := Classical.decEq L
       obtain ⟨ζ, hζ⟩ := @IsCyclotomicExtension.exists_prim_root {n} K L _ _ _ _ _ (mem_singleton n)
       exact adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ }
-#align is_cyclotomic_extension.splitting_field_cyclotomic IsCyclotomicExtension.splittingFieldCyclotomic
+#align
+  is_cyclotomic_extension.splitting_field_cyclotomic IsCyclotomicExtension.splittingFieldCyclotomic
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splittingFieldCyclotomic
 
@@ -544,7 +570,8 @@ splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
 the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/
 def CyclotomicField : Type w :=
   (cyclotomic n K).SplittingField deriving Field,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] K», Inhabited
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] K»,
+  Inhabited
 #align cyclotomic_field CyclotomicField
 
 namespace CyclotomicField
@@ -552,7 +579,8 @@ namespace CyclotomicField
 instance [CharZero K] : CharZero (CyclotomicField n K) :=
   char_zero_of_injective_algebra_map (algebraMap K _).Injective
 
-instance is_cyclotomic_extension [NeZero ((n : ℕ) : K)] : IsCyclotomicExtension {n} K (CyclotomicField n K) where
+instance is_cyclotomic_extension [NeZero ((n : ℕ) : K)] :
+    IsCyclotomicExtension {n} K (CyclotomicField n K) where
   exists_prim_root a han := by
     rw [mem_singleton_iff] at han
     subst a
@@ -566,8 +594,10 @@ instance is_cyclotomic_extension [NeZero ((n : ℕ) : K)] : IsCyclotomicExtensio
     rw [← Algebra.eq_top_iff, ← splitting_field.adjoin_roots, eq_comm]
     letI := Classical.decEq (CyclotomicField n K)
     obtain ⟨ζ, hζ⟩ :=
-      exists_root_of_splits _ (splitting_field.splits (cyclotomic n K)) (degree_cyclotomic_pos n _ n.pos).ne'
-    haveI : NeZero ((n : ℕ) : CyclotomicField n K) := NeZero.nat_of_injective (algebraMap K _).Injective
+      exists_root_of_splits _ (splitting_field.splits (cyclotomic n K))
+        (degree_cyclotomic_pos n _ n.pos).ne'
+    haveI : NeZero ((n : ℕ) : CyclotomicField n K) :=
+      NeZero.nat_of_injective (algebraMap K _).Injective
     rw [eval₂_eq_eval_map, map_cyclotomic, ← is_root.def, is_root_cyclotomic_iff] at hζ
     exact IsCyclotomicExtension.adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ
 #align cyclotomic_field.is_cyclotomic_extension CyclotomicField.is_cyclotomic_extension
@@ -593,7 +623,8 @@ attribute [local instance] CyclotomicField.algebraBase
 
 instance CyclotomicField.no_zero_smul_divisors : NoZeroSmulDivisors A (CyclotomicField n K) :=
   NoZeroSmulDivisors.of_algebra_map_injective <|
-    Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _) <| IsFractionRing.injective A K
+    Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _) <|
+      IsFractionRing.injective A K
 #align cyclotomic_field.no_zero_smul_divisors CyclotomicField.no_zero_smul_divisors
 
 /-- If `A` is a domain with fraction field `K` and `n : ℕ+`, we define `cyclotomic_ring n A K` as
@@ -623,7 +654,8 @@ theorem algebra_base_injective : Function.Injective <| algebraMap A (CyclotomicR
 instance : Algebra (CyclotomicRing n A K) (CyclotomicField n K) :=
   (adjoin A _).toAlgebra
 
-theorem adjoin_algebra_injective : Function.Injective <| algebraMap (CyclotomicRing n A K) (CyclotomicField n K) :=
+theorem adjoin_algebra_injective :
+    Function.Injective <| algebraMap (CyclotomicRing n A K) (CyclotomicField n K) :=
   Subtype.val_injective
 #align cyclotomic_ring.adjoin_algebra_injective CyclotomicRing.adjoin_algebra_injective
 
@@ -633,13 +665,15 @@ instance : NoZeroSmulDivisors (CyclotomicRing n A K) (CyclotomicField n K) :=
 instance : IsScalarTower A (CyclotomicRing n A K) (CyclotomicField n K) :=
   IsScalarTower.subalgebra' _ _ _ _
 
-instance is_cyclotomic_extension [NeZero ((n : ℕ) : A)] : IsCyclotomicExtension {n} A (CyclotomicRing n A K) where
+instance is_cyclotomic_extension [NeZero ((n : ℕ) : A)] :
+    IsCyclotomicExtension {n} A (CyclotomicRing n A K) where
   exists_prim_root a han := by
     rw [mem_singleton_iff] at han
     subst a
     haveI := NeZero.of_no_zero_smul_divisors A K n
     haveI := NeZero.of_no_zero_smul_divisors A (CyclotomicField n K) n
-    obtain ⟨μ, hμ⟩ := (CyclotomicField.is_cyclotomic_extension n K).exists_prim_root (mem_singleton n)
+    obtain ⟨μ, hμ⟩ :=
+      (CyclotomicField.is_cyclotomic_extension n K).exists_prim_root (mem_singleton n)
     refine' ⟨⟨μ, subset_adjoin _⟩, _⟩
     · apply (is_root_of_unity_iff n.pos (CyclotomicField n K)).mpr
       refine' ⟨n, Nat.mem_divisors_self _ n.ne_zero, _⟩
@@ -648,7 +682,8 @@ instance is_cyclotomic_extension [NeZero ((n : ℕ) : A)] : IsCyclotomicExtensio
     · rwa [← IsPrimitiveRoot.coe_submonoid_class_iff, Subtype.coe_mk]
       
   adjoin_roots x := by
-    refine' adjoin_induction' (fun y hy => _) (fun a => _) (fun y z hy hz => _) (fun y z hy hz => _) x
+    refine'
+      adjoin_induction' (fun y hy => _) (fun a => _) (fun y z hy hz => _) (fun y z hy hz => _) x
     · refine' subset_adjoin _
       simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq]
       rwa [← Subalgebra.coe_eq_one, Subalgebra.coe_pow, Subtype.coe_mk]
@@ -671,28 +706,35 @@ instance [NeZero ((n : ℕ) : A)] : IsFractionRing (CyclotomicRing n A K) (Cyclo
     letI : NeZero ((n : ℕ) : K) := NeZero.nat_of_injective (IsFractionRing.injective A K)
     refine'
       Algebra.adjoin_induction
-        (((IsCyclotomicExtension.iff_singleton n K _).1 (CyclotomicField.is_cyclotomic_extension n K)).2 x)
+        (((IsCyclotomicExtension.iff_singleton n K _).1
+              (CyclotomicField.is_cyclotomic_extension n K)).2
+          x)
         (fun y hy => _) (fun k => _) _ _
     · exact ⟨⟨⟨y, subset_adjoin hy⟩, 1⟩, by simpa⟩
       
     · have : IsLocalization (nonZeroDivisors A) K := inferInstance
       replace := this.surj
       obtain ⟨⟨z, w⟩, hw⟩ := this k
-      refine' ⟨⟨algebraMap A _ z, algebraMap A _ w, map_mem_non_zero_divisors _ (algebra_base_injective n A K) w.2⟩, _⟩
-      letI : IsScalarTower A K (CyclotomicField n K) := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
+      refine'
+        ⟨⟨algebraMap A _ z, algebraMap A _ w,
+            map_mem_non_zero_divisors _ (algebra_base_injective n A K) w.2⟩,
+          _⟩
+      letI : IsScalarTower A K (CyclotomicField n K) :=
+        IsScalarTower.of_algebra_map_eq (congr_fun rfl)
       rw [SetLike.coe_mk, ← IsScalarTower.algebra_map_apply, ← IsScalarTower.algebra_map_apply,
-        @IsScalarTower.algebra_map_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w, ← RingHom.map_mul,
-        hw, ← IsScalarTower.algebra_map_apply]
+        @IsScalarTower.algebra_map_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w,
+        ← RingHom.map_mul, hw, ← IsScalarTower.algebra_map_apply]
       
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.2 + b.1 * a.2, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
-      rw [SetLike.coe_mk, RingHom.map_mul, add_mul, ← mul_assoc, ha, mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, hb]
+      rw [SetLike.coe_mk, RingHom.map_mul, add_mul, ← mul_assoc, ha,
+        mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, hb]
       simp only [map_add, map_mul]
       
     · rintro y z ⟨a, ha⟩ ⟨b, hb⟩
       refine' ⟨⟨a.1 * b.1, a.2 * b.2, mul_mem_non_zero_divisors.2 ⟨a.2.2, b.2.2⟩⟩, _⟩
-      rw [SetLike.coe_mk, RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ← mul_assoc z, hb, ←
-        mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
+      rw [SetLike.coe_mk, RingHom.map_mul, mul_comm ((algebraMap _ _) ↑a.2), mul_assoc, ←
+        mul_assoc z, hb, ← mul_comm ((algebraMap _ _) ↑a.2), ← mul_assoc, ha]
       simp only [map_mul]
       
   eq_iff_exists x y :=
@@ -719,7 +761,8 @@ variable [IsAlgClosed K]
 
 /-- Algebraically closed fields are `S`-cyclotomic extensions over themselves if
 `ne_zero ((a : ℕ) : K))` for all `a ∈ S`. -/
-theorem IsAlgClosed.is_cyclotomic_extension (h : ∀ a ∈ S, NeZero ((a : ℕ) : K)) : IsCyclotomicExtension S K K := by
+theorem IsAlgClosed.is_cyclotomic_extension (h : ∀ a ∈ S, NeZero ((a : ℕ) : K)) :
+    IsCyclotomicExtension S K K := by
   refine' ⟨fun a ha => _, algebra.eq_top_iff.mp <| Subsingleton.elim _ _⟩
   obtain ⟨r, hr⟩ := IsAlgClosed.exists_aeval_eq_zero K _ (degree_cyclotomic_pos a K a.pos).ne'
   refine' ⟨r, _⟩
@@ -727,9 +770,11 @@ theorem IsAlgClosed.is_cyclotomic_extension (h : ∀ a ∈ S, NeZero ((a : ℕ) 
   rwa [coe_aeval_eq_eval, ← is_root.def, is_root_cyclotomic_iff] at hr
 #align is_alg_closed.is_cyclotomic_extension IsAlgClosed.is_cyclotomic_extension
 
-instance IsAlgClosedOfCharZero.is_cyclotomic_extension [CharZero K] : ∀ S, IsCyclotomicExtension S K K := fun S =>
+instance IsAlgClosedOfCharZero.is_cyclotomic_extension [CharZero K] :
+    ∀ S, IsCyclotomicExtension S K K := fun S =>
   IsAlgClosed.is_cyclotomic_extension S K fun a ha => inferInstance
-#align is_alg_closed_of_char_zero.is_cyclotomic_extension IsAlgClosedOfCharZero.is_cyclotomic_extension
+#align
+  is_alg_closed_of_char_zero.is_cyclotomic_extension IsAlgClosedOfCharZero.is_cyclotomic_extension
 
 end IsAlgClosed
 

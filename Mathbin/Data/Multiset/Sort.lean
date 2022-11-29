@@ -26,8 +26,8 @@ variable (r : α → α → Prop) [DecidableRel r] [IsTrans α r] [IsAntisymm α
   (Uses merge sort algorithm.) -/
 def sort (s : Multiset α) : List α :=
   (Quot.liftOn s (mergeSort r)) fun a b h =>
-    eq_of_perm_of_sorted ((perm_merge_sort _ _).trans <| h.trans (perm_merge_sort _ _).symm) (sorted_merge_sort r _)
-      (sorted_merge_sort r _)
+    eq_of_perm_of_sorted ((perm_merge_sort _ _).trans <| h.trans (perm_merge_sort _ _).symm)
+      (sorted_merge_sort r _) (sorted_merge_sort r _)
 #align multiset.sort Multiset.sort
 
 @[simp]

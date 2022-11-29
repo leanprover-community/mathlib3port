@@ -107,8 +107,8 @@ proceeds as follows:
 Returns the constructed replacement expressions and `e` without its leading
 binders.
 -/
-unsafe def open_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool) (locals_or_metas : Bool) :
-    expr → tactic (List expr × expr) := fun e => do
+unsafe def open_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool)
+    (locals_or_metas : Bool) : expr → tactic (List expr × expr) := fun e => do
   let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
     pure ([], e)
   let replacement ← mk_binder_replacement locals_or_metas ⟨Name, bi, type⟩
@@ -121,8 +121,8 @@ unsafe def open_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambda
 leading Π/λ binders of `e`. If `e` does not start with at least `n` Π/λ binders,
 (after normalisation, if `do_whnf` is given), the tactic fails.
 -/
-unsafe def open_n_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool) (locals_or_metas : Bool) :
-    expr → ℕ → tactic (List expr × expr)
+unsafe def open_n_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool)
+    (locals_or_metas : Bool) : expr → ℕ → tactic (List expr × expr)
   | e, 0 => pure ([], e)
   | e, d + 1 => do
     let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
@@ -171,7 +171,8 @@ normalisation with transparency `md`. `unfold_ginductive` determines whether
 constructors of generalised inductive types are unfolded during normalisation.
 This is `open_pis` up to normalisation.
 -/
-unsafe def open_pis_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) : tactic (List expr × expr) :=
+unsafe def open_pis_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) :
+    tactic (List expr × expr) :=
   open_binders (some (md, unfold_ginductive)) true true e
 #align tactic.open_pis_whnf tactic.open_pis_whnf
 
@@ -204,8 +205,8 @@ determines whether constructors of generalised inductive types are unfolded
 during normalisation. This is `open_pis_metas_whnf` but restricted to `n`
 binders.
 -/
-unsafe def open_n_pis_metas_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
-    tactic (List expr × expr) :=
+unsafe def open_n_pis_metas_whnf (e : expr) (n : ℕ) (md := semireducible)
+    (unfold_ginductive := true) : tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) true false e n
 #align tactic.open_n_pis_metas_whnf tactic.open_n_pis_metas_whnf
 
@@ -219,7 +220,8 @@ unsafe def get_pi_binders (e : expr) : tactic (List binder × expr) := do
   pure (lcs to_binder, rest)
 #align tactic.get_pi_binders tactic.get_pi_binders
 
-private unsafe def get_pi_binders_nondep_aux : ℕ → expr → tactic (List (ℕ × binder) × expr) := fun i e => do
+private unsafe def get_pi_binders_nondep_aux : ℕ → expr → tactic (List (ℕ × binder) × expr) :=
+  fun i e => do
   let some (Name, bi, type, body) ← get_binder none true e |
     pure ([], e)
   let replacement ← mk_local' Name bi type
@@ -278,7 +280,8 @@ normalisation with transparency `md`. `unfold_ginductive` determines whether
 constructors of generalised inductive types are unfolded during normalisation.
 This is `open_lambdas` up to normalisation.
 -/
-unsafe def open_lambdas_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) : tactic (List expr × expr) :=
+unsafe def open_lambdas_whnf (e : expr) (md := semireducible) (unfold_ginductive := true) :
+    tactic (List expr × expr) :=
   open_binders (some (md, unfold_ginductive)) false true e
 #align tactic.open_lambdas_whnf tactic.open_lambdas_whnf
 
@@ -300,8 +303,8 @@ constructors of generalised inductive types are unfolded during normalisation.
 Fails if `e` does not start with `n` λ binders (after normalisation). This is
 `open_n_lambdas` up to normalisation.
 -/
-unsafe def open_n_lambdas_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
-    tactic (List expr × expr) :=
+unsafe def open_n_lambdas_whnf (e : expr) (n : ℕ) (md := semireducible)
+    (unfold_ginductive := true) : tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) false true e n
 #align tactic.open_n_lambdas_whnf tactic.open_n_lambdas_whnf
 
@@ -312,8 +315,8 @@ constructors of generalised inductive types are unfolded during normalisation.
 Fails if `e` does not start with `n` λ binders (after normalisation). This is
 `open_n_lambdas_metas` up to normalisation.
 -/
-unsafe def open_n_lambdas_metas_whnf (e : expr) (n : ℕ) (md := semireducible) (unfold_ginductive := true) :
-    tactic (List expr × expr) :=
+unsafe def open_n_lambdas_metas_whnf (e : expr) (n : ℕ) (md := semireducible)
+    (unfold_ginductive := true) : tactic (List expr × expr) :=
   open_n_binders (some (md, unfold_ginductive)) false false e n
 #align tactic.open_n_lambdas_metas_whnf tactic.open_n_lambdas_metas_whnf
 

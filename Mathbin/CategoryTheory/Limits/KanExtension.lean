@@ -138,7 +138,8 @@ namespace RanCat
 variable (D)
 
 /-- The adjunction associated to `Ran`. -/
-def adjunction [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (whiskeringLeft _ _ D).obj ι ⊣ ran ι :=
+def adjunction [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] :
+    (whiskeringLeft _ _ D).obj ι ⊣ ran ι :=
   Adjunction.adjunctionOfEquivRight _ _
 #align category_theory.Ran.adjunction CategoryTheory.ran.adjunction
 
@@ -152,7 +153,8 @@ theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredA
   simp only [category.id_comp]
   exact
     is_iso.of_iso
-      ((limit.is_limit _).conePointUniqueUpToIso (limit_of_diagram_initial structured_arrow.mk_id_initial _))
+      ((limit.is_limit _).conePointUniqueUpToIso
+        (limit_of_diagram_initial structured_arrow.mk_id_initial _))
 #align category_theory.Ran.reflective CategoryTheory.ran.reflective
 
 end RanCat
@@ -216,7 +218,8 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D where
 def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     (loc ι F ⟶ G) ≃ (F ⟶ ((whiskeringLeft _ _ _).obj ι).obj G) where
   toFun f :=
-    { app := fun x => by apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
+    { app := fun x => by
+        apply colimit.ι (diagram ι F (ι.obj x)) (costructured_arrow.mk (𝟙 _)) ≫ f.app _,-- sigh
       naturality' := by
         intro x y ff
         dsimp only [whiskering_left]
@@ -271,7 +274,8 @@ namespace LanCat
 variable (D)
 
 /-- The adjunction associated to `Lan`. -/
-def adjunction [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : lan ι ⊣ (whiskeringLeft _ _ D).obj ι :=
+def adjunction [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] :
+    lan ι ⊣ (whiskeringLeft _ _ D).obj ι :=
   Adjunction.adjunctionOfEquivLeft _ _
 #align category_theory.Lan.adjunction CategoryTheory.lan.adjunction
 

@@ -84,7 +84,8 @@ unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : ta
         (match d with
         | declaration.defn n ls t _ _ _ =>
           declaration.defn al ls t (expr.const n (level.param <$> ls)) ReducibilityHints.abbrev tt
-        | declaration.thm n ls t _ => declaration.thm al ls t <| task.pure <| expr.const n (level.param <$> ls)
+        | declaration.thm n ls t _ =>
+          declaration.thm al ls t <| task.pure <| expr.const n (level.param <$> ls)
         | _ => undefined)
   let target := target.plain d.to_name
   alias_attr al target tt
@@ -100,14 +101,18 @@ unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : ta
   def
     mk_iff_mp_app
     ( iffmp : Name ) : expr → ( ℕ → expr ) → tactic expr
-    | expr.pi n bi e t , f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f ( n + 1 ) ( expr.var n )
+    |
+        expr.pi n bi e t , f
+        =>
+        expr.lam n bi e <$> mk_iff_mp_app t fun n => f ( n + 1 ) ( expr.var n )
       | q( $ ( a ) ↔ $ ( b ) ) , f => pure <| @ expr.const true iffmp [ ] a b ( f 0 )
       | _ , f => fail "Target theorem must have the form `Π x y z, a ↔ b`"
 #align tactic.alias.mk_iff_mp_app tactic.alias.mk_iff_mp_app
 
 /-- The core tactic which handles `alias d ↔ al _` or `alias d ↔ _ al`. `ns` is the current
 namespace, and `is_forward` is true if this is the forward implication (the first form). -/
-unsafe def alias_iff (doc : Option String) (d : declaration) (ns al : Name) (is_forward : Bool) : tactic Unit :=
+unsafe def alias_iff (doc : Option String) (d : declaration) (ns al : Name) (is_forward : Bool) :
+    tactic Unit :=
   if al = `_ then skip
   else
     let al := ns.append_namespace al
@@ -197,7 +202,8 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : le
 #align tactic.alias.alias_cmd tactic.alias.alias_cmd
 
 add_tactic_doc
-  { Name := "alias", category := DocCategory.cmd, declNames := [`tactic.alias.alias_cmd], tags := ["renaming"] }
+  { Name := "alias", category := DocCategory.cmd, declNames := [`tactic.alias.alias_cmd],
+    tags := ["renaming"] }
 
 /-- Given a definition, look up the definition that it is an alias of.
 Returns `none` if this defintion is not an alias. -/

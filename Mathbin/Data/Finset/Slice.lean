@@ -64,12 +64,12 @@ theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
-theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} : (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by
-  simp_rw [sized_Union]
+theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} :
+    (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by simp_rw [sized_Union]
 #align set.sized_Union₂ Set.sized_Union₂
 
-protected theorem Sized.is_antichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A := fun s hs t ht h hst =>
-  h <| Finset.eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
+protected theorem Sized.is_antichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A :=
+  fun s hs t ht h hst => h <| Finset.eq_of_subset_of_card_le hst ((hA ht).trans (hA hs).symm).le
 #align set.sized.is_antichain Set.Sized.is_antichain
 
 protected theorem Sized.subsingleton (hA : A.Sized 0) : A.Subsingleton :=
@@ -88,8 +88,8 @@ theorem Sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔
   hA.IsAntichain.top_mem_iff
 #align set.sized.univ_mem_iff Set.Sized.univ_mem_iff
 
-theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r := fun t ht =>
-  (mem_powerset_len.1 ht).2
+theorem sized_powerset_len (s : Finset α) (r : ℕ) : (powersetLen r s : Set (Finset α)).Sized r :=
+  fun t ht => (mem_powerset_len.1 ht).2
 #align set.sized_powerset_len Set.sized_powerset_len
 
 end Set
@@ -106,10 +106,11 @@ theorem subset_powerset_len_univ_iff : 𝒜 ⊆ powersetLen r univ ↔ (𝒜 : S
 
 alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_univ
 
-theorem _root_.set.sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) : card 𝒜 ≤ (Fintype.card α).choose r := by
+theorem Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
+    card 𝒜 ≤ (Fintype.card α).choose r := by
   rw [Fintype.card, ← card_powerset_len]
   exact card_le_of_subset h𝒜.subset_powerset_len_univ
-#align finset._root_.set.sized.card_le finset._root_.set.sized.card_le
+#align set.sized.card_le Set.Sized.card_le
 
 end Sized
 
@@ -151,8 +152,8 @@ theorem ne_of_mem_slice (h₁ : A₁ ∈ 𝒜 # r₁) (h₂ : A₂ ∈ 𝒜 # r�
   mt fun h => (sized_slice h₁).symm.trans ((congr_arg card h).trans (sized_slice h₂))
 #align finset.ne_of_mem_slice Finset.ne_of_mem_slice
 
-theorem pairwise_disjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
-  disjoint_filter.2 fun s hs hm hn => hmn <| hm.symm.trans hn
+theorem pairwise_disjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice 𝒜) :=
+  fun m _ n _ hmn => disjoint_filter.2 fun s hs hm hn => hmn <| hm.symm.trans hn
 #align finset.pairwise_disjoint_slice Finset.pairwise_disjoint_slice
 
 variable [Fintype α] (𝒜)

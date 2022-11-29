@@ -216,7 +216,8 @@ theorem xa_sq (i : Zmod (2 * n)) : xa i ^ 2 = a n := by simp [sq]
 
 @[simp]
 theorem xa_pow_four (i : Zmod (2 * n)) : xa i ^ 4 = 1 := by
-  simp only [pow_succ, sq, xa_mul_xa, xa_mul_a, add_sub_cancel, add_sub_assoc, add_sub_cancel', sub_self, add_zero]
+  simp only [pow_succ, sq, xa_mul_xa, xa_mul_a, add_sub_cancel, add_sub_assoc, add_sub_cancel',
+    sub_self, add_zero]
   norm_cast
   rw [← two_mul]
   simp [one_def]
@@ -247,7 +248,8 @@ theorem quaternion_group_one_is_cyclic : IsCyclic (QuaternionGroup 1) := by
   apply is_cyclic_of_order_of_eq_card
   rw [card, mul_one]
   exact order_of_xa 0
-#align quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternion_group_one_is_cyclic
+#align
+  quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternion_group_one_is_cyclic
 
 /-- If `0 < n`, then `a 1` has order `2 * n`.
 -/
@@ -262,7 +264,9 @@ theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
     haveI : CharZero (Zmod (2 * 0)) := Zmod.char_zero
     simpa using h.ne'
     
-  apply (Nat.le_of_dvd (NeZero.pos _) (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
+  apply
+    (Nat.le_of_dvd (NeZero.pos _)
+          (order_of_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
   intro h
   have h1 : (a 1 : QuaternionGroup n) ^ orderOf (a 1) = 1 := pow_order_of_eq_one _
   rw [a_one_pow] at h1
@@ -273,7 +277,8 @@ theorem order_of_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
 
 /-- If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.
 -/
-theorem order_of_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val := by
+theorem order_of_a [NeZero n] (i : Zmod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
+  by
   conv_lhs => rw [← Zmod.nat_cast_zmod_val i]
   rw [← a_one_pow, order_of_pow, order_of_a_one]
 #align quaternion_group.order_of_a QuaternionGroup.order_of_a

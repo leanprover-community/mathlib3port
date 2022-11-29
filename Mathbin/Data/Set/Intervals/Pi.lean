@@ -38,7 +38,7 @@ theorem pi_univ_Icc : (pi univ fun i => icc (x i) (y i)) = icc x y :=
   ext fun y => by simp [Pi.le_def, forall_and]
 #align set.pi_univ_Icc Set.pi_univ_Icc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
     (h₁ : ∀ i ∈ s, f₁ i ∈ icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ icc (g₁ i) (g₂ i)) :
     s.piecewise f₁ f₂ ∈ icc g₁ g₂ :=
@@ -46,8 +46,8 @@ theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g
     piecewise_le (fun i hi => (h₁ i hi).2) fun i hi => (h₂ i hi).2⟩
 #align set.piecewise_mem_Icc Set.piecewise_mem_Icc
 
-theorem piecewise_mem_Icc' {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i} (h₁ : f₁ ∈ icc g₁ g₂)
-    (h₂ : f₂ ∈ icc g₁ g₂) : s.piecewise f₁ f₂ ∈ icc g₁ g₂ :=
+theorem piecewise_mem_Icc' {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
+    (h₁ : f₁ ∈ icc g₁ g₂) (h₂ : f₂ ∈ icc g₁ g₂) : s.piecewise f₁ f₂ ∈ icc g₁ g₂ :=
   piecewise_mem_Icc (fun i hi => ⟨h₁.1 _, h₁.2 _⟩) fun i hi => ⟨h₂.1 _, h₂.2 _⟩
 #align set.piecewise_mem_Icc' Set.piecewise_mem_Icc'
 
@@ -56,7 +56,8 @@ section Nonempty
 variable [Nonempty ι]
 
 theorem pi_univ_Ioi_subset : (pi univ fun i => ioi (x i)) ⊆ ioi x := fun z hz =>
-  ⟨fun i => le_of_lt <| hz i trivial, fun h => (Nonempty.elim ‹Nonempty ι›) fun i => (h i).not_lt (hz i trivial)⟩
+  ⟨fun i => le_of_lt <| hz i trivial, fun h =>
+    (Nonempty.elim ‹Nonempty ι›) fun i => (h i).not_lt (hz i trivial)⟩
 #align set.pi_univ_Ioi_subset Set.pi_univ_Ioi_subset
 
 theorem pi_univ_Iio_subset : (pi univ fun i => iio (x i)) ⊆ iio x :=
@@ -82,25 +83,33 @@ variable [DecidableEq ι]
 open Function (update)
 
 theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : x i₀ ≤ m) :
-    (pi univ fun i => ioc (update x i₀ m i) (y i)) = { z | m < z i₀ } ∩ pi univ fun i => ioc (x i) (y i) := by
+    (pi univ fun i => ioc (update x i₀ m i) (y i)) =
+      { z | m < z i₀ } ∩ pi univ fun i => ioc (x i) (y i) :=
+  by
   have : Ioc m (y i₀) = Ioi m ∩ Ioc (x i₀) (y i₀) := by
-    rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, ← inter_assoc, inter_eq_self_of_subset_left (Ioi_subset_Ioi hm)]
-  simp_rw [univ_pi_update i₀ _ _ fun i z => Ioc z (y i), ← pi_inter_compl ({i₀} : Set ι), singleton_pi', ← inter_assoc,
-    this]
+    rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, ← inter_assoc,
+      inter_eq_self_of_subset_left (Ioi_subset_Ioi hm)]
+  simp_rw [univ_pi_update i₀ _ _ fun i z => Ioc z (y i), ← pi_inter_compl ({i₀} : Set ι),
+    singleton_pi', ← inter_assoc, this]
   rfl
 #align set.pi_univ_Ioc_update_left Set.pi_univ_Ioc_update_left
 
 theorem pi_univ_Ioc_update_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : m ≤ y i₀) :
-    (pi univ fun i => ioc (x i) (update y i₀ m i)) = { z | z i₀ ≤ m } ∩ pi univ fun i => ioc (x i) (y i) := by
+    (pi univ fun i => ioc (x i) (update y i₀ m i)) =
+      { z | z i₀ ≤ m } ∩ pi univ fun i => ioc (x i) (y i) :=
+  by
   have : Ioc (x i₀) m = Iic m ∩ Ioc (x i₀) (y i₀) := by
-    rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, inter_left_comm, inter_eq_self_of_subset_left (Iic_subset_Iic.2 hm)]
-  simp_rw [univ_pi_update i₀ y m fun i z => Ioc (x i) z, ← pi_inter_compl ({i₀} : Set ι), singleton_pi', ← inter_assoc,
-    this]
+    rw [← Ioi_inter_Iic, ← Ioi_inter_Iic, inter_left_comm,
+      inter_eq_self_of_subset_left (Iic_subset_Iic.2 hm)]
+  simp_rw [univ_pi_update i₀ y m fun i z => Ioc (x i) z, ← pi_inter_compl ({i₀} : Set ι),
+    singleton_pi', ← inter_assoc, this]
   rfl
 #align set.pi_univ_Ioc_update_right Set.pi_univ_Ioc_update_right
 
 theorem disjoint_pi_univ_Ioc_update_left_right {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} :
-    Disjoint (pi univ fun i => ioc (x i) (update y i₀ m i)) (pi univ fun i => ioc (update x i₀ m i) (y i)) := by
+    Disjoint (pi univ fun i => ioc (x i) (update y i₀ m i))
+      (pi univ fun i => ioc (update x i₀ m i) (y i)) :=
+  by
   rw [disjoint_left]
   rintro z h₁ h₂
   refine' (h₁ i₀ (mem_univ _)).2.not_lt _
@@ -114,11 +123,12 @@ variable [DecidableEq ι] [∀ i, LinearOrder (α i)]
 open Function (update)
 
 theorem pi_univ_Ioc_update_union (x y : ∀ i, α i) (i₀ : ι) (m : α i₀) (hm : m ∈ icc (x i₀) (y i₀)) :
-    ((pi univ fun i => ioc (x i) (update y i₀ m i)) ∪ pi univ fun i => ioc (update x i₀ m i) (y i)) =
+    ((pi univ fun i => ioc (x i) (update y i₀ m i)) ∪
+        pi univ fun i => ioc (update x i₀ m i) (y i)) =
       pi univ fun i => ioc (x i) (y i) :=
   by
-  simp_rw [pi_univ_Ioc_update_left hm.1, pi_univ_Ioc_update_right hm.2, ← union_inter_distrib_right, ← set_of_or,
-    le_or_lt, set_of_true, univ_inter]
+  simp_rw [pi_univ_Ioc_update_left hm.1, pi_univ_Ioc_update_right hm.2, ← union_inter_distrib_right,
+    ← set_of_or, le_or_lt, set_of_true, univ_inter]
 #align set.pi_univ_Ioc_update_union Set.pi_univ_Ioc_update_union
 
 /-- If `x`, `y`, `x'`, and `y'` are functions `Π i : ι, α i`, then

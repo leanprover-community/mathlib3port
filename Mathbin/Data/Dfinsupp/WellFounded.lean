@@ -64,15 +64,17 @@ open Relation Prod
   `dfinsupp.single i (x i)` is accessible for each `i` in the (finite) support of `x`
   (`dfinsupp.lex.acc_of_single`). -/
 theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
-    Fibration (InvImage (GameAdd (Dfinsupp.Lex r s) (Dfinsupp.Lex r s)) snd) (Dfinsupp.Lex r s) fun x =>
-      piecewise x.2.1 x.2.2 x.1 :=
+    Fibration (InvImage (GameAdd (Dfinsupp.Lex r s) (Dfinsupp.Lex r s)) snd) (Dfinsupp.Lex r s)
+      fun x => piecewise x.2.1 x.2.2 x.1 :=
   by
   rintro ⟨p, x₁, x₂⟩ x ⟨i, hr, hs⟩
   simp_rw [piecewise_apply] at hs hr
   split_ifs  at hs
   classical
-  on_goal 1 => refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
-  on_goal 3 => refine' ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩, game_add.snd ⟨i, _⟩, _⟩
+  on_goal 1 =>
+    refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
+  on_goal 3 =>
+    refine' ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩, game_add.snd ⟨i, _⟩, _⟩
   pick_goal 3
   iterate 2 
   simp_rw [piecewise_apply]
@@ -80,10 +82,7 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
   convert hs
   refine' ite_eq_right_iff.2 fun h' => (hr i h').symm ▸ _
   first |rw [if_neg h]|rw [if_pos h]
-  all_goals
-  ext j
-  simp_rw [piecewise_apply]
-  split_ifs with h₁ h₂
+  all_goals ext j; simp_rw [piecewise_apply]; split_ifs with h₁ h₂
   · rw [hr j h₂, if_pos (h₁ h₂)]
     
   · rfl
@@ -101,9 +100,12 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
 
 variable {r s}
 
-theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι) (hs : Acc (Dfinsupp.Lex r s) <| single i (x i))
-    (hu : Acc (Dfinsupp.Lex r s) <| x.erase i) : Acc (Dfinsupp.Lex r s) x := by classical
-  convert ← @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩ (InvImage.accessible snd <| hs.prod_game_add hu)
+theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
+    (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.erase i) :
+    Acc (Dfinsupp.Lex r s) x := by classical
+  convert ←
+    @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
+      (InvImage.accessible snd <| hs.prod_game_add hu)
   convert piecewise_single_erase x i
 #align dfinsupp.lex.acc_of_single_erase Dfinsupp.Lex.acc_of_single_erase
 
@@ -117,8 +119,7 @@ theorem Lex.acc_zero : Acc (Dfinsupp.Lex r s) 0 :=
 
 theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i) :
     (∀ i ∈ x.support, Acc (Dfinsupp.Lex r s) <| single i (x i)) → Acc (Dfinsupp.Lex r s) x := by
-  generalize ht : x.support = t
-  revert x
+  generalize ht : x.support = t; revert x
   classical
   induction' t using Finset.induction with b t hb ih
   · intro x ht
@@ -135,8 +136,8 @@ variable (hs : ∀ i, WellFounded (s i))
 
 include hs
 
-theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)) i) : ∀ a, Acc (Dfinsupp.Lex r s) (single i a) :=
-  by
+theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)) i) :
+    ∀ a, Acc (Dfinsupp.Lex r s) (single i a) := by
   induction' hi with i hi ih
   refine' fun a => (hs i).induction a fun a ha => _
   refine' Acc.intro _ fun x => _
@@ -210,7 +211,13 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
                   [`hbot
                    `hs
                    `x
-                   (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))])))))]
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`i (Term.hole "_")]
+                     []
+                     "=>"
+                     (Term.app `hr.apply [`i])))])))])))))]
         "⟩")
        [])
       []
@@ -240,7 +247,13 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
                  [`hbot
                   `hs
                   `x
-                  (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))])))))]
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`i (Term.hole "_")]
+                    []
+                    "=>"
+                    (Term.app `hr.apply [`i])))])))])))))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -263,7 +276,9 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
                [`hbot
                 `hs
                 `x
-                (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))])))))
+                (Term.fun
+                 "fun"
+                 (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -279,7 +294,9 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
              [`hbot
               `hs
               `x
-              (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))])))
+              (Term.fun
+               "fun"
+               (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -289,17 +306,28 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
         "exact"
         (Term.app
          `lex.acc
-         [`hbot `hs `x (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))
+         [`hbot
+          `hs
+          `x
+          (Term.fun
+           "fun"
+           (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
        (Term.app
         `lex.acc
-        [`hbot `hs `x (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))]))
+        [`hbot
+         `hs
+         `x
+         (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `lex.acc
-       [`hbot `hs `x (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])
+       [`hbot
+        `hs
+        `x
+        (Term.fun "fun" (Term.basicFun [`i (Term.hole "_")] [] "=>" (Term.app `hr.apply [`i])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -310,44 +338,52 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hr.apply
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hbot
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `lex.acc
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -367,15 +403,18 @@ theorem
   := ⟨ fun x => by skip <;> exact lex.acc hbot hs x fun i _ => hr.apply i ⟩
 #align dfinsupp.lex.well_founded Dfinsupp.Lex.well_founded
 
-theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.swap) : WellFounded (Dfinsupp.Lex r s) :=
+theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.swap) :
+    WellFounded (Dfinsupp.Lex r s) :=
   Lex.well_founded hbot hs <|
-    Subrelation.wf (fun i j h => ((@IsTrichotomous.trichotomous ι r _ i j).resolve_left h.1).resolve_left h.2) hr
+    Subrelation.wf
+      (fun i j h => ((@IsTrichotomous.trichotomous ι r _ i j).resolve_left h.1).resolve_left h.2) hr
 #align dfinsupp.lex.well_founded' Dfinsupp.Lex.well_founded'
 
 omit hz hbot hs
 
 instance Lex.well_founded_lt [LT ι] [IsTrichotomous ι (· < ·)] [hι : WellFoundedGt ι]
-    [∀ i, CanonicallyOrderedAddMonoid (α i)] [hα : ∀ i, WellFoundedLt (α i)] : WellFoundedLt (Lex (Π₀ i, α i)) :=
+    [∀ i, CanonicallyOrderedAddMonoid (α i)] [hα : ∀ i, WellFoundedLt (α i)] :
+    WellFoundedLt (Lex (Π₀ i, α i)) :=
   ⟨Lex.well_founded' (fun i a => (zero_le a).not_lt) (fun i => (hα i).wf) hι.wf⟩
 #align dfinsupp.lex.well_founded_lt Dfinsupp.Lex.well_founded_lt
 
@@ -393,15 +432,13 @@ theorem Pi.Lex.well_founded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, W
     exact (h.1 x).elim
     
   letI : ∀ i, Zero (α i) := fun i => ⟨(hs i).min ⊤ ⟨x i, trivial⟩⟩
-  haveI := IsTrans.swap r
-  haveI := IsIrrefl.swap r
-  haveI := Fintype.ofFinite ι
+  haveI := IsTrans.swap r; haveI := IsIrrefl.swap r; haveI := Fintype.ofFinite ι
   refine' InvImage.wf equiv_fun_on_fintype.symm (lex.well_founded' (fun i a => _) hs _)
   exacts[(hs i).not_lt_min ⊤ _ trivial, Finite.well_founded_of_trans_of_irrefl r.swap]
 #align pi.lex.well_founded Pi.Lex.well_founded
 
-instance Pi.Lex.well_founded_lt [LinearOrder ι] [Finite ι] [∀ i, LT (α i)] [hwf : ∀ i, WellFoundedLt (α i)] :
-    WellFoundedLt (Lex (∀ i, α i)) :=
+instance Pi.Lex.well_founded_lt [LinearOrder ι] [Finite ι] [∀ i, LT (α i)]
+    [hwf : ∀ i, WellFoundedLt (α i)] : WellFoundedLt (Lex (∀ i, α i)) :=
   ⟨Pi.Lex.well_founded (· < ·) fun i => (hwf i).1⟩
 #align pi.lex.well_founded_lt Pi.Lex.well_founded_lt
 
@@ -416,19 +453,19 @@ theorem Dfinsupp.Lex.well_founded_of_finite [IsStrictTotalOrder ι r] [Finite ι
   InvImage.wf equiv_fun_on_fintype (Pi.Lex.well_founded r hs)
 #align dfinsupp.lex.well_founded_of_finite Dfinsupp.Lex.well_founded_of_finite
 
-instance Dfinsupp.Lex.well_founded_lt_of_finite [LinearOrder ι] [Finite ι] [∀ i, Zero (α i)] [∀ i, LT (α i)]
-    [hwf : ∀ i, WellFoundedLt (α i)] : WellFoundedLt (Lex (Π₀ i, α i)) :=
+instance Dfinsupp.Lex.well_founded_lt_of_finite [LinearOrder ι] [Finite ι] [∀ i, Zero (α i)]
+    [∀ i, LT (α i)] [hwf : ∀ i, WellFoundedLt (α i)] : WellFoundedLt (Lex (Π₀ i, α i)) :=
   ⟨(Dfinsupp.Lex.well_founded_of_finite (· < ·)) fun i => (hwf i).1⟩
 #align dfinsupp.lex.well_founded_lt_of_finite Dfinsupp.Lex.well_founded_lt_of_finite
 
-protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder (α i)] [∀ i, WellFoundedLt (α i)]
-    (hbot : ∀ ⦃i⦄ ⦃a : α i⦄, ¬a < 0) : WellFoundedLt (Π₀ i, α i) :=
+protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder (α i)]
+    [∀ i, WellFoundedLt (α i)] (hbot : ∀ ⦃i⦄ ⦃a : α i⦄, ¬a < 0) : WellFoundedLt (Π₀ i, α i) :=
   ⟨by
     letI : ∀ i, Zero (Antisymmetrization (α i) (· ≤ ·)) := fun i => ⟨toAntisymmetrization (· ≤ ·) 0⟩
     let f := map_range (fun i => @toAntisymmetrization (α i) (· ≤ ·) _) fun i => rfl
     refine' Subrelation.wf (fun x y h => _) (InvImage.wf f <| lex.well_founded' _ (fun i => _) _)
     · exact well_ordering_rel.swap
-      
+      ;
     · exact fun i => (· < ·)
       
     · haveI := IsStrictOrder.swap (@WellOrderingRel ι)
@@ -441,8 +478,8 @@ protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder
     exacts[IsWellFounded.wf, IsTrichotomous.swap _, IsWellFounded.wf]⟩
 #align dfinsupp.well_founded_lt Dfinsupp.well_founded_lt
 
-instance Dfinsupp.well_founded_lt' [∀ i, CanonicallyOrderedAddMonoid (α i)] [∀ i, WellFoundedLt (α i)] :
-    WellFoundedLt (Π₀ i, α i) :=
+instance Dfinsupp.well_founded_lt' [∀ i, CanonicallyOrderedAddMonoid (α i)]
+    [∀ i, WellFoundedLt (α i)] : WellFoundedLt (Π₀ i, α i) :=
   Dfinsupp.well_founded_lt fun i a => (zero_le a).not_lt
 #align dfinsupp.well_founded_lt' Dfinsupp.well_founded_lt'
 
@@ -460,7 +497,8 @@ instance Pi.well_founded_lt [Finite ι] [∀ i, Preorder (α i)] [hw : ∀ i, We
     exact (hw i).wf.not_lt_min ⊤ _ trivial⟩
 #align pi.well_founded_lt Pi.well_founded_lt
 
-instance Function.well_founded_lt {α} [Finite ι] [Preorder α] [WellFoundedLt α] : WellFoundedLt (ι → α) :=
+instance Function.well_founded_lt {α} [Finite ι] [Preorder α] [WellFoundedLt α] :
+    WellFoundedLt (ι → α) :=
   Pi.well_founded_lt
 #align function.well_founded_lt Function.well_founded_lt
 

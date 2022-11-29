@@ -30,7 +30,8 @@ open MeasureTheory
 
 -- mathport name: condexp.volume
 -- We define notations `𝔼[f|m]` for the conditional expectation of `f` with respect to `m`.
-scoped[ProbabilityTheory] notation "𝔼[" X "|" m "]" => MeasureTheory.condexp m MeasureTheory.MeasureSpace.volume X
+scoped[ProbabilityTheory]
+  notation "𝔼[" X "|" m "]" => MeasureTheory.condexp m MeasureTheory.MeasureSpace.volume X
 
 -- mathport name: condexp.probability
 scoped[ProbabilityTheory] notation P "[" X "]" => ∫ x, X x ∂P

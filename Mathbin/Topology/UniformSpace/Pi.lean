@@ -26,11 +26,13 @@ variable {ι : Type _} (α : ι → Type u) [U : ∀ i, UniformSpace (α i)]
 include U
 
 instance PiCat.uniformSpace : UniformSpace (∀ i, α i) :=
-  UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore PiCat.topologicalSpace <|
+  UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore
+      PiCat.topologicalSpace <|
     Eq.symm to_topological_space_infi
 #align Pi.uniform_space PiCat.uniformSpace
 
-theorem PiCat.uniformity : 𝓤 (∀ i, α i) = ⨅ i : ι, (Filter.comap fun a => (a.1 i, a.2 i)) <| 𝓤 (α i) :=
+theorem PiCat.uniformity :
+    𝓤 (∀ i, α i) = ⨅ i : ι, (Filter.comap fun a => (a.1 i, a.2 i)) <| 𝓤 (α i) :=
   infi_uniformity
 #align Pi.uniformity PiCat.uniformity
 
@@ -53,7 +55,8 @@ instance PiCat.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α
     haveI := hf.1
     have : ∀ i, ∃ x : α i, Filter.map (fun a : ∀ i, α i => a i) f ≤ 𝓝 x := by
       intro i
-      have key : Cauchy (map (fun a : ∀ i : ι, α i => a i) f) := hf.map (PiCat.uniform_continuous_proj α i)
+      have key : Cauchy (map (fun a : ∀ i : ι, α i => a i) f) :=
+        hf.map (PiCat.uniform_continuous_proj α i)
       exact cauchy_iff_exists_le_nhds.1 key
     choose x hx using this
     use x

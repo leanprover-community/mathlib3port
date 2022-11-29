@@ -43,7 +43,8 @@ acted on by an `add_group G` with a transitive and free action given
 by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
-class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] extends AddAction G P, HasVsub G P where
+class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam <| AddGroup G] extends AddAction G P,
+  HasVsub G P where
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
   vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g
@@ -90,7 +91,8 @@ theorem vadd_vsub (g : G) (p : P) : g +ᵥ p -ᵥ p = g :=
 
 /-- If the same point added to two group elements produces equal
 results, those group elements are equal. -/
-theorem vadd_right_cancel {g1 g2 : G} (p : P) (h : g1 +ᵥ p = g2 +ᵥ p) : g1 = g2 := by rw [← vadd_vsub g1, h, vadd_vsub]
+theorem vadd_right_cancel {g1 g2 : G} (p : P) (h : g1 +ᵥ p = g2 +ᵥ p) : g1 = g2 := by
+  rw [← vadd_vsub g1, h, vadd_vsub]
 #align vadd_right_cancel vadd_right_cancel
 
 @[simp]
@@ -100,7 +102,8 @@ theorem vadd_right_cancel_iff {g1 g2 : G} (p : P) : g1 +ᵥ p = g2 +ᵥ p ↔ g1
 
 /-- Adding a group element to the point `p` is an injective
 function. -/
-theorem vadd_right_injective (p : P) : Function.Injective ((· +ᵥ p) : G → P) := fun g1 g2 => vadd_right_cancel p
+theorem vadd_right_injective (p : P) : Function.Injective ((· +ᵥ p) : G → P) := fun g1 g2 =>
+  vadd_right_cancel p
 #align vadd_right_injective vadd_right_injective
 
 /-- Adding a group element to a point, then subtracting another point,
@@ -113,11 +116,13 @@ theorem vadd_vsub_assoc (g : G) (p1 p2 : P) : g +ᵥ p1 -ᵥ p2 = g + (p1 -ᵥ p
 
 /-- Subtracting a point from itself produces 0. -/
 @[simp]
-theorem vsub_self (p : P) : p -ᵥ p = (0 : G) := by rw [← zero_add (p -ᵥ p), ← vadd_vsub_assoc, vadd_vsub]
+theorem vsub_self (p : P) : p -ᵥ p = (0 : G) := by
+  rw [← zero_add (p -ᵥ p), ← vadd_vsub_assoc, vadd_vsub]
 #align vsub_self vsub_self
 
 /-- If subtracting two points produces 0, they are equal. -/
-theorem eq_of_vsub_eq_zero {p1 p2 : P} (h : p1 -ᵥ p2 = (0 : G)) : p1 = p2 := by rw [← vsub_vadd p1 p2, h, zero_vadd]
+theorem eq_of_vsub_eq_zero {p1 p2 : P} (h : p1 -ᵥ p2 = (0 : G)) : p1 = p2 := by
+  rw [← vsub_vadd p1 p2, h, zero_vadd]
 #align eq_of_vsub_eq_zero eq_of_vsub_eq_zero
 
 /-- Subtracting two points produces 0 if and only if they are
@@ -153,8 +158,8 @@ theorem vadd_vsub_eq_sub_vsub (g : G) (p q : P) : g +ᵥ p -ᵥ q = g - (q -ᵥ 
 /-- Subtracting the result of adding a group element produces the same result
 as subtracting the points and subtracting that group element. -/
 theorem vsub_vadd_eq_vsub_sub (p1 p2 : P) (g : G) : p1 -ᵥ (g +ᵥ p2) = p1 -ᵥ p2 - g := by
-  rw [← add_right_inj (p2 -ᵥ p1 : G), vsub_add_vsub_cancel, ← neg_vsub_eq_vsub_rev, vadd_vsub, ← add_sub_assoc, ←
-    neg_vsub_eq_vsub_rev, neg_add_self, zero_sub]
+  rw [← add_right_inj (p2 -ᵥ p1 : G), vsub_add_vsub_cancel, ← neg_vsub_eq_vsub_rev, vadd_vsub, ←
+    add_sub_assoc, ← neg_vsub_eq_vsub_rev, neg_add_self, zero_sub]
 #align vsub_vadd_eq_vsub_sub vsub_vadd_eq_vsub_sub
 
 /-- Cancellation subtracting the results of two subtractions. -/
@@ -170,7 +175,8 @@ theorem eq_vadd_iff_vsub_eq (p1 : P) (g : G) (p2 : P) : p1 = g +ᵥ p2 ↔ p1 -�
   ⟨fun h => h.symm ▸ vadd_vsub _ _, fun h => h ▸ (vsub_vadd _ _).symm⟩
 #align eq_vadd_iff_vsub_eq eq_vadd_iff_vsub_eq
 
-theorem vadd_eq_vadd_iff_neg_add_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} : v₁ +ᵥ p₁ = v₂ +ᵥ p₂ ↔ -v₁ + v₂ = p₁ -ᵥ p₂ := by
+theorem vadd_eq_vadd_iff_neg_add_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} :
+    v₁ +ᵥ p₁ = v₂ +ᵥ p₂ ↔ -v₁ + v₂ = p₁ -ᵥ p₂ := by
   rw [eq_vadd_iff_vsub_eq, vadd_vsub_assoc, ← add_right_inj (-v₁), neg_add_cancel_left, eq_comm]
 #align vadd_eq_vadd_iff_neg_add_eq_vsub vadd_eq_vadd_iff_neg_add_eq_vsub
 
@@ -204,7 +210,8 @@ theorem vsub_left_cancel_iff {p1 p2 p : P} : p1 -ᵥ p = p2 -ᵥ p ↔ p1 = p2 :
 #align vsub_left_cancel_iff vsub_left_cancel_iff
 
 /-- Subtracting the point `p` is an injective function. -/
-theorem vsub_left_injective (p : P) : Function.Injective ((· -ᵥ p) : P → G) := fun p2 p3 => vsub_left_cancel
+theorem vsub_left_injective (p : P) : Function.Injective ((· -ᵥ p) : P → G) := fun p2 p3 =>
+  vsub_left_cancel
 #align vsub_left_injective vsub_left_injective
 
 /-- If subtracting two points from the same point produces equal
@@ -223,7 +230,8 @@ theorem vsub_right_cancel_iff {p1 p2 p : P} : p -ᵥ p1 = p -ᵥ p2 ↔ p1 = p2 
 
 /-- Subtracting a point from the point `p` is an injective
 function. -/
-theorem vsub_right_injective (p : P) : Function.Injective ((· -ᵥ ·) p : P → G) := fun p2 p3 => vsub_right_cancel
+theorem vsub_right_injective (p : P) : Function.Injective ((· -ᵥ ·) p : P → G) := fun p2 p3 =>
+  vsub_right_cancel
 #align vsub_right_injective vsub_right_injective
 
 end General
@@ -250,7 +258,8 @@ theorem vsub_vadd_comm (p1 p2 p3 : P) : (p1 -ᵥ p2 : G) +ᵥ p3 = p3 -ᵥ p2 +�
   simp
 #align vsub_vadd_comm vsub_vadd_comm
 
-theorem vadd_eq_vadd_iff_sub_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} : v₁ +ᵥ p₁ = v₂ +ᵥ p₂ ↔ v₂ - v₁ = p₁ -ᵥ p₂ := by
+theorem vadd_eq_vadd_iff_sub_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} :
+    v₁ +ᵥ p₁ = v₂ +ᵥ p₂ ↔ v₂ - v₁ = p₁ -ᵥ p₂ := by
   rw [vadd_eq_vadd_iff_neg_add_eq_vsub, neg_add_eq_sub]
 #align vadd_eq_vadd_iff_sub_eq_vsub vadd_eq_vadd_iff_sub_eq_vsub
 
@@ -262,8 +271,8 @@ end comm
 
 namespace Prod
 
-variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroup G] [AddGroup G'] [AddTorsor G P]
-  [AddTorsor G' P']
+variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroup G] [AddGroup G']
+  [AddTorsor G P] [AddTorsor G' P']
 
 instance : AddTorsor (G × G') (P × P') where
   vadd v p := (v.1 +ᵥ p.1, v.2 +ᵥ p.2)
@@ -300,7 +309,8 @@ theorem snd_vsub (p₁ p₂ : P × P') : (p₁ -ᵥ p₂ : G × G').2 = p₁.2 -
 #align prod.snd_vsub Prod.snd_vsub
 
 @[simp]
-theorem mk_vsub_mk (p₁ p₂ : P) (p₁' p₂' : P') : ((p₁, p₁') -ᵥ (p₂, p₂') : G × G') = (p₁ -ᵥ p₂, p₁' -ᵥ p₂') :=
+theorem mk_vsub_mk (p₁ p₂ : P) (p₁' p₂' : P') :
+    ((p₁, p₁') -ᵥ (p₂, p₂') : G × G') = (p₁ -ᵥ p₂, p₁' -ᵥ p₂') :=
   rfl
 #align prod.mk_vsub_mk Prod.mk_vsub_mk
 
@@ -435,22 +445,27 @@ theorem point_reflection_involutive (x : P) : Involutive (pointReflection x : P 
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/
 theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (bit0 : G → G)) :
     pointReflection x y = y ↔ y = x := by
-  rw [point_reflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ←
-    bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq, eq_comm]
-#align equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.point_reflection_fixed_iff_of_injective_bit0
+  rw [point_reflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev,
+    neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq, eq_comm]
+#align
+  equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.point_reflection_fixed_iff_of_injective_bit0
 
 omit G
 
-theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroup G] [AddTorsor G P]
-    (h : Injective (bit0 : G → G)) (y : P) : Injective fun x : P => pointReflection x y :=
+theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroup G]
+    [AddTorsor G P] (h : Injective (bit0 : G → G)) (y : P) :
+    Injective fun x : P => pointReflection x y :=
   fun x₁ x₂ (hy : pointReflection x₁ y = pointReflection x₂ y) => by
-  rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right, ←
-    neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
-#align equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_point_reflection_left_of_injective_bit0
+  rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub,
+    vsub_sub_vsub_cancel_right, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero,
+    h.eq_iff, vsub_eq_zero_iff_eq] at hy
+#align
+  equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_point_reflection_left_of_injective_bit0
 
 end Equiv
 
-theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroup G] [AddTorsor G P] : Subsingleton G ↔ Subsingleton P := by
+theorem AddTorsor.subsingleton_iff (G P : Type _) [AddGroup G] [AddTorsor G P] :
+    Subsingleton G ↔ Subsingleton P := by
   inhabit P
   exact (Equiv.vaddConst default).subsingleton_congr
 #align add_torsor.subsingleton_iff AddTorsor.subsingleton_iff

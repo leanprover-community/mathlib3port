@@ -47,28 +47,35 @@ variable [OrderedCancelCommMonoid α] {a b c d : α}
 instance (priority := 200) OrderedCancelCommMonoid.to_contravariant_class_le_left :
     ContravariantClass α α (· * ·) (· ≤ ·) :=
   ⟨OrderedCancelCommMonoid.le_of_mul_le_mul_left⟩
-#align ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariant_class_le_left
+#align
+  ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariant_class_le_left
 
 @[to_additive]
-theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < a * c → b < c := fun a b c h =>
+theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < a * c → b < c :=
+  fun a b c h =>
   lt_of_le_not_le (OrderedCancelCommMonoid.le_of_mul_le_mul_left a b c h.le) <|
     mt (fun h => OrderedCancelCommMonoid.mul_le_mul_left _ _ h _) (not_le_of_gt h)
-#align ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_mul_lt_mul_left
+#align
+  ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_mul_lt_mul_left
 
 @[to_additive]
-instance OrderedCancelCommMonoid.to_contravariant_class_left (M : Type _) [OrderedCancelCommMonoid M] :
-    ContravariantClass M M (· * ·) (· < ·) where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
-#align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariant_class_left
+instance OrderedCancelCommMonoid.to_contravariant_class_left (M : Type _)
+    [OrderedCancelCommMonoid M] :
+    ContravariantClass M M (· * ·)
+      (· < ·) where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
+#align
+  ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariant_class_left
 
 /- This instance can be proven with `by apply_instance`.  However, by analogy with the
 instance `ordered_cancel_comm_monoid.to_covariant_class_right` above, I imagine that without
 this instance, some Type would not have a `contravariant_class M M (function.swap (*)) (<)`
 instance. -/
 @[to_additive]
-instance OrderedCancelCommMonoid.to_contravariant_class_right (M : Type _) [OrderedCancelCommMonoid M] :
-    ContravariantClass M M (swap (· * ·)) (· < ·) :=
+instance OrderedCancelCommMonoid.to_contravariant_class_right (M : Type _)
+    [OrderedCancelCommMonoid M] : ContravariantClass M M (swap (· * ·)) (· < ·) :=
   contravariant_swap_mul_lt_of_contravariant_mul_lt M
-#align ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariant_class_right
+#align
+  ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariant_class_right
 
 #print OrderedCancelCommMonoid.toOrderedCommMonoid /-
 -- see Note [lower instance priority]
@@ -82,7 +89,8 @@ instance (priority := 100) OrderedCancelCommMonoid.toOrderedCommMonoid : Ordered
 @[to_additive]
 instance (priority := 100) OrderedCancelCommMonoid.toCancelCommMonoid : CancelCommMonoid α :=
   { ‹OrderedCancelCommMonoid α› with
-    mul_left_cancel := fun a b c h => (le_of_mul_le_mul_left' h.le).antisymm <| le_of_mul_le_mul_left' h.ge }
+    mul_left_cancel := fun a b c h =>
+      (le_of_mul_le_mul_left' h.le).antisymm <| le_of_mul_le_mul_left' h.ge }
 #align ordered_cancel_comm_monoid.to_cancel_comm_monoid OrderedCancelCommMonoid.toCancelCommMonoid
 
 end OrderedCancelCommMonoid
@@ -91,13 +99,15 @@ end OrderedCancelCommMonoid
 is an additive commutative monoid with a decidable linear order
 in which addition is cancellative and monotone. -/
 @[protect_proj]
-class LinearOrderedCancelAddCommMonoid (α : Type u) extends OrderedCancelAddCommMonoid α, LinearOrderedAddCommMonoid α
+class LinearOrderedCancelAddCommMonoid (α : Type u) extends OrderedCancelAddCommMonoid α,
+  LinearOrderedAddCommMonoid α
 #align linear_ordered_cancel_add_comm_monoid LinearOrderedCancelAddCommMonoid
 
 /-- A linearly ordered cancellative commutative monoid
 is a commutative monoid with a linear order
 in which multiplication is cancellative and monotone. -/
 @[protect_proj, to_additive]
-class LinearOrderedCancelCommMonoid (α : Type u) extends OrderedCancelCommMonoid α, LinearOrderedCommMonoid α
+class LinearOrderedCancelCommMonoid (α : Type u) extends OrderedCancelCommMonoid α,
+  LinearOrderedCommMonoid α
 #align linear_ordered_cancel_comm_monoid LinearOrderedCancelCommMonoid
 

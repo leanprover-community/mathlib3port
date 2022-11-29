@@ -39,7 +39,8 @@ unsafe def binder_less_important (u v : BinderInfo) : Bool :=
 /-- Selects the elements of the given `list α` which under the image of `p : α → β × γ` have `β`
 component equal to `b'`. Returns the `γ` components of the selected elements under the image of `p`,
 and the elements of the original `list α` which were not selected. -/
-def selectForWhich {α β γ : Type} (p : α → β × γ) [DecidableEq β] (b' : β) : List α → List γ × List α
+def selectForWhich {α β γ : Type} (p : α → β × γ) [DecidableEq β] (b' : β) :
+    List α → List γ × List α
   | [] => ([], [])
   | a :: rest =>
     let (cs, others) := select_for_which rest
@@ -48,7 +49,8 @@ def selectForWhich {α β γ : Type} (p : α → β × γ) [DecidableEq β] (b' 
 #align where.select_for_which Where.selectForWhich
 
 /-- Helper function for `collect_by`. -/
-private unsafe def collect_by_aux {α β γ : Type} (p : α → β × γ) [DecidableEq β] : List β → List α → List (β × List γ)
+private unsafe def collect_by_aux {α β γ : Type} (p : α → β × γ) [DecidableEq β] :
+    List β → List α → List (β × List γ)
   | [], [] => []
   | [], _ => undefined_core "didn't find every key entry!"
   | b :: rest, as =>
@@ -58,15 +60,18 @@ private unsafe def collect_by_aux {α β γ : Type} (p : α → β × γ) [Decid
 
 /-- Returns the elements of `l` under the image of `p`, collecting together elements with the same
 `β` component, deleting duplicates. -/
-unsafe def collect_by {α β γ : Type} (l : List α) (p : α → β × γ) [DecidableEq β] : List (β × List γ) :=
+unsafe def collect_by {α β γ : Type} (l : List α) (p : α → β × γ) [DecidableEq β] :
+    List (β × List γ) :=
   collect_by_aux p (l.map <| Prod.fst ∘ p).dedup l
 #align where.collect_by where.collect_by
 
 /-- Sort the variables by their priority as defined by `where.binder_priority`. -/
-unsafe def sort_variable_list (l : List (Name × BinderInfo × expr)) : List (expr × BinderInfo × List Name) :=
+unsafe def sort_variable_list (l : List (Name × BinderInfo × expr)) :
+    List (expr × BinderInfo × List Name) :=
   let l := (collect_by l) fun v => (v.2.2, (v.1, v.2.1))
   let l := l.map fun el => (el.1, (collect_by el.2) fun v => (v.2, v.1))
-  (List.join <| l.map fun e => Prod.mk e.1 <$> e.2).qsort fun v u => binder_less_important v.2.1 u.2.1
+  (List.join <| l.map fun e => Prod.mk e.1 <$> e.2).qsort fun v u =>
+    binder_less_important v.2.1 u.2.1
 #align where.sort_variable_list where.sort_variable_list
 
 /-- Separate out the names of implicit variables (commonly instances with no name). -/
@@ -187,7 +192,8 @@ unsafe def where_cmd (_ : parse <| tk "#where") : lean.parser Unit := do
 #align where.where_cmd where.where_cmd
 
 add_tactic_doc
-  { Name := "#where", category := DocCategory.cmd, declNames := [`where.where_cmd], tags := ["environment"] }
+  { Name := "#where", category := DocCategory.cmd, declNames := [`where.where_cmd],
+    tags := ["environment"] }
 
 end Where
 

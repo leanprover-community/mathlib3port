@@ -45,8 +45,8 @@ abbrev AssocMonoidHom (M N : Type _) [Monoid M] [Monoid N] :=
 @[to_additive]
 instance bundledHom : BundledHom AssocMonoidHom :=
   ⟨fun M N [Monoid M] [Monoid N] => @MonoidHom.toFun M N _ _, fun M [Monoid M] => @MonoidHom.id M _,
-    fun M N P [Monoid M] [Monoid N] [Monoid P] => @MonoidHom.comp M N P _ _ _, fun M N [Monoid M] [Monoid N] =>
-    @MonoidHom.coe_inj M N _ _⟩
+    fun M N P [Monoid M] [Monoid N] [Monoid P] => @MonoidHom.comp M N P _ _ _,
+    fun M N [Monoid M] [Monoid N] => @MonoidHom.coe_inj M N _ _⟩
 #align Mon.bundled_hom MonCat.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for MonCat
@@ -174,7 +174,8 @@ example (R : CommMonCat.{u}) : R ⟶ R :=
       match_hyp x : (R : Type u)
       exact x * x,
     map_one' := by simp,
-    map_mul' := fun x y => by rw [mul_assoc x y (x * y), ← mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc] }
+    map_mul' := fun x y => by
+      rw [mul_assoc x y (x * y), ← mul_assoc y x y, mul_comm y x, mul_assoc, mul_assoc] }
 
 variable {X Y : Type u}
 
@@ -211,7 +212,8 @@ end
 namespace CategoryTheory.Iso
 
 /-- Build a `mul_equiv` from an isomorphism in the category `Mon`. -/
-@[to_additive AddMon_iso_to_add_equiv "Build an `add_equiv` from an isomorphism in the category\n`AddMon`."]
+@[to_additive AddMon_iso_to_add_equiv
+      "Build an `add_equiv` from an isomorphism in the category\n`AddMon`."]
 def monIsoToMulEquiv {X Y : MonCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.Mon_iso_to_mul_equiv CategoryTheory.Iso.monIsoToMulEquiv
@@ -228,7 +230,8 @@ end CategoryTheory.Iso
 in `Mon` -/
 @[to_additive addEquivIsoAddMonIso
       "additive equivalences between `add_monoid`s are the same\nas (isomorphic to) isomorphisms in `AddMon`"]
-def mulEquivIsoMonIso {X Y : Type u} [Monoid X] [Monoid Y] : X ≃* Y ≅ MonCat.of X ≅ MonCat.of Y where
+def mulEquivIsoMonIso {X Y : Type u} [Monoid X] [Monoid Y] :
+    X ≃* Y ≅ MonCat.of X ≅ MonCat.of Y where
   Hom e := e.toMonIso
   inv i := i.monIsoToMulEquiv
 #align mul_equiv_iso_Mon_iso mulEquivIsoMonIso

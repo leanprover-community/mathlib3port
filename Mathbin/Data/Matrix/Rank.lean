@@ -47,7 +47,8 @@ theorem rank_one : rank (1 : Matrix n n K) = Fintype.card n := by
 #align matrix.rank_one Matrix.rank_one
 
 @[simp]
-theorem rank_zero : rank (0 : Matrix n n K) = 0 := by rw [rank, LinearEquiv.map_zero, LinearMap.range_zero, finrank_bot]
+theorem rank_zero : rank (0 : Matrix n n K) = 0 := by
+  rw [rank, LinearEquiv.map_zero, LinearMap.range_zero, finrank_bot]
 #align matrix.rank_zero Matrix.rank_zero
 
 theorem rank_le_card_width : A.rank ≤ Fintype.card n := by
@@ -68,7 +69,7 @@ theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank := by
 theorem rank_unit (A : (Matrix n n K)ˣ) : (A : Matrix n n K).rank = Fintype.card n := by
   refine' le_antisymm (rank_le_card_width A) _
   have := rank_mul_le (A : Matrix n n K) (↑A⁻¹ : Matrix n n K)
-  rwa [← mul_eq_mul, ← Units.coe_mul, mul_inv_self, Units.coe_one, rank_one] at this
+  rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this
 #align matrix.rank_unit Matrix.rank_unit
 
 theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.card n := by
@@ -78,8 +79,9 @@ theorem rank_of_is_unit (A : Matrix n n K) (h : IsUnit A) : A.rank = Fintype.car
 
 include m_fin
 
-theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂] [Module K M₁] [Module K M₂]
-    (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) : A.rank = finrank K (toLin v₂ v₁ A).range := by
+theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [AddCommGroup M₂]
+    [Module K M₁] [Module K M₂] (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) :
+    A.rank = finrank K (toLin v₂ v₁ A).range := by
   let e₁ := (Pi.basisFun K m).Equiv v₁ (Equiv.refl _)
   let e₂ := (Pi.basisFun K n).Equiv v₂ (Equiv.refl _)
   have range_e₂ : (e₂ : (n → K) →ₗ[K] M₂).range = ⊤ := by
@@ -95,8 +97,8 @@ theorem rank_eq_finrank_range_to_lin {M₁ M₂ : Type _} [AddCommGroup M₁] [A
   have aux₂ := Basis.equiv_apply (Pi.basisFun K n) i v₂
   rw [to_lin_eq_to_lin'] at aux₁
   rw [Pi.basis_fun_apply, LinearMap.coe_std_basis] at aux₁ aux₂
-  simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂, LinearMap.coe_single,
-    to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
+  simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
+    LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_to_lin
 
 theorem rank_le_card_height : A.rank ≤ Fintype.card m :=

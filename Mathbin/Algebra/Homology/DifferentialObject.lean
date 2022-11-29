@@ -33,18 +33,17 @@ variable {V : Type _} [Category V] [HasZeroMorphisms V]
 
 /-- Since `eq_to_hom` only preserves the fact that `X.X i = X.X j` but not `i = j`, this definition
 is used to aid the simplifier. -/
-abbrev _root_.category_theory.differential_object.X_eq_to_hom (X : DifferentialObject (GradedObjectWithShift b V))
-    {i j : β} (h : i = j) : X.x i ⟶ X.x j :=
+abbrev CategoryTheory.DifferentialObject.xEqToHom
+    (X : DifferentialObject (GradedObjectWithShift b V)) {i j : β} (h : i = j) : X.x i ⟶ X.x j :=
   eqToHom (congr_arg X.x h)
-#align
-  homological_complex._root_.category_theory.differential_object.X_eq_to_hom homological_complex._root_.category_theory.differential_object.X_eq_to_hom
+#align category_theory.differential_object.X_eq_to_hom CategoryTheory.DifferentialObject.xEqToHom
 
 @[simp]
-theorem _root_.category_theory.differential_object.X_eq_to_hom_refl (X : DifferentialObject (GradedObjectWithShift b V))
-    (i : β) : X.xEqToHom (refl i) = 𝟙 _ :=
+theorem CategoryTheory.DifferentialObject.X_eq_to_hom_refl
+    (X : DifferentialObject (GradedObjectWithShift b V)) (i : β) : X.xEqToHom (refl i) = 𝟙 _ :=
   rfl
 #align
-  homological_complex._root_.category_theory.differential_object.X_eq_to_hom_refl homological_complex._root_.category_theory.differential_object.X_eq_to_hom_refl
+  category_theory.differential_object.X_eq_to_hom_refl CategoryTheory.DifferentialObject.X_eq_to_hom_refl
 
 @[simp, reassoc]
 theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : β} (h : x = y) :
@@ -68,8 +67,8 @@ theorem d_eq_to_hom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β}
 #align homological_complex.d_eq_to_hom HomologicalComplex.d_eq_to_hom
 
 @[simp, reassoc]
-theorem eq_to_hom_f' {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β} (h : x = y) :
-    X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h := by
+theorem eq_to_hom_f' {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β}
+    (h : x = y) : X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h := by
   cases h
   simp
 #align homological_complex.eq_to_hom_f' HomologicalComplex.eq_to_hom_f'
@@ -85,13 +84,13 @@ def dgoToHomologicalComplex :
     DifferentialObject (GradedObjectWithShift b V) ⥤ HomologicalComplex V (ComplexShape.up' b) where
   obj X :=
     { x := fun i => X.x i,
-      d := fun i j => if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0,
+      d := fun i j =>
+        if h : i + b = j then X.d i ≫ X.xEqToHom (show i + (1 : ℤ) • b = j by simp [h]) else 0,
       shape' := fun i j w => by
         dsimp at w
         convert dif_neg w,
       d_comp_d' := fun i j k hij hjk => by
-        dsimp at hij hjk
-        substs hij hjk
+        dsimp at hij hjk; substs hij hjk
         have : X.d i ≫ X.d _ = _ := (congr_fun X.d_squared i : _)
         reassoc! this
         simp [this] }
@@ -102,7 +101,8 @@ def dgoToHomologicalComplex :
         subst h
         have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_fun f.comm i).symm
         reassoc! this
-        simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc, eq_to_hom_f'] }
+        simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc,
+          eq_to_hom_f'] }
 #align homological_complex.dgo_to_homological_complex HomologicalComplex.dgoToHomologicalComplex
 
 /-- The functor from homological complexes to differential graded objects.
@@ -128,29 +128,31 @@ def homologicalComplexToDgo :
 -/
 @[simps]
 def dgoEquivHomologicalComplexUnitIso :
-    𝟭 (DifferentialObject (GradedObjectWithShift b V)) ≅ dgoToHomologicalComplex b V ⋙ homologicalComplexToDgo b V :=
-  NatIso.ofComponents (fun X => { Hom := { f := fun i => 𝟙 (X.x i) }, inv := { f := fun i => 𝟙 (X.x i) } }) (by tidy)
-#align homological_complex.dgo_equiv_homological_complex_unit_iso HomologicalComplex.dgoEquivHomologicalComplexUnitIso
+    𝟭 (DifferentialObject (GradedObjectWithShift b V)) ≅
+      dgoToHomologicalComplex b V ⋙ homologicalComplexToDgo b V :=
+  NatIso.ofComponents
+    (fun X => { Hom := { f := fun i => 𝟙 (X.x i) }, inv := { f := fun i => 𝟙 (X.x i) } }) (by tidy)
+#align
+  homological_complex.dgo_equiv_homological_complex_unit_iso HomologicalComplex.dgoEquivHomologicalComplexUnitIso
 
 /-- The counit isomorphism for `dgo_equiv_homological_complex`.
 -/
 @[simps]
 def dgoEquivHomologicalComplexCounitIso :
-    homologicalComplexToDgo b V ⋙ dgoToHomologicalComplex b V ≅ 𝟭 (HomologicalComplex V (ComplexShape.up' b)) :=
+    homologicalComplexToDgo b V ⋙ dgoToHomologicalComplex b V ≅
+      𝟭 (HomologicalComplex V (ComplexShape.up' b)) :=
   NatIso.ofComponents
     (fun X =>
       { Hom :=
           { f := fun i => 𝟙 (X.x i),
             comm' := fun i j h => by
-              dsimp at h⊢
-              subst h
+              dsimp at h⊢; subst h
               delta homological_complex_to_dgo
               simp },
         inv :=
           { f := fun i => 𝟙 (X.x i),
             comm' := fun i j h => by
-              dsimp at h⊢
-              subst h
+              dsimp at h⊢; subst h
               delta homological_complex_to_dgo
               simp } })
     (by tidy)
@@ -167,7 +169,8 @@ def dgoEquivHomologicalComplex :
   inverse := homologicalComplexToDgo b V
   unitIso := dgoEquivHomologicalComplexUnitIso b V
   counitIso := dgoEquivHomologicalComplexCounitIso b V
-#align homological_complex.dgo_equiv_homological_complex HomologicalComplex.dgoEquivHomologicalComplex
+#align
+  homological_complex.dgo_equiv_homological_complex HomologicalComplex.dgoEquivHomologicalComplex
 
 end HomologicalComplex
 

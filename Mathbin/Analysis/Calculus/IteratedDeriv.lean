@@ -75,9 +75,11 @@ theorem iterated_deriv_within_univ : iteratedDerivWithin n f univ = iteratedDeri
 
 
 theorem iterated_deriv_within_eq_iterated_fderiv_within :
-    iteratedDerivWithin n f s x = (iteratedFderivWithin 𝕜 n f s x : (Fin n → 𝕜) → F) fun i : Fin n => 1 :=
+    iteratedDerivWithin n f s x =
+      (iteratedFderivWithin 𝕜 n f s x : (Fin n → 𝕜) → F) fun i : Fin n => 1 :=
   rfl
-#align iterated_deriv_within_eq_iterated_fderiv_within iterated_deriv_within_eq_iterated_fderiv_within
+#align
+  iterated_deriv_within_eq_iterated_fderiv_within iterated_deriv_within_eq_iterated_fderiv_within
 
 /-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
@@ -92,14 +94,19 @@ theorem iterated_deriv_within_eq_equiv_comp :
 /-- Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
 iterated derivative. -/
 theorem iterated_fderiv_within_eq_equiv_comp :
-    iteratedFderivWithin 𝕜 n f s = ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F ∘ iteratedDerivWithin n f s := by
-  rw [iterated_deriv_within_eq_equiv_comp, ← Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
+    iteratedFderivWithin 𝕜 n f s =
+      ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F ∘ iteratedDerivWithin n f s :=
+  by
+  rw [iterated_deriv_within_eq_equiv_comp, ← Function.comp.assoc,
+    LinearIsometryEquiv.self_comp_symm, Function.left_id]
 #align iterated_fderiv_within_eq_equiv_comp iterated_fderiv_within_eq_equiv_comp
 
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
 theorem iterated_fderiv_within_apply_eq_iterated_deriv_within_mul_prod {m : Fin n → 𝕜} :
-    (iteratedFderivWithin 𝕜 n f s x : (Fin n → 𝕜) → F) m = (∏ i, m i) • iteratedDerivWithin n f s x := by
+    (iteratedFderivWithin 𝕜 n f s x : (Fin n → 𝕜) → F) m =
+      (∏ i, m i) • iteratedDerivWithin n f s x :=
+  by
   rw [iterated_deriv_within_eq_iterated_fderiv_within, ← ContinuousMultilinearMap.map_smul_univ]
   simp
 #align
@@ -131,7 +138,8 @@ theorem contDiffOnOfContinuousOnDifferentiableOnDeriv {n : ℕ∞}
     
   · simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
     
-#align cont_diff_on_of_continuous_on_differentiable_on_deriv contDiffOnOfContinuousOnDifferentiableOnDeriv
+#align
+  cont_diff_on_of_continuous_on_differentiable_on_deriv contDiffOnOfContinuousOnDifferentiableOnDeriv
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
@@ -139,26 +147,31 @@ require on the `n`-th derivative is differentiability instead of continuity, but
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
 theorem contDiffOnOfDifferentiableOnDeriv {n : ℕ∞}
-    (h : ∀ m : ℕ, (m : ℕ∞) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) : ContDiffOn 𝕜 n f s := by
+    (h : ∀ m : ℕ, (m : ℕ∞) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) :
+    ContDiffOn 𝕜 n f s := by
   apply contDiffOnOfDifferentiableOn
   simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 #align cont_diff_on_of_differentiable_on_deriv contDiffOnOfDifferentiableOnDeriv
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives up to `n` which are
 continuous. -/
-theorem ContDiffOn.continuous_on_iterated_deriv_within {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s) (hmn : (m : ℕ∞) ≤ n)
-    (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s := by
+theorem ContDiffOn.continuous_on_iterated_deriv_within {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s)
+    (hmn : (m : ℕ∞) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s := by
   simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff] using
     h.continuous_on_iterated_fderiv_within hmn hs
-#align cont_diff_on.continuous_on_iterated_deriv_within ContDiffOn.continuous_on_iterated_deriv_within
+#align
+  cont_diff_on.continuous_on_iterated_deriv_within ContDiffOn.continuous_on_iterated_deriv_within
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
-theorem ContDiffOn.differentiableOnIteratedDerivWithin {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s) (hmn : (m : ℕ∞) < n)
-    (hs : UniqueDiffOn 𝕜 s) : DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s := by
-  simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff] using
+theorem ContDiffOn.differentiableOnIteratedDerivWithin {n : ℕ∞} {m : ℕ} (h : ContDiffOn 𝕜 n f s)
+    (hmn : (m : ℕ∞) < n) (hs : UniqueDiffOn 𝕜 s) :
+    DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s := by
+  simpa only [iterated_deriv_within_eq_equiv_comp,
+    LinearIsometryEquiv.comp_differentiable_on_iff] using
     h.differentiable_on_iterated_fderiv_within hmn hs
-#align cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiableOnIteratedDerivWithin
+#align
+  cont_diff_on.differentiable_on_iterated_deriv_within ContDiffOn.differentiableOnIteratedDerivWithin
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative on sets with unique derivatives. -/
@@ -167,9 +180,11 @@ theorem cont_diff_on_iff_continuous_on_differentiable_on_deriv {n : ℕ∞} (hs 
       (∀ m : ℕ, (m : ℕ∞) ≤ n → ContinuousOn (iteratedDerivWithin m f s) s) ∧
         ∀ m : ℕ, (m : ℕ∞) < n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
   by
-  simp only [cont_diff_on_iff_continuous_on_differentiable_on hs, iterated_fderiv_within_eq_equiv_comp,
-    LinearIsometryEquiv.comp_continuous_on_iff, LinearIsometryEquiv.comp_differentiable_on_iff]
-#align cont_diff_on_iff_continuous_on_differentiable_on_deriv cont_diff_on_iff_continuous_on_differentiable_on_deriv
+  simp only [cont_diff_on_iff_continuous_on_differentiable_on hs,
+    iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff,
+    LinearIsometryEquiv.comp_differentiable_on_iff]
+#align
+  cont_diff_on_iff_continuous_on_differentiable_on_deriv cont_diff_on_iff_continuous_on_differentiable_on_deriv
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 differentiating the `n`-th iterated derivative. -/
@@ -178,7 +193,8 @@ theorem iterated_deriv_within_succ {x : 𝕜} (hxs : UniqueDiffWithinAt 𝕜 s x
   rw [iterated_deriv_within_eq_iterated_fderiv_within, iterated_fderiv_within_succ_apply_left,
     iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_fderiv_within _ hxs, derivWithin]
   change
-    ((ContinuousMultilinearMap.mkPiField 𝕜 (Fin n) ((fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1) :
+    ((ContinuousMultilinearMap.mkPiField 𝕜 (Fin n)
+            ((fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1) :
           (Fin n → 𝕜) → F)
         fun i : Fin n => 1) =
       (fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1
@@ -216,7 +232,9 @@ theorem iterated_deriv_eq_iterated_fderiv :
 /-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
 theorem iterated_deriv_eq_equiv_comp :
-    iteratedDeriv n f = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F).symm ∘ iteratedFderiv 𝕜 n f := by
+    iteratedDeriv n f =
+      (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F).symm ∘ iteratedFderiv 𝕜 n f :=
+  by
   ext x
   rfl
 #align iterated_deriv_eq_equiv_comp iterated_deriv_eq_equiv_comp
@@ -224,8 +242,10 @@ theorem iterated_deriv_eq_equiv_comp :
 /-- Write the iterated Fréchet derivative as the composition of a continuous linear equiv and the
 iterated derivative. -/
 theorem iterated_fderiv_eq_equiv_comp :
-    iteratedFderiv 𝕜 n f = ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F ∘ iteratedDeriv n f := by
-  rw [iterated_deriv_eq_equiv_comp, ← Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
+    iteratedFderiv 𝕜 n f = ContinuousMultilinearMap.piFieldEquiv 𝕜 (Fin n) F ∘ iteratedDeriv n f :=
+  by
+  rw [iterated_deriv_eq_equiv_comp, ← Function.comp.assoc, LinearIsometryEquiv.self_comp_symm,
+    Function.left_id]
 #align iterated_fderiv_eq_equiv_comp iterated_fderiv_eq_equiv_comp
 
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
@@ -234,7 +254,8 @@ theorem iterated_fderiv_apply_eq_iterated_deriv_mul_prod {m : Fin n → 𝕜} :
     (iteratedFderiv 𝕜 n f x : (Fin n → 𝕜) → F) m = (∏ i, m i) • iteratedDeriv n f x := by
   rw [iterated_deriv_eq_iterated_fderiv, ← ContinuousMultilinearMap.map_smul_univ]
   simp
-#align iterated_fderiv_apply_eq_iterated_deriv_mul_prod iterated_fderiv_apply_eq_iterated_deriv_mul_prod
+#align
+  iterated_fderiv_apply_eq_iterated_deriv_mul_prod iterated_fderiv_apply_eq_iterated_deriv_mul_prod
 
 @[simp]
 theorem iterated_deriv_zero : iteratedDeriv 0 f = f := by
@@ -270,13 +291,13 @@ theorem contDiffOfDifferentiableIteratedDeriv {n : ℕ∞}
   cont_diff_iff_iterated_deriv.2 ⟨fun m hm => (h m hm).Continuous, fun m hm => h m (le_of_lt hm)⟩
 #align cont_diff_of_differentiable_iterated_deriv contDiffOfDifferentiableIteratedDeriv
 
-theorem ContDiff.continuous_iterated_deriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f) (hmn : (m : ℕ∞) ≤ n) :
-    Continuous (iteratedDeriv m f) :=
+theorem ContDiff.continuous_iterated_deriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f)
+    (hmn : (m : ℕ∞) ≤ n) : Continuous (iteratedDeriv m f) :=
   (cont_diff_iff_iterated_deriv.1 h).1 m hmn
 #align cont_diff.continuous_iterated_deriv ContDiff.continuous_iterated_deriv
 
-theorem ContDiff.differentiableIteratedDeriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f) (hmn : (m : ℕ∞) < n) :
-    Differentiable 𝕜 (iteratedDeriv m f) :=
+theorem ContDiff.differentiableIteratedDeriv {n : ℕ∞} (m : ℕ) (h : ContDiff 𝕜 n f)
+    (hmn : (m : ℕ∞) < n) : Differentiable 𝕜 (iteratedDeriv m f) :=
   (cont_diff_iff_iterated_deriv.1 h).2 m hmn
 #align cont_diff.differentiable_iterated_deriv ContDiff.differentiableIteratedDeriv
 

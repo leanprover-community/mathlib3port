@@ -74,7 +74,8 @@ theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ Ant
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
   refine' ⟨C⁻¹.toNnreal, real.to_nnreal_pos.mpr (inv_pos.mpr C_pos), _⟩
   refine' ContinuousLinearMap.antilipschitzOfBound B♯ _
-  simp_rw [Real.coe_to_nnreal', max_eq_left_of_lt (inv_pos.mpr C_pos), ← inv_mul_le_iff (inv_pos.mpr C_pos)]
+  simp_rw [Real.coe_to_nnreal', max_eq_left_of_lt (inv_pos.mpr C_pos), ←
+    inv_mul_le_iff (inv_pos.mpr C_pos)]
   simpa using below_bound
 #align is_coercive.antilipschitz IsCoercive.antilipschitz
 
@@ -122,12 +123,14 @@ def continuousLinearEquivOfBilin (coercive : IsCoercive B) : V ≃L[ℝ] V :=
 theorem continuous_linear_equiv_of_bilin_apply (coercive : IsCoercive B) (v w : V) :
     ⟪coercive.continuousLinearEquivOfBilin v, w⟫_ℝ = B v w :=
   continuous_linear_map_of_bilin_apply ℝ B v w
-#align is_coercive.continuous_linear_equiv_of_bilin_apply IsCoercive.continuous_linear_equiv_of_bilin_apply
+#align
+  is_coercive.continuous_linear_equiv_of_bilin_apply IsCoercive.continuous_linear_equiv_of_bilin_apply
 
 theorem unique_continuous_linear_equiv_of_bilin (coercive : IsCoercive B) {v f : V}
     (is_lax_milgram : ∀ w, ⟪f, w⟫_ℝ = B v w) : f = coercive.continuousLinearEquivOfBilin v :=
   unique_continuous_linear_map_of_bilin ℝ B is_lax_milgram
-#align is_coercive.unique_continuous_linear_equiv_of_bilin IsCoercive.unique_continuous_linear_equiv_of_bilin
+#align
+  is_coercive.unique_continuous_linear_equiv_of_bilin IsCoercive.unique_continuous_linear_equiv_of_bilin
 
 end IsCoercive
 

@@ -115,8 +115,8 @@ def op {sq : CommSq f i p g} (l : LiftStruct sq) : LiftStruct sq.op where
 /-- A `lift_struct` for a commutative square in the opposite category
 gives a `lift_struct` for the corresponding square in the original category. -/
 @[simps]
-def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} {sq : CommSq f i p g} (l : LiftStruct sq) :
-    LiftStruct sq.unop where
+def unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} {sq : CommSq f i p g}
+    (l : LiftStruct sq) : LiftStruct sq.unop where
   l := l.l.unop
   fac_left' := by rw [← unop_comp, l.fac_right]
   fac_right' := by rw [← unop_comp, l.fac_left]
@@ -134,8 +134,8 @@ def opEquiv (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.op where
 
 /-- Equivalences of `lift_struct` for a square in the oppositive category and
 the corresponding square in the original category. -/
-def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} (sq : CommSq f i p g) :
-    LiftStruct sq ≃ LiftStruct sq.unop where
+def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
+    (sq : CommSq f i p g) : LiftStruct sq ≃ LiftStruct sq.unop where
   toFun := unop
   invFun := op
   left_inv := by tidy
@@ -144,17 +144,21 @@ def unopEquiv {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g :
 
 end LiftStruct
 
-instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] : Subsingleton (LiftStruct sq) :=
+instance subsingleton_lift_struct_of_epi (sq : CommSq f i p g) [Epi i] :
+    Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_epi i, lift_struct.fac_left]⟩
-#align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_lift_struct_of_epi
+#align
+  category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_lift_struct_of_epi
 
-instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] : Subsingleton (LiftStruct sq) :=
+instance subsingleton_lift_struct_of_mono (sq : CommSq f i p g) [Mono p] :
+    Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
     simp only [← cancel_mono p, lift_struct.fac_right]⟩
-#align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_lift_struct_of_mono
+#align
+  category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_lift_struct_of_mono
 
 variable (sq : CommSq f i p g)
 
@@ -183,8 +187,8 @@ theorem iff_op : HasLift sq ↔ HasLift sq.op := by
   exact Nonempty.congr (lift_struct.op_equiv sq).toFun (lift_struct.op_equiv sq).invFun
 #align category_theory.comm_sq.has_lift.iff_op CategoryTheory.CommSq.HasLift.iff_op
 
-theorem iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y} (sq : CommSq f i p g) :
-    HasLift sq ↔ HasLift sq.unop := by
+theorem iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
+    (sq : CommSq f i p g) : HasLift sq ↔ HasLift sq.unop := by
   rw [Iff, Iff]
   exact Nonempty.congr (lift_struct.unop_equiv sq).toFun (lift_struct.unop_equiv sq).invFun
 #align category_theory.comm_sq.has_lift.iff_unop CategoryTheory.CommSq.HasLift.iff_unop

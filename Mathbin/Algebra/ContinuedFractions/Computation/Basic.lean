@@ -87,13 +87,15 @@ instance [Repr K] : Repr (IntFractPair K) :=
 
 instance inhabited [Inhabited K] : Inhabited (IntFractPair K) :=
   ⟨⟨0, default⟩⟩
-#align generalized_continued_fraction.int_fract_pair.inhabited GeneralizedContinuedFraction.IntFractPair.inhabited
+#align
+  generalized_continued_fraction.int_fract_pair.inhabited GeneralizedContinuedFraction.IntFractPair.inhabited
 
 /-- Maps a function `f` on the fractional components of a given pair.
 -/
 def mapFr {β : Type _} (f : K → β) (gp : IntFractPair K) : IntFractPair β :=
   ⟨gp.b, f gp.fr⟩
-#align generalized_continued_fraction.int_fract_pair.mapFr GeneralizedContinuedFraction.IntFractPair.mapFr
+#align
+  generalized_continued_fraction.int_fract_pair.mapFr GeneralizedContinuedFraction.IntFractPair.mapFr
 
 section coe
 
@@ -147,7 +149,8 @@ protected def stream (v : K) : Stream <| Option (IntFractPair K)
   | n + 1 => do
     let ap_n ← Stream n
     if ap_n = 0 then none else int_fract_pair.of ap_n⁻¹
-#align generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
+#align
+  generalized_continued_fraction.int_fract_pair.stream GeneralizedContinuedFraction.IntFractPair.stream
 
 /-- Shows that `int_fract_pair.stream` has the sequence property, that is once we return `none` at
 position `n`, we also return `none` at `n + 1`.
@@ -155,9 +158,11 @@ position `n`, we also return `none` at `n + 1`.
 theorem streamIsSeq (v : K) : (IntFractPair.stream v).IsSeq := by
   intro _ hyp
   simp [int_fract_pair.stream, hyp]
-#align generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.streamIsSeq
+#align
+  generalized_continued_fraction.int_fract_pair.stream_is_seq GeneralizedContinuedFraction.IntFractPair.streamIsSeq
 
-/-- Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
+/--
+Uses `int_fract_pair.stream` to create a sequence with head (i.e. `seq1`) of integer and fractional
 parts of a value `v`. The first value of `int_fract_pair.stream` is never `none`, so we can safely
 extract it and put the tail of the stream in the sequence part.
 
@@ -172,7 +177,8 @@ protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
       ⟨IntFractPair.stream v,-- the underlying stream
           @streamIsSeq
           _ _ _ v⟩⟩
-#align generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1
+#align
+  generalized_continued_fraction.int_fract_pair.seq1 GeneralizedContinuedFraction.IntFractPair.seq1
 
 -- the proof that the stream is a sequence
 end IntFractPair

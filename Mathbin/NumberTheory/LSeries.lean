@@ -52,14 +52,17 @@ theorem l_series_eq_zero_of_not_l_series_summable (f : ArithmeticFunction ℂ) (
   nat.arithmetic_function.l_series_eq_zero_of_not_l_series_summable Nat.ArithmeticFunction.l_series_eq_zero_of_not_l_series_summable
 
 @[simp]
-theorem l_series_summable_zero {z : ℂ} : LSeriesSummable 0 z := by simp [l_series_summable, summable_zero]
+theorem l_series_summable_zero {z : ℂ} : LSeriesSummable 0 z := by
+  simp [l_series_summable, summable_zero]
 #align nat.arithmetic_function.l_series_summable_zero Nat.ArithmeticFunction.l_series_summable_zero
 
 theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {m : ℝ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.LSeriesSummable z := by
   by_cases h0 : m = 0
   · subst h0
-    have hf : f = 0 := arithmetic_function.ext fun n => complex.abs.eq_zero.1 (le_antisymm (h n) (complex.abs.nonneg _))
+    have hf : f = 0 :=
+      arithmetic_function.ext fun n =>
+        complex.abs.eq_zero.1 (le_antisymm (h n) (complex.abs.nonneg _))
     simp [hf]
     
   refine' summable_of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
@@ -80,7 +83,8 @@ theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ}
 
 theorem l_series_summable_iff_of_re_eq_re {f : ArithmeticFunction ℂ} {w z : ℂ} (h : w.re = z.re) :
     f.LSeriesSummable w ↔ f.LSeriesSummable z := by
-  suffices h : ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n ^ w) = Complex.abs (f n) / Complex.abs (↑n ^ z)
+  suffices h :
+    ∀ n : ℕ, Complex.abs (f n) / Complex.abs (↑n ^ w) = Complex.abs (f n) / Complex.abs (↑n ^ z)
   · simp [l_series_summable, ← summable_norm_iff, h, Complex.norm_eq_abs]
     
   intro n
@@ -110,8 +114,8 @@ theorem l_series_summable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {
 open ArithmeticFunction
 
 theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re := by
-  rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re), l_series_summable, ← summable_norm_iff, ←
-    Real.summable_one_div_nat_rpow, iff_iff_eq]
+  rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re), l_series_summable, ←
+    summable_norm_iff, ← Real.summable_one_div_nat_rpow, iff_iff_eq]
   by_cases h0 : z.re = 0
   · rw [h0, ← summable_nat_add_iff 1]
     swap
@@ -125,16 +129,16 @@ theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z �
     ext ⟨- | n⟩
     · simp [h0]
       
-    simp only [cast_zero, nat_coe_apply, zeta_apply, succ_ne_zero, if_false, cast_succ, one_div, Complex.norm_eq_abs,
-      map_inv₀, Complex.abs_cpow_real, inv_inj, zero_add]
+    simp only [cast_zero, nat_coe_apply, zeta_apply, succ_ne_zero, if_false, cast_succ, one_div,
+      Complex.norm_eq_abs, map_inv₀, Complex.abs_cpow_real, inv_inj, zero_add]
     rw [← cast_one, ← cast_add, Complex.abs_of_nat, cast_add, cast_one]
     
 #align
   nat.arithmetic_function.zeta_l_series_summable_iff_one_lt_re Nat.ArithmeticFunction.zeta_l_series_summable_iff_one_lt_re
 
 @[simp]
-theorem l_series_add {f g : ArithmeticFunction ℂ} {z : ℂ} (hf : f.LSeriesSummable z) (hg : g.LSeriesSummable z) :
-    (f + g).lSeries z = f.lSeries z + g.lSeries z := by
+theorem l_series_add {f g : ArithmeticFunction ℂ} {z : ℂ} (hf : f.LSeriesSummable z)
+    (hg : g.LSeriesSummable z) : (f + g).lSeries z = f.lSeries z + g.lSeries z := by
   simp only [l_series, add_apply]
   rw [← tsum_add hf hg]
   apply congr rfl (funext fun n => _)

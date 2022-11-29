@@ -61,34 +61,40 @@ theorem HasFpowerSeriesAt.fderiv_eq (h : HasFpowerSeriesAt f p x) :
   h.HasFderivAt.fderiv
 #align has_fpower_series_at.fderiv_eq HasFpowerSeriesAt.fderiv_eq
 
-theorem HasFpowerSeriesOnBall.differentiableOn [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) :
-    DifferentiableOn 𝕜 f (Emetric.ball x r) := fun y hy => (h.analyticAtOfMem hy).DifferentiableWithinAt
+theorem HasFpowerSeriesOnBall.differentiableOn [CompleteSpace F]
+    (h : HasFpowerSeriesOnBall f p x r) : DifferentiableOn 𝕜 f (Emetric.ball x r) := fun y hy =>
+  (h.analyticAtOfMem hy).DifferentiableWithinAt
 #align has_fpower_series_on_ball.differentiable_on HasFpowerSeriesOnBall.differentiableOn
 
 theorem AnalyticOn.differentiableOn (h : AnalyticOn 𝕜 f s) : DifferentiableOn 𝕜 f s := fun y hy =>
   (h y hy).DifferentiableWithinAt
 #align analytic_on.differentiable_on AnalyticOn.differentiableOn
 
-theorem HasFpowerSeriesOnBall.hasFderivAt [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) {y : E}
-    (hy : (‖y‖₊ : ℝ≥0∞) < r) : HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1)) (x + y) :=
+theorem HasFpowerSeriesOnBall.hasFderivAt [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r)
+    {y : E} (hy : (‖y‖₊ : ℝ≥0∞) < r) :
+    HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1)) (x + y) :=
   (h.changeOrigin hy).HasFpowerSeriesAt.HasFderivAt
 #align has_fpower_series_on_ball.has_fderiv_at HasFpowerSeriesOnBall.hasFderivAt
 
-theorem HasFpowerSeriesOnBall.fderiv_eq [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) {y : E}
-    (hy : (‖y‖₊ : ℝ≥0∞) < r) : fderiv 𝕜 f (x + y) = continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1) :=
+theorem HasFpowerSeriesOnBall.fderiv_eq [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r)
+    {y : E} (hy : (‖y‖₊ : ℝ≥0∞) < r) :
+    fderiv 𝕜 f (x + y) = continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1) :=
   (h.HasFderivAt hy).fderiv
 #align has_fpower_series_on_ball.fderiv_eq HasFpowerSeriesOnBall.fderiv_eq
 
 /-- If a function has a power series on a ball, then so does its derivative. -/
 theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) :
     HasFpowerSeriesOnBall (fderiv 𝕜 f)
-      ((continuousMultilinearCurryFin1 𝕜 E F : (E[×1]→L[𝕜] F) →L[𝕜] E →L[𝕜] F).compFormalMultilinearSeries
+      ((continuousMultilinearCurryFin1 𝕜 E F :
+            (E[×1]→L[𝕜] F) →L[𝕜] E →L[𝕜] F).compFormalMultilinearSeries
         (p.changeOriginSeries 1))
       x r :=
   by
   suffices A :
-    HasFpowerSeriesOnBall (fun z => continuousMultilinearCurryFin1 𝕜 E F (p.change_origin (z - x) 1))
-      ((continuousMultilinearCurryFin1 𝕜 E F : (E[×1]→L[𝕜] F) →L[𝕜] E →L[𝕜] F).compFormalMultilinearSeries
+    HasFpowerSeriesOnBall
+      (fun z => continuousMultilinearCurryFin1 𝕜 E F (p.change_origin (z - x) 1))
+      ((continuousMultilinearCurryFin1 𝕜 E F :
+            (E[×1]→L[𝕜] F) →L[𝕜] E →L[𝕜] F).compFormalMultilinearSeries
         (p.change_origin_series 1))
       x r
   · apply A.congr
@@ -97,13 +103,21 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
     rw [← h.fderiv_eq, add_sub_cancel'_right]
     simpa only [edist_eq_coe_nnnorm_sub, Emetric.mem_ball] using hz
     
-  suffices B : HasFpowerSeriesOnBall (fun z => p.change_origin (z - x) 1) (p.change_origin_series 1) x r
-  exact (continuousMultilinearCurryFin1 𝕜 E F).toContinuousLinearEquiv.toContinuousLinearMap.compHasFpowerSeriesOnBall B
-  simpa using ((p.has_fpower_series_on_ball_change_origin 1 (h.r_pos.trans_le h.r_le)).mono h.r_pos h.r_le).comp_sub x
+  suffices B :
+    HasFpowerSeriesOnBall (fun z => p.change_origin (z - x) 1) (p.change_origin_series 1) x r
+  exact
+    (continuousMultilinearCurryFin1 𝕜 E
+              F).toContinuousLinearEquiv.toContinuousLinearMap.compHasFpowerSeriesOnBall
+      B
+  simpa using
+    ((p.has_fpower_series_on_ball_change_origin 1 (h.r_pos.trans_le h.r_le)).mono h.r_pos
+          h.r_le).comp_sub
+      x
 #align has_fpower_series_on_ball.fderiv HasFpowerSeriesOnBall.fderiv
 
 /-- If a function is analytic on a set `s`, so is its Fréchet derivative. -/
-theorem AnalyticOn.fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticOn 𝕜 (fderiv 𝕜 f) s := by
+theorem AnalyticOn.fderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticOn 𝕜 (fderiv 𝕜 f) s :=
+  by
   intro y hy
   rcases h y hy with ⟨p, r, hp⟩
   exact hp.fderiv.analytic_at
@@ -125,10 +139,10 @@ theorem AnalyticOn.iteratedFderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
 #align analytic_on.iterated_fderiv AnalyticOn.iteratedFderiv
 
 /-- An analytic function is infinitely differentiable. -/
-theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} : ContDiffOn 𝕜 n f s := by
+theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} :
+    ContDiffOn 𝕜 n f s := by
   let t := { x | AnalyticAt 𝕜 f x }
-  suffices : ContDiffOn 𝕜 n f t
-  exact this.mono h
+  suffices : ContDiffOn 𝕜 n f t; exact this.mono h
   have H : AnalyticOn 𝕜 f t := fun x hx => hx
   have t_open : IsOpen t := is_open_analytic_at 𝕜 f
   apply contDiffOnOfContinuousOnDifferentiableOn
@@ -157,11 +171,13 @@ protected theorem HasFpowerSeriesAt.hasStrictDerivAt (h : HasFpowerSeriesAt f p 
   h.HasStrictFderivAt.HasStrictDerivAt
 #align has_fpower_series_at.has_strict_deriv_at HasFpowerSeriesAt.hasStrictDerivAt
 
-protected theorem HasFpowerSeriesAt.hasDerivAt (h : HasFpowerSeriesAt f p x) : HasDerivAt f (p 1 fun _ => 1) x :=
+protected theorem HasFpowerSeriesAt.hasDerivAt (h : HasFpowerSeriesAt f p x) :
+    HasDerivAt f (p 1 fun _ => 1) x :=
   h.HasStrictDerivAt.HasDerivAt
 #align has_fpower_series_at.has_deriv_at HasFpowerSeriesAt.hasDerivAt
 
-protected theorem HasFpowerSeriesAt.deriv (h : HasFpowerSeriesAt f p x) : deriv f x = p 1 fun _ => 1 :=
+protected theorem HasFpowerSeriesAt.deriv (h : HasFpowerSeriesAt f p x) :
+    deriv f x = p 1 fun _ => 1 :=
   h.HasDerivAt.deriv
 #align has_fpower_series_at.deriv HasFpowerSeriesAt.deriv
 
@@ -171,7 +187,8 @@ theorem AnalyticOn.deriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticO
 #align analytic_on.deriv AnalyticOn.deriv
 
 /-- If a function is analytic on a set `s`, so are its successive derivatives. -/
-theorem AnalyticOn.iteratedDeriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n : ℕ) : AnalyticOn 𝕜 ((deriv^[n]) f) s := by
+theorem AnalyticOn.iteratedDeriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n : ℕ) :
+    AnalyticOn 𝕜 ((deriv^[n]) f) s := by
   induction' n with n IH
   · exact h
     

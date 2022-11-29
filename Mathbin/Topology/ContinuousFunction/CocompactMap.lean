@@ -28,8 +28,8 @@ when the codomain is Hausdorff (see `cocompact_map.tendsto_of_forall_preimage` a
 
 Cocompact maps thus generalise proper maps, with which they correspond when the codomain is
 Hausdorff. -/
-structure CocompactMap (α : Type u) (β : Type v) [TopologicalSpace α] [TopologicalSpace β] extends ContinuousMap α β :
-  Type max u v where
+structure CocompactMap (α : Type u) (β : Type v) [TopologicalSpace α] [TopologicalSpace β] extends
+  ContinuousMap α β : Type max u v where
   cocompact_tendsto' : Tendsto to_fun (cocompact α) (cocompact β)
 #align cocompact_map CocompactMap
 
@@ -38,8 +38,8 @@ section
 /-- `cocompact_map_class F α β` states that `F` is a type of cocompact continuous maps.
 
 You should also extend this typeclass when you extend `cocompact_map`. -/
-class CocompactMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
-  ContinuousMapClass F α β where
+class CocompactMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
+  [TopologicalSpace β] extends ContinuousMapClass F α β where
   cocompact_tendsto (f : F) : Tendsto f (cocompact α) (cocompact β)
 #align cocompact_map_class CocompactMapClass
 
@@ -60,7 +60,8 @@ namespace CocompactMap
 
 section Basics
 
-variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
+variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
+  [TopologicalSpace δ]
 
 instance : CocompactMapClass (CocompactMap α β) α β where
   coe f := f.toFun
@@ -108,7 +109,8 @@ theorem copy_eq (f : CocompactMap α β) (f' : α → β) (h : f' = f) : f.copy 
 #align cocompact_map.copy_eq CocompactMap.copy_eq
 
 @[simp]
-theorem coe_mk (f : C(α, β)) (h : Tendsto f (cocompact α) (cocompact β)) : ⇑(⟨f, h⟩ : CocompactMap α β) = f :=
+theorem coe_mk (f : C(α, β)) (h : Tendsto f (cocompact α) (cocompact β)) :
+    ⇑(⟨f, h⟩ : CocompactMap α β) = f :=
   rfl
 #align cocompact_map.coe_mk CocompactMap.coe_mk
 
@@ -165,20 +167,24 @@ theorem comp_id (f : CocompactMap α β) : f.comp (CocompactMap.id _) = f :=
 theorem tendsto_of_forall_preimage {f : α → β} (h : ∀ s, IsCompact s → IsCompact (f ⁻¹' s)) :
     Tendsto f (cocompact α) (cocompact β) := fun s hs =>
   match mem_cocompact.mp hs with
-  | ⟨t, ht, hts⟩ => mem_map.mpr (mem_cocompact.mpr ⟨f ⁻¹' t, h t ht, by simpa using preimage_mono hts⟩)
+  | ⟨t, ht, hts⟩ =>
+    mem_map.mpr (mem_cocompact.mpr ⟨f ⁻¹' t, h t ht, by simpa using preimage_mono hts⟩)
 #align cocompact_map.tendsto_of_forall_preimage CocompactMap.tendsto_of_forall_preimage
 
 /-- If the codomain is Hausdorff, preimages of compact sets are compact under a cocompact
 continuous map. -/
-theorem is_compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ (hs : IsCompact s) : IsCompact (f ⁻¹' s) :=
-  by
+theorem is_compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ (hs : IsCompact s) :
+    IsCompact (f ⁻¹' s) := by
   obtain ⟨t, ht, hts⟩ :=
     mem_cocompact'.mp
       (by
         simpa only [preimage_image_preimage, preimage_compl] using
           mem_map.mp
-            (cocompact_tendsto f <| mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
-  exact is_compact_of_is_closed_subset ht (hs.is_closed.preimage <| map_continuous f) (by simpa using hts)
+            (cocompact_tendsto f <|
+              mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
+  exact
+    is_compact_of_is_closed_subset ht (hs.is_closed.preimage <| map_continuous f)
+      (by simpa using hts)
 #align cocompact_map.is_compact_preimage CocompactMap.is_compact_preimage
 
 end Basics
@@ -187,8 +193,8 @@ end CocompactMap
 
 /-- A homemomorphism is a cocompact map. -/
 @[simps]
-def Homeomorph.toCocompactMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ₜ β) :
-    CocompactMap α β where
+def Homeomorph.toCocompactMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
+    (f : α ≃ₜ β) : CocompactMap α β where
   toFun := f
   continuous_to_fun := f.Continuous
   cocompact_tendsto' := by

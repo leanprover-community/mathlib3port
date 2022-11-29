@@ -50,37 +50,39 @@ simplify terms involving `Union_lift`. -/
 it on each component, and proving that it agrees on the intersections. -/
 @[nolint unused_arguments]
 noncomputable def unionLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
-    (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α) (hT : T ⊆ union S)
-    (x : T) : β :=
+    (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α)
+    (hT : T ⊆ union S) (x : T) : β :=
   let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.Prop))
   f i ⟨x, i.Prop⟩
 #align set.Union_lift Set.unionLift
 
 variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
-  {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ union S}
-  (hT' : T = union S)
+  {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α}
+  {hT : T ⊆ union S} (hT' : T = union S)
 
 @[simp]
-theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : unionLift S f hf T hT ⟨x, hx⟩ = f i x := by
+theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) :
+    unionLift S f hf T hT ⟨x, hx⟩ = f i x := by
   let j := Classical.indefiniteDescription _ (mem_Union.1 (hT hx))
   cases' x with x hx <;> exact hf j i x j.2 _
 #align set.Union_lift_mk Set.Union_lift_mk
 
 @[simp]
-theorem Union_lift_inclusion {i : ι} (x : S i) (h : S i ⊆ T) : unionLift S f hf T hT (Set.inclusion h x) = f i x :=
+theorem Union_lift_inclusion {i : ι} (x : S i) (h : S i ⊆ T) :
+    unionLift S f hf T hT (Set.inclusion h x) = f i x :=
   Union_lift_mk x _
 #align set.Union_lift_inclusion Set.Union_lift_inclusion
 
-theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) : unionLift S f hf T hT x = f i ⟨x, hx⟩ := by
-  cases' x with x hx <;> exact hf _ _ _ _ _
+theorem Union_lift_of_mem (x : T) {i : ι} (hx : (x : α) ∈ S i) :
+    unionLift S f hf T hT x = f i ⟨x, hx⟩ := by cases' x with x hx <;> exact hf _ _ _ _ _
 #align set.Union_lift_of_mem Set.Union_lift_of_mem
 
 /-- `Union_lift_const` is useful for proving that `Union_lift` is a homomorphism
   of algebraic structures when defined on the Union of algebraic subobjects.
   For example, it could be used to prove that the lift of a collection
   of group homomorphisms on a union of subgroups preserves `1`. -/
-theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β) (h : ∀ i, f i (ci i) = cβ) :
-    unionLift S f hf T hT c = cβ := by
+theorem Union_lift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β)
+    (h : ∀ i, f i (ci i) = cβ) : unionLift S f hf T hT c = cβ := by
   let ⟨i, hi⟩ := Set.mem_Union.1 (hT c.Prop)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
   rw [Union_lift_of_mem _ hi, ← this, h]
@@ -141,13 +143,14 @@ theorem Union_lift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) (o
 end UnionLift
 
 variable {S : ι → Set α} {f : ∀ (i) (x : S i), β}
-  {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : union S = univ}
+  {hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩}
+  {hS : union S = univ}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/
 noncomputable def liftCover (S : ι → Set α) (f : ∀ (i) (x : S i), β)
-    (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (hS : union S = univ) (a : α) :
-    β :=
+    (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩)
+    (hS : union S = univ) (a : α) : β :=
   unionLift S f hf univ (hS ▸ Set.Subset.refl _) ⟨a, trivial⟩
 #align set.lift_cover Set.liftCover
 
@@ -156,7 +159,8 @@ theorem lift_cover_coe {i : ι} (x : S i) : liftCover S f hf hS x = f i x :=
   Union_lift_mk x _
 #align set.lift_cover_coe Set.lift_cover_coe
 
-theorem lift_cover_of_mem {i : ι} {x : α} (hx : (x : α) ∈ S i) : liftCover S f hf hS x = f i ⟨x, hx⟩ :=
+theorem lift_cover_of_mem {i : ι} {x : α} (hx : (x : α) ∈ S i) :
+    liftCover S f hf hS x = f i ⟨x, hx⟩ :=
   Union_lift_of_mem ⟨x, trivial⟩ hx
 #align set.lift_cover_of_mem Set.lift_cover_of_mem
 

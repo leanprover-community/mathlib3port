@@ -58,8 +58,8 @@ protected theorem map_eq {α β : Type _} (f : α → β) (a : P.A) (g : P.B a �
 protected theorem id_map {α : Type _} : ∀ x : P.Obj α, id <$> x = id x := fun ⟨a, b⟩ => rfl
 #align pfunctor.id_map Pfunctor.id_map
 
-protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ x : P.Obj α, (g ∘ f) <$> x = g <$> f <$> x :=
-  fun ⟨a, b⟩ => rfl
+protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) :
+    ∀ x : P.Obj α, (g ∘ f) <$> x = g <$> f <$> x := fun ⟨a, b⟩ => rfl
 #align pfunctor.comp_map Pfunctor.comp_map
 
 instance : IsLawfulFunctor P.Obj where
@@ -133,8 +133,8 @@ theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = 
 #align pfunctor.fst_map Pfunctor.fst_map
 
 @[simp]
-theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α) (f : α → β) (i : P.IdxCat)
-    (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) := by
+theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α)
+    (f : α → β) (i : P.IdxCat) (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) := by
   simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
   cases x
   rfl
@@ -173,7 +173,8 @@ variable {P : Pfunctor.{u}}
 
 open Functor
 
-theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
+theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) :
+    Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : y with a f
@@ -182,8 +183,7 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P.Obj α) : Liftp p x ↔
     
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i => ⟨f i, pf i⟩⟩
-  rw [xeq]
-  rfl
+  rw [xeq]; rfl
 #align pfunctor.liftp_iff Pfunctor.liftp_iff
 
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
@@ -219,15 +219,14 @@ theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P.Obj α) :
   · rw [xeq]
     rfl
     
-  rw [yeq]
-  rfl
+  rw [yeq]; rfl
 #align pfunctor.liftr_iff Pfunctor.liftr_iff
 
 open Set
 
-theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) : @supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ := by
-  ext
-  simp only [supp, image_univ, mem_range, mem_set_of_eq]
+theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) :
+    @supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ := by
+  ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun x => ∃ y : P.B a, f y = x
     rw [liftp_iff']

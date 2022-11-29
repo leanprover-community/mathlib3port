@@ -39,14 +39,17 @@ theorem product_nil : ∀ l : List α, product l (@nil β) = []
 #align list.product_nil List.product_nil
 
 @[simp]
-theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} : (a, b) ∈ product l₁ l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ := by
-  simp only [product, mem_bind, mem_map, Prod.ext_iff, exists_prop, and_left_comm, exists_and_left, exists_eq_left,
-    exists_eq_right]
+theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} :
+    (a, b) ∈ product l₁ l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ := by
+  simp only [product, mem_bind, mem_map, Prod.ext_iff, exists_prop, and_left_comm, exists_and_left,
+    exists_eq_left, exists_eq_right]
 #align list.mem_product List.mem_product
 
-theorem length_product (l₁ : List α) (l₂ : List β) : length (product l₁ l₂) = length l₁ * length l₂ := by
+theorem length_product (l₁ : List α) (l₂ : List β) :
+    length (product l₁ l₂) = length l₁ * length l₂ := by
   induction' l₁ with x l₁ IH <;> [exact (zero_mul _).symm,
-    simp only [length, product_cons, length_append, IH, right_distrib, one_mul, length_map, add_comm]]
+    simp only [length, product_cons, length_append, IH, right_distrib, one_mul, length_map,
+      add_comm]]
 #align list.length_product List.length_product
 
 /-! ### sigma -/
@@ -74,13 +77,14 @@ theorem sigma_nil : ∀ l : List α, (l.Sigma fun a => @nil (σ a)) = []
 @[simp]
 theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ a} :
     Sigma.mk a b ∈ l₁.Sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
-  simp only [List.sigma, mem_bind, mem_map, exists_prop, exists_and_left, and_left_comm, exists_eq_left, heq_iff_eq,
-    exists_eq_right]
+  simp only [List.sigma, mem_bind, mem_map, exists_prop, exists_and_left, and_left_comm,
+    exists_eq_left, heq_iff_eq, exists_eq_right]
 #align list.mem_sigma List.mem_sigma
 
 theorem length_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
     length (l₁.Sigma l₂) = (l₁.map fun a => length (l₂ a)).Sum := by
-  induction' l₁ with x l₁ IH <;> [rfl, simp only [map, sigma_cons, length_append, length_map, IH, sum_cons]]
+  induction' l₁ with x l₁ IH <;> [rfl,
+    simp only [map, sigma_cons, length_append, length_map, IH, sum_cons]]
 #align list.length_sigma List.length_sigma
 
 end List

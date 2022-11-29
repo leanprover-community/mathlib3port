@@ -41,7 +41,8 @@ def Intersecting (s : Set α) : Prop :=
 #align set.intersecting Set.Intersecting
 
 @[mono]
-theorem Intersecting.mono (h : t ⊆ s) (hs : s.Intersecting) : t.Intersecting := fun a ha b hb => hs (h ha) (h hb)
+theorem Intersecting.mono (h : t ⊆ s) (hs : s.Intersecting) : t.Intersecting := fun a ha b hb =>
+  hs (h ha) (h hb)
 #align set.intersecting.mono Set.Intersecting.mono
 
 theorem Intersecting.not_bot_mem (hs : s.Intersecting) : ⊥ ∉ s := fun h => hs h h disjoint_bot_left
@@ -71,13 +72,16 @@ theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀ b �
     
 #align set.intersecting.insert Set.Intersecting.insert
 
-theorem intersecting_insert : (insert a s).Intersecting ↔ s.Intersecting ∧ a ≠ ⊥ ∧ ∀ b ∈ s, ¬Disjoint a b :=
+theorem intersecting_insert :
+    (insert a s).Intersecting ↔ s.Intersecting ∧ a ≠ ⊥ ∧ ∀ b ∈ s, ¬Disjoint a b :=
   ⟨fun h =>
-    ⟨h.mono <| subset_insert _ _, h.ne_bot <| mem_insert _ _, fun b hb => h (mem_insert _ _) <| mem_insert_of_mem _ hb⟩,
+    ⟨h.mono <| subset_insert _ _, h.ne_bot <| mem_insert _ _, fun b hb =>
+      h (mem_insert _ _) <| mem_insert_of_mem _ hb⟩,
     fun h => h.1.insert h.2.1 h.2.2⟩
 #align set.intersecting_insert Set.intersecting_insert
 
-theorem intersecting_iff_pairwise_not_disjoint : s.Intersecting ↔ (s.Pairwise fun a b => ¬Disjoint a b) ∧ s ≠ {⊥} := by
+theorem intersecting_iff_pairwise_not_disjoint :
+    s.Intersecting ↔ (s.Pairwise fun a b => ¬Disjoint a b) ∧ s ≠ {⊥} := by
   refine' ⟨fun h => ⟨fun a ha b hb _ => h ha hb, _⟩, fun h a ha b hb hab => _⟩
   · rintro rfl
     exact intersecting_singleton.1 h rfl
@@ -85,7 +89,10 @@ theorem intersecting_iff_pairwise_not_disjoint : s.Intersecting ↔ (s.Pairwise 
   · have := h.1.Eq ha hb (not_not.2 hab)
     rw [this, disjoint_self] at hab
     rw [hab] at hb
-    exact h.2 (eq_singleton_iff_unique_mem.2 ⟨hb, fun c hc => not_ne_iff.1 fun H => h.1 hb hc H.symm disjoint_bot_left⟩)
+    exact
+      h.2
+        (eq_singleton_iff_unique_mem.2
+          ⟨hb, fun c hc => not_ne_iff.1 fun H => h.1 hb hc H.symm disjoint_bot_left⟩)
     
 #align set.intersecting_iff_pairwise_not_disjoint Set.intersecting_iff_pairwise_not_disjoint
 
@@ -93,7 +100,8 @@ protected theorem Subsingleton.intersecting (hs : s.Subsingleton) : s.Intersecti
   intersecting_iff_pairwise_not_disjoint.trans <| and_iff_right <| hs.Pairwise _
 #align set.subsingleton.intersecting Set.Subsingleton.intersecting
 
-theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α) : s.Intersecting ↔ s = ∅ := by
+theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α) :
+    s.Intersecting ↔ s = ∅ := by
   refine'
     subsingleton_of_subsingleton.intersecting.trans
       ⟨not_imp_comm.2 fun h => subsingleton_of_subsingleton.eq_singleton_of_mem _, _⟩
@@ -106,46 +114,49 @@ theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α)
 #align set.intersecting_iff_eq_empty_of_subsingleton Set.intersecting_iff_eq_empty_of_subsingleton
 
 /-- Maximal intersecting families are upper sets. -/
-protected theorem Intersecting.is_upper_set (hs : s.Intersecting) (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) :
-    IsUpperSet s := by classical
+protected theorem Intersecting.is_upper_set (hs : s.Intersecting)
+    (h : ∀ t : Set α, t.Intersecting → s ⊆ t → s = t) : IsUpperSet s := by classical
   rintro a b hab ha
   rw [h (insert b s) _ (subset_insert _ _)]
   · exact mem_insert _ _
     
-  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
+  exact
+    hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 #align set.intersecting.is_upper_set Set.Intersecting.is_upper_set
 
 /-- Maximal intersecting families are upper sets. Finset version. -/
 theorem Intersecting.is_upper_set' {s : Finset α} (hs : (s : Set α).Intersecting)
-    (h : ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) : IsUpperSet (s : Set α) := by classical
+    (h : ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) : IsUpperSet (s : Set α) := by
+  classical
   rintro a b hab ha
   rw [h (insert b s) _ (Finset.subset_insert _ _)]
   · exact mem_insert_self _ _
     
   rw [coe_insert]
-  exact hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
+  exact
+    hs.insert (mt (eq_bot_mono hab) <| hs.ne_bot ha) fun c hc hbc => hs ha hc <| hbc.mono_left hab
 #align set.intersecting.is_upper_set' Set.Intersecting.is_upper_set'
 
 end SemilatticeInf
 
-theorem Intersecting.exists_mem_set {𝒜 : Set (Set α)} (h𝒜 : 𝒜.Intersecting) {s t : Set α} (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) :
-    ∃ a, a ∈ s ∧ a ∈ t :=
+theorem Intersecting.exists_mem_set {𝒜 : Set (Set α)} (h𝒜 : 𝒜.Intersecting) {s t : Set α}
+    (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) : ∃ a, a ∈ s ∧ a ∈ t :=
   not_disjoint_iff.1 <| h𝒜 hs ht
 #align set.intersecting.exists_mem_set Set.Intersecting.exists_mem_set
 
-theorem Intersecting.exists_mem_finset [DecidableEq α] {𝒜 : Set (Finset α)} (h𝒜 : 𝒜.Intersecting) {s t : Finset α}
-    (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) : ∃ a, a ∈ s ∧ a ∈ t :=
+theorem Intersecting.exists_mem_finset [DecidableEq α] {𝒜 : Set (Finset α)} (h𝒜 : 𝒜.Intersecting)
+    {s t : Finset α} (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) : ∃ a, a ∈ s ∧ a ∈ t :=
   not_disjoint_iff.1 <| disjoint_coe.Not.2 <| h𝒜 hs ht
 #align set.intersecting.exists_mem_finset Set.Intersecting.exists_mem_finset
 
 variable [BooleanAlgebra α]
 
-theorem Intersecting.not_compl_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : a ∈ s) : aᶜ ∉ s := fun h =>
-  hs ha h disjoint_compl_right
+theorem Intersecting.not_compl_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : a ∈ s) :
+    aᶜ ∉ s := fun h => hs ha h disjoint_compl_right
 #align set.intersecting.not_compl_mem Set.Intersecting.not_compl_mem
 
-theorem Intersecting.not_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : aᶜ ∈ s) : a ∉ s := fun h =>
-  hs ha h disjoint_compl_left
+theorem Intersecting.not_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : aᶜ ∈ s) : a ∉ s :=
+  fun h => hs ha h disjoint_compl_left
 #align set.intersecting.not_mem Set.Intersecting.not_mem
 
 theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Intersecting) :
@@ -156,8 +167,8 @@ theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Inter
   exact hs.not_compl_mem hx' hx
 #align set.intersecting.disjoint_map_compl Set.Intersecting.disjoint_map_compl
 
-theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Intersecting) : 2 * s.card ≤ Fintype.card α :=
-  by classical
+theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Intersecting) :
+    2 * s.card ≤ Fintype.card α := by classical
   refine' (s.disj_union _ hs.disjoint_map_compl).card_le_univ.trans_eq' _
   rw [two_mul, card_disj_union, card_map]
 #align set.intersecting.card_le Set.Intersecting.card_le
@@ -166,10 +177,12 @@ variable [Nontrivial α] [Fintype α] {s : Finset α}
 
 -- Note, this lemma is false when `α` has exactly one element and boring when `α` is empty.
 theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
-    (∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) ↔ 2 * s.card = Fintype.card α := by classical
+    (∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t) ↔ 2 * s.card = Fintype.card α := by
+  classical
   refine'
     ⟨fun h => _, fun h t ht hst =>
-      Finset.eq_of_subset_of_card_le hst <| le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) two_pos⟩
+      Finset.eq_of_subset_of_card_le hst <|
+        le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) two_pos⟩
   suffices s.disj_union (s.map ⟨compl, compl_injective⟩) hs.disjoint_map_compl = Finset.univ by
     rw [Fintype.card, ← this, two_mul, card_disj_union, card_map]
   rw [← coe_eq_univ, disj_union_eq_union, coe_union, coe_map, Function.Embedding.coe_fn_mk,

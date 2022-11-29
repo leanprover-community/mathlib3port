@@ -47,7 +47,8 @@ theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.Sum = (s.map ((·
   (DistribSmul.toAddMonoidHom β r).map_multiset_sum s
 #align multiset.smul_sum Multiset.smul_sum
 
-theorem Finset.smul_sum {r : α} {f : γ → β} {s : Finset γ} : (r • ∑ x in s, f x) = ∑ x in s, r • f x :=
+theorem Finset.smul_sum {r : α} {f : γ → β} {s : Finset γ} :
+    (r • ∑ x in s, f x) = ∑ x in s, r • f x :=
   (DistribSmul.toAddMonoidHom β r).map_sum f s
 #align finset.smul_sum Finset.smul_sum
 
@@ -61,7 +62,8 @@ theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.Prod = (s.map ((
   (MulDistribMulAction.toMonoidHom β r).map_multiset_prod s
 #align multiset.smul_prod Multiset.smul_prod
 
-theorem Finset.smul_prod {r : α} {f : γ → β} {s : Finset γ} : (r • ∏ x in s, f x) = ∏ x in s, r • f x :=
+theorem Finset.smul_prod {r : α} {f : γ → β} {s : Finset γ} :
+    (r • ∏ x in s, f x) = ∏ x in s, r • f x :=
   (MulDistribMulAction.toMonoidHom β r).map_prod f s
 #align finset.smul_prod Finset.smul_prod
 

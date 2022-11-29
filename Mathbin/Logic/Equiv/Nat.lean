@@ -39,7 +39,8 @@ def natSumNatEquivNat : Sum ℕ ℕ ≃ ℕ :=
 #align equiv.nat_sum_nat_equiv_nat Equiv.natSumNatEquivNat
 
 @[simp]
-theorem nat_sum_nat_equiv_nat_apply : ⇑nat_sum_nat_equiv_nat = Sum.elim bit0 bit1 := by ext (x | x) <;> rfl
+theorem nat_sum_nat_equiv_nat_apply : ⇑nat_sum_nat_equiv_nat = Sum.elim bit0 bit1 := by
+  ext (x | x) <;> rfl
 #align equiv.nat_sum_nat_equiv_nat_apply Equiv.nat_sum_nat_equiv_nat_apply
 
 /-- An equivalence between `ℤ` and `ℕ`, through `ℤ ≃ ℕ ⊕ ℕ` and `ℕ ⊕ ℕ ≃ ℕ`.

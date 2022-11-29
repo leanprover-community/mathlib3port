@@ -18,8 +18,9 @@ Instances on `Prop` such as `distrib_lattice`, `bounded_order`, `linear_order`.
 /-- Propositions form a distributive lattice. -/
 instance PropCat.distribLattice : DistribLattice Prop :=
   { PropCat.partialOrder with sup := Or, le_sup_left := @Or.inl, le_sup_right := @Or.inr,
-    sup_le := fun a b c => Or.ndrec, inf := And, inf_le_left := @And.left, inf_le_right := @And.right,
-    le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha), le_sup_inf := fun a b c => or_and_left.2 }
+    sup_le := fun a b c => Or.ndrec, inf := And, inf_le_left := @And.left,
+    inf_le_right := @And.right, le_inf := fun a b c Hab Hac Ha => And.intro (Hab Ha) (Hac Ha),
+    le_sup_inf := fun a b c => or_and_left.2 }
 #align Prop.distrib_lattice PropCat.distribLattice
 
 /-- Propositions form a bounded order. -/
@@ -93,12 +94,14 @@ instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.prop', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.prop "Prop")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Lattice.toLinearOrder
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -109,7 +112,8 @@ instance PropCat.le_is_total : IsTotal Prop (· ≤ ·) :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-noncomputable instance PropCat.linearOrder : LinearOrder Prop := by skip <;> exact Lattice.toLinearOrder Prop
+noncomputable
+  instance PropCat.linearOrder : LinearOrder Prop := by skip <;> exact Lattice.toLinearOrder Prop
 #align Prop.linear_order PropCat.linearOrder
 
 @[simp]
@@ -126,7 +130,8 @@ namespace Pi
 
 variable {ι : Type _} {α' : ι → Type _} [∀ i, PartialOrder (α' i)]
 
-theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} : Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) := by
+theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
+    Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) := by
   constructor
   · intro h i x hf hg
     refine'
@@ -145,11 +150,13 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} : Disjoint f
     
 #align pi.disjoint_iff Pi.disjoint_iff
 
-theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} : Codisjoint f g ↔ ∀ i, Codisjoint (f i) (g i) :=
+theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} :
+    Codisjoint f g ↔ ∀ i, Codisjoint (f i) (g i) :=
   @disjoint_iff _ (fun i => (α' i)ᵒᵈ) _ _ _ _
 #align pi.codisjoint_iff Pi.codisjoint_iff
 
-theorem is_compl_iff [∀ i, BoundedOrder (α' i)] {f g : ∀ i, α' i} : IsCompl f g ↔ ∀ i, IsCompl (f i) (g i) := by
+theorem is_compl_iff [∀ i, BoundedOrder (α' i)] {f g : ∀ i, α' i} :
+    IsCompl f g ↔ ∀ i, IsCompl (f i) (g i) := by
   simp_rw [is_compl_iff, disjoint_iff, codisjoint_iff, forall_and]
 #align pi.is_compl_iff Pi.is_compl_iff
 

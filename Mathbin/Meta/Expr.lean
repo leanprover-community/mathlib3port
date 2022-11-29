@@ -339,7 +339,8 @@ unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr 
   let z : expr := q(@Zero.zero.{0} $(type) $(Zero))
   let o : expr := q(@One.one.{0} $(type) $(One))
   Nat.binaryRec z fun b n e =>
-    if n = 0 then o else if b then q(@bit1.{0} $(type) $(One) $(Add) $(e)) else q(@bit0.{0} $(type) $(Add) $(e))
+    if n = 0 then o
+    else if b then q(@bit1.{0} $(type) $(One) $(Add) $(e)) else q(@bit0.{0} $(type) $(Add) $(e))
 #align nat.mk_numeral nat.mk_numeral
 
 /-- `int.mk_numeral z` embeds `z` as a numeral expression inside a type with 0, 1, +, and -.
@@ -492,7 +493,8 @@ unsafe def replace_with (e : expr) (s : expr) (s' : expr) : expr :=
 #align expr.replace_with expr.replace_with
 
 /-- Implementation of `expr.mreplace`. -/
-unsafe def mreplace_aux {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) : expr → ℕ → m expr
+unsafe def mreplace_aux {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) :
+    expr → ℕ → m expr
   | app f x, n =>
     Option.getDM (R (app f x) n) do
       let Rf ← mreplace_aux f n
@@ -514,7 +516,8 @@ unsafe def mreplace_aux {m : Type _ → Type _} [Monad m] (R : expr → Nat → 
       let Ra ← mreplace_aux a n
       let Rb ← mreplace_aux b n
       return <| elet nm Rty Ra Rb
-  | macro c es, n => Option.getDM (R (macro c es) n) <| macro c <$> es.mmap fun e => mreplace_aux e n
+  | macro c es, n =>
+    Option.getDM (R (macro c es) n) <| macro c <$> es.mmap fun e => mreplace_aux e n
   | e, n => Option.getDM (R e n) (return e)
 #align expr.mreplace_aux expr.mreplace_aux
 
@@ -531,7 +534,8 @@ WARNING: This function performs exponentially worse on large terms than `expr.re
 if a subexpression occurs more than once in an expression, `expr.replace` visits them only once,
 but this function will visit every occurence of it. Do not use this on large expressions.
 -/
-unsafe def mreplace {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) (e : expr) : m expr :=
+unsafe def mreplace {m : Type _ → Type _} [Monad m] (R : expr → Nat → m (Option expr)) (e : expr) :
+    m expr :=
   mreplace_aux R e 0
 #align expr.mreplace expr.mreplace
 
@@ -655,7 +659,8 @@ unsafe def list_local_consts' (e : expr) : expr_set :=
 
 /-- Returns the unique names of all local constants in an expression. -/
 unsafe def list_local_const_unique_names (e : expr) : name_set :=
-  e.fold mk_name_set fun e' _ es => if e'.is_local_constant then es.insert e'.local_uniq_name else es
+  e.fold mk_name_set fun e' _ es =>
+    if e'.is_local_constant then es.insert e'.local_uniq_name else es
 #align expr.list_local_const_unique_names expr.list_local_const_unique_names
 
 /-- Returns a `name_set` of all constants in an expression. -/
@@ -735,7 +740,7 @@ unsafe def get_simp_args (e : expr) : tactic (List expr) :=
     pure []
   else do
     let cgr ← mk_specialized_congr_lemma_simp e
-    pure <| do
+    pure do
         let (arg_kind, arg) ← cgr e
         guard <| arg_kind = CongrArgKind.eq
         pure arg
@@ -744,16 +749,17 @@ unsafe def get_simp_args (e : expr) : tactic (List expr) :=
 /-- Simplifies the expression `t` with the specified options.
   The result is `(new_e, pr)` with the new expression `new_e` and a proof
   `pr : e = new_e`. -/
-unsafe def simp (t : expr) (cfg : SimpConfig := {  }) (discharger : tactic Unit := failed) (no_defaults := false)
-    (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic (expr × expr × name_set) := do
+unsafe def simp (t : expr) (cfg : SimpConfig := {  }) (discharger : tactic Unit := failed)
+    (no_defaults := false) (attr_names : List Name := []) (hs : List simp_arg_type := []) :
+    tactic (expr × expr × name_set) := do
   let (s, to_unfold) ← mk_simp_set no_defaults attr_names hs
   simplify s to_unfold t cfg `eq discharger
 #align expr.simp expr.simp
 
 /-- Definitionally simplifies the expression `t` with the specified options.
   The result is the simplified expression. -/
-unsafe def dsimp (t : expr) (cfg : DsimpConfig := {  }) (no_defaults := false) (attr_names : List Name := [])
-    (hs : List simp_arg_type := []) : tactic expr := do
+unsafe def dsimp (t : expr) (cfg : DsimpConfig := {  }) (no_defaults := false)
+    (attr_names : List Name := []) (hs : List simp_arg_type := []) : tactic expr := do
   let (s, to_unfold) ← mk_simp_set no_defaults attr_names hs
   s to_unfold t cfg
 #align expr.dsimp expr.dsimp
@@ -800,7 +806,8 @@ unsafe def instantiate_lambdas_or_apps : List expr → expr → expr
   | es, e => mk_app e es
 #align expr.instantiate_lambdas_or_apps expr.instantiate_lambdas_or_apps
 
-library_note "open expressions"/-- Some declarations work with open expressions, i.e. an expr that has free variables.
+library_note "open expressions"/--
+Some declarations work with open expressions, i.e. an expr that has free variables.
 Terms will free variables are not well-typed, and one should not use them in tactics like
 `infer_type` or `unify`. You can still do syntactic analysis/manipulation on them.
 The reason for working with open types is for performance: instantiating variables requires
@@ -940,9 +947,11 @@ unsafe def unsafe_cast {elab₁ elab₂ : Bool} : expr elab₁ → expr elab₂ 
 /-- `replace_subexprs e mappings` takes an `e : expr` and interprets a `list (expr × expr)` as
 a collection of rules for variable replacements. A pair `(f, t)` encodes a rule which says "whenever
 `f` is encountered in `e` verbatim, replace it with `t`". -/
-unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr × expr)) : expr elab :=
+unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr × expr)) :
+    expr elab :=
   unsafe_cast <|
-    e.unsafe_cast.replace fun e n => (mappings.filter fun ent : expr × expr => ent.1 = e).head'.map Prod.snd
+    e.unsafe_cast.replace fun e n =>
+      (mappings.filter fun ent : expr × expr => ent.1 = e).head'.map Prod.snd
 #align expr.replace_subexprs expr.replace_subexprs
 
 /-- `is_implicitly_included_variable e vs` accepts `e`, an `expr.local_const`, and a list `vs` of
@@ -963,16 +972,20 @@ unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr
     Note that if `e ∈ vs` then `is_implicitly_included_variable e vs = tt`. -/
 unsafe def is_implicitly_included_variable (e : expr) (vs : List expr) : Bool :=
   if ¬e.local_pp_name.toString.startsWith "_" then e ∈ vs
-  else (e.local_type.fold true) fun se _ b => if ¬b then false else if ¬se.is_local_constant then true else se ∈ vs
+  else
+    (e.local_type.fold true) fun se _ b =>
+      if ¬b then false else if ¬se.is_local_constant then true else se ∈ vs
 #align expr.is_implicitly_included_variable expr.is_implicitly_included_variable
 
 /-- Private work function for `all_implicitly_included_variables`, performing the actual series of
     iterations, tracking with a boolean whether any updates occured this iteration. -/
-private unsafe def all_implicitly_included_variables_aux : List expr → List expr → List expr → Bool → List expr
+private unsafe def all_implicitly_included_variables_aux :
+    List expr → List expr → List expr → Bool → List expr
   | [], vs, rs, tt => all_implicitly_included_variables_aux rs vs [] false
   | [], vs, rs, ff => vs
   | e :: rest, vs, rs, b =>
-    let (vs, rs, b) := if e.is_implicitly_included_variable vs then (e :: vs, rs, true) else (vs, e :: rs, b)
+    let (vs, rs, b) :=
+      if e.is_implicitly_included_variable vs then (e :: vs, rs, true) else (vs, e :: rs, b)
     all_implicitly_included_variables_aux rest vs rs b
 #align expr.all_implicitly_included_variables_aux expr.all_implicitly_included_variables_aux
 
@@ -1051,14 +1064,16 @@ e.g. `g x₁ x₂ x₃ ... xₙ` becomes `g x₂ x₁ x₃ ... xₙ` if `reorder
 We assume that all functions where we want to reorder arguments are fully applied.
 This can be done by applying `expr.eta_expand` first.
 -/
-protected unsafe def apply_replacement_fun (f : Name → Name) (test : expr → Bool) (relevant : name_map ℕ)
-    (reorder : name_map <| List ℕ) : expr → expr
+protected unsafe def apply_replacement_fun (f : Name → Name) (test : expr → Bool)
+    (relevant : name_map ℕ) (reorder : name_map <| List ℕ) : expr → expr
   | e =>
     e.replace fun e _ =>
       match e with
       | const n ls =>
         some <|
-          const (f n) <|-- if the first two arguments are reordered, we also reorder the first two universe parameters
+          const
+              (f
+                n) <|-- if the first two arguments are reordered, we also reorder the first two universe parameters
               if 1 ∈ (reorder.find n).iget then ls.inth 1 :: ls.head :: ls.drop 2
             else ls
       | app g x =>
@@ -1069,7 +1084,8 @@ protected unsafe def apply_replacement_fun (f : Name → Name) (test : expr → 
           if n_args ∈ (reorder.find nm).iget ∧ test g.get_app_args.head then
           -- interchange `x` and the last argument of `g`
             some <|
-            apply_replacement_fun g.app_fn (apply_replacement_fun x) <| apply_replacement_fun g.app_arg
+            apply_replacement_fun g.app_fn (apply_replacement_fun x) <|
+              apply_replacement_fun g.app_arg
         else
           if n_args = (relevant.find nm).lhoare 0 ∧ f.is_constant ∧ ¬test x then
             some <| (f.mk_app <| g.get_app_args.map apply_replacement_fun) (apply_replacement_fun x)
@@ -1132,7 +1148,8 @@ unsafe def get_decl_names (e : environment) : List Name :=
 #align environment.get_decl_names environment.get_decl_names
 
 /-- Fold a monad over all declarations in the environment. -/
-unsafe def mfold {α : Type} {m : Type → Type} [Monad m] (e : environment) (x : α) (fn : declaration → α → m α) : m α :=
+unsafe def mfold {α : Type} {m : Type → Type} [Monad m] (e : environment) (x : α)
+    (fn : declaration → α → m α) : m α :=
   e.fold (return x) fun d t => t >>= fn d
 #align environment.mfold environment.mfold
 
@@ -1142,7 +1159,8 @@ unsafe def filter (e : environment) (test : declaration → Bool) : List declara
 #align environment.filter environment.filter
 
 /-- Filters all declarations in the environment. -/
-unsafe def mfilter (e : environment) (test : declaration → tactic Bool) : tactic (List declaration) :=
+unsafe def mfilter (e : environment) (test : declaration → tactic Bool) :
+    tactic (List declaration) :=
   (e.mfold []) fun d ds => do
     let b ← test d
     return <| if b then d :: ds else ds
@@ -1171,7 +1189,8 @@ namespace Expr
   `pr = nm.{univs} args`.
   Used in `is_eta_expansion`, where `l` consists of the projections and the fields of the value we
   want to eta-reduce. -/
-unsafe def is_eta_expansion_of (args : List expr) (univs : List level) (l : List (Name × expr)) : Bool :=
+unsafe def is_eta_expansion_of (args : List expr) (univs : List level) (l : List (Name × expr)) :
+    Bool :=
   l.all fun ⟨proj, val⟩ => val = (const proj univs).mk_app args
 #align expr.is_eta_expansion_of expr.is_eta_expansion_of
 
@@ -1233,11 +1252,15 @@ namespace Declaration
 sets the name of the given `decl : declaration` to `tgt`, and applies both `expr.eta_expand` and
 `expr.apply_replacement_fun` to the value and type of `decl`.
 -/
-protected unsafe def update_with_fun (env : environment) (f : Name → Name) (test : expr → Bool) (relevant : name_map ℕ)
-    (reorder : name_map <| List ℕ) (tgt : Name) (decl : declaration) : declaration :=
+protected unsafe def update_with_fun (env : environment) (f : Name → Name) (test : expr → Bool)
+    (relevant : name_map ℕ) (reorder : name_map <| List ℕ) (tgt : Name) (decl : declaration) :
+    declaration :=
   let decl := decl.update_name <| tgt
-  let decl := decl.update_type <| (decl.type.eta_expand env reorder).apply_replacement_fun f test relevant reorder
-  decl.update_value <| (decl.value.eta_expand env reorder).apply_replacement_fun f test relevant reorder
+  let decl :=
+    decl.update_type <|
+      (decl.type.eta_expand env reorder).apply_replacement_fun f test relevant reorder
+  decl.update_value <|
+    (decl.value.eta_expand env reorder).apply_replacement_fun f test relevant reorder
 #align declaration.update_with_fun declaration.update_with_fun
 
 /-- Checks whether the declaration is declared in the current file.
@@ -1273,11 +1296,13 @@ unsafe def is_axiom : declaration → Bool
 unsafe def is_auto_generated (e : environment) (d : declaration) : Bool :=
   e.is_constructor d.to_name ∨
     (e.is_projection d.to_name).isSome ∨
-      e.is_constructor d.to_name.getPrefix ∧ d.to_name.last ∈ ["inj", "inj_eq", "sizeof_spec", "inj_arrow"] ∨
+      e.is_constructor d.to_name.getPrefix ∧
+          d.to_name.last ∈ ["inj", "inj_eq", "sizeof_spec", "inj_arrow"] ∨
         e.is_inductive d.to_name.getPrefix ∧
             d.to_name.last ∈
-              ["below", "binduction_on", "brec_on", "cases_on", "dcases_on", "drec_on", "drec", "rec", "rec_on",
-                "no_confusion", "no_confusion_type", "sizeof", "ibelow", "has_sizeof_inst"] ∨
+              ["below", "binduction_on", "brec_on", "cases_on", "dcases_on", "drec_on", "drec",
+                "rec", "rec_on", "no_confusion", "no_confusion_type", "sizeof", "ibelow",
+                "has_sizeof_inst"] ∨
           d.to_name.hasPrefix fun nm => e.is_ginductive' nm
 #align declaration.is_auto_generated declaration.is_auto_generated
 
@@ -1306,16 +1331,22 @@ private unsafe def print_thm (nm : Name) (tp : expr) (body : task expr) : tactic
 #align declaration.print_thm declaration.print_thm
 
 /-- formats the arguments of a `declaration.defn` -/
-private unsafe def print_defn (nm : Name) (tp : expr) (body : expr) (is_trusted : Bool) : tactic format := do
+private unsafe def print_defn (nm : Name) (tp : expr) (body : expr) (is_trusted : Bool) :
+    tactic format := do
   let tp ← pp tp
   let body ← pp body
-  return <| ("<" ++ if is_trusted then "def " else "meta def ") ++ to_fmt nm ++ " : " ++ tp ++ " := " ++ body ++ ">"
+  return <|
+      ("<" ++ if is_trusted then "def " else "meta def ") ++ to_fmt nm ++ " : " ++ tp ++ " := " ++
+          body ++
+        ">"
 #align declaration.print_defn declaration.print_defn
 
 /-- formats the arguments of a `declaration.cnst` -/
 private unsafe def print_cnst (nm : Name) (tp : expr) (is_trusted : Bool) : tactic format := do
   let tp ← pp tp
-  return <| ("<" ++ if is_trusted then "constant " else "meta constant ") ++ to_fmt nm ++ " : " ++ tp ++ ">"
+  return <|
+      ("<" ++ if is_trusted then "constant " else "meta constant ") ++ to_fmt nm ++ " : " ++ tp ++
+        ">"
 #align declaration.print_cnst declaration.print_cnst
 
 /-- formats the arguments of a `declaration.ax` -/

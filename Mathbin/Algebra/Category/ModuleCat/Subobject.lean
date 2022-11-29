@@ -42,9 +42,11 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
             fapply eq_mk_of_comm
             · apply LinearEquiv.toModuleIso'Left
               apply LinearEquiv.ofBijective (LinearMap.codRestrict S.arrow.range S.arrow _)
-              · simpa only [← LinearMap.ker_eq_bot, LinearMap.ker_cod_restrict] using ker_eq_bot_of_mono _
+              · simpa only [← LinearMap.ker_eq_bot, LinearMap.ker_cod_restrict] using
+                  ker_eq_bot_of_mono _
                 
-              · rw [← LinearMap.range_eq_top, LinearMap.range_cod_restrict, Submodule.comap_subtype_self]
+              · rw [← LinearMap.range_eq_top, LinearMap.range_cod_restrict,
+                  Submodule.comap_subtype_self]
                 
               · exact LinearMap.mem_range_self _
                 
@@ -55,7 +57,9 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
               ),
       left_inv := fun N => by
         convert congr_arg LinearMap.range (underlying_iso_arrow (↾N.subtype)) using 1
-        · have : (underlying_iso (↾N.subtype)).inv = (underlying_iso (↾N.subtype)).symm.toLinearEquiv := by
+        · have :
+            (underlying_iso (↾N.subtype)).inv = (underlying_iso (↾N.subtype)).symm.toLinearEquiv :=
+            by
             apply LinearMap.ext
             intro x
             rfl
@@ -84,7 +88,8 @@ instance well_powered_Module : WellPowered (ModuleCat.{v} R) :=
 attribute [local instance] has_kernels_Module
 
 /-- Bundle an element `m : M` such that `f m = 0` as a term of `kernel_subobject f`. -/
-noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} : LinearMap.ker f →ₗ[R] kernelSubobject f :=
+noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} :
+    LinearMap.ker f →ₗ[R] kernelSubobject f :=
   (kernelSubobjectIso f ≪≫ ModuleCat.kernelIsoKer f).inv
 #align Module.to_kernel_subobject ModuleCat.toKernelSubobject
 

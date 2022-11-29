@@ -20,8 +20,9 @@ of the Lie algebra for a Lie group.
 -/
 
 
-variable (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {H : Type _}
-  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M] (n : ℕ∞)
+variable (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
+  [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _)
+  [TopologicalSpace M] [ChartedSpace H M] (n : ℕ∞)
 
 open Manifold
 
@@ -121,8 +122,9 @@ theorem eval_at_apply (x : M) : evalAt x X f = (X f) x :=
 
 end Derivation
 
-variable {I} {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
-  {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+variable {I} {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
+  [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M']
+  [ChartedSpace H' M']
 
 /-- The heterogeneous differential as a linear map. Instead of taking a function as an argument this
 differential takes `h : f x = y`. It is particularly handy to deal with situations where the points
@@ -131,17 +133,20 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
     PointDerivation I x →ₗ[𝕜] PointDerivation I' y where
   toFun v :=
     Derivation.mk'
-      { toFun := fun g => v (g.comp f), map_add' := fun g g' => by rw [SmoothMap.add_comp, Derivation.map_add],
-        map_smul' := fun k g => by simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
+      { toFun := fun g => v (g.comp f),
+        map_add' := fun g g' => by rw [SmoothMap.add_comp, Derivation.map_add],
+        map_smul' := fun k g => by
+          simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by
-      simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk, PointedSmoothMap.smul_def,
-        ContMdiffMap.comp_apply, h]
+      simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk,
+        PointedSmoothMap.smul_def, ContMdiffMap.comp_apply, h]
   map_smul' k v := rfl
   map_add' v w := rfl
 #align hfdifferential hfdifferential
 
 /-- The homogeneous differential as a linear map. -/
-def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) : PointDerivation I x →ₗ[𝕜] PointDerivation I' (f x) :=
+def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) :
+    PointDerivation I x →ₗ[𝕜] PointDerivation I' (f x) :=
   hfdifferential (rfl : f x = f x)
 #align fdifferential fdifferential
 
@@ -154,19 +159,20 @@ scoped[Manifold] notation "𝒅" => fdifferential
 scoped[Manifold] notation "𝒅ₕ" => hfdifferential
 
 @[simp]
-theorem apply_fdifferential (f : C^∞⟮I, M; I', M'⟯) {x : M} (v : PointDerivation I x) (g : C^∞⟮I', M'; 𝕜⟯) :
-    𝒅 f x v g = v (g.comp f) :=
+theorem apply_fdifferential (f : C^∞⟮I, M; I', M'⟯) {x : M} (v : PointDerivation I x)
+    (g : C^∞⟮I', M'; 𝕜⟯) : 𝒅 f x v g = v (g.comp f) :=
   rfl
 #align apply_fdifferential apply_fdifferential
 
 @[simp]
-theorem apply_hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) (v : PointDerivation I x)
-    (g : C^∞⟮I', M'; 𝕜⟯) : 𝒅ₕ h v g = 𝒅 f x v g :=
+theorem apply_hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y)
+    (v : PointDerivation I x) (g : C^∞⟮I', M'; 𝕜⟯) : 𝒅ₕ h v g = 𝒅 f x v g :=
   rfl
 #align apply_hfdifferential apply_hfdifferential
 
-variable {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
-  {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
+variable {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _}
+  [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
+  [ChartedSpace H'' M'']
 
 @[simp]
 theorem fdifferential_comp (g : C^∞⟮I', M'; I'', M''⟯) (f : C^∞⟮I, M; I', M'⟯) (x : M) :

@@ -80,7 +80,8 @@ theorem dual_def (x : E) (f : Dual 𝕜 E) : inclusionInDoubleDual 𝕜 E x f = 
   rfl
 #align normed_space.dual_def NormedSpace.dual_def
 
-theorem inclusion_in_double_dual_norm_eq : ‖inclusionInDoubleDual 𝕜 E‖ = ‖ContinuousLinearMap.id 𝕜 (Dual 𝕜 E)‖ :=
+theorem inclusion_in_double_dual_norm_eq :
+    ‖inclusionInDoubleDual 𝕜 E‖ = ‖ContinuousLinearMap.id 𝕜 (Dual 𝕜 E)‖ :=
   ContinuousLinearMap.op_norm_flip _
 #align normed_space.inclusion_in_double_dual_norm_eq NormedSpace.inclusion_in_double_dual_norm_eq
 
@@ -116,8 +117,8 @@ variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedAddCommGroup E] [Norm
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
-theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ‖f x‖ ≤ M * ‖f‖) : ‖x‖ ≤ M := by
-  classical
+theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ‖f x‖ ≤ M * ‖f‖) :
+    ‖x‖ ≤ M := by classical
   by_cases h : x = 0
   · simp only [h, hMp, norm_zero]
     
@@ -168,8 +169,8 @@ open Metric Set NormedSpace
 /-- Given a subset `s` in a normed space `E` (over a field `𝕜`), the polar
 `polar 𝕜 s` is the subset of `dual 𝕜 E` consisting of those functionals which
 evaluate to something of norm at most one at all points `z ∈ s`. -/
-def polar (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] :
-    Set E → Set (Dual 𝕜 E) :=
+def polar (𝕜 : Type _) [NontriviallyNormedField 𝕜] {E : Type _} [SeminormedAddCommGroup E]
+    [NormedSpace 𝕜 E] : Set E → Set (Dual 𝕜 E) :=
   (dualPairing 𝕜 E).flip.polar
 #align normed_space.polar NormedSpace.polar
 
@@ -183,7 +184,8 @@ theorem mem_polar_iff {x' : Dual 𝕜 E} (s : Set E) : x' ∈ polar 𝕜 s ↔ �
 
 @[simp]
 theorem polar_univ : polar 𝕜 (univ : Set E) = {(0 : dual 𝕜 E)} :=
-  (dualPairing 𝕜 E).flip.polar_univ (LinearMap.flip_separating_right.mpr (dualPairingSeparatingLeft 𝕜 E))
+  (dualPairing 𝕜 E).flip.polar_univ
+    (LinearMap.flip_separating_right.mpr (dualPairingSeparatingLeft 𝕜 E))
 #align normed_space.polar_univ NormedSpace.polar_univ
 
 theorem isClosedPolar (s : Set E) : IsClosed (polar 𝕜 s) := by
@@ -198,14 +200,16 @@ theorem polar_closure (s : Set E) : polar 𝕜 (closure s) = polar 𝕜 s :=
   ((dualPairing 𝕜 E).flip.polar_antitone subset_closure).antisymm <|
     (dualPairing 𝕜 E).flip.polar_gc.l_le <|
       closure_minimal ((dualPairing 𝕜 E).flip.polar_gc.le_u_l s) <| by
-        simpa [LinearMap.flip_flip] using (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
+        simpa [LinearMap.flip_flip] using
+          (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
 #align normed_space.polar_closure NormedSpace.polar_closure
 
 variable {𝕜}
 
 /-- If `x'` is a dual element such that the norms `‖x' z‖` are bounded for `z ∈ s`, then a
 small scalar multiple of `x'` is in `polar 𝕜 s`. -/
-theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ‖x' z‖ ≤ ‖c‖) : c⁻¹ • x' ∈ polar 𝕜 s := by
+theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ‖x' z‖ ≤ ‖c‖) :
+    c⁻¹ • x' ∈ polar 𝕜 s := by
   by_cases c_zero : c = 0
   · simp only [c_zero, inv_zero, zero_smul]
     exact (dual_pairing 𝕜 E).flip.zero_mem_polar _
@@ -215,7 +219,8 @@ theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z 
     intro z hzs
     rw [Eq z]
     apply mul_le_mul (le_of_eq rfl) (hc z hzs) (norm_nonneg _) (norm_nonneg _)
-  have cancel : ‖c⁻¹‖ * ‖c‖ = 1 := by simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
+  have cancel : ‖c⁻¹‖ * ‖c‖ = 1 := by
+    simp only [c_zero, norm_eq_zero, Ne.def, not_false_iff, inv_mul_cancel, norm_inv]
   rwa [cancel] at le
 #align normed_space.smul_mem_polar NormedSpace.smul_mem_polar
 
@@ -244,12 +249,13 @@ theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
     _ = r / r := inv_mul_eq_div _ _
     _ ≤ 1 := div_self_le_one r
     
-#align normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closed_ball_inv_subset_polar_closed_ball
+#align
+  normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closed_ball_inv_subset_polar_closed_ball
 
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with
 inverse radius. -/
-theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ} (hr : 0 < r) :
-    polar 𝕜 (closedBall (0 : E) r) = closedBall (0 : Dual 𝕜 E) r⁻¹ := by
+theorem polar_closed_ball {𝕜 E : Type _} [IsROrC 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {r : ℝ}
+    (hr : 0 < r) : polar 𝕜 (closedBall (0 : E) r) = closedBall (0 : Dual 𝕜 E) r⁻¹ := by
   refine' subset.antisymm _ (closed_ball_inv_subset_polar_closed_ball _)
   intro x' h
   simp only [mem_closed_ball_zero_iff]
@@ -264,7 +270,8 @@ theorem boundedPolarOfMemNhdsZero {s : Set E} (s_nhd : s ∈ 𝓝 (0 : E)) : Bou
   obtain ⟨r, r_pos, r_ball⟩ : ∃ (r : ℝ)(hr : 0 < r), ball 0 r ⊆ s := Metric.mem_nhds_iff.1 s_nhd
   exact
     bounded_closed_ball.mono
-      (((dual_pairing 𝕜 E).flip.polar_antitone r_ball).trans <| polar_ball_subset_closed_ball_div ha r_pos)
+      (((dual_pairing 𝕜 E).flip.polar_antitone r_ball).trans <|
+        polar_ball_subset_closed_ball_div ha r_pos)
 #align normed_space.bounded_polar_of_mem_nhds_zero NormedSpace.boundedPolarOfMemNhdsZero
 
 end PolarSets

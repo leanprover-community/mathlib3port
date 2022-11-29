@@ -33,47 +33,52 @@ namespace CancelFactors
 
 theorem mul_subst {α} [CommRing α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1 = t1) (h2 : n2 * e2 = t2)
     (h3 : n1 * n2 = k) : k * (e1 * e2) = t1 * t2 := by
-  rw [← h3, mul_comm n1, mul_assoc n2, ← mul_assoc n1, h1, ← mul_assoc n2, mul_comm n2, mul_assoc, h2]
+  rw [← h3, mul_comm n1, mul_assoc n2, ← mul_assoc n1, h1, ← mul_assoc n2, mul_comm n2, mul_assoc,
+    h2]
 #align cancel_factors.mul_subst CancelFactors.mul_subst
 
-theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1) (h3 : n1 * n2 = k) :
-    k * (e1 / e2) = t1 := by rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mul]
+theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1)
+    (h3 : n1 * n2 = k) : k * (e1 / e2) = t1 := by
+  rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mul]
 #align cancel_factors.div_subst CancelFactors.div_subst
 
-theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
+theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) :
+    e = e' / n :=
   eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h
 #align cancel_factors.cancel_factors_eq_div CancelFactors.cancel_factors_eq_div
 
-theorem add_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 := by
-  simp [left_distrib, *]
+theorem add_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) :
+    n * (e1 + e2) = t1 + t2 := by simp [left_distrib, *]
 #align cancel_factors.add_subst CancelFactors.add_subst
 
-theorem sub_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 - e2) = t1 - t2 := by
-  simp [left_distrib, *, sub_eq_add_neg]
+theorem sub_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) :
+    n * (e1 - e2) = t1 - t2 := by simp [left_distrib, *, sub_eq_add_neg]
 #align cancel_factors.sub_subst CancelFactors.sub_subst
 
 theorem neg_subst {α} [Ring α] {n e t : α} (h1 : n * e = t) : n * -e = -t := by simp [*]
 #align cancel_factors.neg_subst CancelFactors.neg_subst
 
-theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
+theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
+    (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
+    (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
   rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_lt_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 #align cancel_factors.cancel_factors_lt CancelFactors.cancel_factors_lt
 
-theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
+theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
+    (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
+    (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
   rw [mul_le_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_le_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 #align cancel_factors.cancel_factors_le CancelFactors.cancel_factors_le
 
-theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
+theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
+    (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
+    (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
   rw [← ha, ← hb, ← mul_assoc bd, ← mul_assoc ad, mul_comm bd]
-  ext
-  constructor
+  ext; constructor
   · rintro rfl
     rfl
     
@@ -132,7 +137,9 @@ open Tree
               =>
               let
                 ( v1 , t1 ) := find_cancel_factor e1
-                let n := v1 . lcm q . num . natAbs ( n , node n t1 ( node q . num . natAbs Tree.nil Tree.nil ) )
+                let
+                  n := v1 . lcm q . num . natAbs
+                  ( n , node n t1 ( node q . num . natAbs Tree.nil Tree.nil ) )
             | none => ( 1 , node 1 Tree.nil Tree.nil )
       | q( - $ ( e ) ) => find_cancel_factor e
       | _ => ( 1 , node 1 Tree.nil Tree.nil )
@@ -153,11 +160,17 @@ open Tree
     |
         v , node _ lhs rhs , q( $ ( e1 ) + $ ( e2 ) )
         =>
-        do let v1 ← mk_prod_prf v lhs e1 let v2 ← mk_prod_prf v rhs e2 mk_app ` ` add_subst [ v1 , v2 ]
+        do
+          let v1 ← mk_prod_prf v lhs e1
+            let v2 ← mk_prod_prf v rhs e2
+            mk_app ` ` add_subst [ v1 , v2 ]
       |
         v , node _ lhs rhs , q( $ ( e1 ) - $ ( e2 ) )
         =>
-        do let v1 ← mk_prod_prf v lhs e1 let v2 ← mk_prod_prf v rhs e2 mk_app ` ` sub_subst [ v1 , v2 ]
+        do
+          let v1 ← mk_prod_prf v lhs e1
+            let v2 ← mk_prod_prf v rhs e2
+            mk_app ` ` sub_subst [ v1 , v2 ]
       |
         v , node n ( lhs @ ( node ln _ _ ) ) rhs , q( $ ( e1 ) * $ ( e2 ) )
         =>
@@ -190,16 +203,22 @@ open Tree
       |
         v , _ , e
         =>
-        do let tp ← infer_type e let v' ← tp . ofNat v let e' ← to_expr ` `( $ ( v' ) * $ ( e ) ) mk_app `eq.refl [ e' ]
+        do
+          let tp ← infer_type e
+            let v' ← tp . ofNat v
+            let e' ← to_expr ` `( $ ( v' ) * $ ( e ) )
+            mk_app `eq.refl [ e' ]
 #align cancel_factors.mk_prod_prf cancel_factors.mk_prod_prf
 
-/-- Given `e`, a term with rational division, produces a natural number `n` and a proof of `n*e = e'`,
+/--
+Given `e`, a term with rational division, produces a natural number `n` and a proof of `n*e = e'`,
 where `e'` has no division. Assumes "well-behaved" division.
 -/
 unsafe def derive (e : expr) : tactic (ℕ × expr) :=
   let (n, t) := find_cancel_factor e
   Prod.mk n <$> mk_prod_prf n t e <|>
-    throwError "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
+    throwError
+      "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 #align cancel_factors.derive cancel_factors.derive
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -219,7 +238,9 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
           let n' ← tp . ofNat n
           let tgt ← to_expr ` `( $ ( n' ) ≠ 0 )
           let ( _ , pn ) ← solve_aux tgt sorry
-          Prod.mk n <$> mk_mapp ` ` cancel_factors_eq_div [ none , none , n' , none , none , p , pn ]
+          Prod.mk n
+            <$>
+            mk_mapp ` ` cancel_factors_eq_div [ none , none , n' , none , none , p , pn ]
 #align cancel_factors.derive_div cancel_factors.derive_div
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -297,11 +318,12 @@ end
 -/
 unsafe def tactic.interactive.cancel_denoms (l : parse location) : tactic Unit := do
   let locs ← l.get_locals
-  tactic.replace_at cancel_denominators_in_type locs l >>= guardb <|> fail "failed to cancel any denominators"
+  tactic.replace_at cancel_denominators_in_type locs l >>= guardb <|>
+      fail "failed to cancel any denominators"
   tactic.interactive.norm_num [simp_arg_type.symm_expr ``(mul_assoc)] l
 #align tactic.interactive.cancel_denoms tactic.interactive.cancel_denoms
 
 add_tactic_doc
-  { Name := "cancel_denoms", category := DocCategory.tactic, declNames := [`tactic.interactive.cancel_denoms],
-    tags := ["simplification"] }
+  { Name := "cancel_denoms", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.cancel_denoms], tags := ["simplification"] }
 

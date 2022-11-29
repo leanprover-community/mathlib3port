@@ -56,7 +56,13 @@ namespace Interactive
   def
     init_ring
     ( assert : parse ( tk "using" *> parser.pexpr ) ? ) : tactic Unit
-    := do sorry match assert with | none => skip | some e => do sorry tactic.replace `h `( $ ( e ) p _ h ) sorry
+    :=
+      do
+        sorry
+          match
+            assert
+            with
+            | none => skip | some e => do sorry tactic.replace `h `( $ ( e ) p _ h ) sorry
 #align tactic.interactive.init_ring tactic.interactive.init_ring
 
 end Interactive
@@ -114,13 +120,14 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
   intro n
   simp only [RingHom.map_add]
   suffices
-    (bind₁ (select_poly P)) (wittPolynomial p ℤ n) + (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
+    (bind₁ (select_poly P)) (wittPolynomial p ℤ n) +
+        (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
       wittPolynomial p ℤ n
     by
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
-  simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow, AlgHom.map_mul,
-    bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_add]
+  simp only [witt_polynomial_eq_sum_C_mul_X_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
+    AlgHom.map_mul, bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_add]
   apply Finset.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
   rw [ite_pow, ite_pow, zero_pow (pow_pos hp.out.pos _)]
@@ -198,16 +205,20 @@ theorem init_init (x : 𝕎 R) (n : ℕ) : init n (init n x) = init n x := by in
 
 include hp
 
-theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by init_ring using witt_add_vars
+theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by
+  init_ring using witt_add_vars
 #align witt_vector.init_add WittVector.init_add
 
-theorem init_mul (x y : 𝕎 R) (n : ℕ) : init n (x * y) = init n (init n x * init n y) := by init_ring using witt_mul_vars
+theorem init_mul (x y : 𝕎 R) (n : ℕ) : init n (x * y) = init n (init n x * init n y) := by
+  init_ring using witt_mul_vars
 #align witt_vector.init_mul WittVector.init_mul
 
-theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by init_ring using witt_neg_vars
+theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by
+  init_ring using witt_neg_vars
 #align witt_vector.init_neg WittVector.init_neg
 
-theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by init_ring using witt_sub_vars
+theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by
+  init_ring using witt_sub_vars
 #align witt_vector.init_sub WittVector.init_sub
 
 theorem init_nsmul (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by

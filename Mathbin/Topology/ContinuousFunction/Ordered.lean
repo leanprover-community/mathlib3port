@@ -68,12 +68,14 @@ theorem sup_coe [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) :
 #align continuous_map.sup_coe ContinuousMap.sup_coe
 
 @[simp]
-theorem sup_apply [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f ⊔ g) a = max (f a) (g a) :=
+theorem sup_apply [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) :
+    (f ⊔ g) a = max (f a) (g a) :=
   rfl
 #align continuous_map.sup_apply ContinuousMap.sup_apply
 
 instance [LinearOrder β] [OrderClosedTopology β] : SemilatticeSup C(α, β) :=
-  { ContinuousMap.partialOrder, ContinuousMap.hasSup with le_sup_left := fun f g => le_def.mpr (by simp [le_refl]),
+  { ContinuousMap.partialOrder, ContinuousMap.hasSup with
+    le_sup_left := fun f g => le_def.mpr (by simp [le_refl]),
     le_sup_right := fun f g => le_def.mpr (by simp [le_refl]),
     sup_le := fun f₁ f₂ g w₁ w₂ => le_def.mpr fun a => by simp [le_def.mp w₁ a, le_def.mp w₂ a] }
 
@@ -88,12 +90,14 @@ theorem inf_coe [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) :
 #align continuous_map.inf_coe ContinuousMap.inf_coe
 
 @[simp]
-theorem inf_apply [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f ⊓ g) a = min (f a) (g a) :=
+theorem inf_apply [LinearOrder β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) :
+    (f ⊓ g) a = min (f a) (g a) :=
   rfl
 #align continuous_map.inf_apply ContinuousMap.inf_apply
 
 instance [LinearOrder β] [OrderClosedTopology β] : SemilatticeInf C(α, β) :=
-  { ContinuousMap.partialOrder, ContinuousMap.hasInf with inf_le_left := fun f g => le_def.mpr (by simp [le_refl]),
+  { ContinuousMap.partialOrder, ContinuousMap.hasInf with
+    inf_le_left := fun f g => le_def.mpr (by simp [le_refl]),
     inf_le_right := fun f g => le_def.mpr (by simp [le_refl]),
     le_inf := fun f₁ f₂ g w₁ w₂ => le_def.mpr fun a => by simp [le_def.mp w₁ a, le_def.mp w₂ a] }
 
@@ -149,7 +153,8 @@ def iccExtend (f : C(Set.icc a b, β)) : C(α, β) :=
 #align continuous_map.Icc_extend ContinuousMap.iccExtend
 
 @[simp]
-theorem coe_Icc_extend (f : C(Set.icc a b, β)) : ((iccExtend h f : C(α, β)) : α → β) = Set.iccExtend h f :=
+theorem coe_Icc_extend (f : C(Set.icc a b, β)) :
+    ((iccExtend h f : C(α, β)) : α → β) = Set.iccExtend h f :=
   rfl
 #align continuous_map.coe_Icc_extend ContinuousMap.coe_Icc_extend
 

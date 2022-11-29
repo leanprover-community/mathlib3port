@@ -31,14 +31,16 @@ variable {C : Type _} [Category C]
 variable [Preadditive C]
 
 -- See also `epi_of_nonzero_to_simple`, which does not require `preadditive C`.
-theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X ⟶ Y} (w : f ≠ 0) : Mono f :=
+theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X ⟶ Y} (w : f ≠ 0) :
+    Mono f :=
   Preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)
 #align category_theory.mono_of_nonzero_from_simple CategoryTheory.mono_of_nonzero_from_simple
 
 /-- The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
-theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f :=
+theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y}
+    (w : f ≠ 0) : IsIso f :=
   haveI := mono_of_nonzero_from_simple w
   is_iso_of_mono_of_nonzero w
 #align category_theory.is_iso_of_hom_simple CategoryTheory.is_iso_of_hom_simple
@@ -46,7 +48,8 @@ theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f :
 /-- As a corollary of Schur's lemma for preadditive categories,
 any morphism between simple objects is (exclusively) either an isomorphism or zero.
 -/
-theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X ⟶ Y) : IsIso f ↔ f ≠ 0 :=
+theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X ⟶ Y) :
+    IsIso f ↔ f ≠ 0 :=
   ⟨fun I => by
     intro h
     apply id_nonzero X
@@ -87,7 +90,13 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
              "exact"
              (Term.structInst
               "{"
-              [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
+              [[(Term.typeAscription
+                 "("
+                 `inferInstance
+                 ":"
+                 [(Term.app `Ring [(Term.app `End [`X])])]
+                 ")")]
+               "with"]
               [(Term.structInstField
                 (Term.structInstLVal `inv [])
                 ":="
@@ -107,7 +116,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                    "else"
                    (Std.Tactic.haveI
                     "haveI"
-                    (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
+                    (Term.haveDecl
+                     (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
                     []
                     (Term.app `inv [`f]))))))
                ","
@@ -123,7 +133,10 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                   (Term.app `id_nonzero [(Term.hole "_")])]
                  "⟩"))
                ","
-               (Term.structInstField (Term.structInstLVal `inv_zero []) ":=" (Term.app `dif_pos [`rfl]))
+               (Term.structInstField
+                (Term.structInstLVal `inv_zero [])
+                ":="
+                (Term.app `dif_pos [`rfl]))
                ","
                (Term.structInstField
                 (Term.structInstLVal `mul_inv_cancel [])
@@ -140,7 +153,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                     (Tactic.tacticSeq1Indented
                      [(Std.Tactic.tacticHaveI_
                        "haveI"
-                       (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h]))))
+                       (Term.haveDecl
+                        (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h]))))
                       []
                       (convert "convert" [] (Term.app `is_iso.inv_hom_id [`f]) [])
                       []
@@ -167,7 +181,13 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
             "exact"
             (Term.structInst
              "{"
-             [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
+             [[(Term.typeAscription
+                "("
+                `inferInstance
+                ":"
+                [(Term.app `Ring [(Term.app `End [`X])])]
+                ")")]
+              "with"]
              [(Term.structInstField
                (Term.structInstLVal `inv [])
                ":="
@@ -187,7 +207,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                   "else"
                   (Std.Tactic.haveI
                    "haveI"
-                   (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
+                   (Term.haveDecl
+                    (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h])))
                    []
                    (Term.app `inv [`f]))))))
               ","
@@ -203,7 +224,10 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                  (Term.app `id_nonzero [(Term.hole "_")])]
                 "⟩"))
               ","
-              (Term.structInstField (Term.structInstLVal `inv_zero []) ":=" (Term.app `dif_pos [`rfl]))
+              (Term.structInstField
+               (Term.structInstLVal `inv_zero [])
+               ":="
+               (Term.app `dif_pos [`rfl]))
               ","
               (Term.structInstField
                (Term.structInstLVal `mul_inv_cancel [])
@@ -220,7 +244,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                    (Tactic.tacticSeq1Indented
                     [(Std.Tactic.tacticHaveI_
                       "haveI"
-                      (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h]))))
+                      (Term.haveDecl
+                       (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h]))))
                      []
                      (convert "convert" [] (Term.app `is_iso.inv_hom_id [`f]) [])
                      []
@@ -237,7 +262,13 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
         "exact"
         (Term.structInst
          "{"
-         [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
+         [[(Term.typeAscription
+            "("
+            `inferInstance
+            ":"
+            [(Term.app `Ring [(Term.app `End [`X])])]
+            ")")]
+          "with"]
          [(Term.structInstField
            (Term.structInstLVal `inv [])
            ":="
@@ -290,7 +321,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                (Tactic.tacticSeq1Indented
                 [(Std.Tactic.tacticHaveI_
                   "haveI"
-                  (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h]))))
+                  (Term.haveDecl
+                   (Term.haveIdDecl [] [] ":=" (Term.app `is_iso_of_hom_simple [`h]))))
                  []
                  (convert "convert" [] (Term.app `is_iso.inv_hom_id [`f]) [])
                  []
@@ -303,7 +335,13 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
        "exact"
        (Term.structInst
         "{"
-        [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
+        [[(Term.typeAscription
+           "("
+           `inferInstance
+           ":"
+           [(Term.app `Ring [(Term.app `End [`X])])]
+           ")")]
+         "with"]
         [(Term.structInstField
           (Term.structInstLVal `inv [])
           ":="
@@ -367,7 +405,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.structInst
        "{"
-       [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")] "with"]
+       [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")]
+        "with"]
        [(Term.structInstField
          (Term.structInstLVal `inv [])
          ":="
@@ -468,10 +507,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `dif_neg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -482,10 +523,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `is_iso.inv_hom_id
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -498,10 +541,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `is_iso_of_hom_simple
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -510,13 +555,15 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -525,10 +572,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `dif_pos
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -546,26 +595,32 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `id_nonzero
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [`X])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
@@ -613,10 +668,12 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `inv
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `is_iso_of_hom_simple [`h])
@@ -624,20 +681,24 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `is_iso_of_hom_simple
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» `f "=" (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -648,7 +709,8 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.typeAscription "(" `inferInstance ":" [(Term.app `Ring [(Term.app `End [`X])])] ")")
@@ -662,22 +724,29 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `End
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `End [`X]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Ring
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `inferInstance
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -710,7 +779,10 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                 ,
                 mul_inv_cancel
                   :=
-                  fun f h => by haveI := is_iso_of_hom_simple h convert is_iso.inv_hom_id f exact dif_neg h
+                  fun
+                    f h
+                      =>
+                      by haveI := is_iso_of_hom_simple h convert is_iso.inv_hom_id f exact dif_neg h
               }
 
 open FiniteDimensional
@@ -722,8 +794,8 @@ variable (𝕜 : Type _) [DivisionRing 𝕜]
 /-- Part of **Schur's lemma** for `𝕜`-linear categories:
 the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
-theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C} [Simple X] [Simple Y]
-    (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
+theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C}
+    [Simple X] [Simple Y] (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
   haveI :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
       have p := not_congr (is_iso_iff_nonzero f)
@@ -770,8 +842,8 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
           rfl)
         (End.of f)
     use c
-    rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not, sub_eq_zero,
-      Algebra.algebra_map_eq_smul_one] at nu
+    rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def, not_not,
+      sub_eq_zero, Algebra.algebra_map_eq_smul_one] at nu
     exact nu.symm
     
 #align category_theory.finrank_endomorphism_eq_one CategoryTheory.finrank_endomorphism_eq_one
@@ -783,11 +855,13 @@ variable [HasKernels C]
 theorem finrank_endomorphism_simple_eq_one (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
     finrank 𝕜 (X ⟶ X) = 1 :=
   finrank_endomorphism_eq_one 𝕜 is_iso_iff_nonzero
-#align category_theory.finrank_endomorphism_simple_eq_one CategoryTheory.finrank_endomorphism_simple_eq_one
+#align
+  category_theory.finrank_endomorphism_simple_eq_one CategoryTheory.finrank_endomorphism_simple_eq_one
 
-theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] (f : X ⟶ X) :
-    ∃ c : 𝕜, c • 𝟙 X = f :=
-  (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X) f
+theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)]
+    (f : X ⟶ X) : ∃ c : 𝕜, c • 𝟙 X = f :=
+  (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X)
+    f
 #align category_theory.endomorphism_simple_eq_smul_id CategoryTheory.endomorphism_simple_eq_smul_id
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -826,7 +900,12 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
              "exact"
              (Term.structInst
               "{"
-              [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")]
+              [[(Term.typeAscription
+                 "("
+                 `inferInstance
+                 ":"
+                 [(Term.app `DivisionRing [(Term.app `End [`X])])]
+                 ")")]
                "with"]
               [(Term.structInstField
                 (Term.structInstLVal `mul_comm [])
@@ -851,7 +930,8 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `rfl)])
                              [])]
                            "⟩")])]
                        []
@@ -867,7 +947,8 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `rfl)])
                              [])]
                            "⟩")])]
                        []
@@ -904,7 +985,12 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
             "exact"
             (Term.structInst
              "{"
-             [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")]
+             [[(Term.typeAscription
+                "("
+                `inferInstance
+                ":"
+                [(Term.app `DivisionRing [(Term.app `End [`X])])]
+                ")")]
               "with"]
              [(Term.structInstField
                (Term.structInstLVal `mul_comm [])
@@ -929,7 +1015,8 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
                             [])
                            ","
                            (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                            (Std.Tactic.RCases.rcasesPatMed
+                             [(Std.Tactic.RCases.rcasesPat.one `rfl)])
                             [])]
                           "⟩")])]
                       []
@@ -945,7 +1032,8 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
                             [])
                            ","
                            (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                            (Std.Tactic.RCases.rcasesPatMed
+                             [(Std.Tactic.RCases.rcasesPat.one `rfl)])
                             [])]
                           "⟩")])]
                       []
@@ -974,7 +1062,13 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
         "exact"
         (Term.structInst
          "{"
-         [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")] "with"]
+         [[(Term.typeAscription
+            "("
+            `inferInstance
+            ":"
+            [(Term.app `DivisionRing [(Term.app `End [`X])])]
+            ")")]
+          "with"]
          [(Term.structInstField
            (Term.structInstLVal `mul_comm [])
            ":="
@@ -1039,7 +1133,13 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
        "exact"
        (Term.structInst
         "{"
-        [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")] "with"]
+        [[(Term.typeAscription
+           "("
+           `inferInstance
+           ":"
+           [(Term.app `DivisionRing [(Term.app `End [`X])])]
+           ")")]
+         "with"]
         [(Term.structInstField
           (Term.structInstLVal `mul_comm [])
           ":="
@@ -1102,7 +1202,13 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.structInst
        "{"
-       [[(Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")] "with"]
+       [[(Term.typeAscription
+          "("
+          `inferInstance
+          ":"
+          [(Term.app `DivisionRing [(Term.app `End [`X])])]
+          ")")]
+        "with"]
        [(Term.structInstField
          (Term.structInstLVal `mul_comm [])
          ":="
@@ -1286,21 +1392,25 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `d
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `mul_comm
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mul_smul
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.obtain
@@ -1308,7 +1418,9 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
        [(Std.Tactic.RCases.rcasesPatMed
          [(Std.Tactic.RCases.rcasesPat.tuple
            "⟨"
-           [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `d)]) [])
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `d)])
+             [])
             ","
             (Std.Tactic.RCases.rcasesPatLo
              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
@@ -1322,15 +1434,18 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `𝕜
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `endomorphism_simple_eq_smul_id
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1339,7 +1454,9 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
        [(Std.Tactic.RCases.rcasesPatMed
          [(Std.Tactic.RCases.rcasesPat.tuple
            "⟨"
-           [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `c)]) [])
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `c)])
+             [])
             ","
             (Std.Tactic.RCases.rcasesPatLo
              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
@@ -1353,15 +1470,18 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `𝕜
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `endomorphism_simple_eq_smul_id
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -1370,16 +1490,23 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.typeAscription "(" `inferInstance ":" [(Term.app `DivisionRing [(Term.app `End [`X])])] ")")
+      (Term.typeAscription
+       "("
+       `inferInstance
+       ":"
+       [(Term.app `DivisionRing [(Term.app `End [`X])])]
+       ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `DivisionRing [(Term.app `End [`X])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1390,22 +1517,29 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `End
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `End [`X]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `DivisionRing
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `inferInstance
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1454,8 +1588,8 @@ if hom spaces are finite dimensional, then the hom space between simples is at m
 See `finrank_hom_simple_simple_eq_one_iff` and `finrank_hom_simple_simple_eq_zero_iff` below
 for the refinements when we know whether or not the simples are isomorphic.
 -/
-theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [Simple X] [Simple Y] :
-    finrank 𝕜 (X ⟶ Y) ≤ 1 := by
+theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [Simple X]
+    [Simple Y] : finrank 𝕜 (X ⟶ Y) ≤ 1 := by
   cases' subsingleton_or_nontrivial (X ⟶ Y) with h
   · skip
     rw [finrank_zero_of_subsingleton]
@@ -1468,10 +1602,12 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X �
     obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
     exact ⟨c, by simpa using w =≫ f⟩
     
-#align category_theory.finrank_hom_simple_simple_le_one CategoryTheory.finrank_hom_simple_simple_le_one
+#align
+  category_theory.finrank_hom_simple_simple_le_one CategoryTheory.finrank_hom_simple_simple_le_one
 
-theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [FiniteDimensional 𝕜 (X ⟶ Y)]
-    [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) := by
+theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
+    [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] :
+    finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) := by
   fconstructor
   · intro h
     rw [finrank_eq_one_iff'] at h
@@ -1485,10 +1621,12 @@ theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (
       finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp inferInstance⟩
     linarith
     
-#align category_theory.finrank_hom_simple_simple_eq_one_iff CategoryTheory.finrank_hom_simple_simple_eq_one_iff
+#align
+  category_theory.finrank_hom_simple_simple_eq_one_iff CategoryTheory.finrank_hom_simple_simple_eq_one_iff
 
-theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [FiniteDimensional 𝕜 (X ⟶ Y)]
-    [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) := by
+theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
+    [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) :=
+  by
   rw [← not_nonempty_iff, ← not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y)]
   refine'
     ⟨fun h => by
@@ -1500,12 +1638,13 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
     
   · exact False.elim (h h')
     
-#align category_theory.finrank_hom_simple_simple_eq_zero_iff CategoryTheory.finrank_hom_simple_simple_eq_zero_iff
+#align
+  category_theory.finrank_hom_simple_simple_eq_zero_iff CategoryTheory.finrank_hom_simple_simple_eq_zero_iff
 
 open Classical
 
-theorem finrank_hom_simple_simple (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] :
-    finrank 𝕜 (X ⟶ Y) = if Nonempty (X ≅ Y) then 1 else 0 := by
+theorem finrank_hom_simple_simple (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X]
+    [Simple Y] : finrank 𝕜 (X ⟶ Y) = if Nonempty (X ≅ Y) then 1 else 0 := by
   split_ifs
   exact (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y).2 h
   exact (finrank_hom_simple_simple_eq_zero_iff 𝕜 X Y).2 (not_nonempty_iff.mp h)

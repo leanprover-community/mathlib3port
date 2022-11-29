@@ -34,14 +34,17 @@ variable [HasSup α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasSup [Inhabited s] :
-    HasSup s where sup t := if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
+    HasSup
+      s where sup t :=
+    if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default
 #align subset_has_Sup subsetHasSup
 
 attribute [local instance] subsetHasSup
 
 @[simp]
 theorem subset_Sup_def [Inhabited s] :
-    @sup s _ = fun t => if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default :=
+    @sup s _ = fun t =>
+      if ht : sup (coe '' t : Set α) ∈ s then ⟨sup (coe '' t : Set α), ht⟩ else default :=
   rfl
 #align subset_Sup_def subset_Sup_def
 
@@ -59,14 +62,17 @@ variable [HasInf α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetHasInf [Inhabited s] :
-    HasInf s where inf t := if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
+    HasInf
+      s where inf t :=
+    if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default
 #align subset_has_Inf subsetHasInf
 
 attribute [local instance] subsetHasInf
 
 @[simp]
 theorem subset_Inf_def [Inhabited s] :
-    @inf s _ = fun t => if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default :=
+    @inf s _ = fun t =>
+      if ht : inf (coe '' t : Set α) ∈ s then ⟨inf (coe '' t : Set α), ht⟩ else default :=
   rfl
 #align subset_Inf_def subset_Inf_def
 
@@ -145,10 +151,11 @@ theorem Inf_within_of_ord_connected {s : Set α} [hs : OrdConnected s] ⦃t : Se
 
 /-- A nonempty `ord_connected` set in a conditionally complete linear order is naturally a
 conditionally complete linear order. -/
-noncomputable instance ordConnectedSubsetConditionallyCompleteLinearOrder [Inhabited s] [OrdConnected s] :
-    ConditionallyCompleteLinearOrder s :=
+noncomputable instance ordConnectedSubsetConditionallyCompleteLinearOrder [Inhabited s]
+    [OrdConnected s] : ConditionallyCompleteLinearOrder s :=
   subsetConditionallyCompleteLinearOrder s Sup_within_of_ord_connected Inf_within_of_ord_connected
-#align ord_connected_subset_conditionally_complete_linear_order ordConnectedSubsetConditionallyCompleteLinearOrder
+#align
+  ord_connected_subset_conditionally_complete_linear_order ordConnectedSubsetConditionallyCompleteLinearOrder
 
 end OrdConnected
 

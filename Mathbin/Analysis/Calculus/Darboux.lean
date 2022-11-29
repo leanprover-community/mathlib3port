@@ -23,8 +23,8 @@ variable {a b : ℝ} {f f' : ℝ → ℝ}
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a < m < f' b`, then `f' c = m` for some
 `c ∈ [a, b]`. -/
 theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
-    (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : f' a < m) (hmb : m < f' b) :
-    m ∈ f' '' icc a b := by
+    (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : f' a < m)
+    (hmb : m < f' b) : m ∈ f' '' icc a b := by
   have hab' : a < b := by
     refine' lt_of_le_of_ne hab fun hab' => _
     subst b
@@ -34,12 +34,14 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
     intro x hx
     simpa using (hf x hx).sub ((hasDerivWithinAtId x _).const_mul m)
   obtain ⟨c, cmem, hc⟩ : ∃ c ∈ Icc a b, IsMinOn g (Icc a b) c
-  exact is_compact_Icc.exists_forall_le (nonempty_Icc.2 <| hab) fun x hx => (hg x hx).ContinuousWithinAt
+  exact
+    is_compact_Icc.exists_forall_le (nonempty_Icc.2 <| hab) fun x hx => (hg x hx).ContinuousWithinAt
   have cmem' : c ∈ Ioo a b := by
     cases' eq_or_lt_of_le cmem.1 with hac hac
     -- Show that `c` can't be equal to `a`
     · subst c
-      refine' absurd (sub_nonneg.1 <| nonneg_of_mul_nonneg_right _ (sub_pos.2 hab')) (not_le_of_lt hma)
+      refine'
+        absurd (sub_nonneg.1 <| nonneg_of_mul_nonneg_right _ (sub_pos.2 hab')) (not_le_of_lt hma)
       have : b - a ∈ posTangentConeAt (Icc a b) a :=
         mem_pos_tangent_cone_at_of_segment_subset (segment_eq_Icc hab ▸ subset.refl _)
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
@@ -48,7 +50,9 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
     cases' eq_or_lt_of_le cmem.2 with hbc hbc
     -- Show that `c` can't be equal to `b`
     · subst c
-      refine' absurd (sub_nonpos.1 <| nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab')) (not_le_of_lt hmb)
+      refine'
+        absurd (sub_nonpos.1 <| nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab'))
+          (not_le_of_lt hmb)
       have : a - b ∈ posTangentConeAt (Icc a b) b :=
         mem_pos_tangent_cone_at_of_segment_subset (by rw [segment_symm, segment_eq_Icc hab])
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
@@ -64,16 +68,17 @@ theorem exists_has_deriv_within_at_eq_of_gt_of_lt (hab : a ≤ b)
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.
 -/
 theorem exists_has_deriv_within_at_eq_of_lt_of_gt (hab : a ≤ b)
-    (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : m < f' a) (hmb : f' b < m) :
-    m ∈ f' '' icc a b :=
+    (hf : ∀ x ∈ icc a b, HasDerivWithinAt f (f' x) (icc a b) x) {m : ℝ} (hma : m < f' a)
+    (hmb : f' b < m) : m ∈ f' '' icc a b :=
   let ⟨c, cmem, hc⟩ :=
-    exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x hx).neg) (neg_lt_neg hma) (neg_lt_neg hmb)
+    exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x hx).neg) (neg_lt_neg hma)
+      (neg_lt_neg hmb)
   ⟨c, cmem, neg_injective hc⟩
 #align exists_has_deriv_within_at_eq_of_lt_of_gt exists_has_deriv_within_at_eq_of_lt_of_gt
 
 /-- **Darboux's theorem**: the image of a convex set under `f'` is a convex set. -/
-theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x ∈ s, HasDerivAt f (f' x) x) :
-    Convex ℝ (f' '' s) := by
+theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s)
+    (hf : ∀ x ∈ s, HasDerivAt f (f' x) x) : Convex ℝ (f' '' s) := by
   refine' ord_connected.convex ⟨_⟩
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ m ⟨hma, hmb⟩
   cases' eq_or_lt_of_le hma with hma hma
@@ -84,12 +89,14 @@ theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x 
     
   cases' le_total a b with hab hab
   · have : Icc a b ⊆ s := hs.ord_connected.out ha hb
-    rcases exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x <| this hx).HasDerivWithinAt) hma hmb with
+    rcases exists_has_deriv_within_at_eq_of_gt_of_lt hab
+        (fun x hx => (hf x <| this hx).HasDerivWithinAt) hma hmb with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
     
   · have : Icc b a ⊆ s := hs.ord_connected.out hb ha
-    rcases exists_has_deriv_within_at_eq_of_lt_of_gt hab (fun x hx => (hf x <| this hx).HasDerivWithinAt) hmb hma with
+    rcases exists_has_deriv_within_at_eq_of_lt_of_gt hab
+        (fun x hx => (hf x <| this hx).HasDerivWithinAt) hmb hma with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
     
@@ -97,10 +104,13 @@ theorem convex_image_has_deriv_at {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x 
 
 /-- If the derivative of a function is never equal to `m`, then either
 it is always greater than `m`, or it is always less than `m`. -/
-theorem deriv_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x ∈ s, HasDerivAt f (f' x) x)
-    {m : ℝ} (hf' : ∀ x ∈ s, f' x ≠ m) : (∀ x ∈ s, f' x < m) ∨ ∀ x ∈ s, m < f' x := by
+theorem deriv_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs : Convex ℝ s)
+    (hf : ∀ x ∈ s, HasDerivAt f (f' x) x) {m : ℝ} (hf' : ∀ x ∈ s, f' x ≠ m) :
+    (∀ x ∈ s, f' x < m) ∨ ∀ x ∈ s, m < f' x := by
   contrapose! hf'
   rcases hf' with ⟨⟨b, hb, hmb⟩, ⟨a, ha, hma⟩⟩
-  exact (convex_image_has_deriv_at hs hf).OrdConnected.out (mem_image_of_mem f' ha) (mem_image_of_mem f' hb) ⟨hma, hmb⟩
+  exact
+    (convex_image_has_deriv_at hs hf).OrdConnected.out (mem_image_of_mem f' ha)
+      (mem_image_of_mem f' hb) ⟨hma, hmb⟩
 #align deriv_forall_lt_or_forall_gt_of_forall_ne deriv_forall_lt_or_forall_gt_of_forall_ne
 

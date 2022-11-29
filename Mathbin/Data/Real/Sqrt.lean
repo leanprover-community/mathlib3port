@@ -101,7 +101,8 @@ theorem sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x :=
 theorem sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq x]
 #align nnreal.sqrt_mul_self Nnreal.sqrt_mul_self
 
-theorem sqrt_mul (x y : ℝ≥0) : sqrt (x * y) = sqrt x * sqrt y := by rw [sqrt_eq_iff_sq_eq, mul_pow, sq_sqrt, sq_sqrt]
+theorem sqrt_mul (x y : ℝ≥0) : sqrt (x * y) = sqrt x * sqrt y := by
+  rw [sqrt_eq_iff_sq_eq, mul_pow, sq_sqrt, sq_sqrt]
 #align nnreal.sqrt_mul Nnreal.sqrt_mul
 
 /-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
@@ -136,7 +137,8 @@ def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
 
 theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
+    rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;>
+      exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
   | n + 1 => le_max_left _ _
 #align real.sqrt_aux_nonneg Real.sqrt_aux_nonneg
 
@@ -170,7 +172,8 @@ noncomputable def sqrt (x : ℝ) : ℝ :=
 variable {x y : ℝ}
 
 @[simp, norm_cast]
-theorem coe_sqrt {x : ℝ≥0} : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by rw [Real.sqrt, Real.to_nnreal_coe]
+theorem coe_sqrt {x : ℝ≥0} : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by
+  rw [Real.sqrt, Real.to_nnreal_coe]
 #align real.coe_sqrt Real.coe_sqrt
 
 @[continuity]
@@ -178,7 +181,8 @@ theorem continuous_sqrt : Continuous sqrt :=
   Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp continuous_real_to_nnreal
 #align real.continuous_sqrt Real.continuous_sqrt
 
-theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by simp [sqrt, Real.to_nnreal_eq_zero.2 h]
+theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by
+  simp [sqrt, Real.to_nnreal_eq_zero.2 h]
 #align real.sqrt_eq_zero_of_nonpos Real.sqrt_eq_zero_of_nonpos
 
 theorem sqrt_nonneg (x : ℝ) : 0 ≤ sqrt x :=
@@ -213,7 +217,8 @@ theorem sqrt_eq_iff_mul_self_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y
   ⟨fun h => by rw [← h, mul_self_sqrt hx], fun h => by rw [← h, sqrt_mul_self hy]⟩
 #align real.sqrt_eq_iff_mul_self_eq Real.sqrt_eq_iff_mul_self_eq
 
-theorem sqrt_eq_iff_mul_self_eq_of_pos (h : 0 < y) : sqrt x = y ↔ y * y = x := by simp [sqrt_eq_cases, h.ne', h.le]
+theorem sqrt_eq_iff_mul_self_eq_of_pos (h : 0 < y) : sqrt x = y ↔ y * y = x := by
+  simp [sqrt_eq_cases, h.ne', h.le]
 #align real.sqrt_eq_iff_mul_self_eq_of_pos Real.sqrt_eq_iff_mul_self_eq_of_pos
 
 @[simp]
@@ -236,7 +241,8 @@ theorem sqrt_eq_iff_sq_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = y ↔ y ^ 2 =
   rw [sq, sqrt_eq_iff_mul_self_eq hx hy]
 #align real.sqrt_eq_iff_sq_eq Real.sqrt_eq_iff_sq_eq
 
-theorem sqrt_mul_self_eq_abs (x : ℝ) : sqrt (x * x) = |x| := by rw [← abs_mul_abs_self x, sqrt_mul_self (abs_nonneg _)]
+theorem sqrt_mul_self_eq_abs (x : ℝ) : sqrt (x * x) = |x| := by
+  rw [← abs_mul_abs_self x, sqrt_mul_self (abs_nonneg _)]
 #align real.sqrt_mul_self_eq_abs Real.sqrt_mul_self_eq_abs
 
 theorem sqrt_sq_eq_abs (x : ℝ) : sqrt (x ^ 2) = |x| := by rw [sq, sqrt_mul_self_eq_abs]
@@ -283,7 +289,8 @@ theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
   exact sqrt_le_left
 #align real.sqrt_le_iff Real.sqrt_le_iff
 
-theorem sqrt_lt (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x < y ↔ x < y ^ 2 := by rw [← sqrt_lt_sqrt_iff hx, sqrt_sq hy]
+theorem sqrt_lt (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x < y ↔ x < y ^ 2 := by
+  rw [← sqrt_lt_sqrt_iff hx, sqrt_sq hy]
 #align real.sqrt_lt Real.sqrt_lt
 
 theorem sqrt_lt' (hy : 0 < y) : sqrt x < y ↔ x < y ^ 2 := by
@@ -300,7 +307,8 @@ theorem le_sqrt' (hx : 0 < x) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
   le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt' hx
 #align real.le_sqrt' Real.le_sqrt'
 
-theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
+theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ sqrt y := by
+  rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
 #align real.abs_le_sqrt Real.abs_le_sqrt
 
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -sqrt y ≤ x ∧ x ≤ sqrt y := by
@@ -321,7 +329,8 @@ theorem le_sqrt_of_sq_le (h : x ^ 2 ≤ y) : x ≤ sqrt y :=
 #align real.le_sqrt_of_sq_le Real.le_sqrt_of_sq_le
 
 @[simp]
-theorem sqrt_inj (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = sqrt y ↔ x = y := by simp [le_antisymm_iff, hx, hy]
+theorem sqrt_inj (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x = sqrt y ↔ x = y := by
+  simp [le_antisymm_iff, hx, hy]
 #align real.sqrt_inj Real.sqrt_inj
 
 @[simp]
@@ -362,7 +371,7 @@ unsafe def _root_.tactic.positivity_sqrt : expr → tactic strictness
   |-- else report nonnegativity
     _ =>
     failed
-#align real._root_.tactic.positivity_sqrt real._root_.tactic.positivity_sqrt
+#align tactic.positivity_sqrt tactic.positivity_sqrt
 
 end
 
@@ -372,7 +381,8 @@ theorem sqrt_mul (hx : 0 ≤ x) (y : ℝ) : sqrt (x * y) = sqrt x * sqrt y := by
 #align real.sqrt_mul Real.sqrt_mul
 
 @[simp]
-theorem sqrt_mul' (x) {y : ℝ} (hy : 0 ≤ y) : sqrt (x * y) = sqrt x * sqrt y := by rw [mul_comm, sqrt_mul hy, mul_comm]
+theorem sqrt_mul' (x) {y : ℝ} (hy : 0 ≤ y) : sqrt (x * y) = sqrt x * sqrt y := by
+  rw [mul_comm, sqrt_mul hy, mul_comm]
 #align real.sqrt_mul' Real.sqrt_mul'
 
 @[simp]
@@ -400,10 +410,12 @@ theorem sqrt_div_self' : sqrt x / x = 1 / sqrt x := by rw [← div_sqrt, one_div
 theorem sqrt_div_self : sqrt x / x = (sqrt x)⁻¹ := by rw [sqrt_div_self', one_div]
 #align real.sqrt_div_self Real.sqrt_div_self
 
-theorem lt_sqrt (hx : 0 ≤ x) : x < sqrt y ↔ x ^ 2 < y := by rw [← sqrt_lt_sqrt_iff (sq_nonneg _), sqrt_sq hx]
+theorem lt_sqrt (hx : 0 ≤ x) : x < sqrt y ↔ x ^ 2 < y := by
+  rw [← sqrt_lt_sqrt_iff (sq_nonneg _), sqrt_sq hx]
 #align real.lt_sqrt Real.lt_sqrt
 
-theorem sq_lt : x ^ 2 < y ↔ -sqrt y < x ∧ x < sqrt y := by rw [← abs_lt, ← sq_abs, lt_sqrt (abs_nonneg _)]
+theorem sq_lt : x ^ 2 < y ↔ -sqrt y < x ∧ x < sqrt y := by
+  rw [← abs_lt, ← sq_abs, lt_sqrt (abs_nonneg _)]
 #align real.sq_lt Real.sq_lt
 
 theorem neg_sqrt_lt_of_sq_lt (h : x ^ 2 < y) : -sqrt y < x :=
@@ -441,7 +453,8 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
 instance : StarOrderedRing ℝ :=
   { Real.orderedAddCommGroup with
     nonneg_iff := fun r => by
-      refine' ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩
+      refine'
+        ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩
       rintro ⟨s, rfl⟩
       exact mul_self_nonneg s }
 
@@ -458,7 +471,8 @@ theorem Filter.Tendsto.sqrt {f : α → ℝ} {l : Filter α} {x : ℝ} (h : Tend
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}
 
-theorem ContinuousWithinAt.sqrt (h : ContinuousWithinAt f s x) : ContinuousWithinAt (fun x => sqrt (f x)) s x :=
+theorem ContinuousWithinAt.sqrt (h : ContinuousWithinAt f s x) :
+    ContinuousWithinAt (fun x => sqrt (f x)) s x :=
   h.sqrt
 #align continuous_within_at.sqrt ContinuousWithinAt.sqrt
 
@@ -466,7 +480,8 @@ theorem ContinuousAt.sqrt (h : ContinuousAt f x) : ContinuousAt (fun x => sqrt (
   h.sqrt
 #align continuous_at.sqrt ContinuousAt.sqrt
 
-theorem ContinuousOn.sqrt (h : ContinuousOn f s) : ContinuousOn (fun x => sqrt (f x)) s := fun x hx => (h x hx).sqrt
+theorem ContinuousOn.sqrt (h : ContinuousOn f s) : ContinuousOn (fun x => sqrt (f x)) s :=
+  fun x hx => (h x hx).sqrt
 #align continuous_on.sqrt ContinuousOn.sqrt
 
 @[continuity]

@@ -31,22 +31,24 @@ variable {Fq : Type _} [Fintype Fq]
 
 /-- If `A` is a family of enough low-degree polynomials over a finite semiring, there is a
 pair of equal elements in `A`. -/
-theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
-    (hb : natDegree b ≤ d) (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
-    ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
+theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m)
+    (b : Fq[X]) (hb : natDegree b ≤ d) (A : Fin m.succ → Fq[X])
+    (hA : ∀ i, degree (A i) < degree b) : ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
   -- Since there are > q^d elements of A, and only q^d choices for the highest `d` coefficients,
   -- there must be two elements of A with the same coefficients at
   -- `0`, ... `degree b - 1` ≤ `d - 1`.
   -- In other words, the following map is not injective:
   set f : Fin m.succ → Fin d → Fq := fun i j => (A i).coeff j
-  have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ) := by simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
+  have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ) := by
+    simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
   -- Therefore, the differences have all coefficients higher than `deg b - d` equal.
   obtain ⟨i₀, i₁, i_ne, i_eq⟩ := Fintype.exists_ne_map_eq_of_card_lt f this
   use i₀, i₁, i_ne
   ext j
   -- The coefficients higher than `deg b` are the same because they are equal to 0.
   by_cases hbj : degree b ≤ j
-  · rw [coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj), coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj)]
+  · rw [coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj),
+      coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj)]
     
   -- So we only need to look for the coefficients between `0` and `deg b`.
   rw [not_le] at hbj
@@ -57,8 +59,8 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
-theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
-    (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
+theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m)
+    (b : Fq[X]) (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
   have hb : b ≠ 0 := by
     rintro rfl
@@ -70,7 +72,8 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   -- `degree b - 1`, ... `degree b - d`.
   -- In other words, the following map is not injective:
   set f : Fin m.succ → Fin d → Fq := fun i j => (A i).coeff (nat_degree b - j.succ)
-  have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ) := by simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
+  have : Fintype.card (Fin d → Fq) < Fintype.card (Fin m.succ) := by
+    simpa using lt_of_le_of_lt hm (Nat.lt_succ_self m)
   -- Therefore, the differences have all coefficients higher than `deg b - d` equal.
   obtain ⟨i₀, i₁, i_ne, i_eq⟩ := Fintype.exists_ne_map_eq_of_card_lt f this
   use i₀, i₁, i_ne
@@ -122,7 +125,8 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- Otherwise, it suffices to choose two elements whose difference is of small enough degree.
   rw [not_le] at le_b
   obtain ⟨i₀, i₁, i_ne, deg_lt⟩ :=
-    exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
+    exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i =>
+      EuclideanDomain.mod_lt (A i) hb
   simp only at deg_lt
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
@@ -133,10 +137,12 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- If the remainders are not equal, we'll show their difference is of small degree.
   -- In particular, we'll show the degree is less than the following:
   suffices (nat_degree (A i₁ % b - A i₀ % b) : ℝ) < b.nat_degree + log ε / log (Fintype.card Fq) by
-    rwa [← Real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε, card_pow_degree_nonzero _ h',
-      card_pow_degree_nonzero _ hb, Algebra.smul_def, eq_int_cast, Int.cast_pow, Int.cast_ofNat, Int.cast_pow,
-      Int.cast_ofNat, log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ← rpow_nat_cast, ← rpow_nat_cast, log_rpow q_pos',
-      log_rpow q_pos', ← lt_div_iff (log_pos one_lt_q'), add_div, mul_div_cancel _ (log_pos one_lt_q').ne']
+    rwa [← Real.log_lt_log_iff (int.cast_pos.mpr (card_pow_degree.pos h')) hbε,
+      card_pow_degree_nonzero _ h', card_pow_degree_nonzero _ hb, Algebra.smul_def, eq_int_cast,
+      Int.cast_pow, Int.cast_ofNat, Int.cast_pow, Int.cast_ofNat,
+      log_mul (pow_ne_zero _ q_pos'.ne') hε.ne', ← rpow_nat_cast, ← rpow_nat_cast, log_rpow q_pos',
+      log_rpow q_pos', ← lt_div_iff (log_pos one_lt_q'), add_div,
+      mul_div_cancel _ (log_pos one_lt_q').ne']
   -- And that result follows from manipulating the result from `exists_approx_polynomial_aux`
   -- to turn the `-⌈-stuff⌉₊` into `+ stuff`.
   refine' lt_of_lt_of_le (nat.cast_lt.mpr (with_bot.coe_lt_coe.mp _)) _
@@ -165,12 +171,13 @@ theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPo
     
   rw [← Ne.def, ← sub_ne_zero] at hxy' hyz' hxz'
   refine' lt_of_le_of_lt _ (max_lt hxy hyz)
-  rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy', card_pow_degree_nonzero _ hyz']
+  rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy',
+    card_pow_degree_nonzero _ hyz']
   have : (1 : ℤ) ≤ Fintype.card Fq := by exact_mod_cast (@Fintype.one_lt_card Fq _ _).le
   simp only [Int.cast_pow, Int.cast_ofNat, le_max_iff]
   refine' Or.imp (pow_le_pow this) (pow_le_pow this) _
-  rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ← le_max_iff, ← degree_eq_nat_degree hxy', ←
-    degree_eq_nat_degree hyz']
+  rw [nat_degree_le_iff_degree_le, nat_degree_le_iff_degree_le, ← le_max_iff, ←
+    degree_eq_nat_degree hxy', ← degree_eq_nat_degree hyz']
   convert degree_add_le (x - y) (y - z) using 2
   exact (sub_add_sub_cancel _ _ _).symm
 #align polynomial.card_pow_degree_anti_archimedean Polynomial.card_pow_degree_anti_archimedean
@@ -178,9 +185,11 @@ theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPo
 /-- A slightly stronger version of `exists_partition` on which we perform induction on `n`:
 for all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into equivalence classes, where the equivalence(!) relation is "closer than `ε`". -/
-theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0) (A : Fin n → Fq[X]) :
+theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0)
+    (A : Fin n → Fq[X]) :
     ∃ t : Fin n → Fin (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊),
-      ∀ i₀ i₁ : Fin n, t i₀ = t i₁ ↔ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
+      ∀ i₀ i₁ : Fin n,
+        t i₀ = t i₁ ↔ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
   by
   have hbε : 0 < card_pow_degree b • ε := by
     rw [Algebra.smul_def, eq_int_cast]
@@ -193,14 +202,16 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
   have anti_archim' :
     ∀ {i j k} {ε : ℝ},
       (card_pow_degree (A i % b - A j % b) : ℝ) < ε →
-        (card_pow_degree (A j % b - A k % b) : ℝ) < ε → (card_pow_degree (A i % b - A k % b) : ℝ) < ε :=
+        (card_pow_degree (A j % b - A k % b) : ℝ) < ε →
+          (card_pow_degree (A i % b - A k % b) : ℝ) < ε :=
     by
     intro i j k ε
     simp_rw [← Int.lt_ceil]
     exact card_pow_degree_anti_archimedean
   obtain ⟨t', ht'⟩ := ih (Fin.tail A)
   -- We got rid of `A 0`, so determine the index `j` of the partition we'll re-add it to.
-  rsuffices ⟨j, hj⟩ : ∃ j, ∀ i, t' i = j ↔ (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε
+  rsuffices ⟨j, hj⟩ :
+    ∃ j, ∀ i, t' i = j ↔ (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε
   · refine' ⟨Fin.cons j t', fun i₀ i₁ => _⟩
     refine' Fin.cases _ (fun i₀ => _) i₀ <;> refine' Fin.cases _ (fun i₁ => _) i₁
     · simpa using hbε
@@ -218,13 +229,18 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
   -- `exists_approx_polynomial` guarantees that we can insert `A 0` into some partition `j`,
   -- but not that `j` is uniquely defined (which is needed to keep the induction going).
   obtain ⟨j, hj⟩ :
-    ∃ j, ∀ i : Fin n, t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε := by
+    ∃ j,
+      ∀ i : Fin n,
+        t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε :=
+    by
     by_contra this
     push_neg  at this
     obtain ⟨j₀, j₁, j_ne, approx⟩ :=
-      exists_approx_polynomial hb hε (Fin.cons (A 0) fun j => A (Fin.succ (Classical.choose (this j))))
+      exists_approx_polynomial hb hε
+        (Fin.cons (A 0) fun j => A (Fin.succ (Classical.choose (this j))))
     revert j_ne approx
-    refine' Fin.cases _ (fun j₀ => _) j₀ <;> refine' Fin.cases (fun j_ne approx => _) (fun j₁ j_ne approx => _) j₁
+    refine' Fin.cases _ (fun j₀ => _) j₀ <;>
+      refine' Fin.cases (fun j_ne approx => _) (fun j₁ j_ne approx => _) j₁
     · exact absurd rfl j_ne
       
     · rw [Fin.cons_succ, Fin.cons_zero, ← not_le, AbsoluteValue.map_sub] at approx
@@ -245,7 +261,9 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
       
   -- However, if one of those partitions `j` is inhabited by some `i`, then this `j` works.
   by_cases exists_nonempty_j :
-    ∃ j, (∃ i, t' i = j) ∧ ∀ i, t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε
+    ∃ j,
+      (∃ i, t' i = j) ∧
+        ∀ i, t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε
   · obtain ⟨j, ⟨i, hi⟩, hj⟩ := exists_nonempty_j
     refine' ⟨j, fun i' => ⟨hj i', fun hi' => trans ((ht' _ _).mpr _) hi⟩⟩
     apply anti_archim' _ hi'
@@ -260,9 +278,11 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
 
 /-- For all `ε > 0`, we can partition the remainders of any family of polynomials `A`
 into classes, where all remainders in a class are close together. -/
-theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0) (A : Fin n → Fq[X]) :
+theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[X]} (hb : b ≠ 0)
+    (A : Fin n → Fq[X]) :
     ∃ t : Fin n → Fin (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊),
-      ∀ i₀ i₁ : Fin n, t i₀ = t i₁ → (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
+      ∀ i₀ i₁ : Fin n,
+        t i₀ = t i₁ → (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε :=
   by
   obtain ⟨t, ht⟩ := exists_partition_polynomial_aux n hε hb A
   exact ⟨t, fun i₀ i₁ hi => (ht i₀ i₁).mp hi⟩
@@ -270,8 +290,10 @@ theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[
 
 /-- `λ p, fintype.card Fq ^ degree p` is an admissible absolute value.
 We set `q ^ degree 0 = 0`. -/
-noncomputable def cardPowDegreeIsAdmissible : IsAdmissible (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
-  { @card_pow_degree_is_euclidean Fq _ _ with card := fun ε => Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊,
+noncomputable def cardPowDegreeIsAdmissible :
+    IsAdmissible (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
+  { @card_pow_degree_is_euclidean Fq _ _ with
+    card := fun ε => Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_polynomial n hε hb }
 #align polynomial.card_pow_degree_is_admissible Polynomial.cardPowDegreeIsAdmissible
 

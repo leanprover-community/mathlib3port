@@ -39,7 +39,8 @@ open Injective
 
 variable [HasZeroObject C] [HasZeroMorphisms C] [HasEqualizers C] [HasImages C]
 
-/-- An `InjectiveResolution Z` consists of a bundled `ℕ`-indexed cochain complex of injective objects,
+/--
+An `InjectiveResolution Z` consists of a bundled `ℕ`-indexed cochain complex of injective objects,
 along with a quasi-isomorphism to the complex consisting of just `Z` supported in degree `0`.
 
 Except in situations where you want to provide a particular injective resolution
@@ -88,12 +89,12 @@ namespace InjectiveResolutionCat
 @[simp]
 theorem ι_f_succ {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : I.ι.f (n + 1) = 0 := by
   apply zero_of_source_iso_zero
-  dsimp
-  rfl
+  dsimp; rfl
 #align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolutionCat.ι_f_succ
 
 @[simp]
-theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolutionCat Z) : I.ι.f 0 ≫ I.cocomplex.d 0 1 = 0 :=
+theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolutionCat Z) :
+    I.ι.f 0 ≫ I.cocomplex.d 0 1 = 0 :=
   I.exact₀.w
 #align
   category_theory.InjectiveResolution.ι_f_zero_comp_complex_d CategoryTheory.InjectiveResolutionCat.ι_f_zero_comp_complex_d
@@ -102,9 +103,11 @@ theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolutionCat Z) : I.ι.f
 theorem complex_d_comp {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) :
     I.cocomplex.d n (n + 1) ≫ I.cocomplex.d (n + 1) (n + 2) = 0 :=
   (I.exact _).w
-#align category_theory.InjectiveResolution.complex_d_comp CategoryTheory.InjectiveResolutionCat.complex_d_comp
+#align
+  category_theory.InjectiveResolution.complex_d_comp CategoryTheory.InjectiveResolutionCat.complex_d_comp
 
-instance {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by cases n <;> infer_instance
+instance {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by
+  cases n <;> infer_instance
 
 /-- An injective object admits a trivial injective resolution: itself in degree 0. -/
 def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolutionCat Z where

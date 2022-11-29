@@ -20,9 +20,10 @@ about this type.
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ() -/
 /-- Extended natural numbers `ℕ∞ = with_top ℕ`. -/
 def Enat : Type :=
-  WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrder, OrderBot,
-  OrderTop, HasBot, HasTop, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub, CompleteLinearOrder,
-  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, WellFoundedRelation, CharZero,
+  WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial,
+  LinearOrder, OrderBot, OrderTop, HasBot, HasTop, CanonicallyLinearOrderedAddMonoid, Sub,
+  HasOrderedSub, CompleteLinearOrder, LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt,
+  WellFoundedRelation, CharZero,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat Enat
 
@@ -38,38 +39,30 @@ instance : IsWellOrder ℕ∞ (· < ·) where
 
 variable {m n : ℕ∞}
 
--- The following lemmas can be proven by `simp` lemmas for `coe_is_ring_hom`
--- but are worth keeping since they are eligible for `dsimp`.
 @[simp, norm_cast]
-protected theorem coe_zero : ((0 : ℕ) : ℕ∞) = 0 :=
+theorem coe_zero : ((0 : ℕ) : ℕ∞) = 0 :=
   rfl
 #align enat.coe_zero Enat.coe_zero
 
 @[simp, norm_cast]
-protected theorem coe_one : ((1 : ℕ) : ℕ∞) = 1 :=
+theorem coe_one : ((1 : ℕ) : ℕ∞) = 1 :=
   rfl
 #align enat.coe_one Enat.coe_one
 
 @[simp, norm_cast]
-protected theorem coe_add (m n : ℕ) : ↑(m + n) = (m + n : ℕ∞) :=
+theorem coe_add (m n : ℕ) : ↑(m + n) = (m + n : ℕ∞) :=
   rfl
 #align enat.coe_add Enat.coe_add
 
 @[simp, norm_cast]
-protected theorem coe_sub (m n : ℕ) : ↑(m - n) = (m - n : ℕ∞) :=
+theorem coe_sub (m n : ℕ) : ↑(m - n) = (m - n : ℕ∞) :=
   rfl
 #align enat.coe_sub Enat.coe_sub
 
 @[simp, norm_cast]
-protected theorem coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) :=
+theorem coe_mul (m n : ℕ) : ↑(m * n) = (m * n : ℕ∞) :=
   WithTop.coe_mul
 #align enat.coe_mul Enat.coe_mul
-
-instance : CoeIsRingHom ℕ ℕ∞ where
-  coe_one := rfl
-  coe_zero := rfl
-  coe_add _ _ := rfl
-  coe_mul _ _ := WithTop.coe_mul
 
 instance canLift : CanLift ℕ∞ ℕ coe fun n => n ≠ ⊤ :=
   WithTop.canLift
@@ -115,7 +108,7 @@ theorem to_nat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = 
   induction m using WithTop.recTopCoe
   · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
     
-  · rw [← Enat.coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
+  · rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
     
 #align enat.to_nat_sub Enat.to_nat_sub
 

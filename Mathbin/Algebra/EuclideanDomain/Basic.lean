@@ -83,10 +83,12 @@ theorem zero_div {a : R} : 0 / a = 0 :=
 #align euclidean_domain.zero_div EuclideanDomain.zero_div
 
 @[simp]
-theorem div_self {a : R} (a0 : a ≠ 0) : a / a = 1 := by simpa only [one_mul] using mul_div_cancel 1 a0
+theorem div_self {a : R} (a0 : a ≠ 0) : a / a = 1 := by
+  simpa only [one_mul] using mul_div_cancel 1 a0
 #align euclidean_domain.div_self EuclideanDomain.div_self
 
-theorem eq_div_of_mul_eq_left {a b c : R} (hb : b ≠ 0) (h : a * b = c) : a = c / b := by rw [← h, mul_div_cancel _ hb]
+theorem eq_div_of_mul_eq_left {a b c : R} (hb : b ≠ 0) (h : a * b = c) : a = c / b := by
+  rw [← h, mul_div_cancel _ hb]
 #align euclidean_domain.eq_div_of_mul_eq_left EuclideanDomain.eq_div_of_mul_eq_left
 
 theorem eq_div_of_mul_eq_right {a b c : R} (ha : a ≠ 0) (h : a * b = c) : b = c / a := by
@@ -115,7 +117,8 @@ theorem div_dvd_of_dvd {p q : R} (hpq : q ∣ p) : p / q ∣ p := by
     exact dvd_zero _
     
   use q
-  rw [mul_comm, ← EuclideanDomain.mul_div_assoc _ hpq, mul_comm, EuclideanDomain.mul_div_cancel _ hq]
+  rw [mul_comm, ← EuclideanDomain.mul_div_assoc _ hpq, mul_comm,
+    EuclideanDomain.mul_div_cancel _ hq]
 #align euclidean_domain.div_dvd_of_dvd EuclideanDomain.div_dvd_of_dvd
 
 theorem dvd_div_of_mul_dvd {a b c : R} (h : a * b ∣ c) : b ∣ c / a := by
@@ -214,17 +217,16 @@ theorem xgcdAuxP (a b : R) {r r' : R} :
         intros
         simpa only [xgcd_zero_left] ))
     fun x y h IH s t s' t' p p' => by
-    rw [xgcd_aux_rec h]
-    refine' IH _ p
-    unfold P at p p'⊢
-    rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc, mul_comm _ t, ←
-      mul_assoc, ← add_mul, ← p, mod_eq_sub_mul_div]
+    rw [xgcd_aux_rec h]; refine' IH _ p; unfold P at p p'⊢
+    rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc,
+      mul_comm _ t, ← mul_assoc, ← add_mul, ← p, mod_eq_sub_mul_div]
 #align euclidean_domain.xgcd_aux_P EuclideanDomain.xgcdAuxP
 
 /-- An explicit version of **Bézout's lemma** for Euclidean domains. -/
 theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b := by
   have :=
-    @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_one, mul_zero, add_zero]) (by rw [P, mul_one, mul_zero, zero_add])
+    @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_one, mul_zero, add_zero])
+      (by rw [P, mul_one, mul_zero, zero_add])
   rwa [xgcd_aux_val, xgcd_val] at this
 #align euclidean_domain.gcd_eq_gcd_ab EuclideanDomain.gcd_eq_gcd_ab
 
@@ -289,7 +291,8 @@ theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z := b
 
 @[simp]
 theorem lcm_dvd_iff {x y z : R} : lcm x y ∣ z ↔ x ∣ z ∧ y ∣ z :=
-  ⟨fun hz => ⟨(dvd_lcm_left _ _).trans hz, (dvd_lcm_right _ _).trans hz⟩, fun ⟨hxz, hyz⟩ => lcm_dvd hxz hyz⟩
+  ⟨fun hz => ⟨(dvd_lcm_left _ _).trans hz, (dvd_lcm_right _ _).trans hz⟩, fun ⟨hxz, hyz⟩ =>
+    lcm_dvd hxz hyz⟩
 #align euclidean_domain.lcm_dvd_iff EuclideanDomain.lcm_dvd_iff
 
 @[simp]
@@ -327,15 +330,13 @@ theorem lcm_eq_zero_iff {x y : R} : lcm x y = 0 ↔ x = 0 ∨ y = 0 := by
 
 @[simp]
 theorem gcd_mul_lcm (x y : R) : gcd x y * lcm x y = x * y := by
-  rw [lcm]
-  by_cases h : gcd x y = 0
+  rw [lcm]; by_cases h : gcd x y = 0
   · rw [h, zero_mul]
     rw [EuclideanDomain.gcd_eq_zero_iff] at h
     rw [h.1, zero_mul]
     
   rcases gcd_dvd x y with ⟨⟨r, hr⟩, ⟨s, hs⟩⟩
-  generalize gcd x y = g at h hr⊢
-  subst hr
+  generalize gcd x y = g at h hr⊢; subst hr
   rw [mul_assoc, mul_div_cancel_left _ h]
 #align euclidean_domain.gcd_mul_lcm EuclideanDomain.gcd_mul_lcm
 
@@ -344,18 +345,20 @@ end Lcm
 section Div
 
 theorem mul_div_mul_cancel {a b c : R} (ha : a ≠ 0) (hcb : c ∣ b) : a * b / (a * c) = b / c := by
-  by_cases hc : c = 0
+  by_cases hc : c = 0;
   · simp [hc]
     
   refine' eq_div_of_mul_eq_right hc (mul_left_cancel₀ ha _)
-  rw [← mul_assoc, ← mul_div_assoc _ (mul_dvd_mul_left a hcb), mul_div_cancel_left _ (mul_ne_zero ha hc)]
+  rw [← mul_assoc, ← mul_div_assoc _ (mul_dvd_mul_left a hcb),
+    mul_div_cancel_left _ (mul_ne_zero ha hc)]
 #align euclidean_domain.mul_div_mul_cancel EuclideanDomain.mul_div_mul_cancel
 
-theorem mul_div_mul_comm_of_dvd_dvd {a b c d : R} (hac : c ∣ a) (hbd : d ∣ b) : a * b / (c * d) = a / c * (b / d) := by
-  rcases eq_or_ne c 0 with (rfl | hc0)
+theorem mul_div_mul_comm_of_dvd_dvd {a b c d : R} (hac : c ∣ a) (hbd : d ∣ b) :
+    a * b / (c * d) = a / c * (b / d) := by
+  rcases eq_or_ne c 0 with (rfl | hc0);
   · simp
     
-  rcases eq_or_ne d 0 with (rfl | hd0)
+  rcases eq_or_ne d 0 with (rfl | hd0);
   · simp
     
   obtain ⟨k1, rfl⟩ := hac

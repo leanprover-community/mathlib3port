@@ -28,8 +28,9 @@ isometry, affine map, linear map
 -/
 
 
-variable {E PE F PF : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MetricSpace PE] [NormedAddTorsor E PE]
-  [NormedAddCommGroup F] [NormedSpace ℝ F] [MetricSpace PF] [NormedAddTorsor F PF]
+variable {E PE F PF : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MetricSpace PE]
+  [NormedAddTorsor E PE] [NormedAddCommGroup F] [NormedSpace ℝ F] [MetricSpace PF]
+  [NormedAddTorsor F PF]
 
 open Set AffineMap AffineIsometryEquiv
 
@@ -42,7 +43,8 @@ include E
 /-- If an isometric self-homeomorphism of a normed vector space over `ℝ` fixes `x` and `y`,
 then it fixes the midpoint of `[x, y]`. This is a lemma for a more general Mazur-Ulam theorem,
 see below. -/
-theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y → e (midpoint ℝ x y) = midpoint ℝ x y := by
+theorem midpoint_fixed {x y : PE} :
+    ∀ e : PE ≃ᵢ PE, e x = x → e y = y → e (midpoint ℝ x y) = midpoint ℝ x y := by
   set z := midpoint ℝ x y
   -- Consider the set of `e : E ≃ᵢ E` such that `e x = x` and `e y = y`
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
@@ -65,7 +67,8 @@ theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y �
   have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z := by
     intro e
     dsimp [f]
-    rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply, dist_point_reflection_self_real, dist_comm]
+    rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply,
+      dist_point_reflection_self_real, dist_comm]
   -- Also note that `f` maps `s` to itself
   have hf_maps_to : maps_to f s s := by
     rintro e ⟨hx, hy⟩
@@ -95,8 +98,8 @@ theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midp
   have hy : e y = y := by simp
   have hm := e.midpoint_fixed hx hy
   simp only [e, trans_apply] at hm
-  rwa [← eq_symm_apply, to_isometric_symm, point_reflection_symm, coe_to_isometric, coe_to_isometric,
-    point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm
+  rwa [← eq_symm_apply, to_isometric_symm, point_reflection_symm, coe_to_isometric,
+    coe_to_isometric, point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm
 #align isometric.map_midpoint Isometric.map_midpoint
 
 /-!
@@ -110,7 +113,8 @@ over `ℝ` and `f 0 = 0`, then `f` is a linear isometry equivalence. -/
 def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃ₗᵢ[ℝ] F :=
   { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.Continuous, f with
     norm_map' := fun x => show ‖f x‖ = ‖x‖ by simp only [← dist_zero_right, ← h0, f.dist_eq] }
-#align isometric.to_real_linear_isometry_equiv_of_map_zero Isometric.toRealLinearIsometryEquivOfMapZero
+#align
+  isometric.to_real_linear_isometry_equiv_of_map_zero Isometric.toRealLinearIsometryEquivOfMapZero
 
 @[simp]
 theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
@@ -122,7 +126,8 @@ theorem coe_to_real_linear_equiv_of_map_zero (f : E ≃ᵢ F) (h0 : f 0 = 0) :
 theorem coe_to_real_linear_equiv_of_map_zero_symm (f : E ≃ᵢ F) (h0 : f 0 = 0) :
     ⇑(f.toRealLinearIsometryEquivOfMapZero h0).symm = f.symm :=
   rfl
-#align isometric.coe_to_real_linear_equiv_of_map_zero_symm Isometric.coe_to_real_linear_equiv_of_map_zero_symm
+#align
+  isometric.coe_to_real_linear_equiv_of_map_zero_symm Isometric.coe_to_real_linear_equiv_of_map_zero_symm
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed vector spaces
 over `ℝ`, then `x ↦ f x - f 0` is a linear isometry equivalence. -/
@@ -132,7 +137,8 @@ def toRealLinearIsometryEquiv (f : E ≃ᵢ F) : E ≃ₗᵢ[ℝ] F :=
 #align isometric.to_real_linear_isometry_equiv Isometric.toRealLinearIsometryEquiv
 
 @[simp]
-theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) : (f.toRealLinearIsometryEquiv : E → F) x = f x - f 0 :=
+theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) :
+    (f.toRealLinearIsometryEquiv : E → F) x = f x - f 0 :=
   (sub_eq_add_neg (f x) (f 0)).symm
 #align isometric.to_real_linear_equiv_apply Isometric.to_real_linear_equiv_apply
 
@@ -140,7 +146,8 @@ theorem to_real_linear_equiv_apply (f : E ≃ᵢ F) (x : E) : (f.toRealLinearIso
 theorem to_real_linear_isometry_equiv_symm_apply (f : E ≃ᵢ F) (y : F) :
     (f.toRealLinearIsometryEquiv.symm : F → E) y = f.symm (y + f 0) :=
   rfl
-#align isometric.to_real_linear_isometry_equiv_symm_apply Isometric.to_real_linear_isometry_equiv_symm_apply
+#align
+  isometric.to_real_linear_isometry_equiv_symm_apply Isometric.to_real_linear_isometry_equiv_symm_apply
 
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed add-torsors over
 normed vector spaces over `ℝ`, then `f` is an affine isometry equivalence. -/
@@ -157,7 +164,8 @@ theorem coe_fn_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : ⇑f.toRealAff
 #align isometric.coe_fn_to_real_affine_isometry_equiv Isometric.coe_fn_to_real_affine_isometry_equiv
 
 @[simp]
-theorem coe_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) : f.toRealAffineIsometryEquiv.toIsometric = f := by
+theorem coe_to_real_affine_isometry_equiv (f : PE ≃ᵢ PF) :
+    f.toRealAffineIsometryEquiv.toIsometric = f := by
   ext
   rfl
 #align isometric.coe_to_real_affine_isometry_equiv Isometric.coe_to_real_affine_isometry_equiv

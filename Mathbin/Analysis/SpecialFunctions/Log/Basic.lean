@@ -113,10 +113,12 @@ theorem log_abs (x : ℝ) : log (|x|) = log x := by
 theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by rw [← log_abs x, ← log_abs (-x), abs_neg]
 #align real.log_neg_eq_log Real.log_neg_eq_log
 
-theorem sinh_log {x : ℝ} (hx : 0 < x) : sinh (log x) = (x - x⁻¹) / 2 := by rw [sinh_eq, exp_neg, exp_log hx]
+theorem sinh_log {x : ℝ} (hx : 0 < x) : sinh (log x) = (x - x⁻¹) / 2 := by
+  rw [sinh_eq, exp_neg, exp_log hx]
 #align real.sinh_log Real.sinh_log
 
-theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by rw [cosh_eq, exp_neg, exp_log hx]
+theorem cosh_log {x : ℝ} (hx : 0 < x) : cosh (log x) = (x + x⁻¹) / 2 := by
+  rw [cosh_eq, exp_neg, exp_log hx]
 #align real.cosh_log Real.cosh_log
 
 theorem surj_on_log' : SurjOn log (iio 0) univ := fun x _ =>
@@ -124,22 +126,25 @@ theorem surj_on_log' : SurjOn log (iio 0) univ := fun x _ =>
 #align real.surj_on_log' Real.surj_on_log'
 
 theorem log_mul (hx : x ≠ 0) (hy : y ≠ 0) : log (x * y) = log x + log y :=
-  exp_injective <| by rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
+  exp_injective <| by
+    rw [exp_log_eq_abs (mul_ne_zero hx hy), exp_add, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_mul]
 #align real.log_mul Real.log_mul
 
 theorem log_div (hx : x ≠ 0) (hy : y ≠ 0) : log (x / y) = log x - log y :=
-  exp_injective <| by rw [exp_log_eq_abs (div_ne_zero hx hy), exp_sub, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_div]
+  exp_injective <| by
+    rw [exp_log_eq_abs (div_ne_zero hx hy), exp_sub, exp_log_eq_abs hx, exp_log_eq_abs hy, abs_div]
 #align real.log_div Real.log_div
 
 @[simp]
 theorem log_inv (x : ℝ) : log x⁻¹ = -log x := by
-  by_cases hx : x = 0
+  by_cases hx : x = 0;
   · simp [hx]
     
   rw [← exp_eq_exp, exp_log_eq_abs (inv_ne_zero hx), exp_neg, exp_log_eq_abs hx, abs_inv]
 #align real.log_inv Real.log_inv
 
-theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : log x ≤ log y ↔ x ≤ y := by rw [← exp_le_exp, exp_log h, exp_log h₁]
+theorem log_le_log (h : 0 < x) (h₁ : 0 < y) : log x ≤ log y ↔ x ≤ y := by
+  rw [← exp_le_exp, exp_log h, exp_log h₁]
 #align real.log_le_log Real.log_le_log
 
 theorem log_lt_log (hx : 0 < x) : x < y → log x < log y := by
@@ -147,7 +152,8 @@ theorem log_lt_log (hx : 0 < x) : x < y → log x < log y := by
   rwa [← exp_lt_exp, exp_log hx, exp_log (lt_trans hx h)]
 #align real.log_lt_log Real.log_lt_log
 
-theorem log_lt_log_iff (hx : 0 < x) (hy : 0 < y) : log x < log y ↔ x < y := by rw [← exp_lt_exp, exp_log hx, exp_log hy]
+theorem log_lt_log_iff (hx : 0 < x) (hy : 0 < y) : log x < log y ↔ x < y := by
+  rw [← exp_lt_exp, exp_log hx, exp_log hy]
 #align real.log_lt_log_iff Real.log_lt_log_iff
 
 theorem log_le_iff_le_exp (hx : 0 < x) : log x ≤ y ↔ x ≤ exp y := by rw [← exp_le_exp, exp_log hx]
@@ -257,7 +263,8 @@ theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
   induction n
   · rw [Int.ofNat_eq_coe, zpow_coe_nat, log_pow, Int.cast_ofNat]
     
-  rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one, neg_mul_eq_neg_mul]
+  rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one,
+    neg_mul_eq_neg_mul]
 #align real.log_zpow Real.log_zpow
 
 theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 := by
@@ -322,7 +329,9 @@ theorem continuous_at_log (hx : x ≠ 0) : ContinuousAt log x :=
 theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
   refine' ⟨_, continuous_at_log⟩
   rintro h rfl
-  exact not_tendsto_nhds_of_tendsto_at_bot tendsto_log_nhds_within_zero _ (h.tendsto.mono_left inf_le_left)
+  exact
+    not_tendsto_nhds_of_tendsto_at_bot tendsto_log_nhds_within_zero _
+      (h.tendsto.mono_left inf_le_left)
 #align real.continuous_at_log_iff Real.continuous_at_log_iff
 
 open BigOperators
@@ -337,7 +346,8 @@ theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ 
     
 #align real.log_prod Real.log_prod
 
-theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun p t => t * log p := by
+theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun p t => t * log p :=
+  by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
     
@@ -386,7 +396,8 @@ theorem Continuous.log (hf : Continuous f) (h₀ : ∀ x, f x ≠ 0) : Continuou
   continuous_on_log.comp_continuous hf h₀
 #align continuous.log Continuous.log
 
-theorem ContinuousAt.log (hf : ContinuousAt f a) (h₀ : f a ≠ 0) : ContinuousAt (fun x => log (f x)) a :=
+theorem ContinuousAt.log (hf : ContinuousAt f a) (h₀ : f a ≠ 0) :
+    ContinuousAt (fun x => log (f x)) a :=
   hf.log h₀
 #align continuous_at.log ContinuousAt.log
 
@@ -395,8 +406,8 @@ theorem ContinuousWithinAt.log (hf : ContinuousWithinAt f s a) (h₀ : f a ≠ 0
   hf.log h₀
 #align continuous_within_at.log ContinuousWithinAt.log
 
-theorem ContinuousOn.log (hf : ContinuousOn f s) (h₀ : ∀ x ∈ s, f x ≠ 0) : ContinuousOn (fun x => log (f x)) s :=
-  fun x hx => (hf x hx).log (h₀ x hx)
+theorem ContinuousOn.log (hf : ContinuousOn f s) (h₀ : ∀ x ∈ s, f x ≠ 0) :
+    ContinuousOn (fun x => log (f x)) s := fun x hx => (hf x hx).log (h₀ x hx)
 #align continuous_on.log ContinuousOn.log
 
 end Continuity

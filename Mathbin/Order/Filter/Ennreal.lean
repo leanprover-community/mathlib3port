@@ -22,7 +22,8 @@ namespace Ennreal
 
 variable {α : Type _} {f : Filter α}
 
-theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) : ∀ᶠ y in f, u y ≤ f.limsup u := by
+theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) :
+    ∀ᶠ y in f, u y ≤ f.limsup u := by
   by_cases hx_top : f.limsup u = ⊤
   · simp_rw [hx_top]
     exact eventually_of_forall fun a => le_top
@@ -41,9 +42,11 @@ theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) : 
   exact (hy i).le.trans (add_le_add_left hi.le (f.limsup u))
 #align ennreal.eventually_le_limsup Ennreal.eventually_le_limsup
 
-theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.limsup u = 0 ↔ u =ᶠ[f] 0 := by
+theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.limsup u = 0 ↔ u =ᶠ[f] 0 :=
+  by
   constructor <;> intro h
-  · have hu_zero := eventually_le.trans (eventually_le_limsup u) (eventually_of_forall fun _ => le_of_eq h)
+  · have hu_zero :=
+      eventually_le.trans (eventually_le_limsup u) (eventually_of_forall fun _ => le_of_eq h)
     exact hu_zero.mono fun x hx => le_antisymm hx (zero_le _)
     
   · rw [limsup_congr h]
@@ -51,7 +54,7 @@ theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.
     
 #align ennreal.limsup_eq_zero_iff Ennreal.limsup_eq_zero_iff
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_top : a ≠ ⊤) :
     (f.limsup fun x : α => a * u x) = a * f.limsup u := by
   by_cases ha_zero : a = 0
@@ -100,8 +103,9 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
     
 #align ennreal.limsup_const_mul Ennreal.limsup_const_mul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u * v) ≤ f.limsup u * f.limsup v :=
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
+    f.limsup (u * v) ≤ f.limsup u * f.limsup v :=
   calc
     f.limsup (u * v) ≤ f.limsup fun x => f.limsup u * v x := by
       refine' limsup_le_limsup _ _
@@ -115,14 +119,19 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.lim
     
 #align ennreal.limsup_mul_le Ennreal.limsup_mul_le
 
-theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) : f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
-  Inf_le ((eventually_le_limsup u).mp ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
+theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
+    f.limsup (u + v) ≤ f.limsup u + f.limsup v :=
+  Inf_le
+    ((eventually_le_limsup u).mp
+      ((eventually_le_limsup v).mono fun _ hxg hxf => add_le_add hxf hxg))
 #align ennreal.limsup_add_le Ennreal.limsup_add_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [CountableInterFilter f] {g : Filter β}
-    (u : α → β → ℝ≥0∞) :
-    (f.limsup fun a : α => g.liminf fun b : β => u a b) ≤ g.liminf fun b => f.limsup fun a => u a b := by
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic filter.is_bounded_default -/
+theorem limsup_liminf_le_liminf_limsup {β} [Countable β] {f : Filter α} [CountableInterFilter f]
+    {g : Filter β} (u : α → β → ℝ≥0∞) :
+    (f.limsup fun a : α => g.liminf fun b : β => u a b) ≤
+      g.liminf fun b => f.limsup fun a => u a b :=
+  by
   have h1 : ∀ᶠ a in f, ∀ b, u a b ≤ f.limsup fun a' => u a' b := by
     rw [eventually_countable_forall]
     exact fun b => Ennreal.eventually_le_limsup fun a => u a b

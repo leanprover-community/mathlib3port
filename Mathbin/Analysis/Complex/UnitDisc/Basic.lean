@@ -97,7 +97,8 @@ theorem mk_neg (z : ℂ) (hz : abs (-z) < 1) : mk (-z) hz = -mk z (abs.map_neg z
 
 instance : SemigroupWithZero 𝔻 :=
   { UnitDisc.commSemigroup with zero := mk 0 <| (map_zero _).trans_lt one_pos,
-    zero_mul := fun z => coe_injective <| zero_mul _, mul_zero := fun z => coe_injective <| mul_zero _ }
+    zero_mul := fun z => coe_injective <| zero_mul _,
+    mul_zero := fun z => coe_injective <| mul_zero _ }
 
 @[simp]
 theorem coe_zero : ((0 : 𝔻) : ℂ) = 0 :=
@@ -118,7 +119,8 @@ instance circleAction : MulAction circle 𝔻 :=
 
 instance is_scalar_tower_circle_circle : IsScalarTower circle circle 𝔻 :=
   is_scalar_tower_sphere_sphere_ball
-#align complex.unit_disc.is_scalar_tower_circle_circle Complex.UnitDisc.is_scalar_tower_circle_circle
+#align
+  complex.unit_disc.is_scalar_tower_circle_circle Complex.UnitDisc.is_scalar_tower_circle_circle
 
 instance is_scalar_tower_circle : IsScalarTower circle 𝔻 𝔻 :=
   is_scalar_tower_sphere_ball_ball
@@ -141,7 +143,8 @@ instance closedBallAction : MulAction (closedBall (0 : ℂ) 1) 𝔻 :=
   mulActionClosedBallBall
 #align complex.unit_disc.closed_ball_action Complex.UnitDisc.closedBallAction
 
-instance is_scalar_tower_closed_ball_closed_ball : IsScalarTower (closedBall (0 : ℂ) 1) (closedBall (0 : ℂ) 1) 𝔻 :=
+instance is_scalar_tower_closed_ball_closed_ball :
+    IsScalarTower (closedBall (0 : ℂ) 1) (closedBall (0 : ℂ) 1) 𝔻 :=
   is_scalar_tower_closed_ball_closed_ball_ball
 #align
   complex.unit_disc.is_scalar_tower_closed_ball_closed_ball Complex.UnitDisc.is_scalar_tower_closed_ball_closed_ball
@@ -160,11 +163,13 @@ instance smul_comm_class_closed_ball' : SmulCommClass 𝔻 (closedBall (0 : ℂ)
 
 instance smul_comm_class_circle_closed_ball : SmulCommClass circle (closedBall (0 : ℂ) 1) 𝔻 :=
   smul_comm_class_sphere_closed_ball_ball
-#align complex.unit_disc.smul_comm_class_circle_closed_ball Complex.UnitDisc.smul_comm_class_circle_closed_ball
+#align
+  complex.unit_disc.smul_comm_class_circle_closed_ball Complex.UnitDisc.smul_comm_class_circle_closed_ball
 
 instance smul_comm_class_closed_ball_circle : SmulCommClass (closedBall (0 : ℂ) 1) circle 𝔻 :=
   SmulCommClass.symm _ _ _
-#align complex.unit_disc.smul_comm_class_closed_ball_circle Complex.UnitDisc.smul_comm_class_closed_ball_circle
+#align
+  complex.unit_disc.smul_comm_class_closed_ball_circle Complex.UnitDisc.smul_comm_class_closed_ball_circle
 
 @[simp, norm_cast]
 theorem coe_smul_closed_ball (z : closedBall (0 : ℂ) 1) (w : 𝔻) : ↑(z • w) = (z * w : ℂ) :=

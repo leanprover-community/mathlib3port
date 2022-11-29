@@ -30,9 +30,9 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 
 
 /-- A continuous map of affine spaces. -/
-structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ring R] [AddCommGroup V] [Module R V]
-  [TopologicalSpace P] [AddTorsor V P] [AddCommGroup W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q] extends
-  P →ᵃ[R] Q where
+structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ring R] [AddCommGroup V]
+  [Module R V] [TopologicalSpace P] [AddTorsor V P] [AddCommGroup W] [Module R W]
+  [TopologicalSpace Q] [AddTorsor W Q] extends P →ᵃ[R] Q where
   cont : Continuous to_fun
 #align continuous_affine_map ContinuousAffineMap
 
@@ -110,15 +110,18 @@ theorem coe_to_continuous_map (f : P →A[R] Q) : ((f : C(P, Q)) : P → Q) = f 
   rfl
 #align continuous_affine_map.coe_to_continuous_map ContinuousAffineMap.coe_to_continuous_map
 
-theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g := by
+theorem to_affine_map_injective {f g : P →A[R] Q} (h : (f : P →ᵃ[R] Q) = (g : P →ᵃ[R] Q)) : f = g :=
+  by
   ext a
   exact AffineMap.congr_fun h a
 #align continuous_affine_map.to_affine_map_injective ContinuousAffineMap.to_affine_map_injective
 
-theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g := by
+theorem to_continuous_map_injective {f g : P →A[R] Q} (h : (f : C(P, Q)) = (g : C(P, Q))) : f = g :=
+  by
   ext a
   exact ContinuousMap.congr_fun h a
-#align continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuous_map_injective
+#align
+  continuous_affine_map.to_continuous_map_injective ContinuousAffineMap.to_continuous_map_injective
 
 @[norm_cast]
 theorem coe_affine_map_mk (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q) : P →ᵃ[R] Q) = f :=
@@ -173,7 +176,8 @@ def comp (f : Q →A[R] Q₂) (g : P →A[R] Q) : P →A[R] Q₂ :=
 #align continuous_affine_map.comp ContinuousAffineMap.comp
 
 @[simp, norm_cast]
-theorem coe_comp (f : Q →A[R] Q₂) (g : P →A[R] Q) : (f.comp g : P → Q₂) = (f : Q → Q₂) ∘ (g : P → Q) :=
+theorem coe_comp (f : Q →A[R] Q₂) (g : P →A[R] Q) :
+    (f.comp g : P → Q₂) = (f : Q → Q₂) ∘ (g : P → Q) :=
   rfl
 #align continuous_affine_map.coe_comp ContinuousAffineMap.coe_comp
 
@@ -207,7 +211,9 @@ variable [Monoid S] [DistribMulAction S W] [SmulCommClass R S W]
 
 variable [HasContinuousConstSmul S W]
 
-instance : HasSmul S (P →A[R] W) where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
+instance :
+    HasSmul S
+      (P →A[R] W) where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
 
 @[norm_cast, simp]
 theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
@@ -229,7 +235,10 @@ end MulAction
 variable [TopologicalAddGroup W]
 
 instance :
-    Add (P →A[R] W) where add f g := { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
+    Add
+      (P →A[R]
+        W) where add f g :=
+    { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_add (f g : P →A[R] W) : ⇑(f + g) = f + g :=
@@ -241,7 +250,10 @@ theorem add_apply (f g : P →A[R] W) (x : P) : (f + g) x = f x + g x :=
 #align continuous_affine_map.add_apply ContinuousAffineMap.add_apply
 
 instance :
-    Sub (P →A[R] W) where sub f g := { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
+    Sub
+      (P →A[R]
+        W) where sub f g :=
+    { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
 
 @[norm_cast, simp]
 theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
@@ -264,13 +276,16 @@ theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
 #align continuous_affine_map.neg_apply ContinuousAffineMap.neg_apply
 
 instance : AddCommGroup (P →A[R] W) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ => coe_smul _ _
+  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
+    coe_smul _ _
 
 instance [Monoid S] [DistribMulAction S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
     DistribMulAction S (P →A[R] W) :=
-  Function.Injective.distribMulAction ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
+  Function.Injective.distribMulAction ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective
+    coe_smul
 
-instance [Semiring S] [Module S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] : Module S (P →A[R] W) :=
+instance [Semiring S] [Module S W] [SmulCommClass R S W] [HasContinuousConstSmul S W] :
+    Module S (P →A[R] W) :=
   Function.Injective.module S ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
 
 end ModuleValuedMaps
@@ -296,11 +311,13 @@ def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W where
 @[simp]
 theorem coe_to_continuous_affine_map (f : V →L[R] W) : ⇑f.toContinuousAffineMap = f :=
   rfl
-#align continuous_linear_map.coe_to_continuous_affine_map ContinuousLinearMap.coe_to_continuous_affine_map
+#align
+  continuous_linear_map.coe_to_continuous_affine_map ContinuousLinearMap.coe_to_continuous_affine_map
 
 @[simp]
 theorem to_continuous_affine_map_map_zero (f : V →L[R] W) : f.toContinuousAffineMap 0 = 0 := by simp
-#align continuous_linear_map.to_continuous_affine_map_map_zero ContinuousLinearMap.to_continuous_affine_map_map_zero
+#align
+  continuous_linear_map.to_continuous_affine_map_map_zero ContinuousLinearMap.to_continuous_affine_map_map_zero
 
 end ContinuousLinearMap
 

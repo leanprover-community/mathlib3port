@@ -34,10 +34,12 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
       inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩,
       val_inv := ext fun x => Units.mul_inv _, inv_val := ext fun x => Units.inv_mul _ }
   invFun f :=
-    { toFun := fun x => ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩,
+    { toFun := fun x =>
+        ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩,
       continuous_to_fun :=
         continuous_induced_rng.2 <|
-          Continuous.prod_mk (f : C(X, M)).Continuous <| MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
+          Continuous.prod_mk (f : C(X, M)).Continuous <|
+            MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
   left_inv f := by
     ext
     rfl
@@ -52,16 +54,16 @@ section NormedRing
 
 variable [NormedRing R] [CompleteSpace R]
 
-theorem _root_.normed_ring.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
+theorem NormedRing.is_unit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
     Continuous fun x => (h x).Unit := by
   refine'
     continuous_induced_rng.2
-      (Continuous.prod_mk f.continuous (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
+      (Continuous.prod_mk f.continuous
+        (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
   have := NormedRing.inverse_continuous_at (h x).Unit
   simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_apply] at this⊢
   exact this.comp (f.continuous_at x)
-#align
-  continuous_map._root_.normed_ring.is_unit_unit_continuous continuous_map._root_.normed_ring.is_unit_unit_continuous
+#align normed_ring.is_unit_unit_continuous NormedRing.is_unit_unit_continuous
 
 /-- Construct a continuous map into the group of units of a normed ring from a function into the
 normed ring and a proof that every element of the range is a unit. -/
@@ -72,8 +74,8 @@ noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : 
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :
-    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩) fun f =>
-      ∀ x, IsUnit (f x) where prf f h :=
+    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩)
+      fun f => ∀ x, IsUnit (f x) where prf f h :=
     ⟨unitsOfForallIsUnit h, by
       ext
       rfl⟩
@@ -98,8 +100,9 @@ theorem is_unit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x �
 
 theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f := by
   ext
-  simp only [spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, ContinuousMap.coe_sub, Pi.sub_apply,
-    algebra_map_apply, Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero, @eq_comm _ x _]
+  simp only [spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply,
+    algebra_map_apply, Algebra.id.smul_eq_mul, mul_one, not_not, Set.mem_range, sub_eq_zero,
+    @eq_comm _ x _]
 #align continuous_map.spectrum_eq_range ContinuousMap.spectrum_eq_range
 
 end NormedField

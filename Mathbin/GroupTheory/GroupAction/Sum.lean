@@ -25,7 +25,8 @@ namespace Sum
 
 section HasSmul
 
-variable [HasSmul M α] [HasSmul M β] [HasSmul N α] [HasSmul N β] (a : M) (b : α) (c : β) (x : Sum α β)
+variable [HasSmul M α] [HasSmul M β] [HasSmul N α] [HasSmul N β] (a : M) (b : α) (c : β)
+  (x : Sum α β)
 
 @[to_additive Sum.hasVadd]
 instance : HasSmul M (Sum α β) :=
@@ -62,7 +63,8 @@ instance [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (Sum 
     exacts[congr_arg inl (smul_comm _ _ _), congr_arg inr (smul_comm _ _ _)]⟩
 
 @[to_additive]
-instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] : IsCentralScalar M (Sum α β) :=
+instance [HasSmul Mᵐᵒᵖ α] [HasSmul Mᵐᵒᵖ β] [IsCentralScalar M α] [IsCentralScalar M β] :
+    IsCentralScalar M (Sum α β) :=
   ⟨fun a x => by
     cases x
     exacts[congr_arg inl (op_smul_eq_smul _ _), congr_arg inr (op_smul_eq_smul _ _)]⟩

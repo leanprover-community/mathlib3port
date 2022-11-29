@@ -71,7 +71,8 @@ attribute [local instance] BoundedLatticeHomClass.toBiheytingHomClass
 @[simps]
 instance hasForgetToHeytAlg :
     HasForget₂ BoolAlgCat
-      HeytAlgCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y f => show BoundedLatticeHom X Y from f }
+      HeytAlgCat where forget₂ :=
+    { obj := fun X => ⟨X⟩, map := fun X Y f => show BoundedLatticeHom X Y from f }
 #align BoolAlg.has_forget_to_HeytAlg BoolAlgCat.hasForgetToHeytAlg
 
 end
@@ -99,7 +100,8 @@ def dual : BoolAlgCat ⥤ BoolAlgCat where
 /-- The equivalence between `BoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : BoolAlgCat ≌ BoolAlgCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoolAlg.dual_equiv BoolAlgCat.dualEquiv
 
@@ -109,5 +111,6 @@ theorem BoolAlg_dual_comp_forget_to_BoundedDistribLattice :
     BoolAlgCat.dual ⋙ forget₂ BoolAlgCat BoundedDistribLatticeCat =
       forget₂ BoolAlgCat BoundedDistribLatticeCat ⋙ BoundedDistribLatticeCat.dual :=
   rfl
-#align BoolAlg_dual_comp_forget_to_BoundedDistribLattice BoolAlg_dual_comp_forget_to_BoundedDistribLattice
+#align
+  BoolAlg_dual_comp_forget_to_BoundedDistribLattice BoolAlg_dual_comp_forget_to_BoundedDistribLattice
 

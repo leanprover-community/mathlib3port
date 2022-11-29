@@ -94,11 +94,13 @@ instance inv_pair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, 
 
 -- mathport name: frobenius_ring_hom.linear_map
 scoped[Isocrystal]
-  notation:50 M " →ᶠˡ[" p ", " k "] " M₂ => LinearMap (WittVector.FractionRing.frobeniusRingHom p k) M M₂
+  notation:50 M " →ᶠˡ[" p ", " k "] " M₂ =>
+    LinearMap (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
 -- mathport name: frobenius_ring_hom.linear_equiv
 scoped[Isocrystal]
-  notation:50 M " ≃ᶠˡ[" p ", " k "] " M₂ => LinearEquiv (WittVector.FractionRing.frobeniusRingHom p k) M M₂
+  notation:50 M " ≃ᶠˡ[" p ", " k "] " M₂ =>
+    LinearEquiv (WittVector.FractionRing.frobeniusRingHom p k) M M₂
 
 /-! ### Isocrystals -/
 
@@ -116,7 +118,8 @@ variable (V₂ : Type _) [AddCommGroup V₂] [Isocrystal p k V₂]
 
 variable {V}
 
-/-- Project the Frobenius automorphism from an isocrystal. Denoted by `Φ(p, k)` when V can be inferred.
+/--
+Project the Frobenius automorphism from an isocrystal. Denoted by `Φ(p, k)` when V can be inferred.
 -/
 def Isocrystal.frobenius : V ≃ᶠˡ[p, k] V :=
   @Isocrystal.frob p _ k _ _ _ _ _ _ _
@@ -184,14 +187,15 @@ instance (m : ℤ) :
 theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIsocrystal p k m) :
     Φ(p, k) x = (p : K(p, k)) ^ m • φ(p, k) x :=
   rfl
-#align witt_vector.standard_one_dim_isocrystal.frobenius_apply WittVector.StandardOneDimIsocrystal.frobenius_apply
+#align
+  witt_vector.standard_one_dim_isocrystal.frobenius_apply WittVector.StandardOneDimIsocrystal.frobenius_apply
 
 end PerfectRing
 
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
-theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroup V]
-    [Isocrystal p k V] (h_dim : finrank K(p, k) V = 1) :
+theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _)
+    [AddCommGroup V] [Isocrystal p k V] (h_dim : finrank K(p, k) V = 1) :
     ∃ m : ℤ, Nonempty (StandardOneDimIsocrystal p k m ≃ᶠⁱ[p, k] V) := by
   haveI : Nontrivial V := FiniteDimensional.nontrivial_of_finrank_eq_succ h_dim
   obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := exists_ne 0
@@ -220,8 +224,8 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   intro c
   rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.smul_of_ne_zero_apply,
     LinearEquiv.smul_of_ne_zero_apply, LinearEquiv.map_smul, LinearEquiv.map_smul]
-  simp only [hax, LinearEquiv.of_bijective_apply, LinearMap.to_span_singleton_apply, LinearEquiv.map_smulₛₗ,
-    standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
+  simp only [hax, LinearEquiv.of_bijective_apply, LinearMap.to_span_singleton_apply,
+    LinearEquiv.map_smulₛₗ, standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
   simp only [← mul_smul]
   congr 1
   linear_combination φ(p, k) c * hmb

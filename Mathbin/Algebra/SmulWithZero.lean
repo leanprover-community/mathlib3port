@@ -129,7 +129,8 @@ class MulActionWithZero extends MulAction R M where
 #align mul_action_with_zero MulActionWithZero
 
 -- see Note [lower instance priority]
-instance (priority := 100) MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] : SmulWithZero R M :=
+instance (priority := 100) MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] :
+    SmulWithZero R M :=
   { m with }
 #align mul_action_with_zero.to_smul_with_zero MulActionWithZero.toSmulWithZero
 
@@ -166,8 +167,8 @@ variable (M)
 
 /-- Compose a `mul_action_with_zero` with a `monoid_with_zero_hom`, with action `f r' • m` -/
 def MulActionWithZero.compHom (f : R' →*₀ R) : MulActionWithZero R' M :=
-  { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f, mul_smul := fun r s m => by simp [mul_smul],
-    one_smul := fun m => by simp }
+  { SmulWithZero.compHom M f.toZeroHom with smul := (· • ·) ∘ f,
+    mul_smul := fun r s m => by simp [mul_smul], one_smul := fun m => by simp }
 #align mul_action_with_zero.comp_hom MulActionWithZero.compHom
 
 end MonoidWithZero
@@ -176,7 +177,8 @@ section GroupWithZero
 
 variable {α β : Type _} [GroupWithZero α] [GroupWithZero β] [MulActionWithZero α β]
 
-theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) : (c • x)⁻¹ = c⁻¹ • x⁻¹ := by
+theorem smul_inv₀ [SmulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) :
+    (c • x)⁻¹ = c⁻¹ • x⁻¹ := by
   obtain rfl | hc := eq_or_ne c 0
   · simp only [inv_zero, zero_smul]
     
@@ -192,8 +194,8 @@ end GroupWithZero
 
 /-- Scalar multiplication as a monoid homomorphism with zero. -/
 @[simps]
-def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZero α] [MulZeroOneClass β] [MulActionWithZero α β]
-    [IsScalarTower α β β] [SmulCommClass α β β] : α × β →*₀ β :=
+def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZero α] [MulZeroOneClass β]
+    [MulActionWithZero α β] [IsScalarTower α β β] [SmulCommClass α β β] : α × β →*₀ β :=
   { smulMonoidHom with map_zero' := smul_zero _ }
 #align smul_monoid_with_zero_hom smulMonoidWithZeroHom
 

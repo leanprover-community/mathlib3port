@@ -39,6 +39,7 @@ variable {α : Type u}
 /-! ### lexicographic ordering -/
 
 
+#print List.Lex /-
 /-- Given a strict order `<` on `α`, the lexicographic strict order on `list α`, for which
 `[a0, ..., an] < [b0, ..., b_k]` if `a0 < b0` or `a0 = b0` and `[a1, ..., an] < [b1, ..., bk]`.
 The definition is given for any relation `r`, not only strict orders. -/
@@ -47,19 +48,27 @@ inductive Lex (r : α → α → Prop) : List α → List α → Prop
   | cons {a l₁ l₂} (h : lex l₁ l₂) : lex (a :: l₁) (a :: l₂)
   | rel {a₁ l₁ a₂ l₂} (h : r a₁ a₂) : lex (a₁ :: l₁) (a₂ :: l₂)
 #align list.lex List.Lex
+-/
 
 namespace Lex
 
-theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} : Lex r (a :: l₁) (a :: l₂) ↔ Lex r l₁ l₂ :=
-  ⟨fun h => by cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h, exact (irrefl_of r a h).elim], Lex.cons⟩
+#print List.Lex.cons_iff /-
+theorem cons_iff {r : α → α → Prop} [IsIrrefl α r] {a l₁ l₂} :
+    Lex r (a :: l₁) (a :: l₂) ↔ Lex r l₁ l₂ :=
+  ⟨fun h => by cases' h with _ _ _ _ _ h _ _ _ _ h <;> [exact h, exact (irrefl_of r a h).elim],
+    Lex.cons⟩
 #align list.lex.cons_iff List.Lex.cons_iff
+-/
 
+#print List.Lex.not_nil_right /-
 @[simp]
 theorem not_nil_right (r : α → α → Prop) (l : List α) : ¬Lex r l [] :=
   fun.
 #align list.lex.not_nil_right List.Lex.not_nil_right
+-/
 
-instance is_order_connected (r : α → α → Prop) [IsOrderConnected α r] [IsTrichotomous α r] :
+#print List.Lex.isOrderConnected /-
+instance isOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTrichotomous α r] :
     IsOrderConnected (List α) (Lex r) :=
   ⟨fun l₁ =>
     match l₁ with
@@ -76,9 +85,11 @@ instance is_order_connected (r : α → α → Prop) [IsOrderConnected α r] [Is
         
       · exact Or.inr (rel ab)
         ⟩
-#align list.lex.is_order_connected List.Lex.is_order_connected
+#align list.lex.is_order_connected List.Lex.isOrderConnected
+-/
 
-instance is_trichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrichotomous (List α) (Lex r) :=
+#print List.Lex.isTrichotomous /-
+instance isTrichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTrichotomous (List α) (Lex r) :=
   ⟨fun l₁ =>
     match l₁ with
     | [], [] => Or.inr (Or.inl rfl)
@@ -92,21 +103,28 @@ instance is_trichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTric
         
       · exact Or.inr (Or.inr (rel ab))
         ⟩
-#align list.lex.is_trichotomous List.Lex.is_trichotomous
+#align list.lex.is_trichotomous List.Lex.isTrichotomous
+-/
 
-instance is_asymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (Lex r) :=
+#print List.Lex.isAsymm /-
+instance isAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (Lex r) :=
   ⟨fun l₁ =>
     match l₁ with
     | a :: l₁, b :: l₂, lex.rel h₁, lex.rel h₂ => asymm h₁ h₂
     | a :: l₁, b :: l₂, lex.rel h₁, lex.cons h₂ => asymm h₁ h₁
     | a :: l₁, b :: l₂, lex.cons h₁, lex.rel h₂ => asymm h₂ h₂
     | a :: l₁, b :: l₂, lex.cons h₁, lex.cons h₂ => _match _ _ h₁ h₂⟩
-#align list.lex.is_asymm List.Lex.is_asymm
+#align list.lex.is_asymm List.Lex.isAsymm
+-/
 
-instance is_strict_total_order (r : α → α → Prop) [IsStrictTotalOrder α r] : IsStrictTotalOrder (List α) (Lex r) :=
+#print List.Lex.isStrictTotalOrder /-
+instance isStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder α r] :
+    IsStrictTotalOrder (List α) (Lex r) :=
   { isStrictWeakOrder_of_isOrderConnected with }
-#align list.lex.is_strict_total_order List.Lex.is_strict_total_order
+#align list.lex.is_strict_total_order List.Lex.isStrictTotalOrder
+-/
 
+#print List.Lex.decidableRel /-
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
   | l₁, [] => is_false fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
@@ -126,30 +144,40 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
         
       
 #align list.lex.decidable_rel List.Lex.decidableRel
+-/
 
+#print List.Lex.append_right /-
 theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} (t), Lex r s₁ s₂ → Lex r s₁ (s₂ ++ t)
   | _, _, t, nil => nil
   | _, _, t, cons h => cons (append_right _ h)
   | _, _, t, rel r => rel r
 #align list.lex.append_right List.Lex.append_right
+-/
 
+#print List.Lex.append_left /-
 theorem append_left (R : α → α → Prop) {t₁ t₂} (h : Lex R t₁ t₂) : ∀ s, Lex R (s ++ t₁) (s ++ t₂)
   | [] => h
   | a :: l => cons (append_left l)
 #align list.lex.append_left List.Lex.append_left
+-/
 
+#print List.Lex.imp /-
 theorem imp {r s : α → α → Prop} (H : ∀ a b, r a b → s a b) : ∀ l₁ l₂, Lex r l₁ l₂ → Lex s l₁ l₂
   | _, _, nil => nil
   | _, _, cons h => cons (imp _ _ h)
   | _, _, rel r => rel (H _ _ r)
 #align list.lex.imp List.Lex.imp
+-/
 
+#print List.Lex.to_ne /-
 theorem to_ne : ∀ {l₁ l₂ : List α}, Lex (· ≠ ·) l₁ l₂ → l₁ ≠ l₂
   | _, _, cons h, e => to_ne h (List.cons.inj e).2
   | _, _, rel r, e => r (List.cons.inj e).1
 #align list.lex.to_ne List.Lex.to_ne
+-/
 
-theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) :
+#print Decidable.List.Lex.ne_iff /-
+theorem Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) :
     Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
   ⟨to_ne, fun h => by
     induction' l₁ with a l₁ IH generalizing l₂ <;> cases' l₂ with b l₂
@@ -167,8 +195,10 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       · exact rel ab
         
       ⟩
-#align list.lex._root_.decidable.list.lex.ne_iff list.lex._root_.decidable.list.lex.ne_iff
+#align decidable.list.lex.ne_iff Decidable.List.Lex.ne_iff
+-/
 
+#print List.Lex.ne_iff /-
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])
@@ -177,11 +207,18 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       (Command.declId `ne_iff [])
       (Command.declSig
        [(Term.implicitBinder "{" [`l₁ `l₂] [":" (Term.app `List [`α])] "}")
-        (Term.explicitBinder "(" [`H] [":" («term_≤_» (Term.app `length [`l₁]) "≤" (Term.app `length [`l₂]))] [] ")")]
+        (Term.explicitBinder
+         "("
+         [`H]
+         [":" («term_≤_» (Term.app `length [`l₁]) "≤" (Term.app `length [`l₂]))]
+         []
+         ")")]
        (Term.typeSpec
         ":"
         («term_↔_»
-         (Term.app `Lex [(Term.paren "(" («term_≠_» (Term.cdot "·") "≠" (Term.cdot "·")) ")") `l₁ `l₂])
+         (Term.app
+          `Lex
+          [(Term.paren "(" («term_≠_» (Term.cdot "·") "≠" (Term.cdot "·")) ")") `l₁ `l₂])
          "↔"
          («term_≠_» `l₁ "≠" `l₂))))
       (Command.declValSimple
@@ -222,12 +259,14 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Decidable.List.Lex.ne_iff
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -245,25 +284,32 @@ theorem
   { l₁ l₂ : List α } ( H : length l₁ ≤ length l₂ ) : Lex ( · ≠ · ) l₁ l₂ ↔ l₁ ≠ l₂
   := by skip <;> exact Decidable.List.Lex.ne_iff H
 #align list.lex.ne_iff List.Lex.ne_iff
+-/
 
 end Lex
 
+#print List.LT' /-
 --Note: this overrides an instance in core lean
-instance hasLt' [LT α] : LT (List α) :=
+instance LT' [LT α] : LT (List α) :=
   ⟨Lex (· < ·)⟩
-#align list.has_lt' List.hasLt'
+#align list.has_lt' List.LT'
+-/
 
+#print List.nil_lt_cons /-
 theorem nil_lt_cons [LT α] (a : α) (l : List α) : [] < a :: l :=
   lex.nil
 #align list.nil_lt_cons List.nil_lt_cons
+-/
 
 instance [LinearOrder α] : LinearOrder (List α) :=
   linearOrderOfSTO (Lex (· < ·))
 
+#print List.LE' /-
 --Note: this overrides an instance in core lean
-instance hasLe' [LinearOrder α] : LE (List α) :=
+instance LE' [LinearOrder α] : LE (List α) :=
   Preorder.toLE _
-#align list.has_le' List.hasLe'
+#align list.has_le' List.LE'
+-/
 
 end List
 

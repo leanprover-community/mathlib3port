@@ -195,10 +195,14 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (
 theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
     c.approx n x ∈ icc (c.right.approx n x) (c.left.approx n x) := by
   induction' n with n ihn generalizing c
-  · exact ⟨le_rfl, indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset) (fun _ => zero_le_one) _⟩
+  · exact
+      ⟨le_rfl,
+        indicator_le_indicator_of_subset (compl_subset_compl.2 c.left_U_subset)
+          (fun _ => zero_le_one) _⟩
     
   · simp only [approx, mem_Icc]
-    refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;> apply approx_le_approx_of_U_sub_C
+    refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
+      apply approx_le_approx_of_U_sub_C
     exacts[subset_closure, subset_closure]
     
 #align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
@@ -226,7 +230,8 @@ protected noncomputable def lim (c : CU X) (x : X) : ℝ :=
   ⨆ n, c.approx n x
 #align urysohns.CU.lim Urysohns.CU.lim
 
-theorem tendsto_approx_at_top (c : CU X) (x : X) : Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
+theorem tendsto_approx_at_top (c : CU X) (x : X) :
+    Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
   tendsto_at_top_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_at_top
 
@@ -238,7 +243,8 @@ theorem lim_of_nmem_U (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
   simp only [CU.lim, approx_of_nmem_U c _ h, csupr_const]
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_U
 
-theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) := by
+theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
+  by
   refine' tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _)
   simp only [approx]
   exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
@@ -274,7 +280,8 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
     
   · by_cases hxl : x ∈ c.left.U
     · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd
-      rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint, c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
+      rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint,
+        c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
         c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)]
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
       rw [dist_self, add_zero, div_eq_inv_mul]
@@ -282,16 +289,19 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
       
     · replace hxl : x ∈ c.left.right.Cᶜ
       exact compl_subset_compl.2 c.left.right.subset hxl
-      filter_upwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl, ihn c.left.right,
-        ihn c.right] with y hyl hydl hydr
+      filter_upwards [IsOpen.mem_nhds (is_open_compl_iff.2 c.left.right.closed_C) hxl,
+        ihn c.left.right, ihn c.right] with y hyl hydl hydr
       replace hxl : x ∉ c.left.left.U
       exact compl_subset_compl.2 c.left.left_U_subset_right_C hxl
       replace hyl : y ∉ c.left.left.U
       exact compl_subset_compl.2 c.left.left_U_subset_right_C hyl
-      simp only [pow_succ, c.lim_eq_midpoint, c.left.lim_eq_midpoint, c.left.left.lim_of_nmem_U _ hxl,
-        c.left.left.lim_of_nmem_U _ hyl]
+      simp only [pow_succ, c.lim_eq_midpoint, c.left.lim_eq_midpoint,
+        c.left.left.lim_of_nmem_U _ hxl, c.left.left.lim_of_nmem_U _ hyl]
       refine' (dist_midpoint_midpoint_le _ _ _ _).trans _
-      refine' (div_le_div_of_le_of_nonneg (add_le_add_right (dist_midpoint_midpoint_le _ _ _ _) _) zero_le_two).trans _
+      refine'
+        (div_le_div_of_le_of_nonneg (add_le_add_right (dist_midpoint_midpoint_le _ _ _ _) _)
+              zero_le_two).trans
+          _
       rw [dist_self, zero_add]
       refine'
         (div_le_div_of_le_of_nonneg (add_le_add (div_le_div_of_le_of_nonneg hydl zero_le_two) hydr)
@@ -317,10 +327,12 @@ then there exists a continuous function `f : X → ℝ` such that
 * `f` equals one on `t`;
 * `0 ≤ f x ≤ 1` for all `x`.
 -/
-theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t) (hd : Disjoint s t) :
-    ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 := by
+theorem exists_continuous_zero_one_of_closed {s t : Set X} (hs : IsClosed s) (ht : IsClosed t)
+    (hd : Disjoint s t) : ∃ f : C(X, ℝ), EqOn f 0 s ∧ EqOn f 1 t ∧ ∀ x, f x ∈ icc (0 : ℝ) 1 := by
   -- The actual proof is in the code above. Here we just repack it into the expected format.
   set c : Urysohns.CU X := ⟨s, tᶜ, hs, ht.is_open_compl, disjoint_left.1 hd⟩
-  exact ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx, c.lim_mem_Icc⟩
+  exact
+    ⟨⟨c.lim, c.continuous_lim⟩, c.lim_of_mem_C, fun x hx => c.lim_of_nmem_U _ fun h => h hx,
+      c.lim_mem_Icc⟩
 #align exists_continuous_zero_one_of_closed exists_continuous_zero_one_of_closed
 

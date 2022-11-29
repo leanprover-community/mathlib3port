@@ -30,14 +30,15 @@ open Set
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
 instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by classical
   /- We start with trivial observations about `1 / 2 ^ k`. Here and below we use `1 / 2 ^ k` in
     the comments and `2⁻¹ ^ k` in the code. -/
-  have pow_pos : ∀ k : ℕ, (0 : ℝ≥0∞) < 2⁻¹ ^ k := fun k => Ennreal.pow_pos (Ennreal.inv_pos.2 Ennreal.two_ne_top) _
+  have pow_pos : ∀ k : ℕ, (0 : ℝ≥0∞) < 2⁻¹ ^ k := fun k =>
+    Ennreal.pow_pos (Ennreal.inv_pos.2 Ennreal.two_ne_top) _
   have hpow_le : ∀ {m n : ℕ}, m ≤ n → (2⁻¹ : ℝ≥0∞) ^ n ≤ 2⁻¹ ^ m := fun m n h =>
     Ennreal.pow_le_pow_of_le_one (Ennreal.inv_le_one.2 ennreal.one_lt_two.le) h
   have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n := by
@@ -52,7 +53,8 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
   -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
   set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)
   have mem_ind : ∀ x, x ∈ s (ind x) := fun x => wf.min_mem _ (hcov x)
-  have nmem_of_lt_ind : ∀ {x i}, i < ind x → x ∉ s i := fun x i hlt hxi => wf.not_lt_min _ (hcov x) hxi hlt
+  have nmem_of_lt_ind : ∀ {x i}, i < ind x → x ∉ s i := fun x i hlt hxi =>
+    wf.not_lt_min _ (hcov x) hxi hlt
   /- The refinement `D : ℕ → ι → set α` is defined recursively. For each `n` and `i`, `D n i`
     is the union of balls `ball x (1 / 2 ^ n)` over all points `x` such that
   
@@ -64,21 +66,21 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
     -/
   set D : ℕ → ι → Set α := fun n =>
     Nat.strongRecOn' n fun n D' i =>
-      ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀ m < n, ∀ (j : ι), x ∉ D' m ‹_› j),
-        ball x (2⁻¹ ^ n)
+      ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt :
+        ∀ m < n, ∀ (j : ι), x ∉ D' m ‹_› j), ball x (2⁻¹ ^ n)
   have Dn :
     ∀ n i,
       D n i =
-        ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀ m < n, ∀ (j : ι), x ∉ D m j),
-          ball x (2⁻¹ ^ n) :=
+        ⋃ (x : α) (hxs : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt :
+          ∀ m < n, ∀ (j : ι), x ∉ D m j), ball x (2⁻¹ ^ n) :=
     fun n s => by
     simp only [D]
     rw [Nat.strong_rec_on_beta']
   have memD :
     ∀ {n i y},
       y ∈ D n i ↔
-        ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt : ∀ m < n, ∀ (j : ι), x ∉ D m j),
-          edist y x < 2⁻¹ ^ n :=
+        ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt :
+          ∀ m < n, ∀ (j : ι), x ∉ D m j), edist y x < 2⁻¹ ^ n :=
     by
     intro n i y
     rw [Dn n i]
@@ -145,7 +147,8 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
       calc
         edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
         _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := Ennreal.add_lt_add hz hyx
-        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) := add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith)
+        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
+          add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith)
         _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
         
     -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
@@ -163,7 +166,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
           add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
         _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr ennreal.add_lt_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr ennreal.add_lt_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
         _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
           Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)

@@ -45,9 +45,10 @@ namespace RingSubgroupsBasis
 
 variable {A ι : Type _} [Ring A]
 
-theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j)
-    (mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i)
-    (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i) : RingSubgroupsBasis B :=
+theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
+    (inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j) (mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i)
+    (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i) :
+    RingSubgroupsBasis B :=
   { inter, mul, leftMul,
     rightMul := by
       intro x i
@@ -57,7 +58,8 @@ theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter :
 #align ring_subgroups_basis.of_comm RingSubgroupsBasis.of_comm
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
-def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
+def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) :
+    RingFilterBasis A where
   sets := { U | ∃ i, U = B i }
   Nonempty := by
     inhabit ι
@@ -99,11 +101,14 @@ def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgrou
 
 variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 
-theorem mem_add_group_filter_basis_iff {V : Set A} : V ∈ hB.toRingFilterBasis.toAddGroupFilterBasis ↔ ∃ i, V = B i :=
+theorem mem_add_group_filter_basis_iff {V : Set A} :
+    V ∈ hB.toRingFilterBasis.toAddGroupFilterBasis ↔ ∃ i, V = B i :=
   Iff.rfl
-#align ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_add_group_filter_basis_iff
+#align
+  ring_subgroups_basis.mem_add_group_filter_basis_iff RingSubgroupsBasis.mem_add_group_filter_basis_iff
 
-theorem mem_add_group_filter_basis (i) : (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=
+theorem mem_add_group_filter_basis (i) :
+    (B i : Set A) ∈ hB.toRingFilterBasis.toAddGroupFilterBasis :=
   ⟨i, rfl⟩
 #align ring_subgroups_basis.mem_add_group_filter_basis RingSubgroupsBasis.mem_add_group_filter_basis
 
@@ -126,7 +131,8 @@ theorem has_basis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) f
       ⟩
 #align ring_subgroups_basis.has_basis_nhds_zero RingSubgroupsBasis.has_basis_nhds_zero
 
-theorem has_basis_nhds (a : A) : HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
+theorem has_basis_nhds (a : A) :
+    HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
   ⟨by
     intro s
     rw [(hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
@@ -194,7 +200,8 @@ namespace SubmodulesRingBasis
 
 variable {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
 
-theorem to_ring_subgroups_basis (hB : SubmodulesRingBasis B) : RingSubgroupsBasis fun i => (B i).toAddSubgroup := by
+theorem to_ring_subgroups_basis (hB : SubmodulesRingBasis B) :
+    RingSubgroupsBasis fun i => (B i).toAddSubgroup := by
   apply RingSubgroupsBasis.of_comm (fun i => (B i).toAddSubgroup) hB.inter hB.mul
   intro a i
   rcases hB.left_mul a i with ⟨j, hj⟩
@@ -329,7 +336,8 @@ end
 /-- Given a ring filter basis on a commutative ring `R`, define a compatibility condition
 on a family of submodules of a `R`-module `M`. This compatibility condition allows to get
 a topological module structure. -/
-structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → Submodule R M) : Prop where
+structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → Submodule R M) :
+  Prop where
   inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j
   smul : ∀ (m : M) (i : ι), ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
 #align ring_filter_basis.submodules_basis RingFilterBasis.SubmodulesBasis

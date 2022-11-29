@@ -54,8 +54,8 @@ theorem is_nilpotent_neg_iff [Ring R] : IsNilpotent (-x) ↔ IsNilpotent x :=
   ⟨fun h => neg_neg x ▸ h.neg, fun h => h.neg⟩
 #align is_nilpotent_neg_iff is_nilpotent_neg_iff
 
-theorem IsNilpotent.map [MonoidWithZero R] [MonoidWithZero S] {r : R} {F : Type _} [MonoidWithZeroHomClass F R S]
-    (hr : IsNilpotent r) (f : F) : IsNilpotent (f r) := by
+theorem IsNilpotent.map [MonoidWithZero R] [MonoidWithZero S] {r : R} {F : Type _}
+    [MonoidWithZeroHomClass F R S] (hr : IsNilpotent r) (f : F) : IsNilpotent (f r) := by
   use hr.some
   rw [← map_pow, hr.some_spec, map_zero]
 #align is_nilpotent.map IsNilpotent.map
@@ -66,11 +66,13 @@ class IsReduced (R : Type _) [Zero R] [Pow R ℕ] : Prop where
   eq_zero : ∀ x : R, IsNilpotent x → x = 0
 #align is_reduced IsReduced
 
-instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZero R] [NoZeroDivisors R] : IsReduced R :=
+instance (priority := 900) is_reduced_of_no_zero_divisors [MonoidWithZero R] [NoZeroDivisors R] :
+    IsReduced R :=
   ⟨fun _ ⟨_, hn⟩ => pow_eq_zero hn⟩
 #align is_reduced_of_no_zero_divisors is_reduced_of_no_zero_divisors
 
-instance (priority := 900) is_reduced_of_subsingleton [Zero R] [Pow R ℕ] [Subsingleton R] : IsReduced R :=
+instance (priority := 900) is_reduced_of_subsingleton [Zero R] [Pow R ℕ] [Subsingleton R] :
+    IsReduced R :=
   ⟨fun _ _ => Subsingleton.elim _ _⟩
 #align is_reduced_of_subsingleton is_reduced_of_subsingleton
 
@@ -83,8 +85,9 @@ theorem is_nilpotent_iff_eq_zero [MonoidWithZero R] [IsReduced R] : IsNilpotent 
   ⟨fun h => h.eq_zero, fun h => h.symm ▸ IsNilpotent.zero⟩
 #align is_nilpotent_iff_eq_zero is_nilpotent_iff_eq_zero
 
-theorem is_reduced_of_injective [MonoidWithZero R] [MonoidWithZero S] {F : Type _} [MonoidWithZeroHomClass F R S]
-    (f : F) (hf : Function.Injective f) [IsReduced S] : IsReduced R := by
+theorem is_reduced_of_injective [MonoidWithZero R] [MonoidWithZero S] {F : Type _}
+    [MonoidWithZeroHomClass F R S] (f : F) (hf : Function.Injective f) [IsReduced S] :
+    IsReduced R := by
   constructor
   intro x hx
   apply hf
@@ -92,12 +95,15 @@ theorem is_reduced_of_injective [MonoidWithZero R] [MonoidWithZero S] {F : Type 
   exact (hx.map f).eq_zero
 #align is_reduced_of_injective is_reduced_of_injective
 
-theorem RingHom.ker_is_radical_iff_reduced_of_surjective {S F} [CommSemiring R] [CommRing S] [RingHomClass F R S]
-    {f : F} (hf : Function.Surjective f) : (RingHom.ker f).IsRadical ↔ IsReduced S := by
+theorem RingHom.ker_is_radical_iff_reduced_of_surjective {S F} [CommSemiring R] [CommRing S]
+    [RingHomClass F R S] {f : F} (hf : Function.Surjective f) :
+    (RingHom.ker f).IsRadical ↔ IsReduced S := by
   simp_rw [is_reduced_iff, hf.forall, IsNilpotent, ← map_pow, ← RingHom.mem_ker] <;> rfl
-#align ring_hom.ker_is_radical_iff_reduced_of_surjective RingHom.ker_is_radical_iff_reduced_of_surjective
+#align
+  ring_hom.ker_is_radical_iff_reduced_of_surjective RingHom.ker_is_radical_iff_reduced_of_surjective
 
-theorem Ideal.is_radical_iff_quotient_reduced [CommRing R] (I : Ideal R) : I.IsRadical ↔ IsReduced (R ⧸ I) := by
+theorem Ideal.is_radical_iff_quotient_reduced [CommRing R] (I : Ideal R) :
+    I.IsRadical ↔ IsReduced (R ⧸ I) := by
   conv_lhs => rw [← @Ideal.mk_ker R _ I]
   exact RingHom.ker_is_radical_iff_reduced_of_surjective (@Ideal.Quotient.mk_surjective R _ I)
 #align ideal.is_radical_iff_quotient_reduced Ideal.is_radical_iff_quotient_reduced
@@ -113,19 +119,22 @@ theorem zero_is_radical_iff [MonoidWithZero R] : IsRadical (0 : R) ↔ IsReduced
   exact forall_swap
 #align zero_is_radical_iff zero_is_radical_iff
 
-theorem is_radical_iff_span_singleton [CommSemiring R] : IsRadical y ↔ (Ideal.span ({y} : Set R)).IsRadical := by
+theorem is_radical_iff_span_singleton [CommSemiring R] :
+    IsRadical y ↔ (Ideal.span ({y} : Set R)).IsRadical := by
   simp_rw [IsRadical, ← Ideal.mem_span_singleton]
   exact forall_swap.trans (forall_congr' fun r => exists_imp_distrib.symm)
 #align is_radical_iff_span_singleton is_radical_iff_span_singleton
 
-theorem is_radical_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) : IsRadical y ↔ ∀ x, y ∣ x ^ k → y ∣ x :=
+theorem is_radical_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) :
+    IsRadical y ↔ ∀ x, y ∣ x ^ k → y ∣ x :=
   ⟨fun h x => h k x, fun h =>
     k.cauchy_induction_mul (fun n h x hd => h x <| (pow_succ' x n).symm ▸ hd.mulRight x) 0 hk
       (fun x hd => pow_one x ▸ hd) fun n _ hn x hd => h x <| hn _ <| (pow_mul x k n).subst hd⟩
 #align is_radical_iff_pow_one_lt is_radical_iff_pow_one_lt
 
-theorem is_reduced_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) : IsReduced R ↔ ∀ x : R, x ^ k = 0 → x = 0 :=
-  by simp_rw [← zero_is_radical_iff, is_radical_iff_pow_one_lt k hk, zero_dvd_iff]
+theorem is_reduced_iff_pow_one_lt [MonoidWithZero R] (k : ℕ) (hk : 1 < k) :
+    IsReduced R ↔ ∀ x : R, x ^ k = 0 → x = 0 := by
+  simp_rw [← zero_is_radical_iff, is_radical_iff_pow_one_lt k hk, zero_dvd_iff]
 #align is_reduced_iff_pow_one_lt is_reduced_iff_pow_one_lt
 
 namespace Commute
@@ -194,7 +203,8 @@ theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
   Iff.rfl
 #align mem_nilradical mem_nilradical
 
-theorem nilradical_eq_Inf (R : Type _) [CommSemiring R] : nilradical R = inf { J : Ideal R | J.IsPrime } :=
+theorem nilradical_eq_Inf (R : Type _) [CommSemiring R] :
+    nilradical R = inf { J : Ideal R | J.IsPrime } :=
   (Ideal.radical_eq_Inf ⊥).trans <| by simp_rw [and_iff_right bot_le]
 #align nilradical_eq_Inf nilradical_eq_Inf
 
@@ -220,12 +230,16 @@ variable (R) {A : Type v} [CommSemiring R] [Semiring A] [Algebra R A]
 
 @[simp]
 theorem is_nilpotent_mul_left_iff (a : A) : IsNilpotent (mulLeft R a) ↔ IsNilpotent a := by
-  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [mul_left_eq_zero_iff, pow_mul_left] at hn⊢ <;> exact hn
+  constructor <;> rintro ⟨n, hn⟩ <;> use n <;>
+      simp only [mul_left_eq_zero_iff, pow_mul_left] at hn⊢ <;>
+    exact hn
 #align linear_map.is_nilpotent_mul_left_iff LinearMap.is_nilpotent_mul_left_iff
 
 @[simp]
 theorem is_nilpotent_mul_right_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNilpotent a := by
-  constructor <;> rintro ⟨n, hn⟩ <;> use n <;> simp only [mul_right_eq_zero_iff, pow_mul_right] at hn⊢ <;> exact hn
+  constructor <;> rintro ⟨n, hn⟩ <;> use n <;>
+      simp only [mul_right_eq_zero_iff, pow_mul_right] at hn⊢ <;>
+    exact hn
 #align linear_map.is_nilpotent_mul_right_iff LinearMap.is_nilpotent_mul_right_iff
 
 end LinearMap
@@ -250,9 +264,13 @@ variable [CommSemiring R] [CommRing S] [Algebra R S] (I : Ideal S)
 
 /-- Let `P` be a property on ideals. If `P` holds for square-zero ideals, and if
   `P I → P (J ⧸ I) → P J`, then `P` holds for all nilpotent ideals. -/
-theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I : Ideal S, Prop}
+theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
+    {P : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I : Ideal S, Prop}
     (h₁ : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I : Ideal S, I ^ 2 = ⊥ → P I)
-    (h₂ : ∀ ⦃S : Type _⦄ [CommRing S], ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) : P I := by
+    (h₂ :
+      ∀ ⦃S : Type _⦄ [CommRing S],
+        ∀ I J : Ideal S, I ≤ J → P I → P (J.map (Ideal.Quotient.mk I)) → P J) :
+    P I := by
   obtain ⟨n, hI : I ^ n = ⊥⟩ := hI
   revert S
   apply Nat.strong_induction_on n
@@ -286,8 +304,8 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I) {P : ∀ ⦃S : Type
     
 #align ideal.is_nilpotent.induction_on Ideal.IsNilpotent.induction_on
 
-theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal R} (hI : IsNilpotent I) {x : R} :
-    IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x := by
+theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal R}
+    (hI : IsNilpotent I) {x : R} : IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x := by
   refine' ⟨_, fun h => h.map I⟩
   revert x
   apply Ideal.IsNilpotent.induction_on I hI <;> clear hI I
@@ -295,13 +313,16 @@ theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal
   · introv e h₁ h₂ h₃
     apply h₁
     apply h₂
-    exact h₃.map ((DoubleQuot.quotQuotEquivQuotSup I J).trans (Ideal.quotEquivOfEq (sup_eq_right.mpr e))).symm.toRingHom
+    exact
+      h₃.map
+        ((DoubleQuot.quotQuotEquivQuotSup I J).trans
+              (Ideal.quotEquivOfEq (sup_eq_right.mpr e))).symm.toRingHom
     
   · introv e H
     skip
     obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
     have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1 := by
-      rw [map_one, _root_.map_mul, hy, IsUnit.mul_coe_inv]
+      rw [map_one, _root_.map_mul, hy, IsUnit.mul_val_inv]
     rw [Ideal.Quotient.eq] at this
     have : (x * y - 1) ^ 2 = 0 := by
       rw [← Ideal.mem_bot, ← e]
@@ -309,7 +330,7 @@ theorem IsNilpotent.is_unit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal
     have : x * (y * (2 - x * y)) = 1 := by
       rw [eq_comm, ← sub_eq_zero, ← this]
       ring
-    exact is_unit_of_mul_eq_one _ _ this
+    exact isUnit_of_mul_eq_one _ _ this
     
 #align is_nilpotent.is_unit_quotient_mk_iff IsNilpotent.is_unit_quotient_mk_iff
 

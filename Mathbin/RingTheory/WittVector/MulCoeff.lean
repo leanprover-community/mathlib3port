@@ -47,7 +47,8 @@ open BigOperators
 ```
 -/
 def wittPolyProd (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
-  rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ n) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ n)
+  rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ n) *
+    rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ n)
 #align witt_vector.witt_poly_prod WittVector.wittPolyProd
 
 include hp
@@ -68,7 +69,8 @@ def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
 #align witt_vector.witt_poly_prod_remainder WittVector.wittPolyProdRemainder
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n := by
+theorem witt_poly_prod_remainder_vars (n : ℕ) :
+    (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n := by
   rw [witt_poly_prod_remainder]
   apply subset.trans (vars_sum_subset _ _)
   rw [bUnion_subset]
@@ -76,7 +78,8 @@ theorem witt_poly_prod_remainder_vars (n : ℕ) : (wittPolyProdRemainder p n).va
   apply subset.trans (vars_mul _ _)
   apply union_subset
   · apply subset.trans (vars_pow _ _)
-    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by simp only [Int.cast_ofNat, eq_int_cast]
+    have : (p : MvPolynomial (Fin 2 × ℕ) ℤ) = C (p : ℤ) := by
+      simp only [Int.cast_ofNat, eq_int_cast]
     rw [this, vars_C]
     apply empty_subset
     
@@ -95,8 +98,10 @@ omit hp
 but `remainder` will only have variables up to `n`.
 -/
 def remainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
-  (∑ x : ℕ in range (n + 1), (rename (Prod.mk 0)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))) *
-    ∑ x : ℕ in range (n + 1), (rename (Prod.mk 1)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))
+  (∑ x : ℕ in range (n + 1),
+      (rename (Prod.mk 0)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))) *
+    ∑ x : ℕ in range (n + 1),
+      (rename (Prod.mk 1)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))
 #align witt_vector.remainder WittVector.remainder
 
 include hp
@@ -127,7 +132,9 @@ def polyOfInterest (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
 #align witt_vector.poly_of_interest WittVector.polyOfInterest
 
 theorem mul_poly_of_interest_aux1 (n : ℕ) :
-    (∑ i in range (n + 1), p ^ i * wittMul p i ^ p ^ (n - i) : MvPolynomial (Fin 2 × ℕ) ℤ) = wittPolyProd p n := by
+    (∑ i in range (n + 1), p ^ i * wittMul p i ^ p ^ (n - i) : MvPolynomial (Fin 2 × ℕ) ℤ) =
+      wittPolyProd p n :=
+  by
   simp only [witt_poly_prod]
   convert witt_structure_int_prop p (X (0 : Fin 2) * X 1) n using 1
   · simp only [wittPolynomial, witt_mul]
@@ -138,15 +145,17 @@ theorem mul_poly_of_interest_aux1 (n : ℕ) :
       rw [Finsupp.support_eq_singleton]
       simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne.def]
       exact pow_ne_zero _ hp.out.ne_zero
-    simp only [bind₁_monomial, hsupp, Int.cast_ofNat, prod_singleton, eq_int_cast, Finsupp.single_eq_same, C_pow,
-      mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true]
+    simp only [bind₁_monomial, hsupp, Int.cast_ofNat, prod_singleton, eq_int_cast,
+      Finsupp.single_eq_same, C_pow, mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true]
     
   · simp only [map_mul, bind₁_X_right]
     
 #align witt_vector.mul_poly_of_interest_aux1 WittVector.mul_poly_of_interest_aux1
 
 theorem mul_poly_of_interest_aux2 (n : ℕ) :
-    (p ^ n * wittMul p n : MvPolynomial (Fin 2 × ℕ) ℤ) + wittPolyProdRemainder p n = wittPolyProd p n := by
+    (p ^ n * wittMul p n : MvPolynomial (Fin 2 × ℕ) ℤ) + wittPolyProdRemainder p n =
+      wittPolyProd p n :=
+  by
   convert mul_poly_of_interest_aux1 p n
   rw [sum_range_succ, add_comm, Nat.sub_self, pow_zero, pow_one]
   rfl
@@ -197,7 +206,8 @@ theorem mul_poly_of_interest_aux4 (n : ℕ) :
 #align witt_vector.mul_poly_of_interest_aux4 WittVector.mul_poly_of_interest_aux4
 
 theorem mul_poly_of_interest_aux5 (n : ℕ) :
-    (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n = remainder p n - wittPolyProdRemainder p (n + 1) :=
+    (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n =
+      remainder p n - wittPolyProdRemainder p (n + 1) :=
   by
   simp only [poly_of_interest, mul_sub, mul_add, sub_eq_iff_eq_add']
   rw [mul_poly_of_interest_aux4 p n]
@@ -206,7 +216,9 @@ theorem mul_poly_of_interest_aux5 (n : ℕ) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_poly_of_interest_vars (n : ℕ) :
-    ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
+    ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆
+      univ ×ˢ range (n + 1) :=
+  by
   rw [mul_poly_of_interest_aux5]
   apply subset.trans (vars_sub_subset _ _)
   apply union_subset
@@ -241,15 +253,16 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
           y.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * x.coeff i ^ p ^ (n + 1 - i)) -
         x.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * y.coeff i ^ p ^ (n + 1 - i) :=
   by
-  simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow, Function.uncurry_apply_pair, aeval_X,
-    Matrix.cons_val_one, map_mul, Matrix.cons_val_zero, map_sub]
+  simp only [poly_of_interest, peval, map_nat_cast, Matrix.head_cons, map_pow,
+    Function.uncurry_apply_pair, aeval_X, Matrix.cons_val_one, map_mul, Matrix.cons_val_zero,
+    map_sub]
   rw [sub_sub, add_comm (_ * _), ← sub_sub]
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.c ↑p := by rw [eq_int_cast, Int.cast_ofNat]
   have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by
     intros
     rw [mvpz, MvPolynomial.eval₂_C]
-  simp [witt_polynomial_eq_sum_C_mul_X_pow, aeval, eval₂_rename, this, mul_coeff, peval, map_nat_cast, map_add, map_pow,
-    map_mul]
+  simp [witt_polynomial_eq_sum_C_mul_X_pow, aeval, eval₂_rename, this, mul_coeff, peval,
+    map_nat_cast, map_add, map_pow, map_mul]
 #align witt_vector.peval_poly_of_interest WittVector.peval_poly_of_interest
 
 variable [CharP k p]
@@ -257,13 +270,17 @@ variable [CharP k p]
 /-- The characteristic `p` version of `peval_poly_of_interest` -/
 theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
     peval (polyOfInterest p n) ![fun i => x.coeff i, fun i => y.coeff i] =
-      (x * y).coeff (n + 1) - y.coeff (n + 1) * x.coeff 0 ^ p ^ (n + 1) - x.coeff (n + 1) * y.coeff 0 ^ p ^ (n + 1) :=
+      (x * y).coeff (n + 1) - y.coeff (n + 1) * x.coeff 0 ^ p ^ (n + 1) -
+        x.coeff (n + 1) * y.coeff 0 ^ p ^ (n + 1) :=
   by
   rw [peval_poly_of_interest]
   have : (p : k) = 0 := CharP.cast_eq_zero k p
   simp only [this, add_zero, zero_mul, Nat.succ_ne_zero, Ne.def, not_false_iff, zero_pow']
   have sum_zero_pow_mul_pow_p :
-    ∀ y : 𝕎 k, (∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x)) = y.coeff 0 ^ p ^ (n + 1) := by
+    ∀ y : 𝕎 k,
+      (∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x)) =
+        y.coeff 0 ^ p ^ (n + 1) :=
+    by
     intro y
     rw [Finset.sum_eq_single_of_mem 0]
     · simp
@@ -292,8 +309,8 @@ theorem nth_mul_coeff' (n : ℕ) :
     apply f₀
     rintro ⟨a, ha⟩
     apply Function.uncurry ![x, y]
-    simp only [true_and_iff, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
-      Multiset.range_succ, mem_univ_val] at ha
+    simp only [true_and_iff, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range,
+      Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha
     refine' ⟨a.fst, ⟨a.snd, _⟩⟩
     cases' ha with ha ha <;> linarith only [ha]
   use f
@@ -305,8 +322,8 @@ theorem nth_mul_coeff' (n : ℕ) :
   ext a
   cases' a with a ha
   cases' a with i m
-  simp only [true_and_iff, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
-    Multiset.range_succ, mem_univ_val] at ha
+  simp only [true_and_iff, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range,
+    Multiset.mem_product, Multiset.range_succ, mem_univ_val] at ha
   have ha' : m < n + 1 := by cases' ha with ha ha <;> linarith only [ha]
   fin_cases i <;>-- surely this case split is not necessary
     · simpa only using x.coeff_truncate_fun ⟨m, ha'⟩
@@ -329,7 +346,8 @@ theorem nth_mul_coeff (n : ℕ) :
 
 variable {k}
 
-/-- Produces the "remainder function" of the `n+1`st coefficient, which does not depend on the `n+1`st
+/--
+Produces the "remainder function" of the `n+1`st coefficient, which does not depend on the `n+1`st
 coefficients of the inputs. -/
 def nthRemainder (n : ℕ) : (Fin (n + 1) → k) → (Fin (n + 1) → k) → k :=
   Classical.choose (nth_mul_coeff p k n)

@@ -20,9 +20,10 @@ namespace List
 
 theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈ Set.range f } := by
   refine'
-    Set.Subset.antisymm (Set.range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => Set.mem_range_self _)
+    Set.Subset.antisymm
+      (Set.range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => Set.mem_range_self _)
       fun l hl => _
-  induction' l with a l ihl
+  induction' l with a l ihl;
   · exact ⟨[], rfl⟩
     
   rcases ihl fun x hx => hl x <| subset_cons _ _ hx with ⟨l, rfl⟩
@@ -46,7 +47,8 @@ theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l)
     Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } := by
   induction' l with hd tl IH
   · intro n hn m hm h
-    simp only [Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, length, nonpos_iff_eq_zero] at hn hm
+    simp only [Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, length, nonpos_iff_eq_zero] at
+      hn hm
     simp [hn, hm]
     
   · intro n hn m hm h

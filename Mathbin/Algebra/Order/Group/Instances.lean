@@ -33,8 +33,8 @@ instance [LinearOrderedCommGroup α] : LinearOrderedCommGroup αᵒᵈ :=
 
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid [LinearOrderedCommGroup α] :
-    LinearOrderedCancelCommMonoid α :=
+instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid
+    [LinearOrderedCommGroup α] : LinearOrderedCancelCommMonoid α :=
   { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left' }
 #align
   linear_ordered_comm_group.to_linear_ordered_cancel_comm_monoid LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid

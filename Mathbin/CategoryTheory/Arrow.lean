@@ -39,7 +39,8 @@ def Arrow :=
 #align category_theory.arrow CategoryTheory.Arrow
 
 -- Satisfying the inhabited linter
-instance Arrow.inhabited [Inhabited T] : Inhabited (Arrow T) where default := show Comma (𝟭 T) (𝟭 T) from default
+instance Arrow.inhabited [Inhabited T] :
+    Inhabited (Arrow T) where default := show Comma (𝟭 T) (𝟭 T) from default
 #align category_theory.arrow.inhabited CategoryTheory.Arrow.inhabited
 
 end
@@ -70,7 +71,8 @@ theorem mk_eq (f : Arrow T) : Arrow.mk f.Hom = f := by
   rfl
 #align category_theory.arrow.mk_eq CategoryTheory.Arrow.mk_eq
 
-theorem mk_injective (A B : T) : Function.Injective (Arrow.mk : (A ⟶ B) → Arrow T) := fun f g h => by
+theorem mk_injective (A B : T) : Function.Injective (Arrow.mk : (A ⟶ B) → Arrow T) := fun f g h =>
+  by
   cases h
   rfl
 #align category_theory.arrow.mk_injective CategoryTheory.Arrow.mk_injective
@@ -85,7 +87,8 @@ instance {X Y : T} : Coe (X ⟶ Y) (Arrow T) :=
 /-- A morphism in the arrow category is a commutative square connecting two objects of the arrow
     category. -/
 @[simps]
-def homMk {f g : Arrow T} {u : f.left ⟶ g.left} {v : f.right ⟶ g.right} (w : u ≫ g.Hom = f.Hom ≫ v) : f ⟶ g where
+def homMk {f g : Arrow T} {u : f.left ⟶ g.left} {v : f.right ⟶ g.right}
+    (w : u ≫ g.Hom = f.Hom ≫ v) : f ⟶ g where
   left := u
   right := v
   w' := w
@@ -107,35 +110,41 @@ theorem w {f g : Arrow T} (sq : f ⟶ g) : sq.left ≫ g.Hom = f.Hom ≫ sq.righ
 
 -- `w_mk_left` is not needed, as it is a consequence of `w` and `mk_hom`.
 @[simp, reassoc]
-theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) : sq.left ≫ g = f.Hom ≫ sq.right :=
+theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) :
+    sq.left ≫ g = f.Hom ≫ sq.right :=
   sq.w
 #align category_theory.arrow.w_mk_right CategoryTheory.Arrow.w_mk_right
 
-theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left] [IsIso ff.right] : IsIso ff :=
+theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left]
+    [IsIso ff.right] : IsIso ff :=
   { out :=
       ⟨⟨inv ff.left, inv ff.right⟩, by ext <;> dsimp <;> simp only [is_iso.hom_inv_id], by
         ext <;> dsimp <;> simp only [is_iso.inv_hom_id]⟩ }
-#align category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.is_iso_of_iso_left_of_is_iso_right
+#align
+  category_theory.arrow.is_iso_of_iso_left_of_is_iso_right CategoryTheory.Arrow.is_iso_of_iso_left_of_is_iso_right
 
 /-- Create an isomorphism between arrows,
 by providing isomorphisms between the domains and codomains,
 and a proof that the square commutes. -/
 @[simps]
-def isoMk {f g : Arrow T} (l : f.left ≅ g.left) (r : f.right ≅ g.right) (h : l.Hom ≫ g.Hom = f.Hom ≫ r.Hom) : f ≅ g :=
+def isoMk {f g : Arrow T} (l : f.left ≅ g.left) (r : f.right ≅ g.right)
+    (h : l.Hom ≫ g.Hom = f.Hom ≫ r.Hom) : f ≅ g :=
   Comma.isoMk l r h
 #align category_theory.arrow.iso_mk CategoryTheory.Arrow.isoMk
 
 /-- A variant of `arrow.iso_mk` that creates an iso between two `arrow.mk`s with a better type
 signature. -/
-abbrev isoMk' {W X Y Z : T} (f : W ⟶ X) (g : Y ⟶ Z) (e₁ : W ≅ Y) (e₂ : X ≅ Z) (h : e₁.Hom ≫ g = f ≫ e₂.Hom) :
-    Arrow.mk f ≅ Arrow.mk g :=
+abbrev isoMk' {W X Y Z : T} (f : W ⟶ X) (g : Y ⟶ Z) (e₁ : W ≅ Y) (e₂ : X ≅ Z)
+    (h : e₁.Hom ≫ g = f ≫ e₂.Hom) : Arrow.mk f ≅ Arrow.mk g :=
   Arrow.isoMk e₁ e₂ h
 #align category_theory.arrow.iso_mk' CategoryTheory.Arrow.isoMk'
 
-theorem Hom.congr_left {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ₂) : φ₁.left = φ₂.left := by rw [h]
+theorem Hom.congr_left {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ₂) : φ₁.left = φ₂.left := by
+  rw [h]
 #align category_theory.arrow.hom.congr_left CategoryTheory.Arrow.Hom.congr_left
 
-theorem Hom.congr_right {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ₂) : φ₁.right = φ₂.right := by rw [h]
+theorem Hom.congr_right {f g : Arrow T} {φ₁ φ₂ : f ⟶ g} (h : φ₁ = φ₂) : φ₁.right = φ₂.right := by
+  rw [h]
 #align category_theory.arrow.hom.congr_right CategoryTheory.Arrow.Hom.congr_right
 
 theorem iso_w {f g : Arrow T} (e : f ≅ g) : g.Hom = e.inv.left ≫ f.Hom ≫ e.Hom.right := by
@@ -144,7 +153,8 @@ theorem iso_w {f g : Arrow T} (e : f ≅ g) : g.Hom = e.inv.left ≫ f.Hom ≫ e
   erw [w_assoc, Eq, category.comp_id]
 #align category_theory.arrow.iso_w CategoryTheory.Arrow.iso_w
 
-theorem iso_w' {W X Y Z : T} {f : W ⟶ X} {g : Y ⟶ Z} (e : Arrow.mk f ≅ Arrow.mk g) : g = e.inv.left ≫ f ≫ e.Hom.right :=
+theorem iso_w' {W X Y Z : T} {f : W ⟶ X} {g : Y ⟶ Z} (e : Arrow.mk f ≅ Arrow.mk g) :
+    g = e.inv.left ≫ f ≫ e.Hom.right :=
   iso_w e
 #align category_theory.arrow.iso_w' CategoryTheory.Arrow.iso_w'
 
@@ -156,16 +166,16 @@ instance is_iso_left [IsIso sq] :
     IsIso
       sq.left where out :=
     ⟨(inv sq).left, by
-      simp only [← comma.comp_left, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_left, eq_self_iff_true,
-        and_self_iff]⟩
+      simp only [← comma.comp_left, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_left,
+        eq_self_iff_true, and_self_iff]⟩
 #align category_theory.arrow.is_iso_left CategoryTheory.Arrow.is_iso_left
 
 instance is_iso_right [IsIso sq] :
     IsIso
       sq.right where out :=
     ⟨(inv sq).right, by
-      simp only [← comma.comp_right, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_right, eq_self_iff_true,
-        and_self_iff]⟩
+      simp only [← comma.comp_right, is_iso.hom_inv_id, is_iso.inv_hom_id, arrow.id_right,
+        eq_self_iff_true, and_self_iff]⟩
 #align category_theory.arrow.is_iso_right CategoryTheory.Arrow.is_iso_right
 
 @[simp]
@@ -184,7 +194,8 @@ theorem left_hom_inv_right [IsIso sq] : sq.left ≫ g.Hom ≫ inv sq.right = f.H
 #align category_theory.arrow.left_hom_inv_right CategoryTheory.Arrow.left_hom_inv_right
 
 -- simp proves this
-theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.Hom := by simp only [w, is_iso.inv_comp_eq]
+theorem inv_left_hom_right [IsIso sq] : inv sq.left ≫ f.Hom ≫ sq.right = g.Hom := by
+  simp only [w, is_iso.inv_comp_eq]
 #align category_theory.arrow.inv_left_hom_right CategoryTheory.Arrow.inv_left_hom_right
 
 instance mono_left [Mono sq] :
@@ -241,7 +252,8 @@ A  → X
 B  → Z                 B → Z
  -/
 @[simps]
-def squareToSnd {X Y Z : C} {i : Arrow C} {f : X ⟶ Y} {g : Y ⟶ Z} (sq : i ⟶ Arrow.mk (f ≫ g)) : i ⟶ Arrow.mk g where
+def squareToSnd {X Y Z : C} {i : Arrow C} {f : X ⟶ Y} {g : Y ⟶ Z} (sq : i ⟶ Arrow.mk (f ≫ g)) :
+    i ⟶ Arrow.mk g where
   left := sq.left ≫ f
   right := sq.right
 #align category_theory.arrow.square_to_snd CategoryTheory.Arrow.squareToSnd
@@ -288,8 +300,8 @@ end Functor
 
 /-- The images of `f : arrow C` by two isomorphic functors `F : C ⥤ D` are
 isomorphic arrows in `D`. -/
-def Arrow.isoOfNatIso {C D : Type _} [Category C] [Category D] {F G : C ⥤ D} (e : F ≅ G) (f : Arrow C) :
-    F.mapArrow.obj f ≅ G.mapArrow.obj f :=
+def Arrow.isoOfNatIso {C D : Type _} [Category C] [Category D] {F G : C ⥤ D} (e : F ≅ G)
+    (f : Arrow C) : F.mapArrow.obj f ≅ G.mapArrow.obj f :=
   Arrow.isoMk (e.app f.left) (e.app f.right) (by simp)
 #align category_theory.arrow.iso_of_nat_iso CategoryTheory.Arrow.isoOfNatIso
 

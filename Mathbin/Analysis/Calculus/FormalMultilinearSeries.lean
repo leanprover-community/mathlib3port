@@ -34,16 +34,17 @@ variable {𝕜 𝕜' E F G : Type _}
 section
 
 variable [CommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
-  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F] [TopologicalAddGroup F]
-  [HasContinuousConstSmul 𝕜 F] [AddCommGroup G] [Module 𝕜 G] [TopologicalSpace G] [TopologicalAddGroup G]
-  [HasContinuousConstSmul 𝕜 G]
+  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+  [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
+  [TopologicalSpace G] [TopologicalAddGroup G] [HasContinuousConstSmul 𝕜 G]
 
 /-- A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
 multilinear maps from `E^n` to `F` for all `n`. -/
 @[nolint unused_arguments]
-def FormalMultilinearSeries (𝕜 : Type _) (E : Type _) (F : Type _) [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E]
-    [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
-    [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F] :=
+def FormalMultilinearSeries (𝕜 : Type _) (E : Type _) (F : Type _) [Ring 𝕜] [AddCommGroup E]
+    [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+    [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F] [TopologicalAddGroup F]
+    [HasContinuousConstSmul 𝕜 F] :=
   ∀ n : ℕ, E[×n]→L[𝕜] F deriving AddCommGroup
 #align formal_multilinear_series FormalMultilinearSeries
 
@@ -55,7 +56,8 @@ section Module
 /- `derive` is not able to find the module structure, probably because Lean is confused by the
 dependent types. We register it explicitly. -/
 instance : Module 𝕜 (FormalMultilinearSeries 𝕜 E F) := by
-  letI : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Fin n => E) F) := fun n => by infer_instance
+  letI : ∀ n, Module 𝕜 (ContinuousMultilinearMap 𝕜 (fun i : Fin n => E) F) := fun n => by
+    infer_instance
   refine' Pi.module _ _ _
 
 end Module
@@ -79,22 +81,27 @@ def removeZero (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries 
 @[simp]
 theorem remove_zero_coeff_zero (p : FormalMultilinearSeries 𝕜 E F) : p.removeZero 0 = 0 :=
   rfl
-#align formal_multilinear_series.remove_zero_coeff_zero FormalMultilinearSeries.remove_zero_coeff_zero
+#align
+  formal_multilinear_series.remove_zero_coeff_zero FormalMultilinearSeries.remove_zero_coeff_zero
 
 @[simp]
-theorem remove_zero_coeff_succ (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) : p.removeZero (n + 1) = p (n + 1) :=
+theorem remove_zero_coeff_succ (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
+    p.removeZero (n + 1) = p (n + 1) :=
   rfl
-#align formal_multilinear_series.remove_zero_coeff_succ FormalMultilinearSeries.remove_zero_coeff_succ
+#align
+  formal_multilinear_series.remove_zero_coeff_succ FormalMultilinearSeries.remove_zero_coeff_succ
 
-theorem remove_zero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h : 0 < n) : p.removeZero n = p n := by
+theorem remove_zero_of_pos (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (h : 0 < n) :
+    p.removeZero n = p n := by
   rw [← Nat.succ_pred_eq_of_pos h]
   rfl
 #align formal_multilinear_series.remove_zero_of_pos FormalMultilinearSeries.remove_zero_of_pos
 
 /-- Convenience congruence lemma stating in a dependent setting that, if the arguments to a formal
 multilinear series are equal, then the values are also equal. -/
-theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Fin m → E} {w : Fin n → E} (h1 : m = n)
-    (h2 : ∀ (i : ℕ) (him : i < m) (hin : i < n), v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w := by
+theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Fin m → E} {w : Fin n → E}
+    (h1 : m = n) (h2 : ∀ (i : ℕ) (him : i < m) (hin : i < n), v ⟨i, him⟩ = w ⟨i, hin⟩) :
+    p m v = p n w := by
   cases h1
   congr with ⟨i, hi⟩
   exact h2 i hi hi
@@ -102,13 +109,14 @@ theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Fin m → 
 
 /-- Composing each term `pₙ` in a formal multilinear series with `(u, ..., u)` where `u` is a fixed
 continuous linear map, gives a new formal multilinear series `p.comp_continuous_linear_map u`. -/
-def compContinuousLinearMap (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) : FormalMultilinearSeries 𝕜 E G :=
-  fun n => (p n).compContinuousLinearMap fun i : Fin n => u
-#align formal_multilinear_series.comp_continuous_linear_map FormalMultilinearSeries.compContinuousLinearMap
+def compContinuousLinearMap (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) :
+    FormalMultilinearSeries 𝕜 E G := fun n => (p n).compContinuousLinearMap fun i : Fin n => u
+#align
+  formal_multilinear_series.comp_continuous_linear_map FormalMultilinearSeries.compContinuousLinearMap
 
 @[simp]
-theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) (n : ℕ) (v : Fin n → E) :
-    (p.compContinuousLinearMap u) n v = p n (u ∘ v) :=
+theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) (n : ℕ)
+    (v : Fin n → E) : (p.compContinuousLinearMap u) n v = p n (u ∘ v) :=
   rfl
 #align
   formal_multilinear_series.comp_continuous_linear_map_apply FormalMultilinearSeries.comp_continuous_linear_map_apply
@@ -121,8 +129,8 @@ variable [Module 𝕜' F] [HasContinuousConstSmul 𝕜' F] [IsScalarTower 𝕜 �
 
 /-- Reinterpret a formal `𝕜'`-multilinear series as a formal `𝕜`-multilinear series. -/
 @[simp]
-protected def restrictScalars (p : FormalMultilinearSeries 𝕜' E F) : FormalMultilinearSeries 𝕜 E F := fun n =>
-  (p n).restrictScalars 𝕜
+protected def restrictScalars (p : FormalMultilinearSeries 𝕜' E F) :
+    FormalMultilinearSeries 𝕜 E F := fun n => (p n).restrictScalars 𝕜
 #align formal_multilinear_series.restrict_scalars FormalMultilinearSeries.restrictScalars
 
 end FormalMultilinearSeries
@@ -131,8 +139,8 @@ end
 
 namespace FormalMultilinearSeries
 
-variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F]
-  [NormedAddCommGroup G] [NormedSpace 𝕜 G]
+variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAddCommGroup F]
+  [NormedSpace 𝕜 F] [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
 variable (p : FormalMultilinearSeries 𝕜 E F)
 
@@ -155,26 +163,27 @@ end FormalMultilinearSeries
 namespace ContinuousLinearMap
 
 variable [CommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
-  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F] [TopologicalAddGroup F]
-  [HasContinuousConstSmul 𝕜 F] [AddCommGroup G] [Module 𝕜 G] [TopologicalSpace G] [TopologicalAddGroup G]
-  [HasContinuousConstSmul 𝕜 G]
+  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+  [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
+  [TopologicalSpace G] [TopologicalAddGroup G] [HasContinuousConstSmul 𝕜 G]
 
 /-- Composing each term `pₙ` in a formal multilinear series with a continuous linear map `f` on the
 left gives a new formal multilinear series `f.comp_formal_multilinear_series p` whose general term
 is `f ∘ pₙ`. -/
-def compFormalMultilinearSeries (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F) : FormalMultilinearSeries 𝕜 E G :=
-  fun n => f.compContinuousMultilinearMap (p n)
-#align continuous_linear_map.comp_formal_multilinear_series ContinuousLinearMap.compFormalMultilinearSeries
+def compFormalMultilinearSeries (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F) :
+    FormalMultilinearSeries 𝕜 E G := fun n => f.compContinuousMultilinearMap (p n)
+#align
+  continuous_linear_map.comp_formal_multilinear_series ContinuousLinearMap.compFormalMultilinearSeries
 
 @[simp]
-theorem comp_formal_multilinear_series_apply (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
-    (f.compFormalMultilinearSeries p) n = f.compContinuousMultilinearMap (p n) :=
+theorem comp_formal_multilinear_series_apply (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F)
+    (n : ℕ) : (f.compFormalMultilinearSeries p) n = f.compContinuousMultilinearMap (p n) :=
   rfl
 #align
   continuous_linear_map.comp_formal_multilinear_series_apply ContinuousLinearMap.comp_formal_multilinear_series_apply
 
-theorem comp_formal_multilinear_series_apply' (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ)
-    (v : Fin n → E) : (f.compFormalMultilinearSeries p) n v = f (p n v) :=
+theorem comp_formal_multilinear_series_apply' (f : F →L[𝕜] G) (p : FormalMultilinearSeries 𝕜 E F)
+    (n : ℕ) (v : Fin n → E) : (f.compFormalMultilinearSeries p) n v = f (p n v) :=
   rfl
 #align
   continuous_linear_map.comp_formal_multilinear_series_apply' ContinuousLinearMap.comp_formal_multilinear_series_apply'
@@ -185,9 +194,10 @@ namespace FormalMultilinearSeries
 
 section Order
 
-variable [CommRing 𝕜] {n : ℕ} [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
-  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F] [TopologicalAddGroup F]
-  [HasContinuousConstSmul 𝕜 F] {p : FormalMultilinearSeries 𝕜 E F}
+variable [CommRing 𝕜] {n : ℕ} [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
+  [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
+  [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F]
+  {p : FormalMultilinearSeries 𝕜 E F}
 
 /-- The index of the first non-zero coefficient in `p` (or `0` if all coefficients are zero). This
   is the order of the isolated zero of an analytic function `f` at a point if `p` is the Taylor
@@ -201,10 +211,11 @@ theorem order_zero : (0 : FormalMultilinearSeries 𝕜 E F).order = 0 := by simp
 #align formal_multilinear_series.order_zero FormalMultilinearSeries.order_zero
 
 theorem ne_zero_of_order_ne_zero (hp : p.order ≠ 0) : p ≠ 0 := fun h => by simpa [h] using hp
-#align formal_multilinear_series.ne_zero_of_order_ne_zero FormalMultilinearSeries.ne_zero_of_order_ne_zero
+#align
+  formal_multilinear_series.ne_zero_of_order_ne_zero FormalMultilinearSeries.ne_zero_of_order_ne_zero
 
-theorem order_eq_find [DecidablePred fun n => p n ≠ 0] (hp : ∃ n, p n ≠ 0) : p.order = Nat.find hp := by
-  simp [order, Inf, hp]
+theorem order_eq_find [DecidablePred fun n => p n ≠ 0] (hp : ∃ n, p n ≠ 0) :
+    p.order = Nat.find hp := by simp [order, Inf, hp]
 #align formal_multilinear_series.order_eq_find FormalMultilinearSeries.order_eq_find
 
 theorem order_eq_find' [DecidablePred fun n => p n ≠ 0] (hp : p ≠ 0) :
@@ -217,7 +228,8 @@ theorem order_eq_zero_iff (hp : p ≠ 0) : p.order = 0 ↔ p 0 ≠ 0 := by class
   simp [order_eq_find this, hp]
 #align formal_multilinear_series.order_eq_zero_iff FormalMultilinearSeries.order_eq_zero_iff
 
-theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by by_cases h : p = 0 <;> simp [h, order_eq_zero_iff]
+theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by
+  by_cases h : p = 0 <;> simp [h, order_eq_zero_iff]
 #align formal_multilinear_series.order_eq_zero_iff' FormalMultilinearSeries.order_eq_zero_iff'
 
 theorem apply_order_ne_zero (hp : p ≠ 0) : p p.order ≠ 0 := by classical
@@ -237,7 +249,8 @@ theorem apply_eq_zero_of_lt_order (hp : n < p.order) : p n = 0 := by
     rw [order_eq_find' h] at hp
     simpa using Nat.find_min _ hp
     
-#align formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
+#align
+  formal_multilinear_series.apply_eq_zero_of_lt_order FormalMultilinearSeries.apply_eq_zero_of_lt_order
 
 end Order
 
@@ -262,7 +275,8 @@ theorem mk_pi_field_coeff_eq (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ)
 theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n := by
   convert (p n).toMultilinearMap.map_smul_univ y 1
   funext <;> simp only [Pi.one_apply, Algebra.id.smul_eq_mul, mul_one]
-#align formal_multilinear_series.apply_eq_prod_smul_coeff FormalMultilinearSeries.apply_eq_prod_smul_coeff
+#align
+  formal_multilinear_series.apply_eq_prod_smul_coeff FormalMultilinearSeries.apply_eq_prod_smul_coeff
 
 theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
   rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.mk_pi_field_eq_zero_iff]
@@ -270,24 +284,26 @@ theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
 
 @[simp]
 theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by simp
-#align formal_multilinear_series.apply_eq_pow_smul_coeff FormalMultilinearSeries.apply_eq_pow_smul_coeff
+#align
+  formal_multilinear_series.apply_eq_pow_smul_coeff FormalMultilinearSeries.apply_eq_pow_smul_coeff
 
 @[simp]
 theorem norm_apply_eq_norm_coef : ‖p n‖ = ‖coeff p n‖ := by
   rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.norm_mk_pi_field]
-#align formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
+#align
+  formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
 
 end Coef
 
 section Fslope
 
-variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {p : FormalMultilinearSeries 𝕜 𝕜 E}
-  {n : ℕ}
+variable [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
+  {p : FormalMultilinearSeries 𝕜 𝕜 E} {n : ℕ}
 
 /-- The formal counterpart of `dslope`, corresponding to the expansion of `(f z - f 0) / z`. If `f`
 has `p` as a power series, then `dslope f` has `fslope p` as a power series. -/
-noncomputable def fslope (p : FormalMultilinearSeries 𝕜 𝕜 E) : FormalMultilinearSeries 𝕜 𝕜 E := fun n =>
-  (p (n + 1)).curryLeft 1
+noncomputable def fslope (p : FormalMultilinearSeries 𝕜 𝕜 E) : FormalMultilinearSeries 𝕜 𝕜 E :=
+  fun n => (p (n + 1)).curryLeft 1
 #align formal_multilinear_series.fslope FormalMultilinearSeries.fslope
 
 @[simp]
@@ -310,16 +326,18 @@ section Const
 /-- The formal multilinear series where all terms of positive degree are equal to zero, and the term
 of degree zero is `c`. It is the power series expansion of the constant function equal to `c`
 everywhere. -/
-def constFormalMultilinearSeries (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) [NormedAddCommGroup E]
-    [NormedSpace 𝕜 E] [HasContinuousConstSmul 𝕜 E] [TopologicalAddGroup E] {F : Type _} [NormedAddCommGroup F]
-    [TopologicalAddGroup F] [NormedSpace 𝕜 F] [HasContinuousConstSmul 𝕜 F] (c : F) : FormalMultilinearSeries 𝕜 E F
+def constFormalMultilinearSeries (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
+    [NormedAddCommGroup E] [NormedSpace 𝕜 E] [HasContinuousConstSmul 𝕜 E] [TopologicalAddGroup E]
+    {F : Type _} [NormedAddCommGroup F] [TopologicalAddGroup F] [NormedSpace 𝕜 F]
+    [HasContinuousConstSmul 𝕜 F] (c : F) : FormalMultilinearSeries 𝕜 E F
   | 0 => ContinuousMultilinearMap.curry0 _ _ c
   | _ => 0
 #align const_formal_multilinear_series constFormalMultilinearSeries
 
 @[simp]
-theorem const_formal_multilinear_series_apply [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedAddCommGroup F]
-    [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] {c : F} {n : ℕ} (hn : n ≠ 0) : constFormalMultilinearSeries 𝕜 E c n = 0 :=
+theorem const_formal_multilinear_series_apply [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
+    [NormedAddCommGroup F] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] {c : F} {n : ℕ} (hn : n ≠ 0) :
+    constFormalMultilinearSeries 𝕜 E c n = 0 :=
   Nat.casesOn n (fun hn => (hn rfl).elim) (fun _ _ => rfl) hn
 #align const_formal_multilinear_series_apply const_formal_multilinear_series_apply
 

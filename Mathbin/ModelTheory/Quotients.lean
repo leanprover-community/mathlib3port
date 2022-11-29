@@ -40,8 +40,10 @@ class Prestructure (s : Setoid M) where
 variable {L} {s : Setoid M} [ps : L.Prestructure s]
 
 instance quotientStructure : L.StructureCat (Quotient s) where
-  funMap n f x := Quotient.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotient.finChoice x)
-  rel_map n r x := Quotient.lift (@RelMap L M ps.toStructure n r) Prestructure.rel_equiv (Quotient.finChoice x)
+  funMap n f x :=
+    Quotient.map (@funMap L M ps.toStructure n f) Prestructure.fun_equiv (Quotient.finChoice x)
+  rel_map n r x :=
+    Quotient.lift (@RelMap L M ps.toStructure n r) Prestructure.rel_equiv (Quotient.finChoice x)
 #align first_order.language.quotient_structure FirstOrder.Language.quotientStructure
 
 variable (s)
@@ -50,13 +52,17 @@ include s
 
 theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
     (funMap f fun i => ⟦x i⟧) = ⟦@funMap _ _ ps.toStructure _ f x⟧ := by
-  change Quotient.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotient.finChoice _) = _
+  change
+    Quotient.map (@fun_map L M ps.to_structure n f) prestructure.fun_equiv (Quotient.finChoice _) =
+      _
   rw [Quotient.fin_choice_eq, Quotient.map_mk]
 #align first_order.language.fun_map_quotient_mk FirstOrder.Language.fun_map_quotient_mk
 
 theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
     (RelMap r fun i => ⟦x i⟧) ↔ @RelMap _ _ ps.toStructure _ r x := by
-  change Quotient.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotient.finChoice _) ↔ _
+  change
+    Quotient.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotient.finChoice _) ↔
+      _
   rw [Quotient.fin_choice_eq, Quotient.lift_mk]
 #align first_order.language.rel_map_quotient_mk FirstOrder.Language.rel_map_quotient_mk
 

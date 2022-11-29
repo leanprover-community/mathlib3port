@@ -40,7 +40,8 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
     { x := AddCommGroupCat.of (G × H),
       π :=
         { app := fun j =>
-            Discrete.casesOn j fun j => WalkingPair.casesOn j (AddMonoidHom.fst G H) (AddMonoidHom.snd G H),
+            Discrete.casesOn j fun j =>
+              WalkingPair.casesOn j (AddMonoidHom.fst G H) (AddMonoidHom.snd G H),
           naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
     { lift := fun s => AddMonoidHom.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩),
@@ -49,14 +50,16 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
           · ext x
             simp
             ,
-      uniq' := fun s m w => by ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+      uniq' := fun s m w => by
+        ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align AddCommGroup.binary_product_limit_cone AddCommGroupCat.binaryProductLimitCone
 
 @[simp]
 theorem binary_product_limit_cone_cone_π_app_left (G H : AddCommGroupCat.{u}) :
     (binaryProductLimitCone G H).Cone.π.app ⟨WalkingPair.left⟩ = AddMonoidHom.fst G H :=
   rfl
-#align AddCommGroup.binary_product_limit_cone_cone_π_app_left AddCommGroupCat.binary_product_limit_cone_cone_π_app_left
+#align
+  AddCommGroup.binary_product_limit_cone_cone_π_app_left AddCommGroupCat.binary_product_limit_cone_cone_π_app_left
 
 @[simp]
 theorem binary_product_limit_cone_cone_π_app_right (G H : AddCommGroupCat.{u}) :
@@ -69,7 +72,8 @@ theorem binary_product_limit_cone_cone_π_app_right (G H : AddCommGroupCat.{u}) 
 the cartesian product of the underlying types:
 -/
 @[simps hom_apply]
-noncomputable def biprodIsoProd (G H : AddCommGroupCat.{u}) : (G ⊞ H : AddCommGroupCat) ≅ AddCommGroupCat.of (G × H) :=
+noncomputable def biprodIsoProd (G H : AddCommGroupCat.{u}) :
+    (G ⊞ H : AddCommGroupCat) ≅ AddCommGroupCat.of (G × H) :=
   IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit G H) (binaryProductLimitCone G H).IsLimit
 #align AddCommGroup.biprod_iso_prod AddCommGroupCat.biprodIsoProd
 
@@ -108,7 +112,8 @@ def lift (s : Fan f) : s.x ⟶ AddCommGroupCat.of (∀ j, f j) where
 @[simps]
 def productLimitCone : Limits.LimitCone (Discrete.functor f) where
   Cone :=
-    { x := AddCommGroupCat.of (∀ j, f j), π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => f j) j.as }
+    { x := AddCommGroupCat.of (∀ j, f j),
+      π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => f j) j.as }
   IsLimit :=
     { lift := lift f,
       fac' := fun s j => by

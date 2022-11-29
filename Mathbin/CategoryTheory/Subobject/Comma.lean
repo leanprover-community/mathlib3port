@@ -45,18 +45,21 @@ variable {S : D} {T : C ⥤ D}
 
 /-- Every subobject of a structured arrow can be projected to a subobject of the underlying
     object. -/
-def projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} : Subobject A → Subobject A.right := by
+def projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} :
+    Subobject A → Subobject A.right := by
   refine' subobject.lift (fun P f hf => subobject.mk f.right) _
   intro P Q f g hf hg i hi
   refine' subobject.mk_eq_mk_of_comm _ _ ((proj S T).mapIso i) _
   exact congr_arg comma_morphism.right hi
-#align category_theory.structured_arrow.project_subobject CategoryTheory.StructuredArrow.projectSubobject
+#align
+  category_theory.structured_arrow.project_subobject CategoryTheory.StructuredArrow.projectSubobject
 
 @[simp]
-theorem project_subobject_mk [HasLimits C] [PreservesLimits T] {A P : StructuredArrow S T} (f : P ⟶ A) [Mono f] :
-    projectSubobject (Subobject.mk f) = Subobject.mk f.right :=
+theorem project_subobject_mk [HasLimits C] [PreservesLimits T] {A P : StructuredArrow S T}
+    (f : P ⟶ A) [Mono f] : projectSubobject (Subobject.mk f) = Subobject.mk f.right :=
   rfl
-#align category_theory.structured_arrow.project_subobject_mk CategoryTheory.StructuredArrow.project_subobject_mk
+#align
+  category_theory.structured_arrow.project_subobject_mk CategoryTheory.StructuredArrow.project_subobject_mk
 
 theorem project_subobject_factors [HasLimits C] [PreservesLimits T] {A : StructuredArrow S T} :
     ∀ P : Subobject A, ∃ q, q ≫ T.map (projectSubobject P).arrow = A.Hom :=
@@ -71,8 +74,8 @@ theorem project_subobject_factors [HasLimits C] [PreservesLimits T] {A : Structu
     the structured arrow, provided that there is a morphism making the subobject into a structured
     arrow. -/
 @[simp]
-def liftSubobject {A : StructuredArrow S T} (P : Subobject A.right) {q} (hq : q ≫ T.map P.arrow = A.Hom) :
-    Subobject A :=
+def liftSubobject {A : StructuredArrow S T} (P : Subobject A.right) {q}
+    (hq : q ≫ T.map P.arrow = A.Hom) : Subobject A :=
   Subobject.mk (homMk P.arrow hq : mk q ⟶ A)
 #align category_theory.structured_arrow.lift_subobject CategoryTheory.StructuredArrow.liftSubobject
 
@@ -101,7 +104,8 @@ theorem lift_project_subobject [HasLimits C] [PreservesLimits T] {A : Structured
               dsimp
               simp)
         )
-#align category_theory.structured_arrow.lift_project_subobject CategoryTheory.StructuredArrow.lift_project_subobject
+#align
+  category_theory.structured_arrow.lift_project_subobject CategoryTheory.StructuredArrow.lift_project_subobject
 
 /-- If `A : S → T.obj B` is a structured arrow for `S : D` and `T : C ⥤ D`, then we can explicitly
     describe the subobjects of `A` as the subobjects `P` of `B` in `C` for which `A.hom` factors
@@ -121,17 +125,20 @@ def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
         · refine' hom_mk (subobject.of_mk_le_mk _ _ h) ((cancel_mono (T.map g.right)).1 _)
           simp [← T.map_comp]
           
-        · simp only [mono_over.mk'_arrow, subobject.of_mk_le_mk_comp, comma.comp_right, hom_mk_right]
+        · simp only [mono_over.mk'_arrow, subobject.of_mk_le_mk_comp, comma.comp_right,
+            hom_mk_right]
           
         · refine' subobject.mk_le_mk_of_comm (subobject.of_mk_le_mk _ _ h).right _
           exact congr_arg comma_morphism.right (subobject.of_mk_le_mk_comp h)
           )
-#align category_theory.structured_arrow.subobject_equiv CategoryTheory.StructuredArrow.subobjectEquiv
+#align
+  category_theory.structured_arrow.subobject_equiv CategoryTheory.StructuredArrow.subobjectEquiv
 
 /-- If `C` is well-powered and complete and `T` preserves limits, then `structured_arrow S T` is
     well-powered. -/
 instance well_powered_structured_arrow [WellPowered C] [HasLimits C] [PreservesLimits T] :
-    WellPowered (StructuredArrow S T) where subobject_small X := small_map (subobjectEquiv X).toEquiv
+    WellPowered
+      (StructuredArrow S T) where subobject_small X := small_map (subobjectEquiv X).toEquiv
 #align
   category_theory.structured_arrow.well_powered_structured_arrow CategoryTheory.StructuredArrow.well_powered_structured_arrow
 
@@ -150,14 +157,16 @@ def projectQuotient [HasColimits C] [PreservesColimits S] {A : CostructuredArrow
   refine' subobject.mk_eq_mk_of_comm _ _ ((proj S T).mapIso i.unop).op (Quiver.Hom.unop_inj _)
   have := congr_arg Quiver.Hom.unop hi
   simpa using congr_arg comma_morphism.left this
-#align category_theory.costructured_arrow.project_quotient CategoryTheory.CostructuredArrow.projectQuotient
+#align
+  category_theory.costructured_arrow.project_quotient CategoryTheory.CostructuredArrow.projectQuotient
 
 @[simp]
 theorem project_quotient_mk [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T}
     {P : (CostructuredArrow S T)ᵒᵖ} (f : P ⟶ op A) [Mono f] :
     projectQuotient (Subobject.mk f) = Subobject.mk f.unop.left.op :=
   rfl
-#align category_theory.costructured_arrow.project_quotient_mk CategoryTheory.CostructuredArrow.project_quotient_mk
+#align
+  category_theory.costructured_arrow.project_quotient_mk CategoryTheory.CostructuredArrow.project_quotient_mk
 
 theorem project_quotient_factors [HasColimits C] [PreservesColimits S] {A : CostructuredArrow S T} :
     ∀ P : Subobject (op A), ∃ q, S.map (projectQuotient P).arrow.unop ≫ q = A.Hom :=
@@ -173,16 +182,19 @@ theorem project_quotient_factors [HasColimits C] [PreservesColimits S] {A : Cost
     the costructured arrow, provided that there is a morphism making the quotient into a
     costructured arrow. -/
 @[simp]
-def liftQuotient {A : CostructuredArrow S T} (P : Subobject (op A.left)) {q} (hq : S.map P.arrow.unop ≫ q = A.Hom) :
-    Subobject (op A) :=
+def liftQuotient {A : CostructuredArrow S T} (P : Subobject (op A.left)) {q}
+    (hq : S.map P.arrow.unop ≫ q = A.Hom) : Subobject (op A) :=
   Subobject.mk (homMk P.arrow.unop hq : A ⟶ mk q).op
-#align category_theory.costructured_arrow.lift_quotient CategoryTheory.CostructuredArrow.liftQuotient
+#align
+  category_theory.costructured_arrow.lift_quotient CategoryTheory.CostructuredArrow.liftQuotient
 
 /-- Technical lemma for `lift_project_quotient`. -/
 @[simp]
-theorem unop_left_comp_underlying_iso_hom_unop {A : CostructuredArrow S T} {P : (CostructuredArrow S T)ᵒᵖ}
-    (f : P ⟶ op A) [Mono f.unop.left.op] :
-    f.unop.left ≫ (Subobject.underlyingIso f.unop.left.op).Hom.unop = (Subobject.mk f.unop.left.op).arrow.unop := by
+theorem unop_left_comp_underlying_iso_hom_unop {A : CostructuredArrow S T}
+    {P : (CostructuredArrow S T)ᵒᵖ} (f : P ⟶ op A) [Mono f.unop.left.op] :
+    f.unop.left ≫ (Subobject.underlyingIso f.unop.left.op).Hom.unop =
+      (Subobject.mk f.unop.left.op).arrow.unop :=
+  by
   conv_lhs =>
   congr
   rw [← Quiver.Hom.unop_op f.unop.left]
@@ -213,12 +225,13 @@ theorem lift_project_quotient [HasColimits C] [PreservesColimits S] {A : Costruc
                 dsimp
                 simp))
         )
-#align category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_project_quotient
+#align
+  category_theory.costructured_arrow.lift_project_quotient CategoryTheory.CostructuredArrow.lift_project_quotient
 
 /-- Technical lemma for `quotient_equiv`. -/
-theorem unop_left_comp_of_mk_le_mk_unop {A : CostructuredArrow S T} {P Q : (CostructuredArrow S T)ᵒᵖ} {f : P ⟶ op A}
-    {g : Q ⟶ op A} [Mono f.unop.left.op] [Mono g.unop.left.op]
-    (h : Subobject.mk f.unop.left.op ≤ Subobject.mk g.unop.left.op) :
+theorem unop_left_comp_of_mk_le_mk_unop {A : CostructuredArrow S T}
+    {P Q : (CostructuredArrow S T)ᵒᵖ} {f : P ⟶ op A} {g : Q ⟶ op A} [Mono f.unop.left.op]
+    [Mono g.unop.left.op] (h : Subobject.mk f.unop.left.op ≤ Subobject.mk g.unop.left.op) :
     g.unop.left ≫ (Subobject.ofMkLeMk f.unop.left.op g.unop.left.op h).unop = f.unop.left := by
   conv_lhs =>
   congr
@@ -241,8 +254,10 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
     Subobject.ind₂ _
       (by
         intro P Q f g hf hg
-        refine' ⟨fun h => subobject.mk_le_mk_of_comm _ (Quiver.Hom.unop_inj (ext _ _ _)), fun h => _⟩
-        · refine' (hom_mk (subobject.of_mk_le_mk _ _ h).unop ((cancel_epi (S.map g.unop.left)).1 _)).op
+        refine'
+          ⟨fun h => subobject.mk_le_mk_of_comm _ (Quiver.Hom.unop_inj (ext _ _ _)), fun h => _⟩
+        · refine'
+            (hom_mk (subobject.of_mk_le_mk _ _ h).unop ((cancel_epi (S.map g.unop.left)).1 _)).op
           dsimp only [mono_over.mk'_arrow]
           rw [← category.assoc, ← S.map_comp, unop_left_comp_of_mk_le_mk_unop]
           dsimp
@@ -255,12 +270,15 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
           have := congr_arg Quiver.Hom.unop (subobject.of_mk_le_mk_comp h)
           simpa [-subobject.of_mk_le_mk_comp] using congr_arg comma_morphism.left this
           )
-#align category_theory.costructured_arrow.quotient_equiv CategoryTheory.CostructuredArrow.quotientEquiv
+#align
+  category_theory.costructured_arrow.quotient_equiv CategoryTheory.CostructuredArrow.quotientEquiv
 
 /-- If `C` is well-copowered and cocomplete and `S` preserves colimits, then
     `costructured_arrow S T` is well-copowered. -/
 instance well_copowered_costructured_arrow [WellPowered Cᵒᵖ] [HasColimits C] [PreservesColimits S] :
-    WellPowered (CostructuredArrow S T)ᵒᵖ where subobject_small X := small_map (quotientEquiv (unop X)).toEquiv
+    WellPowered
+      (CostructuredArrow S
+          T)ᵒᵖ where subobject_small X := small_map (quotientEquiv (unop X)).toEquiv
 #align
   category_theory.costructured_arrow.well_copowered_costructured_arrow CategoryTheory.CostructuredArrow.well_copowered_costructured_arrow
 

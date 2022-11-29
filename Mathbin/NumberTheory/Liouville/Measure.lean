@@ -35,7 +35,9 @@ theorem set_of_liouville_with_subset_aux :
       ⋃ m : ℤ,
         (fun x : ℝ => x + m) ⁻¹'
           ⋃ n > (0 : ℕ),
-            { x : ℝ | ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
+            { x : ℝ |
+              ∃ᶠ b : ℕ in at_top,
+                ∃ a ∈ Finset.icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
   by
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
@@ -44,12 +46,13 @@ theorem set_of_liouville_with_subset_aux :
     ∀ y : ℝ,
       LiouvilleWith p y →
         y ∈ Ico (0 : ℝ) 1 →
-          ∃ᶠ b : ℕ in at_top, ∃ a ∈ Finset.icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
+          ∃ᶠ b : ℕ in at_top,
+            ∃ a ∈ Finset.icc (0 : ℤ) b, |y - a / b| < 1 / b ^ (2 + 1 / (n + 1 : ℕ) : ℝ)
     by
     simp only [mem_Union, mem_preimage]
     have hx : x + ↑(-⌊x⌋) ∈ Ico (0 : ℝ) 1 := by
-      simp only [Int.floor_le, Int.lt_floor_add_one, add_neg_lt_iff_le_add', zero_add, and_self_iff, mem_Ico,
-        Int.cast_neg, le_add_neg_iff_add_le]
+      simp only [Int.floor_le, Int.lt_floor_add_one, add_neg_lt_iff_le_add', zero_add, and_self_iff,
+        mem_Ico, Int.cast_neg, le_add_neg_iff_add_le]
     refine' ⟨-⌊x⌋, n + 1, n.succ_pos, this _ (hxp.add_int _) hx⟩
   clear hxp x
   intro x hxp hx01
@@ -68,10 +71,10 @@ theorem set_of_liouville_with_subset_aux :
       
     simpa using n.cast_add_one_pos.le
     
-  rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff, sub_lt_iff_lt_add,
-    sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
-  rw [Finset.mem_Icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ← @Int.cast_lt ℝ, ←
-    @Int.cast_lt ℝ]
+  rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff,
+    sub_lt_iff_lt_add, sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt
+  rw [Finset.mem_Icc, ← Int.lt_add_one_iff, ← Int.lt_add_one_iff, ← neg_lt_iff_pos_add, add_comm, ←
+    @Int.cast_lt ℝ, ← @Int.cast_lt ℝ]
   push_cast
   refine' ⟨lt_of_le_of_lt _ hlt.1, hlt.2.trans_le _⟩
   · simp only [mul_nonneg hx01.left b.cast_nonneg, neg_le_sub_iff_le_add, le_add_iff_nonneg_left]
@@ -87,7 +90,8 @@ theorem set_of_liouville_with_subset_aux :
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
 measure zero. -/
 @[simp]
-theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 := by
+theorem volume_Union_set_of_liouville_with :
+    volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 := by
   simp only [← set_of_exists]
   refine' measure_mono_null set_of_liouville_with_subset_aux _
   rw [measure_Union_null_iff]
@@ -105,16 +109,17 @@ theorem volume_Union_set_of_liouville_with : volume (⋃ (p : ℝ) (hp : 2 < p),
   set B : ℤ → ℕ → Set ℝ := fun a b => ball (a / b) (1 / b ^ r)
   have hB : ∀ a b, volume (B a b) = ↑(2 / b ^ r : ℝ≥0) := by
     intro a b
-    rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ← Nnreal.coe_div,
-      Ennreal.of_real_coe_nnreal]
-  have : ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) := by
+    rw [Real.volume_ball, mul_one_div, ← Nnreal.coe_two, ← Nnreal.coe_nat_cast, ← Nnreal.coe_rpow, ←
+      Nnreal.coe_div, Ennreal.of_real_coe_nnreal]
+  have :
+    ∀ b : ℕ, volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) := by
     intro b
     calc
       volume (⋃ a ∈ Finset.icc (0 : ℤ) b, B a b) ≤ ∑ a in Finset.icc (0 : ℤ) b, volume (B a b) :=
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
-        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ, Int.toNat_coe_nat, ←
-          Nat.cast_succ, Ennreal.coe_mul, Ennreal.coe_nat]
+        simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
+          Int.toNat_coe_nat, ← Nat.cast_succ, Ennreal.coe_mul, Ennreal.coe_nat]
       _ = _ := _
       
     have : 1 - r ≠ 0 := by linarith

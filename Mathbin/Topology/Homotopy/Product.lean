@@ -53,8 +53,8 @@ open ContinuousMap
 
 section Pi
 
-variable {I A : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] [TopologicalSpace A] {f g : ∀ i, C(A, X i)}
-  {S : Set A}
+variable {I A : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] [TopologicalSpace A]
+  {f g : ∀ i, C(A, X i)} {S : Set A}
 
 /-- The product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
@@ -70,7 +70,8 @@ def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi
 
 /-- The relative product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
-def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : HomotopyRel (pi f) (pi g) S :=
+def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) :
+    HomotopyRel (pi f) (pi g) S :=
   { Homotopy.pi fun i => (homotopies i).toHomotopy with
     prop' := by
       intro t x hx
@@ -84,13 +85,14 @@ end Pi
 
 section Prod
 
-variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type _} [TopologicalSpace A] {f₀ f₁ : C(A, α)}
-  {g₀ g₁ : C(A, β)} {S : Set A}
+variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type _} [TopologicalSpace A]
+  {f₀ f₁ : C(A, α)} {g₀ g₁ : C(A, β)} {S : Set A}
 
 /-- The product of homotopies `F` and `G`,
   where `F` takes `f₀` to `f₁`  and `G` takes `g₀` to `g₁` -/
 @[simps]
-def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
+def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) :
+    Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
   toFun t := (F t, G t)
   map_zero_left' x := by simp only [prod_eval, homotopy.apply_zero]
   map_one_left' x := by simp only [prod_eval, homotopy.apply_one]
@@ -133,11 +135,13 @@ def piHomotopy (γ₀ γ₁ : ∀ i, Path (as i) (bs i)) (H : ∀ i, Path.Homoto
 
 /-- The product of a family of path homotopy classes -/
 def pi (γ : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) : Path.Homotopic.Quotient as bs :=
-  (Quotient.map Path.pi fun x y hxy => Nonempty.map (piHomotopy x y) (Classical.nonempty_pi.mpr hxy))
+  (Quotient.map Path.pi fun x y hxy =>
+      Nonempty.map (piHomotopy x y) (Classical.nonempty_pi.mpr hxy))
     (Quotient.choice γ)
 #align path.homotopic.pi Path.Homotopic.pi
 
-theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => ⟦γ i⟧) = ⟦Path.pi γ⟧ := by
+theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => ⟦γ i⟧) = ⟦Path.pi γ⟧ :=
+  by
   unfold pi
   simp
 #align path.homotopic.pi_lift Path.Homotopic.pi_lift
@@ -145,7 +149,8 @@ theorem pi_lift (γ : ∀ i, Path (as i) (bs i)) : (Path.Homotopic.pi fun i => �
 /-- Composition and products commute.
   This is `path.trans_pi_eq_pi_trans` descended to path homotopy classes -/
 theorem comp_pi_eq_pi_comp (γ₀ : ∀ i, Path.Homotopic.Quotient (as i) (bs i))
-    (γ₁ : ∀ i, Path.Homotopic.Quotient (bs i) (cs i)) : pi γ₀ ⬝ pi γ₁ = pi fun i => γ₀ i ⬝ γ₁ i := by
+    (γ₁ : ∀ i, Path.Homotopic.Quotient (bs i) (cs i)) : pi γ₀ ⬝ pi γ₁ = pi fun i => γ₀ i ⬝ γ₁ i :=
+  by
   apply Quotient.induction_on_pi γ₁
   apply Quotient.induction_on_pi γ₀
   intros
@@ -162,38 +167,35 @@ def proj (i : ι) (p : Path.Homotopic.Quotient as bs) : Path.Homotopic.Quotient 
 
 /-- Lemmas showing projection is the inverse of pi -/
 @[simp]
-theorem proj_pi (i : ι) (paths : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) : proj i (pi paths) = paths i := by
+theorem proj_pi (i : ι) (paths : ∀ i, Path.Homotopic.Quotient (as i) (bs i)) :
+    proj i (pi paths) = paths i := by
   apply Quotient.induction_on_pi paths
-  intro
-  unfold proj
+  intro ; unfold proj
   rw [pi_lift, ← Path.Homotopic.map_lift]
-  congr
-  ext
-  rfl
+  congr ; ext; rfl
 #align path.homotopic.proj_pi Path.Homotopic.proj_pi
 
 @[simp]
 theorem pi_proj (p : Path.Homotopic.Quotient as bs) : (pi fun i => proj i p) = p := by
   apply Quotient.induction_on p
-  intro
-  unfold proj
+  intro ; unfold proj
   simp_rw [← Path.Homotopic.map_lift]
   rw [pi_lift]
-  congr
-  ext
-  rfl
+  congr ; ext; rfl
 #align path.homotopic.pi_proj Path.Homotopic.pi_proj
 
 end Pi
 
 section Prod
 
-variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {a₁ a₂ a₃ : α} {b₁ b₂ b₃ : β} {p₁ p₁' : Path a₁ a₂}
-  {p₂ p₂' : Path b₁ b₂} (q₁ : Path.Homotopic.Quotient a₁ a₂) (q₂ : Path.Homotopic.Quotient b₁ b₂)
+variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {a₁ a₂ a₃ : α} {b₁ b₂ b₃ : β}
+  {p₁ p₁' : Path a₁ a₂} {p₂ p₂' : Path b₁ b₂} (q₁ : Path.Homotopic.Quotient a₁ a₂)
+  (q₂ : Path.Homotopic.Quotient b₁ b₂)
 
 /-- The product of homotopies h₁ and h₂.
     This is `homotopy_rel.prod` specialized for path homotopies. -/
-def prodHomotopy (h₁ : Path.Homotopy p₁ p₁') (h₂ : Path.Homotopy p₂ p₂') : Path.Homotopy (p₁.Prod p₂) (p₁'.Prod p₂') :=
+def prodHomotopy (h₁ : Path.Homotopy p₁ p₁') (h₂ : Path.Homotopy p₂ p₂') :
+    Path.Homotopy (p₁.Prod p₂) (p₁'.Prod p₂') :=
   ContinuousMap.HomotopyRel.prod h₁ h₂
 #align path.homotopic.prod_homotopy Path.Homotopic.prodHomotopy
 
@@ -241,9 +243,7 @@ theorem proj_left_prod : projLeft (prod q₁ q₂) = q₁ := by
   intro p₁ p₂
   unfold proj_left
   rw [prod_lift, ← Path.Homotopic.map_lift]
-  congr
-  ext
-  rfl
+  congr ; ext; rfl
 #align path.homotopic.proj_left_prod Path.Homotopic.proj_left_prod
 
 @[simp]
@@ -252,9 +252,7 @@ theorem proj_right_prod : projRight (prod q₁ q₂) = q₂ := by
   intro p₁ p₂
   unfold proj_right
   rw [prod_lift, ← Path.Homotopic.map_lift]
-  congr
-  ext
-  rfl
+  congr ; ext; rfl
 #align path.homotopic.proj_right_prod Path.Homotopic.proj_right_prod
 
 @[simp]
@@ -262,11 +260,9 @@ theorem prod_proj_left_proj_right (p : Path.Homotopic.Quotient (a₁, b₁) (a�
     prod (projLeft p) (projRight p) = p := by
   apply Quotient.induction_on p
   intro p'
-  unfold proj_left
-  unfold proj_right
+  unfold proj_left; unfold proj_right
   simp only [← Path.Homotopic.map_lift, prod_lift]
-  congr
-  ext <;> rfl
+  congr ; ext <;> rfl
 #align path.homotopic.prod_proj_left_proj_right Path.Homotopic.prod_proj_left_proj_right
 
 end Prod

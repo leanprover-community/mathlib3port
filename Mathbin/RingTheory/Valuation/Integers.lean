@@ -57,7 +57,8 @@ instance : Algebra v.integer R :=
   Algebra.ofSubring v.integer
 
 theorem integer.integers : v.Integers v.integer :=
-  { hom_inj := Subtype.coe_injective, map_le_one := fun r => r.2, exists_of_le_one := fun r hr => ⟨⟨r, hr⟩, rfl⟩ }
+  { hom_inj := Subtype.coe_injective, map_le_one := fun r => r.2,
+    exists_of_le_one := fun r hr => ⟨⟨r, hr⟩, rfl⟩ }
 #align valuation.integer.integers Valuation.integer.integers
 
 namespace Integers
@@ -74,10 +75,12 @@ theorem one_of_is_unit {x : O} (hx : IsUnit x) : v (algebraMap O R x) = 1 :=
     exact mul_le_mul_left' (hv.2 (u⁻¹ : Units O)) _
 #align valuation.integers.one_of_is_unit Valuation.Integers.one_of_is_unit
 
-theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) : IsUnit x :=
+theorem is_unit_of_one {x : O} (hx : IsUnit (algebraMap O R x)) (hvx : v (algebraMap O R x) = 1) :
+    IsUnit x :=
   let ⟨u, hu⟩ := hx
   have h1 : v u ≤ 1 := hu.symm ▸ hv.2 x
-  have h2 : v (u⁻¹ : Rˣ) ≤ 1 := by rw [← one_mul (v _), ← hvx, ← v.map_mul, ← hu, u.mul_inv, hu, hvx, v.map_one]
+  have h2 : v (u⁻¹ : Rˣ) ≤ 1 := by
+    rw [← one_mul (v _), ← hvx, ← v.map_mul, ← hu, u.mul_inv, hu, hvx, v.map_one]
   let ⟨r1, hr1⟩ := hv.3 h1
   let ⟨r2, hr2⟩ := hv.3 h2
   ⟨⟨r1, r2, hv.1 <| by rw [RingHom.map_mul, RingHom.map_one, hr1, hr2, Units.mul_inv],
@@ -107,7 +110,9 @@ namespace Integers
 
 theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) : y ∣ x :=
   (Classical.by_cases fun hy : algebraMap O F y = 0 =>
-      have hx : x = 0 := hv.1 <| (algebraMap O F).map_zero.symm ▸ (v.zero_iff.1 <| le_zero_iff.1 (v.map_zero ▸ hy ▸ h))
+      have hx : x = 0 :=
+        hv.1 <|
+          (algebraMap O F).map_zero.symm ▸ (v.zero_iff.1 <| le_zero_iff.1 (v.map_zero ▸ hy ▸ h))
       hx.symm ▸ dvd_zero y)
     fun hy : algebraMap O F y ≠ 0 =>
     have : v ((algebraMap O F y)⁻¹ * algebraMap O F x) ≤ 1 := by

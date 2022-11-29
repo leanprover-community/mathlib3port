@@ -53,11 +53,10 @@ section IsSearchableLemmas
 
 variable {lt : α → α → Prop}
 
-theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, IsSearchable lt t lo hi → Lift lt lo hi := by
+theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] :
+    ∀ {lo hi}, IsSearchable lt t lo hi → Lift lt lo hi := by
   induction t <;> intro lo hi hs
-  case leaf =>
-  cases hs
-  assumption
+  case leaf => cases hs; assumption
   all_goals
   cases hs
   have h₁ := t_ih_lchild hs_hs₁
@@ -66,88 +65,91 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, IsSearchabl
   apply trans_of lt h₁ h₂
 #align rbnode.lo_lt_hi Rbnode.lo_lt_hi
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : IsSearchable lt t lo (some hi)),
       IsSearchable lt t lo (some hi') :=
   by classical
-  induction t <;>
-    intros <;>
-      run_tac
-        is_searchable_tactic
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
   · cases lo <;> simp_all [lift]
     apply lt_of_lt_of_incomp
     assumption
     exact ⟨hc.2, hc.1⟩
     
   all_goals apply t_ih_rchild hc hs_hs₂
-#align rbnode.is_searchable_of_is_searchable_of_incomp Rbnode.is_searchable_of_is_searchable_of_incomp
+#align
+  rbnode.is_searchable_of_is_searchable_of_incomp Rbnode.is_searchable_of_is_searchable_of_incomp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : IsSearchable lt t (some lo) hi),
       IsSearchable lt t (some lo') hi :=
   by classical
-  induction t <;>
-    intros <;>
-      run_tac
-        is_searchable_tactic
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
   · cases hi <;> simp_all [lift]
     apply lt_of_incomp_of_lt
     assumption
     assumption
     
   all_goals apply t_ih_lchild hc hs_hs₁
-#align rbnode.is_searchable_of_incomp_of_is_searchable Rbnode.is_searchable_of_incomp_of_is_searchable
+#align
+  rbnode.is_searchable_of_incomp_of_is_searchable Rbnode.is_searchable_of_incomp_of_is_searchable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
-    ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : IsSearchable lt t (some lo) hi), IsSearchable lt t (some lo') hi := by
-  induction t <;>
-    intros <;>
-      run_tac
-        is_searchable_tactic
+    ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : IsSearchable lt t (some lo) hi),
+      IsSearchable lt t (some lo') hi :=
+  by
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
   · cases hi <;> simp_all [lift]
     apply trans_of lt hlt
     assumption
     
   all_goals apply t_ih_lchild hlt hs_hs₁
-#align rbnode.is_searchable_some_low_of_is_searchable_of_lt Rbnode.is_searchable_some_low_of_is_searchable_of_lt
+#align
+  rbnode.is_searchable_some_low_of_is_searchable_of_lt Rbnode.is_searchable_some_low_of_is_searchable_of_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_none_low_of_is_searchable_some_low {t} :
     ∀ {y hi} (hlt : IsSearchable lt t (some y) hi), IsSearchable lt t none hi := by
-  induction t <;>
-    intros <;>
-      run_tac
-        is_searchable_tactic
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
   · simp [lift]
     
   all_goals apply t_ih_lchild hlt_hs₁
-#align rbnode.is_searchable_none_low_of_is_searchable_some_low Rbnode.is_searchable_none_low_of_is_searchable_some_low
+#align
+  rbnode.is_searchable_none_low_of_is_searchable_some_low Rbnode.is_searchable_none_low_of_is_searchable_some_low
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
-    ∀ {lo hi hi'} (hlt : lt hi hi') (hs : IsSearchable lt t lo (some hi)), IsSearchable lt t lo (some hi') := by
-  induction t <;>
-    intros <;>
-      run_tac
-        is_searchable_tactic
+    ∀ {lo hi hi'} (hlt : lt hi hi') (hs : IsSearchable lt t lo (some hi)),
+      IsSearchable lt t lo (some hi') :=
+  by
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
   · cases lo <;> simp_all [lift]
     apply trans_of lt
     assumption
     assumption
     
   all_goals apply t_ih_rchild hlt hs_hs₂
-#align rbnode.is_searchable_some_high_of_is_searchable_of_lt Rbnode.is_searchable_some_high_of_is_searchable_of_lt
+#align
+  rbnode.is_searchable_some_high_of_is_searchable_of_lt Rbnode.is_searchable_some_high_of_is_searchable_of_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
     ∀ {lo y} (hlt : IsSearchable lt t lo (some y)), IsSearchable lt t lo none := by
-  induction t <;>
-    intros <;>
-      run_tac
-        is_searchable_tactic
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
   · cases lo <;> simp [lift]
     
   all_goals apply t_ih_rchild hlt_hs₂
@@ -155,7 +157,8 @@ theorem is_searchable_none_high_of_is_searchable_some_high {t} :
   rbnode.is_searchable_none_high_of_is_searchable_some_high Rbnode.is_searchable_none_high_of_is_searchable_some_high
 
 theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
-    ∀ {lo hi}, IsSearchable lt t lo hi → Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi := by classical
+    ∀ {lo hi}, IsSearchable lt t lo hi → Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi :=
+  by classical
   induction t
   case leaf => simp [mem]
   all_goals
@@ -220,22 +223,21 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
 
 theorem lt_of_mem_left [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x}, Mem lt x l → lt x y := by
-  intro _ _ hs hn x hm
-  cases hn <;> cases hs
+  intro _ _ hs hn x hm; cases hn <;> cases hs
   all_goals exact (range hs_hs₁ hm).2
 #align rbnode.lt_of_mem_left Rbnode.lt_of_mem_left
 
 theorem lt_of_mem_right [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {z}, Mem lt z r → lt y z := by
-  intro _ _ hs hn z hm
-  cases hn <;> cases hs
+  intro _ _ hs hn z hm; cases hn <;> cases hs
   all_goals exact (range hs_hs₂ hm).1
 #align rbnode.lt_of_mem_right Rbnode.lt_of_mem_right
 
 theorem lt_of_mem_left_right [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :
-    ∀ {lo hi}, IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x z}, Mem lt x l → Mem lt z r → lt x z := by
-  intro _ _ hs hn x z hm₁ hm₂
-  cases hn <;> cases hs
+    ∀ {lo hi},
+      IsSearchable lt t lo hi → IsNodeOf t l y r → ∀ {x z}, Mem lt x l → Mem lt z r → lt x z :=
+  by
+  intro _ _ hs hn x z hm₁ hm₂; cases hn <;> cases hs
   all_goals
   have h₁ := range hs_hs₁ hm₁
   have h₂ := range hs_hs₂ hm₂
@@ -247,7 +249,8 @@ end IsSearchableLemmas
 inductive IsRedBlack : Rbnode α → Color → Nat → Prop
   | leaf_rb : is_red_black leaf black 0
   |
-  red_rb {v l r n} (rb_l : is_red_black l black n) (rb_r : is_red_black r black n) : is_red_black (red_node l v r) red n
+  red_rb {v l r n} (rb_l : is_red_black l black n) (rb_r : is_red_black r black n) :
+    is_red_black (red_node l v r) red n
   |
   black_rb {v l r n c₁ c₂} (rb_l : is_red_black l c₁ n) (rb_r : is_red_black r c₂ n) :
     is_red_black (black_node l v r) black (succ n)
@@ -302,7 +305,8 @@ theorem depth_max {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤
   le_trans (depth_max' h) (upper_le _ _)
 #align rbnode.depth_max Rbnode.depth_max
 
-theorem balanced {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * depth min t + 1 := by
+theorem balanced {c n} {t : Rbnode α} (h : IsRedBlack t c n) : depth max t ≤ 2 * depth min t + 1 :=
+  by
   have : 2 * depth min t + 1 ≥ 2 * n + 1 := by
     apply succ_le_succ
     apply Nat.mul_le_mul_left

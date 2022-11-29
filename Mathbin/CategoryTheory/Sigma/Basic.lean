@@ -33,9 +33,9 @@ namespace SigmaHom
 
 /- warning: category_theory.sigma.sigma_hom.id -> CategoryTheory.Sigma.SigmaHom.id is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] (X : Sigma.{w₁ u₁} I (fun (i : I) => C i)), CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X X
+  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁, u₁} (C i)] (X : Sigma.{w₁, u₁} I (fun (i : I) => C i)), CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X X
 but is expected to have type
-  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] (X : Sigma.{w₁ u₁} I (fun (i : I) => C i)), CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X X
+  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁, u₁} (C i)] (X : Sigma.{w₁, u₁} I (fun (i : I) => C i)), CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X X
 Case conversion may be inaccurate. Consider using '#align category_theory.sigma.sigma_hom.id CategoryTheory.Sigma.SigmaHom.idₓ'. -/
 /-- The identity morphism on an object. -/
 def id : ∀ X : Σi, C i, SigmaHom X X
@@ -47,9 +47,9 @@ instance (X : Σi, C i) : Inhabited (SigmaHom X X) :=
 
 /- warning: category_theory.sigma.sigma_hom.comp -> CategoryTheory.Sigma.SigmaHom.comp is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {X : Sigma.{w₁ u₁} I (fun (i : I) => C i)} {Y : Sigma.{w₁ u₁} I (fun (i : I) => C i)} {Z : Sigma.{w₁ u₁} I (fun (i : I) => C i)}, (CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Y) -> (CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) Y Z) -> (CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Z)
+  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁, u₁} (C i)] {X : Sigma.{w₁, u₁} I (fun (i : I) => C i)} {Y : Sigma.{w₁, u₁} I (fun (i : I) => C i)} {Z : Sigma.{w₁, u₁} I (fun (i : I) => C i)}, (CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Y) -> (CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) Y Z) -> (CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Z)
 but is expected to have type
-  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {X : Sigma.{w₁ u₁} I (fun (i : I) => C i)} {Y : Sigma.{w₁ u₁} I (fun (i : I) => C i)} {Z : Sigma.{w₁ u₁} I (fun (i : I) => C i)}, (CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Y) -> (CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) Y Z) -> (CategoryTheory.Sigma.SigmaHom.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Z)
+  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁, u₁} (C i)] {X : Sigma.{w₁, u₁} I (fun (i : I) => C i)} {Y : Sigma.{w₁, u₁} I (fun (i : I) => C i)} {Z : Sigma.{w₁, u₁} I (fun (i : I) => C i)}, (CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Y) -> (CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) Y Z) -> (CategoryTheory.Sigma.SigmaHom.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) X Z)
 Case conversion may be inaccurate. Consider using '#align category_theory.sigma.sigma_hom.comp CategoryTheory.Sigma.SigmaHom.compₓ'. -/
 /-- Composition of sigma homomorphisms. -/
 def comp : ∀ {X Y Z : Σi, C i}, SigmaHom X Y → SigmaHom Y Z → SigmaHom X Z
@@ -108,7 +108,8 @@ section
 
 variable {D : Type u₂} [Category.{v₂} D] (F : ∀ i, C i ⥤ D)
 
-/-- To build a natural transformation over the sigma category, it suffices to specify it restricted to
+/--
+To build a natural transformation over the sigma category, it suffices to specify it restricted to
 each subcategory.
 -/
 def natTrans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G where
@@ -119,16 +120,16 @@ def natTrans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i �
 #align category_theory.sigma.nat_trans CategoryTheory.Sigma.natTrans
 
 @[simp]
-theorem nat_trans_app {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I) (X : C i) :
-    (natTrans h).app ⟨i, X⟩ = (h i).app X :=
+theorem nat_trans_app {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I)
+    (X : C i) : (natTrans h).app ⟨i, X⟩ = (h i).app X :=
   rfl
 #align category_theory.sigma.nat_trans_app CategoryTheory.Sigma.nat_trans_app
 
 /- warning: category_theory.sigma.desc_map -> CategoryTheory.Sigma.descMap is a dubious translation:
 lean 3 declaration is
-  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂ u₂} D] (F : forall (i : I), CategoryTheory.Functor.{v₁ v₂ u₁ u₂} (C i) (_inst_1 i) D _inst_2) (X : Sigma.{w₁ u₁} I (fun (i : I) => C i)) (Y : Sigma.{w₁ u₁} I (fun (i : I) => C i)), (Quiver.Hom.{succ (max w₁ v₁ u₁) (max w₁ u₁)} (Sigma.{w₁ u₁} I (fun (i : I) => C i)) (CategoryTheory.CategoryStruct.toQuiver.{(max w₁ v₁ u₁) (max w₁ u₁)} (Sigma.{w₁ u₁} I (fun (i : I) => C i)) (CategoryTheory.Sigma.SigmaHom.Sigma.CategoryTheory.categoryStruct.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i))) X Y) -> (Quiver.Hom.{succ v₂ u₂} D (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} D (CategoryTheory.Category.toCategoryStruct.{v₂ u₂} D _inst_2)) (CategoryTheory.Functor.obj.{v₁ v₂ u₁ u₂} (C (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) X)) (_inst_1 (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) X)) D _inst_2 (F (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) X)) (Sigma.snd.{w₁ u₁} I (fun (i : I) => C i) X)) (CategoryTheory.Functor.obj.{v₁ v₂ u₁ u₂} (C (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) Y)) (_inst_1 (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) Y)) D _inst_2 (F (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) Y)) (Sigma.snd.{w₁ u₁} I (fun (i : I) => C i) Y)))
+  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁, u₁} (C i)] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂, u₂} D] (F : forall (i : I), CategoryTheory.Functor.{v₁, v₂, u₁, u₂} (C i) (_inst_1 i) D _inst_2) (X : Sigma.{w₁, u₁} I (fun (i : I) => C i)) (Y : Sigma.{w₁, u₁} I (fun (i : I) => C i)), (Quiver.Hom.{succ (max w₁ v₁ u₁), max w₁ u₁} (Sigma.{w₁, u₁} I (fun (i : I) => C i)) (CategoryTheory.CategoryStruct.toQuiver.{max w₁ v₁ u₁, max w₁ u₁} (Sigma.{w₁, u₁} I (fun (i : I) => C i)) (CategoryTheory.Sigma.SigmaHom.Sigma.CategoryTheory.categoryStruct.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i))) X Y) -> (Quiver.Hom.{succ v₂, u₂} D (CategoryTheory.CategoryStruct.toQuiver.{v₂, u₂} D (CategoryTheory.Category.toCategoryStruct.{v₂, u₂} D _inst_2)) (CategoryTheory.Functor.obj.{v₁, v₂, u₁, u₂} (C (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) X)) (_inst_1 (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) X)) D _inst_2 (F (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) X)) (Sigma.snd.{w₁, u₁} I (fun (i : I) => C i) X)) (CategoryTheory.Functor.obj.{v₁, v₂, u₁, u₂} (C (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) Y)) (_inst_1 (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) Y)) D _inst_2 (F (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) Y)) (Sigma.snd.{w₁, u₁} I (fun (i : I) => C i) Y)))
 but is expected to have type
-  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂ u₂} D] (F : forall (i : I), CategoryTheory.Functor.{v₁ v₂ u₁ u₂} (C i) (_inst_1 i) D _inst_2) (X : Sigma.{w₁ u₁} I (fun (i : I) => C i)) (Y : Sigma.{w₁ u₁} I (fun (i : I) => C i)), (Quiver.Hom.{succ (max w₁ v₁ u₁) (max w₁ u₁)} (Sigma.{w₁ u₁} I (fun (i : I) => C i)) (CategoryTheory.CategoryStruct.toQuiver.{(max w₁ v₁ u₁) (max w₁ u₁)} (Sigma.{w₁ u₁} I (fun (i : I) => C i)) (CategoryTheory.Sigma.SigmaHom.Sigma.CategoryTheory.categoryStruct.{w₁ v₁ u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i))) X Y) -> (Quiver.Hom.{succ v₂ u₂} D (CategoryTheory.CategoryStruct.toQuiver.{v₂ u₂} D (CategoryTheory.Category.toCategoryStruct.{v₂ u₂} D _inst_2)) (CategoryTheory.Functor.obj.{v₁ v₂ u₁ u₂} (C (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) X)) (_inst_1 (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) X)) D _inst_2 (F (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) X)) (Sigma.snd.{w₁ u₁} I (fun (i : I) => C i) X)) (CategoryTheory.Functor.obj.{v₁ v₂ u₁ u₂} (C (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) Y)) (_inst_1 (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) Y)) D _inst_2 (F (Sigma.fst.{w₁ u₁} I (fun (i : I) => C i) Y)) (Sigma.snd.{w₁ u₁} I (fun (i : I) => C i) Y)))
+  forall {I : Type.{w₁}} {C : I -> Type.{u₁}} [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁, u₁} (C i)] {D : Type.{u₂}} [_inst_2 : CategoryTheory.Category.{v₂, u₂} D] (F : forall (i : I), CategoryTheory.Functor.{v₁, v₂, u₁, u₂} (C i) (_inst_1 i) D _inst_2) (X : Sigma.{w₁, u₁} I (fun (i : I) => C i)) (Y : Sigma.{w₁, u₁} I (fun (i : I) => C i)), (Quiver.Hom.{succ (max w₁ v₁ u₁), max w₁ u₁} (Sigma.{w₁, u₁} I (fun (i : I) => C i)) (CategoryTheory.CategoryStruct.toQuiver.{max w₁ v₁ u₁, max w₁ u₁} (Sigma.{w₁, u₁} I (fun (i : I) => C i)) (CategoryTheory.Sigma.SigmaHom.Sigma.CategoryTheory.categoryStruct.{w₁, v₁, u₁} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i))) X Y) -> (Quiver.Hom.{succ v₂, u₂} D (CategoryTheory.CategoryStruct.toQuiver.{v₂, u₂} D (CategoryTheory.Category.toCategoryStruct.{v₂, u₂} D _inst_2)) (CategoryTheory.Functor.obj.{v₁, v₂, u₁, u₂} (C (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) X)) (_inst_1 (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) X)) D _inst_2 (F (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) X)) (Sigma.snd.{w₁, u₁} I (fun (i : I) => C i) X)) (CategoryTheory.Functor.obj.{v₁, v₂, u₁, u₂} (C (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) Y)) (_inst_1 (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) Y)) D _inst_2 (F (Sigma.fst.{w₁, u₁} I (fun (i : I) => C i) Y)) (Sigma.snd.{w₁, u₁} I (fun (i : I) => C i) Y)))
 Case conversion may be inaccurate. Consider using '#align category_theory.sigma.desc_map CategoryTheory.Sigma.descMapₓ'. -/
 /-- (Implementation). An auxiliary definition to build the functor `desc`. -/
 def descMap : ∀ X Y : Σi, C i, (X ⟶ Y) → ((F X.1).obj X.2 ⟶ (F Y.1).obj Y.2)
@@ -199,7 +200,8 @@ theorem desc_uniq_inv_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F 
   rfl
 #align category_theory.sigma.desc_uniq_inv_app CategoryTheory.Sigma.desc_uniq_inv_app
 
-/-- If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁` and `q₂` are isomorphic.
+/--
+If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁` and `q₂` are isomorphic.
 -/
 @[simps]
 def natIso {q₁ q₂ : (Σi, C i) ⥤ D} (h : ∀ i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) : q₁ ≅ q₂ where
@@ -224,7 +226,8 @@ theorem map_obj (j : J) (X : C (g j)) : (Sigma.map C g).obj ⟨j, X⟩ = ⟨g j,
 #align category_theory.sigma.map_obj CategoryTheory.Sigma.map_obj
 
 @[simp]
-theorem map_map {j : J} {X Y : C (g j)} (f : X ⟶ Y) : (Sigma.map C g).map (SigmaHom.mk f) = SigmaHom.mk f :=
+theorem map_map {j : J} {X Y : C (g j)} (f : X ⟶ Y) :
+    (Sigma.map C g).map (SigmaHom.mk f) = SigmaHom.mk f :=
   rfl
 #align category_theory.sigma.map_map CategoryTheory.Sigma.map_map
 
@@ -248,7 +251,8 @@ variable {I} {K : Type w₃}
 /-- The functor `sigma.map` applied to a composition is a composition of functors. -/
 @[simps]
 def mapComp (f : K → J) (g : J → I) : map (C ∘ g) f ⋙ (map C g : _) ≅ map C (g ∘ f) :=
-  (descUniq _ _) fun k => (isoWhiskerRight (inclCompMap (C ∘ g) f k) (map C g : _) : _) ≪≫ inclCompMap _ _ _
+  (descUniq _ _) fun k =>
+    (isoWhiskerRight (inclCompMap (C ∘ g) f k) (map C g : _) : _) ≪≫ inclCompMap _ _ _
 #align category_theory.sigma.map_comp CategoryTheory.Sigma.mapComp
 
 end

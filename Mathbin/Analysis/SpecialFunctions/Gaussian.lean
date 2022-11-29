@@ -62,7 +62,8 @@ theorem integrableOnRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1
 
 theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     Integrable fun x : ℝ => x ^ s * exp (-b * x ^ 2) := by
-  rw [← integrable_on_univ, ← @Iio_union_Ici _ _ (0 : ℝ), integrable_on_union, integrable_on_Ici_iff_integrable_on_Ioi]
+  rw [← integrable_on_univ, ← @Iio_union_Ici _ _ (0 : ℝ), integrable_on_union,
+    integrable_on_Ici_iff_integrable_on_Ioi]
   refine' ⟨_, integrableOnRpowMulExpNegMulSq hb hs⟩
   rw [←
     (measure.measure_preserving_neg (volume : Measure ℝ)).integrable_on_comp_preimage
@@ -70,7 +71,9 @@ theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 <
   simp only [Function.comp, neg_sq, neg_preimage, preimage_neg_Iio, neg_neg, neg_zero]
   apply integrable.mono' (integrableOnRpowMulExpNegMulSq hb hs)
   · apply Measurable.aeStronglyMeasurable
-    exact (measurable_id'.neg.pow measurableConst).mul ((measurable_id'.pow measurableConst).const_mul (-b)).exp
+    exact
+      (measurable_id'.neg.pow measurableConst).mul
+        ((measurable_id'.pow measurableConst).const_mul (-b)).exp
     
   · have : MeasurableSet (Ioi (0 : ℝ)) := measurableSetIoi
     filter_upwards [ae_restrict_mem this] with x hx
@@ -87,8 +90,8 @@ theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ =>
   simp
 #align integrable_exp_neg_mul_sq integrableExpNegMulSq
 
-theorem integrable_on_Ioi_exp_neg_mul_sq_iff {b : ℝ} : IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (ioi 0) ↔ 0 < b :=
-  by
+theorem integrable_on_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
+    IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (ioi 0) ↔ 0 < b := by
   refine' ⟨fun h => _, fun h => (integrableExpNegMulSq h).IntegrableOn⟩
   by_contra' hb
   have : (∫⁻ x : ℝ in Ioi 0, 1) ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ := by
@@ -99,29 +102,40 @@ theorem integrable_on_Ioi_exp_neg_mul_sq_iff {b : ℝ} : IntegrableOn (fun x : �
   simpa using this.trans_lt h.2
 #align integrable_on_Ioi_exp_neg_mul_sq_iff integrable_on_Ioi_exp_neg_mul_sq_iff
 
-theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b :=
+theorem integrable_exp_neg_mul_sq_iff {b : ℝ} :
+    (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b :=
   ⟨fun h => integrable_on_Ioi_exp_neg_mul_sq_iff.mp h.IntegrableOn, integrableExpNegMulSq⟩
 #align integrable_exp_neg_mul_sq_iff integrable_exp_neg_mul_sq_iff
 
-theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
+theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) :
+    Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
   have A : (-1 : ℝ) < 1 := by norm_num
   convert integrableRpowMulExpNegMulSq hb A
   simp
 #align integrable_mul_exp_neg_mul_sq integrableMulExpNegMulSq
 
-theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : (∫ r in ioi 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
+theorem integral_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
+    (∫ r in ioi 0, r * exp (-b * r ^ 2)) = (2 * b)⁻¹ := by
   have I : integrable fun x => x * exp (-b * x ^ 2) := integrableMulExpNegMulSq hb
-  refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ I.integrable_on Filter.tendsto_id) _
+  refine'
+    tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ I.integrable_on Filter.tendsto_id)
+      _
   have A : ∀ x, HasDerivAt (fun x => -(2 * b)⁻¹ * exp (-b * x ^ 2)) (x * exp (-b * x ^ 2)) x := by
     intro x
     convert ((hasDerivAtPow 2 x).const_mul (-b)).exp.const_mul (-(2 * b)⁻¹) using 1
     field_simp [hb.ne']
     ring
   have :
-    ∀ y : ℝ, (∫ x in 0 ..id y, x * exp (-b * x ^ 2)) = -(2 * b)⁻¹ * exp (-b * y ^ 2) - -(2 * b)⁻¹ * exp (-b * 0 ^ 2) :=
-    fun y => intervalIntegral.integral_eq_sub_of_has_deriv_at (fun x hx => A x) I.interval_integrable
+    ∀ y : ℝ,
+      (∫ x in 0 ..id y, x * exp (-b * x ^ 2)) =
+        -(2 * b)⁻¹ * exp (-b * y ^ 2) - -(2 * b)⁻¹ * exp (-b * 0 ^ 2) :=
+    fun y =>
+    intervalIntegral.integral_eq_sub_of_has_deriv_at (fun x hx => A x) I.interval_integrable
   simp_rw [this]
-  have L : tendsto (fun x : ℝ => (2 * b)⁻¹ - (2 * b)⁻¹ * exp (-b * x ^ 2)) at_top (𝓝 ((2 * b)⁻¹ - (2 * b)⁻¹ * 0)) := by
+  have L :
+    tendsto (fun x : ℝ => (2 * b)⁻¹ - (2 * b)⁻¹ * exp (-b * x ^ 2)) at_top
+      (𝓝 ((2 * b)⁻¹ - (2 * b)⁻¹ * 0)) :=
+    by
     refine' tendsto_const_nhds.sub _
     apply tendsto.const_mul
     apply tendsto_exp_at_bot.comp
@@ -165,9 +179,9 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
       ring
     _ = π / b := by
       have : 0 ≤ π + π := by linarith [Real.pi_pos]
-      simp only [integral_const, measure.restrict_apply', measurableSetIoo, univ_inter, this, sub_neg_eq_add,
-        Algebra.id.smul_eq_mul, mul_one, volume_Ioo, two_mul, Ennreal.to_real_of_real, integral_mul_exp_neg_mul_sq hb,
-        one_mul]
+      simp only [integral_const, measure.restrict_apply', measurableSetIoo, univ_inter, this,
+        sub_neg_eq_add, Algebra.id.smul_eq_mul, mul_one, volume_Ioo, two_mul,
+        Ennreal.to_real_of_real, integral_mul_exp_neg_mul_sq hb, one_mul]
       field_simp [hb.ne']
       ring
     _ = sqrt (π / b) ^ 2 := by
@@ -196,8 +210,12 @@ theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in ioi 0, exp (-b * x ^ 2)) = s
     intro c
     have := @intervalIntegral.integral_comp_sub_left _ _ _ _ 0 c (fun x => exp (-b * x ^ 2)) 0
     simpa [zero_sub, neg_sq, neg_zero] using this
-  have t1 := interval_integral_tendsto_integral_Ioi _ (integrableExpNegMulSq hb).IntegrableOn tendsto_id
-  have t2 : tendsto (fun c : ℝ => ∫ x in 0 ..c, exp (-b * x ^ 2)) at_top (𝓝 (∫ x in Iic 0, exp (-b * x ^ 2))) := by
+  have t1 :=
+    interval_integral_tendsto_integral_Ioi _ (integrableExpNegMulSq hb).IntegrableOn tendsto_id
+  have t2 :
+    tendsto (fun c : ℝ => ∫ x in 0 ..c, exp (-b * x ^ 2)) at_top
+      (𝓝 (∫ x in Iic 0, exp (-b * x ^ 2))) :=
+    by
     simp_rw [this]
     refine' interval_integral_tendsto_integral_Iic _ _ tendsto_neg_at_top_at_bot
     apply (integrableExpNegMulSq hb).IntegrableOn
@@ -209,7 +227,8 @@ namespace Complex
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
 theorem Gamma_one_half_eq : gamma (1 / 2) = sqrt π := by
   -- first reduce to real integrals
-  have hh : (1 / 2 : ℂ) = ↑(1 / 2 : ℝ) := by simp only [one_div, of_real_inv, of_real_bit0, of_real_one]
+  have hh : (1 / 2 : ℂ) = ↑(1 / 2 : ℝ) := by
+    simp only [one_div, of_real_inv, of_real_bit0, of_real_one]
   have hh2 : (1 / 2 : ℂ).re = 1 / 2 := by convert Complex.of_real_re (1 / 2 : ℝ)
   replace hh2 : 0 < (1 / 2 : ℂ).re := by
     rw [hh2]
@@ -218,7 +237,9 @@ theorem Gamma_one_half_eq : gamma (1 / 2) = sqrt π := by
   -- now do change-of-variables
   rw [← integral_comp_rpow_Ioi_of_pos zero_lt_two]
   have :
-    eq_on (fun x : ℝ => (2 * x ^ ((2 : ℝ) - 1)) • (Real.exp (-x ^ (2 : ℝ)) * (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1)))
+    eq_on
+      (fun x : ℝ =>
+        (2 * x ^ ((2 : ℝ) - 1)) • (Real.exp (-x ^ (2 : ℝ)) * (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1)))
       (fun x : ℝ => 2 * Real.exp (-1 * x ^ (2 : ℕ))) (Ioi 0) :=
     by
     intro x hx

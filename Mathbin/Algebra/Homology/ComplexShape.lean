@@ -206,11 +206,12 @@ def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α 
 
 /- warning: complex_shape.down'_mk -> ComplexShape.down'_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toHasAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α _inst_1))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α _inst_1 a) i j)
+  forall {α : Type.{u_1}} [_inst_1 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toHasAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α _inst_1))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α _inst_1 a) i j)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664 a) i j)
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664 : AddRightCancelSemigroup.{u_1} α] (a : α) (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664))) j a) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down'.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.664 a) i j)
 Case conversion may be inaccurate. Consider using '#align complex_shape.down'_mk ComplexShape.down'_mkₓ'. -/
-theorem down'_mk {α : Type _} [AddRightCancelSemigroup α] (a : α) (i j : α) (h : j + a = i) : (down' a).Rel i j :=
+theorem down'_mk {α : Type _} [AddRightCancelSemigroup α] (a : α) (i j : α) (h : j + a = i) :
+    (down' a).Rel i j :=
   h
 #align complex_shape.down'_mk ComplexShape.down'_mk
 
@@ -234,11 +235,12 @@ def down (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :
 
 /- warning: complex_shape.down_mk -> ComplexShape.down_mk is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} [_inst_1 : AddRightCancelSemigroup.{u_1} α] [_inst_2 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toHasAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α _inst_1))) j (OfNat.ofNat.{u_1} α 1 (OfNat.mk.{u_1} α 1 (One.one.{u_1} α _inst_2)))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α _inst_1 _inst_2) i j)
+  forall {α : Type.{u_1}} [_inst_1 : AddRightCancelSemigroup.{u_1} α] [_inst_2 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toHasAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α _inst_1))) j (OfNat.ofNat.{u_1} α 1 (OfNat.mk.{u_1} α 1 (One.one.{u_1} α _inst_2)))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α _inst_1 _inst_2) i j)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714 : AddRightCancelSemigroup.{u_1} α] [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1 u_1 u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714))) j (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714 inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717) i j)
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714 : AddRightCancelSemigroup.{u_1} α] [inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717 : One.{u_1} α] (i : α) (j : α), (Eq.{succ u_1} α (HAdd.hAdd.{u_1, u_1, u_1} α α α (instHAdd.{u_1} α (AddSemigroup.toAdd.{u_1} α (AddRightCancelSemigroup.toAddSemigroup.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714))) j (OfNat.ofNat.{u_1} α 1 (One.toOfNat1.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717))) i) -> (ComplexShape.Rel.{u_1} α (ComplexShape.down.{u_1} α inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.714 inst._@.Mathlib.Algebra.Homology.ComplexShape._hyg.717) i j)
 Case conversion may be inaccurate. Consider using '#align complex_shape.down_mk ComplexShape.down_mkₓ'. -/
-theorem down_mk {α : Type _} [AddRightCancelSemigroup α] [One α] (i j : α) (h : j + 1 = i) : (down α).Rel i j :=
+theorem down_mk {α : Type _} [AddRightCancelSemigroup α] [One α] (i j : α) (h : j + 1 = i) :
+    (down α).Rel i j :=
   down'_mk (1 : α) i j h
 #align complex_shape.down_mk ComplexShape.down_mk
 

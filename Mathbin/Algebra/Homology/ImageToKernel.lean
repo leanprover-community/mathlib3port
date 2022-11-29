@@ -53,7 +53,8 @@ theorem subobject_of_le_as_image_to_kernel (w : f ≫ g = 0) (h) :
 
 @[simp, reassoc, elementwise]
 theorem image_to_kernel_arrow (w : f ≫ g = 0) :
-    imageToKernel f g w ≫ (kernelSubobject g).arrow = (imageSubobject f).arrow := by simp [imageToKernel]
+    imageToKernel f g w ≫ (kernelSubobject g).arrow = (imageSubobject f).arrow := by
+  simp [imageToKernel]
 #align image_to_kernel_arrow image_to_kernel_arrow
 
 -- This is less useful as a `simp` lemma than it initially appears,
@@ -62,7 +63,8 @@ theorem factor_thru_image_subobject_comp_image_to_kernel (w : f ≫ g = 0) :
     factorThruImageSubobject f ≫ imageToKernel f g w = factorThruKernelSubobject g f w := by
   ext
   simp
-#align factor_thru_image_subobject_comp_image_to_kernel factor_thru_image_subobject_comp_image_to_kernel
+#align
+  factor_thru_image_subobject_comp_image_to_kernel factor_thru_image_subobject_comp_image_to_kernel
 
 end
 
@@ -71,13 +73,16 @@ section
 variable {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
 
 @[simp]
-theorem image_to_kernel_zero_left [HasKernels V] [HasZeroObject V] {w} : imageToKernel (0 : A ⟶ B) g w = 0 := by
+theorem image_to_kernel_zero_left [HasKernels V] [HasZeroObject V] {w} :
+    imageToKernel (0 : A ⟶ B) g w = 0 := by
   ext
   simp
 #align image_to_kernel_zero_left image_to_kernel_zero_left
 
 theorem image_to_kernel_zero_right [HasImages V] {w} :
-    imageToKernel f (0 : B ⟶ C) w = (imageSubobject f).arrow ≫ inv (kernelSubobject (0 : B ⟶ C)).arrow := by
+    imageToKernel f (0 : B ⟶ C) w =
+      (imageSubobject f).arrow ≫ inv (kernelSubobject (0 : B ⟶ C)).arrow :=
+  by
   ext
   simp
 #align image_to_kernel_zero_right image_to_kernel_zero_right
@@ -95,7 +100,9 @@ theorem image_to_kernel_comp_right {D : V} (h : C ⟶ D) (w : f ≫ g = 0) :
 #align image_to_kernel_comp_right image_to_kernel_comp_right
 
 theorem image_to_kernel_comp_left {Z : V} (h : Z ⟶ A) (w : f ≫ g = 0) :
-    imageToKernel (h ≫ f) g (by simp [w]) = Subobject.ofLe _ _ (image_subobject_comp_le h f) ≫ imageToKernel f g w := by
+    imageToKernel (h ≫ f) g (by simp [w]) =
+      Subobject.ofLe _ _ (image_subobject_comp_le h f) ≫ imageToKernel f g w :=
+  by
   ext
   simp
 #align image_to_kernel_comp_left image_to_kernel_comp_left
@@ -125,7 +132,8 @@ end
 @[simp]
 theorem image_to_kernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V} {i : B ≅ Z} (w) :
     imageToKernel (f ≫ i.Hom) (i.inv ≫ g) w =
-      (imageSubobjectCompIso _ _).Hom ≫ imageToKernel f g (by simpa using w) ≫ (kernelSubobjectIsoComp i.inv g).inv :=
+      (imageSubobjectCompIso _ _).Hom ≫
+        imageToKernel f g (by simpa using w) ≫ (kernelSubobjectIsoComp i.inv g).inv :=
   by
   ext
   simp
@@ -144,7 +152,8 @@ instance image_to_kernel_epi_of_zero_of_mono [HasKernels V] [HasZeroObject V] [M
 /-- `image_to_kernel` for `A --f--> B --0--> C`, where `g` is an epi is itself an epi
 (i.e. the sequence is exact at `B`).
 -/
-instance image_to_kernel_epi_of_epi_of_zero [HasImages V] [Epi f] : Epi (imageToKernel f (0 : B ⟶ C) (by simp)) := by
+instance image_to_kernel_epi_of_epi_of_zero [HasImages V] [Epi f] :
+    Epi (imageToKernel f (0 : B ⟶ C) (by simp)) := by
   simp only [image_to_kernel_zero_right]
   haveI := epi_image_of_epi f
   rw [← image_subobject_arrow]
@@ -182,34 +191,40 @@ theorem homology.condition : imageToKernel f g w ≫ homology.π f g w = 0 :=
 /-- To construct a map out of homology, it suffices to construct a map out of the cycles
 which vanishes on boundaries.
 -/
-def homology.desc {D : V} (k : (kernelSubobject g : V) ⟶ D) (p : imageToKernel f g w ≫ k = 0) : homology f g w ⟶ D :=
+def homology.desc {D : V} (k : (kernelSubobject g : V) ⟶ D) (p : imageToKernel f g w ≫ k = 0) :
+    homology f g w ⟶ D :=
   cokernel.desc _ k p
 #align homology.desc homology.desc
 
 @[simp, reassoc, elementwise]
-theorem homology.π_desc {D : V} (k : (kernelSubobject g : V) ⟶ D) (p : imageToKernel f g w ≫ k = 0) :
-    homology.π f g w ≫ homology.desc f g w k p = k := by simp [homology.π, homology.desc]
+theorem homology.π_desc {D : V} (k : (kernelSubobject g : V) ⟶ D)
+    (p : imageToKernel f g w ≫ k = 0) : homology.π f g w ≫ homology.desc f g w k p = k := by
+  simp [homology.π, homology.desc]
 #align homology.π_desc homology.π_desc
 
 /-- To check two morphisms out of `homology f g w` are equal, it suffices to check on cycles. -/
 @[ext.1]
-theorem homology.ext {D : V} {k k' : homology f g w ⟶ D} (p : homology.π f g w ≫ k = homology.π f g w ≫ k') : k = k' :=
-  by
+theorem homology.ext {D : V} {k k' : homology f g w ⟶ D}
+    (p : homology.π f g w ≫ k = homology.π f g w ≫ k') : k = k' := by
   ext
   exact p
 #align homology.ext homology.ext
 
 /-- The cokernel of the map `Im f ⟶ Ker 0` is isomorphic to the cokernel of `f.` -/
-def homologyOfZeroRight [HasCokernel (imageToKernel f (0 : B ⟶ C) comp_zero)] [HasCokernel f] [HasCokernel (image.ι f)]
-    [Epi (factorThruImage f)] : homology f (0 : B ⟶ C) comp_zero ≅ cokernel f :=
-  (cokernel.mapIso _ _ (imageSubobjectIso _) ((kernelSubobjectIso 0).trans kernelZeroIsoSource) (by simp)).trans
+def homologyOfZeroRight [HasCokernel (imageToKernel f (0 : B ⟶ C) comp_zero)] [HasCokernel f]
+    [HasCokernel (image.ι f)] [Epi (factorThruImage f)] :
+    homology f (0 : B ⟶ C) comp_zero ≅ cokernel f :=
+  (cokernel.mapIso _ _ (imageSubobjectIso _) ((kernelSubobjectIso 0).trans kernelZeroIsoSource)
+        (by simp)).trans
     (cokernelImageι _)
 #align homology_of_zero_right homologyOfZeroRight
 
 /-- The kernel of the map `Im 0 ⟶ Ker f` is isomorphic to the kernel of `f.` -/
 def homologyOfZeroLeft [HasZeroObject V] [HasKernels V] [HasImage (0 : A ⟶ B)]
-    [HasCokernel (imageToKernel (0 : A ⟶ B) g zero_comp)] : homology (0 : A ⟶ B) g zero_comp ≅ kernel g :=
-  ((cokernel_iso_of_eq <| image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans (kernelSubobjectIso _)
+    [HasCokernel (imageToKernel (0 : A ⟶ B) g zero_comp)] :
+    homology (0 : A ⟶ B) g zero_comp ≅ kernel g :=
+  ((cokernel_iso_of_eq <| image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans
+    (kernelSubobjectIso _)
 #align homology_of_zero_left homologyOfZeroLeft
 
 /-- `homology 0 0 _` is just the middle object. -/
@@ -225,12 +240,14 @@ end
 
 section
 
-variable {f g} (w : f ≫ g = 0) {A' B' C' : V} {f' : A' ⟶ B'} [HasImage f'] {g' : B' ⟶ C'} [HasKernel g']
-  (w' : f' ≫ g' = 0) (α : Arrow.mk f ⟶ Arrow.mk f') [HasImageMap α] (β : Arrow.mk g ⟶ Arrow.mk g') {A₁ B₁ C₁ : V}
-  {f₁ : A₁ ⟶ B₁} [HasImage f₁] {g₁ : B₁ ⟶ C₁} [HasKernel g₁] (w₁ : f₁ ≫ g₁ = 0) {A₂ B₂ C₂ : V} {f₂ : A₂ ⟶ B₂}
-  [HasImage f₂] {g₂ : B₂ ⟶ C₂} [HasKernel g₂] (w₂ : f₂ ≫ g₂ = 0) {A₃ B₃ C₃ : V} {f₃ : A₃ ⟶ B₃} [HasImage f₃]
-  {g₃ : B₃ ⟶ C₃} [HasKernel g₃] (w₃ : f₃ ≫ g₃ = 0) (α₁ : Arrow.mk f₁ ⟶ Arrow.mk f₂) [HasImageMap α₁]
-  (β₁ : Arrow.mk g₁ ⟶ Arrow.mk g₂) (α₂ : Arrow.mk f₂ ⟶ Arrow.mk f₃) [HasImageMap α₂] (β₂ : Arrow.mk g₂ ⟶ Arrow.mk g₃)
+variable {f g} (w : f ≫ g = 0) {A' B' C' : V} {f' : A' ⟶ B'} [HasImage f'] {g' : B' ⟶ C'}
+  [HasKernel g'] (w' : f' ≫ g' = 0) (α : Arrow.mk f ⟶ Arrow.mk f') [HasImageMap α]
+  (β : Arrow.mk g ⟶ Arrow.mk g') {A₁ B₁ C₁ : V} {f₁ : A₁ ⟶ B₁} [HasImage f₁] {g₁ : B₁ ⟶ C₁}
+  [HasKernel g₁] (w₁ : f₁ ≫ g₁ = 0) {A₂ B₂ C₂ : V} {f₂ : A₂ ⟶ B₂} [HasImage f₂] {g₂ : B₂ ⟶ C₂}
+  [HasKernel g₂] (w₂ : f₂ ≫ g₂ = 0) {A₃ B₃ C₃ : V} {f₃ : A₃ ⟶ B₃} [HasImage f₃] {g₃ : B₃ ⟶ C₃}
+  [HasKernel g₃] (w₃ : f₃ ≫ g₃ = 0) (α₁ : Arrow.mk f₁ ⟶ Arrow.mk f₂) [HasImageMap α₁]
+  (β₁ : Arrow.mk g₁ ⟶ Arrow.mk g₂) (α₂ : Arrow.mk f₂ ⟶ Arrow.mk f₃) [HasImageMap α₂]
+  (β₂ : Arrow.mk g₂ ⟶ Arrow.mk g₃)
 
 /-- Given compatible commutative squares between
 a pair `f g` and a pair `f' g'` satisfying `f ≫ g = 0` and `f' ≫ g' = 0`,
@@ -283,10 +300,11 @@ theorem homology.map_id : homology.map w w (𝟙 _) (𝟙 _) rfl = 𝟙 _ := by
 #align homology.map_id homology.map_id
 
 /-- Auxiliary lemma for homology computations. -/
-theorem homology.comp_right_eq_comp_left {V : Type _} [Category V] {A₁ B₁ C₁ A₂ B₂ C₂ A₃ B₃ C₃ : V} {f₁ : A₁ ⟶ B₁}
-    {g₁ : B₁ ⟶ C₁} {f₂ : A₂ ⟶ B₂} {g₂ : B₂ ⟶ C₂} {f₃ : A₃ ⟶ B₃} {g₃ : B₃ ⟶ C₃} {α₁ : Arrow.mk f₁ ⟶ Arrow.mk f₂}
-    {β₁ : Arrow.mk g₁ ⟶ Arrow.mk g₂} {α₂ : Arrow.mk f₂ ⟶ Arrow.mk f₃} {β₂ : Arrow.mk g₂ ⟶ Arrow.mk g₃}
-    (p₁ : α₁.right = β₁.left) (p₂ : α₂.right = β₂.left) : (α₁ ≫ α₂).right = (β₁ ≫ β₂).left := by
+theorem homology.comp_right_eq_comp_left {V : Type _} [Category V] {A₁ B₁ C₁ A₂ B₂ C₂ A₃ B₃ C₃ : V}
+    {f₁ : A₁ ⟶ B₁} {g₁ : B₁ ⟶ C₁} {f₂ : A₂ ⟶ B₂} {g₂ : B₂ ⟶ C₂} {f₃ : A₃ ⟶ B₃} {g₃ : B₃ ⟶ C₃}
+    {α₁ : Arrow.mk f₁ ⟶ Arrow.mk f₂} {β₁ : Arrow.mk g₁ ⟶ Arrow.mk g₂}
+    {α₂ : Arrow.mk f₂ ⟶ Arrow.mk f₃} {β₂ : Arrow.mk g₂ ⟶ Arrow.mk g₃} (p₁ : α₁.right = β₁.left)
+    (p₂ : α₂.right = β₂.left) : (α₁ ≫ α₂).right = (β₁ ≫ β₂).left := by
   simp only [comma.comp_left, comma.comp_right, p₁, p₂]
 #align homology.comp_right_eq_comp_left homology.comp_right_eq_comp_left
 
@@ -294,18 +312,20 @@ theorem homology.comp_right_eq_comp_left {V : Type _} [Category V] {A₁ B₁ C�
 theorem homology.map_comp (p₁ : α₁.right = β₁.left) (p₂ : α₂.right = β₂.left) :
     homology.map w₁ w₂ α₁ β₁ p₁ ≫ homology.map w₂ w₃ α₂ β₂ p₂ =
       homology.map w₁ w₃ (α₁ ≫ α₂) (β₁ ≫ β₂) (homology.comp_right_eq_comp_left p₁ p₂) :=
-  by ext <;> simp only [kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map, category.assoc]
+  by
+  ext <;>
+    simp only [kernel_subobject_map_comp, homology.π_map_assoc, homology.π_map, category.assoc]
 #align homology.map_comp homology.map_comp
 
 /-- An isomorphism between two three-term complexes induces an isomorphism on homology. -/
-def homology.mapIso (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂) (p : α.Hom.right = β.Hom.left) :
-    homology f₁ g₁ w₁ ≅ homology f₂ g₂ w₂ where
+def homology.mapIso (α : Arrow.mk f₁ ≅ Arrow.mk f₂) (β : Arrow.mk g₁ ≅ Arrow.mk g₂)
+    (p : α.Hom.right = β.Hom.left) : homology f₁ g₁ w₁ ≅ homology f₂ g₂ w₂ where
   Hom := homology.map w₁ w₂ α.Hom β.Hom p
   inv :=
     homology.map w₂ w₁ α.inv β.inv
       (by
-        rw [← cancel_mono α.hom.right, ← comma.comp_right, α.inv_hom_id, comma.id_right, p, ← comma.comp_left,
-          β.inv_hom_id, comma.id_left]
+        rw [← cancel_mono α.hom.right, ← comma.comp_right, α.inv_hom_id, comma.id_right, p, ←
+          comma.comp_left, β.inv_hom_id, comma.id_left]
         rfl)
   hom_inv_id' := by
     rw [homology.map_comp]
@@ -321,8 +341,8 @@ end
 
 section
 
-variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0) [HasKernels V]
-  [HasCokernels V] [HasImages V] [HasImageMaps V]
+variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C}
+  (w' : f' ≫ g' = 0) [HasKernels V] [HasCokernels V] [HasImages V] [HasImageMaps V]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
@@ -330,10 +350,10 @@ private unsafe def aux_tac : tactic Unit :=
   sorry
 #align aux_tac aux_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.1897560745.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.1897560745.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.1897560745.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.1897560745.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.158239337.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.158239337.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.158239337.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic _private.158239337.aux_tac -/
 /-- `homology f g w ≅ homology f' g' w'` if `f = f'` and `g = g'`.
 (Note the objects are not changing here.)
 -/
@@ -358,14 +378,10 @@ def homology.congr (pf : f = f') (pg : g = g') : homology f g w ≅ homology f' 
           aux_tac⟩
       rfl
   hom_inv_id' := by
-    cases pf
-    cases pg
-    rw [homology.map_comp, ← homology.map_id]
+    cases pf; cases pg; rw [homology.map_comp, ← homology.map_id]
     congr 1 <;> exact category.comp_id _
   inv_hom_id' := by
-    cases pf
-    cases pg
-    rw [homology.map_comp, ← homology.map_id]
+    cases pf; cases pg; rw [homology.map_comp, ← homology.map_id]
     congr 1 <;> exact category.comp_id _
 #align homology.congr homology.congr
 
@@ -397,14 +413,18 @@ def imageToKernel' (w : f ≫ g = 0) : image f ⟶ kernel g :=
 
 @[simp]
 theorem image_subobject_iso_image_to_kernel' (w : f ≫ g = 0) :
-    (imageSubobjectIso f).Hom ≫ imageToKernel' f g w = imageToKernel f g w ≫ (kernelSubobjectIso g).Hom := by
+    (imageSubobjectIso f).Hom ≫ imageToKernel' f g w =
+      imageToKernel f g w ≫ (kernelSubobjectIso g).Hom :=
+  by
   ext
   simp [imageToKernel']
 #align image_subobject_iso_image_to_kernel' image_subobject_iso_image_to_kernel'
 
 @[simp]
 theorem image_to_kernel'_kernel_subobject_iso (w : f ≫ g = 0) :
-    imageToKernel' f g w ≫ (kernelSubobjectIso g).inv = (imageSubobjectIso f).inv ≫ imageToKernel f g w := by
+    imageToKernel' f g w ≫ (kernelSubobjectIso g).inv =
+      (imageSubobjectIso f).inv ≫ imageToKernel f g w :=
+  by
   ext
   simp [imageToKernel']
 #align image_to_kernel'_kernel_subobject_iso image_to_kernel'_kernel_subobject_iso
@@ -413,7 +433,8 @@ variable [HasCokernels V]
 
 /-- `homology f g w` can be computed as the cokernel of `image_to_kernel' f g w`.
 -/
-def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) : homology f g w ≅ cokernel (imageToKernel' f g w) where
+def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) :
+    homology f g w ≅ cokernel (imageToKernel' f g w) where
   Hom :=
     cokernel.map _ _ (imageSubobjectIso f).Hom (kernelSubobjectIso g).Hom
       (by simp only [image_subobject_iso_image_to_kernel'])
@@ -422,11 +443,13 @@ def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) : homology f g w ≅ cok
       (by simp only [image_to_kernel'_kernel_subobject_iso])
   hom_inv_id' := by
     apply coequalizer.hom_ext
-    simp only [iso.hom_inv_id_assoc, cokernel.π_desc, cokernel.π_desc_assoc, category.assoc, coequalizer_as_cokernel]
+    simp only [iso.hom_inv_id_assoc, cokernel.π_desc, cokernel.π_desc_assoc, category.assoc,
+      coequalizer_as_cokernel]
     exact (category.comp_id _).symm
   inv_hom_id' := by
     ext1
-    simp only [iso.inv_hom_id_assoc, cokernel.π_desc, category.comp_id, cokernel.π_desc_assoc, category.assoc]
+    simp only [iso.inv_hom_id_assoc, cokernel.π_desc, category.comp_id, cokernel.π_desc_assoc,
+      category.assoc]
 #align homology_iso_cokernel_image_to_kernel' homologyIsoCokernelImageToKernel'
 
 variable [HasEqualizers V]

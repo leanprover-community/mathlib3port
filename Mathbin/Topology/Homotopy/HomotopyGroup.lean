@@ -87,7 +87,8 @@ theorem one_char (f : I^ 1) : f = fun _ => f 0 := by convert eq_const_of_unique 
 
 end Cube
 
-/-- The `n`-dimensional generalized loops; functions `I^n → X` that send the boundary to the base point.
+/--
+The `n`-dimensional generalized loops; functions `I^n → X` that send the boundary to the base point.
 -/
 structure GenLoop (n : ℕ) (x : X) extends C(I^ n, X) where
   boundary : ∀ y ∈ Cube.boundary n, to_fun y = x
@@ -188,7 +189,7 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
   Quotient.congr genLoopZeroEquiv
     (by
       -- joined iff homotopic
-      intros
+      intros ;
       constructor <;> rintro ⟨H⟩
       exacts[⟨{ toFun := fun t => H ⟨t, Fin.elim0⟩,
             source' := (H.apply_zero _).trans (congr_arg a₁ matrix.zero_empty.symm),
@@ -227,10 +228,12 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
   refine' Equiv.trans _ (CategoryTheory.Groupoid.isoEquivHom _ _).symm
   refine' Quotient.congr genLoopOneEquivPathSelf _
   -- homotopic iff homotopic
-  intros
+  intros ;
   constructor <;> rintro ⟨H⟩
-  exacts[⟨{ toFun := fun tx => H (tx.fst, fun _ => tx.snd), map_zero_left' := fun _ => by convert H.apply_zero _,
-        map_one_left' := fun _ => by convert H.apply_one _, prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
+  exacts[⟨{ toFun := fun tx => H (tx.fst, fun _ => tx.snd),
+        map_zero_left' := fun _ => by convert H.apply_zero _,
+        map_one_left' := fun _ => by convert H.apply_one _,
+        prop' := fun t y iH => H.prop' _ _ ⟨0, iH⟩ }⟩,
     ⟨{ toFun := fun tx => H (tx.fst, tx.snd.head),
         map_zero_left' := fun y => by
           convert H.apply_zero _
@@ -239,8 +242,7 @@ def pi1EquivFundamentalGroup : π 1 x ≃ FundamentalGroup X x := by
           convert H.apply_one _
           exact y.one_char,
         prop' := fun t y ⟨i, iH⟩ => by
-          cases Unique.eq_default i
-          constructor
+          cases Unique.eq_default i; constructor
           · convert H.eq_fst _ _
             exacts[y.one_char, iH]
             

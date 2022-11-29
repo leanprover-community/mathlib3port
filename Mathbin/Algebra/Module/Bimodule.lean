@@ -80,13 +80,13 @@ individually, rather than jointly via their tensor product.
 Note that `R` plays no role but it is convenient to make this generalisation to support the cases
 `R = ℕ` and `R = ℤ` which both show up naturally. See also `base_change`. -/
 @[simps]
-def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p) (hB : ∀ (b : B) {m : M}, m ∈ p → b • m ∈ p) :
-    Submodule (A ⊗[R] B) M :=
+def mk (p : AddSubmonoid M) (hA : ∀ (a : A) {m : M}, m ∈ p → a • m ∈ p)
+    (hB : ∀ (b : B) {m : M}, m ∈ p → b • m ∈ p) : Submodule (A ⊗[R] B) M :=
   { p with carrier := p,
     smul_mem' := fun ab m =>
       TensorProduct.induction_on ab (fun hm => by simpa only [zero_smul] using p.zero_mem)
-        (fun a b hm => by simpa only [TensorProduct.Algebra.smul_def] using hA a (hB b hm)) fun z w hz hw hm => by
-        simpa only [add_smul] using p.add_mem (hz hm) (hw hm) }
+        (fun a b hm => by simpa only [TensorProduct.Algebra.smul_def] using hA a (hB b hm))
+        fun z w hz hw hm => by simpa only [add_smul] using p.add_mem (hz hm) (hw hm) }
 #align subbimodule.mk Subbimodule.mk
 
 theorem smul_mem (p : Submodule (A ⊗[R] B) M) (a : A) {m : M} (hm : m ∈ p) : a • m ∈ p := by
@@ -102,8 +102,9 @@ theorem smul_mem' (p : Submodule (A ⊗[R] B) M) (b : B) {m : M} (hm : m ∈ p) 
 /-- If `A` and `B` are also `algebra`s over yet another set of scalars `S` then we may "base change"
 from `R` to `S`. -/
 @[simps]
-def baseChange (S : Type _) [CommSemiring S] [Module S M] [Algebra S A] [Algebra S B] [IsScalarTower S A M]
-    [IsScalarTower S B M] (p : Submodule (A ⊗[R] B) M) : Submodule (A ⊗[S] B) M :=
+def baseChange (S : Type _) [CommSemiring S] [Module S M] [Algebra S A] [Algebra S B]
+    [IsScalarTower S A M] [IsScalarTower S B M] (p : Submodule (A ⊗[R] B) M) :
+    Submodule (A ⊗[S] B) M :=
   mk p.toAddSubmonoid (smul_mem p) (smul_mem' p)
 #align subbimodule.base_change Subbimodule.baseChange
 

@@ -177,7 +177,8 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 `false`, and fail if no contradiction is found with any list.
 -/
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
-  (first <| ls.map <| prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
+  (first <| ls.map <| prove_false_by_linarith cfg) <|>
+    fail "linarith failed to find a contradiction"
 #align linarith.try_linarith_on_lists linarith.try_linarith_on_lists
 
 /-- Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
@@ -189,13 +190,16 @@ In each branch, we partition the  list of hypotheses by type, and run `linarith`
 in the partition; one of these must succeed in order for `linarith` to succeed on this branch.
 If `pref_type` is given, it will first use the class of proofs of comparisons over that type.
 -/
-unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_type : Option expr) : tactic Unit :=
+unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr)
+    (pref_type : Option expr) : tactic Unit :=
   let single_process := fun hyps : List expr => do
     linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps ++ " facts:") hyps
     let hyp_set ← partition_by_type hyps
     linarith_trace f! "hypotheses appear in {hyp_set} different types"
     match pref_type with
-      | some t => prove_false_by_linarith cfg (hyp_set t) <|> try_linarith_on_lists cfg (rb_map.values (hyp_set t))
+      | some t =>
+        prove_false_by_linarith cfg (hyp_set t) <|>
+          try_linarith_on_lists cfg (rb_map.values (hyp_set t))
       | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
   let preprocessors := cfg.preprocessors.getOrElse default_preprocessors
   let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors
@@ -206,7 +210,8 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
       single_process hs.2 >>= exact
 #align linarith.run_linarith_on_pfs linarith.run_linarith_on_pfs
 
-/-- `filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it
+/--
+`filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it
 to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
@@ -231,7 +236,8 @@ end Linarith
 
 open Linarith
 
-/-- `linarith reduce_semi only_on hyps cfg` tries to close the goal using linear arithmetic. It fails
+/--
+`linarith reduce_semi only_on hyps cfg` tries to close the goal using linear arithmetic. It fails
 if it does not succeed at doing this.
 
 * If `reduce_semi` is true, it will unfold semireducible definitions when trying to match atomic
@@ -240,13 +246,14 @@ expressions.
 * If `only_on` is true, the search will be restricted to `hyps`. Otherwise it will use all
   comparisons in the local context.
 -/
-unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr) (cfg : linarith_config := {  }) :
-    tactic Unit :=
-  focus1 <| do
+unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr)
+    (cfg : linarith_config := {  }) : tactic Unit :=
+  focus1 do
     let t ← target
     -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
         if t then
-        linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
+        linarith_trace "target is an equality: splitting" >>
+          seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
       else do
         let hyps ← hyps fun e => i_to_expr e >>= note_anon none
         when cfg (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
@@ -295,8 +302,8 @@ Config options:
   Options: `ring2`, `ring SOP`, `simp`
 * `linarith {split_hypotheses := ff}` will not destruct conjunctions in the context.
 -/
-unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
-    (cfg : linarith_config := {  }) : tactic Unit :=
+unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
+    (hyps : parse pexpr_list ?) (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse []) cfg
 #align tactic.interactive.linarith tactic.interactive.linarith
 
@@ -356,7 +363,8 @@ add_tactic_doc
   { Name := "linarith", category := DocCategory.tactic, declNames := [`tactic.interactive.linarith],
     tags := ["arithmetic", "decision procedure", "finishing"] }
 
-/-- An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
+/--
+An extension of `linarith` with some preprocessing to allow it to solve some nonlinear arithmetic
 problems. (Based on Coq's `nra` tactic.) See `linarith` for the available syntax of options,
 which are inherited by `nlinarith`; that is, `nlinarith!` and `nlinarith only [h1, h2]` all work as
 in `linarith`. The preprocessing is as follows:
@@ -367,15 +375,18 @@ in `linarith`. The preprocessing is as follows:
   the assumption `0 R' (b1 - a1) * (b2 - a2)` is added to the context (non-recursively),
   where `R ∈ {<, ≤, =}` is the appropriate comparison derived from `R1, R2`.
 -/
-unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
-    (cfg : linarith_config := {  }) : tactic Unit :=
+unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
+    (hyps : parse pexpr_list ?) (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
-    { cfg with preprocessors := some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
+    { cfg with
+      preprocessors :=
+        some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
 #align tactic.interactive.nlinarith tactic.interactive.nlinarith
 
 add_hint_tactic nlinarith
 
 add_tactic_doc
-  { Name := "nlinarith", category := DocCategory.tactic, declNames := [`tactic.interactive.nlinarith],
+  { Name := "nlinarith", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.nlinarith],
     tags := ["arithmetic", "decision procedure", "finishing"] }
 

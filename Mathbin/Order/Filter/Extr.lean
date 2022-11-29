@@ -290,72 +290,88 @@ theorem IsExtrOn.inter (hf : IsExtrOn f s a) (t) : IsExtrOn f (s ∩ t) a :=
 /-! ### Composition with (anti)monotone functions -/
 
 
-theorem IsMinFilter.comp_mono (hf : IsMinFilter f l a) {g : β → γ} (hg : Monotone g) : IsMinFilter (g ∘ f) l a :=
+theorem IsMinFilter.comp_mono (hf : IsMinFilter f l a) {g : β → γ} (hg : Monotone g) :
+    IsMinFilter (g ∘ f) l a :=
   (mem_of_superset hf) fun x hx => hg hx
 #align is_min_filter.comp_mono IsMinFilter.comp_mono
 
-theorem IsMaxFilter.comp_mono (hf : IsMaxFilter f l a) {g : β → γ} (hg : Monotone g) : IsMaxFilter (g ∘ f) l a :=
+theorem IsMaxFilter.comp_mono (hf : IsMaxFilter f l a) {g : β → γ} (hg : Monotone g) :
+    IsMaxFilter (g ∘ f) l a :=
   (mem_of_superset hf) fun x hx => hg hx
 #align is_max_filter.comp_mono IsMaxFilter.comp_mono
 
-theorem IsExtrFilter.comp_mono (hf : IsExtrFilter f l a) {g : β → γ} (hg : Monotone g) : IsExtrFilter (g ∘ f) l a :=
+theorem IsExtrFilter.comp_mono (hf : IsExtrFilter f l a) {g : β → γ} (hg : Monotone g) :
+    IsExtrFilter (g ∘ f) l a :=
   hf.elim (fun hf => (hf.comp_mono hg).is_extr) fun hf => (hf.comp_mono hg).is_extr
 #align is_extr_filter.comp_mono IsExtrFilter.comp_mono
 
-theorem IsMinFilter.comp_antitone (hf : IsMinFilter f l a) {g : β → γ} (hg : Antitone g) : IsMaxFilter (g ∘ f) l a :=
+theorem IsMinFilter.comp_antitone (hf : IsMinFilter f l a) {g : β → γ} (hg : Antitone g) :
+    IsMaxFilter (g ∘ f) l a :=
   hf.dual.comp_mono fun x y h => hg h
 #align is_min_filter.comp_antitone IsMinFilter.comp_antitone
 
-theorem IsMaxFilter.comp_antitone (hf : IsMaxFilter f l a) {g : β → γ} (hg : Antitone g) : IsMinFilter (g ∘ f) l a :=
+theorem IsMaxFilter.comp_antitone (hf : IsMaxFilter f l a) {g : β → γ} (hg : Antitone g) :
+    IsMinFilter (g ∘ f) l a :=
   hf.dual.comp_mono fun x y h => hg h
 #align is_max_filter.comp_antitone IsMaxFilter.comp_antitone
 
-theorem IsExtrFilter.comp_antitone (hf : IsExtrFilter f l a) {g : β → γ} (hg : Antitone g) : IsExtrFilter (g ∘ f) l a :=
+theorem IsExtrFilter.comp_antitone (hf : IsExtrFilter f l a) {g : β → γ} (hg : Antitone g) :
+    IsExtrFilter (g ∘ f) l a :=
   hf.dual.comp_mono fun x y h => hg h
 #align is_extr_filter.comp_antitone IsExtrFilter.comp_antitone
 
-theorem IsMinOn.comp_mono (hf : IsMinOn f s a) {g : β → γ} (hg : Monotone g) : IsMinOn (g ∘ f) s a :=
+theorem IsMinOn.comp_mono (hf : IsMinOn f s a) {g : β → γ} (hg : Monotone g) :
+    IsMinOn (g ∘ f) s a :=
   hf.comp_mono hg
 #align is_min_on.comp_mono IsMinOn.comp_mono
 
-theorem IsMaxOn.comp_mono (hf : IsMaxOn f s a) {g : β → γ} (hg : Monotone g) : IsMaxOn (g ∘ f) s a :=
+theorem IsMaxOn.comp_mono (hf : IsMaxOn f s a) {g : β → γ} (hg : Monotone g) :
+    IsMaxOn (g ∘ f) s a :=
   hf.comp_mono hg
 #align is_max_on.comp_mono IsMaxOn.comp_mono
 
-theorem IsExtrOn.comp_mono (hf : IsExtrOn f s a) {g : β → γ} (hg : Monotone g) : IsExtrOn (g ∘ f) s a :=
+theorem IsExtrOn.comp_mono (hf : IsExtrOn f s a) {g : β → γ} (hg : Monotone g) :
+    IsExtrOn (g ∘ f) s a :=
   hf.comp_mono hg
 #align is_extr_on.comp_mono IsExtrOn.comp_mono
 
-theorem IsMinOn.comp_antitone (hf : IsMinOn f s a) {g : β → γ} (hg : Antitone g) : IsMaxOn (g ∘ f) s a :=
+theorem IsMinOn.comp_antitone (hf : IsMinOn f s a) {g : β → γ} (hg : Antitone g) :
+    IsMaxOn (g ∘ f) s a :=
   hf.comp_antitone hg
 #align is_min_on.comp_antitone IsMinOn.comp_antitone
 
-theorem IsMaxOn.comp_antitone (hf : IsMaxOn f s a) {g : β → γ} (hg : Antitone g) : IsMinOn (g ∘ f) s a :=
+theorem IsMaxOn.comp_antitone (hf : IsMaxOn f s a) {g : β → γ} (hg : Antitone g) :
+    IsMinOn (g ∘ f) s a :=
   hf.comp_antitone hg
 #align is_max_on.comp_antitone IsMaxOn.comp_antitone
 
-theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antitone g) : IsExtrOn (g ∘ f) s a :=
+theorem IsExtrOn.comp_antitone (hf : IsExtrOn f s a) {g : β → γ} (hg : Antitone g) :
+    IsExtrOn (g ∘ f) s a :=
   hf.comp_antitone hg
 #align is_extr_on.comp_antitone IsExtrOn.comp_antitone
 
-theorem IsMinFilter.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
-    (hf : IsMinFilter f l a) {g : α → γ} (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
+theorem IsMinFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
+    (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinFilter f l a) {g : α → γ}
+    (hg : IsMinFilter g l a) : IsMinFilter (fun x => op (f x) (g x)) l a :=
   (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_min_filter.bicomp_mono IsMinFilter.bicomp_mono
 
-theorem IsMaxFilter.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
-    (hf : IsMaxFilter f l a) {g : α → γ} (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
+theorem IsMaxFilter.bicomp_mono [Preorder δ] {op : β → γ → δ}
+    (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxFilter f l a) {g : α → γ}
+    (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => op (f x) (g x)) l a :=
   (mem_of_superset (inter_mem hf hg)) fun x ⟨hfx, hgx⟩ => hop hfx hgx
 #align is_max_filter.bicomp_mono IsMaxFilter.bicomp_mono
 
 -- No `extr` version because we need `hf` and `hg` to be of the same kind
-theorem IsMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
-    (hf : IsMinOn f s a) {g : α → γ} (hg : IsMinOn g s a) : IsMinOn (fun x => op (f x) (g x)) s a :=
+theorem IsMinOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
+    (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMinOn f s a) {g : α → γ}
+    (hg : IsMinOn g s a) : IsMinOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_min_on.bicomp_mono IsMinOn.bicomp_mono
 
-theorem IsMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ} (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op)
-    (hf : IsMaxOn f s a) {g : α → γ} (hg : IsMaxOn g s a) : IsMaxOn (fun x => op (f x) (g x)) s a :=
+theorem IsMaxOn.bicomp_mono [Preorder δ] {op : β → γ → δ}
+    (hop : ((· ≤ ·) ⇒ (· ≤ ·) ⇒ (· ≤ ·)) op op) (hf : IsMaxOn f s a) {g : α → γ}
+    (hg : IsMaxOn g s a) : IsMaxOn (fun x => op (f x) (g x)) s a :=
   hf.bicomp_mono hop hg
 #align is_max_on.bicomp_mono IsMaxOn.bicomp_mono
 
@@ -377,29 +393,33 @@ theorem IsExtrFilter.comp_tendsto {g : δ → α} {l' : Filter δ} {b : δ} (hf 
   hf.elim (fun hf => (hf.comp_tendsto hg).is_extr) fun hf => (hf.comp_tendsto hg).is_extr
 #align is_extr_filter.comp_tendsto IsExtrFilter.comp_tendsto
 
-theorem IsMinOn.on_preimage (g : δ → α) {b : δ} (hf : IsMinOn f s (g b)) : IsMinOn (f ∘ g) (g ⁻¹' s) b :=
+theorem IsMinOn.on_preimage (g : δ → α) {b : δ} (hf : IsMinOn f s (g b)) :
+    IsMinOn (f ∘ g) (g ⁻¹' s) b :=
   hf.comp_tendsto (tendsto_principal_principal.mpr <| Subset.refl _)
 #align is_min_on.on_preimage IsMinOn.on_preimage
 
-theorem IsMaxOn.on_preimage (g : δ → α) {b : δ} (hf : IsMaxOn f s (g b)) : IsMaxOn (f ∘ g) (g ⁻¹' s) b :=
+theorem IsMaxOn.on_preimage (g : δ → α) {b : δ} (hf : IsMaxOn f s (g b)) :
+    IsMaxOn (f ∘ g) (g ⁻¹' s) b :=
   hf.comp_tendsto (tendsto_principal_principal.mpr <| Subset.refl _)
 #align is_max_on.on_preimage IsMaxOn.on_preimage
 
-theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) : IsExtrOn (f ∘ g) (g ⁻¹' s) b :=
+theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) :
+    IsExtrOn (f ∘ g) (g ⁻¹' s) b :=
   hf.elim (fun hf => (hf.on_preimage g).is_extr) fun hf => (hf.on_preimage g).is_extr
 #align is_extr_on.on_preimage IsExtrOn.on_preimage
 
-theorem IsMinOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
-    IsMinOn (f ∘ g) t b := fun y hy => by simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
+theorem IsMinOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a)
+    (hg : MapsTo g t s) (ha : g b = a) : IsMinOn (f ∘ g) t b := fun y hy => by
+  simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
 #align is_min_on.comp_maps_to IsMinOn.comp_maps_to
 
-theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
-    IsMaxOn (f ∘ g) t b :=
+theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a)
+    (hg : MapsTo g t s) (ha : g b = a) : IsMaxOn (f ∘ g) t b :=
   hf.dual.comp_maps_to hg ha
 #align is_max_on.comp_maps_to IsMaxOn.comp_maps_to
 
-theorem IsExtrOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsExtrOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
-    IsExtrOn (f ∘ g) t b :=
+theorem IsExtrOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsExtrOn f s a)
+    (hg : MapsTo g t s) (ha : g b = a) : IsExtrOn (f ∘ g) t b :=
   hf.elim (fun h => Or.inl <| h.comp_maps_to hg ha) fun h => Or.inr <| h.comp_maps_to hg ha
 #align is_extr_on.comp_maps_to IsExtrOn.comp_maps_to
 
@@ -412,12 +432,16 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-theorem IsMinFilter.add (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) : IsMinFilter (fun x => f x + g x) l a :=
-  show IsMinFilter (fun x => f x + g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => add_le_add hx hy) hg
+theorem IsMinFilter.add (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) :
+    IsMinFilter (fun x => f x + g x) l a :=
+  show IsMinFilter (fun x => f x + g x) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => add_le_add hx hy) hg
 #align is_min_filter.add IsMinFilter.add
 
-theorem IsMaxFilter.add (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => f x + g x) l a :=
-  show IsMaxFilter (fun x => f x + g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => add_le_add hx hy) hg
+theorem IsMaxFilter.add (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) :
+    IsMaxFilter (fun x => f x + g x) l a :=
+  show IsMaxFilter (fun x => f x + g x) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => add_le_add hx hy) hg
 #align is_max_filter.add IsMaxFilter.add
 
 theorem IsMinOn.add (hf : IsMinOn f s a) (hg : IsMinOn g s a) : IsMinOn (fun x => f x + g x) s a :=
@@ -461,20 +485,20 @@ theorem IsExtrOn.neg (hf : IsExtrOn f s a) : IsExtrOn (fun x => -f x) s a :=
   hf.elim (fun hf => hf.neg.is_extr) fun hf => hf.neg.is_extr
 #align is_extr_on.neg IsExtrOn.neg
 
-theorem IsMinFilter.sub (hf : IsMinFilter f l a) (hg : IsMaxFilter g l a) : IsMinFilter (fun x => f x - g x) l a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+theorem IsMinFilter.sub (hf : IsMinFilter f l a) (hg : IsMaxFilter g l a) :
+    IsMinFilter (fun x => f x - g x) l a := by simpa only [sub_eq_add_neg] using hf.add hg.neg
 #align is_min_filter.sub IsMinFilter.sub
 
-theorem IsMaxFilter.sub (hf : IsMaxFilter f l a) (hg : IsMinFilter g l a) : IsMaxFilter (fun x => f x - g x) l a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+theorem IsMaxFilter.sub (hf : IsMaxFilter f l a) (hg : IsMinFilter g l a) :
+    IsMaxFilter (fun x => f x - g x) l a := by simpa only [sub_eq_add_neg] using hf.add hg.neg
 #align is_max_filter.sub IsMaxFilter.sub
 
-theorem IsMinOn.sub (hf : IsMinOn f s a) (hg : IsMaxOn g s a) : IsMinOn (fun x => f x - g x) s a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+theorem IsMinOn.sub (hf : IsMinOn f s a) (hg : IsMaxOn g s a) : IsMinOn (fun x => f x - g x) s a :=
+  by simpa only [sub_eq_add_neg] using hf.add hg.neg
 #align is_min_on.sub IsMinOn.sub
 
-theorem IsMaxOn.sub (hf : IsMaxOn f s a) (hg : IsMinOn g s a) : IsMaxOn (fun x => f x - g x) s a := by
-  simpa only [sub_eq_add_neg] using hf.add hg.neg
+theorem IsMaxOn.sub (hf : IsMaxOn f s a) (hg : IsMinOn g s a) : IsMaxOn (fun x => f x - g x) s a :=
+  by simpa only [sub_eq_add_neg] using hf.add hg.neg
 #align is_max_on.sub IsMaxOn.sub
 
 end OrderedAddCommGroup
@@ -486,12 +510,16 @@ section SemilatticeSup
 
 variable [SemilatticeSup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-theorem IsMinFilter.sup (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) : IsMinFilter (fun x => f x ⊔ g x) l a :=
-  show IsMinFilter (fun x => f x ⊔ g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => sup_le_sup hx hy) hg
+theorem IsMinFilter.sup (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) :
+    IsMinFilter (fun x => f x ⊔ g x) l a :=
+  show IsMinFilter (fun x => f x ⊔ g x) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => sup_le_sup hx hy) hg
 #align is_min_filter.sup IsMinFilter.sup
 
-theorem IsMaxFilter.sup (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => f x ⊔ g x) l a :=
-  show IsMaxFilter (fun x => f x ⊔ g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => sup_le_sup hx hy) hg
+theorem IsMaxFilter.sup (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) :
+    IsMaxFilter (fun x => f x ⊔ g x) l a :=
+  show IsMaxFilter (fun x => f x ⊔ g x) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => sup_le_sup hx hy) hg
 #align is_max_filter.sup IsMaxFilter.sup
 
 theorem IsMinOn.sup (hf : IsMinOn f s a) (hg : IsMinOn g s a) : IsMinOn (fun x => f x ⊔ g x) s a :=
@@ -508,12 +536,16 @@ section SemilatticeInf
 
 variable [SemilatticeInf β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
-theorem IsMinFilter.inf (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) : IsMinFilter (fun x => f x ⊓ g x) l a :=
-  show IsMinFilter (fun x => f x ⊓ g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => inf_le_inf hx hy) hg
+theorem IsMinFilter.inf (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) :
+    IsMinFilter (fun x => f x ⊓ g x) l a :=
+  show IsMinFilter (fun x => f x ⊓ g x) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => inf_le_inf hx hy) hg
 #align is_min_filter.inf IsMinFilter.inf
 
-theorem IsMaxFilter.inf (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) : IsMaxFilter (fun x => f x ⊓ g x) l a :=
-  show IsMaxFilter (fun x => f x ⊓ g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => inf_le_inf hx hy) hg
+theorem IsMaxFilter.inf (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) :
+    IsMaxFilter (fun x => f x ⊓ g x) l a :=
+  show IsMaxFilter (fun x => f x ⊓ g x) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => inf_le_inf hx hy) hg
 #align is_max_filter.inf IsMaxFilter.inf
 
 theorem IsMinOn.inf (hf : IsMinOn f s a) (hg : IsMinOn g s a) : IsMinOn (fun x => f x ⊓ g x) s a :=
@@ -535,37 +567,45 @@ variable [LinearOrder β] {f g : α → β} {a : α} {s : Set α} {l : Filter α
 
 theorem IsMinFilter.min (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) :
     IsMinFilter (fun x => min (f x) (g x)) l a :=
-  show IsMinFilter (fun x => min (f x) (g x)) l a from hf.bicomp_mono (fun x x' hx y y' hy => min_le_min hx hy) hg
+  show IsMinFilter (fun x => min (f x) (g x)) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => min_le_min hx hy) hg
 #align is_min_filter.min IsMinFilter.min
 
 theorem IsMaxFilter.min (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) :
     IsMaxFilter (fun x => min (f x) (g x)) l a :=
-  show IsMaxFilter (fun x => min (f x) (g x)) l a from hf.bicomp_mono (fun x x' hx y y' hy => min_le_min hx hy) hg
+  show IsMaxFilter (fun x => min (f x) (g x)) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => min_le_min hx hy) hg
 #align is_max_filter.min IsMaxFilter.min
 
-theorem IsMinOn.min (hf : IsMinOn f s a) (hg : IsMinOn g s a) : IsMinOn (fun x => min (f x) (g x)) s a :=
+theorem IsMinOn.min (hf : IsMinOn f s a) (hg : IsMinOn g s a) :
+    IsMinOn (fun x => min (f x) (g x)) s a :=
   hf.min hg
 #align is_min_on.min IsMinOn.min
 
-theorem IsMaxOn.min (hf : IsMaxOn f s a) (hg : IsMaxOn g s a) : IsMaxOn (fun x => min (f x) (g x)) s a :=
+theorem IsMaxOn.min (hf : IsMaxOn f s a) (hg : IsMaxOn g s a) :
+    IsMaxOn (fun x => min (f x) (g x)) s a :=
   hf.min hg
 #align is_max_on.min IsMaxOn.min
 
 theorem IsMinFilter.max (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) :
     IsMinFilter (fun x => max (f x) (g x)) l a :=
-  show IsMinFilter (fun x => max (f x) (g x)) l a from hf.bicomp_mono (fun x x' hx y y' hy => max_le_max hx hy) hg
+  show IsMinFilter (fun x => max (f x) (g x)) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => max_le_max hx hy) hg
 #align is_min_filter.max IsMinFilter.max
 
 theorem IsMaxFilter.max (hf : IsMaxFilter f l a) (hg : IsMaxFilter g l a) :
     IsMaxFilter (fun x => max (f x) (g x)) l a :=
-  show IsMaxFilter (fun x => max (f x) (g x)) l a from hf.bicomp_mono (fun x x' hx y y' hy => max_le_max hx hy) hg
+  show IsMaxFilter (fun x => max (f x) (g x)) l a from
+    hf.bicomp_mono (fun x x' hx y y' hy => max_le_max hx hy) hg
 #align is_max_filter.max IsMaxFilter.max
 
-theorem IsMinOn.max (hf : IsMinOn f s a) (hg : IsMinOn g s a) : IsMinOn (fun x => max (f x) (g x)) s a :=
+theorem IsMinOn.max (hf : IsMinOn f s a) (hg : IsMinOn g s a) :
+    IsMinOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
 #align is_min_on.max IsMinOn.max
 
-theorem IsMaxOn.max (hf : IsMaxOn f s a) (hg : IsMaxOn g s a) : IsMaxOn (fun x => max (f x) (g x)) s a :=
+theorem IsMaxOn.max (hf : IsMaxOn f s a) (hg : IsMaxOn g s a) :
+    IsMaxOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
 #align is_max_on.max IsMaxOn.max
 
@@ -576,46 +616,48 @@ section Eventually
 /-! ### Relation with `eventually` comparisons of two functions -/
 
 
-theorem Filter.EventuallyLe.is_max_filter {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
-    (hle : g ≤ᶠ[l] f) (hfga : f a = g a) (h : IsMaxFilter f l a) : IsMaxFilter g l a := by
+theorem Filter.EventuallyLe.is_max_filter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+    {l : Filter α} (hle : g ≤ᶠ[l] f) (hfga : f a = g a) (h : IsMaxFilter f l a) :
+    IsMaxFilter g l a := by
   refine' hle.mp (h.mono fun x hf hgf => _)
   rw [← hfga]
   exact le_trans hgf hf
 #align filter.eventually_le.is_max_filter Filter.EventuallyLe.is_max_filter
 
-theorem IsMaxFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α} (h : IsMaxFilter f l a)
-    (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter g l a :=
+theorem IsMaxFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
+    (h : IsMaxFilter f l a) (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter g l a :=
   HEq.symm.le.IsMaxFilter hfga h
 #align is_max_filter.congr IsMaxFilter.congr
 
-theorem Filter.EventuallyEq.is_max_filter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
-    (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter f l a ↔ IsMaxFilter g l a :=
+theorem Filter.EventuallyEq.is_max_filter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+    {l : Filter α} (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter f l a ↔ IsMaxFilter g l a :=
   ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
 #align filter.eventually_eq.is_max_filter_iff Filter.EventuallyEq.is_max_filter_iff
 
-theorem Filter.EventuallyLe.is_min_filter {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
-    (hle : f ≤ᶠ[l] g) (hfga : f a = g a) (h : IsMinFilter f l a) : IsMinFilter g l a :=
+theorem Filter.EventuallyLe.is_min_filter {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+    {l : Filter α} (hle : f ≤ᶠ[l] g) (hfga : f a = g a) (h : IsMinFilter f l a) :
+    IsMinFilter g l a :=
   @Filter.EventuallyLe.is_max_filter _ βᵒᵈ _ _ _ _ _ hle hfga h
 #align filter.eventually_le.is_min_filter Filter.EventuallyLe.is_min_filter
 
-theorem IsMinFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α} (h : IsMinFilter f l a)
-    (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter g l a :=
+theorem IsMinFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
+    (h : IsMinFilter f l a) (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter g l a :=
   HEq.le.IsMinFilter hfga h
 #align is_min_filter.congr IsMinFilter.congr
 
-theorem Filter.EventuallyEq.is_min_filter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
-    (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter f l a ↔ IsMinFilter g l a :=
+theorem Filter.EventuallyEq.is_min_filter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+    {l : Filter α} (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter f l a ↔ IsMinFilter g l a :=
   ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
 #align filter.eventually_eq.is_min_filter_iff Filter.EventuallyEq.is_min_filter_iff
 
-theorem IsExtrFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α} (h : IsExtrFilter f l a)
-    (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsExtrFilter g l a := by
+theorem IsExtrFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
+    (h : IsExtrFilter f l a) (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsExtrFilter g l a := by
   rw [IsExtrFilter] at *
   rwa [← heq.is_max_filter_iff hfga, ← heq.is_min_filter_iff hfga]
 #align is_extr_filter.congr IsExtrFilter.congr
 
-theorem Filter.EventuallyEq.is_extr_filter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
-    (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsExtrFilter f l a ↔ IsExtrFilter g l a :=
+theorem Filter.EventuallyEq.is_extr_filter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α}
+    {l : Filter α} (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsExtrFilter f l a ↔ IsExtrFilter g l a :=
   ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
 #align filter.eventually_eq.is_extr_filter_iff Filter.EventuallyEq.is_extr_filter_iff
 

@@ -64,7 +64,8 @@ def mulLeft {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R where
 #align add_monoid_hom.mul_left AddMonoidHom.mulLeft
 
 @[simp]
-theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : ⇑(mulLeft r) = (· * ·) r :=
+theorem coe_mul_left {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
+    ⇑(mulLeft r) = (· * ·) r :=
   rfl
 #align add_monoid_hom.coe_mul_left AddMonoidHom.coe_mul_left
 
@@ -76,11 +77,13 @@ def mulRight {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : R →+ R where
 #align add_monoid_hom.mul_right AddMonoidHom.mulRight
 
 @[simp]
-theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) : ⇑(mulRight r) = (· * r) :=
+theorem coe_mul_right {R : Type _} [NonUnitalNonAssocSemiring R] (r : R) :
+    ⇑(mulRight r) = (· * r) :=
   rfl
 #align add_monoid_hom.coe_mul_right AddMonoidHom.coe_mul_right
 
-theorem mul_right_apply {R : Type _} [NonUnitalNonAssocSemiring R] (a r : R) : mulRight r a = a * r :=
+theorem mul_right_apply {R : Type _} [NonUnitalNonAssocSemiring R] (a r : R) :
+    mulRight r a = a * r :=
   rfl
 #align add_monoid_hom.mul_right_apply AddMonoidHom.mul_right_apply
 

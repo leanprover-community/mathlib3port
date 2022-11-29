@@ -84,7 +84,8 @@ unsafe def apply_measurable.comp_ae_measurable : tactic Unit :=
   sorry
 #align tactic.apply_measurable.comp_ae_measurable tactic.apply_measurable.comp_ae_measurable
 
-/-- We don't want the intro1 tactic to apply to a goal of the form `measurable f`, `ae_measurable f μ`
+/--
+We don't want the intro1 tactic to apply to a goal of the form `measurable f`, `ae_measurable f μ`
 or `measurable_set s`. This tactic tests the target to see if it matches that form.
  -/
 unsafe def goal_is_not_measurable : tactic Unit := do
@@ -108,7 +109,8 @@ unsafe def measurability_tactics (md : Transparency := semireducible) : List (ta
     apply_rules [] [`` measurability] 50 { md } >> pure "apply_rules with measurability",
     apply_measurable.comp >> pure "refine measurable.comp _ _",
     apply_measurable.comp_ae_measurable >> pure "refine measurable.comp_ae_measurable _ _",
-    sorry >> pure "refine measurable.ae_measurable _", sorry >> pure "refine measurable.ae_strongly_measurable _"]
+    sorry >> pure "refine measurable.ae_measurable _",
+    sorry >> pure "refine measurable.ae_strongly_measurable _"]
 #align tactic.measurability_tactics tactic.measurability_tactics
 
 namespace Interactive

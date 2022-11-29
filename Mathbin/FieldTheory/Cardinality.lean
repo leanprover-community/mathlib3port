@@ -55,7 +55,8 @@ theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ I
   exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩
 #align fintype.nonempty_field_iff Fintype.nonempty_field_iff
 
-theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ring α] : ¬IsPrimePow ‖α‖ → ¬IsField α :=
+theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ring α] :
+    ¬IsPrimePow ‖α‖ → ¬IsField α :=
   mt fun h => Fintype.nonempty_field_iff.mp ⟨h.toField⟩
 #align fintype.not_is_field_of_card_not_prime_pow Fintype.not_is_field_of_card_not_prime_pow
 
@@ -67,7 +68,8 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
     exact ⟨e.field⟩
   rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rfl]
   apply le_antisymm
-  · refine' ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => _⟩⟩
+  · refine'
+      ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => _⟩⟩
     simpa [MvPolynomial.monomial_eq_monomial_iff, Finsupp.single_eq_single_iff] using h
     
   · simp
@@ -78,8 +80,8 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
 theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow (#α) := by
   rw [Cardinal.is_prime_pow_iff]
   cases' fintypeOrInfinite α with h h
-  · simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left', (Cardinal.nat_lt_aleph_0 _).not_le,
-      false_or_iff] using Fintype.nonempty_field_iff
+  · simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left',
+      (Cardinal.nat_lt_aleph_0 _).not_le, false_or_iff] using Fintype.nonempty_field_iff
     
   · simpa only [← Cardinal.infinite_iff, h, true_or_iff, iff_true_iff] using Infinite.nonempty_field
     

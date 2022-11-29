@@ -59,8 +59,8 @@ namespace PseudoMetricSpace
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
-noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) :
-    PseudoMetricSpace X where
+noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+    (dist_comm : ∀ x y, d x y = d y x) : PseudoMetricSpace X where
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self x :=
     (Nnreal.coe_eq_zero _).2 <|
@@ -68,31 +68,38 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
   dist_comm x y :=
     Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
-      rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse, reverse_singleton, singleton_append,
-        reverse_cons, reverse_reverse, zip_with_comm _ dist_comm]
+      rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse,
+        reverse_singleton, singleton_append, reverse_cons, reverse_reverse,
+        zip_with_comm _ dist_comm]
       simp only [length, length_append]
   dist_triangle x y z := by
     rw [← Nnreal.coe_add, Nnreal.coe_le_coe]
     refine' Nnreal.le_infi_add_infi fun lxy lyz => _
     calc
-      (⨅ l, (zip_with d (x::l) (l ++ [z])).Sum) ≤ (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
+      (⨅ l, (zip_with d (x::l) (l ++ [z])).Sum) ≤
+          (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
         cinfi_le (OrderBot.bdd_below _) (lxy ++ y::lyz)
       _ = (zip_with d (x::lxy) (lxy ++ [y])).Sum + (zip_with d (y::lyz) (lyz ++ [z])).Sum := _
       
-    rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc, append_assoc, append_assoc]
+    rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc,
+      append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]
 #align pseudo_metric_space.of_prenndist PseudoMetricSpace.ofPrenndist
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
-    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y =
+theorem dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+    (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
+    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
+        y =
       ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0) :=
   rfl
 #align pseudo_metric_space.dist_of_prenndist PseudoMetricSpace.dist_of_prenndist
 
-theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
-    (x y : X) :
-    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y ≤ d x y :=
+theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+    (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
+    @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
+        y ≤
+      d x y :=
   Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp
 #align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_of_prenndist_le
 
@@ -104,9 +111,14 @@ theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
 inequality: `d x₁ x₄ ≤ 2 * max (d x₁ x₂, d x₂ x₃, d x₃ x₄)`. Then `d x y ≤ 2 * dist x y` for all
 `x`, `y`. -/
-theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
+theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
+    (dist_comm : ∀ x y, d x y = d y x)
     (hd : ∀ x₁ x₂ x₃ x₄, d x₁ x₄ ≤ 2 * max (d x₁ x₂) (max (d x₂ x₃) (d x₃ x₄))) (x y : X) :
-    ↑(d x y) ≤ 2 * @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y :=
+    ↑(d x y) ≤
+      2 *
+        @dist X
+          (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
+          y :=
   by
   /- We need to show that `d x y` is at most twice the sum `L` of `d xᵢ xᵢ₊₁` over a path
     `x₀=x, ..., xₙ=y`. We prove it by induction on the length `n` of the sequence. Find an edge that
@@ -139,8 +151,9 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
       intro m hm
       rw [← not_lt, Nat.lt_iff_add_one_le, ← hL_len]
       intro hLm
-      rw [mem_set_of_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero, sum_eq_zero_iff, ←
-          all₂_iff_forall, all₂_zip_with, ← chain_append_singleton_iff_forall₂] at hm <;>
+      rw [mem_set_of_eq, take_all_of_le hLm, two_mul, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
+          sum_eq_zero_iff, ← all₂_iff_forall, all₂_zip_with, ←
+          chain_append_singleton_iff_forall₂] at hm <;>
         [skip,
         · simp
           ]
@@ -159,8 +172,8 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     simp only [nth_le]
     refine' (ihn _ hMl _ _ _ hMl').trans _
     convert hMs.1.out
-    rw [zip_with_distrib_take, take, take_succ, nth_append hMl, nth_le_nth hMl, ← Option.coe_def, Option.to_list_some,
-      take_append_of_le_length hMl.le]
+    rw [zip_with_distrib_take, take, take_succ, nth_append hMl, nth_le_nth hMl, ← Option.coe_def,
+      Option.to_list_some, take_append_of_le_length hMl.le]
     rfl
     
   · refine' single_le_sum (fun x hx => zero_le x) _ (mem_iff_nth_le.2 ⟨M, hM_lt, _⟩)
@@ -174,21 +187,23 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
     have hlen_lt : length l - (M + 1) < length l := Nat.sub_lt_of_pos_le _ _ M.succ_pos hMl
     refine' (ihn _ hlen_lt _ y _ hlen).trans _
     rw [cons_nth_le_drop_succ]
-    have hMs' : L.sum ≤ 2 * (L.take (M + 1)).Sum := not_lt.1 fun h => (hMs.2 h.le).not_lt M.lt_succ_self
-    rw [← sum_take_add_sum_drop L (M + 1), two_mul, add_le_add_iff_left, ← add_le_add_iff_right, sum_take_add_sum_drop,
-      ← two_mul] at hMs'
+    have hMs' : L.sum ≤ 2 * (L.take (M + 1)).Sum :=
+      not_lt.1 fun h => (hMs.2 h.le).not_lt M.lt_succ_self
+    rw [← sum_take_add_sum_drop L (M + 1), two_mul, add_le_add_iff_left, ← add_le_add_iff_right,
+      sum_take_add_sum_drop, ← two_mul] at hMs'
     convert hMs'
     rwa [zip_with_distrib_drop, drop, drop_append_of_le_length]
     
-#align pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_of_prenndist
+#align
+  pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_of_prenndist
 
 end PseudoMetricSpace
 
 /-- If `X` is a uniform space with countably generated uniformity filter, there exists a
 `pseudo_metric_space` structure compatible with the `uniform_space` structure. Use
 `uniform_space.pseudo_metric_space` or `uniform_space.metric_space` instead. -/
-protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
-    ∃ I : PseudoMetricSpace X, I.toUniformSpace = ‹_› := by classical
+protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace X]
+    [IsCountablyGenerated (𝓤 X)] : ∃ I : PseudoMetricSpace X, I.toUniformSpace = ‹_› := by classical
   /- Choose a fast decreasing antitone basis `U : ℕ → set (X × X)` of the uniformity filter `𝓤 X`.
     Define `d x y : ℝ≥0` to be `(1 / 2) ^ n`, where `n` is the minimal index of `U n` that separates
     `x` and `y`: `(x, y) ∉ U n`, or `0` if `x` is not separated from `y`. This function satisfies the
@@ -199,11 +214,13 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     `𝓤 X` as well. -/
   obtain ⟨U, hU_symm, hU_comp, hB⟩ :
     ∃ U : ℕ → Set (X × X),
-      (∀ n, SymmetricRel (U n)) ∧ (∀ ⦃m n⦄, m < n → U n ○ (U n ○ U n) ⊆ U m) ∧ (𝓤 X).HasAntitoneBasis U :=
+      (∀ n, SymmetricRel (U n)) ∧
+        (∀ ⦃m n⦄, m < n → U n ○ (U n ○ U n) ⊆ U m) ∧ (𝓤 X).HasAntitoneBasis U :=
     by
     rcases UniformSpace.has_seq_basis X with ⟨V, hB, hV_symm⟩
     rcases hB.subbasis_with_rel fun m =>
-        hB.tendsto_small_sets.eventually (eventually_uniformity_iterate_comp_subset (hB.mem m) 2) with
+        hB.tendsto_small_sets.eventually
+          (eventually_uniformity_iterate_comp_subset (hB.mem m) 2) with
       ⟨φ, hφ_mono, hφ_comp, hφB⟩
     exact ⟨V ∘ φ, fun n => hV_symm _, hφ_comp, hφB⟩
   letI := UniformSpace.separationSetoid X
@@ -223,7 +240,8 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     intro x y
     dsimp only [d]
     simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
-  have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
+  have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 :=
+    ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
   letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
   have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_of_prenndist_le _ _ _
   have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n := by
@@ -256,27 +274,28 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     rw [mem_set_of_eq] at hx
     contrapose! hx
     refine' le_trans _ ((div_le_iff' (@two_pos ℝ _ _)).2 (hd_le x.1 x.2))
-    rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ', mul_one_div,
-      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d, Prod.mk.eta]
+    rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ',
+      mul_one_div, Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
+      Prod.mk.eta]
     
 #align uniform_space.metrizable_uniformity UniformSpace.metrizable_uniformity
 
 /-- A `pseudo_metric_space` instance compatible with a given `uniform_space` structure. -/
-protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
-    PseudoMetricSpace X :=
+protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X]
+    [IsCountablyGenerated (𝓤 X)] : PseudoMetricSpace X :=
   (UniformSpace.metrizable_uniformity X).some.replaceUniformity <|
     congr_arg _ (UniformSpace.metrizable_uniformity X).some_spec.symm
 #align uniform_space.pseudo_metric_space UniformSpace.pseudoMetricSpace
 
 /-- A `metric_space` instance compatible with a given `uniform_space` structure. -/
-protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)]
-    [T0Space X] : MetricSpace X :=
+protected noncomputable def UniformSpace.metricSpace (X : Type _) [UniformSpace X]
+    [IsCountablyGenerated (𝓤 X)] [T0Space X] : MetricSpace X :=
   @ofT0PseudoMetricSpace X (UniformSpace.pseudoMetricSpace X) _
 #align uniform_space.metric_space UniformSpace.metricSpace
 
 /-- A uniform space with countably generated `𝓤 X` is pseudo metrizable. -/
-instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
-    TopologicalSpace.PseudoMetrizableSpace X := by
+instance (priority := 100) UniformSpace.pseudoMetrizableSpace [UniformSpace X]
+    [IsCountablyGenerated (𝓤 X)] : TopologicalSpace.PseudoMetrizableSpace X := by
   letI := UniformSpace.pseudoMetricSpace X
   infer_instance
 #align uniform_space.pseudo_metrizable_space UniformSpace.pseudoMetrizableSpace

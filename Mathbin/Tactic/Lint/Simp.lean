@@ -19,7 +19,9 @@ This files defines several linters that prevent common mistakes when declaring s
 open Tactic Expr
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
-/-- `simp_lhs_rhs ty` returns the left-hand and right-hand side of a simp lemma with type `ty`. -/ private unsafe
+/-- `simp_lhs_rhs ty` returns the left-hand and right-hand side of a simp lemma with type `ty`. -/
+    private
+    unsafe
   def
     simp_lhs_rhs
     : expr → tactic ( expr × expr )
@@ -70,7 +72,12 @@ private unsafe def simp_lhs (ty : expr) : tactic expr :=
                 do
                   let l ← mk_local' n bi a
                     let some lhs ← simp_is_conditional_core ( b l ) | pure none
-                    if bi ≠ BinderInfo.inst_implicit ∧ ¬ ( lhs l ) . has_var then pure none else pure lhs
+                    if
+                      bi ≠ BinderInfo.inst_implicit ∧ ¬ ( lhs l ) . has_var
+                      then
+                      pure none
+                      else
+                      pure lhs
               | ty => pure ty
 #align simp_is_conditional_core simp_is_conditional_core
 
@@ -103,7 +110,7 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
   let [] ← get_eqn_lemmas_for false d.to_name |
     pure none
   try_for timeout <|
-      retrieve <| do
+      retrieve do
         let g ← mk_meta_var d
         set_goals [g]
         unfreezing intros
@@ -111,20 +118,23 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
         let sls ← simp_lemmas.mk_default
         let sls' := sls [d]
         let (lhs', prf1, ns1) ←
-          decorate_error "simplify fails on left-hand side:" <| simplify sls [] lhs { failIfUnchanged := ff }
+          decorate_error "simplify fails on left-hand side:" <|
+              simplify sls [] lhs { failIfUnchanged := ff }
         let prf1_lems ← heuristic_simp_lemma_extraction prf1
         if d ∈ prf1_lems then pure none
           else do
             let is_cond ← simp_is_conditional d
             let (rhs', prf2, ns2) ←
-              decorate_error "simplify fails on right-hand side:" <| simplify sls [] rhs { failIfUnchanged := ff }
+              decorate_error "simplify fails on right-hand side:" <|
+                  simplify sls [] rhs { failIfUnchanged := ff }
             let lhs'_eq_rhs' ← is_simp_eq lhs' rhs'
             let lhs_in_nf ← is_simp_eq lhs' lhs
             if lhs'_eq_rhs' then do
                 let used_lemmas ← heuristic_simp_lemma_extraction (prf1 prf2)
                 pure <|
                     pure <|
-                      "simp can prove this:\n" ++ "  by simp only " ++ toString used_lemmas ++ "\n" ++
+                      "simp can prove this:\n" ++ "  by simp only " ++ toString used_lemmas ++
+                            "\n" ++
                           "One of the lemmas above could be a duplicate.\n" ++
                         "If that's not the case try reordering lemmas or adding @[priority].\n"
               else
@@ -133,7 +143,8 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
                   let lhs' ← pp lhs'
                   pure <|
                       format.to_string <|
-                        to_fmt "Left-hand side simplifies from" ++ lhs 2 ++ format.line ++ "to" ++ lhs' 2 ++
+                        to_fmt "Left-hand side simplifies from" ++ lhs 2 ++ format.line ++ "to" ++
+                                    lhs' 2 ++
                                   format.line ++
                                 "using " ++
                               (to_fmt prf1_lems).group.indent 2 ++

@@ -20,7 +20,8 @@ unsafe def tidy_attribute : user_attribute where
 #align tactic.tidy.tidy_attribute tactic.tidy.tidy_attribute
 
 add_tactic_doc
-  { Name := "tidy", category := DocCategory.attr, declNames := [`tactic.tidy.tidy_attribute], tags := ["search"] }
+  { Name := "tidy", category := DocCategory.attr, declNames := [`tactic.tidy.tidy_attribute],
+    tags := ["search"] }
 
 unsafe def run_tactics : tactic String := do
   let names ← attribute.get_instances `tidy
@@ -46,11 +47,12 @@ unsafe def ext1_wrapper : tactic String := do
 unsafe def default_tactics : List (tactic String) :=
   [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial",
     (propositional_goal >> assumption) >> pure "assumption",
-    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.toString)), auto_cases,
-    sorry >> pure "apply_auto_param", sorry >> pure "dsimp at *", sorry >> pure "simp at *", ext1_wrapper,
-    fsplit >> pure "fsplit", injections_and_clear >> pure "injections_and_clear",
-    (propositional_goal >> sorry) >> pure "solve_by_elim", sorry >> pure "norm_cast", sorry >> pure "unfold_coes",
-    sorry >> pure "unfold_aux", tidy.run_tactics]
+    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.toString)),
+    auto_cases, sorry >> pure "apply_auto_param", sorry >> pure "dsimp at *",
+    sorry >> pure "simp at *", ext1_wrapper, fsplit >> pure "fsplit",
+    injections_and_clear >> pure "injections_and_clear",
+    (propositional_goal >> sorry) >> pure "solve_by_elim", sorry >> pure "norm_cast",
+    sorry >> pure "unfold_coes", sorry >> pure "unfold_aux", tidy.run_tactics]
 #align tactic.tidy.default_tactics tactic.tidy.default_tactics
 
 unsafe structure cfg where
@@ -118,7 +120,8 @@ unsafe def tidy_hole_cmd : hole_command where
 #align tactic.tidy_hole_cmd tactic.tidy_hole_cmd
 
 add_tactic_doc
-  { Name := "tidy", category := DocCategory.hole_cmd, declNames := [`tactic.tidy_hole_cmd], tags := ["search"] }
+  { Name := "tidy", category := DocCategory.hole_cmd, declNames := [`tactic.tidy_hole_cmd],
+    tags := ["search"] }
 
 end Tactic
 

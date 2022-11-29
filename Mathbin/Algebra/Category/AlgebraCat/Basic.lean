@@ -50,13 +50,15 @@ instance : ConcreteCategory.{v} (AlgebraCat.{v} R) where
 
 instance hasForgetToRing :
     HasForget₂ (AlgebraCat.{v} R)
-      RingCat.{v} where forget₂ := { obj := fun A => RingCat.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
+      RingCat.{v} where forget₂ :=
+    { obj := fun A => RingCat.of A, map := fun A₁ A₂ f => AlgHom.toRingHom f }
 #align Algebra.has_forget_to_Ring AlgebraCat.hasForgetToRing
 
 instance hasForgetToModule :
     HasForget₂ (AlgebraCat.{v} R)
       (ModuleCat.{v}
-        R) where forget₂ := { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
+        R) where forget₂ :=
+    { obj := fun M => ModuleCat.of R M, map := fun M₁ M₂ f => AlgHom.toLinearMap f }
 #align Algebra.has_forget_to_Module AlgebraCat.hasForgetToModule
 
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
@@ -66,14 +68,14 @@ def of (X : Type v) [Ring X] [Algebra R X] : AlgebraCat.{v} R :=
 #align Algebra.of AlgebraCat.of
 
 /-- Typecheck a `alg_hom` as a morphism in `Algebra R`. -/
-def ofHom {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y] [Algebra R Y] (f : X →ₐ[R] Y) :
-    of R X ⟶ of R Y :=
+def ofHom {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y] [Algebra R Y]
+    (f : X →ₐ[R] Y) : of R X ⟶ of R Y :=
   f
 #align Algebra.of_hom AlgebraCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y] [Algebra R Y]
-    (f : X →ₐ[R] Y) (x : X) : ofHom f x = f x :=
+theorem of_hom_apply {R : Type u} [CommRing R] {X Y : Type v} [Ring X] [Algebra R X] [Ring Y]
+    [Algebra R Y] (f : X →ₐ[R] Y) (x : X) : ofHom f x = f x :=
   rfl
 #align Algebra.of_hom_apply AlgebraCat.of_hom_apply
 
@@ -125,7 +127,8 @@ def free : Type u ⥤ AlgebraCat.{u} R where
     ext1
     simp only [FreeAlgebra.ι_comp_lift]
     ext1
-    simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_apply, types_comp_apply]
+    simp only [FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_apply,
+      types_comp_apply]
 #align Algebra.free AlgebraCat.free
 
 /-- The free/forget adjunction for `R`-algebras. -/
@@ -136,13 +139,13 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
       hom_equiv_naturality_left_symm' := by
         intros
         ext
-        simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp, Function.comp_apply,
-          types_comp_apply],
+        simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp,
+          Function.comp_apply, types_comp_apply],
       hom_equiv_naturality_right' := by
         intros
         ext
-        simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_apply, FreeAlgebra.lift_symm_apply,
-          types_comp_apply] }
+        simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_apply,
+          FreeAlgebra.lift_symm_apply, types_comp_apply] }
 #align Algebra.adj AlgebraCat.adj
 
 instance : IsRightAdjoint (forget (AlgebraCat.{u} R)) :=
@@ -156,16 +159,12 @@ variable {X₁ X₂ : Type u}
 
 /-- Build an isomorphism in the category `Algebra R` from a `alg_equiv` between `algebra`s. -/
 @[simps]
-def AlgEquiv.toAlgebraIso {g₁ : Ring X₁} {g₂ : Ring X₂} {m₁ : Algebra R X₁} {m₂ : Algebra R X₂} (e : X₁ ≃ₐ[R] X₂) :
-    AlgebraCat.of R X₁ ≅ AlgebraCat.of R X₂ where
+def AlgEquiv.toAlgebraIso {g₁ : Ring X₁} {g₂ : Ring X₂} {m₁ : Algebra R X₁} {m₂ : Algebra R X₂}
+    (e : X₁ ≃ₐ[R] X₂) : AlgebraCat.of R X₁ ≅ AlgebraCat.of R X₂ where
   hom := (e : X₁ →ₐ[R] X₂)
   inv := (e.symm : X₂ →ₐ[R] X₁)
-  hom_inv_id' := by
-    ext
-    exact e.left_inv x
-  inv_hom_id' := by
-    ext
-    exact e.right_inv x
+  hom_inv_id' := by ext; exact e.left_inv x
+  inv_hom_id' := by ext; exact e.right_inv x
 #align alg_equiv.to_Algebra_iso AlgEquiv.toAlgebraIso
 
 namespace CategoryTheory.Iso

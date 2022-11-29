@@ -48,7 +48,8 @@ with an `R`-algebra structure. -/
 class Galgebra where
   toFun : R →+ A 0
   map_one : to_fun 1 = GradedMonoid.GhasOne.one
-  map_mul : ∀ r s, GradedMonoid.mk _ (to_fun (r * s)) = ⟨_, GradedMonoid.GhasMul.mul (to_fun r) (to_fun s)⟩
+  map_mul :
+    ∀ r s, GradedMonoid.mk _ (to_fun (r * s)) = ⟨_, GradedMonoid.GhasMul.mul (to_fun r) (to_fun s)⟩
   commutes : ∀ r x, GradedMonoid.mk _ (to_fun r) * x = x * ⟨_, to_fun r⟩
   smul_def : ∀ (r) (x : GradedMonoid A), GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩ * x
 #align direct_sum.galgebra DirectSum.Galgebra
@@ -77,11 +78,13 @@ instance : Algebra R (⨁ i, A i) where
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
     apply AddMonoidHom.congr_fun _ x
     ext (i xi) : 2
-    dsimp only [AddMonoidHom.comp_apply, DistribMulAction.to_add_monoid_hom_apply, AddMonoidHom.mul_apply]
+    dsimp only [AddMonoidHom.comp_apply, DistribMulAction.to_add_monoid_hom_apply,
+      AddMonoidHom.mul_apply]
     rw [DirectSum.of_mul_of, ← of_smul]
     apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)
 
-theorem algebra_map_apply (r : R) : algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (Galgebra.toFun r) :=
+theorem algebra_map_apply (r : R) :
+    algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (Galgebra.toFun r) :=
   rfl
 #align direct_sum.algebra_map_apply DirectSum.algebra_map_apply
 
@@ -128,12 +131,13 @@ end DirectSum
 
 -/
 @[simps]
-instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A]
-    [Algebra R A] : DirectSum.Galgebra R fun i : ι => A where
+instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι] [CommSemiring R]
+    [Semiring A] [Algebra R A] : DirectSum.Galgebra R fun i : ι => A where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
   map_mul a b := Sigma.ext (zero_add _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)
-  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_add _).trans (add_zero _).symm) (heq_of_eq <| Algebra.commutes _ _)
+  commutes := fun r ⟨ai, a⟩ =>
+    Sigma.ext ((zero_add _).trans (add_zero _).symm) (heq_of_eq <| Algebra.commutes _ _)
   smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_add _).symm (heq_of_eq <| Algebra.smul_def _ _)
 #align algebra.direct_sum_galgebra Algebra.directSumGalgebra
 

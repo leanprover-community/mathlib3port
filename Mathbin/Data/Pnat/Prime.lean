@@ -94,13 +94,8 @@ theorem gcd_mul_lcm (n m : ℕ+) : gcd n m * lcm n m = n * m :=
 #align pnat.gcd_mul_lcm PNat.gcd_mul_lcm
 
 theorem eq_one_of_lt_two {n : ℕ+} : n < 2 → n = 1 := by
-  intro h
-  apply le_antisymm
-  swap
-  apply PNat.one_le
-  change n < 1 + 1 at h
-  rw [PNat.lt_add_one_iff] at h
-  apply h
+  intro h; apply le_antisymm; swap; apply PNat.one_le
+  change n < 1 + 1 at h; rw [PNat.lt_add_one_iff] at h; apply h
 #align pnat.eq_one_of_lt_two PNat.eq_one_of_lt_two
 
 section Prime
@@ -147,9 +142,7 @@ theorem Prime.not_dvd_one {p : ℕ+} : p.Prime → ¬p ∣ 1 := fun pp : p.Prime
 
 theorem exists_prime_and_dvd {n : ℕ+} (hn : n ≠ 1) : ∃ p : ℕ+, p.Prime ∧ p ∣ n := by
   obtain ⟨p, hp⟩ := Nat.exists_prime_and_dvd (mt coe_eq_one_iff.mp hn)
-  exists (⟨p, Nat.Prime.pos hp.left⟩ : ℕ+)
-  rw [dvd_iff]
-  apply hp
+  exists (⟨p, Nat.Prime.pos hp.left⟩ : ℕ+); rw [dvd_iff]; apply hp
 #align pnat.exists_prime_and_dvd PNat.exists_prime_and_dvd
 
 end Prime
@@ -202,29 +195,23 @@ theorem gcd_eq_right_iff_dvd {m n : ℕ+} : m ∣ n ↔ n.gcd m = m := by
   apply gcd_eq_left_iff_dvd
 #align pnat.gcd_eq_right_iff_dvd PNat.gcd_eq_right_iff_dvd
 
-theorem Coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (k * m).gcd n = m.gcd n := by
-  intro h
-  apply Eq
-  simp only [gcd_coe, mul_coe]
-  apply Nat.Coprime.gcd_mul_left_cancel
-  simpa
+theorem Coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (k * m).gcd n = m.gcd n :=
+  by
+  intro h; apply Eq; simp only [gcd_coe, mul_coe]
+  apply Nat.Coprime.gcd_mul_left_cancel; simpa
 #align pnat.coprime.gcd_mul_left_cancel PNat.Coprime.gcd_mul_left_cancel
 
-theorem Coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (m * k).gcd n = m.gcd n := by
-  rw [mul_comm]
-  apply coprime.gcd_mul_left_cancel
+theorem Coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (m * k).gcd n = m.gcd n :=
+  by rw [mul_comm]; apply coprime.gcd_mul_left_cancel
 #align pnat.coprime.gcd_mul_right_cancel PNat.Coprime.gcd_mul_right_cancel
 
-theorem Coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.Coprime m → m.gcd (k * n) = m.gcd n := by
-  intro h
-  iterate 2 
-  rw [gcd_comm]
-  symm
+theorem Coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} :
+    k.Coprime m → m.gcd (k * n) = m.gcd n := by intro h; iterate 2 rw [gcd_comm]; symm;
   apply coprime.gcd_mul_left_cancel _ h
 #align pnat.coprime.gcd_mul_left_cancel_right PNat.Coprime.gcd_mul_left_cancel_right
 
-theorem Coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} : k.Coprime m → m.gcd (n * k) = m.gcd n := by
-  rw [mul_comm]
+theorem Coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} :
+    k.Coprime m → m.gcd (n * k) = m.gcd n := by rw [mul_comm];
   apply coprime.gcd_mul_left_cancel_right
 #align pnat.coprime.gcd_mul_right_cancel_right PNat.Coprime.gcd_mul_right_cancel_right
 
@@ -263,38 +250,31 @@ theorem Coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.Coprime n → m.
   apply Nat.Coprime.coprime_dvd_left
 #align pnat.coprime.coprime_dvd_left PNat.Coprime.coprime_dvd_left
 
-theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (a * b).gcd m :=
-  by
+theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
+    a = (a * b).gcd m := by
   rw [gcd_eq_left_iff_dvd] at am
-  conv_lhs => rw [← am]
-  symm
+  conv_lhs => rw [← am]; symm
   apply coprime.gcd_mul_right_cancel a
   apply coprime.coprime_dvd_left bn cop.symm
 #align pnat.coprime.factor_eq_gcd_left PNat.Coprime.factor_eq_gcd_left
 
-theorem Coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) : a = (b * a).gcd m :=
-  by
-  rw [mul_comm]
-  apply coprime.factor_eq_gcd_left cop am bn
+theorem Coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
+    a = (b * a).gcd m := by rw [mul_comm]; apply coprime.factor_eq_gcd_left cop am bn
 #align pnat.coprime.factor_eq_gcd_right PNat.Coprime.factor_eq_gcd_right
 
-theorem Coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
-    a = m.gcd (a * b) := by
-  rw [gcd_comm]
-  apply coprime.factor_eq_gcd_left cop am bn
+theorem Coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m)
+    (bn : b ∣ n) : a = m.gcd (a * b) := by rw [gcd_comm]; apply coprime.factor_eq_gcd_left cop am bn
 #align pnat.coprime.factor_eq_gcd_left_right PNat.Coprime.factor_eq_gcd_left_right
 
-theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
-    a = m.gcd (b * a) := by
-  rw [gcd_comm]
+theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m)
+    (bn : b ∣ n) : a = m.gcd (b * a) := by rw [gcd_comm];
   apply coprime.factor_eq_gcd_right cop am bn
 #align pnat.coprime.factor_eq_gcd_right_right PNat.Coprime.factor_eq_gcd_right_right
 
-theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n := by
-  rw [← coprime_coe] at h
-  apply Eq
-  simp only [gcd_coe, mul_coe]
-  apply Nat.Coprime.gcd_mul k h
+theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n :=
+  by
+  rw [← coprime_coe] at h; apply Eq
+  simp only [gcd_coe, mul_coe]; apply Nat.Coprime.gcd_mul k h
 #align pnat.coprime.gcd_mul PNat.Coprime.gcd_mul
 
 theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m := by
@@ -306,10 +286,7 @@ theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m := by
 #align pnat.gcd_eq_left PNat.gcd_eq_left
 
 theorem Coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.Coprime n) : (m ^ k).Coprime (n ^ l) := by
-  rw [← coprime_coe] at *
-  simp only [pow_coe]
-  apply Nat.Coprime.pow
-  apply h
+  rw [← coprime_coe] at *; simp only [pow_coe]; apply Nat.Coprime.pow; apply h
 #align pnat.coprime.pow PNat.Coprime.pow
 
 end Coprime

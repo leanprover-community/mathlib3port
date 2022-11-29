@@ -47,20 +47,23 @@ def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
   Matrix.scalar n (x : R[X]) - (c : R →+* R[X]).mapMatrix M
 #align charmatrix charmatrix
 
-theorem charmatrix_apply (M : Matrix n n R) (i j : n) : charmatrix M i j = X * (1 : Matrix n n R[X]) i j - c (M i j) :=
+theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
+    charmatrix M i j = X * (1 : Matrix n n R[X]) i j - c (M i j) :=
   rfl
 #align charmatrix_apply charmatrix_apply
 
 @[simp]
-theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) : charmatrix M i i = (x : R[X]) - c (M i i) := by
-  simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.map_matrix_apply, map_apply,
-    Dmatrix.sub_apply]
+theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) :
+    charmatrix M i i = (x : R[X]) - c (M i i) := by
+  simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.map_matrix_apply,
+    map_apply, Dmatrix.sub_apply]
 #align charmatrix_apply_eq charmatrix_apply_eq
 
 @[simp]
-theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmatrix M i j = -c (M i j) := by
-  simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.map_matrix_apply, map_apply,
-    Dmatrix.sub_apply]
+theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
+    charmatrix M i j = -c (M i j) := by
+  simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.map_matrix_apply,
+    map_apply, Dmatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
 
 theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
@@ -90,8 +93,8 @@ def Matrix.charpoly (M : Matrix n n R) : R[X] :=
   (charmatrix M).det
 #align matrix.charpoly Matrix.charpoly
 
-theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
-    (reindex e e M).charpoly = M.charpoly := by
+theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m)
+    (M : Matrix n n R) : (reindex e e M).charpoly = M.charpoly := by
   unfold Matrix.charpoly
   rw [charmatrix_reindex, Matrix.det_reindex_self]
 #align matrix.charpoly_reindex Matrix.charpoly_reindex
@@ -107,7 +110,8 @@ See `linear_map.aeval_self_charpoly` for the equivalent statement about endomorp
 theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by
   -- We begin with the fact $χ_M(t) I = adjugate (t I - M) * (t I - M)$,
   -- as an identity in `matrix n n R[X]`.
-  have h : M.charpoly • (1 : Matrix n n R[X]) = adjugate (charmatrix M) * charmatrix M := (adjugate_mul _).symm
+  have h : M.charpoly • (1 : Matrix n n R[X]) = adjugate (charmatrix M) * charmatrix M :=
+    (adjugate_mul _).symm
   -- Using the algebra isomorphism `matrix n n R[X] ≃ₐ[R] polynomial (matrix n n R)`,
   -- we have the same identity in `polynomial (matrix n n R)`.
   apply_fun matPolyEquiv  at h

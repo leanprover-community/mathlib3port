@@ -108,9 +108,11 @@ theorem to_End_def [Monoid α] (x : α) : toEnd α x = x :=
 See <https://stacks.math.columbia.edu/tag/001F> --
 although we do not characterize when the functor is full or faithful.
 -/
-def mapHom (α : Type u) (β : Type v) [Monoid α] [Monoid β] : (α →* β) ≃ SingleObj α ⥤ SingleObj β where
+def mapHom (α : Type u) (β : Type v) [Monoid α] [Monoid β] :
+    (α →* β) ≃ SingleObj α ⥤ SingleObj β where
   toFun f :=
-    { obj := id, map := fun _ _ => ⇑f, map_id' := fun _ => f.map_one, map_comp' := fun _ _ _ x y => f.map_mul y x }
+    { obj := id, map := fun _ _ => ⇑f, map_id' := fun _ => f.map_one,
+      map_comp' := fun _ _ _ x y => f.map_mul y x }
   invFun f :=
     { toFun := @Functor.map _ _ _ _ f (SingleObj.star α) (SingleObj.star α), map_one' := f.map_id _,
       map_mul' := fun x y => f.map_comp y x }
@@ -122,8 +124,8 @@ theorem map_hom_id (α : Type u) [Monoid α] : mapHom α α (MonoidHom.id α) = 
   rfl
 #align category_theory.single_obj.map_hom_id CategoryTheory.SingleObj.map_hom_id
 
-theorem map_hom_comp {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w} [Monoid γ] (g : β →* γ) :
-    mapHom α γ (g.comp f) = mapHom α β f ⋙ mapHom β γ g :=
+theorem map_hom_comp {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w}
+    [Monoid γ] (g : β →* γ) : mapHom α γ (g.comp f) = mapHom α β f ⋙ mapHom β γ g :=
   rfl
 #align category_theory.single_obj.map_hom_comp CategoryTheory.SingleObj.map_hom_comp
 
@@ -152,7 +154,8 @@ namespace MonoidHom
 /-- Reinterpret a monoid homomorphism `f : α → β` as a functor `(single_obj α) ⥤ (single_obj β)`.
 See also `category_theory.single_obj.map_hom` for an equivalence between these types. -/
 @[reducible]
-def toFunctor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) : SingleObj α ⥤ SingleObj β :=
+def toFunctor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) :
+    SingleObj α ⥤ SingleObj β :=
   SingleObj.mapHom α β f
 #align monoid_hom.to_functor MonoidHom.toFunctor
 
@@ -162,8 +165,8 @@ theorem id_to_functor (α : Type u) [Monoid α] : (id α).toFunctor = 𝟭 _ :=
 #align monoid_hom.id_to_functor MonoidHom.id_to_functor
 
 @[simp]
-theorem comp_to_functor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w} [Monoid γ]
-    (g : β →* γ) : (g.comp f).toFunctor = f.toFunctor ⋙ g.toFunctor :=
+theorem comp_to_functor {α : Type u} {β : Type v} [Monoid α] [Monoid β] (f : α →* β) {γ : Type w}
+    [Monoid γ] (g : β →* γ) : (g.comp f).toFunctor = f.toFunctor ⋙ g.toFunctor :=
   rfl
 #align monoid_hom.comp_to_functor MonoidHom.comp_to_functor
 

@@ -22,7 +22,8 @@ variable (R : Type u) {M : Type v} [Semiring R] [AddCommMonoid M] [Module R M]
 
 /-- `mul_opposite.distrib_mul_action` extends to a `module` -/
 instance : Module R (MulOpposite M) :=
-  { MulOpposite.distribMulAction M R with add_smul := fun r₁ r₂ x => unop_injective <| add_smul r₁ r₂ (unop x),
+  { MulOpposite.distribMulAction M R with
+    add_smul := fun r₁ r₂ x => unop_injective <| add_smul r₁ r₂ (unop x),
     zero_smul := fun x => unop_injective <| zero_smul _ (unop x) }
 
 /-- The function `op` is a linear equivalence. -/
@@ -46,9 +47,11 @@ theorem coe_op_linear_equiv_to_linear_map : ((opLinearEquiv R).toLinearMap : M �
 #align mul_opposite.coe_op_linear_equiv_to_linear_map MulOpposite.coe_op_linear_equiv_to_linear_map
 
 @[simp]
-theorem coe_op_linear_equiv_symm_to_linear_map : ((opLinearEquiv R).symm.toLinearMap : Mᵐᵒᵖ → M) = unop :=
+theorem coe_op_linear_equiv_symm_to_linear_map :
+    ((opLinearEquiv R).symm.toLinearMap : Mᵐᵒᵖ → M) = unop :=
   rfl
-#align mul_opposite.coe_op_linear_equiv_symm_to_linear_map MulOpposite.coe_op_linear_equiv_symm_to_linear_map
+#align
+  mul_opposite.coe_op_linear_equiv_symm_to_linear_map MulOpposite.coe_op_linear_equiv_symm_to_linear_map
 
 @[simp]
 theorem op_linear_equiv_to_add_equiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = op_add_equiv :=
@@ -56,7 +59,8 @@ theorem op_linear_equiv_to_add_equiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ
 #align mul_opposite.op_linear_equiv_to_add_equiv MulOpposite.op_linear_equiv_to_add_equiv
 
 @[simp]
-theorem op_linear_equiv_symm_to_add_equiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).symm.toAddEquiv = opAddEquiv.symm :=
+theorem op_linear_equiv_symm_to_add_equiv :
+    (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).symm.toAddEquiv = opAddEquiv.symm :=
   rfl
 #align mul_opposite.op_linear_equiv_symm_to_add_equiv MulOpposite.op_linear_equiv_symm_to_add_equiv
 

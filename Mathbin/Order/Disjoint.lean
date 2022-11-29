@@ -81,7 +81,8 @@ theorem disjoint_self : Disjoint a a ↔ a = ⊥ :=
 `disjoint.eq_bot` -/
 alias disjoint_self ↔ Disjoint.eq_bot_of_self _
 
-theorem Disjoint.ne (ha : a ≠ ⊥) (hab : Disjoint a b) : a ≠ b := fun h => ha <| disjoint_self.1 <| by rwa [← h] at hab
+theorem Disjoint.ne (ha : a ≠ ⊥) (hab : Disjoint a b) : a ≠ b := fun h =>
+  ha <| disjoint_self.1 <| by rwa [← h] at hab
 #align disjoint.ne Disjoint.ne
 
 theorem Disjoint.eq_bot_of_le (hab : Disjoint a b) (h : a ≤ b) : a = ⊥ :=
@@ -134,7 +135,8 @@ theorem disjoint_assoc : Disjoint (a ⊓ b) c ↔ Disjoint a (b ⊓ c) := by
   rw [disjoint_iff_inf_le, disjoint_iff_inf_le, inf_assoc]
 #align disjoint_assoc disjoint_assoc
 
-theorem disjoint_left_comm : Disjoint a (b ⊓ c) ↔ Disjoint b (a ⊓ c) := by simp_rw [disjoint_iff_inf_le, inf_left_comm]
+theorem disjoint_left_comm : Disjoint a (b ⊓ c) ↔ Disjoint b (a ⊓ c) := by
+  simp_rw [disjoint_iff_inf_le, inf_left_comm]
 #align disjoint_left_comm disjoint_left_comm
 
 theorem disjoint_right_comm : Disjoint (a ⊓ b) c ↔ Disjoint (a ⊓ c) b := by
@@ -241,8 +243,8 @@ theorem codisjoint_top_left : Codisjoint ⊤ a := fun x htop ha => htop
 theorem codisjoint_top_right : Codisjoint a ⊤ := fun x ha htop => htop
 #align codisjoint_top_right codisjoint_top_right
 
-theorem Codisjoint.mono (h₁ : a ≤ b) (h₂ : c ≤ d) : Codisjoint a c → Codisjoint b d := fun h x ha hc =>
-  h (h₁.trans ha) (h₂.trans hc)
+theorem Codisjoint.mono (h₁ : a ≤ b) (h₂ : c ≤ d) : Codisjoint a c → Codisjoint b d :=
+  fun h x ha hc => h (h₁.trans ha) (h₂.trans hc)
 #align codisjoint.mono Codisjoint.mono
 
 theorem Codisjoint.mono_left (h : a ≤ b) : Codisjoint a c → Codisjoint b c :=
@@ -344,11 +346,13 @@ theorem Codisjoint.sup_right' (h : Codisjoint a b) : Codisjoint a (c ⊔ b) :=
 
 variable {c}
 
-theorem Codisjoint.of_codisjoint_sup_of_le (h : Codisjoint (a ⊔ b) c) (hle : c ≤ a) : Codisjoint a b :=
+theorem Codisjoint.of_codisjoint_sup_of_le (h : Codisjoint (a ⊔ b) c) (hle : c ≤ a) :
+    Codisjoint a b :=
   @Disjoint.of_disjoint_inf_of_le αᵒᵈ _ _ _ _ _ h hle
 #align codisjoint.of_codisjoint_sup_of_le Codisjoint.of_codisjoint_sup_of_le
 
-theorem Codisjoint.of_codisjoint_sup_of_le' (h : Codisjoint (a ⊔ b) c) (hle : c ≤ b) : Codisjoint a b :=
+theorem Codisjoint.of_codisjoint_sup_of_le' (h : Codisjoint (a ⊔ b) c) (hle : c ≤ b) :
+    Codisjoint a b :=
   @Disjoint.of_disjoint_inf_of_le' αᵒᵈ _ _ _ _ _ h hle
 #align codisjoint.of_codisjoint_sup_of_le' Codisjoint.of_codisjoint_sup_of_le'
 
@@ -390,11 +394,13 @@ end Codisjoint
 
 open OrderDual
 
-theorem Disjoint.dual [SemilatticeInf α] [OrderBot α] {a b : α} : Disjoint a b → Codisjoint (toDual a) (toDual b) :=
+theorem Disjoint.dual [SemilatticeInf α] [OrderBot α] {a b : α} :
+    Disjoint a b → Codisjoint (toDual a) (toDual b) :=
   id
 #align disjoint.dual Disjoint.dual
 
-theorem Codisjoint.dual [SemilatticeSup α] [OrderTop α] {a b : α} : Codisjoint a b → Disjoint (toDual a) (toDual b) :=
+theorem Codisjoint.dual [SemilatticeSup α] [OrderTop α] {a b : α} :
+    Codisjoint a b → Disjoint (toDual a) (toDual b) :=
   id
 #align codisjoint.dual Codisjoint.dual
 
@@ -442,7 +448,8 @@ structure IsCompl [PartialOrder α] [BoundedOrder α] (x y : α) : Prop where
   Codisjoint : Codisjoint x y
 #align is_compl IsCompl
 
-theorem is_compl_iff [PartialOrder α] [BoundedOrder α] {a b : α} : IsCompl a b ↔ Disjoint a b ∧ Codisjoint a b :=
+theorem is_compl_iff [PartialOrder α] [BoundedOrder α] {a b : α} :
+    IsCompl a b ↔ Disjoint a b ∧ Codisjoint a b :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 #align is_compl_iff is_compl_iff
 
@@ -551,10 +558,12 @@ theorem left_unique (hxz : IsCompl x z) (hyz : IsCompl y z) : x = y :=
 
 theorem sup_inf {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') : IsCompl (x ⊔ x') (y ⊓ y') :=
   of_eq
-    (by rw [inf_sup_right, ← inf_assoc, h.inf_eq_bot, bot_inf_eq, bot_sup_eq, inf_left_comm, h'.inf_eq_bot, inf_bot_eq])
     (by
-      rw [sup_inf_left, @sup_comm _ _ x, sup_assoc, h.sup_eq_top, sup_top_eq, top_inf_eq, sup_assoc, sup_left_comm,
-        h'.sup_eq_top, sup_top_eq])
+      rw [inf_sup_right, ← inf_assoc, h.inf_eq_bot, bot_inf_eq, bot_sup_eq, inf_left_comm,
+        h'.inf_eq_bot, inf_bot_eq])
+    (by
+      rw [sup_inf_left, @sup_comm _ _ x, sup_assoc, h.sup_eq_top, sup_top_eq, top_inf_eq, sup_assoc,
+        sup_left_comm, h'.sup_eq_top, sup_top_eq])
 #align is_compl.sup_inf IsCompl.sup_inf
 
 theorem inf_sup {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') : IsCompl (x ⊓ x') (y ⊔ y') :=
@@ -571,7 +580,8 @@ protected theorem disjoint_iff [OrderBot α] [OrderBot β] {x y : α × β} :
     Disjoint x y ↔ Disjoint x.1 y.1 ∧ Disjoint x.2 y.2 := by
   constructor
   · intro h
-    refine' ⟨fun a hx hy => (@h (a, ⊥) ⟨hx, _⟩ ⟨hy, _⟩).1, fun b hx hy => (@h (⊥, b) ⟨_, hx⟩ ⟨_, hy⟩).2⟩
+    refine'
+      ⟨fun a hx hy => (@h (a, ⊥) ⟨hx, _⟩ ⟨hy, _⟩).1, fun b hx hy => (@h (⊥, b) ⟨_, hx⟩ ⟨_, hy⟩).2⟩
     all_goals exact bot_le
     
   · rintro ⟨ha, hb⟩ z hza hzb

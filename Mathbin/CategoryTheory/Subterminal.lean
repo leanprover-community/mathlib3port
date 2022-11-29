@@ -49,39 +49,47 @@ theorem IsSubterminal.def : IsSubterminal A ↔ ∀ ⦃Z : C⦄ (f g : Z ⟶ A),
 /-- If `A` is subterminal, the unique morphism from it to a terminal object is a monomorphism.
 The converse of `is_subterminal_of_mono_is_terminal_from`.
 -/
-theorem IsSubterminal.mono_is_terminal_from (hA : IsSubterminal A) {T : C} (hT : IsTerminal T) : Mono (hT.from A) :=
+theorem IsSubterminal.mono_is_terminal_from (hA : IsSubterminal A) {T : C} (hT : IsTerminal T) :
+    Mono (hT.from A) :=
   { right_cancellation := fun Z g h _ => hA _ _ }
-#align category_theory.is_subterminal.mono_is_terminal_from CategoryTheory.IsSubterminal.mono_is_terminal_from
+#align
+  category_theory.is_subterminal.mono_is_terminal_from CategoryTheory.IsSubterminal.mono_is_terminal_from
 
 /-- If `A` is subterminal, the unique morphism from it to the terminal object is a monomorphism.
 The converse of `is_subterminal_of_mono_terminal_from`.
 -/
-theorem IsSubterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) : Mono (terminal.from A) :=
+theorem IsSubterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) :
+    Mono (terminal.from A) :=
   hA.mono_is_terminal_from terminalIsTerminal
-#align category_theory.is_subterminal.mono_terminal_from CategoryTheory.IsSubterminal.mono_terminal_from
+#align
+  category_theory.is_subterminal.mono_terminal_from CategoryTheory.IsSubterminal.mono_terminal_from
 
 /-- If the unique morphism from `A` to a terminal object is a monomorphism, `A` is subterminal.
 The converse of `is_subterminal.mono_is_terminal_from`.
 -/
-theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : IsTerminal T) [Mono (hT.from A)] : IsSubterminal A :=
-  fun Z f g => by
+theorem is_subterminal_of_mono_is_terminal_from {T : C} (hT : IsTerminal T) [Mono (hT.from A)] :
+    IsSubterminal A := fun Z f g => by
   rw [← cancel_mono (hT.from A)]
   apply hT.hom_ext
-#align category_theory.is_subterminal_of_mono_is_terminal_from CategoryTheory.is_subterminal_of_mono_is_terminal_from
+#align
+  category_theory.is_subterminal_of_mono_is_terminal_from CategoryTheory.is_subterminal_of_mono_is_terminal_from
 
 /-- If the unique morphism from `A` to the terminal object is a monomorphism, `A` is subterminal.
 The converse of `is_subterminal.mono_terminal_from`.
 -/
-theorem is_subterminal_of_mono_terminal_from [HasTerminal C] [Mono (terminal.from A)] : IsSubterminal A := fun Z f g =>
-  by
+theorem is_subterminal_of_mono_terminal_from [HasTerminal C] [Mono (terminal.from A)] :
+    IsSubterminal A := fun Z f g => by
   rw [← cancel_mono (terminal.from A)]
   apply Subsingleton.elim
-#align category_theory.is_subterminal_of_mono_terminal_from CategoryTheory.is_subterminal_of_mono_terminal_from
+#align
+  category_theory.is_subterminal_of_mono_terminal_from CategoryTheory.is_subterminal_of_mono_terminal_from
 
-theorem is_subterminal_of_is_terminal {T : C} (hT : IsTerminal T) : IsSubterminal T := fun Z f g => hT.hom_ext _ _
+theorem is_subterminal_of_is_terminal {T : C} (hT : IsTerminal T) : IsSubterminal T := fun Z f g =>
+  hT.hom_ext _ _
 #align category_theory.is_subterminal_of_is_terminal CategoryTheory.is_subterminal_of_is_terminal
 
-theorem is_subterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fun Z f g => Subsingleton.elim _ _
+theorem is_subterminal_of_terminal [HasTerminal C] : IsSubterminal (⊤_ C) := fun Z f g =>
+  Subsingleton.elim _ _
 #align category_theory.is_subterminal_of_terminal CategoryTheory.is_subterminal_of_terminal
 
 /-- If `A` is subterminal, its diagonal morphism is an isomorphism.
@@ -97,7 +105,8 @@ theorem IsSubterminal.is_iso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] 
 /-- If the diagonal morphism of `A` is an isomorphism, then it is subterminal.
 The converse of `is_subterminal.is_iso_diag`.
 -/
-theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A := fun Z f g => by
+theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A :=
+  fun Z f g => by
   have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by simp [← cancel_epi (diag A)]
   rw [← prod.lift_fst f g, this, prod.lift_snd]
 #align category_theory.is_subterminal_of_is_iso_diag CategoryTheory.is_subterminal_of_is_iso_diag
@@ -133,7 +142,8 @@ instance subterminals_thin (X Y : Subterminals C) : Subsingleton (X ⟶ Y) :=
   ⟨fun f g => Y.2 f g⟩
 #align category_theory.subterminals_thin CategoryTheory.subterminals_thin
 
-/-- The category of subterminal objects is equivalent to the category of monomorphisms to the terminal
+/--
+The category of subterminal objects is equivalent to the category of monomorphisms to the terminal
 object (which is in turn equivalent to the subobjects of the terminal object).
 -/
 @[simps]
@@ -148,21 +158,26 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
           apply Subsingleton.elim⟩,
       map := fun X Y f => f.1 }
   unitIso := { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
-  counitIso := { Hom := { app := fun X => Over.homMk (𝟙 _) }, inv := { app := fun X => Over.homMk (𝟙 _) } }
-#align category_theory.subterminals_equiv_mono_over_terminal CategoryTheory.subterminalsEquivMonoOverTerminal
+  counitIso :=
+    { Hom := { app := fun X => Over.homMk (𝟙 _) }, inv := { app := fun X => Over.homMk (𝟙 _) } }
+#align
+  category_theory.subterminals_equiv_mono_over_terminal CategoryTheory.subterminalsEquivMonoOverTerminal
 
 @[simp]
 theorem subterminals_to_mono_over_terminal_comp_forget [HasTerminal C] :
-    (subterminalsEquivMonoOverTerminal C).Functor ⋙ MonoOver.forget _ ⋙ Over.forget _ = subterminalInclusion C :=
+    (subterminalsEquivMonoOverTerminal C).Functor ⋙ MonoOver.forget _ ⋙ Over.forget _ =
+      subterminalInclusion C :=
   rfl
 #align
   category_theory.subterminals_to_mono_over_terminal_comp_forget CategoryTheory.subterminals_to_mono_over_terminal_comp_forget
 
 @[simp]
 theorem mono_over_terminal_to_subterminals_comp [HasTerminal C] :
-    (subterminalsEquivMonoOverTerminal C).inverse ⋙ subterminalInclusion C = MonoOver.forget _ ⋙ Over.forget _ :=
+    (subterminalsEquivMonoOverTerminal C).inverse ⋙ subterminalInclusion C =
+      MonoOver.forget _ ⋙ Over.forget _ :=
   rfl
-#align category_theory.mono_over_terminal_to_subterminals_comp CategoryTheory.mono_over_terminal_to_subterminals_comp
+#align
+  category_theory.mono_over_terminal_to_subterminals_comp CategoryTheory.mono_over_terminal_to_subterminals_comp
 
 end CategoryTheory
 

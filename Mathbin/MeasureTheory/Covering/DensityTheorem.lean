@@ -54,28 +54,33 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ := by
   have A :
     ∀ x : α,
       ∃ᶠ r in 𝓝[>] (0 : ℝ),
-        μ (closed_ball x (3 * r)) ≤ scaling_constant_of μ (max (4 * K + 3) 3) * μ (closed_ball x r) :=
+        μ (closed_ball x (3 * r)) ≤
+          scaling_constant_of μ (max (4 * K + 3) 3) * μ (closed_ball x r) :=
     by
     intro x
     apply frequently_iff.2 fun U hU => _
     obtain ⟨ε, εpos, hε⟩ := mem_nhds_within_Ioi_iff_exists_Ioc_subset.1 hU
     refine' ⟨min ε R, hε ⟨lt_min εpos Rpos, min_le_left _ _⟩, _⟩
-    exact measure_mul_le_scaling_constant_of_mul μ ⟨zero_lt_three, le_max_right _ _⟩ (min_le_right _ _)
-  exact (Vitali.vitaliFamily μ (scaling_constant_of μ (max (4 * K + 3) 3)) A).enlarge (R / 4) (by linarith)
+    exact
+      measure_mul_le_scaling_constant_of_mul μ ⟨zero_lt_three, le_max_right _ _⟩ (min_le_right _ _)
+  exact
+    (Vitali.vitaliFamily μ (scaling_constant_of μ (max (4 * K + 3) 3)) A).enlarge (R / 4)
+      (by linarith)
 #align is_doubling_measure.vitali_family IsDoublingMeasure.vitaliFamily
 
 /-- In the Vitali family `is_doubling_measure.vitali_family K`, the sets based at `x` contain all
 balls `closed_ball y r` when `dist x y ≤ K * r`. -/
-theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ} (h : dist x y ≤ K * r) (rpos : 0 < r) :
-    closedBall y r ∈ (vitaliFamily μ K).setsAt x := by
+theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ}
+    (h : dist x y ≤ K * r) (rpos : 0 < r) : closedBall y r ∈ (vitaliFamily μ K).setsAt x := by
   let R := scaling_scale_of μ (max (4 * K + 3) 3)
-  simp only [VitaliFamily, VitaliFamily.enlarge, Vitali.vitaliFamily, mem_union, mem_set_of_eq, is_closed_ball,
-    true_and_iff, (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball, measurableSetClosedBall]
+  simp only [VitaliFamily, VitaliFamily.enlarge, Vitali.vitaliFamily, mem_union, mem_set_of_eq,
+    is_closed_ball, true_and_iff, (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball,
+    measurableSetClosedBall]
   /- The measure is doubling on scales smaller than `R`. Therefore, we treat differently small
     and large balls. For large balls, this follows directly from the enlargement we used in the
     definition. -/
   by_cases H : closed_ball y r ⊆ closed_ball x (R / 4)
-  swap
+  swap;
   · exact Or.inr H
     
   left
@@ -96,7 +101,9 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
         apply closed_ball_subset_closed_ball
         exact mul_le_mul_of_nonneg_right (le_max_left _ _) rpos.le
       apply (measure_mono (I1.trans I2)).trans
-      exact measure_mul_le_scaling_constant_of_mul _ ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩ hr
+      exact
+        measure_mul_le_scaling_constant_of_mul _ ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩
+          hr
       
     
   · refine' ⟨R / 4, H, _⟩
@@ -112,8 +119,8 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
 #align
   is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closed_ball_mem_vitali_family_of_dist_le_mul
 
-theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ)
-    (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
+theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)
+    (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
     Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) := by
   refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
   · filter_upwards [xmem, δlim self_mem_nhds_within] with j hj h'j
@@ -135,17 +142,20 @@ theorem tendsto_closed_ball_filter_at {K : ℝ} {x : α} {ι : Type _} {l : Filt
       
     apply (((metric.tendsto_nhds.mp δlim _ (div_pos hε hK)).And δpos).And xmem).mono
     rintro j ⟨⟨hjε, hj₀ : 0 < δ j⟩, hx⟩ y hy
-    replace hjε : (K + 1) * δ j < ε := by simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
+    replace hjε : (K + 1) * δ j < ε := by
+      simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
     simp only [mem_closed_ball] at hx hy⊢
     linarith [dist_triangle_right y x (w j)]
     
-#align is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
+#align
+  is_doubling_measure.tendsto_closed_ball_filter_at IsDoublingMeasure.tendsto_closed_ball_filter_at
 
 end
 
 section Applications
 
-variable [SigmaCompactSpace α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {E : Type _} [NormedAddCommGroup E]
+variable [SigmaCompactSpace α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {E : Type _}
+  [NormedAddCommGroup E]
 
 /-- A version of *Lebesgue's density theorem* for a sequence of closed balls whose centers are
 not required to be fixed.
@@ -159,7 +169,8 @@ theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
       S] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
-#align is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
+#align
+  is_doubling_measure.ae_tendsto_measure_inter_div IsDoublingMeasure.ae_tendsto_measure_inter_div
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/
@@ -175,7 +186,8 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : �
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
 centers are not required to be fixed. -/
-theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} (hf : Integrable f μ) (K : ℝ) :
+theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} (hf : Integrable f μ)
+    (K : ℝ) :
     ∀ᵐ x ∂μ,
       ∀ {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0))
         (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),

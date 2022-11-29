@@ -21,8 +21,10 @@ open Filter TopologicalSpace
 variable {α β γ : Type _} [LinearOrder α] [TopologicalSpace γ] {a b c : α} {h : a ≤ b}
 
 theorem Filter.Tendsto.Icc_extend (f : γ → icc a b → β) {z : γ} {l : Filter α} {l' : Filter β}
-    (hf : Tendsto (↿f) (𝓝 z ×ᶠ l.map (projIcc a b h)) l') : Tendsto (↿(iccExtend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
-  show Tendsto (↿f ∘ Prod.map id (projIcc a b h)) (𝓝 z ×ᶠ l) l' from hf.comp <| tendsto_id.prod_map tendsto_map
+    (hf : Tendsto (↿f) (𝓝 z ×ᶠ l.map (projIcc a b h)) l') :
+    Tendsto (↿(iccExtend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
+  show Tendsto (↿f ∘ Prod.map id (projIcc a b h)) (𝓝 z ×ᶠ l) l' from
+    hf.comp <| tendsto_id.prod_map tendsto_map
 #align filter.tendsto.Icc_extend Filter.Tendsto.Icc_extend
 
 variable [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
@@ -47,8 +49,8 @@ theorem continuous_Icc_extend_iff {f : icc a b → β} : Continuous (iccExtend h
 #align continuous_Icc_extend_iff continuous_Icc_extend_iff
 
 /-- See Note [continuity lemma statement]. -/
-theorem Continuous.Icc_extend {f : γ → icc a b → β} {g : γ → α} (hf : Continuous ↿f) (hg : Continuous g) :
-    Continuous fun a => iccExtend h (f a) (g a) :=
+theorem Continuous.Icc_extend {f : γ → icc a b → β} {g : γ → α} (hf : Continuous ↿f)
+    (hg : Continuous g) : Continuous fun a => iccExtend h (f a) (g a) :=
   hf.comp <| continuous_id.prod_mk <| continuous_proj_Icc.comp hg
 #align continuous.Icc_extend Continuous.Icc_extend
 

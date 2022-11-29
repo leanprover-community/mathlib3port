@@ -69,7 +69,8 @@ open LinearMap Finsupp
 /-- An R-module is projective if it is a direct summand of a free module, or equivalently
   if maps from the module lift along surjections. There are several other equivalent
   definitions. -/
-class Module.Projective (R : Type _) [Semiring R] (P : Type _) [AddCommMonoid P] [Module R P] : Prop where
+class Module.Projective (R : Type _) [Semiring R] (P : Type _) [AddCommMonoid P] [Module R P] :
+  Prop where
   out : ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s
 #align module.projective Module.Projective
 
@@ -77,20 +78,21 @@ namespace Module
 
 section Semiring
 
-variable {R : Type _} [Semiring R] {P : Type _} [AddCommMonoid P] [Module R P] {M : Type _} [AddCommMonoid M]
-  [Module R M] {N : Type _} [AddCommMonoid N] [Module R N]
+variable {R : Type _} [Semiring R] {P : Type _} [AddCommMonoid P] [Module R P] {M : Type _}
+  [AddCommMonoid M] [Module R M] {N : Type _} [AddCommMonoid N] [Module R N]
 
-theorem projective_def : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
+theorem projective_def :
+    Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align module.projective_def Module.projective_def
 
-theorem projective_def' : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Finsupp.total P P R id ∘ₗ s = id := by
-  simp_rw [projective_def, FunLike.ext_iff, Function.LeftInverse, coe_comp, id_coe, id.def]
+theorem projective_def' : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Finsupp.total P P R id ∘ₗ s = id :=
+  by simp_rw [projective_def, FunLike.ext_iff, Function.LeftInverse, coe_comp, id_coe, id.def]
 #align module.projective_def' Module.projective_def'
 
 /-- A projective R-module has the property that maps from it lift along surjections. -/
-theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N) (hf : Function.Surjective f) :
-    ∃ h : P →ₗ[R] M, f.comp h = g := by
+theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N)
+    (hf : Function.Surjective f) : ∃ h : P →ₗ[R] M, f.comp h = g := by
   /-
     Here's the first step of the proof.
     Recall that `X →₀ R` is Lean's way of talking about the free `R`-module
@@ -118,8 +120,9 @@ instance [hP : Projective R P] [hQ : Projective R Q] : Projective R (P × Q) := 
   cases' hQ.out with sQ hsQ
   use coprod (lmap_domain R R (inl R P Q)) (lmap_domain R R (inr R P Q)) ∘ₗ sP.prod_map sQ
   ext <;>
-    simp only [coe_inl, coe_inr, coe_comp, Function.comp_apply, prod_map_apply, map_zero, coprod_apply,
-      lmap_domain_apply, map_domain_zero, add_zero, zero_add, id_comp, total_map_domain]
+    simp only [coe_inl, coe_inr, coe_comp, Function.comp_apply, prod_map_apply, map_zero,
+      coprod_apply, lmap_domain_apply, map_domain_zero, add_zero, zero_add, id_comp,
+      total_map_domain]
   · rw [← fst_apply _, apply_total R]
     exact hsP x
     
@@ -147,9 +150,10 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
   use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
   ext (i x j)
   simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
-    LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply, Dfinsupp.lsingle_apply,
-    Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single, lmap_domain_apply, Dfinsupp.to_finsupp_single,
-    Finsupp.sum_single_index, id.def, Function.comp.left_id, Dfinsupp.single_apply]
+    LinearEquiv.coe_to_linear_map, finsupp_lequiv_dfinsupp_symm_apply, Function.comp_apply,
+    Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_single,
+    lmap_domain_apply, Dfinsupp.to_finsupp_single, Finsupp.sum_single_index, id.def,
+    Function.comp.left_id, Dfinsupp.single_apply]
   rw [← Dfinsupp.lapply_apply j, apply_total R]
   obtain rfl | hij := eq_or_ne i j
   · convert (hs i) x
@@ -179,7 +183,8 @@ theorem projectiveOfBasis {ι : Type _} (b : Basis ι R P) : Projective R P := b
   -- get it from `ι → (P →₀ R)` coming from `b`.
   use b.constr ℕ fun i => Finsupp.single (b i) (1 : R)
   intro m
-  simp only [b.constr_apply, mul_one, id.def, Finsupp.smul_single', Finsupp.total_single, LinearMap.map_finsupp_sum]
+  simp only [b.constr_apply, mul_one, id.def, Finsupp.smul_single', Finsupp.total_single,
+    LinearMap.map_finsupp_sum]
   exact b.total_repr m
 #align module.projective_of_basis Module.projectiveOfBasis
 
@@ -194,7 +199,8 @@ section OfLiftingProperty
 
 /-- A module which satisfies the universal property is projective. Note that the universe variables
 in `huniv` are somewhat restricted. -/
-theorem projectiveOfLiftingProperty' {R : Type u} [Semiring R] {P : Type max u v} [AddCommMonoid P] [Module R P]
+theorem projectiveOfLiftingProperty' {R : Type u} [Semiring R] {P : Type max u v} [AddCommMonoid P]
+    [Module R P]
     -- If for all surjections of `R`-modules `M →ₗ N`, all maps `P →ₗ N` lift to `P →ₗ M`,
     (huniv :
       ∀ {M : Type max v u} {N : Type max u v} [AddCommMonoid M] [AddCommMonoid N],
@@ -219,7 +225,8 @@ theorem projectiveOfLiftingProperty' {R : Type u} [Semiring R] {P : Type max u v
 
 /-- A variant of `of_lifting_property'` when we're working over a `[ring R]`,
 which only requires quantifying over modules with an `add_comm_group` instance. -/
-theorem projectiveOfLiftingProperty {R : Type u} [Ring R] {P : Type max u v} [AddCommGroup P] [Module R P]
+theorem projectiveOfLiftingProperty {R : Type u} [Ring R] {P : Type max u v} [AddCommGroup P]
+    [Module R P]
     -- If for all surjections of `R`-modules `M →ₗ N`, all maps `P →ₗ N` lift to `P →ₗ M`,
     (huniv :
       ∀ {M : Type max v u} {N : Type max u v} [AddCommGroup M] [AddCommGroup N],

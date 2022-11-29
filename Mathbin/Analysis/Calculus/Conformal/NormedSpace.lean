@@ -43,8 +43,8 @@ Maps such as the complex conjugate are considered to be conformal.
 
 noncomputable section
 
-variable {X Y Z : Type _} [NormedAddCommGroup X] [NormedAddCommGroup Y] [NormedAddCommGroup Z] [NormedSpace ℝ X]
-  [NormedSpace ℝ Y] [NormedSpace ℝ Z]
+variable {X Y Z : Type _} [NormedAddCommGroup X] [NormedAddCommGroup Y] [NormedAddCommGroup Z]
+  [NormedSpace ℝ X] [NormedSpace ℝ Y] [NormedSpace ℝ Z]
 
 section LocConformality
 
@@ -105,7 +105,8 @@ theorem comp {f : X → Y} {g : Y → Z} (x : X) (hg : ConformalAt g (f x)) (hf 
   exact ⟨g'.comp f', hg₁.comp x hf₁, cg.comp cf⟩
 #align conformal_at.comp ConformalAt.comp
 
-theorem constSmul {f : X → Y} {x : X} {c : ℝ} (hc : c ≠ 0) (hf : ConformalAt f x) : ConformalAt (c • f) x :=
+theorem constSmul {f : X → Y} {x : X} {c : ℝ} (hc : c ≠ 0) (hf : ConformalAt f x) :
+    ConformalAt (c • f) x :=
   (conformalAtConstSmul hc <| f x).comp x hf
 #align conformal_at.const_smul ConformalAt.constSmul
 
@@ -123,7 +124,8 @@ def Conformal (f : X → Y) :=
 theorem conformalId : Conformal (id : X → X) := fun x => conformalAtId x
 #align conformal_id conformalId
 
-theorem conformalConstSmul {c : ℝ} (h : c ≠ 0) : Conformal fun x : X => c • x := fun x => conformalAtConstSmul h x
+theorem conformalConstSmul {c : ℝ} (h : c ≠ 0) : Conformal fun x : X => c • x := fun x =>
+  conformalAtConstSmul h x
 #align conformal_const_smul conformalConstSmul
 
 namespace Conformal
@@ -132,15 +134,16 @@ theorem conformalAt {f : X → Y} (h : Conformal f) (x : X) : ConformalAt f x :=
   h x
 #align conformal.conformal_at Conformal.conformalAt
 
-theorem differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f := fun x => (h x).DifferentiableAt
+theorem differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f := fun x =>
+  (h x).DifferentiableAt
 #align conformal.differentiable Conformal.differentiable
 
-theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) := fun x =>
-  (hg <| f x).comp x (hf x)
+theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) :=
+  fun x => (hg <| f x).comp x (hf x)
 #align conformal.comp Conformal.comp
 
-theorem constSmul {f : X → Y} (hf : Conformal f) {c : ℝ} (hc : c ≠ 0) : Conformal (c • f) := fun x =>
-  (hf x).const_smul hc
+theorem constSmul {f : X → Y} (hf : Conformal f) {c : ℝ} (hc : c ≠ 0) : Conformal (c • f) :=
+  fun x => (hf x).const_smul hc
 #align conformal.const_smul Conformal.constSmul
 
 end Conformal

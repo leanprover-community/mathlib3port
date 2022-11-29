@@ -55,8 +55,8 @@ attribute [local instance] fully_faithful_reflects_limits
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
 /-- If `F` is an equivalence and `F.map f` is a normal mono, then `f` is a normal mono. -/
-def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D) [IsEquivalence F]
-    {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f where
+def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
+    [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f where
   z := F.objPreimage hf.z
   g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
   w := Faithful.map_injective F <| by simp [reassoc_of hf.w]
@@ -64,7 +64,8 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
     reflects_limit.reflects <|
       IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
         IsLimit.ofIsoLimit
-          (is_limit.of_iso_limit (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z) (by simp) hf.is_limit)
+          (is_limit.of_iso_limit
+            (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z) (by simp) hf.is_limit)
             (of_ι_congr (category.comp_id _).symm))
           (isoOfι _).symm
 #align category_theory.equivalence_reflects_normal_mono CategoryTheory.equivalenceReflectsNormalMono
@@ -88,8 +89,9 @@ def NormalMono.lift' {W : C} (f : X ⟶ Y) [NormalMono f] (k : W ⟶ Y) (h : k �
 See also `pullback.snd_of_mono` for the basic monomorphism version, and
 `normal_of_is_pullback_fst_of_normal` for the flipped version.
 -/
-def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hn : NormalMono h]
-    (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : NormalMono g where
+def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [hn : NormalMono h] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
+    NormalMono g where
   z := hn.z
   g := k ≫ hn.g
   w := by rw [← reassoc_of comm, hn.w, has_zero_morphisms.comp_zero]
@@ -98,22 +100,21 @@ def normalOfIsPullbackSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h :
     have q := (has_zero_morphisms.comp_zero k hn.Z).symm
     convert gr.is_limit
     dsimp only [kernel_fork.of_ι, fork.of_ι]
-    congr
-    exact q
-    exact q
-    exact q
-    apply proof_irrel_heq
-#align category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
+    congr ; exact q; exact q; exact q; apply proof_irrel_heq
+#align
+  category_theory.normal_of_is_pullback_snd_of_normal CategoryTheory.normalOfIsPullbackSndOfNormal
 
 /-- The first leg of a pullback cone is a normal monomorphism if the left component is too.
 
 See also `pullback.fst_of_mono` for the basic monomorphism version, and
 `normal_of_is_pullback_snd_of_normal` for the flipped version.
 -/
-def normalOfIsPullbackFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hn : NormalMono k]
-    (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) : NormalMono f :=
+def normalOfIsPullbackFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [hn : NormalMono k] (comm : f ≫ h = g ≫ k) (t : IsLimit (PullbackCone.mk _ _ comm)) :
+    NormalMono f :=
   normalOfIsPullbackSndOfNormal comm.symm (PullbackCone.flipIsLimit t)
-#align category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
+#align
+  category_theory.normal_of_is_pullback_fst_of_normal CategoryTheory.normalOfIsPullbackFstOfNormal
 
 section
 
@@ -160,8 +161,8 @@ attribute [local instance] fully_faithful_reflects_colimits
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
 /-- If `F` is an equivalence and `F.map f` is a normal epi, then `f` is a normal epi. -/
-def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D) [IsEquivalence F]
-    {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f where
+def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
+    [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f where
   w := F.objPreimage hf.w
   g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
   w := Faithful.map_injective F <| by simp [hf.w]
@@ -194,8 +195,9 @@ def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : norma
 See also `pushout.snd_of_epi` for the basic epimorphism version, and
 `normal_of_is_pushout_fst_of_normal` for the flipped version.
 -/
-def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [gn : NormalEpi g]
-    (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : NormalEpi h where
+def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [gn : NormalEpi g] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
+    NormalEpi h where
   w := gn.w
   g := gn.g ≫ f
   w := by rw [category.assoc, comm, reassoc_of gn.w, zero_comp]
@@ -204,22 +206,21 @@ def normalOfIsPushoutSndOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : 
     have q := (@zero_comp _ _ _ gn.W _ _ f).symm
     convert hn.is_colimit
     dsimp only [cokernel_cofork.of_π, cofork.of_π]
-    congr
-    exact q
-    exact q
-    exact q
-    apply proof_irrel_heq
-#align category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
+    congr ; exact q; exact q; exact q; apply proof_irrel_heq
+#align
+  category_theory.normal_of_is_pushout_snd_of_normal CategoryTheory.normalOfIsPushoutSndOfNormal
 
 /-- The first leg of a pushout cocone is a normal epimorphism if the left component is too.
 
 See also `pushout.fst_of_epi` for the basic epimorphism version, and
 `normal_of_is_pushout_snd_of_normal` for the flipped version.
 -/
-def normalOfIsPushoutFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S} [hn : NormalEpi f]
-    (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) : NormalEpi k :=
+def normalOfIsPushoutFstOfNormal {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h : Q ⟶ S} {k : R ⟶ S}
+    [hn : NormalEpi f] (comm : f ≫ h = g ≫ k) (t : IsColimit (PushoutCocone.mk _ _ comm)) :
+    NormalEpi k :=
   normalOfIsPushoutSndOfNormal comm.symm (PushoutCocone.flipIsColimit t)
-#align category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
+#align
+  category_theory.normal_of_is_pushout_fst_of_normal CategoryTheory.normalOfIsPushoutFstOfNormal
 
 end
 
@@ -234,9 +235,11 @@ def normalEpiOfNormalMonoUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalMono f.un
   w := congr_arg Quiver.Hom.op m.w
   IsColimit :=
     CokernelCofork.IsColimit.ofπ _ _
-      (fun Z' g' w' => (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
       (fun Z' g' w' =>
-        congr_arg Quiver.Hom.op (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).2)
+        (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
+      (fun Z' g' w' =>
+        congr_arg Quiver.Hom.op
+          (KernelFork.IsLimit.lift' m.IsLimit g'.unop (congr_arg Quiver.Hom.unop w')).2)
       (by
         rintro Z' g' w' m' rfl
         apply Quiver.Hom.unop_inj
@@ -251,9 +254,11 @@ def normalMonoOfNormalEpiUnop {X Y : Cᵒᵖ} (f : X ⟶ Y) (m : NormalEpi f.uno
   w := congr_arg Quiver.Hom.op m.w
   IsLimit :=
     KernelFork.IsLimit.ofι _ _
-      (fun Z' g' w' => (CokernelCofork.IsColimit.desc' m.IsColimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
       (fun Z' g' w' =>
-        congr_arg Quiver.Hom.op (CokernelCofork.IsColimit.desc' m.IsColimit g'.unop (congr_arg Quiver.Hom.unop w')).2)
+        (CokernelCofork.IsColimit.desc' m.IsColimit g'.unop (congr_arg Quiver.Hom.unop w')).1.op)
+      (fun Z' g' w' =>
+        congr_arg Quiver.Hom.op
+          (CokernelCofork.IsColimit.desc' m.IsColimit g'.unop (congr_arg Quiver.Hom.unop w')).2)
       (by
         rintro Z' g' w' m' rfl
         apply Quiver.Hom.unop_inj
@@ -282,7 +287,8 @@ instance (priority := 100) regularEpiCategoryOfNormalEpiCategory [NormalEpiCateg
     RegularEpiCategory C where regularEpiOfEpi _ _ f _ := by
     haveI := normal_epi_of_epi f
     infer_instance
-#align category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
+#align
+  category_theory.regular_epi_category_of_normal_epi_category CategoryTheory.regularEpiCategoryOfNormalEpiCategory
 
 end CategoryTheory
 

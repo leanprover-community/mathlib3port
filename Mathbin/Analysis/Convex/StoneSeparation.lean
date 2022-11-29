@@ -26,8 +26,9 @@ variable {𝕜 E ι : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
 `z ∈ [x, y]`. -/
-theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ segment 𝕜 x y) (hu : u ∈ segment 𝕜 x p)
-    (hv : v ∈ segment 𝕜 y q) : ¬Disjoint (segment 𝕜 u v) (convexHull 𝕜 {p, q, z}) := by
+theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ segment 𝕜 x y)
+    (hu : u ∈ segment 𝕜 x p) (hv : v ∈ segment 𝕜 y q) :
+    ¬Disjoint (segment 𝕜 u v) (convexHull 𝕜 {p, q, z}) := by
   rw [not_disjoint_iff]
   obtain ⟨az, bz, haz, hbz, habz, rfl⟩ := hz
   obtain rfl | haz' := haz.eq_or_lt
@@ -42,9 +43,11 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
     exact ⟨q, right_mem_segment _ _ _, subset_convex_hull _ _ <| by simp⟩
     
   obtain ⟨au, bu, hau, hbu, habu, rfl⟩ := hu
-  have hab : 0 < az * av + bz * au := add_pos_of_pos_of_nonneg (mul_pos haz' hav') (mul_nonneg hbz hau)
+  have hab : 0 < az * av + bz * au :=
+    add_pos_of_pos_of_nonneg (mul_pos haz' hav') (mul_nonneg hbz hau)
   refine'
-    ⟨(az * av / (az * av + bz * au)) • (au • x + bu • p) + (bz * au / (az * av + bz * au)) • (av • y + bv • q),
+    ⟨(az * av / (az * av + bz * au)) • (au • x + bu • p) +
+        (bz * au / (az * av + bz * au)) • (av • y + bv • q),
       ⟨_, _, _, _, _, rfl⟩, _⟩
   · exact div_nonneg (mul_nonneg haz hav) hab.le
     
@@ -69,18 +72,23 @@ theorem not_disjoint_segment_convex_hull_triple {p q u v x y z : E} (hz : z ∈ 
     trans az * av * bu + (bz * au * bv + au * av)
     · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]
       
-    rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add, mul_assoc, ← mul_add,
-      mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu, habv, one_mul, mul_one]
+    rw [← one_mul (au * av), ← habz, add_mul, ← add_assoc, add_add_add_comm, mul_assoc, ← mul_add,
+      mul_assoc, ← mul_add, mul_comm av, ← add_mul, ← mul_add, add_comm bu, add_comm bv, habu, habv,
+      one_mul, mul_one]
   have hz : ∀ i, z i ∈ ({p, q, az • x + bz • y} : Set E) := by
     rintro i
     fin_cases i <;> simp [z]
   convert
-    Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i) (by rwa [hw]) fun i _ => hz i
+    Finset.center_mass_mem_convex_hull (Finset.univ : Finset (Fin 3)) (fun i _ => hw₀ i)
+      (by rwa [hw]) fun i _ => hz i
   rw [Finset.centerMass]
-  simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ← mul_assoc]
+  simp_rw [div_eq_inv_mul, hw, mul_assoc, mul_smul (az * av + bz * au)⁻¹, ← smul_add, add_assoc, ←
+    mul_assoc]
   congr 3
-  rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate, mul_smul _ bz, ← smul_add]
-  simp only [List.map, List.pmap, Nat.add_def, add_zero, Fin.mk_bit0, Fin.mk_one, List.foldr_cons, List.foldr_nil]
+  rw [← mul_smul, ← mul_rotate, mul_right_comm, mul_smul, ← mul_smul _ av, mul_rotate,
+    mul_smul _ bz, ← smul_add]
+  simp only [List.map, List.pmap, Nat.add_def, add_zero, Fin.mk_bit0, Fin.mk_one, List.foldr_cons,
+    List.foldr_nil]
   rfl
 #align not_disjoint_segment_convex_hull_triple not_disjoint_segment_convex_hull_triple
 
@@ -91,10 +99,13 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
   obtain ⟨C, hC, hsC, hCmax⟩ :=
     zorn_subset_nonempty S
       (fun c hcS hc ⟨t, ht⟩ =>
-        ⟨⋃₀c, ⟨hc.directed_on.convex_sUnion fun s hs => (hcS hs).1, disjoint_sUnion_left.2 fun c hc => (hcS hc).2⟩,
+        ⟨⋃₀c,
+          ⟨hc.directed_on.convex_sUnion fun s hs => (hcS hs).1,
+            disjoint_sUnion_left.2 fun c hc => (hcS hc).2⟩,
           fun s => subset_sUnion_of_mem⟩)
       s ⟨hs, hst⟩
-  refine' ⟨C, hC.1, convex_iff_segment_subset.2 fun x hx y hy z hz hzC => _, hsC, hC.2.subset_compl_left⟩
+  refine'
+    ⟨C, hC.1, convex_iff_segment_subset.2 fun x hx y hy z hz hzC => _, hsC, hC.2.subset_compl_left⟩
   suffices h : ∀ c ∈ Cᶜ, ∃ a ∈ C, (segment 𝕜 c a ∩ t).Nonempty
   · obtain ⟨p, hp, u, hu, hut⟩ := h x hx
     obtain ⟨q, hq, v, hv, hvt⟩ := h y hy
@@ -106,7 +117,9 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
   rintro c hc
   by_contra' h
   suffices h : Disjoint (convexHull 𝕜 (insert c C)) t
-  · rw [← hCmax _ ⟨convex_convex_hull _ _, h⟩ ((subset_insert _ _).trans <| subset_convex_hull _ _)] at hc
+  · rw [←
+      hCmax _ ⟨convex_convex_hull _ _, h⟩ ((subset_insert _ _).trans <| subset_convex_hull _ _)] at
+      hc
     exact hc (subset_convex_hull _ _ <| mem_insert _ _)
     
   rw [convex_hull_insert ⟨z, hzC⟩, convex_join_singleton_left]

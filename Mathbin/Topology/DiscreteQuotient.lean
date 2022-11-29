@@ -127,8 +127,8 @@ theorem proj_surjective : Function.Surjective S.proj :=
 
 theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = setOf (S.Rel x) := by
   ext1 y
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotient.eq', DiscreteQuotient.proj.equations._eqn_1,
-    Set.mem_set_of_eq]
+  simp only [Set.mem_preimage, Set.mem_singleton_iff, Quotient.eq',
+    DiscreteQuotient.proj.equations._eqn_1, Set.mem_set_of_eq]
   exact ⟨fun h => S.symm _ _ h, fun h => S.symm _ _ h⟩
 #align discrete_quotient.fiber_eq DiscreteQuotient.fiber_eq
 
@@ -172,10 +172,11 @@ instance : SemilatticeInf (DiscreteQuotient X) :=
     inf := fun A B =>
       { Rel := fun x y => A.Rel x y ∧ B.Rel x y,
         Equiv :=
-          ⟨fun a => ⟨A.refl _, B.refl _⟩, fun a b h => ⟨A.symm _ _ h.1, B.symm _ _ h.2⟩, fun a b c h1 h2 =>
-            ⟨A.trans _ _ _ h1.1 h2.1, B.trans _ _ _ h1.2 h2.2⟩⟩,
+          ⟨fun a => ⟨A.refl _, B.refl _⟩, fun a b h => ⟨A.symm _ _ h.1, B.symm _ _ h.2⟩,
+            fun a b c h1 h2 => ⟨A.trans _ _ _ h1.1 h2.1, B.trans _ _ _ h1.2 h2.2⟩⟩,
         clopen := fun x => IsClopen.inter (A.clopen _) (B.clopen _) },
-    inf_le_left := fun a b => by tauto, inf_le_right := fun a b => by tauto, le_inf := fun a b c h1 h2 => by tauto }
+    inf_le_left := fun a b => by tauto, inf_le_right := fun a b => by tauto,
+    le_inf := fun a b c h1 h2 => by tauto }
 
 instance : Inhabited (DiscreteQuotient X) :=
   ⟨⊤⟩
@@ -226,8 +227,8 @@ theorem of_le_refl_apply {A : DiscreteQuotient X} (a : A) : ofLe (le_refl A) a =
 #align discrete_quotient.of_le_refl_apply DiscreteQuotient.of_le_refl_apply
 
 @[simp]
-theorem of_le_comp {A B C : DiscreteQuotient X} (h1 : A ≤ B) (h2 : B ≤ C) : ofLe (le_trans h1 h2) = ofLe h2 ∘ ofLe h1 :=
-  by
+theorem of_le_comp {A B C : DiscreteQuotient X} (h1 : A ≤ B) (h2 : B ≤ C) :
+    ofLe (le_trans h1 h2) = ofLe h2 ∘ ofLe h1 := by
   ext ⟨⟩
   rfl
 #align discrete_quotient.of_le_comp DiscreteQuotient.of_le_comp
@@ -247,7 +248,8 @@ theorem of_le_proj {A B : DiscreteQuotient X} (h : A ≤ B) : ofLe h ∘ A.proj 
 #align discrete_quotient.of_le_proj DiscreteQuotient.of_le_proj
 
 @[simp]
-theorem of_le_proj_apply {A B : DiscreteQuotient X} (h : A ≤ B) (x : X) : ofLe h (A.proj x) = B.proj x := by
+theorem of_le_proj_apply {A B : DiscreteQuotient X} (h : A ≤ B) (x : X) :
+    ofLe h (A.proj x) = B.proj x := by
   change (of_le h ∘ A.proj) x = _
   simp
 #align discrete_quotient.of_le_proj_apply DiscreteQuotient.of_le_proj_apply
@@ -263,18 +265,19 @@ instance [DiscreteTopology X] : OrderBot (DiscreteQuotient X) where
     rw [h]
     exact S.refl _
 
-theorem proj_bot_injective [DiscreteTopology X] : Function.Injective (⊥ : DiscreteQuotient X).proj := fun a b h =>
-  Quotient.exact' h
+theorem proj_bot_injective [DiscreteTopology X] :
+    Function.Injective (⊥ : DiscreteQuotient X).proj := fun a b h => Quotient.exact' h
 #align discrete_quotient.proj_bot_injective DiscreteQuotient.proj_bot_injective
 
-theorem proj_bot_bijective [DiscreteTopology X] : Function.Bijective (⊥ : DiscreteQuotient X).proj :=
+theorem proj_bot_bijective [DiscreteTopology X] :
+    Function.Bijective (⊥ : DiscreteQuotient X).proj :=
   ⟨proj_bot_injective, proj_surjective _⟩
 #align discrete_quotient.proj_bot_bijective DiscreteQuotient.proj_bot_bijective
 
 section Map
 
-variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f) (A : DiscreteQuotient Y)
-  (B : DiscreteQuotient X)
+variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f)
+  (A : DiscreteQuotient Y) (B : DiscreteQuotient X)
 
 /-- Given `cont : continuous f`, `le_comap cont A B` is defined as `A ≤ B.comap f`.
 Mathematically this means that `f` descends to a morphism `A → B`.
@@ -288,12 +291,13 @@ variable {cont A B}
 theorem le_comap_id (A : DiscreteQuotient X) : LeComap continuous_id A A := by tauto
 #align discrete_quotient.le_comap_id DiscreteQuotient.le_comap_id
 
-theorem le_comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : Continuous g} {C : DiscreteQuotient Z} :
+theorem le_comap_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : Continuous g}
+    {C : DiscreteQuotient Z} :
     LeComap cont' C A → LeComap cont A B → LeComap (Continuous.comp cont cont') C B := by tauto
 #align discrete_quotient.le_comap_comp DiscreteQuotient.le_comap_comp
 
-theorem le_comap_trans {C : DiscreteQuotient X} : LeComap cont A B → B ≤ C → LeComap cont A C := fun h1 h2 =>
-  le_trans h1 <| comap_mono _ h2
+theorem le_comap_trans {C : DiscreteQuotient X} : LeComap cont A B → B ≤ C → LeComap cont A C :=
+  fun h1 h2 => le_trans h1 <| comap_mono _ h2
 #align discrete_quotient.le_comap_trans DiscreteQuotient.le_comap_trans
 
 /-- Map a discrete quotient along a continuous map. -/
@@ -322,8 +326,9 @@ theorem map_id : map (le_comap_id A) = id := by
 #align discrete_quotient.map_id DiscreteQuotient.map_id
 
 @[simp]
-theorem map_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : Continuous g} {C : DiscreteQuotient Z}
-    (h1 : LeComap cont' C A) (h2 : LeComap cont A B) : map (le_comap_comp h1 h2) = map h2 ∘ map h1 := by
+theorem map_comp {Z : Type _} [TopologicalSpace Z] {g : Z → Y} {cont' : Continuous g}
+    {C : DiscreteQuotient Z} (h1 : LeComap cont' C A) (h2 : LeComap cont A B) :
+    map (le_comap_comp h1 h2) = map h2 ∘ map h1 := by
   ext ⟨⟩
   rfl
 #align discrete_quotient.map_comp DiscreteQuotient.map_comp
@@ -369,7 +374,8 @@ theorem eq_of_proj_eq [T2Space X] [CompactSpace X] [disc : TotallyDisconnectedSp
   tauto
 #align discrete_quotient.eq_of_proj_eq DiscreteQuotient.eq_of_proj_eq
 
-theorem fiber_le_of_le {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) : A.proj ⁻¹' {a} ≤ B.proj ⁻¹' {ofLe h a} := by
+theorem fiber_le_of_le {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) :
+    A.proj ⁻¹' {a} ≤ B.proj ⁻¹' {ofLe h a} := by
   induction a
   erw [fiber_eq, fiber_eq]
   tidy
@@ -379,8 +385,9 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
     (compat : ∀ (A B : DiscreteQuotient X) (h : A ≤ B), ofLe h (Qs _) = Qs _) :
     ∃ x : X, ∀ Q : DiscreteQuotient X, Q.proj x = Qs _ := by
   obtain ⟨x, hx⟩ :=
-    IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _})
-      (fun A B => _) (fun i => _) (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
+    IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
+      (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _}) (fun A B => _) (fun i => _)
+      (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
   · refine' ⟨x, fun Q => _⟩
     exact hx _ ⟨Q, rfl⟩
     

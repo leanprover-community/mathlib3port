@@ -49,9 +49,10 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
     -- restating the assumption in a more practical form
     have h₁ := HomologicalComplex.congr_hom (karoubi.hom_ext.mp (is_iso.hom_inv_id (N₁.map f)))
     have h₂ := HomologicalComplex.congr_hom (karoubi.hom_ext.mp (is_iso.inv_hom_id (N₁.map f)))
-    have h₃ := fun n => karoubi.homological_complex.p_comm_f_assoc (inv (N₁.map f)) n (f.app (op [n]))
-    simp only [N₁_map_f, karoubi.comp, HomologicalComplex.comp_f, alternating_face_map_complex.map_f, N₁_obj_p,
-      karoubi.id_eq, assoc] at h₁ h₂ h₃
+    have h₃ := fun n =>
+      karoubi.homological_complex.p_comm_f_assoc (inv (N₁.map f)) n (f.app (op [n]))
+    simp only [N₁_map_f, karoubi.comp, HomologicalComplex.comp_f,
+      alternating_face_map_complex.map_f, N₁_obj_p, karoubi.id_eq, assoc] at h₁ h₂ h₃
     -- we have to construct an inverse to f in degree n, by induction on n
     intro n
     induction' n with n hn
@@ -65,7 +66,10 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
       
     -- induction step
     · haveI := hn
-      use φ { a := P_infty.f (n + 1) ≫ (inv (N₁.map f)).f.f (n + 1), b := fun i => inv (f.app (op [n])) ≫ X.σ i }
+      use
+        φ
+          { a := P_infty.f (n + 1) ≫ (inv (N₁.map f)).f.f (n + 1),
+            b := fun i => inv (f.app (op [n])) ≫ X.σ i }
       simp only [morph_components.id, ← id_φ, ← pre_comp_φ, pre_comp, ← post_comp_φ, post_comp,
         P_infty_f_naturality_assoc, is_iso.hom_inv_id_assoc, assoc, is_iso.inv_hom_id_assoc,
         simplicial_object.σ_naturality, h₁, h₂, h₃]

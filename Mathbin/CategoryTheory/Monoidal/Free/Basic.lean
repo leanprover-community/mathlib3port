@@ -35,7 +35,8 @@ section
 
 variable (C)
 
-/-- Given a type `C`, the free monoidal category over `C` has as objects formal expressions built from
+/--
+Given a type `C`, the free monoidal category over `C` has as objects formal expressions built from
 (formal) tensor products of terms of `C` and a formal unit. Its morphisms are compositions and
 tensor products of identities, unitors and associators.
 -/
@@ -78,16 +79,21 @@ inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
   | refl {X Y} (f : X ⟶ᵐ Y) : hom_equiv f f
   | symm {X Y} (f g : X ⟶ᵐ Y) : hom_equiv f g → hom_equiv g f
   | trans {X Y} {f g h : X ⟶ᵐ Y} : hom_equiv f g → hom_equiv g h → hom_equiv f h
-  | comp {X Y Z} {f f' : X ⟶ᵐ Y} {g g' : Y ⟶ᵐ Z} : hom_equiv f f' → hom_equiv g g' → hom_equiv (f.comp g) (f'.comp g')
+  |
+  comp {X Y Z} {f f' : X ⟶ᵐ Y} {g g' : Y ⟶ᵐ Z} :
+    hom_equiv f f' → hom_equiv g g' → hom_equiv (f.comp g) (f'.comp g')
   |
   tensor {W X Y Z} {f f' : W ⟶ᵐ X} {g g' : Y ⟶ᵐ Z} :
     hom_equiv f f' → hom_equiv g g' → hom_equiv (f.tensor g) (f'.tensor g')
   | comp_id {X Y} (f : X ⟶ᵐ Y) : hom_equiv (f.comp (Hom.id _)) f
   | id_comp {X Y} (f : X ⟶ᵐ Y) : hom_equiv ((Hom.id _).comp f) f
-  | assoc {X Y U V : F C} (f : X ⟶ᵐ U) (g : U ⟶ᵐ V) (h : V ⟶ᵐ Y) : hom_equiv ((f.comp g).comp h) (f.comp (g.comp h))
+  |
+  assoc {X Y U V : F C} (f : X ⟶ᵐ U) (g : U ⟶ᵐ V) (h : V ⟶ᵐ Y) :
+    hom_equiv ((f.comp g).comp h) (f.comp (g.comp h))
   | tensor_id {X Y} : hom_equiv ((Hom.id X).tensor (Hom.id Y)) (Hom.id _)
   |
-  tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : F C} (f₁ : X₁ ⟶ᵐ Y₁) (f₂ : X₂ ⟶ᵐ Y₂) (g₁ : Y₁ ⟶ᵐ Z₁) (g₂ : Y₂ ⟶ᵐ Z₂) :
+  tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : F C} (f₁ : X₁ ⟶ᵐ Y₁) (f₂ : X₂ ⟶ᵐ Y₂) (g₁ : Y₁ ⟶ᵐ Z₁)
+    (g₂ : Y₂ ⟶ᵐ Z₂) :
     hom_equiv ((f₁.comp g₁).tensor (f₂.comp g₂)) ((f₁.tensor f₂).comp (g₁.tensor g₂))
   | α_hom_inv {X Y Z} : hom_equiv ((Hom.α_hom X Y Z).comp (Hom.α_inv X Y Z)) (Hom.id _)
   | α_inv_hom {X Y Z} : hom_equiv ((Hom.α_inv X Y Z).comp (Hom.α_hom X Y Z)) (Hom.id _)
@@ -97,10 +103,14 @@ inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
       ((Hom.α_hom X₁ X₂ X₃).comp (f₁.tensor (f₂.tensor f₃)))
   | ρ_hom_inv {X} : hom_equiv ((Hom.ρ_hom X).comp (Hom.ρ_inv X)) (Hom.id _)
   | ρ_inv_hom {X} : hom_equiv ((Hom.ρ_inv X).comp (Hom.ρ_hom X)) (Hom.id _)
-  | ρ_naturality {X Y} (f : X ⟶ᵐ Y) : hom_equiv ((f.tensor (Hom.id unit)).comp (Hom.ρ_hom Y)) ((Hom.ρ_hom X).comp f)
+  |
+  ρ_naturality {X Y} (f : X ⟶ᵐ Y) :
+    hom_equiv ((f.tensor (Hom.id unit)).comp (Hom.ρ_hom Y)) ((Hom.ρ_hom X).comp f)
   | l_hom_inv {X} : hom_equiv ((Hom.l_hom X).comp (Hom.l_inv X)) (Hom.id _)
   | l_inv_hom {X} : hom_equiv ((Hom.l_inv X).comp (Hom.l_hom X)) (Hom.id _)
-  | l_naturality {X Y} (f : X ⟶ᵐ Y) : hom_equiv (((Hom.id unit).tensor f).comp (Hom.l_hom Y)) ((Hom.l_hom X).comp f)
+  |
+  l_naturality {X Y} (f : X ⟶ᵐ Y) :
+    hom_equiv (((Hom.id unit).tensor f).comp (Hom.l_hom Y)) ((Hom.l_hom X).comp f)
   |
   pentagon {W X Y Z} :
     hom_equiv
@@ -109,15 +119,19 @@ inductive HomEquiv : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (X ⟶ᵐ Y) → Prop
       ((Hom.α_hom (W.tensor X) Y Z).comp (Hom.α_hom W X (Y.tensor Z)))
   |
   triangle {X Y} :
-    hom_equiv ((Hom.α_hom X unit Y).comp ((Hom.id X).tensor (Hom.l_hom Y))) ((Hom.ρ_hom X).tensor (Hom.id Y))
+    hom_equiv ((Hom.α_hom X unit Y).comp ((Hom.id X).tensor (Hom.l_hom Y)))
+      ((Hom.ρ_hom X).tensor (Hom.id Y))
 #align category_theory.free_monoidal_category.hom_equiv CategoryTheory.FreeMonoidalCategory.HomEquiv
 
 /-- We say that two formal morphisms in the free monoidal category are equivalent if they become
     equal if we apply the relations that are true in a monoidal category. Note that we will prove
     that there is only one equivalence class -- this is the monoidal coherence theorem. -/
 def setoidHom (X Y : F C) : Setoid (X ⟶ᵐ Y) :=
-  ⟨HomEquiv, ⟨fun f => HomEquiv.refl f, fun f g => HomEquiv.symm f g, fun f g h hfg hgh => HomEquiv.trans hfg hgh⟩⟩
-#align category_theory.free_monoidal_category.setoid_hom CategoryTheory.FreeMonoidalCategory.setoidHom
+  ⟨HomEquiv,
+    ⟨fun f => HomEquiv.refl f, fun f g => HomEquiv.symm f g, fun f g h hfg hgh =>
+      HomEquiv.trans hfg hgh⟩⟩
+#align
+  category_theory.free_monoidal_category.setoid_hom CategoryTheory.FreeMonoidalCategory.setoidHom
 
 attribute [instance] setoid_hom
 
@@ -157,7 +171,8 @@ instance : MonoidalCategory (F C) where
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
     exact Quotient.sound (tensor_comp _ _ _ _)
   tensorUnit := FreeMonoidalCategory.unit
-  associator X Y Z := ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotient.sound α_hom_inv, Quotient.sound α_inv_hom⟩
+  associator X Y Z :=
+    ⟨⟦Hom.α_hom X Y Z⟧, ⟦Hom.α_inv X Y Z⟧, Quotient.sound α_hom_inv, Quotient.sound α_inv_hom⟩
   associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ := by
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
     exact Quotient.sound (associator_naturality _ _ _)
@@ -165,7 +180,8 @@ instance : MonoidalCategory (F C) where
   left_unitor_naturality' X Y := by
     rintro ⟨f⟩
     exact Quotient.sound (l_naturality _)
-  rightUnitor X := ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
+  rightUnitor X :=
+    ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
   right_unitor_naturality' X Y := by
     rintro ⟨f⟩
     exact Quotient.sound (ρ_naturality _)
@@ -173,7 +189,8 @@ instance : MonoidalCategory (F C) where
   triangle' X Y := Quotient.sound triangle
 
 @[simp]
-theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) : ⟦f.comp g⟧ = @CategoryStruct.comp (F C) _ _ _ _ ⟦f⟧ ⟦g⟧ :=
+theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) :
+    ⟦f.comp g⟧ = @CategoryStruct.comp (F C) _ _ _ _ ⟦f⟧ ⟦g⟧ :=
   rfl
 #align category_theory.free_monoidal_category.mk_comp CategoryTheory.FreeMonoidalCategory.mk_comp
 
@@ -181,7 +198,8 @@ theorem mk_comp {X Y Z : F C} (f : X ⟶ᵐ Y) (g : Y ⟶ᵐ Z) : ⟦f.comp g⟧
 theorem mk_tensor {X₁ Y₁ X₂ Y₂ : F C} (f : X₁ ⟶ᵐ Y₁) (g : X₂ ⟶ᵐ Y₂) :
     ⟦f.tensor g⟧ = @MonoidalCategory.tensorHom (F C) _ _ _ _ _ _ ⟦f⟧ ⟦g⟧ :=
   rfl
-#align category_theory.free_monoidal_category.mk_tensor CategoryTheory.FreeMonoidalCategory.mk_tensor
+#align
+  category_theory.free_monoidal_category.mk_tensor CategoryTheory.FreeMonoidalCategory.mk_tensor
 
 @[simp]
 theorem mk_id {X : F C} : ⟦Hom.id X⟧ = 𝟙 X :=
@@ -222,12 +240,14 @@ theorem mk_l_inv {X : F C} : ⟦Hom.l_inv X⟧ = (λ_ X).inv :=
 @[simp]
 theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
   rfl
-#align category_theory.free_monoidal_category.tensor_eq_tensor CategoryTheory.FreeMonoidalCategory.tensor_eq_tensor
+#align
+  category_theory.free_monoidal_category.tensor_eq_tensor CategoryTheory.FreeMonoidalCategory.tensor_eq_tensor
 
 @[simp]
 theorem unit_eq_unit : free_monoidal_category.unit = 𝟙_ (F C) :=
   rfl
-#align category_theory.free_monoidal_category.unit_eq_unit CategoryTheory.FreeMonoidalCategory.unit_eq_unit
+#align
+  category_theory.free_monoidal_category.unit_eq_unit CategoryTheory.FreeMonoidalCategory.unit_eq_unit
 
 section Functor
 
@@ -235,9 +255,9 @@ variable {D : Type u'} [Category.{v'} D] [MonoidalCategory D] (f : C → D)
 
 /- warning: category_theory.free_monoidal_category.project_obj -> CategoryTheory.FreeMonoidalCategory.projectObj is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v' u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v' u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
+  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v', u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v', u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
 but is expected to have type
-  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v' u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v' u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
+  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v', u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v', u'} D _inst_1], (C -> D) -> (CategoryTheory.FreeMonoidalCategory.{u} C) -> D
 Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObjₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
@@ -245,7 +265,8 @@ def projectObj : F C → D
   | free_monoidal_category.of X => f X
   | free_monoidal_category.unit => 𝟙_ D
   | free_monoidal_category.tensor X Y => project_obj X ⊗ project_obj Y
-#align category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObj
+#align
+  category_theory.free_monoidal_category.project_obj CategoryTheory.FreeMonoidalCategory.projectObj
 
 section
 
@@ -253,9 +274,9 @@ open Hom
 
 /- warning: category_theory.free_monoidal_category.project_map_aux -> CategoryTheory.FreeMonoidalCategory.projectMapAux is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v' u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v' u'} D _inst_1] (f : C -> D) {X : CategoryTheory.FreeMonoidalCategory.{u} C} {Y : CategoryTheory.FreeMonoidalCategory.{u} C}, (CategoryTheory.FreeMonoidalCategory.Hom.{u} C X Y) -> (Quiver.Hom.{succ v' u'} D (CategoryTheory.CategoryStruct.toQuiver.{v' u'} D (CategoryTheory.Category.toCategoryStruct.{v' u'} D _inst_1)) (CategoryTheory.FreeMonoidalCategory.projectObj.{v' u u'} C D _inst_1 _inst_2 f X) (CategoryTheory.FreeMonoidalCategory.projectObj.{v' u u'} C D _inst_1 _inst_2 f Y))
+  forall {C : Type.{u}} {D : Type.{u'}} [_inst_1 : CategoryTheory.Category.{v', u'} D] [_inst_2 : CategoryTheory.MonoidalCategory.{v', u'} D _inst_1] (f : C -> D) {X : CategoryTheory.FreeMonoidalCategory.{u} C} {Y : CategoryTheory.FreeMonoidalCategory.{u} C}, (CategoryTheory.FreeMonoidalCategory.Hom.{u} C X Y) -> (Quiver.Hom.{succ v', u'} D (CategoryTheory.CategoryStruct.toQuiver.{v', u'} D (CategoryTheory.Category.toCategoryStruct.{v', u'} D _inst_1)) (CategoryTheory.FreeMonoidalCategory.projectObj.{v', u, u'} C D _inst_1 _inst_2 f X) (CategoryTheory.FreeMonoidalCategory.projectObj.{v', u, u'} C D _inst_1 _inst_2 f Y))
 but is expected to have type
-  PUnit.{(max (max (succ (succ u)) (succ (succ u'))) (succ (succ v')))}
+  PUnit.{max (max (succ (succ u)) (succ (succ u'))) (succ (succ v'))}
 Case conversion may be inaccurate. Consider using '#align category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAuxₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
@@ -270,7 +291,8 @@ def projectMapAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObj f X ⟶ projec
   | _, _, ρ_inv _ => (ρ_ _).inv
   | _, _, comp f g => project_map_aux f ≫ project_map_aux g
   | _, _, hom.tensor f g => project_map_aux f ⊗ project_map_aux g
-#align category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAux
+#align
+  category_theory.free_monoidal_category.project_map_aux CategoryTheory.FreeMonoidalCategory.projectMapAux
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :=
@@ -328,7 +350,8 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :
       · simp only [project_map_aux]
         exact monoidal_category.triangle _ _
         )
-#align category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
+#align
+  category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
 
 end
 

@@ -58,8 +58,8 @@ abbrev m.mk : (Σj, F.obj j) → M :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget (ModuleCat R)))
 #align Module.filtered_colimits.M.mk ModuleCat.FilteredColimits.m.mk
 
-theorem m.mk_eq (x y : Σj, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
-    M.mk x = M.mk y :=
+theorem m.mk_eq (x y : Σj, F.obj j)
+    (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget (ModuleCat R)) x y h)
 #align Module.filtered_colimits.M.mk_eq ModuleCat.FilteredColimits.m.mk_eq
 
@@ -69,13 +69,15 @@ def colimitSmulAux (r : R) (x : Σj, F.obj j) : M :=
 #align Module.filtered_colimits.colimit_smul_aux ModuleCat.FilteredColimits.colimitSmulAux
 
 theorem colimit_smul_aux_eq_of_rel (r : R) (x y : Σj, F.obj j)
-    (h : Types.FilteredColimit.Rel (F ⋙ forget (ModuleCat R)) x y) : colimit_smul_aux r x = colimit_smul_aux r y := by
+    (h : Types.FilteredColimit.Rel (F ⋙ forget (ModuleCat R)) x y) :
+    colimit_smul_aux r x = colimit_smul_aux r y := by
   apply M.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
   simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
-#align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimit_smul_aux_eq_of_rel
+#align
+  Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimit_smul_aux_eq_of_rel
 
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/
 instance colimitHasSmul :
@@ -94,46 +96,32 @@ theorem colimit_smul_mk_eq (r : R) (x : Σj, F.obj j) : r • M.mk x = M.mk ⟨x
 
 instance colimitModule : Module R M where
   one_smul x := by
-    apply Quot.induction_on x
-    clear x
-    intro x
-    cases' x with j x
+    apply Quot.induction_on x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq F 1 ⟨j, x⟩, one_smul]
     rfl
   mul_smul r s x := by
-    apply Quot.induction_on x
-    clear x
-    intro x
-    cases' x with j x
-    erw [colimit_smul_mk_eq F (r * s) ⟨j, x⟩, colimit_smul_mk_eq F s ⟨j, x⟩, colimit_smul_mk_eq F r ⟨j, _⟩, mul_smul]
+    apply Quot.induction_on x; clear x; intro x; cases' x with j x
+    erw [colimit_smul_mk_eq F (r * s) ⟨j, x⟩, colimit_smul_mk_eq F s ⟨j, x⟩,
+      colimit_smul_mk_eq F r ⟨j, _⟩, mul_smul]
   smul_add r x y := by
-    apply Quot.induction_on₂ x y
-    clear x y
-    intro x y
-    cases' x with i x
-    cases' y with j y
-    erw [colimit_add_mk_eq _ ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j), colimit_smul_mk_eq,
-      smul_add, colimit_smul_mk_eq, colimit_smul_mk_eq,
-      colimit_add_mk_eq _ ⟨i, _⟩ ⟨j, _⟩ (max' i j) (left_to_max i j) (right_to_max i j), LinearMap.map_smul,
-      LinearMap.map_smul]
+    apply Quot.induction_on₂ x y; clear x y; intro x y; cases' x with i x; cases' y with j y
+    erw [colimit_add_mk_eq _ ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j),
+      colimit_smul_mk_eq, smul_add, colimit_smul_mk_eq, colimit_smul_mk_eq,
+      colimit_add_mk_eq _ ⟨i, _⟩ ⟨j, _⟩ (max' i j) (left_to_max i j) (right_to_max i j),
+      LinearMap.map_smul, LinearMap.map_smul]
     rfl
   smul_zero r := by
     erw [colimit_zero_eq _ (is_filtered.nonempty.some : J), colimit_smul_mk_eq, smul_zero]
     rfl
   zero_smul x := by
-    apply Quot.induction_on x
-    clear x
-    intro x
-    cases' x with j x
+    apply Quot.induction_on x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq, zero_smul, colimit_zero_eq _ j]
     rfl
   add_smul r s x := by
-    apply Quot.induction_on x
-    clear x
-    intro x
-    cases' x with j x
+    apply Quot.induction_on x; clear x; intro x; cases' x with j x
     erw [colimit_smul_mk_eq, add_smul, colimit_smul_mk_eq, colimit_smul_mk_eq,
-      colimit_add_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j), CategoryTheory.Functor.map_id, id_apply, id_apply]
+      colimit_add_mk_eq _ ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j), CategoryTheory.Functor.map_id, id_apply,
+      id_apply]
     rfl
 #align Module.filtered_colimits.colimit_module ModuleCat.FilteredColimits.colimitModule
 
@@ -144,10 +132,10 @@ def colimit : ModuleCat R :=
 
 /-- The linear map from a given `R`-module in the diagram to the colimit module. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit :=
-  { (AddCommGroupCat.FilteredColimits.colimitCocone (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).ι.app j with
-    map_smul' := fun r x => by
-      erw [colimit_smul_mk_eq F r ⟨j, x⟩]
-      rfl }
+  { (AddCommGroupCat.FilteredColimits.colimitCocone
+            (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).ι.app
+      j with
+    map_smul' := fun r x => by erw [colimit_smul_mk_eq F r ⟨j, x⟩]; rfl }
 #align Module.filtered_colimits.cocone_morphism ModuleCat.FilteredColimits.coconeMorphism
 
 /-- The cocone over the proposed colimit module. -/
@@ -164,13 +152,11 @@ We already know that this is a morphism between additive groups. The only thing 
 it is a linear map, i.e. preserves scalar multiplication.
 -/
 def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
-  { (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).desc
+  { (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
+          (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).desc
       ((forget₂ (ModuleCat R) AddCommGroupCat.{max v u}).mapCocone t) with
     map_smul' := fun r x => by
-      apply Quot.induction_on x
-      clear x
-      intro x
-      cases' x with j x
+      apply Quot.induction_on x; clear x; intro x; cases' x with j x
       erw [colimit_smul_mk_eq]
       exact LinearMap.map_smul (t.ι.app j) r x }
 #align Module.filtered_colimits.colimit_desc ModuleCat.FilteredColimits.colimitDesc
@@ -180,12 +166,14 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
   desc := colimit_desc
   fac' t j :=
     LinearMap.coe_injective <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).fac ((forget (ModuleCat R)).mapCocone t) j
+      (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).fac
+        ((forget (ModuleCat R)).mapCocone t) j
   uniq' t m h :=
     LinearMap.coe_injective <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).uniq ((forget (ModuleCat R)).mapCocone t) m fun j =>
-        funext fun x => LinearMap.congr_fun (h j) x
-#align Module.filtered_colimits.colimit_cocone_is_colimit ModuleCat.FilteredColimits.colimitCoconeIsColimit
+      (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).uniq
+        ((forget (ModuleCat R)).mapCocone t) m fun j => funext fun x => LinearMap.congr_fun (h j) x
+#align
+  Module.filtered_colimits.colimit_cocone_is_colimit ModuleCat.FilteredColimits.colimitCoconeIsColimit
 
 instance forget₂AddCommGroupPreservesFilteredColimits :
     PreservesFilteredColimits
@@ -199,7 +187,8 @@ instance forget₂AddCommGroupPreservesFilteredColimits :
   Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits
 
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget (ModuleCat.{u} R)) :=
-  Limits.compPreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupCat) (forget AddCommGroupCat)
+  Limits.compPreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupCat)
+    (forget AddCommGroupCat)
 #align
   Module.filtered_colimits.forget_preserves_filtered_colimits ModuleCat.FilteredColimits.forgetPreservesFilteredColimits
 

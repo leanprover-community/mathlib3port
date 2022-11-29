@@ -26,14 +26,16 @@ open Classical TopologicalSpace
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
-    (h_local_min : IsLocalMinOn f (icc a b) a) (h_conv : ConvexOn ℝ (icc a b) f) : IsMinOn f (icc a b) a := by
+    (h_local_min : IsLocalMinOn f (icc a b) a) (h_conv : ConvexOn ℝ (icc a b) f) :
+    IsMinOn f (icc a b) a := by
   rintro c hc
   dsimp only [mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
   · exact le_rfl
     
-  have H₁ : ∀ᶠ y in 𝓝[>] a, f a ≤ f y := h_local_min.filter_mono (nhds_within_mono _ Ioi_subset_Ici_self)
+  have H₁ : ∀ᶠ y in 𝓝[>] a, f a ≤ f y :=
+    h_local_min.filter_mono (nhds_within_mono _ Ioi_subset_Ici_self)
   have H₂ : ∀ᶠ y in 𝓝[>] a, y ∈ Ioc a c := Ioc_mem_nhds_within_Ioi (left_mem_Ico.2 a_lt_c)
   rcases(H₁.and H₂).exists with ⟨y, hfy, hy_ac⟩
   rcases(Convex.mem_Ioc a_lt_c).mp hy_ac with ⟨ya, yc, ya₀, yc₀, yac, rfl⟩
@@ -48,8 +50,8 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ}
 
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
-theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmin : IsLocalMinOn f s a)
-    (h_conv : ConvexOn ℝ s f) : IsMinOn f s a := by
+theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s : a ∈ s)
+    (h_localmin : IsLocalMinOn f s a) (h_conv : ConvexOn ℝ s f) : IsMinOn f s a := by
   intro x x_in_s
   let g : ℝ →ᵃ[ℝ] E := AffineMap.lineMap a x
   have hg0 : g 0 = a := AffineMap.line_map_apply_zero a x
@@ -67,8 +69,8 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
 #align is_min_on.of_is_local_min_on_of_convex_on IsMinOn.of_is_local_min_on_of_convex_on
 
 /-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
-theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmax : IsLocalMaxOn f s a)
-    (h_conc : ConcaveOn ℝ s f) : IsMaxOn f s a :=
+theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s)
+    (h_localmax : IsLocalMaxOn f s a) (h_conc : ConcaveOn ℝ s f) : IsMaxOn f s a :=
   @IsMinOn.of_is_local_min_on_of_convex_on _ βᵒᵈ _ _ _ _ _ _ _ _ s f a a_in_s h_localmax h_conc
 #align is_max_on.of_is_local_max_on_of_concave_on IsMaxOn.of_is_local_max_on_of_concave_on
 

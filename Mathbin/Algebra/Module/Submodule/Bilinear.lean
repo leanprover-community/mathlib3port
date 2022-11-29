@@ -46,13 +46,13 @@ def map₂ (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q : Submodule R 
   ⨆ s : p, q.map <| f s
 #align submodule.map₂ Submodule.map₂
 
-theorem apply_mem_map₂ (f : M →ₗ[R] N →ₗ[R] P) {m : M} {n : N} {p : Submodule R M} {q : Submodule R N} (hm : m ∈ p)
-    (hn : n ∈ q) : f m n ∈ map₂ f p q :=
+theorem apply_mem_map₂ (f : M →ₗ[R] N →ₗ[R] P) {m : M} {n : N} {p : Submodule R M}
+    {q : Submodule R N} (hm : m ∈ p) (hn : n ∈ q) : f m n ∈ map₂ f p q :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ map₂ f p q) ⟨n, hn, rfl⟩
 #align submodule.apply_mem_map₂ Submodule.apply_mem_map₂
 
-theorem map₂_le {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q : Submodule R N} {r : Submodule R P} :
-    map₂ f p q ≤ r ↔ ∀ m ∈ p, ∀ n ∈ q, f m n ∈ r :=
+theorem map₂_le {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q : Submodule R N}
+    {r : Submodule R P} : map₂ f p q ≤ r ↔ ∀ m ∈ p, ∀ n ∈ q, f m n ∈ r :=
   ⟨fun H m hm n hn => H <| apply_mem_map₂ _ hm hn, fun H =>
     supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 #align submodule.map₂_le Submodule.map₂_le
@@ -66,17 +66,15 @@ theorem map₂_span_span (f : M →ₗ[R] N →ₗ[R] P) (s : Set M) (t : Set N)
     intro a ha b hb
     apply span_induction ha
     on_goal 1 =>
-    intros
-    apply span_induction hb
-    on_goal 1 =>
-    intros
-    exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
+    intros ; apply span_induction hb
+    on_goal 1 => intros ; exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
     intros
-    simp only [LinearMap.map_zero, LinearMap.zero_apply, zero_mem, LinearMap.map_add, LinearMap.add_apply,
-      LinearMap.map_smul, LinearMap.smul_apply]
+    simp only [LinearMap.map_zero, LinearMap.zero_apply, zero_mem, LinearMap.map_add,
+      LinearMap.add_apply, LinearMap.map_smul, LinearMap.smul_apply]
     all_goals
-      solve_by_elim (config := { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
+      solve_by_elim (config :=
+        { max_depth := 4, discharger := tactic.interactive.apply_instance }) [add_mem _ _,
         zero_mem _, smul_mem _ _ _]
     
   · rw [span_le]
@@ -104,18 +102,18 @@ theorem map₂_bot_left (f : M →ₗ[R] N →ₗ[R] P) (q : Submodule R N) : ma
 #align submodule.map₂_bot_left Submodule.map₂_bot_left
 
 @[mono]
-theorem map₂_le_map₂ {f : M →ₗ[R] N →ₗ[R] P} {p₁ p₂ : Submodule R M} {q₁ q₂ : Submodule R N} (hp : p₁ ≤ p₂)
-    (hq : q₁ ≤ q₂) : map₂ f p₁ q₁ ≤ map₂ f p₂ q₂ :=
+theorem map₂_le_map₂ {f : M →ₗ[R] N →ₗ[R] P} {p₁ p₂ : Submodule R M} {q₁ q₂ : Submodule R N}
+    (hp : p₁ ≤ p₂) (hq : q₁ ≤ q₂) : map₂ f p₁ q₁ ≤ map₂ f p₂ q₂ :=
   map₂_le.2 fun m hm n hn => apply_mem_map₂ _ (hp hm) (hq hn)
 #align submodule.map₂_le_map₂ Submodule.map₂_le_map₂
 
-theorem map₂_le_map₂_left {f : M →ₗ[R] N →ₗ[R] P} {p₁ p₂ : Submodule R M} {q : Submodule R N} (h : p₁ ≤ p₂) :
-    map₂ f p₁ q ≤ map₂ f p₂ q :=
+theorem map₂_le_map₂_left {f : M →ₗ[R] N →ₗ[R] P} {p₁ p₂ : Submodule R M} {q : Submodule R N}
+    (h : p₁ ≤ p₂) : map₂ f p₁ q ≤ map₂ f p₂ q :=
   map₂_le_map₂ h (le_refl q)
 #align submodule.map₂_le_map₂_left Submodule.map₂_le_map₂_left
 
-theorem map₂_le_map₂_right {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q₁ q₂ : Submodule R N} (h : q₁ ≤ q₂) :
-    map₂ f p q₁ ≤ map₂ f p q₂ :=
+theorem map₂_le_map₂_right {f : M →ₗ[R] N →ₗ[R] P} {p : Submodule R M} {q₁ q₂ : Submodule R N}
+    (h : q₁ ≤ q₂) : map₂ f p q₁ ≤ map₂ f p q₂ :=
   map₂_le_map₂ (le_refl p) h
 #align submodule.map₂_le_map₂_right Submodule.map₂_le_map₂_right
 
@@ -133,7 +131,9 @@ theorem map₂_sup_left (f : M →ₗ[R] N →ₗ[R] P) (p₁ p₂ : Submodule R
   le_antisymm
     (map₂_le.2 fun mn hmn p hp =>
       let ⟨m, hm, n, hn, hmn⟩ := mem_sup.1 hmn
-      mem_sup.2 ⟨_, apply_mem_map₂ _ hm hp, _, apply_mem_map₂ _ hn hp, hmn ▸ (LinearMap.map_add₂ _ _ _ _).symm⟩)
+      mem_sup.2
+        ⟨_, apply_mem_map₂ _ hm hp, _, apply_mem_map₂ _ hn hp,
+          hmn ▸ (LinearMap.map_add₂ _ _ _ _).symm⟩)
     (sup_le (map₂_le_map₂_left le_sup_left) (map₂_le_map₂_left le_sup_right))
 #align submodule.map₂_sup_left Submodule.map₂_sup_left
 

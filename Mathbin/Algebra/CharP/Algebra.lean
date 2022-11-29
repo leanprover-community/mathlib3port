@@ -39,14 +39,14 @@ theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semirin
       rw [RingHom.map_zero] }
 #align char_p_of_injective_algebra_map char_p_of_injective_algebra_map
 
-theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiring A] [Algebra R A] [Nontrivial A] (p : ℕ)
-    [CharP R p] : CharP A p :=
+theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiring A] [Algebra R A]
+    [Nontrivial A] (p : ℕ) [CharP R p] : CharP A p :=
   char_p_of_injective_algebra_map (algebraMap R A).Injective p
 #align char_p_of_injective_algebra_map' char_p_of_injective_algebra_map'
 
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
-theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
-    (h : Function.Injective (algebraMap R A)) [CharZero R] : CharZero A :=
+theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiring R] [Semiring A]
+    [Algebra R A] (h : Function.Injective (algebraMap R A)) [CharZero R] : CharZero A :=
   { cast_injective := fun x y hxy => by
       change algebraMap ℕ A x = algebraMap ℕ A y at hxy
       rw [IsScalarTower.algebra_map_apply ℕ R A x] at hxy

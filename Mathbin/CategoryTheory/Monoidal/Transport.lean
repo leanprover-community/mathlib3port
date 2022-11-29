@@ -51,12 +51,16 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D where
     e.Functor.mapIso
       (((e.unitIso.app _).symm ⊗ Iso.refl _) ≪≫
         α_ (e.inverse.obj X) (e.inverse.obj Y) (e.inverse.obj Z) ≪≫ (Iso.refl _ ⊗ e.unitIso.app _))
-  leftUnitor X := e.Functor.mapIso (((e.unitIso.app _).symm ⊗ Iso.refl _) ≪≫ λ_ (e.inverse.obj X)) ≪≫ e.counitIso.app _
-  rightUnitor X := e.Functor.mapIso ((Iso.refl _ ⊗ (e.unitIso.app _).symm) ≪≫ ρ_ (e.inverse.obj X)) ≪≫ e.counitIso.app _
+  leftUnitor X :=
+    e.Functor.mapIso (((e.unitIso.app _).symm ⊗ Iso.refl _) ≪≫ λ_ (e.inverse.obj X)) ≪≫
+      e.counitIso.app _
+  rightUnitor X :=
+    e.Functor.mapIso ((Iso.refl _ ⊗ (e.unitIso.app _).symm) ≪≫ ρ_ (e.inverse.obj X)) ≪≫
+      e.counitIso.app _
   triangle' X Y := by
     dsimp
-    simp only [iso.hom_inv_id_app_assoc, comp_tensor_id, equivalence.unit_inverse_comp, assoc, equivalence.inv_fun_map,
-      comp_id, functor.map_comp, id_tensor_comp, e.inverse.map_id]
+    simp only [iso.hom_inv_id_app_assoc, comp_tensor_id, equivalence.unit_inverse_comp, assoc,
+      equivalence.inv_fun_map, comp_id, functor.map_comp, id_tensor_comp, e.inverse.map_id]
     simp only [← e.functor.map_comp]
     congr 2
     slice_lhs 2 3 =>
@@ -67,8 +71,8 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D where
     rw [category.id_comp, ← associator_naturality_assoc, triangle]
   pentagon' W X Y Z := by
     dsimp
-    simp only [iso.hom_inv_id_app_assoc, comp_tensor_id, assoc, equivalence.inv_fun_map, functor.map_comp,
-      id_tensor_comp, e.inverse.map_id]
+    simp only [iso.hom_inv_id_app_assoc, comp_tensor_id, assoc, equivalence.inv_fun_map,
+      functor.map_comp, id_tensor_comp, e.inverse.map_id]
     simp only [← e.functor.map_comp]
     congr 2
     slice_lhs 4 5 =>
@@ -101,14 +105,16 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D where
     erw [← e.counit_iso.hom.naturality]
     simp only [functor.comp_map, ← e.functor.map_comp_assoc]
     congr 2
-    rw [e.inverse.map_id, id_tensor_comp_tensor_id_assoc, ← tensor_id_comp_id_tensor_assoc, left_unitor_naturality]
+    rw [e.inverse.map_id, id_tensor_comp_tensor_id_assoc, ← tensor_id_comp_id_tensor_assoc,
+      left_unitor_naturality]
   right_unitor_naturality' X Y f := by
     dsimp
     simp only [functor.map_comp, Functor.map_id, category.assoc]
     erw [← e.counit_iso.hom.naturality]
     simp only [functor.comp_map, ← e.functor.map_comp_assoc]
     congr 2
-    rw [e.inverse.map_id, tensor_id_comp_id_tensor_assoc, ← id_tensor_comp_tensor_id_assoc, right_unitor_naturality]
+    rw [e.inverse.map_id, tensor_id_comp_id_tensor_assoc, ← id_tensor_comp_tensor_id_assoc,
+      right_unitor_naturality]
   associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ := by
     dsimp
     simp only [equivalence.inv_fun_map, functor.map_comp, category.assoc]
@@ -163,10 +169,12 @@ attribute [local simp] transport_tensor_unit
 
 section
 
-attribute [local simp] transport_tensor_hom transport_associator transport_left_unitor transport_right_unitor
+attribute [local simp]
+  transport_tensor_hom transport_associator transport_left_unitor transport_right_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
+/--
+We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
 def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) where
@@ -183,7 +191,8 @@ def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) where
     rw [comp_id, comp_id]
   associativity' X Y Z := by
     dsimp
-    simp only [comp_tensor_id, assoc, equivalence.inv_fun_map, functor.map_comp, id_tensor_comp, e.inverse.map_id]
+    simp only [comp_tensor_id, assoc, equivalence.inv_fun_map, functor.map_comp, id_tensor_comp,
+      e.inverse.map_id]
     simp only [← e.functor.map_comp]
     congr 2
     slice_lhs 3 3 => rw [← tensor_id_comp_id_tensor]
@@ -203,8 +212,8 @@ def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) where
     rw [← id_tensor_comp, iso.hom_inv_id_app]
     dsimp
     rw [tensor_id]
-    simp only [associator_conjugation, ← tensor_id, ← tensor_comp, iso.inv_hom_id, iso.inv_hom_id_assoc, category.assoc,
-      category.id_comp, category.comp_id]
+    simp only [associator_conjugation, ← tensor_id, ← tensor_comp, iso.inv_hom_id,
+      iso.inv_hom_id_assoc, category.assoc, category.id_comp, category.comp_id]
   left_unitality' X := by
     dsimp
     simp only [tensor_id, assoc, id_comp, functor.map_comp, e.inverse.map_id]
@@ -255,15 +264,18 @@ def fromTransported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
 def transportedMonoidalUnitIso (e : C ≌ D) :
     LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ (fromTransported e).toLaxMonoidalFunctor :=
   asIso (monoidalUnit (toTransported e))
-#align category_theory.monoidal.transported_monoidal_unit_iso CategoryTheory.Monoidal.transportedMonoidalUnitIso
+#align
+  category_theory.monoidal.transported_monoidal_unit_iso CategoryTheory.Monoidal.transportedMonoidalUnitIso
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The counit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
 def transportedMonoidalCounitIso (e : C ≌ D) :
-    (fromTransported e).toLaxMonoidalFunctor ⊗⋙ laxToTransported e ≅ LaxMonoidalFunctor.id (Transported e) :=
+    (fromTransported e).toLaxMonoidalFunctor ⊗⋙ laxToTransported e ≅
+      LaxMonoidalFunctor.id (Transported e) :=
   asIso (monoidalCounit (toTransported e))
-#align category_theory.monoidal.transported_monoidal_counit_iso CategoryTheory.Monoidal.transportedMonoidalCounitIso
+#align
+  category_theory.monoidal.transported_monoidal_counit_iso CategoryTheory.Monoidal.transportedMonoidalCounitIso
 
 end CategoryTheory.Monoidal
 

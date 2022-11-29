@@ -141,23 +141,27 @@ unsafe def hyp_directly_depends_on_locals (h : expr) (hs : List expr) : tactic B
 hypothesis `h` directly depends on a hypothesis whose unique name appears in
 `ns` or `h`'s name appears in `ns`.
 -/
-unsafe def hyp_directly_depends_on_local_name_set_inclusive (h : expr) (ns : name_set) : tactic Bool :=
+unsafe def hyp_directly_depends_on_local_name_set_inclusive (h : expr) (ns : name_set) :
+    tactic Bool :=
   List.mbor [pure <| ns.contains h.local_uniq_name, hyp_directly_depends_on_local_name_set h ns]
-#align tactic.hyp_directly_depends_on_local_name_set_inclusive tactic.hyp_directly_depends_on_local_name_set_inclusive
+#align
+  tactic.hyp_directly_depends_on_local_name_set_inclusive tactic.hyp_directly_depends_on_local_name_set_inclusive
 
 /-- `hyp_directly_depends_on_local_set_inclusive h ns` is true iff the hypothesis `h`
 directly depends on any of the hypotheses `hs` or `h` appears in `hs`.
 -/
 unsafe def hyp_directly_depends_on_local_set_inclusive (h : expr) (hs : expr_set) : tactic Bool :=
   hyp_directly_depends_on_local_name_set_inclusive h <| local_set_to_name_set hs
-#align tactic.hyp_directly_depends_on_local_set_inclusive tactic.hyp_directly_depends_on_local_set_inclusive
+#align
+  tactic.hyp_directly_depends_on_local_set_inclusive tactic.hyp_directly_depends_on_local_set_inclusive
 
 /-- `hyp_directly_depends_on_locals_inclusive h ns` is true iff the hypothesis `h`
 directly depends on any of the hypotheses `hs` or `h` appears in `hs`.
 -/
 unsafe def hyp_directly_depends_on_locals_inclusive (h : expr) (hs : List expr) : tactic Bool :=
   hyp_directly_depends_on_local_name_set_inclusive h <| local_list_to_name_set hs
-#align tactic.hyp_directly_depends_on_locals_inclusive tactic.hyp_directly_depends_on_locals_inclusive
+#align
+  tactic.hyp_directly_depends_on_locals_inclusive tactic.hyp_directly_depends_on_locals_inclusive
 
 /-! #### Computing the direct dependencies of a hypothesis -/
 
@@ -205,7 +209,8 @@ hypotheses that the hypothesis `h` directly depends on, plus `h` itself.
 -/
 unsafe def direct_dependency_name_set_of_hyp_inclusive (h : expr) : tactic name_set :=
   local_set_to_name_set <$> direct_dependency_set_of_hyp_inclusive h
-#align tactic.direct_dependency_name_set_of_hyp_inclusive tactic.direct_dependency_name_set_of_hyp_inclusive
+#align
+  tactic.direct_dependency_name_set_of_hyp_inclusive tactic.direct_dependency_name_set_of_hyp_inclusive
 
 /-- `direct_dependencies_of_hyp_inclusive h` is the list of hypotheses that the
 hypothesis `h` directly depends on, plus `h` itself. The dependencies are
@@ -230,8 +235,8 @@ returns an expanded cache with hypotheses which the tactic has encountered.
 You probably want to use `tactic.hyp_depends_on_local_name_set` or
 `tactic.hyps_depend_on_local_name_set` instead of this tactic.
 -/
-unsafe def hyp_depends_on_local_name_set' : expr_set → expr → name_set → tactic (Bool × expr_set) := fun cache h ns =>
-  do
+unsafe def hyp_depends_on_local_name_set' : expr_set → expr → name_set → tactic (Bool × expr_set) :=
+  fun cache h ns => do
   let ff ← pure <| cache.contains h |
     pure (false, cache)
   let direct_deps ← direct_dependency_set_of_hyp h
@@ -278,7 +283,8 @@ every `h ∈ hs`.
 unsafe def hyps_depend_on_local_name_set (hs : List expr) (ns : name_set) : tactic (List Bool) := do
   let ctx_has_local ← context_has_local_def
   if ctx_has_local then
-      let go : expr → List Bool × expr_set → tactic (List Bool × expr_set) := fun h ⟨deps, cache⟩ => do
+      let go : expr → List Bool × expr_set → tactic (List Bool × expr_set) := fun h ⟨deps, cache⟩ =>
+        do
         let (h_dep, cache) ← hyp_depends_on_local_name_set' cache h ns
         pure (h_dep :: deps, cache)
       Prod.fst <$> hs go ([], mk_expr_map)
@@ -314,8 +320,10 @@ You probably want to use `tactic.hyp_depends_on_local_name_set_inclusive` or
 -/
 unsafe def hyp_depends_on_local_name_set_inclusive' (cache : expr_set) (h : expr) (ns : name_set) :
     tactic (Bool × expr_set) :=
-  if ns.contains h.local_uniq_name then pure (true, cache) else hyp_depends_on_local_name_set' cache h ns
-#align tactic.hyp_depends_on_local_name_set_inclusive' tactic.hyp_depends_on_local_name_set_inclusive'
+  if ns.contains h.local_uniq_name then pure (true, cache)
+  else hyp_depends_on_local_name_set' cache h ns
+#align
+  tactic.hyp_depends_on_local_name_set_inclusive' tactic.hyp_depends_on_local_name_set_inclusive'
 
 /-- `hyp_depends_on_local_name_set_inclusive h ns` is true iff the hypothesis `h`
 inclusively depends on any of the hypotheses whose unique names appear in `ns`.
@@ -349,10 +357,12 @@ whether `h` inclusively depends on a hypothesis whose unique name appears in
 `ns`. This is the same as (but more efficient than) calling
 `tactic.hyp_depends_on_local_name_set_inclusive` for every `h ∈ hs`.
 -/
-unsafe def hyps_depend_on_local_name_set_inclusive (hs : List expr) (ns : name_set) : tactic (List Bool) := do
+unsafe def hyps_depend_on_local_name_set_inclusive (hs : List expr) (ns : name_set) :
+    tactic (List Bool) := do
   let ctx_has_local ← context_has_local_def
   if ctx_has_local then
-      let go : expr → List Bool × expr_set → tactic (List Bool × expr_set) := fun h ⟨deps, cache⟩ => do
+      let go : expr → List Bool × expr_set → tactic (List Bool × expr_set) := fun h ⟨deps, cache⟩ =>
+        do
         let (h_dep, cache) ← hyp_depends_on_local_name_set_inclusive' cache h ns
         pure (h_dep :: deps, cache)
       Prod.fst <$> hs go ([], mk_expr_map)
@@ -364,7 +374,8 @@ unsafe def hyps_depend_on_local_name_set_inclusive (hs : List expr) (ns : name_s
 (but more efficient than) calling `tactic.hyp_depends_on_local_set_inclusive`
 for every `h ∈ hs`.
 -/
-unsafe def hyps_depend_on_local_set_inclusive (hs : List expr) (is : expr_set) : tactic (List Bool) :=
+unsafe def hyps_depend_on_local_set_inclusive (hs : List expr) (is : expr_set) :
+    tactic (List Bool) :=
   hyps_depend_on_local_name_set_inclusive hs <| local_set_to_name_set is
 #align tactic.hyps_depend_on_local_set_inclusive tactic.hyps_depend_on_local_set_inclusive
 
@@ -389,8 +400,8 @@ the tactic has encountered.
 You probably want to use `tactic.dependency_set_of_hyp` or
 `tactic.dependency_sets_of_hyps` instead of this tactic.
 -/
-unsafe def dependency_set_of_hyp' : expr_map expr_set → expr → tactic (expr_set × expr_map expr_set) := fun cache h =>
-  do
+unsafe def dependency_set_of_hyp' :
+    expr_map expr_set → expr → tactic (expr_set × expr_map expr_set) := fun cache h => do
   match cache h with
     | some deps => pure (deps, cache)
     | none => do
@@ -408,7 +419,8 @@ you need the dependencies of multiple hypotheses, use
 -/
 unsafe def dependency_set_of_hyp (h : expr) : tactic expr_set := do
   let ctx_has_local ← context_upto_hyp_has_local_def h
-  if ctx_has_local then Prod.fst <$> dependency_set_of_hyp' mk_expr_map h else direct_dependency_set_of_hyp h
+  if ctx_has_local then Prod.fst <$> dependency_set_of_hyp' mk_expr_map h
+    else direct_dependency_set_of_hyp h
 #align tactic.dependency_set_of_hyp tactic.dependency_set_of_hyp
 
 /-- `dependency_name_set_of_hyp h` is the set of unique names of the dependencies of
@@ -434,7 +446,8 @@ of `h`. This is the same as (but more performant than) using
 unsafe def dependency_sets_of_hyps (hs : List expr) : tactic (List expr_set) := do
   let ctx_has_def ← context_has_local_def
   if ctx_has_def then
-      let go : expr → List expr_set × expr_map expr_set → tactic (List expr_set × expr_map expr_set) := do
+      let go :
+        expr → List expr_set × expr_map expr_set → tactic (List expr_set × expr_map expr_set) := do
         fun h ⟨deps, cache⟩ => do
           let (h_deps, cache) ← dependency_set_of_hyp' cache h
           pure (h_deps :: deps, cache)
@@ -509,7 +522,8 @@ than) using `tactic.dependency_set_of_hyp_inclusive` on every `h ∈ hs`.
 unsafe def dependency_sets_of_hyps_inclusive (hs : List expr) : tactic (List expr_set) := do
   let ctx_has_def ← context_has_local_def
   if ctx_has_def then
-      let go : expr → List expr_set × expr_map expr_set → tactic (List expr_set × expr_map expr_set) :=
+      let go :
+        expr → List expr_set × expr_map expr_set → tactic (List expr_set × expr_map expr_set) :=
         fun h ⟨deps, cache⟩ => do
         let (h_deps, cache) ← dependency_set_of_hyp_inclusive' cache h
         pure (h_deps :: deps, cache)
@@ -543,10 +557,12 @@ private unsafe def reverse_dependencies_of_hyp_name_set_aux (hs : name_set) :
   | [], revdeps, _ => pure revdeps.reverse
   | H :: Hs, revdeps, ns => do
     let H_uname := H.local_uniq_name
-    let H_is_revdep ← List.mband [pure <| ¬hs.contains H_uname, hyp_directly_depends_on_local_name_set H ns]
+    let H_is_revdep ←
+      List.mband [pure <| ¬hs.contains H_uname, hyp_directly_depends_on_local_name_set H ns]
     if H_is_revdep then reverse_dependencies_of_hyp_name_set_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_aux Hs revdeps ns
-#align tactic.reverse_dependencies_of_hyp_name_set_aux tactic.reverse_dependencies_of_hyp_name_set_aux
+#align
+  tactic.reverse_dependencies_of_hyp_name_set_aux tactic.reverse_dependencies_of_hyp_name_set_aux
 
 /-- `reverse_dependencies_of_hyp_name_set hs` is the list of reverse dependencies of
 the hypotheses whose unique names appear in `hs`, excluding the `hs` themselves.
@@ -580,8 +596,10 @@ private unsafe def reverse_dependencies_of_hyp_name_set_inclusive_aux :
   | [], revdeps, _ => pure revdeps.reverse
   | H :: Hs, revdeps, ns => do
     let H_uname := H.local_uniq_name
-    let H_is_revdep ← List.mbor [pure <| ns.contains H.local_uniq_name, hyp_directly_depends_on_local_name_set H ns]
-    if H_is_revdep then reverse_dependencies_of_hyp_name_set_inclusive_aux Hs (H :: revdeps) (ns H_uname)
+    let H_is_revdep ←
+      List.mbor [pure <| ns.contains H.local_uniq_name, hyp_directly_depends_on_local_name_set H ns]
+    if H_is_revdep then
+        reverse_dependencies_of_hyp_name_set_inclusive_aux Hs (H :: revdeps) (ns H_uname)
       else reverse_dependencies_of_hyp_name_set_inclusive_aux Hs revdeps ns
 #align
   tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux tactic.reverse_dependencies_of_hyp_name_set_inclusive_aux
@@ -595,7 +613,8 @@ unsafe def reverse_dependencies_of_hyp_name_set_inclusive (hs : name_set) : tact
   let ctx ← local_context
   let ctx := ctx.dropWhile fun h => ¬hs.contains h.local_uniq_name
   reverse_dependencies_of_hyp_name_set_inclusive_aux ctx [] hs
-#align tactic.reverse_dependencies_of_hyp_name_set_inclusive tactic.reverse_dependencies_of_hyp_name_set_inclusive
+#align
+  tactic.reverse_dependencies_of_hyp_name_set_inclusive tactic.reverse_dependencies_of_hyp_name_set_inclusive
 
 /-- `reverse_dependencies_of_hyp_set_inclusive hs` is the list of reverse
 dependencies of the hypotheses `hs`, including the `hs` themselves. The
@@ -604,7 +623,8 @@ the context.
 -/
 unsafe def reverse_dependencies_of_hyp_set_inclusive (hs : expr_set) : tactic (List expr) :=
   reverse_dependencies_of_hyp_name_set_inclusive <| local_set_to_name_set hs
-#align tactic.reverse_dependencies_of_hyp_set_inclusive tactic.reverse_dependencies_of_hyp_set_inclusive
+#align
+  tactic.reverse_dependencies_of_hyp_set_inclusive tactic.reverse_dependencies_of_hyp_set_inclusive
 
 /-- `reverse_dependencies_of_hyps_inclusive hs` is the list of reverse dependencies
 of the hypotheses `hs`, including the `hs` themselves. The reverse dependencies
@@ -671,7 +691,8 @@ reverted hypotheses.
 -/
 unsafe def revert_reverse_dependencies_of_hyp_name_set (hs : name_set) : tactic ℕ :=
   reverse_dependencies_of_hyp_name_set hs >>= revert_lst
-#align tactic.revert_reverse_dependencies_of_hyp_name_set tactic.revert_reverse_dependencies_of_hyp_name_set
+#align
+  tactic.revert_reverse_dependencies_of_hyp_name_set tactic.revert_reverse_dependencies_of_hyp_name_set
 
 /-- `revert_reverse_dependencies_of_hyp_set hs` reverts all the hypotheses that
 depend on a hypothesis in `hs`. The `hs` themselves are not reverted, unless

@@ -89,54 +89,64 @@ unsafe def tactic.interactive.reflect_name : tactic Unit := do
 #align tactic.interactive.reflect_name tactic.interactive.reflect_name
 
 /-- Convenience helper for two consecutive `reflected.subst` applications -/
-unsafe def reflected.subst₂ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β a → Sort w} {f : ∀ a b, γ a b} {a : α} {b : β a} :
-    reflected _ f → reflected _ a → reflected _ b → reflected _ (f a b) :=
+unsafe def reflected.subst₂ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β a → Sort w} {f : ∀ a b, γ a b}
+    {a : α} {b : β a} : reflected _ f → reflected _ a → reflected _ b → reflected _ (f a b) :=
   (· ∘ ·) reflected.subst ∘ reflected.subst
 #align reflected.subst₂ reflected.subst₂
 
 /-- Convenience helper for three consecutive `reflected.subst` applications -/
-unsafe def reflected.subst₃ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β a → Sort w} {δ : ∀ a b, γ a b → Sort x}
-    {f : ∀ a b c, δ a b c} {a : α} {b : β a} {c : γ a b} :
+unsafe def reflected.subst₃ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β a → Sort w}
+    {δ : ∀ a b, γ a b → Sort x} {f : ∀ a b c, δ a b c} {a : α} {b : β a} {c : γ a b} :
     reflected _ f → reflected _ a → reflected _ b → reflected _ c → reflected _ (f a b c) :=
   (· ∘ ·) reflected.subst₂ ∘ reflected.subst
 #align reflected.subst₃ reflected.subst₃
 
 /-- Convenience helper for four consecutive `reflected.subst` applications -/
-unsafe def reflected.subst₄ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β a → Sort w} {δ : ∀ a b, γ a b → Sort x}
-    {ε : ∀ a b c, δ a b c → Sort y} {f : ∀ a b c d, ε a b c d} {a : α} {b : β a} {c : γ a b} {d : δ a b c} :
-    reflected _ f → reflected _ a → reflected _ b → reflected _ c → reflected _ d → reflected _ (f a b c d) :=
+unsafe def reflected.subst₄ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β a → Sort w}
+    {δ : ∀ a b, γ a b → Sort x} {ε : ∀ a b c, δ a b c → Sort y} {f : ∀ a b c d, ε a b c d} {a : α}
+    {b : β a} {c : γ a b} {d : δ a b c} :
+    reflected _ f →
+      reflected _ a → reflected _ b → reflected _ c → reflected _ d → reflected _ (f a b c d) :=
   (· ∘ ·) reflected.subst₃ ∘ reflected.subst
 #align reflected.subst₄ reflected.subst₄
 
 /-! ### Universe-polymorphic `has_reflect` instances -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `punit.reflect`. -/
 unsafe instance punit.reflect' [reflected_univ.{u}] : has_reflect PUnit.{u}
   | PUnit.unit => by
-    trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]"
+    trace
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]"
 #align punit.reflect' punit.reflect'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `list.reflect`. -/
-unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] : has_reflect (List α)
+unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α] [reflected _ α] :
+    has_reflect (List α)
   | [] =>
-    (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+    (by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
           reflected _ @List.nil.{u}).subst
       q(α)
   | h :: t =>
-    (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+    (by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
           reflected _ @List.cons.{u}).subst₃
       q(α) q(h) (list.reflect' t)
 #align list.reflect' list.reflect'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
-unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : Type v} [reflected _ α] [has_reflect α] :
-    has_reflect (ULift.{u, v} α)
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
+unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : Type v}
+    [reflected _ α] [has_reflect α] : has_reflect (ULift.{u, v} α)
   | ULift.up x =>
-    (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+    (by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
           reflected _ @ULift.up.{u, v}).subst₂
       q(α) q(x)
 #align ulift.reflect' ulift.reflect'

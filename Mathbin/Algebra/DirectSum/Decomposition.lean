@@ -78,16 +78,19 @@ def decompose : M ≃ ⨁ i, ℳ i where
   right_inv := Decomposition.right_inv
 #align direct_sum.decompose DirectSum.decompose
 
-protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0) (h_homogeneous : ∀ {i} (m : ℳ i), p (m : M))
-    (h_add : ∀ m m' : M, p m → p m' → p (m + m')) : ∀ m, p m := by
+protected theorem Decomposition.induction_on {p : M → Prop} (h_zero : p 0)
+    (h_homogeneous : ∀ {i} (m : ℳ i), p (m : M)) (h_add : ∀ m m' : M, p m → p m' → p (m + m')) :
+    ∀ m, p m := by
   let ℳ' : ι → AddSubmonoid M := fun i =>
     (⟨ℳ i, fun _ _ => AddMemClass.add_mem, ZeroMemClass.zero_mem _⟩ : AddSubmonoid M)
   haveI t : DirectSum.Decomposition ℳ' :=
     { decompose' := DirectSum.decompose ℳ, left_inv := fun _ => (decompose ℳ).left_inv _,
       right_inv := fun _ => (decompose ℳ).right_inv _ }
   have mem : ∀ m, m ∈ supr ℳ' := fun m =>
-    (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
-  exact fun m => AddSubmonoid.supr_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
+    (DirectSum.IsInternal.add_submonoid_supr_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸
+      trivial
+  exact fun m =>
+    AddSubmonoid.supr_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
 #align direct_sum.decomposition.induction_on DirectSum.Decomposition.induction_on
 
 @[simp]
@@ -105,7 +108,8 @@ theorem decompose_coe {i : ι} (x : ℳ i) : decompose ℳ (x : M) = DirectSum.o
   rw [← decompose_symm_of, Equiv.apply_symm_apply]
 #align direct_sum.decompose_coe DirectSum.decompose_coe
 
-theorem decompose_of_mem {x : M} {i : ι} (hx : x ∈ ℳ i) : decompose ℳ x = DirectSum.of (fun i => ℳ i) i ⟨x, hx⟩ :=
+theorem decompose_of_mem {x : M} {i : ι} (hx : x ∈ ℳ i) :
+    decompose ℳ x = DirectSum.of (fun i => ℳ i) i ⟨x, hx⟩ :=
   decompose_coe _ ⟨x, hx⟩
 #align direct_sum.decompose_of_mem DirectSum.decompose_of_mem
 
@@ -113,7 +117,8 @@ theorem decompose_of_mem_same {x : M} {i : ι} (hx : x ∈ ℳ i) : (decompose �
   rw [decompose_of_mem _ hx, DirectSum.of_eq_same, Subtype.coe_mk]
 #align direct_sum.decompose_of_mem_same DirectSum.decompose_of_mem_same
 
-theorem decompose_of_mem_ne {x : M} {i j : ι} (hx : x ∈ ℳ i) (hij : i ≠ j) : (decompose ℳ x j : M) = 0 := by
+theorem decompose_of_mem_ne {x : M} {i j : ι} (hx : x ∈ ℳ i) (hij : i ≠ j) :
+    (decompose ℳ x j : M) = 0 := by
   rw [decompose_of_mem _ hx, DirectSum.of_eq_of_ne _ _ _ _ hij, ZeroMemClass.coe_zero]
 #align direct_sum.decompose_of_mem_ne DirectSum.decompose_of_mem_ne
 
@@ -146,7 +151,8 @@ theorem decompose_symm_add (x y : ⨁ i, ℳ i) :
 #align direct_sum.decompose_symm_add DirectSum.decompose_symm_add
 
 @[simp]
-theorem decompose_sum {ι'} (s : Finset ι') (f : ι' → M) : decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
+theorem decompose_sum {ι'} (s : Finset ι') (f : ι' → M) :
+    decompose ℳ (∑ i in s, f i) = ∑ i in s, decompose ℳ (f i) :=
   map_sum (decomposeAddEquiv ℳ) f s
 #align direct_sum.decompose_sum DirectSum.decompose_sum
 
@@ -158,7 +164,8 @@ theorem decompose_symm_sum {ι'} (s : Finset ι') (f : ι' → ⨁ i, ℳ i) :
 
 theorem sum_support_decompose [∀ (i) (x : ℳ i), Decidable (x ≠ 0)] (r : M) :
     (∑ i in (decompose ℳ r).support, (decompose ℳ r i : M)) = r := by
-  conv_rhs => rw [← (decompose ℳ).symm_apply_apply r, ← sum_support_of (fun i => ℳ i) (decompose ℳ r)]
+  conv_rhs =>
+    rw [← (decompose ℳ).symm_apply_apply r, ← sum_support_of (fun i => ℳ i) (decompose ℳ r)]
   rw [decompose_symm_sum]
   simp_rw [decompose_symm_of]
 #align direct_sum.sum_support_decompose DirectSum.sum_support_decompose
@@ -222,7 +229,8 @@ include M
 a module to a direct sum of components. -/
 @[simps (config := { fullyApplied := false })]
 def decomposeLinearEquiv : M ≃ₗ[R] ⨁ i, ℳ i :=
-  LinearEquiv.symm { (decomposeAddEquiv ℳ).symm with map_smul' := map_smul (DirectSum.coeLinearMap ℳ) }
+  LinearEquiv.symm
+    { (decomposeAddEquiv ℳ).symm with map_smul' := map_smul (DirectSum.coeLinearMap ℳ) }
 #align direct_sum.decompose_linear_equiv DirectSum.decomposeLinearEquiv
 
 @[simp]

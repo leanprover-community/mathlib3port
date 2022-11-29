@@ -50,15 +50,16 @@ namespace NormNum
 
 variable {α : Type u}
 
-theorem subst_into_add {α} [Add α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr) (prt : tl + tr = t) : l + r = t :=
-  by rw [prl, prr, prt]
+theorem subst_into_add {α} [Add α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr)
+    (prt : tl + tr = t) : l + r = t := by rw [prl, prr, prt]
 #align norm_num.subst_into_add NormNum.subst_into_add
 
-theorem subst_into_mul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr) (prt : tl * tr = t) : l * r = t :=
-  by rw [prl, prr, prt]
+theorem subst_into_mul {α} [Mul α] (l r tl tr t) (prl : (l : α) = tl) (prr : r = tr)
+    (prt : tl * tr = t) : l * r = t := by rw [prl, prr, prt]
 #align norm_num.subst_into_mul NormNum.subst_into_mul
 
-theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by simp [pra, prt]
+theorem subst_into_neg {α} [Neg α] (a ta t : α) (pra : a = ta) (prt : -ta = t) : -a = t := by
+  simp [pra, prt]
 #align norm_num.subst_into_neg NormNum.subst_into_neg
 
 /-- The result type of `match_numeral`, either `0`, `1`, or a top level
@@ -174,15 +175,18 @@ theorem adc_bit0_bit0 {α} [Semiring α] (a b c : α) (h : a + b = c) : bit0 a +
   h ▸ by simp [bit1, bit0, add_left_comm, add_assoc]
 #align norm_num.adc_bit0_bit0 NormNum.adc_bit0_bit0
 
-theorem adc_bit1_bit0 {α} [Semiring α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit0 b + 1 = bit0 c :=
+theorem adc_bit1_bit0 {α} [Semiring α] (a b c : α) (h : a + b + 1 = c) :
+    bit1 a + bit0 b + 1 = bit0 c :=
   h ▸ by simp [bit1, bit0, add_left_comm, add_assoc]
 #align norm_num.adc_bit1_bit0 NormNum.adc_bit1_bit0
 
-theorem adc_bit0_bit1 {α} [Semiring α] (a b c : α) (h : a + b + 1 = c) : bit0 a + bit1 b + 1 = bit0 c :=
+theorem adc_bit0_bit1 {α} [Semiring α] (a b c : α) (h : a + b + 1 = c) :
+    bit0 a + bit1 b + 1 = bit0 c :=
   h ▸ by simp [bit1, bit0, add_left_comm, add_assoc]
 #align norm_num.adc_bit0_bit1 NormNum.adc_bit0_bit1
 
-theorem adc_bit1_bit1 {α} [Semiring α] (a b c : α) (h : a + b + 1 = c) : bit1 a + bit1 b + 1 = bit1 c :=
+theorem adc_bit1_bit1 {α} [Semiring α] (a b c : α) (h : a + b + 1 = c) :
+    bit1 a + bit1 b + 1 = bit1 c :=
   h ▸ by simp [bit1, bit0, add_left_comm, add_assoc]
 #align norm_num.adc_bit1_bit1 NormNum.adc_bit1_bit1
 
@@ -271,7 +275,8 @@ add_decl_doc prove_add_nat
 add_decl_doc prove_adc_nat
 
 /-- Given `a`,`b` natural numerals, returns `(r, ⊢ a + b = r)`. -/
-unsafe def prove_add_nat' (c : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) := do
+unsafe def prove_add_nat' (c : instance_cache) (a b : expr) :
+    tactic (instance_cache × expr × expr) := do
   let na ← a.toNat
   let nb ← b.toNat
   let (c, r) ← c.ofNat (na + nb)
@@ -289,12 +294,13 @@ theorem mul_bit0' {α} [Semiring α] (a b c : α) (h : a * b = c) : a * bit0 b =
   h ▸ by simp [bit0, mul_add]
 #align norm_num.mul_bit0' NormNum.mul_bit0'
 
-theorem mul_bit0_bit0 {α} [Semiring α] (a b c : α) (h : a * b = c) : bit0 a * bit0 b = bit0 (bit0 c) :=
+theorem mul_bit0_bit0 {α} [Semiring α] (a b c : α) (h : a * b = c) :
+    bit0 a * bit0 b = bit0 (bit0 c) :=
   bit0_mul _ _ _ (mul_bit0' _ _ _ h)
 #align norm_num.mul_bit0_bit0 NormNum.mul_bit0_bit0
 
-theorem mul_bit1_bit1 {α} [Semiring α] (a b c d e : α) (hc : a * b = c) (hd : a + b = d) (he : bit0 c + d = e) :
-    bit1 a * bit1 b = bit1 e := by
+theorem mul_bit1_bit1 {α} [Semiring α] (a b c d e : α) (hc : a * b = c) (hd : a + b = d)
+    (he : bit0 c + d = e) : bit1 a * bit1 b = bit1 e := by
   rw [← he, ← hd, ← hc] <;> simp [bit1, bit0, mul_add, add_mul, add_left_comm, add_assoc]
 #align norm_num.mul_bit1_bit1 NormNum.mul_bit1_bit1
 
@@ -381,7 +387,10 @@ end
     |
         q( $ ( e₁ ) / $ ( e₂ ) )
         =>
-        do let ( c , p₁ ) ← prove_pos_nat c e₁ let ( c , p₂ ) ← prove_pos_nat c e₂ c ` ` div_pos [ e₁ , e₂ , p₁ , p₂ ]
+        do
+          let ( c , p₁ ) ← prove_pos_nat c e₁
+            let ( c , p₂ ) ← prove_pos_nat c e₂
+            c ` ` div_pos [ e₁ , e₂ , p₁ , p₂ ]
       | e => prove_pos_nat c e
 #align norm_num.prove_pos norm_num.prove_pos
 
@@ -418,13 +427,14 @@ unsafe def prove_ne_zero' (c : instance_cache) : expr → tactic (instance_cache
       c `` ne_zero_of_pos [a, p]
 #align norm_num.prove_ne_zero' norm_num.prove_ne_zero'
 
-theorem clear_denom_div {α} [DivisionRing α] (a b b' c d : α) (h₀ : b ≠ 0) (h₁ : b * b' = d) (h₂ : a * b' = c) :
-    a / b * d = c := by rwa [← h₁, ← mul_assoc, div_mul_cancel _ h₀]
+theorem clear_denom_div {α} [DivisionRing α] (a b b' c d : α) (h₀ : b ≠ 0) (h₁ : b * b' = d)
+    (h₂ : a * b' = c) : a / b * d = c := by rwa [← h₁, ← mul_assoc, div_mul_cancel _ h₀]
 #align norm_num.clear_denom_div NormNum.clear_denom_div
 
 /-- Given `a` nonnegative rational and `d` a natural number, returns `(b, ⊢ a * d = b)`.
 (`d` should be a multiple of the denominator of `a`, so that `b` is a natural number.) -/
-unsafe def prove_clear_denom' (prove_ne_zero : instance_cache → expr → ℚ → tactic (instance_cache × expr))
+unsafe def prove_clear_denom'
+    (prove_ne_zero : instance_cache → expr → ℚ → tactic (instance_cache × expr))
     (c : instance_cache) (a d : expr) (na : ℚ) (nd : ℕ) : tactic (instance_cache × expr × expr) :=
   if na.denom = 1 then prove_mul_nat c a d
   else do
@@ -506,11 +516,13 @@ theorem sle_bit0_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a ≤ b) :
   bit1_le_bit1.2 h
 #align norm_num.sle_bit0_bit1 NormNum.sle_bit0_bit1
 
-theorem sle_bit1_bit0 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) : bit1 a + 1 ≤ bit0 b :=
+theorem sle_bit1_bit0 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) :
+    bit1 a + 1 ≤ bit0 b :=
   (bit1_succ a _ rfl).symm ▸ bit0_le_bit0.2 h
 #align norm_num.sle_bit1_bit0 NormNum.sle_bit1_bit0
 
-theorem sle_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) : bit1 a + 1 ≤ bit1 b :=
+theorem sle_bit1_bit1 {α} [LinearOrderedSemiring α] (a b : α) (h : a + 1 ≤ b) :
+    bit1 a + 1 ≤ bit1 b :=
   (bit1_succ a _ rfl).symm ▸ le_bit0_bit1 _ _ h
 #align norm_num.sle_bit1_bit1 NormNum.sle_bit1_bit1
 
@@ -629,13 +641,14 @@ unsafe def prove_lt_nat (ic : instance_cache) : expr → expr → tactic (instan
 
 end
 
-theorem clear_denom_lt {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d) (ha : a * d = a') (hb : b * d = b')
-    (h : a' < b') : a < b :=
+theorem clear_denom_lt {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d)
+    (ha : a * d = a') (hb : b * d = b') (h : a' < b') : a < b :=
   lt_of_mul_lt_mul_right (by rwa [ha, hb]) (le_of_lt h₀)
 #align norm_num.clear_denom_lt NormNum.clear_denom_lt
 
 /-- Given `a`,`b` nonnegative rational numerals, proves `⊢ a < b`. -/
-unsafe def prove_lt_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_lt_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr) :=
   if na.denom = 1 ∧ nb.denom = 1 then prove_lt_nat ic a b
   else do
     let nd := na.denom.lcm nb.denom
@@ -652,7 +665,8 @@ theorem lt_neg_pos {α} [OrderedAddCommGroup α] (a b : α) (ha : 0 < a) (hb : 0
 #align norm_num.lt_neg_pos NormNum.lt_neg_pos
 
 /-- Given `a`,`b` rational numerals, proves `⊢ a < b`. -/
-unsafe def prove_lt_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_lt_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr) :=
   match match_sign a, match_sign b with
   | Sum.inl a, Sum.inl b => do
     let-- we have to switch the order of `a` and `b` because `a < b ↔ -b < -a`
@@ -670,13 +684,14 @@ unsafe def prove_lt_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tacti
   | Sum.inr tt, _ => prove_lt_nonneg_rat ic a b na nb
 #align norm_num.prove_lt_rat norm_num.prove_lt_rat
 
-theorem clear_denom_le {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d) (ha : a * d = a') (hb : b * d = b')
-    (h : a' ≤ b') : a ≤ b :=
+theorem clear_denom_le {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d)
+    (ha : a * d = a') (hb : b * d = b') (h : a' ≤ b') : a ≤ b :=
   le_of_mul_le_mul_right (by rwa [ha, hb]) h₀
 #align norm_num.clear_denom_le NormNum.clear_denom_le
 
 /-- Given `a`,`b` nonnegative rational numerals, proves `⊢ a ≤ b`. -/
-unsafe def prove_le_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_le_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr) :=
   if na.denom = 1 ∧ nb.denom = 1 then prove_le_nat ic a b
   else do
     let nd := na.denom.lcm nb.denom
@@ -693,7 +708,8 @@ theorem le_neg_pos {α} [OrderedAddCommGroup α] (a b : α) (ha : 0 ≤ a) (hb :
 #align norm_num.le_neg_pos NormNum.le_neg_pos
 
 /-- Given `a`,`b` rational numerals, proves `⊢ a ≤ b`. -/
-unsafe def prove_le_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_le_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr) :=
   match match_sign a, match_sign b with
   | Sum.inl a, Sum.inl b => do
     let (ic, p) ← prove_le_nonneg_rat ic a b (-na) (-nb)
@@ -711,7 +727,8 @@ unsafe def prove_le_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tacti
 
 /-- Given `a`,`b` rational numerals, proves `⊢ a ≠ b`. This version tries to prove
 `⊢ a < b` or `⊢ b < a`, and so is not appropriate for types without an order relation. -/
-unsafe def prove_ne_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_ne_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr) :=
   if na < nb then do
     let (ic, p) ← prove_lt_rat ic a b na nb
     ic `` ne_of_lt [a, b, p]
@@ -752,11 +769,13 @@ theorem int_cast_bit1 {α} [Ring α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑(b
   h ▸ Int.cast_bit1 _
 #align norm_num.int_cast_bit1 NormNum.int_cast_bit1
 
-theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(bit0 a) = bit0 a' :=
+theorem rat_cast_bit0 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') :
+    ↑(bit0 a) = bit0 a' :=
   h ▸ Rat.cast_bit0 _
 #align norm_num.rat_cast_bit0 NormNum.rat_cast_bit0
 
-theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') : ↑(bit1 a) = bit1 a' :=
+theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (h : ↑a = a') :
+    ↑(bit1 a) = bit1 a' :=
   h ▸ Rat.cast_bit1 _
 #align norm_num.rat_cast_bit1 NormNum.rat_cast_bit1
 
@@ -841,8 +860,8 @@ unsafe def prove_rat_uncast_nat (ic qc : instance_cache) (cz_inst : expr) :
     | _ => failed
 #align norm_num.prove_rat_uncast_nat norm_num.prove_rat_uncast_nat
 
-theorem rat_cast_div {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') :
-    ↑(a / b) = a' / b' :=
+theorem rat_cast_div {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a')
+    (hb : ↑b = b') : ↑(a / b) = a' / b' :=
   ha ▸ hb ▸ Rat.cast_div _ _
 #align norm_num.rat_cast_div NormNum.rat_cast_div
 
@@ -894,18 +913,18 @@ unsafe def prove_rat_uncast (ic qc : instance_cache) (cz_inst a' : expr) (na' : 
   | none => prove_rat_uncast_nonneg ic qc cz_inst a' na'
 #align norm_num.prove_rat_uncast norm_num.prove_rat_uncast
 
-theorem nat_cast_ne {α} [Semiring α] [CharZero α] (a b : ℕ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
-    a' ≠ b' :=
+theorem nat_cast_ne {α} [Semiring α] [CharZero α] (a b : ℕ) (a' b' : α) (ha : ↑a = a')
+    (hb : ↑b = b') (h : a ≠ b) : a' ≠ b' :=
   ha ▸ hb ▸ mt Nat.cast_inj.1 h
 #align norm_num.nat_cast_ne NormNum.nat_cast_ne
 
-theorem int_cast_ne {α} [Ring α] [CharZero α] (a b : ℤ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
-    a' ≠ b' :=
+theorem int_cast_ne {α} [Ring α] [CharZero α] (a b : ℤ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b')
+    (h : a ≠ b) : a' ≠ b' :=
   ha ▸ hb ▸ mt Int.cast_inj.1 h
 #align norm_num.int_cast_ne NormNum.int_cast_ne
 
-theorem rat_cast_ne {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a') (hb : ↑b = b') (h : a ≠ b) :
-    a' ≠ b' :=
+theorem rat_cast_ne {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : α) (ha : ↑a = a')
+    (hb : ↑b = b') (h : a ≠ b) : a' ≠ b' :=
   ha ▸ hb ▸ mt Rat.cast_inj.1 h
 #align norm_num.rat_cast_ne NormNum.rat_cast_ne
 
@@ -955,17 +974,19 @@ unsafe def prove_ne_zero (ic : instance_cache) : expr → ℚ → tactic (instan
 
 /-- Given `a` nonnegative rational and `d` a natural number, returns `(b, ⊢ a * d = b)`.
 (`d` should be a multiple of the denominator of `a`, so that `b` is a natural number.) -/
-unsafe def prove_clear_denom : instance_cache → expr → expr → ℚ → ℕ → tactic (instance_cache × expr × expr) :=
+unsafe def prove_clear_denom :
+    instance_cache → expr → expr → ℚ → ℕ → tactic (instance_cache × expr × expr) :=
   prove_clear_denom' prove_ne_zero
 #align norm_num.prove_clear_denom norm_num.prove_clear_denom
 
-theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d ≠ 0) (ha : a * d = a') (hb : b * d = b')
-    (hc : c * d = c') (h : a' + b' = c') : a + b = c :=
+theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d ≠ 0) (ha : a * d = a')
+    (hb : b * d = b') (hc : c * d = c') (h : a' + b' = c') : a + b = c :=
   mul_right_cancel₀ h₀ <| by rwa [add_mul, ha, hb, hc]
 #align norm_num.clear_denom_add NormNum.clear_denom_add
 
 /-- Given `a`,`b`,`c` nonnegative rational numerals, returns `⊢ a + b = c`. -/
-unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc : ℚ) :
+    tactic (instance_cache × expr) :=
   if na.denom = 1 ∧ nb.denom = 1 then prove_add_nat ic a b c
   else do
     let nd := na.denom.lcm nb.denom
@@ -999,7 +1020,8 @@ theorem add_neg_neg {α} [AddGroup α] (a b c : α) (h : b + a = c) : -a + -b = 
 #align norm_num.add_neg_neg NormNum.add_neg_neg
 
 /-- Given `a`,`b`,`c` rational numerals, returns `⊢ a + b = c`. -/
-unsafe def prove_add_rat (ic : instance_cache) (ea eb ec : expr) (a b c : ℚ) : tactic (instance_cache × expr) :=
+unsafe def prove_add_rat (ic : instance_cache) (ea eb ec : expr) (a b c : ℚ) :
+    tactic (instance_cache × expr) :=
   match match_neg ea, match_neg eb, match_neg ec with
   | some ea, some eb, some ec => do
     let (ic, p) ← prove_add_nonneg_rat ic eb ea ec (-b) (-a) (-c)
@@ -1020,7 +1042,8 @@ unsafe def prove_add_rat (ic : instance_cache) (ea eb ec : expr) (a b c : ℚ) :
 #align norm_num.prove_add_rat norm_num.prove_add_rat
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a + b = c)`. -/
-unsafe def prove_add_rat' (ic : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) := do
+unsafe def prove_add_rat' (ic : instance_cache) (a b : expr) :
+    tactic (instance_cache × expr × expr) := do
   let na ← a.to_rat
   let nb ← b.to_rat
   let nc := na + nb
@@ -1053,9 +1076,11 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
 #align norm_num.prove_clear_denom_simple norm_num.prove_clear_denom_simple
 
 theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
-    (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') : a * b = c :=
+    (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') :
+    a * b = c :=
   mul_right_cancel₀ ha.1 <|
-    mul_right_cancel₀ hb.1 <| by rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
+    mul_right_cancel₀ hb.1 <| by
+      rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
 #align norm_num.clear_denom_mul NormNum.clear_denom_mul
 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
@@ -1088,7 +1113,8 @@ theorem mul_neg_neg {α} [Ring α] (a b c : α) (h : a * b = c) : -a * -b = c :=
 #align norm_num.mul_neg_neg NormNum.mul_neg_neg
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a * b = c)`. -/
-unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr × expr) :=
+unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr × expr) :=
   match match_sign a, match_sign b with
   | Sum.inl a, Sum.inl b => do
     let (ic, c, p) ← prove_mul_nonneg_rat ic a b (-na) (-nb)
@@ -1130,7 +1156,8 @@ theorem inv_div_one {α} [DivisionRing α] (a : α) : a⁻¹ = 1 / a :=
   inv_eq_one_div _
 #align norm_num.inv_div_one NormNum.inv_div_one
 
-theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by simp only [inv_eq_one_div, one_div_div]
+theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by
+  simp only [inv_eq_one_div, one_div_div]
 #align norm_num.inv_div NormNum.inv_div
 
 /-- Given `a` a rational numeral, returns `(b, ⊢ a⁻¹ = b)`. -/
@@ -1166,12 +1193,13 @@ unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cach
           return (ic, e', p)
 #align norm_num.prove_inv norm_num.prove_inv
 
-theorem div_eq {α} [DivisionRing α] (a b b' c : α) (hb : b⁻¹ = b') (h : a * b' = c) : a / b = c := by
-  rwa [← hb, ← div_eq_mul_inv] at h
+theorem div_eq {α} [DivisionRing α] (a b b' c : α) (hb : b⁻¹ = b') (h : a * b' = c) : a / b = c :=
+  by rwa [← hb, ← div_eq_mul_inv] at h
 #align norm_num.div_eq NormNum.div_eq
 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a / b = c)`. -/
-unsafe def prove_div (ic : instance_cache) (a b : expr) (na nb : ℚ) : tactic (instance_cache × expr × expr) := do
+unsafe def prove_div (ic : instance_cache) (a b : expr) (na nb : ℚ) :
+    tactic (instance_cache × expr × expr) := do
   let (ic, b', pb) ← prove_inv ic b nb
   let (ic, c, p) ← prove_mul_rat ic a b' na nb⁻¹
   let (ic, p) ← ic.mk_app `` div_eq [a, b, b', c, pb, p]
@@ -1272,11 +1300,14 @@ unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × ex
       |
         q( @ Sub.sub $ ( α ) $ ( inst ) $ ( a ) $ ( b ) )
         =>
-        do let c ← mk_instance_cache α if α = q( Nat ) then prove_sub_nat c a b else Prod.snd <$> prove_sub c a b
+        do
+          let c ← mk_instance_cache α
+            if α = q( Nat ) then prove_sub_nat c a b else Prod.snd <$> prove_sub c a b
       |
         q( Inv.inv $ ( e ) )
         =>
-        do let n ← e . to_rat let c ← infer_type e >>= mk_instance_cache Prod.snd <$> prove_inv c e n
+        do
+          let n ← e . to_rat let c ← infer_type e >>= mk_instance_cache Prod.snd <$> prove_inv c e n
       |
         q( $ ( e₁ ) / $ ( e₂ ) )
         =>
@@ -1288,12 +1319,13 @@ unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × ex
       | _ => failed
 #align norm_num.eval_field norm_num.eval_field
 
-theorem pow_bit0 [Monoid α] (a c' c : α) (b : ℕ) (h : a ^ b = c') (h₂ : c' * c' = c) : a ^ bit0 b = c :=
+theorem pow_bit0 [Monoid α] (a c' c : α) (b : ℕ) (h : a ^ b = c') (h₂ : c' * c' = c) :
+    a ^ bit0 b = c :=
   h₂ ▸ by simp [pow_bit0, h]
 #align norm_num.pow_bit0 NormNum.pow_bit0
 
-theorem pow_bit1 [Monoid α] (a c₁ c₂ c : α) (b : ℕ) (h : a ^ b = c₁) (h₂ : c₁ * c₁ = c₂) (h₃ : c₂ * a = c) :
-    a ^ bit1 b = c := by rw [← h₃, ← h₂] <;> simp [pow_bit1, h]
+theorem pow_bit1 [Monoid α] (a c₁ c₂ c : α) (b : ℕ) (h : a ^ b = c₁) (h₂ : c₁ * c₁ = c₂)
+    (h₃ : c₂ * a = c) : a ^ bit1 b = c := by rw [← h₃, ← h₂] <;> simp [pow_bit1, h]
 #align norm_num.pow_bit1 NormNum.pow_bit1
 
 section
@@ -1301,7 +1333,8 @@ section
 open MatchNumeralResult
 
 /-- Given `a` a rational numeral and `b : nat`, returns `(c, ⊢ a ^ b = c)`. -/
-unsafe def prove_pow (a : expr) (na : ℚ) : instance_cache → expr → tactic (instance_cache × expr × expr)
+unsafe def prove_pow (a : expr) (na : ℚ) :
+    instance_cache → expr → tactic (instance_cache × expr × expr)
   | ic, b =>
     match match_numeral b with
     | zero => do
@@ -1329,12 +1362,13 @@ unsafe def prove_pow (a : expr) (na : ℚ) : instance_cache → expr → tactic 
 
 end
 
-theorem zpow_pos {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c : α) (hb : b = b') (h : a ^ b' = c) : a ^ b = c := by
-  rw [← h, hb, zpow_coe_nat]
+theorem zpow_pos {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c : α) (hb : b = b')
+    (h : a ^ b' = c) : a ^ b = c := by rw [← h, hb, zpow_coe_nat]
 #align norm_num.zpow_pos NormNum.zpow_pos
 
-theorem zpow_neg {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b') (hb : b = b') (h : a ^ b' = c)
-    (hc : c⁻¹ = c') : a ^ (-b) = c' := by rw [← hc, ← h, hb, zpow_neg_coe_of_pos _ b0]
+theorem zpow_neg {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α) (b0 : 0 < b')
+    (hb : b = b') (h : a ^ b' = c) (hc : c⁻¹ = c') : a ^ (-b) = c' := by
+  rw [← hc, ← h, hb, zpow_neg_coe_of_pos _ b0]
 #align norm_num.zpow_neg NormNum.zpow_neg
 
 /-- Given `a` a rational numeral and `b : ℤ`, returns `(c, ⊢ a ^ b = c)`. -/
@@ -1446,7 +1480,9 @@ theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c
             if
               n₁ ≤ n₂
               then
-              do let ( _ , p ) ← if n₁ = n₂ then c ` ` le_refl [ e₁ ] else prove_le_rat c e₁ e₂ n₁ n₂ true_intro p
+              do
+                let ( _ , p ) ← if n₁ = n₂ then c ` ` le_refl [ e₁ ] else prove_le_rat c e₁ e₂ n₁ n₂
+                  true_intro p
               else
               do
                 let ( c , p ) ← prove_lt_rat c e₂ e₁ n₂ n₁
@@ -1459,7 +1495,12 @@ theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c
           let n₁ ← e₁ . to_rat
             let n₂ ← e₂ . to_rat
             let c ← infer_type e₁ >>= mk_instance_cache
-            if n₁ = n₂ then mk_eq_refl e₁ >>= true_intro else do let ( _ , p ) ← prove_ne c e₁ e₂ n₁ n₂ false_intro p
+            if
+              n₁ = n₂
+              then
+              mk_eq_refl e₁ >>= true_intro
+              else
+              do let ( _ , p ) ← prove_ne c e₁ e₂ n₁ n₂ false_intro p
       |
         q( $ ( e₁ ) > $ ( e₂ ) )
         =>
@@ -1516,7 +1557,8 @@ theorem int_to_nat_pos (a : ℤ) (b : ℕ)
     a.toNat = b := by rw [← h] <;> simp
 #align norm_num.int_to_nat_pos NormNum.int_to_nat_pos
 
-theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
+theorem int_to_nat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
+  simp only [Int.to_nat_of_nonpos, h.le, neg_nonpos]
 #align norm_num.int_to_nat_neg NormNum.int_to_nat_neg
 
 theorem nat_abs_pos (a : ℤ) (b : ℕ)
@@ -1712,7 +1754,8 @@ end NormNum
 /-- Basic version of `norm_num` that does not call `simp`. It uses the provided `step` tactic
 to simplify the expression; use `get_step` to get the default `norm_num` set and `derive.step` for
 the basic builtin set of simplifications. -/
-unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Interactive.Loc) : tactic Unit := do
+unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Interactive.Loc) :
+    tactic Unit := do
   let ns ← loc.get_locals
   let success ← tactic.replace_at (norm_num.derive' step) ns loc.include_goal
   when loc <| try tactic.triv
@@ -1723,8 +1766,8 @@ unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Inter
 /-- Normalize numerical expressions. It uses the provided `step` tactic to simplify the expression;
 use `get_step` to get the default `norm_num` set and `derive.step` for the basic builtin set of
 simplifications. -/
-unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List simp_arg_type) (l : Interactive.Loc) :
-    tactic Unit :=
+unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List simp_arg_type)
+    (l : Interactive.Loc) : tactic Unit :=
   repeat1 <|
     orelse' (tactic.norm_num1 step l) <|
       interactive.simp_core {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
@@ -1748,7 +1791,7 @@ unsafe def _root_.expr.norm_num (step : expr → tactic (expr × expr)) (no_dflt
     let (e'', p'') ← _root_.expr.norm_num e'
     let p ← mk_eq_trans p' p''
     return (e'', p)
-#align _root_.expr.norm_num _root_.expr.norm_num
+#align expr.norm_num expr.norm_num
 
 namespace Tactic.Interactive
 
@@ -1817,7 +1860,9 @@ def normed_a : ℕ := by apply_normed 2^100
 -/
 add_tactic_doc
   { Name := "norm_num", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.norm_num1, `tactic.interactive.norm_num, `tactic.interactive.apply_normed],
+    declNames :=
+      [`tactic.interactive.norm_num1, `tactic.interactive.norm_num,
+        `tactic.interactive.apply_normed],
     tags := ["arithmetic", "decision procedure"] }
 
 end Tactic.Interactive
@@ -1925,7 +1970,8 @@ unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
           ts
   -- Trace the result.
       when
-      (¬is_trace_enabled_for `silence_norm_num_if_true ∨ result ≠ expr.const `true []) (trace result)
+      (¬is_trace_enabled_for `silence_norm_num_if_true ∨ result ≠ expr.const `true [])
+      (trace result)
 #align tactic.norm_num_cmd tactic.norm_num_cmd
 
 add_tactic_doc
@@ -1941,19 +1987,22 @@ section ElementaryNumberTheory
 open Tactic
 
 theorem nat_div (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a / b = q := by
-  rw [← h, ← hm, Nat.add_mul_div_right _ _ (lt_of_le_of_lt (Nat.zero_le _) h₂), Nat.div_eq_of_lt h₂, zero_add]
+  rw [← h, ← hm, Nat.add_mul_div_right _ _ (lt_of_le_of_lt (Nat.zero_le _) h₂), Nat.div_eq_of_lt h₂,
+    zero_add]
 #align norm_num.nat_div NormNum.nat_div
 
-theorem int_div (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a / b = q := by
-  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gt (lt_of_le_of_lt h₁ h₂)), Int.div_eq_zero_of_lt h₁ h₂, zero_add]
+theorem int_div (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) :
+    a / b = q := by
+  rw [← h, ← hm, Int.add_mul_div_right _ _ (ne_of_gt (lt_of_le_of_lt h₁ h₂)),
+    Int.div_eq_zero_of_lt h₁ h₂, zero_add]
 #align norm_num.int_div NormNum.int_div
 
 theorem nat_mod (a b q r m : ℕ) (hm : q * b = m) (h : r + m = a) (h₂ : r < b) : a % b = r := by
   rw [← h, ← hm, Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt h₂]
 #align norm_num.nat_mod NormNum.nat_mod
 
-theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) : a % b = r := by
-  rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_lt h₁ h₂]
+theorem int_mod (a b q r m : ℤ) (hm : q * b = m) (h : r + m = a) (h₁ : 0 ≤ r) (h₂ : r < b) :
+    a % b = r := by rw [← h, ← hm, Int.add_mul_mod_self, Int.mod_eq_of_lt h₁ h₂]
 #align norm_num.int_mod NormNum.int_mod
 
 theorem int_div_neg (a b c' c : ℤ) (h : a / b = c') (h₂ : -c' = c) : a / -b = c :=
@@ -1968,7 +2017,8 @@ theorem int_mod_neg (a b c : ℤ) (h : a % b = c) : a % -b = c :=
   * `prove_div_mod ic a b ff` returns `(c, ⊢ a / b = c)`
   * `prove_div_mod ic a b tt` returns `(c, ⊢ a % b = c)`
 -/
-unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tactic (instance_cache × expr × expr)
+unsafe def prove_div_mod (ic : instance_cache) :
+    expr → expr → Bool → tactic (instance_cache × expr × expr)
   | a, b, mod =>
     match match_neg b with
     | some b => do
@@ -2019,8 +2069,14 @@ theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (
   def
     eval_nat_int_ext
     : expr → tactic ( expr × expr )
-    | q( $ ( a ) / $ ( b ) ) => do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b ff
-      | q( $ ( a ) % $ ( b ) ) => do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b tt
+    |
+        q( $ ( a ) / $ ( b ) )
+        =>
+        do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b ff
+      |
+        q( $ ( a ) % $ ( b ) )
+        =>
+        do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b tt
       |
         q( $ ( a ) ∣ $ ( b ) )
         =>

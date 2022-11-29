@@ -96,30 +96,29 @@ def freshIndex : Preform → Nat
   | p ∧* q => max p.freshIndex q.freshIndex
 #align omega.nat.preform.fresh_index Omega.Nat.Preform.freshIndex
 
-theorem holds_constant {v w : Nat → Nat} : ∀ p : Preform, (∀ x < p.freshIndex, v x = w x) → (p.Holds v ↔ p.Holds w)
+theorem holds_constant {v w : Nat → Nat} :
+    ∀ p : Preform, (∀ x < p.freshIndex, v x = w x) → (p.Holds v ↔ p.Holds w)
   | t =* s, h1 => by
     simp only [holds]
-    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
-    apply le_max_left
-    apply le_max_right
+    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
+      apply h1 _ (lt_of_lt_of_le h2 _)
+    apply le_max_left; apply le_max_right
   | t ≤* s, h1 => by
     simp only [holds]
-    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
-    apply le_max_left
-    apply le_max_right
+    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
+      apply h1 _ (lt_of_lt_of_le h2 _)
+    apply le_max_left; apply le_max_right
   | ¬* p, h1 => by
     apply not_congr
     apply holds_constant p h1
   | p ∨* q, h1 => by
     simp only [holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
-    apply le_max_left
-    apply le_max_right
+    apply le_max_left; apply le_max_right
   | p ∧* q, h1 => by
     simp only [holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
-    apply le_max_left
-    apply le_max_right
+    apply le_max_left; apply le_max_right
 #align omega.nat.preform.holds_constant Omega.Nat.Preform.holds_constant
 
 /-- All valuations satisfy argument -/
@@ -142,8 +141,7 @@ def Equiv (p q : Preform) : Prop :=
   ∀ v, Holds v p ↔ Holds v q
 #align omega.nat.preform.equiv Omega.Nat.Preform.Equiv
 
-theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by
-  intro h1 h2
+theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by intro h1 h2;
   apply Exists.imp h1 h2
 #align omega.nat.preform.sat_of_implies_of_sat Omega.Nat.Preform.sat_of_implies_of_sat
 
@@ -186,9 +184,7 @@ theorem univ_close_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.v
 
 theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
   simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
-  rw [not_exists_not]
-  intro h
-  assumption
+  rw [not_exists_not]; intro h; assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/

@@ -147,7 +147,8 @@ def algebraEquivUnder : Monad.Algebra (coprodMonad X) ≌ Under X where
       fun A₁ A₂ f => by
       ext
       simp
-  counitIso := NatIso.ofComponents (fun f => Under.isoMk (Iso.refl _) (by tidy)) fun f g k => by tidy
+  counitIso :=
+    NatIso.ofComponents (fun f => Under.isoMk (Iso.refl _) (by tidy)) fun f g k => by tidy
 #align category_theory.algebra_equiv_under CategoryTheory.algebraEquivUnder
 
 end

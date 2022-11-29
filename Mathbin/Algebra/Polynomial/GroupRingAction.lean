@@ -26,8 +26,12 @@ variable (R : Type _) [Semiring R]
 
 variable {M}
 
-theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSemiringAction.toRingHom M R m) := by
-  suffices DistribMulAction.toAddMonoidHom R[X] m = (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom by
+theorem smul_eq_map [MulSemiringAction M R] (m : M) :
+    (· • ·) m = map (MulSemiringAction.toRingHom M R m) := by
+  suffices
+    DistribMulAction.toAddMonoidHom R[X] m =
+      (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
+    by
     ext1 r
     exact AddMonoidHom.congr_fun this r
   ext (n r) : 2
@@ -39,8 +43,10 @@ variable (M)
 
 noncomputable instance [MulSemiringAction M R] : MulSemiringAction M R[X] :=
   { Polynomial.distribMulAction with smul := (· • ·),
-    smul_one := fun m => (smul_eq_map R m).symm ▸ Polynomial.map_one (MulSemiringAction.toRingHom M R m),
-    smul_mul := fun m p q => (smul_eq_map R m).symm ▸ Polynomial.map_mul (MulSemiringAction.toRingHom M R m) }
+    smul_one := fun m =>
+      (smul_eq_map R m).symm ▸ Polynomial.map_one (MulSemiringAction.toRingHom M R m),
+    smul_mul := fun m p q =>
+      (smul_eq_map R m).symm ▸ Polynomial.map_mul (MulSemiringAction.toRingHom M R m) }
 
 variable {M R}
 
@@ -56,18 +62,18 @@ variable (S : Type _) [CommSemiring S] [MulSemiringAction M S]
 theorem smul_eval_smul (m : M) (f : S[X]) (x : S) : (m • f).eval (m • x) = m • f.eval x :=
   Polynomial.induction_on f (fun r => by rw [smul_C, eval_C, eval_C])
     (fun f g ihf ihg => by rw [smul_add, eval_add, ihf, ihg, eval_add, smul_add]) fun n r ih => by
-    rw [smul_mul', smul_pow', smul_C, smul_X, eval_mul, eval_C, eval_pow, eval_X, eval_mul, eval_C, eval_pow, eval_X,
-      smul_mul', smul_pow']
+    rw [smul_mul', smul_pow', smul_C, smul_X, eval_mul, eval_C, eval_pow, eval_X, eval_mul, eval_C,
+      eval_pow, eval_X, smul_mul', smul_pow']
 #align polynomial.smul_eval_smul Polynomial.smul_eval_smul
 
 variable (G : Type _) [Group G]
 
-theorem eval_smul' [MulSemiringAction G S] (g : G) (f : S[X]) (x : S) : f.eval (g • x) = g • (g⁻¹ • f).eval x := by
-  rw [← smul_eval_smul, smul_inv_smul]
+theorem eval_smul' [MulSemiringAction G S] (g : G) (f : S[X]) (x : S) :
+    f.eval (g • x) = g • (g⁻¹ • f).eval x := by rw [← smul_eval_smul, smul_inv_smul]
 #align polynomial.eval_smul' Polynomial.eval_smul'
 
-theorem smul_eval [MulSemiringAction G S] (g : G) (f : S[X]) (x : S) : (g • f).eval x = g • f.eval (g⁻¹ • x) := by
-  rw [← smul_eval_smul, smul_inv_smul]
+theorem smul_eval [MulSemiringAction G S] (g : G) (f : S[X]) (x : S) :
+    (g • f).eval x = g • f.eval (g⁻¹ • x) := by rw [← smul_eval_smul, smul_inv_smul]
 #align polynomial.smul_eval Polynomial.smul_eval
 
 end Polynomial
@@ -103,8 +109,9 @@ theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubS
       rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_X, Polynomial.smul_C]
 #align prod_X_sub_smul.smul prodXSubSmul.smul
 
-theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) : g • (prodXSubSmul G R x).coeff n = (prodXSubSmul G R x).coeff n :=
-  by rw [← Polynomial.coeff_smul, prodXSubSmul.smul]
+theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) :
+    g • (prodXSubSmul G R x).coeff n = (prodXSubSmul G R x).coeff n := by
+  rw [← Polynomial.coeff_smul, prodXSubSmul.smul]
 #align prod_X_sub_smul.coeff prodXSubSmul.coeff
 
 end CommRing
@@ -123,11 +130,14 @@ open Polynomial
 protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X] where
   toFun := map g
   map_smul' m p :=
-    Polynomial.induction_on p (fun b => by rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
-      (fun p q ihp ihq => by rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add]) fun n b ih => by
-      rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, coe_fn_coe,
-        g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, smul_mul', smul_C, smul_pow', smul_X,
-        coe_fn_coe]
+    Polynomial.induction_on p
+      (fun b => by rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
+      (fun p q ihp ihq => by
+        rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add])
+      fun n b ih => by
+      rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow,
+        map_X, coe_fn_coe, g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X,
+        smul_mul', smul_C, smul_pow', smul_X, coe_fn_coe]
   map_zero' := Polynomial.map_zero g
   map_add' p q := Polynomial.map_add g
   map_one' := Polynomial.map_one g

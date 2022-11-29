@@ -33,7 +33,8 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
     
   · rw [prod_insert his, ← mul_assoc] at hx
     have hpi : Prime (p i) := hp i (mem_insert_self _ _)
-    rcases ih (fun i hi => hp i (mem_insert_of_mem hi)) hx with ⟨t, u, b, c, htus, htu, hbc, rfl, rfl⟩
+    rcases ih (fun i hi => hp i (mem_insert_of_mem hi)) hx with
+      ⟨t, u, b, c, htus, htu, hbc, rfl, rfl⟩
     have hit : i ∉ t := fun hit => his (htus ▸ mem_union_left _ hit)
     have hiu : i ∉ u := fun hiu => his (htus ▸ mem_union_right _ hiu)
     obtain ⟨d, rfl⟩ | ⟨d, rfl⟩ : p i ∣ b ∨ p i ∣ c
@@ -55,7 +56,8 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
   as the product of a power of `p` and a divisor of `a`. -/
 theorem mul_eq_mul_prime_pow {x y a p : R} {n : ℕ} (hp : Prime p) (hx : x * y = a * p ^ n) :
     ∃ (i j : ℕ)(b c : R), i + j = n ∧ a = b * c ∧ x = b * p ^ i ∧ y = c * p ^ j := by
-  rcases mul_eq_mul_prime_prod (fun _ _ => hp) (show x * y = a * (range n).Prod fun _ => p by simpa) with
+  rcases mul_eq_mul_prime_prod (fun _ _ => hp)
+      (show x * y = a * (range n).Prod fun _ => p by simpa) with
     ⟨t, u, b, c, htus, htu, rfl, rfl, rfl⟩
   exact ⟨t.card, u.card, b, c, by rw [← card_disjoint_union htu, htus, card_range], by simp⟩
 #align mul_eq_mul_prime_pow mul_eq_mul_prime_pow

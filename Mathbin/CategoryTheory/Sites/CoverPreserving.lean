@@ -100,9 +100,10 @@ This is actually stronger than merely preserving compatible families because of 
 @[nolint has_nonempty_instance]
 structure CompatiblePreserving (K : GrothendieckTopology D) (G : C ⥤ D) : Prop where
   Compatible :
-    ∀ (ℱ : SheafOfTypesCat.{w} K) {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Compatible)
-      {Y₁ Y₂} {X} (f₁ : X ⟶ G.obj Y₁) (f₂ : X ⟶ G.obj Y₂) {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂)
-      (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂), ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
+    ∀ (ℱ : SheafOfTypesCat.{w} K) {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T}
+      (h : x.Compatible) {Y₁ Y₂} {X} (f₁ : X ⟶ G.obj Y₁) (f₂ : X ⟶ G.obj Y₂) {g₁ : Y₁ ⟶ Z}
+      {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂) (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂),
+      ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 #align category_theory.compatible_preserving CategoryTheory.CompatiblePreserving
 
 variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypesCat.{w} K) {Z : C}
@@ -112,7 +113,8 @@ variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Com
 include h hG
 
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
-theorem Presieve.FamilyOfElements.Compatible.functor_pushforward : (x.functorPushforward G).Compatible := by
+theorem Presieve.FamilyOfElements.Compatible.functor_pushforward :
+    (x.functorPushforward G).Compatible := by
   rintro Z₁ Z₂ W g₁ g₂ f₁' f₂' H₁ H₂ eq
   unfold family_of_elements.functor_pushforward
   rcases get_functor_pushforward_structure H₁ with ⟨X₁, f₁, h₁, hf₁, rfl⟩
@@ -128,7 +130,8 @@ theorem Presieve.FamilyOfElements.Compatible.functor_pushforward : (x.functorPus
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
     x.functorPushforward G (G.map f) (image_mem_functor_pushforward G T hf) = x f hf := by
   unfold family_of_elements.functor_pushforward
-  rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with ⟨X, g, f', hg, eq⟩
+  rcases e₁ : get_functor_pushforward_structure (image_mem_functor_pushforward G T hf) with
+    ⟨X, g, f', hg, eq⟩
   simpa using hG.compatible ℱ h f' (𝟙 _) hg hf (by simp [Eq])
 #align category_theory.compatible_preserving.apply_map CategoryTheory.CompatiblePreserving.apply_map
 
@@ -148,7 +151,12 @@ open Limits.WalkingCospan
         (Term.implicitBinder "{" [`D] [":" (Term.type "Type" [`u₁])] "}")
         (Term.instBinder "[" [] (Term.app (Term.explicitUniv `Category ".{" [`v₁] "}") [`D]) "]")
         (Term.explicitBinder "(" [`K] [":" (Term.app `GrothendieckTopology [`D])] [] ")")
-        (Term.explicitBinder "(" [`G] [":" (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_» `C " ⥤ " `D)] [] ")")
+        (Term.explicitBinder
+         "("
+         [`G]
+         [":" (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_» `C " ⥤ " `D)]
+         []
+         ")")
         (Term.instBinder "[" [] (Term.app `RepresentablyFlat [`G]) "]")]
        (Term.typeSpec ":" (Term.app `CompatiblePreserving [`K `G])))
       (Command.declValSimple
@@ -206,7 +214,9 @@ open Limits.WalkingCospan
                [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
                  (Term.app `structured_arrow_cone.to_diagram [`c])
                  " ⋙ "
-                 (Term.app `structured_arrow.pre [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))]))))
+                 (Term.app
+                  `structured_arrow.pre
+                  [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))]))))
            []
            (Tactic.tacticHave_
             "have"
@@ -228,7 +238,8 @@ open Limits.WalkingCospan
                    `eq_to_hom
                    [(Term.byTactic
                      "by"
-                     (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
               ":="
               (Term.byTactic
                "by"
@@ -238,7 +249,9 @@ open Limits.WalkingCospan
                    "erw"
                    (Tactic.rwRuleSeq
                     "["
-                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.proj (Term.app `c'.π.app [`left]) "." `w))]
+                    [(Tactic.rwRule
+                      [(patternIgnore (token.«← » "←"))]
+                      (Term.proj (Term.app `c'.π.app [`left]) "." `w))]
                     "]")
                    [])
                   []
@@ -266,7 +279,8 @@ open Limits.WalkingCospan
                    `eq_to_hom
                    [(Term.byTactic
                      "by"
-                     (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
               ":="
               (Term.byTactic
                "by"
@@ -293,7 +307,10 @@ open Limits.WalkingCospan
             "=>"
             (Tactic.Conv.convSeq
              (Tactic.Conv.convSeq1Indented
-              [(Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₁)] "]"))])))
+              [(Tactic.Conv.convRw__
+                "rw"
+                []
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₁)] "]"))])))
            []
            (Mathlib.Tactic.Conv.convRHS
             "conv_rhs"
@@ -302,7 +319,10 @@ open Limits.WalkingCospan
             "=>"
             (Tactic.Conv.convSeq
              (Tactic.Conv.convSeq1Indented
-              [(Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₂)] "]"))])))
+              [(Tactic.Conv.convRw__
+                "rw"
+                []
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₂)] "]"))])))
            []
            (Tactic.simp
             "simp"
@@ -324,9 +344,15 @@ open Limits.WalkingCospan
            []
            (Tactic.congr "congr" [(num "1")])
            []
-           (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inl]) ["with" ["_" `e₁]])
+           (Tactic.injection
+            "injection"
+            (Term.app `c'.π.naturality [`walking_cospan.hom.inl])
+            ["with" ["_" `e₁]])
            []
-           (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inr]) ["with" ["_" `e₂]])
+           (Tactic.injection
+            "injection"
+            (Term.app `c'.π.naturality [`walking_cospan.hom.inr])
+            ["with" ["_" `e₂]])
            []
            (Tactic.exact
             "exact"
@@ -396,7 +422,9 @@ open Limits.WalkingCospan
               [(CategoryTheory.Functor.CategoryTheory.Functor.Basic.«term_⋙_»
                 (Term.app `structured_arrow_cone.to_diagram [`c])
                 " ⋙ "
-                (Term.app `structured_arrow.pre [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))]))))
+                (Term.app
+                 `structured_arrow.pre
+                 [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))]))))
           []
           (Tactic.tacticHave_
            "have"
@@ -418,7 +446,8 @@ open Limits.WalkingCospan
                   `eq_to_hom
                   [(Term.byTactic
                     "by"
-                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
              ":="
              (Term.byTactic
               "by"
@@ -428,7 +457,9 @@ open Limits.WalkingCospan
                   "erw"
                   (Tactic.rwRuleSeq
                    "["
-                   [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.proj (Term.app `c'.π.app [`left]) "." `w))]
+                   [(Tactic.rwRule
+                     [(patternIgnore (token.«← » "←"))]
+                     (Term.proj (Term.app `c'.π.app [`left]) "." `w))]
                    "]")
                   [])
                  []
@@ -456,7 +487,8 @@ open Limits.WalkingCospan
                   `eq_to_hom
                   [(Term.byTactic
                     "by"
-                    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))]))))]
              ":="
              (Term.byTactic
               "by"
@@ -466,7 +498,9 @@ open Limits.WalkingCospan
                   "erw"
                   (Tactic.rwRuleSeq
                    "["
-                   [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] (Term.proj (Term.app `c'.π.app [`right]) "." `w))]
+                   [(Tactic.rwRule
+                     [(patternIgnore (token.«← » "←"))]
+                     (Term.proj (Term.app `c'.π.app [`right]) "." `w))]
                    "]")
                   [])
                  []
@@ -481,7 +515,10 @@ open Limits.WalkingCospan
            "=>"
            (Tactic.Conv.convSeq
             (Tactic.Conv.convSeq1Indented
-             [(Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₁)] "]"))])))
+             [(Tactic.Conv.convRw__
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₁)] "]"))])))
           []
           (Mathlib.Tactic.Conv.convRHS
            "conv_rhs"
@@ -490,7 +527,10 @@ open Limits.WalkingCospan
            "=>"
            (Tactic.Conv.convSeq
             (Tactic.Conv.convSeq1Indented
-             [(Tactic.Conv.convRw__ "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₂)] "]"))])))
+             [(Tactic.Conv.convRw__
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq₂)] "]"))])))
           []
           (Tactic.simp
            "simp"
@@ -512,9 +552,15 @@ open Limits.WalkingCospan
           []
           (Tactic.congr "congr" [(num "1")])
           []
-          (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inl]) ["with" ["_" `e₁]])
+          (Tactic.injection
+           "injection"
+           (Term.app `c'.π.naturality [`walking_cospan.hom.inl])
+           ["with" ["_" `e₁]])
           []
-          (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inr]) ["with" ["_" `e₂]])
+          (Tactic.injection
+           "injection"
+           (Term.app `c'.π.naturality [`walking_cospan.hom.inr])
+           ["with" ["_" `e₂]])
           []
           (Tactic.exact
            "exact"
@@ -552,22 +598,27 @@ open Limits.WalkingCospan
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `e₂
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `e₁.symm.trans
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `e₁.symm.trans [`e₂]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hg₂
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hg₁
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -578,13 +629,16 @@ open Limits.WalkingCospan
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `right
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `c'.π.app
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `c'.π.app [`right]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -595,20 +649,27 @@ open Limits.WalkingCospan
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `left
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `c'.π.app
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `c'.π.app [`left]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.injection "injection" (Term.app `c'.π.naturality [`walking_cospan.hom.inr]) ["with" ["_" `e₂]])
+      (Tactic.injection
+       "injection"
+       (Term.app `c'.π.naturality [`walking_cospan.hom.inr])
+       ["with" ["_" `e₂]])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'ident'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '_', expected 'Lean.Parser.Term.hole'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
@@ -638,7 +699,8 @@ theorem
           c
             : cone cospan g₁ g₂ ⋙ G
             :=
-            cones.postcompose diagram_iso_cospan cospan g₁ g₂ ⋙ G . inv . obj pullback_cone.mk f₁ f₂ e
+            cones.postcompose diagram_iso_cospan cospan g₁ g₂ ⋙ G . inv . obj
+              pullback_cone.mk f₁ f₂ e
         let c' := is_cofiltered.cone structured_arrow_cone.to_diagram c ⋙ structured_arrow.pre _ _ _
         have
           eq₁
@@ -666,22 +728,24 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
   obtain ⟨X', e⟩ := hF f₁
   apply (ℱ.1.mapIso e.op).toEquiv.Injective
   simp only [iso.op_hom, iso.to_equiv_fun, ℱ.1.map_iso_hom, ← functor_to_types.map_comp_apply]
-  simpa using hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂ (F.map_injective <| by simpa using he)
-#align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
+  simpa using
+    hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂
+      (F.map_injective <| by simpa using he)
+#align
+  category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 
 /-- If `G` is cover-preserving and compatible-preserving,
 then `G.op ⋙ _` pulls sheaves back to sheaves.
 
 This result is basically <https://stacks.math.columbia.edu/tag/00WW>.
 -/
-theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G) (hG₂ : CoverPreserving J K G)
-    (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) := by
+theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
+    (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) := by
   intro X U S hS x hx
   change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x
   let H := ℱ.2 X _ (hG₂.cover_preserve hS)
   let hx' := hx.functor_pushforward hG₁ (sheaf_over ℱ X)
-  constructor
-  swap
+  constructor; swap
   · apply H.amalgamate (x.functor_pushforward G)
     exact hx'
     
@@ -691,17 +755,20 @@ theorem pullbackIsSheafOfCoverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreser
     rw [hG₁.apply_map (sheaf_over ℱ X) hx]
     
   · intro y hy
-    refine' H.is_separated_for _ y _ _ (H.is_amalgamation (hx.functor_pushforward hG₁ (sheaf_over ℱ X)))
+    refine'
+      H.is_separated_for _ y _ _ (H.is_amalgamation (hx.functor_pushforward hG₁ (sheaf_over ℱ X)))
     rintro V f ⟨Z, f', g', h, rfl⟩
-    erw [family_of_elements.comp_of_compatible (S.functor_pushforward G) hx' (image_mem_functor_pushforward G S h) g']
+    erw [family_of_elements.comp_of_compatible (S.functor_pushforward G) hx'
+        (image_mem_functor_pushforward G S h) g']
     dsimp
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
     
-#align category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullbackIsSheafOfCoverPreserving
+#align
+  category_theory.pullback_is_sheaf_of_cover_preserving CategoryTheory.pullbackIsSheafOfCoverPreserving
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
-def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) :
-    SheafCat J A :=
+def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
+    (ℱ : SheafCat K A) : SheafCat J A :=
   ⟨G.op ⋙ ℱ.val, pullbackIsSheafOfCoverPreserving hG₁ hG₂ ℱ⟩
 #align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
 
@@ -765,12 +832,16 @@ instance (G : C ⥤ D) [RepresentablyFlat G] : PreservesFiniteLimits (Sites.push
     
 
 /-- The pushforward functor is left adjoint to the pullback functor. -/
-def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
-    Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
-  ((lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful (sheafToPresheaf J A) (𝟭 _)
-    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
-    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ => (Category.comp_id _).trans (Category.id_comp _).symm)
-#align category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
+def Sites.pullbackPushforwardAdjunction {G : C ⥤ D} (hG₁ : CompatiblePreserving K G)
+    (hG₂ : CoverPreserving J K G) : Sites.pushforward A J K G ⊣ Sites.pullback A hG₁ hG₂ :=
+  ((lan.adjunction A G.op).comp (sheafificationAdjunction K A)).restrictFullyFaithful
+    (sheafToPresheaf J A) (𝟭 _)
+    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
+      (Category.comp_id _).trans (Category.id_comp _).symm)
+    (NatIso.ofComponents (fun _ => Iso.refl _) fun _ _ _ =>
+      (Category.comp_id _).trans (Category.id_comp _).symm)
+#align
+  category_theory.sites.pullback_pushforward_adjunction CategoryTheory.Sites.pullbackPushforwardAdjunction
 
 end CategoryTheory
 

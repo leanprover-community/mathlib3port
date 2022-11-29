@@ -30,16 +30,21 @@ open CategoryTheory.Limits Preadditive
 instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F) where
   homGroup A₁ A₂ :=
     { add := fun α β =>
-        { f := α.f + β.f, h' := by simp only [functor.map_add, add_comp, endofunctor.algebra.hom.h, comp_add] },
+        { f := α.f + β.f,
+          h' := by simp only [functor.map_add, add_comp, endofunctor.algebra.hom.h, comp_add] },
       zero := { f := 0, h' := by simp only [functor.map_zero, zero_comp, comp_zero] },
       nsmul := fun n α =>
-        { f := n • α.f, h' := by rw [comp_nsmul, functor.map_nsmul, nsmul_comp, endofunctor.algebra.hom.h] },
+        { f := n • α.f,
+          h' := by rw [comp_nsmul, functor.map_nsmul, nsmul_comp, endofunctor.algebra.hom.h] },
       neg := fun α =>
-        { f := -α.f, h' := by simp only [functor.map_neg, neg_comp, endofunctor.algebra.hom.h, comp_neg] },
+        { f := -α.f,
+          h' := by simp only [functor.map_neg, neg_comp, endofunctor.algebra.hom.h, comp_neg] },
       sub := fun α β =>
-        { f := α.f - β.f, h' := by simp only [functor.map_sub, sub_comp, endofunctor.algebra.hom.h, comp_sub] },
+        { f := α.f - β.f,
+          h' := by simp only [functor.map_sub, sub_comp, endofunctor.algebra.hom.h, comp_sub] },
       zsmul := fun r α =>
-        { f := r • α.f, h' := by rw [comp_zsmul, functor.map_zsmul, zsmul_comp, endofunctor.algebra.hom.h] },
+        { f := r • α.f,
+          h' := by rw [comp_zsmul, functor.map_zsmul, zsmul_comp, endofunctor.algebra.hom.h] },
       add_assoc := by
         intros
         ext
@@ -103,16 +108,21 @@ instance Algebra.forget_additive : (Endofunctor.Algebra.forget F).Additive where
 instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F) where
   homGroup A₁ A₂ :=
     { add := fun α β =>
-        { f := α.f + β.f, h' := by simp only [functor.map_add, comp_add, endofunctor.coalgebra.hom.h, add_comp] },
+        { f := α.f + β.f,
+          h' := by simp only [functor.map_add, comp_add, endofunctor.coalgebra.hom.h, add_comp] },
       zero := { f := 0, h' := by simp only [functor.map_zero, zero_comp, comp_zero] },
       nsmul := fun n α =>
-        { f := n • α.f, h' := by rw [functor.map_nsmul, comp_nsmul, endofunctor.coalgebra.hom.h, nsmul_comp] },
+        { f := n • α.f,
+          h' := by rw [functor.map_nsmul, comp_nsmul, endofunctor.coalgebra.hom.h, nsmul_comp] },
       neg := fun α =>
-        { f := -α.f, h' := by simp only [functor.map_neg, comp_neg, endofunctor.coalgebra.hom.h, neg_comp] },
+        { f := -α.f,
+          h' := by simp only [functor.map_neg, comp_neg, endofunctor.coalgebra.hom.h, neg_comp] },
       sub := fun α β =>
-        { f := α.f - β.f, h' := by simp only [functor.map_sub, comp_sub, endofunctor.coalgebra.hom.h, sub_comp] },
+        { f := α.f - β.f,
+          h' := by simp only [functor.map_sub, comp_sub, endofunctor.coalgebra.hom.h, sub_comp] },
       zsmul := fun r α =>
-        { f := r • α.f, h' := by rw [functor.map_zsmul, comp_zsmul, endofunctor.coalgebra.hom.h, zsmul_comp] },
+        { f := r • α.f,
+          h' := by rw [functor.map_zsmul, comp_zsmul, endofunctor.coalgebra.hom.h, zsmul_comp] },
       add_assoc := by
         intros
         ext
@@ -167,7 +177,8 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
     intros
     ext
     apply comp_add
-#align category_theory.endofunctor.coalgebra_preadditive CategoryTheory.Endofunctor.coalgebraPreadditive
+#align
+  category_theory.endofunctor.coalgebra_preadditive CategoryTheory.Endofunctor.coalgebraPreadditive
 
 instance Coalgebra.forget_additive : (Endofunctor.Coalgebra.forget F).Additive where
 #align category_theory.coalgebra.forget_additive CategoryTheory.Coalgebra.forget_additive

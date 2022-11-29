@@ -32,13 +32,14 @@ unsafe def poke_data (dn : Name) : tactic Bool := do
   return (e dn).toBool
 #align tactic.local_cache.internal.poke_data tactic.local_cache.internal.poke_data
 
-unsafe def run_once_under_name {α : Type} [reflected _ α] [has_reflect α] (t : tactic α) (cache_name : Name) :
-    tactic α := do
+unsafe def run_once_under_name {α : Type} [reflected _ α] [has_reflect α] (t : tactic α)
+    (cache_name : Name) : tactic α := do
   load_data cache_name <|> do
       let a ← t
       save_data cache_name a
       return a
-#align tactic.local_cache.internal.run_once_under_name tactic.local_cache.internal.run_once_under_name
+#align
+  tactic.local_cache.internal.run_once_under_name tactic.local_cache.internal.run_once_under_name
 
 -- We maintain two separate caches with different scopes:
 -- one local to `begin ... end` or `by` blocks, and another
@@ -60,33 +61,38 @@ namespace BlockLocal
 
 -- `mk_new` gives a way to generate a new name if no current one
 -- exists.
-private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tactic Name) : tactic Name := do
+private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tactic Name) : tactic Name :=
+  do
   let o ← tactic.get_options
   let opt := mk_full_namespace ns
   match o opt "" with
     | "" => mk_new o opt
     | s => return <| Name.fromComponents <| s (· = '.')
-#align tactic.local_cache.internal.block_local.get_name_aux tactic.local_cache.internal.block_local.get_name_aux
+#align
+  tactic.local_cache.internal.block_local.get_name_aux tactic.local_cache.internal.block_local.get_name_aux
 
 unsafe def get_name (ns : Name) : tactic Name :=
   (get_name_aux ns) fun o opt => do
     let n ← mk_user_fresh_name
     tactic.set_options <| o opt n
     return n
-#align tactic.local_cache.internal.block_local.get_name tactic.local_cache.internal.block_local.get_name
+#align
+  tactic.local_cache.internal.block_local.get_name tactic.local_cache.internal.block_local.get_name
 
 -- Like `get_name`, but fail if `ns` does not have a cached
 -- decl name (we create a new one above).
 unsafe def try_get_name (ns : Name) : tactic Name :=
   (get_name_aux ns) fun o opt => fail f! "no cache for "{ns}""
-#align tactic.local_cache.internal.block_local.try_get_name tactic.local_cache.internal.block_local.try_get_name
+#align
+  tactic.local_cache.internal.block_local.try_get_name tactic.local_cache.internal.block_local.try_get_name
 
 unsafe def present (ns : Name) : tactic Bool := do
   let o ← tactic.get_options
   match o (mk_full_namespace ns) "" with
     | "" => return ff
     | s => return tt
-#align tactic.local_cache.internal.block_local.present tactic.local_cache.internal.block_local.present
+#align
+  tactic.local_cache.internal.block_local.present tactic.local_cache.internal.block_local.present
 
 unsafe def clear (ns : Name) : tactic Unit := do
   let o ← tactic.get_options
@@ -102,7 +108,8 @@ section FnvA1
 
 def fNVOFFSETBASIS :=
   14695981039346656037
-#align tactic.local_cache.internal.def_local.FNV_OFFSET_BASIS Tactic.LocalCache.Internal.DefLocal.fNVOFFSETBASIS
+#align
+  tactic.local_cache.internal.def_local.FNV_OFFSET_BASIS Tactic.LocalCache.Internal.DefLocal.fNVOFFSETBASIS
 
 def fNVPRIME :=
   1099511628211
@@ -118,7 +125,8 @@ def hashByte (seed : ℕ) (c : Char) : ℕ :=
 
 def hashString (s : String) : ℕ :=
   s.toList.foldl hashByte fNVOFFSETBASIS
-#align tactic.local_cache.internal.def_local.hash_string Tactic.LocalCache.Internal.DefLocal.hashString
+#align
+  tactic.local_cache.internal.def_local.hash_string Tactic.LocalCache.Internal.DefLocal.hashString
 
 end FnvA1
 
@@ -127,31 +135,37 @@ unsafe def hash_context : tactic String := do
   let dn ← decl_name
   let flat := ((List.cons dn ns).map toString).foldl String.append ""
   return <| toString dn ++ toString (hash_string flat)
-#align tactic.local_cache.internal.def_local.hash_context tactic.local_cache.internal.def_local.hash_context
+#align
+  tactic.local_cache.internal.def_local.hash_context tactic.local_cache.internal.def_local.hash_context
 
 unsafe def get_root_name (ns : Name) : tactic Name := do
   let hc ← hash_context
   return <| mk_full_namespace <| hc ++ ns
-#align tactic.local_cache.internal.def_local.get_root_name tactic.local_cache.internal.def_local.get_root_name
+#align
+  tactic.local_cache.internal.def_local.get_root_name tactic.local_cache.internal.def_local.get_root_name
 
 unsafe def apply_tag (n : Name) (tag : ℕ) : Name :=
   n ++ toString f! "t{tag}"
-#align tactic.local_cache.internal.def_local.apply_tag tactic.local_cache.internal.def_local.apply_tag
+#align
+  tactic.local_cache.internal.def_local.apply_tag tactic.local_cache.internal.def_local.apply_tag
 
 unsafe def mk_dead_name (n : Name) : Name :=
   n ++ `dead
-#align tactic.local_cache.internal.def_local.mk_dead_name tactic.local_cache.internal.def_local.mk_dead_name
+#align
+  tactic.local_cache.internal.def_local.mk_dead_name tactic.local_cache.internal.def_local.mk_dead_name
 
 unsafe def kill_name (n : Name) : tactic Unit :=
   save_data (mk_dead_name n) ()
-#align tactic.local_cache.internal.def_local.kill_name tactic.local_cache.internal.def_local.kill_name
+#align
+  tactic.local_cache.internal.def_local.kill_name tactic.local_cache.internal.def_local.kill_name
 
 unsafe def is_name_dead (n : Name) : tactic Bool :=
   (do
       let witness : Unit ← load_data <| mk_dead_name n
       return True) <|>
     return False
-#align tactic.local_cache.internal.def_local.is_name_dead tactic.local_cache.internal.def_local.is_name_dead
+#align
+  tactic.local_cache.internal.def_local.is_name_dead tactic.local_cache.internal.def_local.is_name_dead
 
 -- `get_with_status_tag_aux rn n` fails exactly when `rn ++ to_string n` does
 -- not exist.
@@ -162,7 +176,8 @@ private unsafe def get_with_status_tag_aux (rn : Name) : ℕ → tactic (ℕ × 
     if ¬present then fail f! "{rn} never seen in cache!"
       else do
         let is_dead ← is_name_dead n
-        if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, False) else return (tag, True)
+        if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, False)
+          else return (tag, True)
 #align
   tactic.local_cache.internal.def_local.get_with_status_tag_aux tactic.local_cache.internal.def_local.get_with_status_tag_aux
 
@@ -182,7 +197,8 @@ unsafe def try_get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
   let (tag, alive) ← get_tag_with_status rn
   if alive then return <| apply_tag rn tag else fail f! "no cache for "{ns}""
-#align tactic.local_cache.internal.def_local.try_get_name tactic.local_cache.internal.def_local.try_get_name
+#align
+  tactic.local_cache.internal.def_local.try_get_name tactic.local_cache.internal.def_local.try_get_name
 
 unsafe def present (ns : Name) : tactic Bool := do
   let rn ← get_root_name ns
@@ -226,8 +242,8 @@ unsafe def clear (ns : Name) (s : cache_scope := block_local) : tactic Unit :=
 #align tactic.local_cache.clear tactic.local_cache.clear
 
 /-- Gets the (optionally present) value-in-cache for `ns`. -/
-unsafe def get (ns : Name) (α : Type) [reflected _ α] [has_reflect α] (s : cache_scope := block_local) :
-    tactic (Option α) := do
+unsafe def get (ns : Name) (α : Type) [reflected _ α] [has_reflect α]
+    (s : cache_scope := block_local) : tactic (Option α) := do
   let dn ← some <$> s.try_get_name ns <|> return none
   match dn with
     | none => return none

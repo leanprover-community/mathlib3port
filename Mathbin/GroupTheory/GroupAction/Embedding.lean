@@ -27,7 +27,8 @@ instance [Group G] [MulAction G β] : HasSmul G (α ↪ β) :=
   ⟨fun g f => f.trans (MulAction.toPerm g).toEmbedding⟩
 
 @[to_additive]
-theorem smul_def [Group G] [MulAction G β] (g : G) (f : α ↪ β) : g • f = f.trans (MulAction.toPerm g).toEmbedding :=
+theorem smul_def [Group G] [MulAction G β] (g : G) (f : α ↪ β) :
+    g • f = f.trans (MulAction.toPerm g).toEmbedding :=
   rfl
 #align function.embedding.smul_def Function.Embedding.smul_def
 
@@ -41,15 +42,17 @@ theorem coe_smul [Group G] [MulAction G β] (g : G) (f : α ↪ β) : ⇑(g • 
   rfl
 #align function.embedding.coe_smul Function.Embedding.coe_smul
 
-instance [Group G] [Group G'] [HasSmul G G'] [MulAction G β] [MulAction G' β] [IsScalarTower G G' β] :
-    IsScalarTower G G' (α ↪ β) :=
+instance [Group G] [Group G'] [HasSmul G G'] [MulAction G β] [MulAction G' β]
+    [IsScalarTower G G' β] : IsScalarTower G G' (α ↪ β) :=
   ⟨fun x y z => Function.Embedding.ext fun i => smul_assoc x y (z i)⟩
 
 @[to_additive]
-instance [Group G] [Group G'] [MulAction G β] [MulAction G' β] [SmulCommClass G G' β] : SmulCommClass G G' (α ↪ β) :=
+instance [Group G] [Group G'] [MulAction G β] [MulAction G' β] [SmulCommClass G G' β] :
+    SmulCommClass G G' (α ↪ β) :=
   ⟨fun x y z => Function.Embedding.ext fun i => smul_comm x y (z i)⟩
 
-instance [Group G] [MulAction G β] [MulAction Gᵐᵒᵖ β] [IsCentralScalar G β] : IsCentralScalar G (α ↪ β) :=
+instance [Group G] [MulAction G β] [MulAction Gᵐᵒᵖ β] [IsCentralScalar G β] :
+    IsCentralScalar G (α ↪ β) :=
   ⟨fun r m => Function.Embedding.ext fun i => op_smul_eq_smul _ _⟩
 
 @[to_additive]

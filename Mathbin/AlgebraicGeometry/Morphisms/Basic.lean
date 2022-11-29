@@ -68,7 +68,8 @@ namespace AlgebraicGeometry
 affine scheme. -/
 def AffineTargetMorphismProperty :=
   ∀ ⦃X Y : SchemeCat⦄ (f : X ⟶ Y) [IsAffine Y], Prop
-#align algebraic_geometry.affine_target_morphism_property AlgebraicGeometry.AffineTargetMorphismProperty
+#align
+  algebraic_geometry.affine_target_morphism_property AlgebraicGeometry.AffineTargetMorphismProperty
 
 /-- `is_iso` as a `morphism_property`. -/
 protected def SchemeCat.isIso : MorphismProperty SchemeCat :=
@@ -84,31 +85,34 @@ instance : Inhabited AffineTargetMorphismProperty :=
 
 /-- A `affine_target_morphism_property` can be extended to a `morphism_property` such that it
 *never* holds when the target is not affine -/
-def AffineTargetMorphismProperty.toProperty (P : AffineTargetMorphismProperty) : MorphismProperty SchemeCat :=
-  fun X Y f => ∃ h, @P f h
+def AffineTargetMorphismProperty.toProperty (P : AffineTargetMorphismProperty) :
+    MorphismProperty SchemeCat := fun X Y f => ∃ h, @P f h
 #align
   algebraic_geometry.affine_target_morphism_property.to_property AlgebraicGeometry.AffineTargetMorphismProperty.toProperty
 
-theorem AffineTargetMorphismProperty.to_property_apply (P : AffineTargetMorphismProperty) {X Y : SchemeCat} (f : X ⟶ Y)
-    [IsAffine Y] : P.toProperty f ↔ P f := by
+theorem AffineTargetMorphismProperty.to_property_apply (P : AffineTargetMorphismProperty)
+    {X Y : SchemeCat} (f : X ⟶ Y) [IsAffine Y] : P.toProperty f ↔ P f := by
   delta affine_target_morphism_property.to_property
   simp [*]
 #align
   algebraic_geometry.affine_target_morphism_property.to_property_apply AlgebraicGeometry.AffineTargetMorphismProperty.to_property_apply
 
-theorem affine_cancel_left_is_iso {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso) {X Y Z : SchemeCat}
-    (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [IsAffine Z] : P (f ≫ g) ↔ P g := by
+theorem affine_cancel_left_is_iso {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso)
+    {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] [IsAffine Z] : P (f ≫ g) ↔ P g := by
   rw [← P.to_property_apply, ← P.to_property_apply, hP.cancel_left_is_iso]
 #align algebraic_geometry.affine_cancel_left_is_iso AlgebraicGeometry.affine_cancel_left_is_iso
 
-theorem affine_cancel_right_is_iso {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso)
-    {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] [IsAffine Z] [IsAffine Y] : P (f ≫ g) ↔ P f := by
+theorem affine_cancel_right_is_iso {P : AffineTargetMorphismProperty}
+    (hP : P.toProperty.RespectsIso) {X Y Z : SchemeCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g]
+    [IsAffine Z] [IsAffine Y] : P (f ≫ g) ↔ P f := by
   rw [← P.to_property_apply, ← P.to_property_apply, hP.cancel_right_is_iso]
 #align algebraic_geometry.affine_cancel_right_is_iso AlgebraicGeometry.affine_cancel_right_is_iso
 
 theorem AffineTargetMorphismProperty.respects_iso_mk {P : AffineTargetMorphismProperty}
     (h₁ : ∀ {X Y Z} (e : X ≅ Y) (f : Y ⟶ Z) [IsAffine Z], P f → P (e.hom ≫ f))
-    (h₂ : ∀ {X Y Z} (e : Y ≅ Z) (f : X ⟶ Y) [h : IsAffine Y], P f → @P (f ≫ e.hom) (is_affine_of_iso e.inv)) :
+    (h₂ :
+      ∀ {X Y Z} (e : Y ≅ Z) (f : X ⟶ Y) [h : IsAffine Y],
+        P f → @P (f ≫ e.hom) (is_affine_of_iso e.inv)) :
     P.toProperty.RespectsIso := by
   constructor
   · rintro X Y Z e f ⟨a, h⟩
@@ -126,14 +130,14 @@ def targetAffineLocally (P : AffineTargetMorphismProperty) : MorphismProperty Sc
   fun {X Y : SchemeCat} (f : X ⟶ Y) => ∀ U : Y.affineOpens, @P (f ∣_ U) U.Prop
 #align algebraic_geometry.target_affine_locally AlgebraicGeometry.targetAffineLocally
 
-theorem IsAffineOpen.map_is_iso {X Y : SchemeCat} {U : Opens Y.carrier} (hU : IsAffineOpen U) (f : X ⟶ Y) [IsIso f] :
-    IsAffineOpen ((Opens.map f.1.base).obj U) :=
+theorem IsAffineOpen.map_is_iso {X Y : SchemeCat} {U : Opens Y.carrier} (hU : IsAffineOpen U)
+    (f : X ⟶ Y) [IsIso f] : IsAffineOpen ((Opens.map f.1.base).obj U) :=
   haveI : is_affine _ := hU
   is_affine_of_iso (f ∣_ U)
 #align algebraic_geometry.is_affine_open.map_is_iso AlgebraicGeometry.IsAffineOpen.map_is_iso
 
-theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty} (hP : P.toProperty.RespectsIso) :
-    (targetAffineLocally P).RespectsIso := by
+theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty}
+    (hP : P.toProperty.RespectsIso) : (targetAffineLocally P).RespectsIso := by
   constructor
   · introv H U
     rw [morphism_restrict_comp, affine_cancel_left_is_iso hP]
@@ -147,7 +151,8 @@ theorem target_affine_locally_respects_iso {P : AffineTargetMorphismProperty} (h
     rw [morphism_restrict_comp, affine_cancel_right_is_iso hP]
     exact H ⟨(opens.map e.hom.val.base).obj U, hU.map_is_iso e.hom⟩
     
-#align algebraic_geometry.target_affine_locally_respects_iso AlgebraicGeometry.target_affine_locally_respects_iso
+#align
+  algebraic_geometry.target_affine_locally_respects_iso AlgebraicGeometry.target_affine_locally_respects_iso
 
 /-- We say that `P : affine_target_morphism_property` is a local property if
 1. `P` respects isomorphisms.
@@ -168,9 +173,10 @@ structure AffineTargetMorphismProperty.IsLocal (P : AffineTargetMorphismProperty
 #align
   algebraic_geometry.affine_target_morphism_property.is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal
 
-theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal) {X Y : SchemeCat} (f : X ⟶ Y)
-    (𝒰 : Y.OpenCover) [∀ i, IsAffine (𝒰.obj i)] (h𝒰 : ∀ i, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) :
-    targetAffineLocally P f := by classical
+theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
+    {X Y : SchemeCat} (f : X ⟶ Y) (𝒰 : Y.OpenCover) [∀ i, IsAffine (𝒰.obj i)]
+    (h𝒰 : ∀ i, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) : targetAffineLocally P f :=
+  by classical
   let S i :=
     (⟨⟨Set.range (𝒰.map i).1.base, (𝒰.is_open i).base_open.open_range⟩,
         range_is_affine_open_of_open_immersion (𝒰.map i)⟩ :
@@ -215,7 +221,8 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
     simp_rw [← P.to_property_apply] at h𝒰⊢
     exact (hP.1.arrow_mk_iso_iff (morphism_restrict_opens_range f _)).mpr (h𝒰 i)
     
-#align algebraic_geometry.target_affine_locally_of_open_cover AlgebraicGeometry.targetAffineLocallyOfOpenCover
+#align
+  algebraic_geometry.target_affine_locally_of_open_cover AlgebraicGeometry.targetAffineLocallyOfOpenCover
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -227,7 +234,12 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
        [(Term.implicitBinder "{" [`P] [":" `AffineTargetMorphismProperty] "}")
         (Term.explicitBinder "(" [`hP] [":" (Term.proj `P "." `IsLocal)] [] ")")
         (Term.implicitBinder "{" [`X `Y] [":" (Term.explicitUniv `SchemeCat ".{" [`u] "}")] "}")
-        (Term.explicitBinder "(" [`f] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)] [] ")")]
+        (Term.explicitBinder
+         "("
+         [`f]
+         [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)]
+         []
+         ")")]
        (Term.typeSpec
         ":"
         (Term.app
@@ -249,7 +261,12 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                 "("
                 [(Lean.binderIdent (Term.hole "_"))]
                 ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+                (Term.forall
+                 "∀"
+                 [`i]
+                 []
+                 ","
+                 (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
                 ")")])
              ","
              (Term.forall
@@ -280,7 +297,12 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               (Term.instBinder
                "["
                []
-               (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+               (Term.forall
+                "∀"
+                [`i]
+                []
+                ","
+                (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
                "]")
               (Term.explicitBinder "(" [`i] [":" (Term.proj `𝒰 "." `J)] [] ")")]
              []
@@ -300,7 +322,12 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
             (Term.forall
              "∀"
              [(Term.implicitBinder "{" [`U] [":" `SchemeCat] "}")
-              (Term.explicitBinder "(" [`g] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `Y)] [] ")")
+              (Term.explicitBinder
+               "("
+               [`g]
+               [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `Y)]
+               []
+               ")")
               (Term.instBinder "[" [] (Term.app `IsAffine [`U]) "]")
               (Term.instBinder "[" [] (Term.app `IsOpenImmersion [`g]) "]")]
              []
@@ -317,7 +344,12 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
             («term∃_,_»
              "∃"
              (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `ι)] ":" (Term.type "Type" [`u]) ")")
+              [(Lean.bracketedExplicitBinders
+                "("
+                [(Lean.binderIdent `ι)]
+                ":"
+                (Term.type "Type" [`u])
+                ")")
                (Lean.bracketedExplicitBinders
                 "("
                 [(Lean.binderIdent `U)]
@@ -344,7 +376,10 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               ","
               (Term.app
                (Term.explicit "@" `P)
-               [(AlgebraicGeometry.AlgebraicGeometry.OpenImmersion.«term_∣__» `f " ∣_ " (Term.app `U [`i]))
+               [(AlgebraicGeometry.AlgebraicGeometry.OpenImmersion.«term_∣__»
+                 `f
+                 " ∣_ "
+                 (Term.app `U [`i]))
                 (Term.app `hU' [`i])])))]
            "]")])))
       (Command.declValSimple
@@ -380,7 +415,10 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               (Tactic.rwSeq
                "rw"
                []
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)] "]")
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)]
+                "]")
                [(Tactic.location "at" (Tactic.locationHyp [`H] [(patternIgnore (token.«⊢» "⊢"))]))])
               [])
              (group
@@ -448,7 +486,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                   "⟩"))]
                [])
               [])
-             (group (Tactic.exact "exact" (Term.app `target_affine_locally_of_open_cover [`hP `f `𝒰 `H])) [])])
+             (group
+              (Tactic.exact "exact" (Term.app `target_affine_locally_of_open_cover [`hP `f `𝒰 `H]))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "2"))
            []
@@ -512,7 +552,10 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               (Tactic.rwSeq
                "rw"
                []
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)] "]")
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)]
+                "]")
                [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
               [])
              (group (convert "convert" [] `H []) [])
@@ -521,7 +564,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                "all_goals"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(Std.Tactic.Ext.tacticExt1___ "ext1" []) [] (Tactic.exact "exact" `Subtype.range_coe)])))
+                 [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                  ";"
+                  (Tactic.exact "exact" `Subtype.range_coe)])))
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "5"))
@@ -538,13 +583,21 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                  ","
                  (Term.fun
                   "fun"
-                  (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
+                  (Term.basicFun
+                   [`x]
+                   []
+                   "=>"
+                   (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
                  ","
                  (Term.hole "_")
                  ","
                  (Term.fun
                   "fun"
-                  (Term.basicFun [`i] [] "=>" (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
+                  (Term.basicFun
+                   [`i]
+                   []
+                   "=>"
+                   (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
                  ","
                  (Term.hole "_")]
                 "⟩"))
@@ -552,11 +605,24 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
              (group
               («tactic___;_»
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") []) [])
+               [(group
+                 (Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]")
+                  [])
+                 [])
                 (group (Tactic.intro "intro" [`x (Term.hole "_")]) [])
-                (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]") []) [])
                 (group
-                 (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
+                 (Tactic.tacticErw__
+                  "erw"
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]")
+                  [])
+                 [])
+                (group
+                 (Tactic.exact
+                  "exact"
+                  (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
                  [])])
               [])
              (group
@@ -570,7 +636,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                    `H
                    [(Term.anonymousCtor
                      "⟨"
-                     [(Term.hole "_") "," (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
+                     [(Term.hole "_")
+                      ","
+                      (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
                      "⟩")]))
                  [])])
               [])])
@@ -613,7 +681,10 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
              (Tactic.rwSeq
               "rw"
               []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)] "]")
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)]
+               "]")
               [(Tactic.location "at" (Tactic.locationHyp [`H] [(patternIgnore (token.«⊢» "⊢"))]))])
              [])
             (group
@@ -651,7 +722,10 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                 [`H]
                 []
                 "=>"
-                (Term.anonymousCtor "⟨" [`Y.affine_cover "," `inferInstance "," (Term.app `H [`Y.affine_cover])] "⟩"))))
+                (Term.anonymousCtor
+                 "⟨"
+                 [`Y.affine_cover "," `inferInstance "," (Term.app `H [`Y.affine_cover])]
+                 "⟩"))))
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "1"))
@@ -678,7 +752,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                  "⟩"))]
               [])
              [])
-            (group (Tactic.exact "exact" (Term.app `target_affine_locally_of_open_cover [`hP `f `𝒰 `H])) [])])
+            (group
+             (Tactic.exact "exact" (Term.app `target_affine_locally_of_open_cover [`hP `f `𝒰 `H]))
+             [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "5") "→" (num "2"))
           []
@@ -742,7 +818,10 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
              (Tactic.rwSeq
               "rw"
               []
-              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)] "]")
+              (Tactic.rwRuleSeq
+               "["
+               [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `P.to_property_apply)]
+               "]")
               [(Tactic.location "at" (Tactic.locationHyp [`H] []))])
              [])
             (group (convert "convert" [] `H []) [])
@@ -751,7 +830,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               "all_goals"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(Std.Tactic.Ext.tacticExt1___ "ext1" []) [] (Tactic.exact "exact" `Subtype.range_coe)])))
+                [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                 ";"
+                 (Tactic.exact "exact" `Subtype.range_coe)])))
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "5"))
@@ -768,13 +849,21 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                 ","
                 (Term.fun
                  "fun"
-                 (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
+                 (Term.basicFun
+                  [`x]
+                  []
+                  "=>"
+                  (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
                 ","
                 (Term.hole "_")
                 ","
                 (Term.fun
                  "fun"
-                 (Term.basicFun [`i] [] "=>" (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
+                 (Term.basicFun
+                  [`i]
+                  []
+                  "=>"
+                  (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
                 ","
                 (Term.hole "_")]
                "⟩"))
@@ -782,11 +871,24 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
             (group
              («tactic___;_»
               (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") []) [])
+              [(group
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]")
+                 [])
+                [])
                (group (Tactic.intro "intro" [`x (Term.hole "_")]) [])
-               (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]") []) [])
                (group
-                (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
+                (Tactic.tacticErw__
+                 "erw"
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]")
+                 [])
+                [])
+               (group
+                (Tactic.exact
+                 "exact"
+                 (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
                 [])])
              [])
             (group
@@ -800,7 +902,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                   `H
                   [(Term.anonymousCtor
                     "⟨"
-                    [(Term.hole "_") "," (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
+                    [(Term.hole "_")
+                     ","
+                     (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
                     "⟩")]))
                 [])])
              [])])
@@ -823,13 +927,21 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
             ","
             (Term.fun
              "fun"
-             (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
+             (Term.basicFun
+              [`x]
+              []
+              "=>"
+              (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
             ","
             (Term.hole "_")
             ","
             (Term.fun
              "fun"
-             (Term.basicFun [`i] [] "=>" (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
+             (Term.basicFun
+              [`i]
+              []
+              "=>"
+              (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
             ","
             (Term.hole "_")]
            "⟩"))
@@ -837,11 +949,20 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         (group
          («tactic___;_»
           (cdotTk (patternIgnore (token.«·» "·")))
-          [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") []) [])
+          [(group
+            (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
+            [])
            (group (Tactic.intro "intro" [`x (Term.hole "_")]) [])
-           (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]") []) [])
            (group
-            (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
+            (Tactic.tacticErw__
+             "erw"
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]")
+             [])
+            [])
+           (group
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
             [])])
          [])
         (group
@@ -855,7 +976,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               `H
               [(Term.anonymousCtor
                 "⟨"
-                [(Term.hole "_") "," (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
+                [(Term.hole "_")
+                 ","
+                 (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
                 "⟩")]))
             [])])
          [])])
@@ -870,7 +993,9 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
            `H
            [(Term.anonymousCtor
              "⟨"
-             [(Term.hole "_") "," (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
+             [(Term.hole "_")
+              ","
+              (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])]
              "⟩")]))
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -902,36 +1027,55 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `range_is_affine_open_of_open_immersion
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`i])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       («tactic___;_»
        (cdotTk (patternIgnore (token.«·» "·")))
-       [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") []) [])
+       [(group
+         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
+         [])
         (group (Tactic.intro "intro" [`x (Term.hole "_")]) [])
-        (group (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]") []) [])
-        (group (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩")) [])])
+        (group
+         (Tactic.tacticErw__
+          "erw"
+          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]")
+          [])
+         [])
+        (group
+         (Tactic.exact
+          "exact"
+          (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
+         [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
+      (Tactic.exact
+       "exact"
+       (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`x "," (Term.app `Y.affine_cover.covers [`x])] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -940,36 +1084,44 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Y.affine_cover.covers
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.tacticErw__ "erw" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `opens.mem_supr)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `opens.mem_supr
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`x (Term.hole "_")])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `eq_top_iff)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `eq_top_iff
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -979,13 +1131,23 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
         "⟨"
         [`Y.carrier
          ","
-         (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`x]
+           []
+           "=>"
+           (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
          ","
          (Term.hole "_")
          ","
          (Term.fun
           "fun"
-          (Term.basicFun [`i] [] "=>" (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
+          (Term.basicFun
+           [`i]
+           []
+           "=>"
+           (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
          ","
          (Term.hole "_")]
         "⟩"))
@@ -994,44 +1156,67 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
        "⟨"
        [`Y.carrier
         ","
-        (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
+        (Term.fun
+         "fun"
+         (Term.basicFun
+          [`x]
+          []
+          "=>"
+          (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
         ","
         (Term.hole "_")
         ","
         (Term.fun
          "fun"
-         (Term.basicFun [`i] [] "=>" (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
+         (Term.basicFun
+          [`i]
+          []
+          "=>"
+          (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
         ","
         (Term.hole "_")]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`i] [] "=>" (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`i]
+        []
+        "=>"
+        (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `range_is_affine_open_of_open_immersion [(Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `range_is_affine_open_of_open_immersion
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`x] [] "=>" (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj (Term.app `Y.affine_cover.map [`x]) "." `opensRange)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -1040,30 +1225,37 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Y.affine_cover.map
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Y.affine_cover.map [`x]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Y.carrier
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`H])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1104,7 +1296,10 @@ theorem
               P ( pullback.snd : pullback f g ⟶ U )
             ,
             ∃
-              ( ι : Type u ) ( U : ι → Opens Y . carrier ) ( hU : supr U = ⊤ ) ( hU' : ∀ i , IsAffineOpen U i )
+              ( ι : Type u )
+                ( U : ι → Opens Y . carrier )
+                ( hU : supr U = ⊤ )
+                ( hU' : ∀ i , IsAffineOpen U i )
               ,
               ∀ i , @ P f ∣_ U i hU' i
           ]
@@ -1114,7 +1309,8 @@ theorem
         ·
           intro H U g h₁ h₂
             skip
-            replace H := H ⟨ ⟨ _ , h₂.base_open.open_range ⟩ , range_is_affine_open_of_open_immersion g ⟩
+            replace
+              H := H ⟨ ⟨ _ , h₂.base_open.open_range ⟩ , range_is_affine_open_of_open_immersion g ⟩
             rw [ ← P.to_property_apply ] at H ⊢
             rwa [ ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ]
         tfae_have 4 → 3
@@ -1129,10 +1325,15 @@ theorem
             refine' ⟨ Y.open_cover_of_supr_eq_top U hU , hU' , _ ⟩
             intro i
             specialize H i
-            rw [ ← P.to_property_apply , ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ]
+            rw
+              [
+                ← P.to_property_apply
+                  ,
+                  ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _
+                ]
             rw [ ← P.to_property_apply ] at H
             convert H
-            all_goals ext1 exact Subtype.range_coe
+            all_goals ext1 ; exact Subtype.range_coe
         tfae_have 1 → 5
         ·
           intro H
@@ -1148,7 +1349,11 @@ theorem
                   ,
                   _
                 ⟩
-            · rw [ eq_top_iff ] intro x _ erw [ opens.mem_supr ] exact ⟨ x , Y.affine_cover.covers x ⟩
+            ·
+              rw [ eq_top_iff ]
+                intro x _
+                erw [ opens.mem_supr ]
+                exact ⟨ x , Y.affine_cover.covers x ⟩
             · intro i exact H ⟨ _ , range_is_affine_open_of_open_immersion _ ⟩
         tfae_finish
 #align
@@ -1160,7 +1365,8 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y),
         (∃ (𝒰 : SchemeCat.OpenCover.{u} Y)(_ : ∀ i, IsAffine (𝒰.obj i)),
             ∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i)) →
-          ∀ {U : SchemeCat} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g], P (pullback.snd : pullback f g ⟶ U)) :
+          ∀ {U : SchemeCat} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
+            P (pullback.snd : pullback f g ⟶ U)) :
     P.IsLocal := by
   refine' ⟨hP, _, _⟩
   · introv h
@@ -1182,7 +1388,8 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
     skip
     replace hs := ((top_is_affine_open Y).basic_open_union_eq_self_iff _).mpr hs
     have := H f ⟨Y.open_cover_of_supr_eq_top _ hs, _, _⟩ (𝟙 _)
-    rwa [← category.comp_id pullback.snd, ← pullback.condition, affine_cancel_left_is_iso hP] at this
+    rwa [← category.comp_id pullback.snd, ← pullback.condition, affine_cancel_left_is_iso hP] at
+      this
     · intro i
       exact (top_is_affine_open Y).basic_open_is_affine _
       
@@ -1196,8 +1403,9 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
 #align
   algebraic_geometry.affine_target_morphism_property.is_local_of_open_cover_imply AlgebraicGeometry.AffineTargetMorphismProperty.isLocalOfOpenCoverImply
 
-theorem AffineTargetMorphismProperty.IsLocal.affine_open_cover_iff {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
-    {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) [h𝒰 : ∀ i, IsAffine (𝒰.obj i)] :
+theorem AffineTargetMorphismProperty.IsLocal.affine_open_cover_iff
+    {P : AffineTargetMorphismProperty} (hP : P.IsLocal) {X Y : SchemeCat.{u}} (f : X ⟶ Y)
+    (𝒰 : SchemeCat.OpenCover.{u} Y) [h𝒰 : ∀ i, IsAffine (𝒰.obj i)] :
     targetAffineLocally P f ↔ ∀ i, @P (pullback.snd : pullback f (𝒰.map i) ⟶ _) (h𝒰 i) :=
   ⟨fun H =>
     let h := ((hP.affine_open_cover_tfae f).out 0 2).mp H
@@ -1208,13 +1416,14 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_open_cover_iff {P : AffineTa
 #align
   algebraic_geometry.affine_target_morphism_property.is_local.affine_open_cover_iff AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.affine_open_cover_iff
 
-theorem AffineTargetMorphismProperty.IsLocal.affine_target_iff {P : AffineTargetMorphismProperty} (hP : P.IsLocal)
-    {X Y : SchemeCat.{u}} (f : X ⟶ Y) [IsAffine Y] : targetAffineLocally P f ↔ P f := by
+theorem AffineTargetMorphismProperty.IsLocal.affine_target_iff {P : AffineTargetMorphismProperty}
+    (hP : P.IsLocal) {X Y : SchemeCat.{u}} (f : X ⟶ Y) [IsAffine Y] :
+    targetAffineLocally P f ↔ P f := by
   rw [hP.affine_open_cover_iff f _]
-  swap
+  swap;
   · exact Scheme.open_cover_of_is_iso (𝟙 Y)
     
-  swap
+  swap;
   · intro
     dsimp
     infer_instance
@@ -1239,8 +1448,9 @@ structure PropertyIsLocalAtTarget (P : MorphismProperty SchemeCat) : Prop where
       (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f
 #align algebraic_geometry.property_is_local_at_target AlgebraicGeometry.PropertyIsLocalAtTarget
 
-theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P : AffineTargetMorphismProperty}
-    (hP : P.IsLocal) : PropertyIsLocalAtTarget (targetAffineLocally P) := by
+theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
+    {P : AffineTargetMorphismProperty} (hP : P.IsLocal) :
+    PropertyIsLocalAtTarget (targetAffineLocally P) := by
   constructor
   · exact target_affine_locally_respects_iso hP.1
     
@@ -1263,7 +1473,8 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
       specialize h𝒰 (Scheme.affine_cover _) i.2
       let e :
         pullback f ((𝒰.obj i.fst).affineCover.map i.snd ≫ 𝒰.map i.fst) ⟶
-          pullback (pullback.snd : pullback f (𝒰.map i.fst) ⟶ _) ((𝒰.obj i.fst).affineCover.map i.snd) :=
+          pullback (pullback.snd : pullback f (𝒰.map i.fst) ⟶ _)
+            ((𝒰.obj i.fst).affineCover.map i.snd) :=
         by
         refine' (pullback_symmetry _ _).Hom ≫ _
         refine' (pullback_right_pullback_fst_iso _ _ _).inv ≫ _
@@ -1288,7 +1499,12 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
        [(Term.implicitBinder "{" [`P] [":" (Term.app `MorphismProperty [`SchemeCat])] "}")
         (Term.explicitBinder "(" [`hP] [":" (Term.app `PropertyIsLocalAtTarget [`P])] [] ")")
         (Term.implicitBinder "{" [`X `Y] [":" (Term.explicitUniv `SchemeCat ".{" [`u] "}")] "}")
-        (Term.explicitBinder "(" [`f] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)] [] ")")]
+        (Term.explicitBinder
+         "("
+         [`f]
+         [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)]
+         []
+         ")")]
        (Term.typeSpec
         ":"
         (Term.app
@@ -1316,7 +1532,9 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                  `pullback.snd
                  ":"
                  [(Combinatorics.Quiver.Basic.«term_⟶_»
-                   (Term.app (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj) [`i])
+                   (Term.app
+                    (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj)
+                    [`i])
                    " ⟶ "
                    (Term.app (Term.proj `𝒰 "." `obj) [`i]))]
                  ")")])))
@@ -1339,7 +1557,9 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                 `pullback.snd
                 ":"
                 [(Combinatorics.Quiver.Basic.«term_⟶_»
-                  (Term.app (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj) [`i])
+                  (Term.app
+                   (Term.proj (Term.app (Term.proj `𝒰 "." `pullbackCover) [`f]) "." `obj)
+                   [`i])
                   " ⟶ "
                   (Term.app (Term.proj `𝒰 "." `obj) [`i]))]
                 ")")]))
@@ -1349,12 +1569,19 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
              [`U]
              [(Term.typeSpec ":" (Term.app `Opens [(Term.proj `Y "." `carrier)]))]
              ","
-             (Term.app `P [(AlgebraicGeometry.AlgebraicGeometry.OpenImmersion.«term_∣__» `f " ∣_ " `U)]))
+             (Term.app
+              `P
+              [(AlgebraicGeometry.AlgebraicGeometry.OpenImmersion.«term_∣__» `f " ∣_ " `U)]))
             ","
             (Term.forall
              "∀"
              [(Term.implicitBinder "{" [`U] [":" `SchemeCat] "}")
-              (Term.explicitBinder "(" [`g] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `Y)] [] ")")
+              (Term.explicitBinder
+               "("
+               [`g]
+               [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `Y)]
+               []
+               ")")
               (Term.instBinder "[" [] (Term.app `IsOpenImmersion [`g]) "]")]
              []
              ","
@@ -1370,7 +1597,12 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
             («term∃_,_»
              "∃"
              (Lean.explicitBinders
-              [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `ι)] ":" (Term.type "Type" [`u]) ")")
+              [(Lean.bracketedExplicitBinders
+                "("
+                [(Lean.binderIdent `ι)]
+                ":"
+                (Term.type "Type" [`u])
+                ")")
                (Lean.bracketedExplicitBinders
                 "("
                 [(Lean.binderIdent `U)]
@@ -1391,7 +1623,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
               ","
               (Term.app
                `P
-               [(AlgebraicGeometry.AlgebraicGeometry.OpenImmersion.«term_∣__» `f " ∣_ " (Term.app `U [`i]))])))]
+               [(AlgebraicGeometry.AlgebraicGeometry.OpenImmersion.«term_∣__»
+                 `f
+                 " ∣_ "
+                 (Term.app `U [`i]))])))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -1419,14 +1654,18 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                   "⟩"))]
                [])
               [])
-             (group (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "3")) [`f `𝒰 `H])) [])])
+             (group
+              (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "3")) [`f `𝒰 `H]))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
             [(group (Tactic.intro "intro" [`H `U]) [])
-             (group (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "2")) [`f `U `H])) [])])
+             (group
+              (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "2")) [`f `U `H]))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
            []
@@ -1447,7 +1686,11 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                 "]")
                [])
               [])
-             (group (Tactic.exact "exact" (Term.app `H [(Term.proj (Term.app `𝒰.map [`i]) "." `opensRange)])) [])])
+             (group
+              (Tactic.exact
+               "exact"
+               (Term.app `H [(Term.proj (Term.app `𝒰.map [`i]) "." `opensRange)]))
+              [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
            []
@@ -1462,7 +1705,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                  [`H]
                  []
                  "=>"
-                 (Term.anonymousCtor "⟨" [`Y.affine_cover "," (Term.app `H [`Y.affine_cover])] "⟩"))))
+                 (Term.anonymousCtor
+                  "⟨"
+                  [`Y.affine_cover "," (Term.app `H [`Y.affine_cover])]
+                  "⟩"))))
               [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
@@ -1497,7 +1743,9 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                "erw"
                (Tactic.rwRuleSeq
                 "["
-                [(Tactic.rwRule [] (Term.proj (Term.proj `hP "." (fieldIdx "1")) "." `cancel_left_is_iso))]
+                [(Tactic.rwRule
+                  []
+                  (Term.proj (Term.proj `hP "." (fieldIdx "1")) "." `cancel_left_is_iso))]
                 "]")
                [])
               [])
@@ -1515,11 +1763,15 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                 "⟨"
                 [`PUnit
                  ","
-                 (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Order.BoundedOrder.«term⊤» "⊤")))
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun [(Term.hole "_")] [] "=>" (Order.BoundedOrder.«term⊤» "⊤")))
                  ","
                  `csupr_const
                  ","
-                 (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `H [(Term.hole "_")])))]
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `H [(Term.hole "_")])))]
                 "⟩"))
               [])])
            []
@@ -1554,7 +1806,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
              (group
               (Tactic.refine'
                "refine'"
-               (Term.anonymousCtor "⟨" [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")] "⟩"))
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")]
+                "⟩"))
               [])
              (group (Tactic.intro "intro" [`i]) [])
              (group
@@ -1577,7 +1832,9 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                "all_goals"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(Std.Tactic.Ext.tacticExt1___ "ext1" []) [] (Tactic.exact "exact" `Subtype.range_coe)])))
+                 [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                  ";"
+                  (Tactic.exact "exact" `Subtype.range_coe)])))
               [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
@@ -1611,14 +1868,18 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                  "⟩"))]
               [])
              [])
-            (group (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "3")) [`f `𝒰 `H])) [])])
+            (group
+             (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "3")) [`f `𝒰 `H]))
+             [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "4"))
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
            [(group (Tactic.intro "intro" [`H `U]) [])
-            (group (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "2")) [`f `U `H])) [])])
+            (group
+             (Tactic.exact "exact" (Term.app (Term.proj `hP "." (fieldIdx "2")) [`f `U `H]))
+             [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "3"))
           []
@@ -1639,7 +1900,11 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                "]")
               [])
              [])
-            (group (Tactic.exact "exact" (Term.app `H [(Term.proj (Term.app `𝒰.map [`i]) "." `opensRange)])) [])])
+            (group
+             (Tactic.exact
+              "exact"
+              (Term.app `H [(Term.proj (Term.app `𝒰.map [`i]) "." `opensRange)]))
+             [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "3") "→" (num "2"))
           []
@@ -1654,7 +1919,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                 [`H]
                 []
                 "=>"
-                (Term.anonymousCtor "⟨" [`Y.affine_cover "," (Term.app `H [`Y.affine_cover])] "⟩"))))
+                (Term.anonymousCtor
+                 "⟨"
+                 [`Y.affine_cover "," (Term.app `H [`Y.affine_cover])]
+                 "⟩"))))
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
@@ -1689,7 +1957,9 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
               "erw"
               (Tactic.rwRuleSeq
                "["
-               [(Tactic.rwRule [] (Term.proj (Term.proj `hP "." (fieldIdx "1")) "." `cancel_left_is_iso))]
+               [(Tactic.rwRule
+                 []
+                 (Term.proj (Term.proj `hP "." (fieldIdx "1")) "." `cancel_left_is_iso))]
                "]")
               [])
              [])
@@ -1707,11 +1977,15 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
                "⟨"
                [`PUnit
                 ","
-                (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Order.BoundedOrder.«term⊤» "⊤")))
+                (Term.fun
+                 "fun"
+                 (Term.basicFun [(Term.hole "_")] [] "=>" (Order.BoundedOrder.«term⊤» "⊤")))
                 ","
                 `csupr_const
                 ","
-                (Term.fun "fun" (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `H [(Term.hole "_")])))]
+                (Term.fun
+                 "fun"
+                 (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `H [(Term.hole "_")])))]
                "⟩"))
              [])])
           []
@@ -1746,7 +2020,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
             (group
              (Tactic.refine'
               "refine'"
-              (Term.anonymousCtor "⟨" [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")] "⟩"))
+              (Term.anonymousCtor
+               "⟨"
+               [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")]
+               "⟩"))
              [])
             (group (Tactic.intro "intro" [`i]) [])
             (group
@@ -1769,7 +2046,9 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
               "all_goals"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(Std.Tactic.Ext.tacticExt1___ "ext1" []) [] (Tactic.exact "exact" `Subtype.range_coe)])))
+                [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+                 ";"
+                 (Tactic.exact "exact" `Subtype.range_coe)])))
              [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
@@ -1786,9 +2065,13 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
           [(Std.Tactic.RCases.rintroPat.one
             (Std.Tactic.RCases.rcasesPat.tuple
              "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ι)]) [])
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ι)])
+               [])
               ","
-              (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)]) [])
+              (Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+               [])
               ","
               (Std.Tactic.RCases.rcasesPatLo
                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
@@ -1803,7 +2086,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
         (group
          (Tactic.refine'
           "refine'"
-          (Term.anonymousCtor "⟨" [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")] "⟩"))
+          (Term.anonymousCtor
+           "⟨"
+           [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")]
+           "⟩"))
          [])
         (group (Tactic.intro "intro" [`i]) [])
         (group
@@ -1826,20 +2112,23 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
           "all_goals"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(Std.Tactic.Ext.tacticExt1___ "ext1" []) [] (Tactic.exact "exact" `Subtype.range_coe)])))
+            [(Std.Tactic.Ext.tacticExt1___ "ext1" [])
+             ";"
+             (Tactic.exact "exact" `Subtype.range_coe)])))
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.allGoals
        "all_goals"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(Std.Tactic.Ext.tacticExt1___ "ext1" []) [] (Tactic.exact "exact" `Subtype.range_coe)])))
+         [(Std.Tactic.Ext.tacticExt1___ "ext1" []) ";" (Tactic.exact "exact" `Subtype.range_coe)])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `Subtype.range_coe)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.range_coe
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.Ext.tacticExt1___ "ext1" [])
@@ -1853,10 +2142,12 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -1884,16 +2175,20 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `morphism_restrict_opens_range
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app `morphism_restrict_opens_range [`f (Term.hole "_")])
@@ -1906,41 +2201,54 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
       `hP
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`i])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.refine'
        "refine'"
-       (Term.anonymousCtor "⟨" [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")] "⟩"))
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")]
+        "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.anonymousCtor "⟨" [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")] "⟩")
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.app `Y.open_cover_of_supr_eq_top [`U `hU]) "," (Term.hole "_")]
+       "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Y.open_cover_of_supr_eq_top [`U `hU])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hU
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `U
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Y.open_cover_of_supr_eq_top
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Std.Tactic.rintro
@@ -1948,13 +2256,21 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
        [(Std.Tactic.RCases.rintroPat.one
          (Std.Tactic.RCases.rcasesPat.tuple
           "⟨"
-          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ι)]) [])
+          [(Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ι)])
+            [])
            ","
-           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)]) [])
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `U)])
+            [])
            ","
-           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)]) [])
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hU)])
+            [])
            ","
-           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)]) [])]
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+            [])]
           "⟩"))]
        [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -1975,7 +2291,10 @@ theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P :
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   PropertyIsLocalAtTarget.open_cover_tfae
-  { P : MorphismProperty SchemeCat } ( hP : PropertyIsLocalAtTarget P ) { X Y : SchemeCat .{ u } } ( f : X ⟶ Y )
+  { P : MorphismProperty SchemeCat }
+      ( hP : PropertyIsLocalAtTarget P )
+      { X Y : SchemeCat .{ u } }
+      ( f : X ⟶ Y )
     :
       Tfae
         [
@@ -1993,7 +2312,10 @@ theorem
             ,
             ∀ U : Opens Y . carrier , P f ∣_ U
             ,
-            ∀ { U : SchemeCat } ( g : U ⟶ Y ) [ IsOpenImmersion g ] , P ( pullback.snd : pullback f g ⟶ U )
+            ∀
+              { U : SchemeCat } ( g : U ⟶ Y ) [ IsOpenImmersion g ]
+              ,
+              P ( pullback.snd : pullback f g ⟶ U )
             ,
             ∃ ( ι : Type u ) ( U : ι → Opens Y . carrier ) ( hU : supr U = ⊤ ) , ∀ i , P f ∣_ U i
           ]
@@ -2004,11 +2326,18 @@ theorem
         tfae_have 1 → 4
         · intro H U exact hP . 2 f U H
         tfae_have 4 → 3
-        · intro H 𝒰 i rw [ ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ] exact H 𝒰.map i . opensRange
+        ·
+          intro H 𝒰 i
+            rw [ ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ]
+            exact H 𝒰.map i . opensRange
         tfae_have 3 → 2
         · exact fun H => ⟨ Y.affine_cover , H Y.affine_cover ⟩
         tfae_have 4 → 5
-        · intro H U g hg skip rw [ ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ] apply H
+        ·
+          intro H U g hg
+            skip
+            rw [ ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ]
+            apply H
         tfae_have 5 → 4
         · intro H U erw [ hP . 1 . cancel_left_is_iso ] apply H
         tfae_have 4 → 6
@@ -2020,14 +2349,14 @@ theorem
             intro i
             rw [ ← hP . 1 . arrow_mk_iso_iff morphism_restrict_opens_range f _ ]
             convert H i
-            all_goals ext1 exact Subtype.range_coe
+            all_goals ext1 ; exact Subtype.range_coe
         tfae_finish
 #align
   algebraic_geometry.property_is_local_at_target.open_cover_tfae AlgebraicGeometry.PropertyIsLocalAtTarget.open_cover_tfae
 
-theorem PropertyIsLocalAtTarget.open_cover_iff {P : MorphismProperty SchemeCat} (hP : PropertyIsLocalAtTarget P)
-    {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) :
-    P f ↔ ∀ i, P (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
+theorem PropertyIsLocalAtTarget.open_cover_iff {P : MorphismProperty SchemeCat}
+    (hP : PropertyIsLocalAtTarget P) {X Y : SchemeCat.{u}} (f : X ⟶ Y)
+    (𝒰 : SchemeCat.OpenCover.{u} Y) : P f ↔ ∀ i, P (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   ⟨fun H =>
     let h := ((hP.open_cover_tfae f).out 0 2).mp H
     h 𝒰,
@@ -2042,13 +2371,15 @@ namespace AffineTargetMorphismProperty
 /-- A `P : affine_target_morphism_property` is stable under base change if `P` holds for `Y ⟶ S`
 implies that `P` holds for `X ×ₛ Y ⟶ X` with `X` and `S` affine schemes. -/
 def StableUnderBaseChange (P : AffineTargetMorphismProperty) : Prop :=
-  ∀ ⦃X Y S : SchemeCat⦄ [IsAffine S] [IsAffine X] (f : X ⟶ S) (g : Y ⟶ S), P g → P (pullback.fst : pullback f g ⟶ X)
+  ∀ ⦃X Y S : SchemeCat⦄ [IsAffine S] [IsAffine X] (f : X ⟶ S) (g : Y ⟶ S),
+    P g → P (pullback.fst : pullback f g ⟶ X)
 #align
   algebraic_geometry.affine_target_morphism_property.stable_under_base_change AlgebraicGeometry.AffineTargetMorphismProperty.StableUnderBaseChange
 
-theorem IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange {P : AffineTargetMorphismProperty}
-    (hP : P.IsLocal) (hP' : P.StableUnderBaseChange) {X Y S : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) [IsAffine S]
-    (H : P g) : targetAffineLocally P (pullback.fst : pullback f g ⟶ X) := by
+theorem IsLocal.targetAffineLocallyPullbackFstOfRightOfStableUnderBaseChange
+    {P : AffineTargetMorphismProperty} (hP : P.IsLocal) (hP' : P.StableUnderBaseChange)
+    {X Y S : SchemeCat} (f : X ⟶ S) (g : Y ⟶ S) [IsAffine S] (H : P g) :
+    targetAffineLocally P (pullback.fst : pullback f g ⟶ X) := by
   rw [(hP.affine_open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
   use X.affine_cover, inferInstance
   intro i
@@ -2064,18 +2395,23 @@ theorem IsLocal.stable_under_base_change {P : AffineTargetMorphismProperty} (hP 
   MorphismProperty.StableUnderBaseChange.mk (target_affine_locally_respects_iso hP.RespectsIso)
     (by
       intro X Y S f g H
-      rw [(hP.target_affine_locally_is_local.open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out 0 1]
+      rw [(hP.target_affine_locally_is_local.open_cover_tfae (pullback.fst : pullback f g ⟶ X)).out
+          0 1]
       use S.affine_cover.pullback_cover f
       intro i
       rw [(hP.affine_open_cover_tfae g).out 0 3] at H
-      let e : pullback (pullback.fst : pullback f g ⟶ _) ((S.affine_cover.pullback_cover f).map i) ≅ _ := by
+      let e :
+        pullback (pullback.fst : pullback f g ⟶ _) ((S.affine_cover.pullback_cover f).map i) ≅ _ :=
+        by
         refine'
           pullback_symmetry _ _ ≪≫
             pullback_right_pullback_fst_iso f g _ ≪≫
               _ ≪≫
                 (pullback_right_pullback_fst_iso (S.affine_cover.map i) g
                     (pullback.snd : pullback f (S.affine_cover.map i) ⟶ _)).symm
-        exact as_iso (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simpa using pullback.condition) (by simp))
+        exact
+          as_iso
+            (pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simpa using pullback.condition) (by simp))
       have : e.hom ≫ pullback.fst = pullback.snd := by simp
       rw [← this, (target_affine_locally_respects_iso hP.1).cancel_left_is_iso]
       apply hP.target_affine_locally_pullback_fst_of_right_of_stable_under_base_change hP'
@@ -2089,8 +2425,8 @@ end AffineTargetMorphismProperty
 /-- The `affine_target_morphism_property` associated to `(target_affine_locally P).diagonal`.
 See `diagonal_target_affine_locally_eq_target_affine_locally`.
 -/
-def AffineTargetMorphismProperty.diagonal (P : AffineTargetMorphismProperty) : AffineTargetMorphismProperty :=
-  fun X Y f hf =>
+def AffineTargetMorphismProperty.diagonal (P : AffineTargetMorphismProperty) :
+    AffineTargetMorphismProperty := fun X Y f hf =>
   ∀ {U₁ U₂ : SchemeCat} (f₁ : U₁ ⟶ X) (f₂ : U₂ ⟶ X) [IsAffine U₁] [IsAffine U₂] [IsOpenImmersion f₁]
     [IsOpenImmersion f₂], P (pullback.map_desc f₁ f₂ f)
 #align
@@ -2113,8 +2449,8 @@ theorem AffineTargetMorphismProperty.diagonal_respects_iso (P : AffineTargetMorp
 #align
   algebraic_geometry.affine_target_morphism_property.diagonal_respects_iso AlgebraicGeometry.AffineTargetMorphismProperty.diagonal_respects_iso
 
-theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty) (hP : P.IsLocal) {X Y : SchemeCat.{u}}
-    (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
+theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty) (hP : P.IsLocal)
+    {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
     (𝒰' : ∀ i, SchemeCat.OpenCover.{u} (pullback f (𝒰.map i))) [∀ i j, IsAffine ((𝒰' i).obj j)]
     (h𝒰' : ∀ i j k, P (pullback.mapDesc ((𝒰' i).map j) ((𝒰' i).map k) pullback.snd)) :
     (targetAffineLocally P).diagonal f := by
@@ -2130,7 +2466,8 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
   · rintro ⟨i, j, k⟩
     dsimp
     convert
-      (affine_cancel_left_is_iso hP.1 (pullback_diagonal_map_iso _ _ ((𝒰' i).map j) ((𝒰' i).map k)).inv pullback.snd).mp
+      (affine_cancel_left_is_iso hP.1
+            (pullback_diagonal_map_iso _ _ ((𝒰' i).map j) ((𝒰' i).map k)).inv pullback.snd).mp
         _
     pick_goal 3
     · convert h𝒰' i j k
@@ -2144,23 +2481,25 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
 #align
   algebraic_geometry.diagonal_target_affine_locally_of_open_cover AlgebraicGeometry.diagonalTargetAffineLocallyOfOpenCover
 
-theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTargetMorphismProperty) (hP : P.IsLocal)
-    {X Y U : SchemeCat.{u}} (f : X ⟶ Y) (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g]
-    (H : (targetAffineLocally P).diagonal f) : P.diagonal (pullback.snd : pullback f g ⟶ _) := by
+theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
+    (P : AffineTargetMorphismProperty) (hP : P.IsLocal) {X Y U : SchemeCat.{u}} (f : X ⟶ Y)
+    (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g] (H : (targetAffineLocally P).diagonal f) :
+    P.diagonal (pullback.snd : pullback f g ⟶ _) := by
   rintro U V f₁ f₂ _ _ _ _
   skip
   replace H := ((hP.affine_open_cover_tfae (pullback.diagonal f)).out 0 3).mp H
   let g₁ :=
-    pullback.map (f₁ ≫ pullback.snd) (f₂ ≫ pullback.snd) f f (f₁ ≫ pullback.fst) (f₂ ≫ pullback.fst) g
-      (by rw [category.assoc, category.assoc, pullback.condition])
+    pullback.map (f₁ ≫ pullback.snd) (f₂ ≫ pullback.snd) f f (f₁ ≫ pullback.fst) (f₂ ≫ pullback.fst)
+      g (by rw [category.assoc, category.assoc, pullback.condition])
       (by rw [category.assoc, category.assoc, pullback.condition])
   let g₂ : pullback f₁ f₂ ⟶ pullback f g := pullback.fst ≫ f₁
   specialize H g₁
   rw [← affine_cancel_left_is_iso hP.1 (pullback_diagonal_map_iso f _ f₁ f₂).Hom]
   convert H
   · apply pullback.hom_ext <;>
-      simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_fst_assoc, pullback.lift_snd_assoc,
-        category.comp_id, pullback_diagonal_map_iso_hom_fst, pullback_diagonal_map_iso_hom_snd]
+      simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_fst_assoc,
+        pullback.lift_snd_assoc, category.comp_id, pullback_diagonal_map_iso_hom_fst,
+        pullback_diagonal_map_iso_hom_snd]
     
 #align
   algebraic_geometry.affine_target_morphism_property.diagonal_of_target_affine_locally AlgebraicGeometry.AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
@@ -2175,7 +2514,12 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
        [(Term.implicitBinder "{" [`P] [":" `AffineTargetMorphismProperty] "}")
         (Term.explicitBinder "(" [`hP] [":" (Term.proj `P "." `IsLocal)] [] ")")
         (Term.implicitBinder "{" [`X `Y] [":" (Term.explicitUniv `SchemeCat ".{" [`u] "}")] "}")
-        (Term.explicitBinder "(" [`f] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)] [] ")")]
+        (Term.explicitBinder
+         "("
+         [`f]
+         [":" (Combinatorics.Quiver.Basic.«term_⟶_» `X " ⟶ " `Y)]
+         []
+         ")")]
        (Term.typeSpec
         ":"
         (Term.app
@@ -2197,7 +2541,12 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                 "("
                 [(Lean.binderIdent (Term.hole "_"))]
                 ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+                (Term.forall
+                 "∀"
+                 [`i]
+                 []
+                 ","
+                 (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
                 ")")])
              ","
              (Term.forall
@@ -2228,7 +2577,12 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
               (Term.instBinder
                "["
                []
-               (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+               (Term.forall
+                "∀"
+                [`i]
+                []
+                ","
+                (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
                "]")
               (Term.explicitBinder "(" [`i] [":" (Term.proj `𝒰 "." `J)] [] ")")]
              []
@@ -2248,7 +2602,12 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
             (Term.forall
              "∀"
              [(Term.implicitBinder "{" [`U] [":" `SchemeCat] "}")
-              (Term.explicitBinder "(" [`g] [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `Y)] [] ")")
+              (Term.explicitBinder
+               "("
+               [`g]
+               [":" (Combinatorics.Quiver.Basic.«term_⟶_» `U " ⟶ " `Y)]
+               []
+               ")")
               (Term.instBinder "[" [] (Term.app `IsAffine [`U]) "]")
               (Term.instBinder "[" [] (Term.app `IsOpenImmersion [`g]) "]")]
              []
@@ -2259,7 +2618,10 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                 "("
                 `pullback.snd
                 ":"
-                [(Combinatorics.Quiver.Basic.«term_⟶_» (Term.app `pullback [`f `g]) " ⟶ " (Term.hole "_"))]
+                [(Combinatorics.Quiver.Basic.«term_⟶_»
+                  (Term.app `pullback [`f `g])
+                  " ⟶ "
+                  (Term.hole "_"))]
                 ")")]))
             ","
             («term∃_,_»
@@ -2275,7 +2637,12 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                 "("
                 [(Lean.binderIdent (Term.hole "_"))]
                 ":"
-                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+                (Term.forall
+                 "∀"
+                 [`i]
+                 []
+                 ","
+                 (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
                 ")")
                (Lean.bracketedExplicitBinders
                 "("
@@ -2346,7 +2713,9 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
            []
            («tactic___;_»
             (cdotTk (patternIgnore (token.«·» "·")))
-            [(group (Mathlib.Tactic.introv "introv" [(Lean.binderIdent `H) (Lean.binderIdent `h𝒰)]) [])
+            [(group
+              (Mathlib.Tactic.introv "introv" [(Lean.binderIdent `H) (Lean.binderIdent `h𝒰)])
+              [])
              (group (Tactic.skip "skip") [])
              (group (Tactic.apply "apply" `H) [])])
            []
@@ -2405,7 +2774,11 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                  ","
                  (Term.fun
                   "fun"
-                  (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))
+                  (Term.basicFun
+                   [(Term.hole "_")]
+                   []
+                   "=>"
+                   (Term.app `Scheme.affine_cover [(Term.hole "_")])))
                  ","
                  `inferInstance
                  ","
@@ -2448,7 +2821,9 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                [])
               [])
              (group
-              (Tactic.exact "exact" (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
+              (Tactic.exact
+               "exact"
+               (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
               [])])
            []
            (Tactic.tfaeFinish "tfae_finish")])))
@@ -2487,7 +2862,9 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Mathlib.Tactic.introv "introv" [(Lean.binderIdent `H) (Lean.binderIdent `h𝒰)]) [])
+           [(group
+             (Mathlib.Tactic.introv "introv" [(Lean.binderIdent `H) (Lean.binderIdent `h𝒰)])
+             [])
             (group (Tactic.skip "skip") [])
             (group (Tactic.apply "apply" `H) [])])
           []
@@ -2504,7 +2881,10 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                 [`H]
                 []
                 "=>"
-                (Term.anonymousCtor "⟨" [`Y.affine_cover "," `inferInstance "," (Term.app `H [`Y.affine_cover])] "⟩"))))
+                (Term.anonymousCtor
+                 "⟨"
+                 [`Y.affine_cover "," `inferInstance "," (Term.app `H [`Y.affine_cover])]
+                 "⟩"))))
              [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "5"))
@@ -2543,7 +2923,11 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
                 ","
                 (Term.fun
                  "fun"
-                 (Term.basicFun [(Term.hole "_")] [] "=>" (Term.app `Scheme.affine_cover [(Term.hole "_")])))
+                 (Term.basicFun
+                  [(Term.hole "_")]
+                  []
+                  "=>"
+                  (Term.app `Scheme.affine_cover [(Term.hole "_")])))
                 ","
                 `inferInstance
                 ","
@@ -2586,7 +2970,9 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
               [])
              [])
             (group
-             (Tactic.exact "exact" (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
+             (Tactic.exact
+              "exact"
+              (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
              [])])
           []
           (Tactic.tfaeFinish "tfae_finish")])))
@@ -2603,7 +2989,9 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
           [(Std.Tactic.RCases.rintroPat.one
             (Std.Tactic.RCases.rcasesPat.tuple
              "⟨"
-             [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)]) [])
+             [(Std.Tactic.RCases.rcasesPatLo
+               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+               [])
               ","
               (Std.Tactic.RCases.rcasesPatLo
                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
@@ -2624,45 +3012,56 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
           [])
          [])
         (group
-         (Tactic.exact "exact" (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
+         (Tactic.exact
+          "exact"
+          (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
+      (Tactic.exact
+       "exact"
+       (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `diagonal_target_affine_locally_of_open_cover [`P `hP `f `𝒰 `𝒰' `H])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `H
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `𝒰'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `𝒰
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hP
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `P
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `diagonal_target_affine_locally_of_open_cover
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -2671,19 +3070,25 @@ theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally (P : AffineTa
        [(Std.Tactic.RCases.rintroPat.one
          (Std.Tactic.RCases.rcasesPat.tuple
           "⟨"
-          [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)]) [])
+          [(Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰)])
+            [])
            ","
            (Std.Tactic.RCases.rcasesPatLo
             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
             [])
            ","
-           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰')]) [])
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `𝒰')])
+            [])
            ","
            (Std.Tactic.RCases.rcasesPatLo
             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.ignore "_")])
             [])
            ","
-           (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)]) [])]
+           (Std.Tactic.RCases.rcasesPatLo
+            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `H)])
+            [])]
           "⟩"))]
        [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -2749,22 +3154,26 @@ theorem
             intro i j k
             apply H
         tfae_have 5 → 1
-        · rintro ⟨ 𝒰 , _ , 𝒰' , _ , H ⟩ exact diagonal_target_affine_locally_of_open_cover P hP f 𝒰 𝒰' H
+        ·
+          rintro ⟨ 𝒰 , _ , 𝒰' , _ , H ⟩
+            exact diagonal_target_affine_locally_of_open_cover P hP f 𝒰 𝒰' H
         tfae_finish
 #align
   algebraic_geometry.affine_target_morphism_property.is_local.diagonal_affine_open_cover_tfae AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.diagonal_affine_open_cover_tfae
 
-theorem AffineTargetMorphismProperty.IsLocal.diagonal {P : AffineTargetMorphismProperty} (hP : P.IsLocal) :
-    P.diagonal.IsLocal :=
-  AffineTargetMorphismProperty.isLocalOfOpenCoverImply P.diagonal (P.diagonal_respects_iso hP.1) fun _ _ f =>
-    ((hP.diagonal_affine_open_cover_tfae f).out 1 3).mp
+theorem AffineTargetMorphismProperty.IsLocal.diagonal {P : AffineTargetMorphismProperty}
+    (hP : P.IsLocal) : P.diagonal.IsLocal :=
+  AffineTargetMorphismProperty.isLocalOfOpenCoverImply P.diagonal (P.diagonal_respects_iso hP.1)
+    fun _ _ f => ((hP.diagonal_affine_open_cover_tfae f).out 1 3).mp
 #align
   algebraic_geometry.affine_target_morphism_property.is_local.diagonal AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.diagonal
 
-theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTargetMorphismProperty) (hP : P.IsLocal) :
-    (targetAffineLocally P).diagonal = targetAffineLocally P.diagonal := by
+theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTargetMorphismProperty)
+    (hP : P.IsLocal) : (targetAffineLocally P).diagonal = targetAffineLocally P.diagonal := by
   ext (_ _ f)
-  exact ((hP.diagonal_affine_open_cover_tfae f).out 0 1).trans ((hP.diagonal.affine_open_cover_tfae f).out 1 0)
+  exact
+    ((hP.diagonal_affine_open_cover_tfae f).out 0 1).trans
+      ((hP.diagonal.affine_open_cover_tfae f).out 1 0)
 #align
   algebraic_geometry.diagonal_target_affine_locally_eq_target_affine_locally AlgebraicGeometry.diagonal_target_affine_locally_eq_target_affine_locally
 
@@ -2787,9 +3196,11 @@ theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
   refine' (is_pullback.of_right _ (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback _ _)).flip
   rw [pullback.lift_fst, ← pullback.condition]
   exact (is_pullback.of_has_pullback _ _).paste_horiz H.flip
-#align algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universally_is_local_at_target
+#align
+  algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universally_is_local_at_target
 
-theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismProperty SchemeCat) (hP₁ : P.RespectsIso)
+theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismProperty SchemeCat)
+    (hP₁ : P.RespectsIso)
     (hP₂ :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : supr U = ⊤),
         (∀ i, P (f ∣_ U i)) → P f) :
@@ -2804,9 +3215,11 @@ theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismPropert
   algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universally_is_local_at_target_of_morphism_restrict
 
 /-- `topologically P` holds for a morphism if the underlying topological map satisfies `P`. -/
-def MorphismProperty.topologically (P : ∀ {α β : Type u} [TopologicalSpace α] [TopologicalSpace β] (f : α → β), Prop) :
+def MorphismProperty.topologically
+    (P : ∀ {α β : Type u} [TopologicalSpace α] [TopologicalSpace β] (f : α → β), Prop) :
     MorphismProperty SchemeCat.{u} := fun X Y f => P f.1.base
-#align algebraic_geometry.morphism_property.topologically AlgebraicGeometry.MorphismProperty.topologically
+#align
+  algebraic_geometry.morphism_property.topologically AlgebraicGeometry.MorphismProperty.topologically
 
 end AlgebraicGeometry
 

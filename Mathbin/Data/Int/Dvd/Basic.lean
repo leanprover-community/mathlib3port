@@ -19,7 +19,10 @@ namespace Int
 theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
   ⟨fun ⟨a, ae⟩ =>
     m.eq_zero_or_pos.elim (fun m0 => by simp [m0] at ae <;> simp [ae, m0]) fun m0l => by
-      cases' eq_coe_of_zero_le (@nonneg_of_mul_nonneg_right ℤ _ m a (by simp [ae.symm]) (by simpa using m0l)) with k e
+      cases'
+        eq_coe_of_zero_le
+          (@nonneg_of_mul_nonneg_right ℤ _ m a (by simp [ae.symm]) (by simpa using m0l)) with
+        k e
       subst a
       exact ⟨k, Int.ofNat.inj ae⟩,
     fun ⟨k, e⟩ => Dvd.intro k <| by rw [e, Int.ofNat_mul]⟩
@@ -41,7 +44,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.le_of_dvd Int.le_of_dvdₓ'. -/
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
-  | (m : ℕ), _, ⟨n, rfl⟩, H => coe_nat_le_coe_nat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
+  | (m : ℕ), _, ⟨n, rfl⟩, H =>
+    coe_nat_le_coe_nat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
   | -[m+1], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt <| negSucc_lt_zero _) (ofNat_zero_le _)
 #align int.le_of_dvd Int.le_of_dvd
 

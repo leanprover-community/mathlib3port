@@ -34,9 +34,7 @@ theorem dist_cast_real (x y : ℤ) : dist (x : ℝ) y = dist x y :=
 
 theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n := by
   intro m n hne
-  rw [dist_eq]
-  norm_cast
-  rwa [← zero_add (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
+  rw [dist_eq]; norm_cast; rwa [← zero_add (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
 #align int.pairwise_one_le_dist Int.pairwise_one_le_dist
 
 theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℤ → ℝ) :=
@@ -74,12 +72,13 @@ instance : ProperSpace ℤ :=
 
 @[simp]
 theorem cocompact_eq : cocompact ℤ = at_bot ⊔ at_top := by
-  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ← cast_abs, ←
-    @comap_comap _ _ _ _ abs, Int.comap_coe_at_top, comap_abs_at_top]
+  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ←
+    cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_coe_at_top, comap_abs_at_top]
 #align int.cocompact_eq Int.cocompact_eq
 
 @[simp]
-theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot ⊔ at_top := by rw [← cocompact_eq_cofinite, cocompact_eq]
+theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot ⊔ at_top := by
+  rw [← cocompact_eq_cofinite, cocompact_eq]
 #align int.cofinite_eq Int.cofinite_eq
 
 end Int

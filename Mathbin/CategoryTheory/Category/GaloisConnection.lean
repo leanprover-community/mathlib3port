@@ -27,7 +27,8 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 def GaloisConnection.adjunction {l : X → Y} {u : Y → X} (gc : GaloisConnection l u) :
     gc.monotone_l.Functor ⊣ gc.monotone_u.Functor :=
   CategoryTheory.Adjunction.mkOfHomEquiv
-    { homEquiv := fun X Y => ⟨fun f => (gc.le_u f.le).Hom, fun f => (gc.l_le f.le).Hom, by tidy, by tidy⟩ }
+    { homEquiv := fun X Y =>
+        ⟨fun f => (gc.le_u f.le).Hom, fun f => (gc.l_le f.le).Hom, by tidy, by tidy⟩ }
 #align galois_connection.adjunction GaloisConnection.adjunction
 
 end
@@ -38,7 +39,8 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 
 /-- An adjunction between preorder categories induces a galois connection.
 -/
-theorem Adjunction.gc {L : X ⥤ Y} {R : Y ⥤ X} (adj : L ⊣ R) : GaloisConnection L.obj R.obj := fun x y =>
+theorem Adjunction.gc {L : X ⥤ Y} {R : Y ⥤ X} (adj : L ⊣ R) : GaloisConnection L.obj R.obj :=
+  fun x y =>
   ⟨fun h => ((adj.homEquiv x y).toFun h.Hom).le, fun h => ((adj.homEquiv x y).invFun h.Hom).le⟩
 #align category_theory.adjunction.gc CategoryTheory.Adjunction.gc
 

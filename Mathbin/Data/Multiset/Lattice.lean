@@ -54,7 +54,8 @@ theorem sup_add (s₁ s₂ : Multiset α) : (s₁ + s₂).sup = s₁.sup ⊔ s�
 #align multiset.sup_add Multiset.sup_add
 
 theorem sup_le {s : Multiset α} {a : α} : s.sup ≤ a ↔ ∀ b ∈ s, b ≤ a :=
-  Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp, forall_and])
+  Multiset.induction_on s (by simp)
+    (by simp (config := { contextual := true }) [or_imp, forall_and])
 #align multiset.sup_le Multiset.sup_le
 
 theorem le_sup {s : Multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
@@ -138,7 +139,8 @@ theorem inf_add (s₁ s₂ : Multiset α) : (s₁ + s₂).inf = s₁.inf ⊓ s�
 #align multiset.inf_add Multiset.inf_add
 
 theorem le_inf {s : Multiset α} {a : α} : a ≤ s.inf ↔ ∀ b ∈ s, a ≤ b :=
-  Multiset.induction_on s (by simp) (by simp (config := { contextual := true }) [or_imp, forall_and])
+  Multiset.induction_on s (by simp)
+    (by simp (config := { contextual := true }) [or_imp, forall_and])
 #align multiset.le_inf Multiset.le_inf
 
 theorem inf_le {s : Multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=

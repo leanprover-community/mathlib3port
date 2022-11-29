@@ -18,7 +18,8 @@ variable {α : Type _}
 /-- A canonically linear ordered field is a linear ordered field in which `a ≤ b` iff there exists
 `c` with `b = a + c`. -/
 @[protect_proj]
-class CanonicallyLinearOrderedSemifield (α : Type _) extends CanonicallyOrderedCommSemiring α, LinearOrderedSemifield α
+class CanonicallyLinearOrderedSemifield (α : Type _) extends CanonicallyOrderedCommSemiring α,
+  LinearOrderedSemifield α
 #align canonically_linear_ordered_semifield CanonicallyLinearOrderedSemifield
 
 -- See note [lower instance priority]

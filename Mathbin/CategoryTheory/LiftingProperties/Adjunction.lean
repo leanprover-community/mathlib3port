@@ -29,8 +29,8 @@ namespace CommSq
 
 section
 
-variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : G.obj A ⟶ X} {v : G.obj B ⟶ Y} (sq : CommSq u (G.map i) p v)
-  (adj : G ⊣ F)
+variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : G.obj A ⟶ X} {v : G.obj B ⟶ Y}
+  (sq : CommSq u (G.map i) p v) (adj : G ⊣ F)
 
 include sq
 
@@ -59,13 +59,15 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
         apply (adj.hom_equiv _ _).left_inv }
   left_inv := by tidy
   right_inv := by tidy
-#align category_theory.comm_sq.right_adjoint_lift_struct_equiv CategoryTheory.CommSq.rightAdjointLiftStructEquiv
+#align
+  category_theory.comm_sq.right_adjoint_lift_struct_equiv CategoryTheory.CommSq.rightAdjointLiftStructEquiv
 
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
 theorem right_adjoint_has_lift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq := by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
-#align category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_has_lift_iff
+#align
+  category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_has_lift_iff
 
 instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by
   rw [right_adjoint_has_lift_iff]
@@ -75,8 +77,8 @@ end
 
 section
 
-variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : A ⟶ F.obj X} {v : B ⟶ F.obj Y} (sq : CommSq u i (F.map p) v)
-  (adj : G ⊣ F)
+variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : A ⟶ F.obj X} {v : B ⟶ F.obj Y}
+  (sq : CommSq u i (F.map p) v) (adj : G ⊣ F)
 
 include sq
 
@@ -93,7 +95,8 @@ theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homE
 adjoint square. -/
 def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct where
   toFun l :=
-    { l := (adj.homEquiv _ _).symm l.l, fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
+    { l := (adj.homEquiv _ _).symm l.l,
+      fac_left' := by rw [← adj.hom_equiv_naturality_left_symm, l.fac_left],
       fac_right' := by rw [← adj.hom_equiv_naturality_right_symm, l.fac_right] }
   invFun l :=
     { l := (adj.homEquiv _ _) l.l,
@@ -105,13 +108,15 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
         apply (adj.hom_equiv _ _).right_inv }
   left_inv := by tidy
   right_inv := by tidy
-#align category_theory.comm_sq.left_adjoint_lift_struct_equiv CategoryTheory.CommSq.leftAdjointLiftStructEquiv
+#align
+  category_theory.comm_sq.left_adjoint_lift_struct_equiv CategoryTheory.CommSq.leftAdjointLiftStructEquiv
 
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
 theorem left_adjoint_has_lift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq := by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
-#align category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_has_lift_iff
+#align
+  category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_has_lift_iff
 
 instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by
   rw [left_adjoint_has_lift_iff]
@@ -132,7 +137,8 @@ theorem has_lifting_property_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ 
   · rw [← sq.right_adjoint_has_lift_iff adj]
     infer_instance
     
-#align category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.has_lifting_property_iff
+#align
+  category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.has_lifting_property_iff
 
 end Adjunction
 

@@ -30,7 +30,8 @@ instance [Semiring k] [OrderedAddCommMonoid M] [Module k M] : Module k Mᵒᵈ w
 
 section Semiring
 
-variable [OrderedSemiring k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
+variable [OrderedSemiring k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M}
+  {c : k}
 
 /- can be generalized from `module k M` to `distrib_mul_action_with_zero k M` once it exists.
 where `distrib_mul_action_with_zero k M`is the conjunction of `distrib_mul_action k M` and
@@ -98,7 +99,8 @@ alias smul_neg_iff_of_pos ↔ _ smul_neg_of_pos_of_neg
 
 alias smul_neg_iff_of_neg ↔ _ smul_neg_of_neg_of_pos
 
-theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonpos h hc
+theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasSmul.smul c : M → M) := fun a b h =>
+  smul_le_smul_of_nonpos h hc
 #align antitone_smul_left antitone_smul_left
 
 theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasSmul.smul c : M → M) := fun a b h =>
@@ -106,8 +108,8 @@ theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasSmul.smul c : M → 
 #align strict_anti_smul_left strict_anti_smul_left
 
 /-- Binary **rearrangement inequality**. -/
-theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M} (hab : a ≤ b)
-    (hcd : c ≤ d) : a • d + b • c ≤ a • c + b • d := by
+theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M}
+    (hab : a ≤ b) (hcd : c ≤ d) : a • d + b • c ≤ a • c + b • d := by
   obtain ⟨b, rfl⟩ := exists_add_of_le hab
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd
   rw [smul_add, add_right_comm, smul_add, ← add_assoc, add_smul _ _ d]
@@ -116,15 +118,16 @@ theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤
 #align smul_add_smul_le_smul_add_smul smul_add_smul_le_smul_add_smul
 
 /-- Binary **rearrangement inequality**. -/
-theorem smul_add_smul_le_smul_add_smul' [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M} (hba : b ≤ a)
-    (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d := by
+theorem smul_add_smul_le_smul_add_smul' [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M}
+    (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d := by
   rw [add_comm (a • d), add_comm (a • c)]
   exact smul_add_smul_le_smul_add_smul hba hdc
 #align smul_add_smul_le_smul_add_smul' smul_add_smul_le_smul_add_smul'
 
 /-- Binary strict **rearrangement inequality**. -/
-theorem smul_add_smul_lt_smul_add_smul [CovariantClass M M (· + ·) (· < ·)] [ContravariantClass M M (· + ·) (· < ·)]
-    {a b : k} {c d : M} (hab : a < b) (hcd : c < d) : a • d + b • c < a • c + b • d := by
+theorem smul_add_smul_lt_smul_add_smul [CovariantClass M M (· + ·) (· < ·)]
+    [ContravariantClass M M (· + ·) (· < ·)] {a b : k} {c d : M} (hab : a < b) (hcd : c < d) :
+    a • d + b • c < a • c + b • d := by
   obtain ⟨b, rfl⟩ := exists_add_of_le hab.le
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
   rw [smul_add, add_right_comm, smul_add, ← add_assoc, add_smul _ _ d]
@@ -133,8 +136,9 @@ theorem smul_add_smul_lt_smul_add_smul [CovariantClass M M (· + ·) (· < ·)] 
 #align smul_add_smul_lt_smul_add_smul smul_add_smul_lt_smul_add_smul
 
 /-- Binary strict **rearrangement inequality**. -/
-theorem smul_add_smul_lt_smul_add_smul' [CovariantClass M M (· + ·) (· < ·)] [ContravariantClass M M (· + ·) (· < ·)]
-    {a b : k} {c d : M} (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d := by
+theorem smul_add_smul_lt_smul_add_smul' [CovariantClass M M (· + ·) (· < ·)]
+    [ContravariantClass M M (· + ·) (· < ·)] {a b : k} {c d : M} (hba : b < a) (hdc : d < c) :
+    a • d + b • c < a • c + b • d := by
   rw [add_comm (a • d), add_comm (a • c)]
   exact smul_add_smul_lt_smul_add_smul hba hdc
 #align smul_add_smul_lt_smul_add_smul' smul_add_smul_lt_smul_add_smul'
@@ -143,7 +147,8 @@ end Ring
 
 section Field
 
-variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
+variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M}
+  {c : k}
 
 theorem smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a := by
   rw [← neg_neg c, neg_smul, neg_smul (-c), neg_le_neg_iff]
@@ -191,11 +196,13 @@ section OrderedRing
 
 variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
 
-theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) : c • lowerBounds s ⊆ upperBounds (c • s) :=
+theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) :
+    c • lowerBounds s ⊆ upperBounds (c • s) :=
   (antitone_smul_left hc).image_lower_bounds_subset_upper_bounds_image
 #align smul_lower_bounds_subset_upper_bounds_smul smul_lower_bounds_subset_upper_bounds_smul
 
-theorem smul_upper_bounds_subset_lower_bounds_smul (hc : c ≤ 0) : c • upperBounds s ⊆ lowerBounds (c • s) :=
+theorem smul_upper_bounds_subset_lower_bounds_smul (hc : c ≤ 0) :
+    c • upperBounds s ⊆ lowerBounds (c • s) :=
   (antitone_smul_left hc).image_upper_bounds_subset_lower_bounds_image
 #align smul_upper_bounds_subset_lower_bounds_smul smul_upper_bounds_subset_lower_bounds_smul
 
@@ -211,7 +218,8 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
+variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M}
+  {c : k}
 
 @[simp]
 theorem lower_bounds_smul_of_neg (hc : c < 0) : lowerBounds (c • s) = c • upperBounds s :=

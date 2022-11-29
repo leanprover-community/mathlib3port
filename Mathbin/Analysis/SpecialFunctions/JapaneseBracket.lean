@@ -55,8 +55,9 @@ theorem rpow_neg_one_add_norm_sq_le {r : ℝ} (x : E) (hr : 0 < r) :
   have h5 : 0 < sqrt (1 + ‖x‖ ^ 2) := by positivity
   have h6 : 0 < sqrt 2 * sqrt (1 + ‖x‖ ^ 2) := mul_pos h3 h5
   rw [rpow_div_two_eq_sqrt _ h1, rpow_div_two_eq_sqrt _ (zero_lt_one_add_norm_sq x).le, ←
-    inv_mul_le_iff (rpow_pos_of_pos h3 _), rpow_neg h4.le, rpow_neg (sqrt_nonneg _), ← mul_inv, ← mul_rpow h3.le h5.le,
-    inv_le_inv (rpow_pos_of_pos h6 _) (rpow_pos_of_pos h4 _), rpow_le_rpow_iff h4.le h6.le hr]
+    inv_mul_le_iff (rpow_pos_of_pos h3 _), rpow_neg h4.le, rpow_neg (sqrt_nonneg _), ← mul_inv, ←
+    mul_rpow h3.le h5.le, inv_le_inv (rpow_pos_of_pos h6 _) (rpow_pos_of_pos h4 _),
+    rpow_le_rpow_iff h4.le h6.le hr]
   exact one_add_norm_le_sqrt_two_mul_sqrt _
 #align rpow_neg_one_add_norm_sq_le rpow_neg_one_add_norm_sq_le
 
@@ -82,7 +83,9 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
     (∫⁻ x : ℝ in ioc 0 1, Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ := by
   have hr : 0 < r := lt_of_le_of_lt n.cast_nonneg hnr
   have h_int :
-    ∀ (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1), Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) ≤ Ennreal.ofReal (x ^ (-(r⁻¹ * n))) := by
+    ∀ (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1),
+      Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) ≤ Ennreal.ofReal (x ^ (-(r⁻¹ * n))) :=
+    by
     intro x hx
     have hxr : 0 ≤ x ^ (-r⁻¹) := rpow_nonneg_of_nonneg hx.1.le _
     apply Ennreal.of_real_le_of_real
@@ -99,8 +102,9 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
   rwa [neg_lt_neg_iff, inv_mul_lt_iff' hr, one_mul]
 #align finite_integral_rpow_sub_one_pow_aux finite_integral_rpow_sub_one_pow_aux
 
-theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure] {r : ℝ}
-    (hnr : (finrank ℝ E : ℝ) < r) : (∫⁻ x : E, Ennreal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ := by
+theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
+    [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
+    (∫⁻ x : E, Ennreal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ := by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   -- We start by applying the layer cake formula
   have h_meas : Measurable fun ω : E => (1 + ‖ω‖) ^ (-r) := by measurability
@@ -112,7 +116,8 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   -- 0 to 1 and from 1 to ∞
   have h_int :
     ∀ (t : ℝ) (ht : t ∈ Ioi (0 : ℝ)),
-      (volume { a : E | t ≤ (1 + ‖a‖) ^ (-r) } : Ennreal) = volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
+      (volume { a : E | t ≤ (1 + ‖a‖) ^ (-r) } : Ennreal) =
+        volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
     by
     intro t ht
     congr 1
@@ -126,32 +131,36 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   have h_int' :
     ∀ (t : ℝ) (ht : t ∈ Ioc (0 : ℝ) 1),
       (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
-        Ennreal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) * volume (Metric.ball (0 : E) 1) :=
+        Ennreal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) *
+          volume (Metric.ball (0 : E) 1) :=
     by
     intro t ht
     refine' volume.add_haar_closed_ball (0 : E) _
     rw [le_sub_iff_add_le', add_zero]
     exact Real.one_le_rpow_of_pos_of_le_one_of_nonpos ht.1 ht.2 (by simp [hr.le])
-  have h_meas' : Measurable fun a : ℝ => Ennreal.ofReal ((a ^ (-r⁻¹) - 1) ^ finrank ℝ E) := by measurability
+  have h_meas' : Measurable fun a : ℝ => Ennreal.ofReal ((a ^ (-r⁻¹) - 1) ^ finrank ℝ E) := by
+    measurability
   constructor
   -- The integral from 0 to 1:
-  · rw [set_lintegral_congr_fun measurableSetIoc (ae_of_all volume <| h_int'), lintegral_mul_const _ h_meas',
-      Ennreal.mul_lt_top_iff]
+  · rw [set_lintegral_congr_fun measurableSetIoc (ae_of_all volume <| h_int'),
+      lintegral_mul_const _ h_meas', Ennreal.mul_lt_top_iff]
     left
     -- We calculate the integral
     exact ⟨finite_integral_rpow_sub_one_pow_aux (finrank ℝ E) hnr, measure_ball_lt_top⟩
     
   -- The integral from 1 to ∞ is zero:
   have h_int'' :
-    ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)), (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 := fun t ht =>
-    by rw [closed_ball_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
+    ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)),
+      (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 :=
+    fun t ht => by rw [closed_ball_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
-  rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume <| h_int''), lintegral_const 0, zero_mul]
+  rw [set_lintegral_congr_fun measurableSetIoi (ae_of_all volume <| h_int''), lintegral_const 0,
+    zero_mul]
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm
 
-theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure] {r : ℝ}
-    (hnr : (finrank ℝ E : ℝ) < r) : Integrable fun x : E => (1 + ‖x‖) ^ (-r) := by
+theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure]
+    {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) : Integrable fun x : E => (1 + ‖x‖) ^ (-r) := by
   refine' ⟨by measurability, _⟩
   -- Lower Lebesgue integral
   have : (∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊) = ∫⁻ a : E, Ennreal.ofReal ((1 + ‖a‖) ^ (-r)) :=
@@ -160,11 +169,13 @@ theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAd
   exact finite_integral_one_add_norm hnr
 #align integrable_one_add_norm integrableOneAddNorm
 
-theorem integrableRpowNegOneAddNormSq [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure] {r : ℝ}
-    (hnr : (finrank ℝ E : ℝ) < r) : Integrable fun x : E => (1 + ‖x‖ ^ 2) ^ (-r / 2) := by
+theorem integrableRpowNegOneAddNormSq [MeasureSpace E] [BorelSpace E]
+    [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
+    Integrable fun x : E => (1 + ‖x‖ ^ 2) ^ (-r / 2) := by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   refine'
-    ((integrableOneAddNorm hnr).const_mul <| 2 ^ (r / 2)).mono (by measurability) (eventually_of_forall fun x => _)
+    ((integrableOneAddNorm hnr).const_mul <| 2 ^ (r / 2)).mono (by measurability)
+      (eventually_of_forall fun x => _)
   have h1 : 0 ≤ (1 + ‖x‖ ^ 2) ^ (-r / 2) := by positivity
   have h2 : 0 ≤ (1 + ‖x‖) ^ (-r) := by positivity
   have h3 : 0 ≤ (2 : ℝ) ^ (r / 2) := by positivity

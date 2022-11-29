@@ -22,7 +22,8 @@ def linComb : List Nat → List Term → Term
   | n :: ns, t :: ts => Term.add (t.mul ↑n) (lin_comb ns ts)
 #align omega.lin_comb Omega.linComb
 
-theorem lin_comb_holds {v : Nat → Int} : ∀ {ts} (ns), (∀ t ∈ ts, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
+theorem lin_comb_holds {v : Nat → Int} :
+    ∀ {ts} (ns), (∀ t ∈ ts, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
   | [], [], h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
   | [], _ :: _, h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
   | _ :: _, [], h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
@@ -51,9 +52,9 @@ theorem unsat_lin_comb_of (ns : List Nat) (ts : List Term) :
   exact ⟨h1, h2⟩
 #align omega.unsat_lin_comb_of Omega.unsat_lin_comb_of
 
-theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) : UnsatLinComb ns ts → Clause.Unsat ([], ts) := by
-  intro h1 h2
-  cases' h2 with v h2
+theorem unsat_of_unsat_lin_comb (ns : List Nat) (ts : List Term) :
+    UnsatLinComb ns ts → Clause.Unsat ([], ts) := by
+  intro h1 h2; cases' h2 with v h2
   have h3 := lin_comb_holds ns h2.right
   cases' h1 with hl hr
   cases' lin_comb ns ts with b as

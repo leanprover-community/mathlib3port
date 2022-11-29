@@ -73,7 +73,8 @@ namespace DirectSum
 a ring to a direct sum of components. -/
 def decomposeRingEquiv : A ≃+* ⨁ i, 𝒜 i :=
   RingEquiv.symm
-    { (decomposeAddEquiv 𝒜).symm with map_mul' := (coeRingHom 𝒜).map_mul, map_add' := (coeRingHom 𝒜).map_add }
+    { (decomposeAddEquiv 𝒜).symm with map_mul' := (coeRingHom 𝒜).map_mul,
+      map_add' := (coeRingHom 𝒜).map_add }
 #align direct_sum.decompose_ring_equiv DirectSum.decomposeRingEquiv
 
 @[simp]
@@ -107,7 +108,8 @@ def GradedRing.proj (i : ι) : A →+ A :=
 #align graded_ring.proj GradedRing.proj
 
 @[simp]
-theorem GradedRing.proj_apply (i : ι) (r : A) : GradedRing.proj 𝒜 i r = (decompose 𝒜 r : ⨁ i, 𝒜 i) i :=
+theorem GradedRing.proj_apply (i : ι) (r : A) :
+    GradedRing.proj 𝒜 i r = (decompose 𝒜 r : ⨁ i, 𝒜 i) i :=
   rfl
 #align graded_ring.proj_apply GradedRing.proj_apply
 
@@ -133,25 +135,27 @@ variable {i j : ι}
 
 namespace DirectSum
 
-theorem coe_decompose_mul_add_of_left_mem [AddLeftCancelMonoid ι] [GradedRing 𝒜] {a b : A} (a_mem : a ∈ 𝒜 i) :
-    (decompose 𝒜 (a * b) (i + j) : A) = a * decompose 𝒜 b j := by
+theorem coe_decompose_mul_add_of_left_mem [AddLeftCancelMonoid ι] [GradedRing 𝒜] {a b : A}
+    (a_mem : a ∈ 𝒜 i) : (decompose 𝒜 (a * b) (i + j) : A) = a * decompose 𝒜 b j := by
   lift a to 𝒜 i using a_mem
   rw [decompose_mul, decompose_coe, coe_of_mul_apply_add]
 #align direct_sum.coe_decompose_mul_add_of_left_mem DirectSum.coe_decompose_mul_add_of_left_mem
 
-theorem coe_decompose_mul_add_of_right_mem [AddRightCancelMonoid ι] [GradedRing 𝒜] {a b : A} (b_mem : b ∈ 𝒜 j) :
-    (decompose 𝒜 (a * b) (i + j) : A) = decompose 𝒜 a i * b := by
+theorem coe_decompose_mul_add_of_right_mem [AddRightCancelMonoid ι] [GradedRing 𝒜] {a b : A}
+    (b_mem : b ∈ 𝒜 j) : (decompose 𝒜 (a * b) (i + j) : A) = decompose 𝒜 a i * b := by
   lift b to 𝒜 j using b_mem
   rw [decompose_mul, decompose_coe, coe_mul_of_apply_add]
 #align direct_sum.coe_decompose_mul_add_of_right_mem DirectSum.coe_decompose_mul_add_of_right_mem
 
 theorem decompose_mul_add_left [AddLeftCancelMonoid ι] [GradedRing 𝒜] (a : 𝒜 i) {b : A} :
-    decompose 𝒜 (↑a * b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ a (decompose 𝒜 b j) :=
+    decompose 𝒜 (↑a * b) (i + j) =
+      @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ a (decompose 𝒜 b j) :=
   Subtype.ext <| coe_decompose_mul_add_of_left_mem 𝒜 a.2
 #align direct_sum.decompose_mul_add_left DirectSum.decompose_mul_add_left
 
 theorem decompose_mul_add_right [AddRightCancelMonoid ι] [GradedRing 𝒜] {a : A} (b : 𝒜 j) :
-    decompose 𝒜 (a * ↑b) (i + j) = @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ (decompose 𝒜 a i) b :=
+    decompose 𝒜 (a * ↑b) (i + j) =
+      @GradedMonoid.GhasMul.mul ι (fun i => 𝒜 i) _ _ _ _ (decompose 𝒜 a i) b :=
   Subtype.ext <| coe_decompose_mul_add_of_right_mem 𝒜 b.2
 #align direct_sum.decompose_mul_add_right DirectSum.decompose_mul_add_right
 
@@ -180,7 +184,8 @@ See note [reducible non-instances]. -/
 @[reducible]
 def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] ⨁ i, 𝒜 i)
     (right_inv : (DirectSum.coeAlgHom 𝒜).comp decompose = AlgHom.id R A)
-    (left_inv : ∀ (i) (x : 𝒜 i), decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) : GradedAlgebra 𝒜 where
+    (left_inv : ∀ (i) (x : 𝒜 i), decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) :
+    GradedAlgebra 𝒜 where
   decompose' := decompose
   left_inv := AlgHom.congr_fun right_inv
   right_inv := by
@@ -199,8 +204,8 @@ an algebra to a direct sum of components. -/
 @[simps]
 def decomposeAlgEquiv : A ≃ₐ[R] ⨁ i, 𝒜 i :=
   AlgEquiv.symm
-    { (decomposeAddEquiv 𝒜).symm with map_mul' := (coeAlgHom 𝒜).map_mul, map_add' := (coeAlgHom 𝒜).map_add,
-      commutes' := (coeAlgHom 𝒜).commutes }
+    { (decomposeAddEquiv 𝒜).symm with map_mul' := (coeAlgHom 𝒜).map_mul,
+      map_add' := (coeAlgHom 𝒜).map_add, commutes' := (coeAlgHom 𝒜).commutes }
 #align direct_sum.decompose_alg_equiv DirectSum.decomposeAlgEquiv
 
 end DirectSum
@@ -213,7 +218,8 @@ def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : �
 #align graded_algebra.proj GradedAlgebra.proj
 
 @[simp]
-theorem GradedAlgebra.proj_apply (i : ι) (r : A) : GradedAlgebra.proj 𝒜 i r = (decompose 𝒜 r : ⨁ i, 𝒜 i) i :=
+theorem GradedAlgebra.proj_apply (i : ι) (r : A) :
+    GradedAlgebra.proj 𝒜 i r = (decompose 𝒜 r : ⨁ i, 𝒜 i) i :=
   rfl
 #align graded_algebra.proj_apply GradedAlgebra.proj_apply
 
@@ -289,15 +295,19 @@ variable {a b : A} {n i : ι}
 
 namespace DirectSum
 
-theorem coe_decompose_mul_of_left_mem_of_not_le (a_mem : a ∈ 𝒜 i) (h : ¬i ≤ n) : (decompose 𝒜 (a * b) n : A) = 0 := by
+theorem coe_decompose_mul_of_left_mem_of_not_le (a_mem : a ∈ 𝒜 i) (h : ¬i ≤ n) :
+    (decompose 𝒜 (a * b) n : A) = 0 := by
   lift a to 𝒜 i using a_mem
   rwa [decompose_mul, decompose_coe, coe_of_mul_apply_of_not_le]
-#align direct_sum.coe_decompose_mul_of_left_mem_of_not_le DirectSum.coe_decompose_mul_of_left_mem_of_not_le
+#align
+  direct_sum.coe_decompose_mul_of_left_mem_of_not_le DirectSum.coe_decompose_mul_of_left_mem_of_not_le
 
-theorem coe_decompose_mul_of_right_mem_of_not_le (b_mem : b ∈ 𝒜 i) (h : ¬i ≤ n) : (decompose 𝒜 (a * b) n : A) = 0 := by
+theorem coe_decompose_mul_of_right_mem_of_not_le (b_mem : b ∈ 𝒜 i) (h : ¬i ≤ n) :
+    (decompose 𝒜 (a * b) n : A) = 0 := by
   lift b to 𝒜 i using b_mem
   rwa [decompose_mul, decompose_coe, coe_mul_of_apply_of_not_le]
-#align direct_sum.coe_decompose_mul_of_right_mem_of_not_le DirectSum.coe_decompose_mul_of_right_mem_of_not_le
+#align
+  direct_sum.coe_decompose_mul_of_right_mem_of_not_le DirectSum.coe_decompose_mul_of_right_mem_of_not_le
 
 variable [Sub ι] [HasOrderedSub ι] [ContravariantClass ι ι (· + ·) (· ≤ ·)]
 
@@ -311,7 +321,8 @@ theorem coe_decompose_mul_of_right_mem_of_le (b_mem : b ∈ 𝒜 i) (h : i ≤ n
     (decompose 𝒜 (a * b) n : A) = decompose 𝒜 a (n - i) * b := by
   lift b to 𝒜 i using b_mem
   rwa [decompose_mul, decompose_coe, coe_mul_of_apply_of_le]
-#align direct_sum.coe_decompose_mul_of_right_mem_of_le DirectSum.coe_decompose_mul_of_right_mem_of_le
+#align
+  direct_sum.coe_decompose_mul_of_right_mem_of_le DirectSum.coe_decompose_mul_of_right_mem_of_le
 
 theorem coe_decompose_mul_of_left_mem (n) [Decidable (i ≤ n)] (a_mem : a ∈ 𝒜 i) :
     (decompose 𝒜 (a * b) n : A) = if i ≤ n then a * decompose 𝒜 b (n - i) else 0 := by

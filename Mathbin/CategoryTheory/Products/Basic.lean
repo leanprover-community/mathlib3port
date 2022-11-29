@@ -58,7 +58,8 @@ theorem prod_comp {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) �
   rfl
 #align category_theory.prod_comp CategoryTheory.prod_comp
 
-theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} : IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by
+theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} :
+    IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by
   constructor
   · rintro ⟨g, hfg, hgf⟩
     simp at hfg hgf
@@ -195,13 +196,10 @@ def evaluationUncurried : C × (C ⥤ D) ⥤ D where
   obj p := p.2.obj p.1
   map x y f := x.2.map f.1 ≫ f.2.app y.1
   map_comp' X Y Z f g := by
-    cases g
-    cases f
-    cases Z
-    cases Y
-    cases X
+    cases g; cases f; cases Z; cases Y; cases X
     simp only [prod_comp, nat_trans.comp_app, functor.map_comp, category.assoc]
-    rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc, nat_trans.naturality]
+    rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc,
+      nat_trans.naturality]
 #align category_theory.evaluation_uncurried CategoryTheory.evaluationUncurried
 
 variable {C}
@@ -210,12 +208,13 @@ variable {C}
 @[simps]
 def Functor.constCompEvaluationObj (X : C) : Functor.const C ⋙ (evaluation C D).obj X ≅ 𝟭 D :=
   NatIso.ofComponents (fun Y => Iso.refl _) fun Y Z f => by simp
-#align category_theory.functor.const_comp_evaluation_obj CategoryTheory.Functor.constCompEvaluationObj
+#align
+  category_theory.functor.const_comp_evaluation_obj CategoryTheory.Functor.constCompEvaluationObj
 
 end
 
-variable {A : Type u₁} [Category.{v₁} A] {B : Type u₂} [Category.{v₂} B] {C : Type u₃} [Category.{v₃} C] {D : Type u₄}
-  [Category.{v₄} D]
+variable {A : Type u₁} [Category.{v₁} A] {B : Type u₂} [Category.{v₂} B] {C : Type u₃}
+  [Category.{v₃} C] {D : Type u₄} [Category.{v₄} D]
 
 namespace Functor
 
@@ -277,8 +276,7 @@ namespace NatTrans
 def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod H ⟶ G.Prod I where
   app X := (α.app X.1, β.app X.2)
   naturality' X Y f := by
-    cases X
-    cases Y
+    cases X; cases Y
     simp only [functor.prod_map, Prod.mk.inj_iff, prod_comp]
     constructor <;> rw [naturality]
 #align category_theory.nat_trans.prod CategoryTheory.NatTrans.prod
@@ -308,24 +306,32 @@ def functorProdToProdFunctor : (A ⥤ B × C) ⥤ (A ⥤ B) × (A ⥤ C) where
   obj F := ⟨F ⋙ CategoryTheory.prod.fst B C, F ⋙ CategoryTheory.prod.snd B C⟩
   map F G α :=
     ⟨{ app := fun X => (α.app X).1,
-        naturality' := fun X Y f => by simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
+        naturality' := fun X Y f => by
+          simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
       { app := fun X => (α.app X).2,
-        naturality' := fun X Y f => by simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
+        naturality' := fun X Y f => by
+          simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
 #align category_theory.functor_prod_to_prod_functor CategoryTheory.functorProdToProdFunctor
 
 /-- The unit isomorphism for `functor_prod_functor_equiv` -/
 @[simps]
-def functorProdFunctorEquivUnitIso : 𝟭 _ ≅ prodFunctorToFunctorProd A B C ⋙ functorProdToProdFunctor A B C :=
+def functorProdFunctorEquivUnitIso :
+    𝟭 _ ≅ prodFunctorToFunctorProd A B C ⋙ functorProdToProdFunctor A B C :=
   NatIso.ofComponents
-    (fun F => (((Functor.prod'CompFst _ _).Prod (Functor.prod'CompSnd _ _)).trans (prod.etaIso F)).symm) fun F G α => by
-    tidy
-#align category_theory.functor_prod_functor_equiv_unit_iso CategoryTheory.functorProdFunctorEquivUnitIso
+    (fun F =>
+      (((Functor.prod'CompFst _ _).Prod (Functor.prod'CompSnd _ _)).trans (prod.etaIso F)).symm)
+    fun F G α => by tidy
+#align
+  category_theory.functor_prod_functor_equiv_unit_iso CategoryTheory.functorProdFunctorEquivUnitIso
 
 /-- The counit isomorphism for `functor_prod_functor_equiv` -/
 @[simps]
-def functorProdFunctorEquivCounitIso : functorProdToProdFunctor A B C ⋙ prodFunctorToFunctorProd A B C ≅ 𝟭 _ :=
-  NatIso.ofComponents (fun F => NatIso.ofComponents (fun X => prod.etaIso (F.obj X)) (by tidy)) (by tidy)
-#align category_theory.functor_prod_functor_equiv_counit_iso CategoryTheory.functorProdFunctorEquivCounitIso
+def functorProdFunctorEquivCounitIso :
+    functorProdToProdFunctor A B C ⋙ prodFunctorToFunctorProd A B C ≅ 𝟭 _ :=
+  NatIso.ofComponents (fun F => NatIso.ofComponents (fun X => prod.etaIso (F.obj X)) (by tidy))
+    (by tidy)
+#align
+  category_theory.functor_prod_functor_equiv_counit_iso CategoryTheory.functorProdFunctorEquivCounitIso
 
 /-- The equivalence of categories between `(A ⥤ B) × (A ⥤ C)` and `A ⥤ (B × C)` -/
 @[simps]

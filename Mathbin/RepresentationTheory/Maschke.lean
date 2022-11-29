@@ -120,8 +120,8 @@ def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
     conv_lhs =>
     rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]
     simp only [mulRightEmbedding]
-    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coe_fn_mk, Finset.sum_map,
-      inv_inv, inv_mul_cancel_right]
+    simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coe_fn_mk,
+      Finset.sum_map, inv_inv, inv_mul_cancel_right]
 #align linear_map.sum_of_conjugates_equivariant LinearMap.sumOfConjugatesEquivariant
 
 section
@@ -140,11 +140,12 @@ def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
 include h
 
 theorem equivariant_projection_condition (v : V) : (π.equivariantProjection G) (i v) = v := by
-  rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant, equivariant_of_linear_of_comm_apply,
-    sum_of_conjugates]
+  rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
+    equivariant_of_linear_of_comm_apply, sum_of_conjugates]
   rw [LinearMap.sum_apply]
   simp only [conjugate_i π i h]
-  rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul, Invertible.inv_of_mul_self, one_smul]
+  rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul,
+    Invertible.inv_of_mul_self, one_smul]
 #align linear_map.equivariant_projection_condition LinearMap.equivariant_projection_condition
 
 end
@@ -190,11 +191,13 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
   intro v
   have := congr_arg LinearMap.toFun hφ
   exact congr_fun this v
-#align monoid_algebra.exists_left_inverse_of_injective MonoidAlgebra.exists_left_inverse_of_injective
+#align
+  monoid_algebra.exists_left_inverse_of_injective MonoidAlgebra.exists_left_inverse_of_injective
 
 namespace Submodule
 
-theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) : ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
+theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) :
+    ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
   let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.Subtype p.ker_subtype
   ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
 #align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_is_compl

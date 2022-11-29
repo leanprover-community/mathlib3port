@@ -42,7 +42,8 @@ variable (R : Type u) [Ring R]
 
 /-- Define `fgModule` as the subtype of `Module.{u} R` of finitely generated modules. -/
 def FgModule :=
-  FullSubcategory fun V : ModuleCat.{u} R => Module.Finite R V deriving LargeCategory, ConcreteCategory, Preadditive
+  FullSubcategory fun V : ModuleCat.{u} R => Module.Finite R V deriving LargeCategory,
+  ConcreteCategory, Preadditive
 #align fgModule FgModule
 
 end Ring
@@ -86,8 +87,9 @@ def isoToLinearEquiv {V W : FgModule R} (i : V ≅ W) : V.obj ≃ₗ[R] W.obj :=
 
 /-- Converts a `linear_equiv` to an isomorphism in the category `fgModule R`. -/
 @[simps]
-def _root_.linear_equiv.to_fgModule_iso {V W : Type u} [AddCommGroup V] [Module R V] [Module.Finite R V]
-    [AddCommGroup W] [Module R W] [Module.Finite R W] (e : V ≃ₗ[R] W) : FgModule.of R V ≅ FgModule.of R W where
+def LinearEquiv.toFgModuleIso {V W : Type u} [AddCommGroup V] [Module R V] [Module.Finite R V]
+    [AddCommGroup W] [Module R W] [Module.Finite R W] (e : V ≃ₗ[R] W) :
+    FgModule.of R V ≅ FgModule.of R W where
   Hom := e.toLinearMap
   inv := e.symm.toLinearMap
   hom_inv_id' := by
@@ -96,7 +98,7 @@ def _root_.linear_equiv.to_fgModule_iso {V W : Type u} [AddCommGroup V] [Module 
   inv_hom_id' := by
     ext
     exact e.right_inv x
-#align fgModule._root_.linear_equiv.to_fgModule_iso fgModule._root_.linear_equiv.to_fgModule_iso
+#align linear_equiv.to_fgModule_iso LinearEquiv.toFgModuleIso
 
 end Ring
 
@@ -104,9 +106,7 @@ section CommRing
 
 variable (R : Type u) [CommRing R]
 
-instance : Linear R (FgModule R) := by dsimp_result =>
-  dsimp [FgModule]
-  infer_instance
+instance : Linear R (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
 instance monoidal_predicate_module_finite :
     MonoidalCategory.MonoidalPredicate fun V : ModuleCat.{u} R => Module.Finite R V where
@@ -114,21 +114,13 @@ instance monoidal_predicate_module_finite :
   prop_tensor' X Y hX hY := Module.Finite.tensor_product R X Y
 #align fgModule.monoidal_predicate_module_finite FgModule.monoidal_predicate_module_finite
 
-instance : MonoidalCategory (FgModule R) := by dsimp_result =>
-  dsimp [FgModule]
-  infer_instance
+instance : MonoidalCategory (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
-instance : SymmetricCategory (FgModule R) := by dsimp_result =>
-  dsimp [FgModule]
-  infer_instance
+instance : SymmetricCategory (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
-instance : MonoidalPreadditive (FgModule R) := by dsimp_result =>
-  dsimp [FgModule]
-  infer_instance
+instance : MonoidalPreadditive (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
-instance : MonoidalLinear R (FgModule R) := by dsimp_result =>
-  dsimp [FgModule]
-  infer_instance
+instance : MonoidalLinear R (FgModule R) := by dsimp_result => dsimp [FgModule]; infer_instance
 
 /-- The forgetful functor `fgModule R ⥤ Module R` as a monoidal functor. -/
 def forget₂Monoidal : MonoidalFunctor (FgModule R) (ModuleCat.{u} R) :=
@@ -166,12 +158,11 @@ instance (V W : FgModule K) : Module.Finite K (V ⟶ W) :=
 
 instance closedPredicateModuleFinite :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K =>
-      Module.Finite K V where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
+      Module.Finite K
+        V where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
 #align fgModule.closed_predicate_module_finite FgModule.closedPredicateModuleFinite
 
-instance : MonoidalClosed (FgModule K) := by dsimp_result =>
-  dsimp [FgModule]
-  infer_instance
+instance : MonoidalClosed (FgModule K) := by dsimp_result => dsimp [FgModule]; infer_instance
 
 variable (V W : FgModule K)
 
@@ -221,7 +212,8 @@ private theorem coevaluation_evaluation :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private theorem evaluation_coevaluation :
-    (fgModuleCoevaluation K V ⊗ 𝟙 V) ≫ (α_ V (fgModuleDual K V) V).Hom ≫ (𝟙 V ⊗ fgModuleEvaluation K V) =
+    (fgModuleCoevaluation K V ⊗ 𝟙 V) ≫
+        (α_ V (fgModuleDual K V) V).Hom ≫ (𝟙 V ⊗ fgModuleEvaluation K V) =
       (λ_ V).Hom ≫ (ρ_ V).inv :=
   by apply contract_left_assoc_coevaluation' K V.obj
 #align fgModule.evaluation_coevaluation fgModule.evaluation_coevaluation

@@ -83,12 +83,14 @@ theorem id_map {C : CatCat} {X Y : C} (f : X ⟶ Y) : (𝟙 C : C ⥤ C).map f =
 #align category_theory.Cat.id_map CategoryTheory.CatCat.id_map
 
 @[simp]
-theorem comp_obj {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) (X : C) : (F ≫ G).obj X = G.obj (F.obj X) :=
+theorem comp_obj {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) (X : C) :
+    (F ≫ G).obj X = G.obj (F.obj X) :=
   Functor.comp_obj F G X
 #align category_theory.Cat.comp_obj CategoryTheory.CatCat.comp_obj
 
 @[simp]
-theorem comp_map {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) {X Y : C} (f : X ⟶ Y) : (F ≫ G).map f = G.map (F.map f) :=
+theorem comp_map {C D E : CatCat} (F : C ⟶ D) (G : D ⟶ E) {X Y : C} (f : X ⟶ Y) :
+    (F ≫ G).map f = G.map (F.map f) :=
   Functor.comp_map F G f
 #align category_theory.Cat.comp_map CategoryTheory.CatCat.comp_map
 
@@ -123,17 +125,14 @@ This ought to be modelled as a 2-functor!
 def typeToCat : Type u ⥤ Cat where
   obj X := CatCat.of (Discrete X)
   map X Y f := Discrete.functor (discrete.mk ∘ f)
-  map_id' X := by
-    apply Functor.ext
-    tidy
-  map_comp' X Y Z f g := by
-    apply Functor.ext
-    tidy
+  map_id' X := by apply Functor.ext; tidy
+  map_comp' X Y Z f g := by apply Functor.ext; tidy
 #align category_theory.Type_to_Cat CategoryTheory.typeToCat
 
 instance :
     Faithful
-      typeToCat.{u} where map_injective' X Y f g h := funext fun x => congr_arg Discrete.as (Functor.congr_obj h ⟨x⟩)
+      typeToCat.{u} where map_injective' X Y f g h :=
+    funext fun x => congr_arg Discrete.as (Functor.congr_obj h ⟨x⟩)
 
 instance : Full typeToCat.{u} where
   preimage X Y F := discrete.as ∘ F.obj ∘ discrete.mk

@@ -199,7 +199,8 @@ theorem coe_bot : ((⊥ : Subsemigroup M) : Set M) = ∅ :=
 @[to_additive "The inf of two `add_subsemigroup`s is their intersection."]
 instance : HasInf (Subsemigroup M) :=
   ⟨fun S₁ S₂ =>
-    { carrier := S₁ ∩ S₂, mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
+    { carrier := S₁ ∩ S₂,
+      mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
 @[simp, to_additive]
 theorem coe_inf (p p' : Subsemigroup M) : ((p ⊓ p' : Subsemigroup M) : Set M) = p ∩ p' :=
@@ -216,7 +217,8 @@ instance : HasInf (Subsemigroup M) :=
   ⟨fun s =>
     { carrier := ⋂ t ∈ s, ↑t,
       mul_mem' := fun x y hx hy =>
-        Set.mem_bInter fun i h => i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
+        Set.mem_bInter fun i h =>
+          i.mul_mem (by apply Set.mem_Inter₂.1 hx i h) (by apply Set.mem_Inter₂.1 hy i h) }⟩
 
 @[simp, norm_cast, to_additive]
 theorem coe_Inf (S : Set (Subsemigroup M)) : ((inf S : Subsemigroup M) : Set M) = ⋂ s ∈ S, ↑s :=
@@ -242,7 +244,8 @@ theorem coe_infi {ι : Sort _} {S : ι → Subsemigroup M} : (↑(⨅ i, S i) : 
 @[to_additive "The `add_subsemigroup`s of an `add_monoid` form a complete lattice."]
 instance : CompleteLattice (Subsemigroup M) :=
   { (completeLatticeOfInf (Subsemigroup M)) fun s =>
-      IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
+      IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe)
+        is_glb_binfi with
     le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x hx => (not_mem_bot hx).elim, top := ⊤,
     le_top := fun S x hx => mem_top x, inf := (· ⊓ ·), inf := HasInf.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
@@ -279,7 +282,8 @@ theorem subset_closure : s ⊆ closure s := fun x hx => mem_closure.2 fun S hS =
 #align subsemigroup.subset_closure Subsemigroup.subset_closure
 
 @[to_additive]
-theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure s) : P ∉ s := fun h => hP (subset_closure h)
+theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure s) : P ∉ s := fun h =>
+  hP (subset_closure h)
 #align subsemigroup.not_mem_of_not_mem_closure Subsemigroup.not_mem_of_not_mem_closure
 
 variable {S}
@@ -287,7 +291,8 @@ variable {S}
 open Set
 
 /-- A subsemigroup `S` includes `closure s` if and only if it includes `s`. -/
-@[simp, to_additive "An additive subsemigroup `S` includes `closure s`\nif and only if it includes `s`"]
+@[simp,
+  to_additive "An additive subsemigroup `S` includes `closure s`\nif and only if it includes `s`"]
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
   ⟨Subset.trans subset_closure, fun h => Inf_le h⟩
 #align subsemigroup.closure_le Subsemigroup.closure_le
@@ -319,19 +324,25 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
 
 /-- A dependent version of `subsemigroup.closure_induction`.  -/
 @[elab_as_elim, to_additive "A dependent version of `add_subsemigroup.closure_induction`. "]
-theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop} (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
-    (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) : p x hx := by
+theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
+    (Hs : ∀ (x) (h : x ∈ s), p x (subset_closure h))
+    (Hmul : ∀ x hx y hy, p x hx → p y hy → p (x * y) (mul_mem hx hy)) {x} (hx : x ∈ closure s) :
+    p x hx := by
   refine' Exists.elim _ fun (hx : x ∈ closure s) (hc : p x hx) => hc
-  exact closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ => ⟨_, Hmul _ _ _ _ hx hy⟩
+  exact
+    closure_induction hx (fun x hx => ⟨_, Hs x hx⟩) fun x y ⟨hx', hx⟩ ⟨hy', hy⟩ =>
+      ⟨_, Hmul _ _ _ _ hx hy⟩
 #align subsemigroup.closure_induction' Subsemigroup.closure_induction'
 
 /-- An induction principle for closure membership for predicates with two arguments.  -/
 @[elab_as_elim,
-  to_additive "An induction principle for additive closure membership for\npredicates with two arguments."]
+  to_additive
+      "An induction principle for additive closure membership for\npredicates with two arguments."]
 theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ closure s) (hy : y ∈ closure s)
     (Hs : ∀ x ∈ s, ∀ y ∈ s, p x y) (Hmul_left : ∀ x y z, p x z → p y z → p (x * y) z)
     (Hmul_right : ∀ x y z, p z x → p z y → p z (x * y)) : p x y :=
-  closure_induction hx (fun x xs => closure_induction hy (Hs x xs) fun z y h₁ h₂ => Hmul_right z _ _ h₁ h₂)
+  closure_induction hx
+    (fun x xs => closure_induction hy (Hs x xs) fun z y h₁ h₂ => Hmul_right z _ _ h₁ h₂)
     fun x z h₁ h₂ => Hmul_left _ _ _ h₁ h₂
 #align subsemigroup.closure_induction₂ Subsemigroup.closure_induction₂
 
@@ -392,7 +403,8 @@ theorem closure_singleton_le_iff_mem (m : M) (p : Subsemigroup M) : closure {m} 
 #align subsemigroup.closure_singleton_le_iff_mem Subsemigroup.closure_singleton_le_iff_mem
 
 @[to_additive]
-theorem mem_supr {ι : Sort _} (p : ι → Subsemigroup M) {m : M} : (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N := by
+theorem mem_supr {ι : Sort _} (p : ι → Subsemigroup M) {m : M} :
+    (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N := by
   rw [← closure_singleton_le_iff_mem, le_supr_iff]
   simp only [closure_singleton_le_iff_mem]
 #align subsemigroup.mem_supr Subsemigroup.mem_supr
@@ -419,8 +431,10 @@ def eqMlocus (f g : M →ₙ* N) : Subsemigroup M where
 #align mul_hom.eq_mlocus MulHom.eqMlocus
 
 /-- If two mul homomorphisms are equal on a set, then they are equal on its subsemigroup closure. -/
-@[to_additive "If two add homomorphisms are equal on a set,\nthen they are equal on its additive subsemigroup closure."]
-theorem eq_on_mclosure {f g : M →ₙ* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
+@[to_additive
+      "If two add homomorphisms are equal on a set,\nthen they are equal on its additive subsemigroup closure."]
+theorem eq_on_mclosure {f g : M →ₙ* N} {s : Set M} (h : Set.EqOn f g s) :
+    Set.EqOn f g (closure s) :=
   show closure s ≤ f.eqMlocus g from closure_le.2 h
 #align mul_hom.eq_on_mclosure MulHom.eq_on_mclosure
 
@@ -430,7 +444,8 @@ theorem eq_of_eq_on_mtop {f g : M →ₙ* N} (h : Set.EqOn f g (⊤ : Subsemigro
 #align mul_hom.eq_of_eq_on_mtop MulHom.eq_of_eq_on_mtop
 
 @[to_additive]
-theorem eq_of_eq_on_mdense {s : Set M} (hs : closure s = ⊤) {f g : M →ₙ* N} (h : s.EqOn f g) : f = g :=
+theorem eq_of_eq_on_mdense {s : Set M} (hs : closure s = ⊤) {f g : M →ₙ* N} (h : s.EqOn f g) :
+    f = g :=
   eq_of_eq_on_mtop <| hs ▸ eq_on_mclosure h
 #align mul_hom.eq_of_eq_on_mdense MulHom.eq_of_eq_on_mdense
 
@@ -452,7 +467,8 @@ def ofMdense {M N} [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : c
     (hmul : ∀ (x), ∀ y ∈ s, f (x * y) = f x * f y) : M →ₙ* N where
   toFun := f
   map_mul' x y :=
-    dense_induction y hs (fun y hy x => hmul x y hy) (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
+    dense_induction y hs (fun y hy x => hmul x y hy)
+      (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 #align mul_hom.of_mdense MulHom.ofMdense
 
 /-- Let `s` be a subset of an additive semigroup `M` such that the closure of `s` is the whole
@@ -461,8 +477,8 @@ of `f (x + y) = f x + f y` only for `y ∈ s`. -/
 add_decl_doc AddHom.ofMdense
 
 @[simp, norm_cast, to_additive]
-theorem coe_of_mdense [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : closure s = ⊤) (hmul) :
-    (ofMdense f hs hmul : M → N) = f :=
+theorem coe_of_mdense [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : closure s = ⊤)
+    (hmul) : (ofMdense f hs hmul : M → N) = f :=
   rfl
 #align mul_hom.coe_of_mdense MulHom.coe_of_mdense
 

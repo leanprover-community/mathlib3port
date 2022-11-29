@@ -16,7 +16,8 @@ universe u u' v w z
 whose rows are indexed by the fintype `m` and
 whose columns are indexed by the fintype `n`. -/
 @[nolint unused_arguments]
-def Dmatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n → Type v) : Type max u u' v :=
+def Dmatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n → Type v) :
+    Type max u u' v :=
   ∀ i j, α i j
 #align dmatrix Dmatrix
 
@@ -42,27 +43,29 @@ theorem ext : (∀ i j, M i j = N i j) → M = N :=
 end Ext
 
 /-- `M.map f` is the dmatrix obtained by applying `f` to each entry of the matrix `M`. -/
-def map (M : Dmatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i j → β i j) : Dmatrix m n β := fun i j => f (M i j)
+def map (M : Dmatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i j → β i j) : Dmatrix m n β :=
+  fun i j => f (M i j)
 #align dmatrix.map Dmatrix.map
 
 @[simp]
-theorem map_apply {M : Dmatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j⦄, α i j → β i j} {i : m} {j : n} :
-    M.map f i j = f (M i j) :=
+theorem map_apply {M : Dmatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j⦄, α i j → β i j} {i : m}
+    {j : n} : M.map f i j = f (M i j) :=
   rfl
 #align dmatrix.map_apply Dmatrix.map_apply
 
 @[simp]
-theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n → Type z} {f : ∀ ⦃i j⦄, α i j → β i j}
-    {g : ∀ ⦃i j⦄, β i j → γ i j} : (M.map f).map g = M.map fun i j x => g (f x) := by
+theorem map_map {M : Dmatrix m n α} {β : m → n → Type w} {γ : m → n → Type z}
+    {f : ∀ ⦃i j⦄, α i j → β i j} {g : ∀ ⦃i j⦄, β i j → γ i j} :
+    (M.map f).map g = M.map fun i j x => g (f x) := by
   ext
   simp
 #align dmatrix.map_map Dmatrix.map_map
 
 /- warning: dmatrix.transpose -> Dmatrix.transpose is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2 u_3 v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3 u_2 v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
+  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2, u_3, v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3, u_2, v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
 but is expected to have type
-  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2 u_3 v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3 u_2 v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
+  forall {m : Type.{u_2}} {n : Type.{u_3}} [_inst_2 : Fintype.{u_2} m] [_inst_3 : Fintype.{u_3} n] {α : m -> n -> Type.{v}}, (Dmatrix.{u_2, u_3, v} m n _inst_2 _inst_3 α) -> (Dmatrix.{u_3, u_2, v} n m _inst_3 _inst_2 (fun (j : n) (i : m) => α i j))
 Case conversion may be inaccurate. Consider using '#align dmatrix.transpose Dmatrix.transposeₓ'. -/
 /-- The transpose of a dmatrix. -/
 def transpose (M : Dmatrix m n α) : Dmatrix n m fun j i => α i j
@@ -74,9 +77,9 @@ scoped postfix:1024 "ᵀ" => Dmatrix.transpose
 
 /- warning: dmatrix.col -> Dmatrix.col is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2 0 v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
+  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2, 0, v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
 but is expected to have type
-  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2 0 v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
+  forall {m : Type.{u_2}} [_inst_2 : Fintype.{u_2} m] {α : m -> Type.{v}}, (forall (i : m), α i) -> (Dmatrix.{u_2, 0, v} m Unit _inst_2 PUnit.fintype.{0} (fun (i : m) (j : Unit) => α i))
 Case conversion may be inaccurate. Consider using '#align dmatrix.col Dmatrix.colₓ'. -/
 /-- `dmatrix.col u` is the column matrix whose entries are given by `u`. -/
 def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
@@ -85,9 +88,9 @@ def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
 
 /- warning: dmatrix.row -> Dmatrix.row is a dubious translation:
 lean 3 declaration is
-  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0 u_3 v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
+  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0, u_3, v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
 but is expected to have type
-  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0 u_3 v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
+  forall {n : Type.{u_3}} [_inst_3 : Fintype.{u_3} n] {α : n -> Type.{v}}, (forall (j : n), α j) -> (Dmatrix.{0, u_3, v} Unit n PUnit.fintype.{0} _inst_3 (fun (i : Unit) (j : n) => α j))
 Case conversion may be inaccurate. Consider using '#align dmatrix.row Dmatrix.rowₓ'. -/
 /-- `dmatrix.row u` is the row matrix whose entries are given by `u`. -/
 def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
@@ -154,20 +157,23 @@ theorem sub_apply [∀ i j, Sub (α i j)] (M N : Dmatrix m n α) (i j) : (M - N)
 #align dmatrix.sub_apply Dmatrix.sub_apply
 
 @[simp]
-theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)] {f : ∀ ⦃i j⦄, α i j → β i j}
-    (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 := by
+theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)]
+    {f : ∀ ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) : (0 : Dmatrix m n α).map f = 0 :=
+  by
   ext
   simp [h]
 #align dmatrix.map_zero Dmatrix.map_zero
 
-theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
-    (M N : Dmatrix m n α) : ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by
+theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
+    (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
+    ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by
   ext
   simp
 #align dmatrix.map_add Dmatrix.map_add
 
-theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j)
-    (M N : Dmatrix m n α) : ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by
+theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)]
+    (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : Dmatrix m n α) :
+    ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by
   ext
   simp
 #align dmatrix.map_sub Dmatrix.map_sub
@@ -188,16 +194,17 @@ end Dmatrix
 
 /-- The `add_monoid_hom` between spaces of dependently typed matrices
 induced by an `add_monoid_hom` between their coefficients. -/
-def AddMonoidHom.mapDmatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
-    (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β where
+def AddMonoidHom.mapDmatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type w}
+    [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) : Dmatrix m n α →+ Dmatrix m n β where
   toFun M := M.map fun i j => @f i j
   map_zero' := by simp
   map_add' := Dmatrix.map_add f
 #align add_monoid_hom.map_dmatrix AddMonoidHom.mapDmatrix
 
 @[simp]
-theorem AddMonoidHom.map_dmatrix_apply [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
-    (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : Dmatrix m n α) : AddMonoidHom.mapDmatrix f M = M.map fun i j => @f i j :=
+theorem AddMonoidHom.map_dmatrix_apply [∀ i j, AddMonoid (α i j)] {β : m → n → Type w}
+    [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : Dmatrix m n α) :
+    AddMonoidHom.mapDmatrix f M = M.map fun i j => @f i j :=
   rfl
 #align add_monoid_hom.map_dmatrix_apply AddMonoidHom.map_dmatrix_apply
 

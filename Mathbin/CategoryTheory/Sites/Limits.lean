@@ -57,8 +57,9 @@ shape `K` of objects in `D`, with cone point `S.X`.
 
 See `is_limit_multifork_of_is_limit` for more on how this definition is used.
 -/
-def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (X : C) (W : J.cover X)
-    (S : Multifork (W.index E.x)) : Cone (F ⋙ sheafToPresheaf J D ⋙ (evaluation Cᵒᵖ D).obj (op X)) where
+def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (X : C)
+    (W : J.cover X) (S : Multifork (W.index E.x)) :
+    Cone (F ⋙ sheafToPresheaf J D ⋙ (evaluation Cᵒᵖ D).obj (op X)) where
   x := S.x
   π :=
     { app := fun k =>
@@ -78,12 +79,13 @@ def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPre
         rw [category.id_comp]
         apply presheaf.is_sheaf.hom_ext (F.obj j).2 W
         intro ii
-        rw [presheaf.is_sheaf.amalgamate_map, category.assoc, ← (F.map f).val.naturality, ← category.assoc,
-          presheaf.is_sheaf.amalgamate_map]
+        rw [presheaf.is_sheaf.amalgamate_map, category.assoc, ← (F.map f).val.naturality, ←
+          category.assoc, presheaf.is_sheaf.amalgamate_map]
         dsimp [multifork.of_ι]
         erw [category.assoc, ← E.w f]
         tidy }
-#align category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.SheafCat.multiforkEvaluationCone
+#align
+  category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.SheafCat.multiforkEvaluationCone
 
 variable [HasLimitsOfShape K D]
 
@@ -93,10 +95,12 @@ condition, at a given covering `W`.
 
 This is used below in `is_sheaf_of_is_limit` to show that the limit presheaf is indeed a sheaf.
 -/
-def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (hE : IsLimit E) (X : C)
-    (W : J.cover X) : IsLimit (W.Multifork E.x) :=
+def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D))
+    (hE : IsLimit E) (X : C) (W : J.cover X) : IsLimit (W.Multifork E.x) :=
   Multifork.IsLimit.mk _
-    (fun S => (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift <| multifork_evaluation_cone F E X W S)
+    (fun S =>
+      (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift <|
+        multifork_evaluation_cone F E X W S)
     (by
       intro S i
       apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
@@ -105,7 +109,8 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToP
       erw [category.assoc, (E.π.app k).naturality]
       dsimp
       rw [← category.assoc]
-      erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac (multifork_evaluation_cone F E X W S)]
+      erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac
+          (multifork_evaluation_cone F E X W S)]
       dsimp [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
       erw [presheaf.is_sheaf.amalgamate_map]
       rfl)
@@ -122,15 +127,16 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToP
       change _ = S.ι i ≫ _
       erw [← hm, category.assoc, ← (E.π.app k).naturality, category.assoc]
       rfl)
-#align category_theory.Sheaf.is_limit_multifork_of_is_limit CategoryTheory.SheafCat.isLimitMultiforkOfIsLimit
+#align
+  category_theory.Sheaf.is_limit_multifork_of_is_limit CategoryTheory.SheafCat.isLimitMultiforkOfIsLimit
 
 /-- If `E` is a cone which is a limit on the level of presheaves,
 then the limit presheaf is again a sheaf.
 
 This is used to show that the forgetful functor from sheaves to presheaves creates limits.
 -/
-theorem isSheafOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (hE : IsLimit E) :
-    Presheaf.IsSheaf J E.x := by
+theorem isSheafOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D))
+    (hE : IsLimit E) : Presheaf.IsSheaf J E.x := by
   rw [presheaf.is_sheaf_iff_multifork]
   intro X S
   exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
@@ -152,7 +158,9 @@ instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
             apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j,
           uniq' := fun S m hm => by
             ext1
-            exact hE.uniq ((Sheaf_to_presheaf J D).mapCone S) m.val fun j => congr_arg hom.val (hm j) } }
+            exact
+              hE.uniq ((Sheaf_to_presheaf J D).mapCone S) m.val fun j =>
+                congr_arg hom.val (hm j) } }
 
 instance : CreatesLimitsOfShape K (sheafToPresheaf J D) where
 
@@ -209,8 +217,8 @@ def sheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J
 /-- If `E` is a colimit cocone of presheaves, over a diagram factoring through sheaves,
 then `sheafify_cocone E` is a colimit cocone. -/
 @[simps]
-def isColimitSheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J D)) (hE : IsColimit E) :
-    IsColimit (sheafify_cocone E) where
+def isColimitSheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToPresheaf J D))
+    (hE : IsColimit E) : IsColimit (sheafify_cocone E) where
   desc S := ⟨J.sheafifyLift (hE.desc ((sheafToPresheaf J D).mapCocone S)) S.x.2⟩
   fac' := by
     intro S j
@@ -226,10 +234,13 @@ def isColimitSheafifyCocone {F : K ⥤ SheafCat J D} (E : Cocone (F ⋙ sheafToP
     intro j
     dsimp
     simpa only [← category.assoc, ← hm]
-#align category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.SheafCat.isColimitSheafifyCocone
+#align
+  category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.SheafCat.isColimitSheafifyCocone
 
 instance [HasColimitsOfShape K D] : HasColimitsOfShape K (SheafCat J D) :=
-  ⟨fun F => HasColimit.mk ⟨sheafify_cocone (Colimit.cocone _), is_colimit_sheafify_cocone _ (colimit.isColimit _)⟩⟩
+  ⟨fun F =>
+    HasColimit.mk
+      ⟨sheafify_cocone (Colimit.cocone _), is_colimit_sheafify_cocone _ (colimit.isColimit _)⟩⟩
 
 instance [HasColimits D] : HasColimits (SheafCat J D) :=
   ⟨inferInstance⟩

@@ -51,7 +51,9 @@ protected def sym2 (s : Finset α) : Finset (Sym2 α) :=
 
 @[simp]
 theorem mem_sym2_iff : m ∈ s.Sym2 ↔ ∀ a ∈ m, a ∈ s := by
-  refine' mem_image.trans ⟨_, fun h => ⟨m.out, mem_product.2 ⟨h _ m.out_fst_mem, h _ m.out_snd_mem⟩, m.out_eq⟩⟩
+  refine'
+    mem_image.trans
+      ⟨_, fun h => ⟨m.out, mem_product.2 ⟨h _ m.out_fst_mem, h _ m.out_snd_mem⟩, m.out_eq⟩⟩
   rintro ⟨⟨a, b⟩, h, rfl⟩
   rw [Sym2.ball]
   rwa [mem_product] at h
@@ -66,7 +68,8 @@ theorem sym2_empty : (∅ : Finset α).Sym2 = ∅ :=
 #align finset.sym2_empty Finset.sym2_empty
 
 @[simp]
-theorem sym2_eq_empty : s.Sym2 = ∅ ↔ s = ∅ := by rw [Finset.sym2, image_eq_empty, product_eq_empty, or_self_iff]
+theorem sym2_eq_empty : s.Sym2 = ∅ ↔ s = ∅ := by
+  rw [Finset.sym2, image_eq_empty, product_eq_empty, or_self_iff]
 #align finset.sym2_eq_empty Finset.sym2_eq_empty
 
 @[simp]
@@ -94,10 +97,12 @@ theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
 #align finset.diag_mem_sym2_iff Finset.diag_mem_sym2_iff
 
 @[simp]
-theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he => mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
+theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he =>
+  mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 #align finset.sym2_mono Finset.sym2_mono
 
-theorem image_diag_union_image_off_diag : s.diag.image Quotient.mk'' ∪ s.offDiag.image Quotient.mk'' = s.Sym2 := by
+theorem image_diag_union_image_off_diag :
+    s.diag.image Quotient.mk'' ∪ s.offDiag.image Quotient.mk'' = s.Sym2 := by
   rw [← image_union, diag_union_off_diag]
   rfl
 #align finset.image_diag_union_image_off_diag Finset.image_diag_union_image_off_diag
@@ -144,7 +149,9 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s := by
       
     
   · obtain ⟨a, m, rfl⟩ := m.exists_eq_cons_of_succ
-    exact ⟨a, h _ <| Sym.mem_cons_self _ _, mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
+    exact
+      ⟨a, h _ <| Sym.mem_cons_self _ _,
+        mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
     
 #align finset.mem_sym_iff Finset.mem_sym_iff
 
@@ -217,11 +224,14 @@ theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t
 
 theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ s.Sym (n - i)) :
     m.fill a i ∈ (insert a s).Sym n :=
-  mem_sym_iff.2 fun b hb => mem_insert.2 <| (Sym.mem_fill_iff.1 hb).imp And.right <| mem_sym_iff.1 h b
+  mem_sym_iff.2 fun b hb =>
+    mem_insert.2 <| (Sym.mem_fill_iff.1 hb).imp And.right <| mem_sym_iff.1 h b
 #align finset.sym_fill_mem Finset.sym_fill_mem
 
-theorem sym_filter_ne_mem (a : α) (h : m ∈ s.Sym n) : (m.filter_ne a).2 ∈ (s.erase a).Sym (n - (m.filter_ne a).1) :=
-  mem_sym_iff.2 fun b H => mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
+theorem sym_filter_ne_mem (a : α) (h : m ∈ s.Sym n) :
+    (m.filter_ne a).2 ∈ (s.erase a).Sym (n - (m.filter_ne a).1) :=
+  mem_sym_iff.2 fun b H =>
+    mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
 #align finset.sym_filter_ne_mem Finset.sym_filter_ne_mem
 
 /-- If `a` does not belong to the finset `s`, then the `n`th symmetric power of `{a} ∪ s` is
@@ -236,10 +246,10 @@ def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.S
     refine' (_ : id.injective).sigma_map (fun i => _) _
     · exact fun i => Sym α (n - i)
       
-    swap
+    swap;
     · exact fun _ _ => id
       
-    swap
+    swap;
     · exact Subtype.coe_injective
       
     refine' Eq.trans _ (Sym.filter_ne_fill a _ _)

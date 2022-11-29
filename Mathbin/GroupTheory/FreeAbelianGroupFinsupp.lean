@@ -45,33 +45,39 @@ open Finsupp FreeAbelianGroup
 
 @[simp]
 theorem Finsupp.to_free_abelian_group_comp_single_add_hom (x : X) :
-    Finsupp.toFreeAbelianGroup.comp (Finsupp.singleAddHom x) = (smulAddHom ℤ (FreeAbelianGroup X)).flip (of x) := by
+    Finsupp.toFreeAbelianGroup.comp (Finsupp.singleAddHom x) =
+      (smulAddHom ℤ (FreeAbelianGroup X)).flip (of x) :=
+  by
   ext
-  simp only [AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply, one_smul, to_free_abelian_group,
-    Finsupp.lift_add_hom_apply_single]
-#align finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.to_free_abelian_group_comp_single_add_hom
+  simp only [AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply, one_smul,
+    to_free_abelian_group, Finsupp.lift_add_hom_apply_single]
+#align
+  finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.to_free_abelian_group_comp_single_add_hom
 
 @[simp]
 theorem FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group :
     toFinsupp.comp toFreeAbelianGroup = AddMonoidHom.id (X →₀ ℤ) := by
-  ext (x y)
-  simp only [AddMonoidHom.id_comp]
+  ext (x y); simp only [AddMonoidHom.id_comp]
   rw [AddMonoidHom.comp_assoc, Finsupp.to_free_abelian_group_comp_single_add_hom]
-  simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply, one_smul, lift.of,
-    AddMonoidHom.flip_apply, smul_add_hom_apply, AddMonoidHom.id_apply]
-#align free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group
+  simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.single_add_hom_apply, Function.comp_apply,
+    one_smul, lift.of, AddMonoidHom.flip_apply, smul_add_hom_apply, AddMonoidHom.id_apply]
+#align
+  free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.to_finsupp_comp_to_free_abelian_group
 
 @[simp]
 theorem Finsupp.to_free_abelian_group_comp_to_finsupp :
     toFreeAbelianGroup.comp toFinsupp = AddMonoidHom.id (FreeAbelianGroup X) := by
   ext
-  rw [to_free_abelian_group, to_finsupp, AddMonoidHom.comp_apply, lift.of, lift_add_hom_apply_single,
-    AddMonoidHom.flip_apply, smul_add_hom_apply, one_smul, AddMonoidHom.id_apply]
+  rw [to_free_abelian_group, to_finsupp, AddMonoidHom.comp_apply, lift.of,
+    lift_add_hom_apply_single, AddMonoidHom.flip_apply, smul_add_hom_apply, one_smul,
+    AddMonoidHom.id_apply]
 #align finsupp.to_free_abelian_group_comp_to_finsupp Finsupp.to_free_abelian_group_comp_to_finsupp
 
 @[simp]
-theorem Finsupp.to_free_abelian_group_to_finsupp {X} (x : FreeAbelianGroup X) : x.toFinsupp.toFreeAbelianGroup = x := by
-  rw [← AddMonoidHom.comp_apply, Finsupp.to_free_abelian_group_comp_to_finsupp, AddMonoidHom.id_apply]
+theorem Finsupp.to_free_abelian_group_to_finsupp {X} (x : FreeAbelianGroup X) :
+    x.toFinsupp.toFreeAbelianGroup = x := by
+  rw [← AddMonoidHom.comp_apply, Finsupp.to_free_abelian_group_comp_to_finsupp,
+    AddMonoidHom.id_apply]
 #align finsupp.to_free_abelian_group_to_finsupp Finsupp.to_free_abelian_group_to_finsupp
 
 namespace FreeAbelianGroup
@@ -81,13 +87,15 @@ open Finsupp
 variable {X}
 
 @[simp]
-theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by simp only [to_finsupp, lift.of]
+theorem to_finsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
+  simp only [to_finsupp, lift.of]
 #align free_abelian_group.to_finsupp_of FreeAbelianGroup.to_finsupp_of
 
 @[simp]
 theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
   rw [← AddMonoidHom.comp_apply, to_finsupp_comp_to_free_abelian_group, AddMonoidHom.id_apply]
-#align free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.to_finsupp_to_free_abelian_group
+#align
+  free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.to_finsupp_to_free_abelian_group
 
 variable (X)
 
@@ -107,15 +115,19 @@ noncomputable def basis (α : Type _) : Basis α ℤ (FreeAbelianGroup α) :=
 #align free_abelian_group.basis FreeAbelianGroup.basis
 
 /-- Isomorphic free ablian groups (as modules) have equivalent bases. -/
-def Equiv.ofFreeAbelianGroupLinearEquiv {α β : Type _} (e : FreeAbelianGroup α ≃ₗ[ℤ] FreeAbelianGroup β) : α ≃ β :=
+def Equiv.ofFreeAbelianGroupLinearEquiv {α β : Type _}
+    (e : FreeAbelianGroup α ≃ₗ[ℤ] FreeAbelianGroup β) : α ≃ β :=
   let t : Basis α ℤ (FreeAbelianGroup β) := (FreeAbelianGroup.basis α).map e
   t.indexEquiv <| FreeAbelianGroup.basis _
-#align free_abelian_group.equiv.of_free_abelian_group_linear_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupLinearEquiv
+#align
+  free_abelian_group.equiv.of_free_abelian_group_linear_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupLinearEquiv
 
 /-- Isomorphic free abelian groups (as additive groups) have equivalent bases. -/
-def Equiv.ofFreeAbelianGroupEquiv {α β : Type _} (e : FreeAbelianGroup α ≃+ FreeAbelianGroup β) : α ≃ β :=
+def Equiv.ofFreeAbelianGroupEquiv {α β : Type _} (e : FreeAbelianGroup α ≃+ FreeAbelianGroup β) :
+    α ≃ β :=
   Equiv.ofFreeAbelianGroupLinearEquiv e.toIntLinearEquiv
-#align free_abelian_group.equiv.of_free_abelian_group_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupEquiv
+#align
+  free_abelian_group.equiv.of_free_abelian_group_equiv FreeAbelianGroup.Equiv.ofFreeAbelianGroupEquiv
 
 /-- Isomorphic free groups have equivalent bases. -/
 def Equiv.ofFreeGroupEquiv {α β : Type _} (e : FreeGroup α ≃* FreeGroup β) : α ≃ β :=
@@ -125,9 +137,10 @@ def Equiv.ofFreeGroupEquiv {α β : Type _} (e : FreeGroup α ≃* FreeGroup β)
 open IsFreeGroup
 
 /-- Isomorphic free groups have equivalent bases (`is_free_group` variant`). -/
-def Equiv.ofIsFreeGroupEquiv {G H : Type _} [Group G] [Group H] [IsFreeGroup G] [IsFreeGroup H] (e : G ≃* H) :
-    Generators G ≃ Generators H :=
-  equiv.of_free_group_equiv <| MulEquiv.trans (toFreeGroup G).symm <| MulEquiv.trans e <| toFreeGroup H
+def Equiv.ofIsFreeGroupEquiv {G H : Type _} [Group G] [Group H] [IsFreeGroup G] [IsFreeGroup H]
+    (e : G ≃* H) : Generators G ≃ Generators H :=
+  equiv.of_free_group_equiv <|
+    MulEquiv.trans (toFreeGroup G).symm <| MulEquiv.trans e <| toFreeGroup H
 #align free_abelian_group.equiv.of_is_free_group_equiv FreeAbelianGroup.Equiv.ofIsFreeGroupEquiv
 
 variable {X}
@@ -170,14 +183,16 @@ theorem support_neg (a : FreeAbelianGroup X) : support (-a) = support a := by
 #align free_abelian_group.support_neg FreeAbelianGroup.support_neg
 
 @[simp]
-theorem support_zsmul (k : ℤ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a := by
+theorem support_zsmul (k : ℤ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a :=
+  by
   ext x
   simp only [mem_support_iff, AddMonoidHom.map_zsmul]
   simp only [h, zsmul_int_int, false_or_iff, Ne.def, mul_eq_zero]
 #align free_abelian_group.support_zsmul FreeAbelianGroup.support_zsmul
 
 @[simp]
-theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a := by
+theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support (k • a) = support a :=
+  by
   apply support_zsmul k _ a
   exact_mod_cast h
 #align free_abelian_group.support_nsmul FreeAbelianGroup.support_nsmul

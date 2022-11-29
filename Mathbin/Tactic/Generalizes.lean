@@ -62,8 +62,8 @@ Note that the substitution also affects the types of the `kᵢ`: If `jᵢ : Jᵢ
 The transparency `md` and the boolean `unify` are passed to `kabstract` when we
 abstract over occurrences of the `jᵢ` in `e`.
 -/
-unsafe def step1 (md : Transparency) (unify : Bool) (e : expr) (to_generalize : List (Name × expr)) :
-    tactic (expr × List expr) := do
+unsafe def step1 (md : Transparency) (unify : Bool) (e : expr)
+    (to_generalize : List (Name × expr)) : tactic (expr × List expr) := do
   let go : Name × expr → expr × List expr → tactic (expr × List expr) := fun ⟨n, j⟩ ⟨e, ks⟩ => do
     let J ← infer_type j
     let k ← mk_local' n BinderInfo.default J
@@ -83,7 +83,8 @@ The transparency `md` is used when determining whether the type of `jᵢ` is def
 to the type of `kᵢ` (and thus whether to generate a homogeneous or heterogeneous
 equation).
 -/
-unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr)) : tactic (List (expr × expr)) :=
+unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr)) :
+    tactic (List (expr × expr)) :=
   to_generalize.mmap fun ⟨n, j, k⟩ => do
     let J ← infer_type j
     let K ← infer_type k
@@ -105,7 +106,7 @@ overall). It asserts the generalized goal, then derives the current goal from
 it. This leaves us with the generalized goal.
 -/
 unsafe def step3 (e : expr) (js ks eqs eq_proofs : List expr) : tactic Unit :=
-  focus1 <| do
+  focus1 do
     let new_target_type := (e.pis eqs).pis ks
     type_check new_target_type <|>
         throwError
@@ -142,8 +143,8 @@ The `args` must be given in dependency order, so `[n, fin n]` is okay but
 After generalizing the `args`, the target type may no longer type check.
 `generalizes'` will then raise an error.
 -/
-unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semireducible) (unify := true) : tactic Unit :=
-  do
+unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semireducible)
+    (unify := true) : tactic Unit := do
   let tgt ← target
   let stage1_args := args.map fun ⟨n, _, j⟩ => (n, j)
   let ⟨e, ks⟩ ← step1 md unify tgt stage1_args
@@ -160,8 +161,8 @@ unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semir
 /-- Like `generalizes'`, but also introduces the generalized constants and their
 associated equations into the context.
 -/
-unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := semireducible) (unify := true) :
-    tactic (List expr × List expr) := do
+unsafe def generalizes_intro (args : List (Name × Option Name × expr)) (md := semireducible)
+    (unify := true) : tactic (List expr × List expr) := do
   generalizes' args md unify
   let ks ← intron' args.length
   let eqs ← intron' <| args.countp fun x => x.snd.fst.isSome
@@ -178,7 +179,7 @@ private unsafe def generalizes_arg_parser_eq : pexpr → lean.parser (pexpr × N
 #align tactic.interactive.generalizes_arg_parser_eq tactic.interactive.generalizes_arg_parser_eq
 
 private unsafe def generalizes_arg_parser : lean.parser (Name × Option Name × pexpr) :=
-  with_desc "(id :)? expr = id" <| do
+  (with_desc "(id :)? expr = id") do
     let lhs ← lean.parser.pexpr 0
     (tk ":" >>
           match lhs with
@@ -232,7 +233,7 @@ After generalization, the target type may no longer type check. `generalizes`
 will then raise an error.
 -/
 unsafe def generalizes (args : parse generalizes_args_parser) : tactic Unit :=
-  propagate_tags <| do
+  propagate_tags do
     let args ←
       args.mmap fun ⟨arg_name, hyp_name, arg⟩ => do
           let arg ← to_expr arg
@@ -242,8 +243,9 @@ unsafe def generalizes (args : parse generalizes_args_parser) : tactic Unit :=
 #align tactic.interactive.generalizes tactic.interactive.generalizes
 
 add_tactic_doc
-  { Name := "generalizes", category := DocCategory.tactic, declNames := [`tactic.interactive.generalizes],
-    tags := ["context management"], inheritDescriptionFrom := `tactic.interactive.generalizes }
+  { Name := "generalizes", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.generalizes], tags := ["context management"],
+    inheritDescriptionFrom := `tactic.interactive.generalizes }
 
 end Interactive
 

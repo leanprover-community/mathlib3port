@@ -67,7 +67,8 @@ theorem nhds_left_sup_nhds_right' (a : α) : 𝓝[≤] a ⊔ 𝓝[>] a = 𝓝 a 
   rw [← nhds_within_union, Iic_union_Ioi, nhds_within_univ]
 #align nhds_left_sup_nhds_right' nhds_left_sup_nhds_right'
 
-theorem nhds_left'_sup_nhds_right' (a : α) : 𝓝[<] a ⊔ 𝓝[>] a = 𝓝[≠] a := by rw [← nhds_within_union, Iio_union_Ioi]
+theorem nhds_left'_sup_nhds_right' (a : α) : 𝓝[<] a ⊔ 𝓝[>] a = 𝓝[≠] a := by
+  rw [← nhds_within_union, Iio_union_Ioi]
 #align nhds_left'_sup_nhds_right' nhds_left'_sup_nhds_right'
 
 theorem continuous_at_iff_continuous_left_right {a : α} {f : α → β} :
@@ -77,7 +78,8 @@ theorem continuous_at_iff_continuous_left_right {a : α} {f : α → β} :
 
 theorem continuous_at_iff_continuous_left'_right' {a : α} {f : α → β} :
     ContinuousAt f a ↔ ContinuousWithinAt f (iio a) a ∧ ContinuousWithinAt f (ioi a) a := by
-  rw [continuous_within_at_Ioi_iff_Ici, continuous_within_at_Iio_iff_Iic, continuous_at_iff_continuous_left_right]
+  rw [continuous_within_at_Ioi_iff_Ici, continuous_within_at_Iio_iff_Iic,
+    continuous_at_iff_continuous_left_right]
 #align continuous_at_iff_continuous_left'_right' continuous_at_iff_continuous_left'_right'
 
 end TopologicalSpace

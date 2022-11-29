@@ -51,7 +51,8 @@ def fixingSubmonoid (s : Set α) : Submonoid M where
   mul_mem' x y hx hy z := by rw [mul_smul, hy z, hx z]
 #align fixing_submonoid fixingSubmonoid
 
-theorem mem_fixing_submonoid_iff {s : Set α} {m : M} : m ∈ fixingSubmonoid M s ↔ ∀ y ∈ s, m • y = y :=
+theorem mem_fixing_submonoid_iff {s : Set α} {m : M} :
+    m ∈ fixingSubmonoid M s ↔ ∀ y ∈ s, m • y = y :=
   ⟨fun hg y hy => hg ⟨y, hy⟩, fun h ⟨y, hy⟩ => h y hy⟩
 #align mem_fixing_submonoid_iff mem_fixing_submonoid_iff
 
@@ -73,7 +74,8 @@ theorem fixed_points_antitone : Antitone fun P : Submonoid M => fixedPoints P α
 #align fixed_points_antitone fixed_points_antitone
 
 /-- Fixing submonoid of union is intersection -/
-theorem fixing_submonoid_union {s t : Set α} : fixingSubmonoid M (s ∪ t) = fixingSubmonoid M s ⊓ fixingSubmonoid M t :=
+theorem fixing_submonoid_union {s t : Set α} :
+    fixingSubmonoid M (s ∪ t) = fixingSubmonoid M s ⊓ fixingSubmonoid M t :=
   (fixing_submonoid_fixed_points_gc M α).l_sup
 #align fixing_submonoid_union fixing_submonoid_union
 
@@ -84,7 +86,8 @@ theorem fixing_submonoid_Union {ι : Sort _} {s : ι → Set α} :
 #align fixing_submonoid_Union fixing_submonoid_Union
 
 /-- Fixed points of sup of submonoids is intersection -/
-theorem fixed_points_submonoid_sup {P Q : Submonoid M} : fixedPoints (↥(P ⊔ Q)) α = fixedPoints P α ∩ fixedPoints Q α :=
+theorem fixed_points_submonoid_sup {P Q : Submonoid M} :
+    fixedPoints (↥(P ⊔ Q)) α = fixedPoints P α ∩ fixedPoints Q α :=
   (fixing_submonoid_fixed_points_gc M α).u_inf
 #align fixed_points_submonoid_sup fixed_points_submonoid_sup
 
@@ -130,7 +133,8 @@ theorem fixed_points_subgroup_antitone : Antitone fun P : Subgroup M => fixedPoi
 #align fixed_points_subgroup_antitone fixed_points_subgroup_antitone
 
 /-- Fixing subgroup of union is intersection -/
-theorem fixing_subgroup_union {s t : Set α} : fixingSubgroup M (s ∪ t) = fixingSubgroup M s ⊓ fixingSubgroup M t :=
+theorem fixing_subgroup_union {s t : Set α} :
+    fixingSubgroup M (s ∪ t) = fixingSubgroup M s ⊓ fixingSubgroup M t :=
   (fixing_subgroup_fixed_points_gc M α).l_sup
 #align fixing_subgroup_union fixing_subgroup_union
 
@@ -141,7 +145,8 @@ theorem fixing_subgroup_Union {ι : Sort _} {s : ι → Set α} :
 #align fixing_subgroup_Union fixing_subgroup_Union
 
 /-- Fixed points of sup of subgroups is intersection -/
-theorem fixed_points_subgroup_sup {P Q : Subgroup M} : fixedPoints (↥(P ⊔ Q)) α = fixedPoints P α ∩ fixedPoints Q α :=
+theorem fixed_points_subgroup_sup {P Q : Subgroup M} :
+    fixedPoints (↥(P ⊔ Q)) α = fixedPoints P α ∩ fixedPoints Q α :=
   (fixing_subgroup_fixed_points_gc M α).u_inf
 #align fixed_points_subgroup_sup fixed_points_subgroup_sup
 

@@ -41,7 +41,8 @@ instance : OrderTopology Ordinal.{u} :=
 theorem is_open_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a := by
   refine' ⟨fun h ha => _, fun ha => _⟩
   · obtain ⟨b, c, hbc, hbc'⟩ :=
-      (mem_nhds_iff_exists_Ioo_subset' ⟨0, Ordinal.pos_iff_ne_zero.2 ha.1⟩ ⟨_, lt_succ a⟩).1 (h.mem_nhds rfl)
+      (mem_nhds_iff_exists_Ioo_subset' ⟨0, Ordinal.pos_iff_ne_zero.2 ha.1⟩ ⟨_, lt_succ a⟩).1
+        (h.mem_nhds rfl)
     have hba := ha.2 b hbc.1
     exact hba.ne (hbc' ⟨lt_succ b, hba.trans hbc.2⟩)
     
@@ -87,7 +88,8 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.ioo
       rcases hu' hos.2 with ⟨b, hb, hb'⟩
       exact
         ⟨_, max_lt ha hb, fun c hc =>
-          ⟨ha' ⟨(le_max_left a b).trans_lt hc.1, hc.2⟩, hb' ⟨(le_max_right a b).trans_lt hc.1, hc.2⟩⟩⟩
+          ⟨ha' ⟨(le_max_left a b).trans_lt hc.1, hc.2⟩,
+            hb' ⟨(le_max_right a b).trans_lt hc.1, hc.2⟩⟩⟩
       
     · rcases hos with ⟨u, hu, hu'⟩
       rcases H u hu hu' with ⟨a, ha, ha'⟩
@@ -95,7 +97,8 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.ioo
       
     
   · let f : s → Set Ordinal := fun o =>
-      if ho : is_limit o.val then Set.ioo (Classical.choose (h o.val o.Prop ho)) (o + 1) else {o.val}
+      if ho : is_limit o.val then Set.ioo (Classical.choose (h o.val o.Prop ho)) (o + 1)
+      else {o.val}
     have : ∀ a, IsOpen (f a) := fun a => by
       change IsOpen (dite _ _ _)
       split_ifs
@@ -131,14 +134,18 @@ theorem is_open_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.ioo
 #align ordinal.is_open_iff Ordinal.is_open_iff
 
 theorem mem_closure_iff_sup :
-    a ∈ closure s ↔ ∃ (ι : Type u)(_ : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a := by
+    a ∈ closure s ↔
+      ∃ (ι : Type u)(_ : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a :=
+  by
   refine' mem_closure_iff.trans ⟨fun h => _, _⟩
   · by_cases has : a ∈ s
     · exact ⟨PUnit, by infer_instance, fun _ => a, fun _ => has, sup_const a⟩
       
     · have H := fun b (hba : b < a) => h _ (@is_open_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
-      let f : a.out.α → Ordinal := fun i => Classical.choose (H (typein (· < ·) i) (typein_lt_self i))
-      have hf : ∀ i, f i ∈ Set.ioo (typein (· < ·) i) (a + 1) ∩ s := fun i => Classical.choose_spec (H _ _)
+      let f : a.out.α → Ordinal := fun i =>
+        Classical.choose (H (typein (· < ·) i) (typein_lt_self i))
+      have hf : ∀ i, f i ∈ Set.ioo (typein (· < ·) i) (a + 1) ∩ s := fun i =>
+        Classical.choose_spec (H _ _)
       rcases eq_zero_or_pos a with (rfl | ha₀)
       · rcases h _ (is_open_singleton_iff.2 not_zero_is_limit) rfl with ⟨b, hb, hb'⟩
         rw [Set.mem_singleton_iff.1 hb] at *
@@ -167,33 +174,42 @@ theorem mem_closure_iff_sup :
       convert hf i
       exact (sup_eq_zero_iff.1 ha₀ i).symm
       
-    rcases(mem_nhds_iff_exists_Ioo_subset' ⟨0, ha₀⟩ ⟨_, lt_succ _⟩).1 (ht.mem_nhds hat) with ⟨b, c, ⟨hab, hac⟩, hbct⟩
+    rcases(mem_nhds_iff_exists_Ioo_subset' ⟨0, ha₀⟩ ⟨_, lt_succ _⟩).1 (ht.mem_nhds hat) with
+      ⟨b, c, ⟨hab, hac⟩, hbct⟩
     cases' lt_sup.1 hab with i hi
     exact ⟨_, hbct ⟨hi, (le_sup.{u, u} f i).trans_lt hac⟩, hf i⟩
     
 #align ordinal.mem_closure_iff_sup Ordinal.mem_closure_iff_sup
 
 theorem mem_closed_iff_sup (hs : IsClosed s) :
-    a ∈ s ↔ ∃ (ι : Type u)(hι : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a := by
-  rw [← mem_closure_iff_sup, hs.closure_eq]
+    a ∈ s ↔ ∃ (ι : Type u)(hι : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a :=
+  by rw [← mem_closure_iff_sup, hs.closure_eq]
 #align ordinal.mem_closed_iff_sup Ordinal.mem_closed_iff_sup
 
 theorem mem_closure_iff_bsup :
-    a ∈ closure s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
+    a ∈ closure s ↔
+      ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal),
+        (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
   mem_closure_iff_sup.trans
     ⟨fun ⟨ι, ⟨i⟩, f, hf, ha⟩ =>
-      ⟨_, fun h => (type_eq_zero_iff_is_empty.1 h).elim i, bfamilyOfFamily f, fun i hi => hf _, by rwa [bsup_eq_sup]⟩,
+      ⟨_, fun h => (type_eq_zero_iff_is_empty.1 h).elim i, bfamilyOfFamily f, fun i hi => hf _, by
+        rwa [bsup_eq_sup]⟩,
       fun ⟨o, ho, f, hf, ha⟩ =>
-      ⟨_, out_nonempty_iff_ne_zero.2 ho, familyOfBfamily o f, fun i => hf _ _, by rwa [sup_eq_bsup]⟩⟩
+      ⟨_, out_nonempty_iff_ne_zero.2 ho, familyOfBfamily o f, fun i => hf _ _, by
+        rwa [sup_eq_bsup]⟩⟩
 #align ordinal.mem_closure_iff_bsup Ordinal.mem_closure_iff_bsup
 
 theorem mem_closed_iff_bsup (hs : IsClosed s) :
-    a ∈ s ↔ ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a := by
-  rw [← mem_closure_iff_bsup, hs.closure_eq]
+    a ∈ s ↔
+      ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal),
+        (∀ i hi, f i hi ∈ s) ∧ bsup.{u, u} o f = a :=
+  by rw [← mem_closure_iff_bsup, hs.closure_eq]
 #align ordinal.mem_closed_iff_bsup Ordinal.mem_closed_iff_bsup
 
 theorem is_closed_iff_sup :
-    IsClosed s ↔ ∀ {ι : Type u} (hι : Nonempty ι) (f : ι → Ordinal), (∀ i, f i ∈ s) → sup.{u, u} f ∈ s := by
+    IsClosed s ↔
+      ∀ {ι : Type u} (hι : Nonempty ι) (f : ι → Ordinal), (∀ i, f i ∈ s) → sup.{u, u} f ∈ s :=
+  by
   use fun hs ι hι f hf => (mem_closed_iff_sup hs).2 ⟨ι, hι, f, hf, rfl⟩
   rw [← closure_subset_iff_is_closed]
   intro h x hx
@@ -202,7 +218,10 @@ theorem is_closed_iff_sup :
 #align ordinal.is_closed_iff_sup Ordinal.is_closed_iff_sup
 
 theorem is_closed_iff_bsup :
-    IsClosed s ↔ ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀ a < o, Ordinal), (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s := by
+    IsClosed s ↔
+      ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀ a < o, Ordinal),
+        (∀ i hi, f i hi ∈ s) → bsup.{u, u} o f ∈ s :=
+  by
   rw [is_closed_iff_sup]
   refine' ⟨fun H o ho f hf => H (out_nonempty_iff_ne_zero.2 ho) _ _, fun H ι hι f hf => _⟩
   · exact fun i => hf _ _
@@ -220,8 +239,7 @@ theorem is_limit_of_mem_frontier (ha : a ∈ frontier s) : IsLimit a := by
   rcases ha.1 _ h rfl with ⟨b, hb, hb'⟩
   rcases ha.2 _ h rfl with ⟨c, hc, hc'⟩
   rw [Set.mem_singleton_iff] at *
-  subst hb
-  subst hc
+  subst hb; subst hc
   exact hc' hb'
 #align ordinal.is_limit_of_mem_frontier Ordinal.is_limit_of_mem_frontier
 
@@ -235,7 +253,9 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     rcases hs _ ho (h.is_limit ho') with ⟨a, ha, has⟩
     rw [← IsNormal.bsup_eq.{u, u} h ho', lt_bsup] at ha
     rcases ha with ⟨b, hb, hab⟩
-    exact ⟨b, hb, fun c hc => Set.mem_preimage.2 (has ⟨hab.trans (h.strict_mono hc.1), h.strict_mono hc.2⟩)⟩
+    exact
+      ⟨b, hb, fun c hc =>
+        Set.mem_preimage.2 (has ⟨hab.trans (h.strict_mono hc.1), h.strict_mono hc.2⟩)⟩
     
   · rw [is_normal_iff_strict_mono_limit]
     rintro ⟨h, h'⟩
@@ -243,12 +263,16 @@ theorem is_normal_iff_strict_mono_and_continuous (f : Ordinal.{u} → Ordinal.{u
     suffices : o ∈ f ⁻¹' Set.iic a
     exact Set.mem_preimage.1 this
     rw [mem_closed_iff_sup (IsClosed.preimage h' (@isClosedIic _ _ _ _ a))]
-    exact ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i), sup_typein_limit ho.2⟩
+    exact
+      ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i),
+        sup_typein_limit ho.2⟩
     
-#align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.is_normal_iff_strict_mono_and_continuous
+#align
+  ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.is_normal_iff_strict_mono_and_continuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (b «expr < » a) -/
-theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal (enumOrd s) ↔ IsClosed s := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr < » a) -/
+theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) :
+    IsNormal (enumOrd s) ↔ IsClosed s := by
   have Hs := enum_ord_strict_mono hs
   refine'
     ⟨fun h => is_closed_iff_sup.2 fun ι hι f hf => _, fun h =>
@@ -266,7 +290,10 @@ theorem enum_ord_is_normal_iff_is_closed (hs : s.Unbounded (· < ·)) : IsNormal
   · rw [is_closed_iff_bsup] at h
     suffices : enum_ord s a ≤ bsup.{u, u} a fun b (_ : b < a) => enum_ord s b
     exact this.trans (bsup_le H)
-    cases' enum_ord_surjective hs _ (h ha.1 (fun b hb => enum_ord s b) fun b hb => enum_ord_mem hs b) with b hb
+    cases'
+      enum_ord_surjective hs _
+        (h ha.1 (fun b hb => enum_ord s b) fun b hb => enum_ord_mem hs b) with
+      b hb
     rw [← hb]
     apply Hs.monotone
     by_contra' hba

@@ -21,7 +21,8 @@ variable {K : Type _} {g : GeneralizedContinuedFraction K} {n m : ℕ}
 /-- If a gcf terminated at position `n`, it also terminated at `m ≥ n`.-/
 theorem terminatedStable (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) : g.TerminatedAt m :=
   g.s.terminatedStable n_le_m terminated_at_n
-#align generalized_continued_fraction.terminated_stable GeneralizedContinuedFraction.terminatedStable
+#align
+  generalized_continued_fraction.terminated_stable GeneralizedContinuedFraction.terminatedStable
 
 variable [DivisionRing K]
 
@@ -32,8 +33,8 @@ theorem continuants_aux_stable_step_of_terminated (terminated_at_n : g.Terminate
 #align
   generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_step_of_terminated
 
-theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m) (terminated_at_n : g.TerminatedAt n) :
-    g.continuantsAux m = g.continuantsAux (n + 1) := by
+theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m)
+    (terminated_at_n : g.TerminatedAt n) : g.continuantsAux m = g.continuantsAux (n + 1) := by
   induction' succ_n_le_m with m succ_n_le_m IH
   · rfl
     
@@ -51,8 +52,8 @@ theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m) (termin
 #align
   generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_of_terminated
 
-theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K} (terminated_at_n : s.TerminatedAt n) :
-    convergents'Aux s (n + 1) = convergents'Aux s n := by
+theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K}
+    (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n := by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
   case zero => simp only [convergents'_aux, terminated_at_n, Seq.head]

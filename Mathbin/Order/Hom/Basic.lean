@@ -110,7 +110,8 @@ abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] :=
 /-- `order_iso_class F α β` states that `F` is a type of order isomorphisms.
 
 You should extend this class when you extend `order_iso`. -/
-class OrderIsoClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] extends EquivLike F α β where
+class OrderIsoClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] extends
+  EquivLike F α β where
   map_le_map_iff (f : F) {a b : α} : f a ≤ f b ↔ a ≤ b
 #align order_iso_class OrderIsoClass
 
@@ -124,7 +125,8 @@ instance [LE α] [LE β] [OrderIsoClass F α β] : CoeTC F (α ≃o β) :=
   ⟨fun f => ⟨f, fun _ _ => map_le_map_iff f⟩⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIsoClass.toOrderHomClass [LE α] [LE β] [OrderIsoClass F α β] : OrderHomClass F α β :=
+instance (priority := 100) OrderIsoClass.toOrderHomClass [LE α] [LE β] [OrderIsoClass F α β] :
+    OrderHomClass F α β :=
   { EquivLike.toEmbeddingLike with map_rel := fun f a b => (map_le_map_iff f).2 }
 #align order_iso_class.to_order_hom_class OrderIsoClass.toOrderHomClass
 
@@ -286,8 +288,11 @@ theorem apply_mono {f g : α →o β} {x y : α} (h₁ : f ≤ g) (h₂ : x ≤ 
 
 /-- Curry/uncurry as an order isomorphism between `α × β →o γ` and `α →o β →o γ`. -/
 def curry : (α × β →o γ) ≃o (α →o β →o γ) where
-  toFun f := ⟨fun x => ⟨Function.curry f x, fun y₁ y₂ h => f.mono ⟨le_rfl, h⟩⟩, fun x₁ x₂ h y => f.mono ⟨h, le_rfl⟩⟩
-  invFun f := ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans <| (f y.1).mono h.2⟩
+  toFun f :=
+    ⟨fun x => ⟨Function.curry f x, fun y₁ y₂ h => f.mono ⟨le_rfl, h⟩⟩, fun x₁ x₂ h y =>
+      f.mono ⟨h, le_rfl⟩⟩
+  invFun f :=
+    ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans <| (f y.1).mono h.2⟩
   left_inv f := by
     ext ⟨x, y⟩
     rfl
@@ -314,8 +319,8 @@ def comp (g : β →o γ) (f : α →o β) : α →o γ :=
 #align order_hom.comp OrderHom.comp
 
 @[mono]
-theorem comp_mono ⦃g₁ g₂ : β →o γ⦄ (hg : g₁ ≤ g₂) ⦃f₁ f₂ : α →o β⦄ (hf : f₁ ≤ f₂) : g₁.comp f₁ ≤ g₂.comp f₂ := fun x =>
-  (hg _).trans (g₂.mono <| hf _)
+theorem comp_mono ⦃g₁ g₂ : β →o γ⦄ (hg : g₁ ≤ g₂) ⦃f₁ f₂ : α →o β⦄ (hf : f₁ ≤ f₂) :
+    g₁.comp f₁ ≤ g₂.comp f₂ := fun x => (hg _).trans (g₂.mono <| hf _)
 #align order_hom.comp_mono OrderHom.comp_mono
 
 /-- The composition of two bundled monotone functions, a fully bundled version. -/
@@ -349,7 +354,8 @@ theorem const_comp (f : α →o β) (c : γ) : (const β c).comp f = const α c 
 #align order_hom.const_comp OrderHom.const_comp
 
 @[simp]
-theorem comp_const (γ : Type _) [Preorder γ] (f : α →o β) (c : α) : f.comp (const γ c) = const γ (f c) :=
+theorem comp_const (γ : Type _) [Preorder γ] (f : α →o β) (c : α) :
+    f.comp (const γ c) = const γ (f c) :=
   rfl
 #align order_hom.comp_const OrderHom.comp_const
 
@@ -361,11 +367,12 @@ protected def prod (f : α →o β) (g : α →o γ) : α →o β × γ :=
 #align order_hom.prod OrderHom.prod
 
 @[mono]
-theorem prod_mono {f₁ f₂ : α →o β} (hf : f₁ ≤ f₂) {g₁ g₂ : α →o γ} (hg : g₁ ≤ g₂) : f₁.Prod g₁ ≤ f₂.Prod g₂ := fun x =>
-  Prod.le_def.2 ⟨hf _, hg _⟩
+theorem prod_mono {f₁ f₂ : α →o β} (hf : f₁ ≤ f₂) {g₁ g₂ : α →o γ} (hg : g₁ ≤ g₂) :
+    f₁.Prod g₁ ≤ f₂.Prod g₂ := fun x => Prod.le_def.2 ⟨hf _, hg _⟩
 #align order_hom.prod_mono OrderHom.prod_mono
 
-theorem comp_prod_comp_same (f₁ f₂ : β →o γ) (g : α →o β) : (f₁.comp g).Prod (f₂.comp g) = (f₁.Prod f₂).comp g :=
+theorem comp_prod_comp_same (f₁ f₂ : β →o γ) (g : α →o β) :
+    (f₁.comp g).Prod (f₂.comp g) = (f₁.Prod f₂).comp g :=
   rfl
 #align order_hom.comp_prod_comp_same OrderHom.comp_prod_comp_same
 
@@ -437,9 +444,9 @@ variable {ι : Type _} {π : ι → Type _} [∀ i, Preorder (π i)]
 
 /-- Evaluation of an unbundled function at a point (`function.eval`) as a `order_hom`. -/
 @[simps (config := { fullyApplied := false })]
-def _root_.pi.eval_order_hom (i : ι) : (∀ j, π j) →o π i :=
+def Pi.evalOrderHom (i : ι) : (∀ j, π j) →o π i :=
   ⟨Function.eval i, Function.monotone_eval i⟩
-#align order_hom._root_.pi.eval_order_hom order_hom._root_.pi.eval_order_hom
+#align pi.eval_order_hom Pi.evalOrderHom
 
 /-- The "forgetful functor" from `α →o β` to `α → β` that takes the underlying function,
 is monotone. -/
@@ -558,7 +565,8 @@ theorem RelEmbedding.order_embedding_of_lt_embedding_apply [PartialOrder α] [Pa
     {f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)} {x : α} :
     RelEmbedding.orderEmbeddingOfLtEmbedding f x = f x :=
   rfl
-#align rel_embedding.order_embedding_of_lt_embedding_apply RelEmbedding.order_embedding_of_lt_embedding_apply
+#align
+  rel_embedding.order_embedding_of_lt_embedding_apply RelEmbedding.order_embedding_of_lt_embedding_apply
 
 namespace OrderEmbedding
 
@@ -600,7 +608,8 @@ protected theorem acc (a : α) : Acc (· < ·) (f a) → Acc (· < ·) a :=
   f.ltEmbedding.Acc a
 #align order_embedding.acc OrderEmbedding.acc
 
-protected theorem well_founded : WellFounded ((· < ·) : β → β → Prop) → WellFounded ((· < ·) : α → α → Prop) :=
+protected theorem well_founded :
+    WellFounded ((· < ·) : β → β → Prop) → WellFounded ((· < ·) : α → α → Prop) :=
   f.ltEmbedding.WellFounded
 #align order_embedding.well_founded OrderEmbedding.well_founded
 
@@ -629,12 +638,14 @@ protected def withTopMap (f : α ↪o β) : WithTop α ↪o WithTop β :=
 /-- To define an order embedding from a partial order to a preorder it suffices to give a function
 together with a proof that it satisfies `f a ≤ f b ↔ a ≤ b`.
 -/
-def ofMapLeIff {α β} [PartialOrder α] [Preorder β] (f : α → β) (hf : ∀ a b, f a ≤ f b ↔ a ≤ b) : α ↪o β :=
+def ofMapLeIff {α β} [PartialOrder α] [Preorder β] (f : α → β) (hf : ∀ a b, f a ≤ f b ↔ a ≤ b) :
+    α ↪o β :=
   RelEmbedding.ofMapRelIff f hf
 #align order_embedding.of_map_le_iff OrderEmbedding.ofMapLeIff
 
 @[simp]
-theorem coe_of_map_le_iff {α β} [PartialOrder α] [Preorder β] {f : α → β} (h) : ⇑(ofMapLeIff f h) = f :=
+theorem coe_of_map_le_iff {α β} [PartialOrder α] [Preorder β] {f : α → β} (h) :
+    ⇑(ofMapLeIff f h) = f :=
   rfl
 #align order_embedding.coe_of_map_le_iff OrderEmbedding.coe_of_map_le_iff
 
@@ -682,9 +693,10 @@ def toOrderHom : α →o β where
 
 end RelHom
 
-theorem RelEmbedding.to_order_hom_injective (f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)) :
-    Function.Injective (f : ((· < ·) : α → α → Prop) →r ((· < ·) : β → β → Prop)).toOrderHom := fun _ _ h =>
-  f.Injective h
+theorem RelEmbedding.to_order_hom_injective
+    (f : ((· < ·) : α → α → Prop) ↪r ((· < ·) : β → β → Prop)) :
+    Function.Injective (f : ((· < ·) : α → α → Prop) →r ((· < ·) : β → β → Prop)).toOrderHom :=
+  fun _ _ h => f.Injective h
 #align rel_embedding.to_order_hom_injective RelEmbedding.to_order_hom_injective
 
 end RelHom
@@ -836,7 +848,8 @@ theorem trans_refl (e : α ≃o β) : e.trans (refl β) = e := by
 #align order_iso.trans_refl OrderIso.trans_refl
 
 @[simp]
-theorem symm_trans_apply (e₁ : α ≃o β) (e₂ : β ≃o γ) (c : γ) : (e₁.trans e₂).symm c = e₁.symm (e₂.symm c) :=
+theorem symm_trans_apply (e₁ : α ≃o β) (e₂ : β ≃o γ) (c : γ) :
+    (e₁.trans e₂).symm c = e₁.symm (e₂.symm c) :=
   rfl
 #align order_iso.symm_trans_apply OrderIso.symm_trans_apply
 
@@ -943,8 +956,8 @@ theorem to_rel_iso_lt_symm (e : α ≃o β) : e.toRelIsoLt.symm = e.symm.toRelIs
 #align order_iso.to_rel_iso_lt_symm OrderIso.to_rel_iso_lt_symm
 
 /-- Converts a `rel_iso (<) (<)` into an `order_iso`. -/
-def ofRelIsoLt {α β} [PartialOrder α] [PartialOrder β] (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) :
-    α ≃o β :=
+def ofRelIsoLt {α β} [PartialOrder α] [PartialOrder β]
+    (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) : α ≃o β :=
   ⟨e.toEquiv, fun x y => by simp [le_iff_eq_or_lt, e.map_rel_iff]⟩
 #align order_iso.of_rel_iso_lt OrderIso.ofRelIsoLt
 
@@ -956,7 +969,8 @@ theorem of_rel_iso_lt_apply {α β} [PartialOrder α] [PartialOrder β]
 
 @[simp]
 theorem of_rel_iso_lt_symm {α β} [PartialOrder α] [PartialOrder β]
-    (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) : (ofRelIsoLt e).symm = ofRelIsoLt e.symm :=
+    (e : ((· < ·) : α → α → Prop) ≃r ((· < ·) : β → β → Prop)) :
+    (ofRelIsoLt e).symm = ofRelIsoLt e.symm :=
   rfl
 #align order_iso.of_rel_iso_lt_symm OrderIso.of_rel_iso_lt_symm
 
@@ -995,8 +1009,8 @@ def ofCmpEqCmp {α β} [LinearOrder α] [LinearOrder β] (f : α → β) (g : β
 /-- To show that `f : α →o β` and `g : β →o α` make up an order isomorphism it is enough to show
     that `g` is the inverse of `f`-/
 def ofHomInv {F G : Type _} [OrderHomClass F α β] [OrderHomClass G β α] (f : F) (g : G)
-    (h₁ : (f : α →o β).comp (g : β →o α) = OrderHom.id) (h₂ : (g : β →o α).comp (f : α →o β) = OrderHom.id) :
-    α ≃o β where
+    (h₁ : (f : α →o β).comp (g : β →o α) = OrderHom.id)
+    (h₂ : (g : β →o α).comp (f : α →o β) = OrderHom.id) : α ≃o β where
   toFun := f
   invFun := g
   left_inv := FunLike.congr_fun h₂
@@ -1035,12 +1049,14 @@ def toOrderIso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : α
 #align equiv.to_order_iso Equiv.toOrderIso
 
 @[simp]
-theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : ⇑(e.toOrderIso h₁ h₂) = e :=
+theorem coe_to_order_iso (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) :
+    ⇑(e.toOrderIso h₁ h₂) = e :=
   rfl
 #align equiv.coe_to_order_iso Equiv.coe_to_order_iso
 
 @[simp]
-theorem to_order_iso_to_equiv (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) : (e.toOrderIso h₁ h₂).toEquiv = e :=
+theorem to_order_iso_to_equiv (e : α ≃ β) (h₁ : Monotone e) (h₂ : Monotone e.symm) :
+    (e.toOrderIso h₁ h₂).toEquiv = e :=
   rfl
 #align equiv.to_order_iso_to_equiv Equiv.to_order_iso_to_equiv
 
@@ -1055,8 +1071,8 @@ variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f
 /-- A strictly monotone function with a right inverse is an order isomorphism. -/
 @[simps (config := { fullyApplied := False })]
 def orderIsoOfRightInverse (g : β → α) (hg : Function.RightInverse g f) : α ≃o β :=
-  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.Injective <| hg _,
-    right_inv := hg }
+  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g,
+    left_inv := fun x => h_mono.Injective <| hg _, right_inv := hg }
 #align strict_mono.order_iso_of_right_inverse StrictMono.orderIsoOfRightInverse
 
 end StrictMono
@@ -1068,8 +1084,8 @@ protected def OrderIso.dual [LE α] [LE β] (f : α ≃o β) : αᵒᵈ ≃o β�
 
 section LatticeIsos
 
-theorem OrderIso.map_bot' [LE α] [PartialOrder β] (f : α ≃o β) {x : α} {y : β} (hx : ∀ x', x ≤ x') (hy : ∀ y', y ≤ y') :
-    f x = y := by
+theorem OrderIso.map_bot' [LE α] [PartialOrder β] (f : α ≃o β) {x : α} {y : β} (hx : ∀ x', x ≤ x')
+    (hy : ∀ y', y ≤ y') : f x = y := by
   refine' le_antisymm _ (hy _)
   rw [← f.apply_symm_apply y, f.map_rel_iff]
   apply hx
@@ -1079,8 +1095,8 @@ theorem OrderIso.map_bot [LE α] [PartialOrder β] [OrderBot α] [OrderBot β] (
   f.map_bot' (fun _ => bot_le) fun _ => bot_le
 #align order_iso.map_bot OrderIso.map_bot
 
-theorem OrderIso.map_top' [LE α] [PartialOrder β] (f : α ≃o β) {x : α} {y : β} (hx : ∀ x', x' ≤ x) (hy : ∀ y', y' ≤ y) :
-    f x = y :=
+theorem OrderIso.map_top' [LE α] [PartialOrder β] (f : α ≃o β) {x : α} {y : β} (hx : ∀ x', x' ≤ x)
+    (hy : ∀ y', y' ≤ y) : f x = y :=
   f.dual.map_bot' hx hy
 #align order_iso.map_top' OrderIso.map_top'
 
@@ -1098,40 +1114,44 @@ theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : �
   f.Monotone.le_map_sup x y
 #align order_embedding.le_map_sup OrderEmbedding.le_map_sup
 
-theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) : f (x ⊓ y) = f x ⊓ f y := by
+theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β) (x y : α) :
+    f (x ⊓ y) = f x ⊓ f y := by
   refine' (f.to_order_embedding.map_inf_le x y).antisymm _
   apply f.symm.le_iff_le.1
   simpa using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 #align order_iso.map_inf OrderIso.map_inf
 
-theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x ⊔ y) = f x ⊔ f y :=
+theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) :
+    f (x ⊔ y) = f x ⊔ f y :=
   f.dual.map_inf x y
 #align order_iso.map_sup OrderIso.map_sup
 
 /-- Note that this goal could also be stated `(disjoint on f) a b` -/
-theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α} (f : α ≃o β)
-    (ha : Disjoint a b) : Disjoint (f a) (f b) := by
+theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β]
+    {a b : α} (f : α ≃o β) (ha : Disjoint a b) : Disjoint (f a) (f b) := by
   rw [disjoint_iff_inf_le, ← f.map_inf, ← f.map_bot]
   exact f.monotone ha.le_bot
 #align disjoint.map_order_iso Disjoint.map_order_iso
 
 /-- Note that this goal could also be stated `(codisjoint on f) a b` -/
-theorem Codisjoint.map_order_iso [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β] {a b : α} (f : α ≃o β)
-    (ha : Codisjoint a b) : Codisjoint (f a) (f b) := by
+theorem Codisjoint.map_order_iso [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β]
+    {a b : α} (f : α ≃o β) (ha : Codisjoint a b) : Codisjoint (f a) (f b) := by
   rw [codisjoint_iff_le_sup, ← f.map_sup, ← f.map_top]
   exact f.monotone ha.top_le
 #align codisjoint.map_order_iso Codisjoint.map_order_iso
 
 @[simp]
-theorem disjoint_map_order_iso_iff [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α}
-    (f : α ≃o β) : Disjoint (f a) (f b) ↔ Disjoint a b :=
-  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h => h.map_order_iso f⟩
+theorem disjoint_map_order_iso_iff [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β]
+    {a b : α} (f : α ≃o β) : Disjoint (f a) (f b) ↔ Disjoint a b :=
+  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h =>
+    h.map_order_iso f⟩
 #align disjoint_map_order_iso_iff disjoint_map_order_iso_iff
 
 @[simp]
-theorem codisjoint_map_order_iso_iff [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β] {a b : α}
-    (f : α ≃o β) : Codisjoint (f a) (f b) ↔ Codisjoint a b :=
-  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h => h.map_order_iso f⟩
+theorem codisjoint_map_order_iso_iff [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β]
+    {a b : α} (f : α ≃o β) : Codisjoint (f a) (f b) ↔ Codisjoint a b :=
+  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h =>
+    h.map_order_iso f⟩
 #align codisjoint_map_order_iso_iff codisjoint_map_order_iso_iff
 
 namespace WithBot
@@ -1144,7 +1164,8 @@ protected def toDualTopEquiv [LE α] : WithBot αᵒᵈ ≃o (WithTop α)ᵒᵈ 
 #align with_bot.to_dual_top_equiv WithBot.toDualTopEquiv
 
 @[simp]
-theorem to_dual_top_equiv_coe [LE α] (a : α) : WithBot.toDualTopEquiv ↑(toDual a) = toDual (a : WithTop α) :=
+theorem to_dual_top_equiv_coe [LE α] (a : α) :
+    WithBot.toDualTopEquiv ↑(toDual a) = toDual (a : WithTop α) :=
   rfl
 #align with_bot.to_dual_top_equiv_coe WithBot.to_dual_top_equiv_coe
 
@@ -1180,7 +1201,8 @@ protected def toDualBotEquiv [LE α] : WithTop αᵒᵈ ≃o (WithBot α)ᵒᵈ 
 #align with_top.to_dual_bot_equiv WithTop.toDualBotEquiv
 
 @[simp]
-theorem to_dual_bot_equiv_coe [LE α] (a : α) : WithTop.toDualBotEquiv ↑(toDual a) = toDual (a : WithBot α) :=
+theorem to_dual_bot_equiv_coe [LE α] (a : α) :
+    WithTop.toDualBotEquiv ↑(toDual a) = toDual (a : WithBot α) :=
   rfl
 #align with_top.to_dual_bot_equiv_coe WithTop.to_dual_bot_equiv_coe
 

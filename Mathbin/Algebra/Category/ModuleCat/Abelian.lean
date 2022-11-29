@@ -67,7 +67,8 @@ def normalEpi (hf : Epi f) : NormalEpi f where
         IsCokernel.cokernelIso
         _ _ (cokernelIsColimit _)
         (LinearEquiv.toModuleIso'
-          (Submodule.quotEquivOfEq _ _ (Submodule.range_subtype _) ≪≫ₗ LinearMap.quotKerEquivRange f ≪≫ₗ
+          (Submodule.quotEquivOfEq _ _ (Submodule.range_subtype _) ≪≫ₗ
+              LinearMap.quotKerEquivRange f ≪≫ₗ
             LinearEquiv.ofTop _ (range_eq_top_of_epi _))) <|
       by
       ext
@@ -86,7 +87,8 @@ section ReflectsLimits
 
 /- We need to put this in this weird spot because we need to know that the category of modules
     is balanced. -/
-instance forgetReflectsLimitsOfSize : ReflectsLimitsOfSize.{v, v} (forget (ModuleCat.{max v w} R)) :=
+instance forgetReflectsLimitsOfSize :
+    ReflectsLimitsOfSize.{v, v} (forget (ModuleCat.{max v w} R)) :=
   reflects_limits_of_reflects_isomorphisms
 #align Module.forget_reflects_limits_of_size ModuleCat.forgetReflectsLimitsOfSize
 

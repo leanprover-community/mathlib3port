@@ -36,10 +36,10 @@ argument `inhabited α`, even if it is not used.  (This is due to the implementa
 -/
 @[derive_handler]
 unsafe def inhabited_instance : derive_handler :=
-  instance_derive_handler `` Inhabited <| do
+  (instance_derive_handler `` Inhabited) do
     applyc `` Inhabited.mk
     sorry <|> constructor >> skip
-    all_goals' <| do
+    all_goals' do
         applyc `` default <|> do
             let s ← read
             fail <| to_fmt "could not find inhabited instance for:\n" ++ to_fmt s
@@ -47,12 +47,13 @@ unsafe def inhabited_instance : derive_handler :=
 
 end Tactic
 
-deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency, Tactic.ApplyCfg,
-  SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config, Tactic.DunfoldConfig, Tactic.DsimpConfig,
-  Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig, Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg,
-  Interactive.Loc, Tactic.UnfoldConfig, ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos,
-  Environment.ProjectionInfo, ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp,
-  Rbnode.Color, Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
+deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.Transparency,
+  Tactic.ApplyCfg, SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config,
+  Tactic.DunfoldConfig, Tactic.DsimpConfig, Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig,
+  Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg, Interactive.Loc, Tactic.UnfoldConfig,
+  ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos, Environment.ProjectionInfo,
+  ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp, Rbnode.Color,
+  Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=
   ⟨BinTree.Empty⟩

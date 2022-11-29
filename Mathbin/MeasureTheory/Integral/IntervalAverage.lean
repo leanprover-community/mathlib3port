@@ -38,7 +38,8 @@ theorem interval_average_symm (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x)
   rw [set_average_eq, set_average_eq, interval_oc_swap]
 #align interval_average_symm interval_average_symm
 
-theorem interval_average_eq (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x) = (b - a)⁻¹ • ∫ x in a..b, f x := by
+theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
+    (⨍ x in a..b, f x) = (b - a)⁻¹ • ∫ x in a..b, f x := by
   cases' le_or_lt a b with h h
   · rw [set_average_eq, interval_oc_of_le h, Real.volume_Ioc, intervalIntegral.integral_of_le h,
       Ennreal.to_real_of_real (sub_nonneg.2 h)]
@@ -48,7 +49,8 @@ theorem interval_average_eq (f : ℝ → E) (a b : ℝ) : (⨍ x in a..b, f x) =
     
 #align interval_average_eq interval_average_eq
 
-theorem interval_average_eq_div (f : ℝ → ℝ) (a b : ℝ) : (⨍ x in a..b, f x) = (∫ x in a..b, f x) / (b - a) := by
+theorem interval_average_eq_div (f : ℝ → ℝ) (a b : ℝ) :
+    (⨍ x in a..b, f x) = (∫ x in a..b, f x) / (b - a) := by
   rw [interval_average_eq, smul_eq_mul, div_eq_inv_mul]
 #align interval_average_eq_div interval_average_eq_div
 

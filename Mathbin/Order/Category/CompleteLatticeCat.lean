@@ -56,7 +56,9 @@ instance : ConcreteCategory CompleteLatticeCat :=
   BundledHom.concreteCategory CompleteLatticeHom
 
 instance hasForgetToBoundedLattice : HasForget₂ CompleteLatticeCat BoundedLatticeCat where
-  forget₂ := { obj := fun X => BoundedLatticeCat.of X, map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
+  forget₂ :=
+    { obj := fun X => BoundedLatticeCat.of X,
+      map := fun X Y => CompleteLatticeHom.toBoundedLatticeHom }
   forget_comp := rfl
 #align CompleteLattice.has_forget_to_BoundedLattice CompleteLatticeCat.hasForgetToBoundedLattice
 
@@ -83,7 +85,8 @@ def dual : CompleteLatticeCat ⥤ CompleteLatticeCat where
 /-- The equivalence between `CompleteLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : CompleteLatticeCat ≌ CompleteLatticeCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align CompleteLattice.dual_equiv CompleteLatticeCat.dualEquiv
 
@@ -93,5 +96,6 @@ theorem CompleteLattice_dual_comp_forget_to_BoundedLattice :
     CompleteLatticeCat.dual ⋙ forget₂ CompleteLatticeCat BoundedLatticeCat =
       forget₂ CompleteLatticeCat BoundedLatticeCat ⋙ BoundedLatticeCat.dual :=
   rfl
-#align CompleteLattice_dual_comp_forget_to_BoundedLattice CompleteLattice_dual_comp_forget_to_BoundedLattice
+#align
+  CompleteLattice_dual_comp_forget_to_BoundedLattice CompleteLattice_dual_comp_forget_to_BoundedLattice
 

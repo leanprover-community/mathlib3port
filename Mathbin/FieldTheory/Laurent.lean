@@ -38,33 +38,39 @@ theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]�
   rw [mem_non_zero_divisors_iff]
   intro x hx
   have : x = taylor (r - r) x := by simp
-  rwa [this, sub_eq_add_neg, ← taylor_taylor, ← taylor_mul, LinearMap.map_eq_zero_iff _ (taylor_injective _),
-    mul_right_mem_non_zero_divisors_eq_zero_iff hp, LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx
+  rwa [this, sub_eq_add_neg, ← taylor_taylor, ← taylor_mul,
+    LinearMap.map_eq_zero_iff _ (taylor_injective _),
+    mul_right_mem_non_zero_divisors_eq_zero_iff hp,
+    LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx
 #align ratfunc.taylor_mem_non_zero_divisors Ratfunc.taylor_mem_non_zero_divisors
 
 /-- The Laurent expansion of rational functions about a value.
 Auxiliary definition, usage when over integral domains should prefer `ratfunc.laurent`. -/
 def laurentAux : Ratfunc R →+* Ratfunc R :=
-  Ratfunc.mapRingHom (RingHom.mk (taylor r) (taylor_one _) (taylor_mul _) (LinearMap.map_zero _) (LinearMap.map_add _))
+  Ratfunc.mapRingHom
+    (RingHom.mk (taylor r) (taylor_one _) (taylor_mul _) (LinearMap.map_zero _)
+      (LinearMap.map_add _))
     (taylor_mem_non_zero_divisors _)
 #align ratfunc.laurent_aux Ratfunc.laurentAux
 
 theorem laurent_aux_of_fraction_ring_mk (q : R[X]⁰) :
     laurentAux r (of_fraction_ring (Localization.mk p q)) =
-      of_fraction_ring (Localization.mk (taylor r p) ⟨taylor r q, taylor_mem_non_zero_divisors r q q.Prop⟩) :=
+      of_fraction_ring
+        (Localization.mk (taylor r p) ⟨taylor r q, taylor_mem_non_zero_divisors r q q.Prop⟩) :=
   map_apply_of_fraction_ring_mk _ _ _ _
 #align ratfunc.laurent_aux_of_fraction_ring_mk Ratfunc.laurent_aux_of_fraction_ring_mk
 
 include hdomain
 
 theorem laurent_aux_div :
-    laurentAux r (algebraMap _ _ p / algebraMap _ _ q) = algebraMap _ _ (taylor r p) / algebraMap _ _ (taylor r q) :=
+    laurentAux r (algebraMap _ _ p / algebraMap _ _ q) =
+      algebraMap _ _ (taylor r p) / algebraMap _ _ (taylor r q) :=
   map_apply_div _ _ _ _
 #align ratfunc.laurent_aux_div Ratfunc.laurent_aux_div
 
 @[simp]
-theorem laurent_aux_algebra_map : laurentAux r (algebraMap _ _ p) = algebraMap _ _ (taylor r p) := by
-  rw [← mk_one, ← mk_one, mk_eq_div, laurent_aux_div, mk_eq_div, taylor_one, _root_.map_one]
+theorem laurent_aux_algebra_map : laurentAux r (algebraMap _ _ p) = algebraMap _ _ (taylor r p) :=
+  by rw [← mk_one, ← mk_one, mk_eq_div, laurent_aux_div, mk_eq_div, taylor_one, _root_.map_one]
 #align ratfunc.laurent_aux_algebra_map Ratfunc.laurent_aux_algebra_map
 
 /-- The Laurent expansion of rational functions about a value. -/
@@ -76,7 +82,8 @@ def laurent : Ratfunc R →ₐ[R] Ratfunc R :=
 #align ratfunc.laurent Ratfunc.laurent
 
 theorem laurent_div :
-    laurent r (algebraMap _ _ p / algebraMap _ _ q) = algebraMap _ _ (taylor r p) / algebraMap _ _ (taylor r q) :=
+    laurent r (algebraMap _ _ p / algebraMap _ _ q) =
+      algebraMap _ _ (taylor r p) / algebraMap _ _ (taylor r q) :=
   laurent_aux_div r p q
 #align ratfunc.laurent_div Ratfunc.laurent_div
 
@@ -91,7 +98,8 @@ theorem laurent_X : laurent r x = X + c r := by
 #align ratfunc.laurent_X Ratfunc.laurent_X
 
 @[simp]
-theorem laurent_C (x : R) : laurent r (c x) = c x := by rw [← algebra_map_C, laurent_algebra_map, taylor_C]
+theorem laurent_C (x : R) : laurent r (c x) = c x := by
+  rw [← algebra_map_C, laurent_algebra_map, taylor_C]
 #align ratfunc.laurent_C Ratfunc.laurent_C
 
 @[simp]

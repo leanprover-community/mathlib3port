@@ -28,23 +28,27 @@ variable (C)
 /-- Class for having all cofiltered limits of a given size. -/
 class HasCofilteredLimitsOfSize : Prop where
   HasLimitsOfShape : ∀ (I : Type w) [Category.{w'} I] [IsCofiltered I], HasLimitsOfShape I C
-#align category_theory.limits.has_cofiltered_limits_of_size CategoryTheory.Limits.HasCofilteredLimitsOfSize
+#align
+  category_theory.limits.has_cofiltered_limits_of_size CategoryTheory.Limits.HasCofilteredLimitsOfSize
 
 /-- Class for having all filtered colimits of a given size. -/
 class HasFilteredColimitsOfSize : Prop where
   HasColimitsOfShape : ∀ (I : Type w) [Category.{w'} I] [IsFiltered I], HasColimitsOfShape I C
-#align category_theory.limits.has_filtered_colimits_of_size CategoryTheory.Limits.HasFilteredColimitsOfSize
+#align
+  category_theory.limits.has_filtered_colimits_of_size CategoryTheory.Limits.HasFilteredColimitsOfSize
 
 end
 
-instance (priority := 100) has_limits_of_shape_of_has_cofiltered_limits [HasCofilteredLimitsOfSize.{w', w} C]
-    (I : Type w) [Category.{w'} I] [IsCofiltered I] : HasLimitsOfShape I C :=
+instance (priority := 100) has_limits_of_shape_of_has_cofiltered_limits
+    [HasCofilteredLimitsOfSize.{w', w} C] (I : Type w) [Category.{w'} I] [IsCofiltered I] :
+    HasLimitsOfShape I C :=
   HasCofilteredLimitsOfSize.has_limits_of_shape _
 #align
   category_theory.limits.has_limits_of_shape_of_has_cofiltered_limits CategoryTheory.Limits.has_limits_of_shape_of_has_cofiltered_limits
 
-instance (priority := 100) has_colimits_of_shape_of_has_filtered_colimits [HasFilteredColimitsOfSize.{w', w} C]
-    (I : Type w) [Category.{w'} I] [IsFiltered I] : HasColimitsOfShape I C :=
+instance (priority := 100) has_colimits_of_shape_of_has_filtered_colimits
+    [HasFilteredColimitsOfSize.{w', w} C] (I : Type w) [Category.{w'} I] [IsFiltered I] :
+    HasColimitsOfShape I C :=
   HasFilteredColimitsOfSize.has_colimits_of_shape _
 #align
   category_theory.limits.has_colimits_of_shape_of_has_filtered_colimits CategoryTheory.Limits.has_colimits_of_shape_of_has_filtered_colimits

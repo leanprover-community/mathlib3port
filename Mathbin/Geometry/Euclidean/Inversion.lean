@@ -27,7 +27,8 @@ open Metric Real Function
 
 namespace EuclideanGeometry
 
-variable {V P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P] {a b c d x y z : P} {R : ℝ}
+variable {V P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
+  {a b c d x y z : P} {R : ℝ}
 
 include V
 
@@ -38,7 +39,8 @@ def inversion (c : P) (R : ℝ) (x : P) : P :=
   (R / dist x c) ^ 2 • (x -ᵥ c) +ᵥ c
 #align euclidean_geometry.inversion EuclideanGeometry.inversion
 
-theorem inversion_vsub_center (c : P) (R : ℝ) (x : P) : inversion c R x -ᵥ c = (R / dist x c) ^ 2 • (x -ᵥ c) :=
+theorem inversion_vsub_center (c : P) (R : ℝ) (x : P) :
+    inversion c R x -ᵥ c = (R / dist x c) ^ 2 • (x -ᵥ c) :=
   vadd_vsub _ _
 #align euclidean_geometry.inversion_vsub_center EuclideanGeometry.inversion_vsub_center
 
@@ -77,12 +79,14 @@ theorem dist_center_inversion (c x : P) (R : ℝ) : dist c (inversion c R x) = R
 #align euclidean_geometry.dist_center_inversion EuclideanGeometry.dist_center_inversion
 
 @[simp]
-theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) : inversion c R (inversion c R x) = x := by
+theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) :
+    inversion c R (inversion c R x) = x := by
   rcases eq_or_ne x c with (rfl | hne)
   · rw [inversion_self, inversion_self]
     
-  · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow, div_mul_div_comm,
-      div_mul_cancel _ (dist_ne_zero.2 hne), ← sq, div_self, one_pow, one_smul, vsub_vadd]
+  · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow,
+      div_mul_div_comm, div_mul_cancel _ (dist_ne_zero.2 hne), ← sq, div_self, one_pow, one_smul,
+      vsub_vadd]
     exact pow_ne_zero _ hR
     
 #align euclidean_geometry.inversion_inversion EuclideanGeometry.inversion_inversion
@@ -108,10 +112,11 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
     dist (inversion c R x) (inversion c R y) = R ^ 2 / (dist x c * dist y c) * dist x y := by
   dsimp only [inversion]
   simp_rw [dist_vadd_cancel_right, dist_eq_norm_vsub V _ c]
-  simpa only [dist_vsub_cancel_right] using dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
+  simpa only [dist_vsub_cancel_right] using
+    dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
 #align euclidean_geometry.dist_inversion_inversion EuclideanGeometry.dist_inversion_inversion
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- **Ptolemy's inequality**: in a quadrangle `ABCD`, `|AC| * |BD| ≤ |AB| * |CD| + |BC| * |AD|`. If
 `ABCD` is a convex cyclic polygon, then this inequality becomes an equality, see
 `euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical`.  -/
@@ -124,7 +129,7 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   rcases eq_or_ne c a with (rfl | hc)
   · rw [dist_self, zero_mul]
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
     
   rcases eq_or_ne d a with (rfl | hd)
   · rw [dist_self, mul_zero, add_zero, dist_comm d, dist_comm d, mul_comm]
@@ -132,14 +137,16 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   /- Otherwise, we apply the triangle inequality to `euclidean_geometry.inversion a 1 b`,
     `euclidean_geometry.inversion a 1 c`, and `euclidean_geometry.inversion a 1 d`. -/
   have H := dist_triangle (inversion a 1 b) (inversion a 1 c) (inversion a 1 d)
-  rw [dist_inversion_inversion hb hd, dist_inversion_inversion hb hc, dist_inversion_inversion hc hd, one_pow] at H
+  rw [dist_inversion_inversion hb hd, dist_inversion_inversion hb hc,
+    dist_inversion_inversion hc hd, one_pow] at H
   rw [← dist_pos] at hb hc hd
   rw [← div_le_div_right (mul_pos hb (mul_pos hc hd))]
   convert H <;>
     · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a]
       ring
       
-#align euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
+#align
+  euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
 
 end EuclideanGeometry
 

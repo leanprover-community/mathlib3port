@@ -161,7 +161,8 @@ section
 open Classical
 
 @[elab_as_elim]
-theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
+theorem Gcd.induction {P : R → R → Prop} :
+    ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
   | a => fun b H0 H1 =>
     if a0 : a = 0 then a0.symm ▸ H0 _
     else

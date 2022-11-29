@@ -90,7 +90,8 @@ def chooseNat (x y : ℕ) (p : x ≤ y) : Gen (x .. y) :=
 def chooseNat' (x y : ℕ) (p : x < y) : Gen (Set.ico x y) :=
   have : ∀ i, x < i → i ≤ y → i.pred < y := fun i h₀ h₁ =>
     show i.pred.succ ≤ y by rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_lt (Nat.zero_le _) h₀
-  (Subtype.map pred fun i (h : x + 1 ≤ i ∧ i ≤ y) => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x + 1) y p
+  (Subtype.map pred fun i (h : x + 1 ≤ i ∧ i ≤ y) => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$>
+    choose (x + 1) y p
 #align slim_check.gen.choose_nat' SlimCheck.Gen.chooseNat'
 
 open Nat
@@ -147,7 +148,7 @@ open ULift
 lean 3 declaration is
   forall {α : Type.{u}} (xs : List.{u} (SlimCheck.Gen.{u} α)), (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (List.length.{u} (SlimCheck.Gen.{u} α) xs)) -> (SlimCheck.Gen.{u} α)
 but is expected to have type
-  forall {α : Type} (xs : Array.{0} (SlimCheck.Gen.{0} α)), (autoParam.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Array.size.{0} (SlimCheck.Gen.{0} α) xs)) _auto._@.Mathlib.Testing.SlimCheck.Gen._hyg.559) -> (SlimCheck.Gen.{0} α)
+  forall {α : Type} (xs : Array.{0} (SlimCheck.Gen.{0} α)), (autoParam.{0} (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Array.size.{0} (SlimCheck.Gen.{0} α) xs)) _auto._@.Mathlib.Testing.SlimCheck.Gen._hyg.562) -> (SlimCheck.Gen.{0} α)
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.one_of SlimCheck.Gen.oneOfₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
@@ -218,7 +219,9 @@ def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs
   | x::xs => do
     let ⟨xs', h⟩ ← permutation_of xs
     let ⟨⟨n, _, h'⟩⟩ ← Uliftable.up <| chooseNat 0 xs'.length (by decide)
-    pure ⟨List.insertNth n x xs', List.Perm.trans (List.Perm.cons _ h) (List.perm_insert_nth _ _ h').symm⟩
+    pure
+        ⟨List.insertNth n x xs',
+          List.Perm.trans (List.Perm.cons _ h) (List.perm_insert_nth _ _ h').symm⟩
 #align slim_check.gen.permutation_of SlimCheck.Gen.permutationOf
 
 end Gen

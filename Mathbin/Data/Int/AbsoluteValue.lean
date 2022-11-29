@@ -29,13 +29,13 @@ theorem AbsoluteValue.map_units_int (abv : AbsoluteValue ℤ S) (x : ℤˣ) : ab
 #align absolute_value.map_units_int AbsoluteValue.map_units_int
 
 @[simp]
-theorem AbsoluteValue.map_units_int_cast [Nontrivial R] (abv : AbsoluteValue R S) (x : ℤˣ) : abv ((x : ℤ) : R) = 1 := by
-  rcases Int.units_eq_one_or x with (rfl | rfl) <;> simp
+theorem AbsoluteValue.map_units_int_cast [Nontrivial R] (abv : AbsoluteValue R S) (x : ℤˣ) :
+    abv ((x : ℤ) : R) = 1 := by rcases Int.units_eq_one_or x with (rfl | rfl) <;> simp
 #align absolute_value.map_units_int_cast AbsoluteValue.map_units_int_cast
 
 @[simp]
-theorem AbsoluteValue.map_units_int_smul (abv : AbsoluteValue R S) (x : ℤˣ) (y : R) : abv (x • y) = abv y := by
-  rcases Int.units_eq_one_or x with (rfl | rfl) <;> simp
+theorem AbsoluteValue.map_units_int_smul (abv : AbsoluteValue R S) (x : ℤˣ) (y : R) :
+    abv (x • y) = abv y := by rcases Int.units_eq_one_or x with (rfl | rfl) <;> simp
 #align absolute_value.map_units_int_smul AbsoluteValue.map_units_int_smul
 
 /-- `int.nat_abs` as a bundled monoid with zero hom. -/

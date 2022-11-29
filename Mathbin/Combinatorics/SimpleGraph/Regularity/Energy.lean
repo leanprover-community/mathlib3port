@@ -22,7 +22,8 @@ open Finset
 
 open BigOperators
 
-variable {α : Type _} [DecidableEq α] {s : Finset α} (P : Finpartition s) (G : SimpleGraph α) [DecidableRel G.Adj]
+variable {α : Type _} [DecidableEq α] {s : Finset α} (P : Finpartition s) (G : SimpleGraph α)
+  [DecidableRel G.Adj]
 
 namespace Finpartition
 

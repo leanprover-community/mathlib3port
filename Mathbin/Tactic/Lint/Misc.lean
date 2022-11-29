@@ -56,7 +56,9 @@ private unsafe def contains_illegal_ge_gt : expr → Bool
   | const nm us => if nm ∈ illegal_ge_gt then true else false
   | app f e@(app (app (const nm us) tp) tc) =>
     contains_illegal_ge_gt f || if nm ∈ illegal_ge_gt then false else contains_illegal_ge_gt e
-  | app (app custom_binder (app (app (app (app (const nm us) tp) tc) (var 0)) t)) e@(lam var_name bi var_type body) =>
+  |
+  app (app custom_binder (app (app (app (app (const nm us) tp) tc) (var 0)) t))
+      e@(lam var_name bi var_type body) =>
     contains_illegal_ge_gt e || if nm ∈ illegal_ge_gt then false else contains_illegal_ge_gt e
   | app f x => contains_illegal_ge_gt f || contains_illegal_ge_gt x
   | lam `H bi (type@(app (app (app (app (const nm us) tp) tc) (var 0)) t)) body =>
@@ -240,7 +242,8 @@ private unsafe def doc_blame_report_thm : declaration → tactic (Option String)
 /-- A linter for checking definition doc strings -/
 @[linter]
 unsafe def linter.doc_blame : linter where
-  test d := condM (not <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
+  test d :=
+    condM (not <$> has_attribute' `instance d.to_name) (doc_blame_report_defn d) (return none)
   auto_decls := false
   no_errors_found := "No definitions are missing documentation."
   errors_found := "DEFINITIONS ARE MISSING DOCUMENTATION STRINGS:"
@@ -312,7 +315,8 @@ unsafe def check_type (d : declaration) : tactic (Option String) :=
 unsafe def linter.check_type : linter where
   test := check_type
   auto_decls := false
-  no_errors_found := "The statements of all declarations type-check with default reducibility settings."
+  no_errors_found :=
+    "The statements of all declarations type-check with default reducibility settings."
   errors_found :=
     "THE STATEMENTS OF THE FOLLOWING DECLARATIONS DO NOT TYPE-CHECK.\nSome definitions in the statement are marked `@[irreducible]`, which means that the statement " ++
           "is now ill-formed. It is likely that these definitions were locally marked as `@[reducible]` " ++
@@ -353,7 +357,9 @@ unsafe def bad_params : rb_set (List Name) → List Name
     let good_levels : name_set :=
       (l.fold mk_name_set) fun us prev => if us.length = 1 then prev.insert us.head else prev
     if good_levels.Empty then l.fold [] List.union
-    else bad_params <| rb_set.of_list <| l.toList.map fun us => us.filter fun nm => !good_levels.contains nm
+    else
+      bad_params <|
+        rb_set.of_list <| l.toList.map fun us => us.filter fun nm => !good_levels.contains nm
 #align bad_params bad_params
 
 /-- Checks whether all universe levels `u` in the type of `d` are "good".
@@ -367,7 +373,8 @@ a higher universe level than `α`.
 unsafe def check_univs (d : declaration) : tactic (Option String) := do
   let l := d.type.univ_params_grouped d.to_name
   let bad := bad_params l
-  if bad then return none else return <| some <| "universes " ++ toString bad ++ " only occur together."
+  if bad then return none
+    else return <| some <| "universes " ++ toString bad ++ " only occur together."
 #align check_univs check_univs
 
 /-- A linter for checking that there are no bad `max u v` universe levels. -/
@@ -431,7 +438,8 @@ attribute [nolint syn_taut] rfl
 -/
 
 
-/-- Check if an expression contains `var 0` by folding over the expression and matching the binder depth
+/--
+Check if an expression contains `var 0` by folding over the expression and matching the binder depth
 -/
 unsafe def expr.has_zero_var (e : expr) : Bool :=
   (e.fold false) fun e' d res =>
@@ -444,11 +452,13 @@ unsafe def expr.has_zero_var (e : expr) : Bool :=
 /-- Return a list of unused have and suffices terms in an expression
 -/
 unsafe def find_unused_have_suffices_macros : expr → tactic (List String)
-  | app a b => (· ++ ·) <$> find_unused_have_suffices_macros a <*> find_unused_have_suffices_macros b
+  | app a b =>
+    (· ++ ·) <$> find_unused_have_suffices_macros a <*> find_unused_have_suffices_macros b
   | lam var_name bi var_type body => find_unused_have_suffices_macros body
   | pi var_name bi var_type body => find_unused_have_suffices_macros body
   | elet var_name type assignment body =>
-    (· ++ ·) <$> find_unused_have_suffices_macros assignment <*> find_unused_have_suffices_macros body
+    (· ++ ·) <$> find_unused_have_suffices_macros assignment <*>
+      find_unused_have_suffices_macros body
   | m@(macro md [l@(lam ppnm bi vt bd)]) => do
     -- term mode have statements are tagged with a macro
           -- if the macro annotation is `have then this lambda came from a term mode have statement
@@ -473,7 +483,8 @@ unsafe def unused_have_of_decl : declaration → tactic (List String)
   | _ => return []
 #align unused_have_of_decl unused_have_of_decl
 
-/-- Checks whether a declaration contains term mode have statements that have no effect on the resulting
+/--
+Checks whether a declaration contains term mode have statements that have no effect on the resulting
 term.
 -/
 unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option String) := do

@@ -28,7 +28,8 @@ variable {σ τ R S : Type _} [CommSemiring R] [CommSemiring S]
 
 See also `polynomial.expand`. -/
 noncomputable def expand (p : ℕ) : MvPolynomial σ R →ₐ[R] MvPolynomial σ R :=
-  { (eval₂Hom c fun i => x i ^ p : MvPolynomial σ R →+* MvPolynomial σ R) with commutes' := fun r => eval₂_hom_C _ _ _ }
+  { (eval₂Hom c fun i => x i ^ p : MvPolynomial σ R →+* MvPolynomial σ R) with
+    commutes' := fun r => eval₂_hom_C _ _ _ }
 #align mv_polynomial.expand MvPolynomial.expand
 
 @[simp]
@@ -48,8 +49,8 @@ theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
 #align mv_polynomial.expand_monomial MvPolynomial.expand_monomial
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
-  simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.to_fun_eq_coe, eval₂_hom_C_left, AlgHom.coe_to_ring_hom,
-    pow_one, AlgHom.coe_mk]
+  simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.to_fun_eq_coe, eval₂_hom_C_left,
+    AlgHom.coe_to_ring_hom, pow_one, AlgHom.coe_mk]
 #align mv_polynomial.expand_one_apply MvPolynomial.expand_one_apply
 
 @[simp]
@@ -66,22 +67,25 @@ theorem expand_comp_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) :
 #align mv_polynomial.expand_comp_bind₁ MvPolynomial.expand_comp_bind₁
 
 theorem expand_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-    expand p (bind₁ f φ) = bind₁ (fun i => expand p (f i)) φ := by rw [← AlgHom.comp_apply, expand_comp_bind₁]
+    expand p (bind₁ f φ) = bind₁ (fun i => expand p (f i)) φ := by
+  rw [← AlgHom.comp_apply, expand_comp_bind₁]
 #align mv_polynomial.expand_bind₁ MvPolynomial.expand_bind₁
 
 @[simp]
-theorem map_expand (f : R →+* S) (p : ℕ) (φ : MvPolynomial σ R) : map f (expand p φ) = expand p (map f φ) := by
-  simp [expand, map_bind₁]
+theorem map_expand (f : R →+* S) (p : ℕ) (φ : MvPolynomial σ R) :
+    map f (expand p φ) = expand p (map f φ) := by simp [expand, map_bind₁]
 #align mv_polynomial.map_expand MvPolynomial.map_expand
 
 @[simp]
-theorem rename_expand (f : σ → τ) (p : ℕ) (φ : MvPolynomial σ R) : rename f (expand p φ) = expand p (rename f φ) := by
-  simp [expand, bind₁_rename, rename_bind₁]
+theorem rename_expand (f : σ → τ) (p : ℕ) (φ : MvPolynomial σ R) :
+    rename f (expand p φ) = expand p (rename f φ) := by simp [expand, bind₁_rename, rename_bind₁]
 #align mv_polynomial.rename_expand MvPolynomial.rename_expand
 
 @[simp]
 theorem rename_comp_expand (f : σ → τ) (p : ℕ) :
-    (rename f).comp (expand p) = (expand p).comp (rename f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) := by
+    (rename f).comp (expand p) =
+      (expand p).comp (rename f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) :=
+  by
   ext1 φ
   simp only [rename_expand, AlgHom.comp_apply]
 #align mv_polynomial.rename_comp_expand MvPolynomial.rename_comp_expand

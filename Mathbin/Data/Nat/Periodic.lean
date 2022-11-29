@@ -31,9 +31,10 @@ theorem periodic_mod (a : ℕ) : Periodic (fun n => n % a) a := by
   simp only [forall_const, eq_self_iff_true, add_mod_right, periodic]
 #align nat.periodic_mod Nat.periodic_mod
 
-theorem _root_.function.periodic.map_mod_nat {α : Type _} {f : ℕ → α} {a : ℕ} (hf : Periodic f a) :
-    ∀ n, f (n % a) = f n := fun n => by conv_rhs => rw [← Nat.mod_add_div n a, mul_comm, ← Nat.nsmul_eq_mul, hf.nsmul]
-#align nat._root_.function.periodic.map_mod_nat nat._root_.function.periodic.map_mod_nat
+theorem Function.Periodic.map_mod_nat {α : Type _} {f : ℕ → α} {a : ℕ} (hf : Periodic f a) :
+    ∀ n, f (n % a) = f n := fun n => by
+  conv_rhs => rw [← Nat.mod_add_div n a, mul_comm, ← Nat.nsmul_eq_mul, hf.nsmul]
+#align function.periodic.map_mod_nat Function.Periodic.map_mod_nat
 
 section Multiset
 
@@ -41,10 +42,11 @@ open Multiset
 
 /-- An interval of length `a` filtered over a periodic predicate of period `a` has cardinality
 equal to the number naturals below `a` for which `p a` is true. -/
-theorem filter_multiset_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p] (pp : Periodic p a) :
-    (filter p (ico n (n + a))).card = a.count p := by
-  rw [count_eq_card_filter_range, Finset.card, Finset.filter_val, Finset.range_coe, ← multiset_Ico_map_mod n, ←
-    map_count_true_eq_filter_card, ← map_count_true_eq_filter_card, map_map, Function.comp]
+theorem filter_multiset_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p]
+    (pp : Periodic p a) : (filter p (ico n (n + a))).card = a.count p := by
+  rw [count_eq_card_filter_range, Finset.card, Finset.filter_val, Finset.range_coe, ←
+    multiset_Ico_map_mod n, ← map_count_true_eq_filter_card, ← map_count_true_eq_filter_card,
+    map_map, Function.comp]
   simp only [pp.map_mod_nat]
 #align nat.filter_multiset_Ico_card_eq_of_periodic Nat.filter_multiset_Ico_card_eq_of_periodic
 
@@ -56,8 +58,8 @@ open Finset
 
 /-- An interval of length `a` filtered over a periodic predicate of period `a` has cardinality
 equal to the number naturals below `a` for which `p a` is true. -/
-theorem filter_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p] (pp : Periodic p a) :
-    ((ico n (n + a)).filter p).card = a.count p :=
+theorem filter_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p]
+    (pp : Periodic p a) : ((ico n (n + a)).filter p).card = a.count p :=
   filter_multiset_Ico_card_eq_of_periodic n a p pp
 #align nat.filter_Ico_card_eq_of_periodic Nat.filter_Ico_card_eq_of_periodic
 

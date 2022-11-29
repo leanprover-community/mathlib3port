@@ -15,7 +15,8 @@ universe u v
 
 namespace CharP
 
-instance subsemiring (R : Type u) [Semiring R] (p : ℕ) [CharP R p] (S : Subsemiring R) : CharP S p :=
+instance subsemiring (R : Type u) [Semiring R] (p : ℕ) [CharP R p] (S : Subsemiring R) :
+    CharP S p :=
   ⟨fun x =>
     Iff.symm <|
       (CharP.cast_eq_zero_iff R p x).symm.trans

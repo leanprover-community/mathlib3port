@@ -92,7 +92,8 @@ theorem ι_sq_scalar (m : M) : ι Q m * ι Q m = algebraMap R _ (Q m) := by
 variable {Q} {A : Type _} [Semiring A] [Algebra R A]
 
 @[simp]
-theorem comp_ι_sq_scalar (g : CliffordAlgebra Q →ₐ[R] A) (m : M) : g (ι Q m) * g (ι Q m) = algebraMap _ _ (Q m) := by
+theorem comp_ι_sq_scalar (g : CliffordAlgebra Q →ₐ[R] A) (m : M) :
+    g (ι Q m) * g (ι Q m) = algebraMap _ _ (Q m) := by
   rw [← AlgHom.map_mul, ι_sq_scalar, AlgHom.commutes]
 #align clifford_algebra.comp_ι_sq_scalar CliffordAlgebra.comp_ι_sq_scalar
 
@@ -103,22 +104,25 @@ variable (Q)
 from `clifford_algebra Q` to `A`.
 -/
 @[simps symmApply]
-def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) where
+def lift :
+    { f : M →ₗ[R] A // ∀ m, f m * f m = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) where
   toFun f :=
     RingQuot.liftAlgHom R
       ⟨TensorAlgebra.lift R (f : M →ₗ[R] A), fun x y (h : Rel Q x y) => by
         induction h
         rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩
   invFun F :=
-    ⟨F.toLinearMap.comp (ι Q), fun m => by rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩
+    ⟨F.toLinearMap.comp (ι Q), fun m => by
+      rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩
   left_inv f := by
     ext
-    simp only [ι, AlgHom.to_linear_map_apply, Function.comp_apply, LinearMap.coe_comp, Subtype.coe_mk,
-      RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
+    simp only [ι, AlgHom.to_linear_map_apply, Function.comp_apply, LinearMap.coe_comp,
+      Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
   right_inv F := by
     ext
-    simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_apply, LinearMap.coe_comp,
-      Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply]
+    simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_apply,
+      LinearMap.coe_comp, Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply,
+      TensorAlgebra.lift_ι_apply]
 #align clifford_algebra.lift CliffordAlgebra.lift
 
 variable {Q}
@@ -136,15 +140,16 @@ theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap 
 #align clifford_algebra.lift_ι_apply CliffordAlgebra.lift_ι_apply
 
 @[simp]
-theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMap _ _ (Q m)) (g : CliffordAlgebra Q →ₐ[R] A) :
-    g.toLinearMap.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ := by
+theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMap _ _ (Q m))
+    (g : CliffordAlgebra Q →ₐ[R] A) : g.toLinearMap.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ := by
   convert (lift Q).symm_apply_eq
   rw [lift_symm_apply]
   simp only
 #align clifford_algebra.lift_unique CliffordAlgebra.lift_unique
 
 @[simp]
-theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) : lift Q ⟨g.toLinearMap.comp (ι Q), comp_ι_sq_scalar _⟩ = g := by
+theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) :
+    lift Q ⟨g.toLinearMap.comp (ι Q), comp_ι_sq_scalar _⟩ = g := by
   convert (lift Q).apply_symm_apply g
   rw [lift_symm_apply]
   rfl
@@ -167,8 +172,9 @@ and is preserved under addition and muliplication, then it holds for all of `cli
 See also the stronger `clifford_algebra.left_induction` and `clifford_algebra.right_induction`.
 -/
 @[elab_as_elim]
-theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r))
-    (h_grade1 : ∀ x, C (ι Q x)) (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
+theorem induction {C : CliffordAlgebra Q → Prop}
+    (h_grade0 : ∀ r, C (algebraMap R (CliffordAlgebra Q) r)) (h_grade1 : ∀ x, C (ι Q x))
+    (h_mul : ∀ a b, C a → C b → C (a * b)) (h_add : ∀ a b, C a → C b → C (a + b))
     (a : CliffordAlgebra Q) : C a := by
   -- the arguments are enough to construct a subalgebra, and a mapping into it from M
   let s : Subalgebra R (CliffordAlgebra Q) :=
@@ -185,7 +191,8 @@ theorem induction {C : CliffordAlgebra Q → Prop} (h_grade0 : ∀ r, C (algebra
 #align clifford_algebra.induction CliffordAlgebra.induction
 
 /-- The symmetric product of vectors is a scalar -/
-theorem ι_mul_ι_add_swap (a b : M) : ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticForm.polar Q a b) :=
+theorem ι_mul_ι_add_swap (a b : M) :
+    ι Q a * ι Q b + ι Q b * ι Q a = algebraMap R _ (QuadraticForm.polar Q a b) :=
   calc
     ι Q a * ι Q b + ι Q b * ι Q a = ι Q (a + b) * ι Q (a + b) - ι Q a * ι Q a - ι Q b * ι Q b := by
       rw [(ι Q).map_add, mul_add, add_mul, add_mul]
@@ -197,19 +204,22 @@ theorem ι_mul_ι_add_swap (a b : M) : ι Q a * ι Q b + ι Q b * ι Q a = algeb
     
 #align clifford_algebra.ι_mul_ι_add_swap CliffordAlgebra.ι_mul_ι_add_swap
 
-theorem ι_mul_comm (a b : M) : ι Q a * ι Q b = algebraMap R _ (QuadraticForm.polar Q a b) - ι Q b * ι Q a :=
+theorem ι_mul_comm (a b : M) :
+    ι Q a * ι Q b = algebraMap R _ (QuadraticForm.polar Q a b) - ι Q b * ι Q a :=
   eq_sub_of_add_eq (ι_mul_ι_add_swap a b)
 #align clifford_algebra.ι_mul_comm CliffordAlgebra.ι_mul_comm
 
 /-- $aba$ is a vector. -/
-theorem ι_mul_ι_mul_ι (a b : M) : ι Q a * ι Q b * ι Q a = ι Q (QuadraticForm.polar Q a b • a - Q a • b) := by
-  rw [ι_mul_comm, sub_mul, mul_assoc, ι_sq_scalar, ← Algebra.smul_def, ← Algebra.commutes, ← Algebra.smul_def, ←
-    map_smul, ← map_smul, ← map_sub]
+theorem ι_mul_ι_mul_ι (a b : M) :
+    ι Q a * ι Q b * ι Q a = ι Q (QuadraticForm.polar Q a b • a - Q a • b) := by
+  rw [ι_mul_comm, sub_mul, mul_assoc, ι_sq_scalar, ← Algebra.smul_def, ← Algebra.commutes, ←
+    Algebra.smul_def, ← map_smul, ← map_smul, ← map_sub]
 #align clifford_algebra.ι_mul_ι_mul_ι CliffordAlgebra.ι_mul_ι_mul_ι
 
 @[simp]
 theorem ι_range_map_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _ _ (Q m)) :
-    (ι Q).range.map (lift Q ⟨f, cond⟩).toLinearMap = f.range := by rw [← LinearMap.range_comp, ι_comp_lift]
+    (ι Q).range.map (lift Q ⟨f, cond⟩).toLinearMap = f.range := by
+  rw [← LinearMap.range_comp, ι_comp_lift]
 #align clifford_algebra.ι_range_map_lift CliffordAlgebra.ι_range_map_lift
 
 section Map
@@ -225,13 +235,15 @@ variable (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) (Q₃ : Qua
 /-- Any linear map that preserves the quadratic form lifts to an `alg_hom` between algebras.
 
 See `clifford_algebra.equiv_of_isometry` for the case when `f` is a `quadratic_form.isometry`. -/
-def map (f : M₁ →ₗ[R] M₂) (hf : ∀ m, Q₂ (f m) = Q₁ m) : CliffordAlgebra Q₁ →ₐ[R] CliffordAlgebra Q₂ :=
+def map (f : M₁ →ₗ[R] M₂) (hf : ∀ m, Q₂ (f m) = Q₁ m) :
+    CliffordAlgebra Q₁ →ₐ[R] CliffordAlgebra Q₂ :=
   CliffordAlgebra.lift Q₁
     ⟨(CliffordAlgebra.ι Q₂).comp f, fun m => (ι_sq_scalar _ _).trans <| RingHom.congr_arg _ <| hf m⟩
 #align clifford_algebra.map CliffordAlgebra.map
 
 @[simp]
-theorem map_comp_ι (f : M₁ →ₗ[R] M₂) (hf) : (map Q₁ Q₂ f hf).toLinearMap.comp (ι Q₁) = (ι Q₂).comp f :=
+theorem map_comp_ι (f : M₁ →ₗ[R] M₂) (hf) :
+    (map Q₁ Q₂ f hf).toLinearMap.comp (ι Q₁) = (ι Q₂).comp f :=
   ι_comp_lift _ _
 #align clifford_algebra.map_comp_ι CliffordAlgebra.map_comp_ι
 
@@ -241,14 +253,16 @@ theorem map_apply_ι (f : M₁ →ₗ[R] M₂) (hf) (m : M₁) : map Q₁ Q₂ f
 #align clifford_algebra.map_apply_ι CliffordAlgebra.map_apply_ι
 
 @[simp]
-theorem map_id : (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rfl) = AlgHom.id R (CliffordAlgebra Q₁) := by
+theorem map_id :
+    (map Q₁ Q₁ (LinearMap.id : M₁ →ₗ[R] M₁) fun m => rfl) = AlgHom.id R (CliffordAlgebra Q₁) := by
   ext m
   exact map_apply_ι _ _ _ _ m
 #align clifford_algebra.map_id CliffordAlgebra.map_id
 
 @[simp]
 theorem map_comp_map (f : M₂ →ₗ[R] M₃) (hf) (g : M₁ →ₗ[R] M₂) (hg) :
-    (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m := by
+    (map Q₂ Q₃ f hf).comp (map Q₁ Q₂ g hg) = map Q₁ Q₃ (f.comp g) fun m => (hf _).trans <| hg m :=
+  by
   ext m
   dsimp only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
   rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
@@ -278,7 +292,8 @@ def equivOfIsometry (e : Q₁.Isometry Q₂) : CliffordAlgebra Q₁ ≃ₐ[R] Cl
 #align clifford_algebra.equiv_of_isometry CliffordAlgebra.equivOfIsometry
 
 @[simp]
-theorem equiv_of_isometry_symm (e : Q₁.Isometry Q₂) : (equivOfIsometry e).symm = equivOfIsometry e.symm :=
+theorem equiv_of_isometry_symm (e : Q₁.Isometry Q₂) :
+    (equivOfIsometry e).symm = equivOfIsometry e.symm :=
   rfl
 #align clifford_algebra.equiv_of_isometry_symm CliffordAlgebra.equiv_of_isometry_symm
 
@@ -290,7 +305,8 @@ theorem equiv_of_isometry_trans (e₁₂ : Q₁.Isometry Q₂) (e₂₃ : Q₂.I
 #align clifford_algebra.equiv_of_isometry_trans CliffordAlgebra.equiv_of_isometry_trans
 
 @[simp]
-theorem equiv_of_isometry_refl : (equiv_of_isometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl := by
+theorem equiv_of_isometry_refl :
+    (equiv_of_isometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl := by
   ext x
   exact AlgHom.congr_fun (map_id Q₁) x
 #align clifford_algebra.equiv_of_isometry_refl CliffordAlgebra.equiv_of_isometry_refl
@@ -303,12 +319,15 @@ variable (Q)
 def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m) where
   invOf := ι Q (⅟ (Q m) • m)
   inv_of_mul_self := by
-    rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self, map_one]
-  mul_inv_of_self := by rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self, map_one]
+    rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self,
+      map_one]
+  mul_inv_of_self := by
+    rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, inv_of_mul_self, map_one]
 #align clifford_algebra.invertible_ι_of_invertible CliffordAlgebra.invertibleιOfInvertible
 
 /-- For a vector with invertible quadratic form, $v^{-1} = \frac{v}{Q(v)}$ -/
-theorem inv_of_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) := by
+theorem inv_of_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) :=
+  by
   letI := invertible_ι_of_invertible Q m
   convert (rfl : ⅟ (ι Q m) = _)
 #align clifford_algebra.inv_of_ι CliffordAlgebra.inv_of_ι
@@ -322,15 +341,15 @@ theorem is_unit_ι_of_is_unit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) := by
 /-- $aba^{-1}$ is a vector. -/
 theorem ι_mul_ι_mul_inv_of_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
     ι Q a * ι Q b * ⅟ (ι Q a) = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
-  rw [inv_of_ι, map_smul, mul_smul_comm, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul, inv_of_mul_self,
-    one_smul]
+  rw [inv_of_ι, map_smul, mul_smul_comm, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul,
+    inv_of_mul_self, one_smul]
 #align clifford_algebra.ι_mul_ι_mul_inv_of_ι CliffordAlgebra.ι_mul_ι_mul_inv_of_ι
 
 /-- $a^{-1}ba$ is a vector. -/
 theorem inv_of_ι_mul_ι_mul_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
     ⅟ (ι Q a) * ι Q b * ι Q a = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
-  rw [inv_of_ι, map_smul, smul_mul_assoc, smul_mul_assoc, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul,
-    inv_of_mul_self, one_smul]
+  rw [inv_of_ι, map_smul, smul_mul_assoc, smul_mul_assoc, ι_mul_ι_mul_ι, ← map_smul, smul_sub,
+    smul_smul, smul_smul, inv_of_mul_self, one_smul]
 #align clifford_algebra.inv_of_ι_mul_ι_mul_ι CliffordAlgebra.inv_of_ι_mul_ι_mul_ι
 
 end CliffordAlgebra
@@ -346,7 +365,8 @@ def toClifford : TensorAlgebra R M →ₐ[R] CliffordAlgebra Q :=
 #align tensor_algebra.to_clifford TensorAlgebra.toClifford
 
 @[simp]
-theorem to_clifford_ι (m : M) : (TensorAlgebra.ι R m).toClifford = CliffordAlgebra.ι Q m := by simp [to_clifford]
+theorem to_clifford_ι (m : M) : (TensorAlgebra.ι R m).toClifford = CliffordAlgebra.ι Q m := by
+  simp [to_clifford]
 #align tensor_algebra.to_clifford_ι TensorAlgebra.to_clifford_ι
 
 end TensorAlgebra

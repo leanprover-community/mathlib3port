@@ -45,17 +45,20 @@ class IsReflexivePair (f g : A ⟶ B) : Prop where
 #align category_theory.is_reflexive_pair CategoryTheory.IsReflexivePair
 
 /- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`common_retraction] [] -/
-/-- The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
+/--
+The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
 -/
 class IsCoreflexivePair (f g : A ⟶ B) : Prop where
   common_retraction : ∃ s : B ⟶ A, f ≫ s = 𝟙 A ∧ g ≫ s = 𝟙 A
 #align category_theory.is_coreflexive_pair CategoryTheory.IsCoreflexivePair
 
-theorem IsReflexivePair.mk' (s : B ⟶ A) (sf : s ≫ f = 𝟙 B) (sg : s ≫ g = 𝟙 B) : IsReflexivePair f g :=
+theorem IsReflexivePair.mk' (s : B ⟶ A) (sf : s ≫ f = 𝟙 B) (sg : s ≫ g = 𝟙 B) :
+    IsReflexivePair f g :=
   ⟨⟨s, sf, sg⟩⟩
 #align category_theory.is_reflexive_pair.mk' CategoryTheory.IsReflexivePair.mk'
 
-theorem IsCoreflexivePair.mk' (s : B ⟶ A) (fs : f ≫ s = 𝟙 A) (gs : g ≫ s = 𝟙 A) : IsCoreflexivePair f g :=
+theorem IsCoreflexivePair.mk' (s : B ⟶ A) (fs : f ≫ s = 𝟙 A) (gs : g ≫ s = 𝟙 A) :
+    IsCoreflexivePair f g :=
   ⟨⟨s, fs, gs⟩⟩
 #align category_theory.is_coreflexive_pair.mk' CategoryTheory.IsCoreflexivePair.mk'
 
@@ -80,12 +83,14 @@ noncomputable def commonRetraction (f g : A ⟶ B) [IsCoreflexivePair f g] : B �
 #align category_theory.common_retraction CategoryTheory.commonRetraction
 
 @[simp, reassoc]
-theorem left_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] : f ≫ commonRetraction f g = 𝟙 A :=
+theorem left_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
+    f ≫ commonRetraction f g = 𝟙 A :=
   (IsCoreflexivePair.common_retraction f g).some_spec.1
 #align category_theory.left_comp_retraction CategoryTheory.left_comp_retraction
 
 @[simp, reassoc]
-theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] : g ≫ commonRetraction f g = 𝟙 A :=
+theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
+    g ≫ commonRetraction f g = 𝟙 A :=
   (IsCoreflexivePair.common_retraction f g).some_spec.2
 #align category_theory.right_comp_retraction CategoryTheory.right_comp_retraction
 
@@ -93,7 +98,8 @@ theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] : g ≫ co
 theorem IsKernelPair.is_reflexive_pair {R : C} {f g : R ⟶ A} {q : A ⟶ B} (h : IsKernelPair q f g) :
     IsReflexivePair f g :=
   IsReflexivePair.mk' _ (h.lift' _ _ rfl).2.1 (h.lift' _ _ _).2.2
-#align category_theory.is_kernel_pair.is_reflexive_pair CategoryTheory.IsKernelPair.is_reflexive_pair
+#align
+  category_theory.is_kernel_pair.is_reflexive_pair CategoryTheory.IsKernelPair.is_reflexive_pair
 
 -- This shouldn't be an instance as it would instantly loop.
 /-- If `f,g` is reflexive, then `g,f` is reflexive. -/
@@ -110,7 +116,8 @@ theorem IsCoreflexivePair.swap [IsCoreflexivePair f g] : IsCoreflexivePair g f :
 variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 
 /-- For an adjunction `F ⊣ G` with counit `ε`, the pair `(FGε_B, ε_FGB)` is reflexive. -/
-instance (B : D) : IsReflexivePair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
+instance (B : D) :
+    IsReflexivePair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
   IsReflexivePair.mk' (F.map (adj.Unit.app (G.obj B)))
     (by
       rw [← F.map_comp, adj.right_triangle_components]
@@ -124,25 +131,28 @@ variable (C)
 /-- `C` has reflexive coequalizers if it has coequalizers for every reflexive pair. -/
 class HasReflexiveCoequalizers : Prop where
   has_coeq : ∀ ⦃A B : C⦄ (f g : A ⟶ B) [IsReflexivePair f g], HasCoequalizer f g
-#align category_theory.limits.has_reflexive_coequalizers CategoryTheory.Limits.HasReflexiveCoequalizers
+#align
+  category_theory.limits.has_reflexive_coequalizers CategoryTheory.Limits.HasReflexiveCoequalizers
 
 /-- `C` has coreflexive equalizers if it has equalizers for every coreflexive pair. -/
 class HasCoreflexiveEqualizers : Prop where
   has_eq : ∀ ⦃A B : C⦄ (f g : A ⟶ B) [IsCoreflexivePair f g], HasEqualizer f g
-#align category_theory.limits.has_coreflexive_equalizers CategoryTheory.Limits.HasCoreflexiveEqualizers
+#align
+  category_theory.limits.has_coreflexive_equalizers CategoryTheory.Limits.HasCoreflexiveEqualizers
 
 attribute [instance] has_reflexive_coequalizers.has_coeq
 
 attribute [instance] has_coreflexive_equalizers.has_eq
 
-theorem has_coequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
-    (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g := by
+theorem has_coequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C} {f g : A ⟶ B}
+    (r : B ⟶ A) (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g := by
   letI := is_reflexive_pair.mk' r rf rg
   infer_instance
-#align category_theory.limits.has_coequalizer_of_common_section CategoryTheory.Limits.has_coequalizer_of_common_section
+#align
+  category_theory.limits.has_coequalizer_of_common_section CategoryTheory.Limits.has_coequalizer_of_common_section
 
-theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
-    (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g := by
+theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B}
+    (r : B ⟶ A) (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g := by
   letI := is_coreflexive_pair.mk' r fr gr
   infer_instance
 #align

@@ -22,7 +22,8 @@ noncomputable section
 open Real intervalIntegral MeasureTheory Set Filter
 
 /-- Integral of `exp (-b * x)` over `(a, X)` is bounded as `X → ∞`. -/
-theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) : (∫ x in a..X, exp (-b * x)) ≤ exp (-b * a) / b := by
+theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) :
+    (∫ x in a..X, exp (-b * x)) ≤ exp (-b * a) / b := by
   rw [integral_deriv_eq_sub' fun x => -exp (-b * x) / b]
   -- goal 1/4: F(X) - F(a) is bounded
   · simp only [tsub_le_iff_right]
@@ -44,7 +45,8 @@ theorem integral_exp_neg_le {b : ℝ} (a X : ℝ) (h2 : 0 < b) : (∫ x in a..X,
 #align integral_exp_neg_le integral_exp_neg_le
 
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
-theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) : IntegrableOn (fun x : ℝ => exp (-b * x)) (ioi a) := by
+theorem expNegIntegrableOnIoi (a : ℝ) {b : ℝ} (h : 0 < b) :
+    IntegrableOn (fun x : ℝ => exp (-b * x)) (ioi a) := by
   have : ∀ X : ℝ, integrable_on (fun x : ℝ => exp (-b * x)) (Ioc a X) := by
     intro X
     exact (continuous_const.mul continuous_id).exp.integrableOnIoc

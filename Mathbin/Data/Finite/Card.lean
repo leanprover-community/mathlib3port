@@ -44,7 +44,8 @@ def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃
   apply Finite.equivFin
 #align finite.equiv_fin_of_card_eq Finite.equivFinOfCardEq
 
-theorem Nat.card_eq (α : Type _) : Nat.card α = if h : Finite α then @Fintype.card α (Fintype.ofFinite α) else 0 := by
+theorem Nat.card_eq (α : Type _) :
+    Nat.card α = if h : Finite α then @Fintype.card α (Fintype.ofFinite α) else 0 := by
   cases finite_or_infinite α
   · letI := Fintype.ofFinite α
     simp only [*, Nat.card_eq_fintype_card, dif_pos]
@@ -94,7 +95,8 @@ theorem card_option [Finite α] : Nat.card (Option α) = Nat.card α + 1 := by
   simp
 #align finite.card_option Finite.card_option
 
-theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injective f) : Nat.card α ≤ Nat.card β := by
+theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injective f) :
+    Nat.card α ≤ Nat.card β := by
   haveI := Fintype.ofFinite β
   haveI := Fintype.ofInjective f hf
   simpa using Fintype.card_le_of_injective f hf
@@ -104,7 +106,8 @@ theorem card_le_of_embedding [Finite β] (f : α ↪ β) : Nat.card α ≤ Nat.c
   card_le_of_injective _ f.Injective
 #align finite.card_le_of_embedding Finite.card_le_of_embedding
 
-theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) : Nat.card β ≤ Nat.card α := by
+theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) :
+    Nat.card β ≤ Nat.card α := by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofSurjective f hf
   simpa using Fintype.card_le_of_surjective f hf
@@ -117,28 +120,30 @@ theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α := by
 
 /-- If `f` is injective, then `nat.card α ≤ nat.card β`. We must also assume
   `nat.card β = 0 → nat.card α = 0` since `nat.card` is defined to be `0` for infinite types. -/
-theorem card_le_of_injective' {f : α → β} (hf : Function.Injective f) (h : Nat.card β = 0 → Nat.card α = 0) :
-    Nat.card α ≤ Nat.card β :=
+theorem card_le_of_injective' {f : α → β} (hf : Function.Injective f)
+    (h : Nat.card β = 0 → Nat.card α = 0) : Nat.card α ≤ Nat.card β :=
   (or_not_of_imp h).casesOn (fun h => le_of_eq_of_le h zero_le') fun h =>
     @card_le_of_injective α β (Nat.finite_of_card_ne_zero h) f hf
 #align finite.card_le_of_injective' Finite.card_le_of_injective'
 
 /-- If `f` is an embedding, then `nat.card α ≤ nat.card β`. We must also assume
   `nat.card β = 0 → nat.card α = 0` since `nat.card` is defined to be `0` for infinite types. -/
-theorem card_le_of_embedding' (f : α ↪ β) (h : Nat.card β = 0 → Nat.card α = 0) : Nat.card α ≤ Nat.card β :=
+theorem card_le_of_embedding' (f : α ↪ β) (h : Nat.card β = 0 → Nat.card α = 0) :
+    Nat.card α ≤ Nat.card β :=
   card_le_of_injective' f.2 h
 #align finite.card_le_of_embedding' Finite.card_le_of_embedding'
 
 /-- If `f` is surjective, then `nat.card β ≤ nat.card α`. We must also assume
   `nat.card α = 0 → nat.card β = 0` since `nat.card` is defined to be `0` for infinite types. -/
-theorem card_le_of_surjective' {f : α → β} (hf : Function.Surjective f) (h : Nat.card α = 0 → Nat.card β = 0) :
-    Nat.card β ≤ Nat.card α :=
+theorem card_le_of_surjective' {f : α → β} (hf : Function.Surjective f)
+    (h : Nat.card α = 0 → Nat.card β = 0) : Nat.card β ≤ Nat.card α :=
   (or_not_of_imp h).casesOn (fun h => le_of_eq_of_le h zero_le') fun h =>
     @card_le_of_surjective α β (Nat.finite_of_card_ne_zero h) f hf
 #align finite.card_le_of_surjective' Finite.card_le_of_surjective'
 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
-theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) (h : Nat.card β = 0) : Nat.card α = 0 := by
+theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) (h : Nat.card β = 0) :
+    Nat.card α = 0 := by
   cases finite_or_infinite β
   · haveI := card_eq_zero_iff.mp h
     haveI := Function.isEmpty f
@@ -150,8 +155,8 @@ theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) 
 #align finite.card_eq_zero_of_surjective Finite.card_eq_zero_of_surjective
 
 /-- NB: `nat.card` is defined to be `0` for infinite types. -/
-theorem card_eq_zero_of_injective [Nonempty α] {f : α → β} (hf : Function.Injective f) (h : Nat.card α = 0) :
-    Nat.card β = 0 :=
+theorem card_eq_zero_of_injective [Nonempty α] {f : α → β} (hf : Function.Injective f)
+    (h : Nat.card α = 0) : Nat.card β = 0 :=
   card_eq_zero_of_surjective (Function.invFun_surjective hf) h
 #align finite.card_eq_zero_of_injective Finite.card_eq_zero_of_injective
 
@@ -179,7 +184,8 @@ theorem card_subtype_le [Finite α] (p : α → Prop) : Nat.card { x // p x } �
   simpa using Fintype.card_subtype_le p
 #align finite.card_subtype_le Finite.card_subtype_le
 
-theorem card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) : Nat.card { x // p x } < Nat.card α := by
+theorem card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) :
+    Nat.card { x // p x } < Nat.card α := by
   haveI := Fintype.ofFinite α
   simpa using Fintype.card_subtype_lt hx
 #align finite.card_subtype_lt Finite.card_subtype_lt
@@ -192,7 +198,8 @@ theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Na
   cases' _root_.finite_or_infinite ↥(s ∪ t) with h h
   · rw [finite_coe_iff, finite_union, ← finite_coe_iff, ← finite_coe_iff] at h
     cases h
-    rw [← Cardinal.nat_cast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk]
+    rw [← Cardinal.nat_cast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk,
+      Finite.cast_card_eq_mk]
     exact Cardinal.mk_union_le s t
     
   · exact nat.card_eq_zero_of_infinite.trans_le (zero_le _)

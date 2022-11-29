@@ -57,7 +57,8 @@ def InducedCategory : Type u₁ :=
 
 variable {D}
 
-instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] : CoeSort (InducedCategory D F) α :=
+instance InducedCategory.hasCoeToSort {α : Sort _} [CoeSort D α] :
+    CoeSort (InducedCategory D F) α :=
   ⟨fun c => ↥(F c)⟩
 #align category_theory.induced_category.has_coe_to_sort CategoryTheory.InducedCategory.hasCoeToSort
 
@@ -91,7 +92,8 @@ variable {C : Type u₁} [Category.{v} C]
 
 variable (Z : C → Prop)
 
-/-- A subtype-like structure for full subcategories. Morphisms just ignore the property. We don't use
+/--
+A subtype-like structure for full subcategories. Morphisms just ignore the property. We don't use
 actual subtypes since the simp-normal form `↑X` of `X.val` does not work well for full
 subcategories.
 
@@ -170,20 +172,25 @@ def FullSubcategory.lift (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) : C ⥤ FullSub
 def FullSubcategory.liftCompInclusion (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) :
     FullSubcategory.lift P F hF ⋙ fullSubcategoryInclusion P ≅ F :=
   NatIso.ofComponents (fun X => Iso.refl _) (by simp)
-#align category_theory.full_subcategory.lift_comp_inclusion CategoryTheory.FullSubcategory.liftCompInclusion
+#align
+  category_theory.full_subcategory.lift_comp_inclusion CategoryTheory.FullSubcategory.liftCompInclusion
 
 @[simp]
 theorem FullSubcategory.inclusion_obj_lift_obj (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) {X : C} :
     (fullSubcategoryInclusion P).obj ((FullSubcategory.lift P F hF).obj X) = F.obj X :=
   rfl
-#align category_theory.full_subcategory.inclusion_obj_lift_obj CategoryTheory.FullSubcategory.inclusion_obj_lift_obj
+#align
+  category_theory.full_subcategory.inclusion_obj_lift_obj CategoryTheory.FullSubcategory.inclusion_obj_lift_obj
 
-theorem FullSubcategory.inclusion_map_lift_map (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) {X Y : C} (f : X ⟶ Y) :
+theorem FullSubcategory.inclusion_map_lift_map (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) {X Y : C}
+    (f : X ⟶ Y) :
     (fullSubcategoryInclusion P).map ((FullSubcategory.lift P F hF).map f) = F.map f :=
   rfl
-#align category_theory.full_subcategory.inclusion_map_lift_map CategoryTheory.FullSubcategory.inclusion_map_lift_map
+#align
+  category_theory.full_subcategory.inclusion_map_lift_map CategoryTheory.FullSubcategory.inclusion_map_lift_map
 
-instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Faithful F] : Faithful (FullSubcategory.lift P F hF) :=
+instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Faithful F] :
+    Faithful (FullSubcategory.lift P F hF) :=
   Faithful.of_comp_iso (FullSubcategory.liftCompInclusion P F hF)
 
 instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Full F] : Full (FullSubcategory.lift P F hF) :=
@@ -191,7 +198,8 @@ instance (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) [Full F] : Full (FullSubcategor
 
 @[simp]
 theorem FullSubcategory.lift_comp_map (F : C ⥤ D) (hF : ∀ X, P (F.obj X)) (h : ∀ ⦃X⦄, P X → Q X) :
-    FullSubcategory.lift P F hF ⋙ FullSubcategory.map h = FullSubcategory.lift Q F fun X => h (hF X) :=
+    FullSubcategory.lift P F hF ⋙ FullSubcategory.map h =
+      FullSubcategory.lift Q F fun X => h (hF X) :=
   rfl
 #align category_theory.full_subcategory.lift_comp_map CategoryTheory.FullSubcategory.lift_comp_map
 

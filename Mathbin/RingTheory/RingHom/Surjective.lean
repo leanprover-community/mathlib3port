@@ -19,7 +19,8 @@ open TensorProduct
 open TensorProduct Algebra.TensorProduct
 
 -- mathport name: exprsurjective
-local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y => Function.Surjective f
+local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
+  Function.Surjective f
 
 theorem surjective_stable_under_composition : StableUnderComposition surjective := by
   introv R hf hg
@@ -63,7 +64,9 @@ theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
       (show _ ∈ Ideal.span s by
         rw [hs]
         trivial)
-  fapply Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem _ l.support (fun x : s => f x) fun x : s => f (l x)
+  fapply
+    Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem _ l.support (fun x : s => f x) fun x : s =>
+      f (l x)
   · dsimp only
     simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]
     exact f.congr_arg hl

@@ -103,16 +103,16 @@ theorem log_one_right (b : ℕ) : log b 1 = 0 :=
 #align nat.log_one_right Nat.log_one_right
 
 /-- `pow b` and `log b` (almost) form a Galois connection. -/
-theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : b ^ x ≤ y ↔ x ≤ log b y := by
+theorem pow_le_iff_le_log {b : ℕ} (hb : 1 < b) {x y : ℕ} (hy : 0 < y) : b ^ x ≤ y ↔ x ≤ log b y :=
+  by
   induction' y using Nat.strong_induction_on with y ih generalizing x
   cases x
   · exact iff_of_true hy (zero_le _)
     
-  rw [log]
-  split_ifs
+  rw [log]; split_ifs
   · have b_pos : 0 < b := zero_le_one.trans_lt hb
-    rw [succ_eq_add_one, add_le_add_iff_right, ← ih (y / b) (div_lt_self hy hb) (Nat.div_pos h.1 b_pos),
-      le_div_iff_mul_le b_pos, pow_succ']
+    rw [succ_eq_add_one, add_le_add_iff_right, ←
+      ih (y / b) (div_lt_self hy hb) (Nat.div_pos h.1 b_pos), le_div_iff_mul_le b_pos, pow_succ']
     
   · refine' iff_of_false (fun hby => h ⟨le_trans _ hby, hb⟩) (not_succ_le_zero _)
     convert pow_mono hb.le (zero_lt_succ x)
@@ -140,8 +140,8 @@ theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log
     · simp
       
     have : 0 < b := zero_lt_one.trans hb
-    rw [← pow_le_iff_le_log hb, pow_succ', (strict_mono_mul_right_of_pos this).le_iff_le, pow_le_iff_le_log hb hn,
-      Nat.succ_le_succ_iff]
+    rw [← pow_le_iff_le_log hb, pow_succ', (strict_mono_mul_right_of_pos this).le_iff_le,
+      pow_le_iff_le_log hb hn, Nat.succ_le_succ_iff]
     simp [hn, this]
 #align nat.log_mul_base Nat.log_mul_base
 
@@ -176,7 +176,7 @@ theorem log_mono_right {b n m : ℕ} (h : n ≤ m) : log b n ≤ log b m := by
 
 @[mono]
 theorem log_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b n ≤ log c n := by
-  cases n
+  cases n;
   · rw [log_zero_right, log_zero_right]
     
   rw [← pow_le_iff_le_log hc (zero_lt_succ n)]
@@ -210,7 +210,8 @@ theorem log_div_mul_self (b n : ℕ) : log b (n / b * b) = log b n :=
         · apply zero_le
           
         rw [← pow_le_iff_le_log, pow_succ'] at h⊢
-        · rwa [(strict_mono_mul_right_of_pos Nat.succ_pos').le_iff_le, Nat.le_div_iff_mul_le Nat.succ_pos']
+        · rwa [(strict_mono_mul_right_of_pos Nat.succ_pos').le_iff_le,
+            Nat.le_div_iff_mul_le Nat.succ_pos']
           
         all_goals simp [hn, Nat.div_pos hb Nat.succ_pos']
         
@@ -286,8 +287,8 @@ theorem clog_one_right (b : ℕ) : clog b 1 = 0 :=
   clog_of_right_le_one le_rfl _
 #align nat.clog_one_right Nat.clog_one_right
 
-theorem clog_of_two_le {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : clog b n = clog b ((n + b - 1) / b) + 1 := by
-  rw [clog, if_pos (⟨hb, hn⟩ : 1 < b ∧ 1 < n)]
+theorem clog_of_two_le {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) :
+    clog b n = clog b ((n + b - 1) / b) + 1 := by rw [clog, if_pos (⟨hb, hn⟩ : 1 < b ∧ 1 < n)]
 #align nat.clog_of_two_le Nat.clog_of_two_le
 
 theorem clog_pos {b n : ℕ} (hb : 1 < b) (hn : 2 ≤ n) : 0 < clog b n := by
@@ -314,13 +315,14 @@ theorem le_pow_iff_clog_le {b : ℕ} (hb : 1 < b) {x y : ℕ} : x ≤ b ^ y ↔ 
     exact clog_pos hb
     
   have b_pos : 0 < b := zero_lt_two.trans_le hb
-  rw [clog]
-  split_ifs
+  rw [clog]; split_ifs
   · rw [succ_eq_add_one, add_le_add_iff_right, ← ih ((x + b - 1) / b) (add_pred_div_lt hb h.2),
-      Nat.div_le_iff_le_mul_add_pred b_pos, ← pow_succ, add_tsub_assoc_of_le (Nat.succ_le_of_lt b_pos),
-      add_le_add_iff_right]
+      Nat.div_le_iff_le_mul_add_pred b_pos, ← pow_succ,
+      add_tsub_assoc_of_le (Nat.succ_le_of_lt b_pos), add_le_add_iff_right]
     
-  · exact iff_of_true ((not_lt.1 (not_and.1 h hb)).trans <| succ_le_of_lt <| pow_pos b_pos _) (zero_le _)
+  · exact
+      iff_of_true ((not_lt.1 (not_and.1 h hb)).trans <| succ_le_of_lt <| pow_pos b_pos _)
+        (zero_le _)
     
 #align nat.le_pow_iff_clog_le Nat.le_pow_iff_clog_le
 
@@ -334,7 +336,8 @@ theorem clog_pow (b x : ℕ) (hb : 1 < b) : clog b (b ^ x) = x :=
     exact (pow_right_strict_mono hb).le_iff_le
 #align nat.clog_pow Nat.clog_pow
 
-theorem pow_pred_clog_lt_self {b : ℕ} (hb : 1 < b) {x : ℕ} (hx : 1 < x) : b ^ (clog b x).pred < x := by
+theorem pow_pred_clog_lt_self {b : ℕ} (hb : 1 < b) {x : ℕ} (hx : 1 < x) : b ^ (clog b x).pred < x :=
+  by
   rw [← not_le, le_pow_iff_clog_le hb, not_le]
   exact pred_lt (clog_pos hb hx).ne'
 #align nat.pow_pred_clog_lt_self Nat.pow_pred_clog_lt_self
@@ -366,8 +369,8 @@ theorem clog_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ 
 theorem clog_monotone (b : ℕ) : Monotone (clog b) := fun x y => clog_mono_right _
 #align nat.clog_monotone Nat.clog_monotone
 
-theorem clog_antitone_left {n : ℕ} : AntitoneOn (fun b : ℕ => clog b n) (Set.ioi 1) := fun _ hc _ _ hb =>
-  clog_anti_left (Set.mem_Iio.1 hc) hb
+theorem clog_antitone_left {n : ℕ} : AntitoneOn (fun b : ℕ => clog b n) (Set.ioi 1) :=
+  fun _ hc _ _ hb => clog_anti_left (Set.mem_Iio.1 hc) hb
 #align nat.clog_antitone_left Nat.clog_antitone_left
 
 theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n := by
@@ -379,7 +382,9 @@ theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n := by
   · rw [log_zero_right]
     exact zero_le _
     
-  exact (pow_right_strict_mono hb).le_iff_le.1 ((pow_log_le_self hb <| succ_pos _).trans <| le_pow_clog hb _)
+  exact
+    (pow_right_strict_mono hb).le_iff_le.1
+      ((pow_log_le_self hb <| succ_pos _).trans <| le_pow_clog hb _)
 #align nat.log_le_clog Nat.log_le_clog
 
 end Nat

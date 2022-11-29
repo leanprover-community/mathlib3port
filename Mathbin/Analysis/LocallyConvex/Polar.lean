@@ -62,7 +62,8 @@ theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.polar s) : ∀ x ∈ s, ‖B
 #align linear_map.polar_mem LinearMap.polar_mem
 
 @[simp]
-theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by simp only [map_zero, norm_zero, zero_le_one]
+theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by
+  simp only [map_zero, norm_zero, zero_le_one]
 #align linear_map.zero_mem_polar LinearMap.zero_mem_polar
 
 theorem polar_eq_Inter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } := by
@@ -73,7 +74,8 @@ theorem polar_eq_Inter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y
 /-- The map `B.polar : set E → set F` forms an order-reversing Galois connection with
 `B.flip.polar : set F → set E`. We use `order_dual.to_dual` and `order_dual.of_dual` to express
 that `polar` is order-reversing. -/
-theorem polar_gc : GaloisConnection (OrderDual.toDual ∘ B.polar) (B.flip.polar ∘ OrderDual.ofDual) := fun s t =>
+theorem polar_gc :
+    GaloisConnection (OrderDual.toDual ∘ B.polar) (B.flip.polar ∘ OrderDual.ofDual) := fun s t =>
   ⟨fun h _ hx _ hy => h hy _ hx, fun h _ hx _ hy => h hy _ hx⟩
 #align linear_map.polar_gc LinearMap.polar_gc
 
@@ -116,7 +118,8 @@ theorem tripolar_eq_polar (s : Set E) : B.polar (B.flip.polar (B.polar s)) = B.p
 #align linear_map.tripolar_eq_polar LinearMap.tripolar_eq_polar
 
 /-- The polar set is closed in the weak topology induced by `B.flip`. -/
-theorem polarWeakClosed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) := by
+theorem polarWeakClosed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) :=
+  by
   rw [polar_eq_Inter]
   refine' isClosedInter fun x => isClosedInter fun _ => _
   exact isClosedLe (WeakBilin.eval_continuous B.flip x).norm continuous_const
@@ -139,7 +142,8 @@ theorem polar_univ (h : SeparatingRight B) : B.polar Set.univ = {(0 : F)} := by
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc
     ‖B x y‖ = ‖c‖ * ‖B (c⁻¹ • x) y‖ := by
-      rw [B.map_smul, LinearMap.smul_apply, Algebra.id.smul_eq_mul, norm_mul, norm_inv, mul_inv_cancel_left₀ hc.ne']
+      rw [B.map_smul, LinearMap.smul_apply, Algebra.id.smul_eq_mul, norm_mul, norm_inv,
+        mul_inv_cancel_left₀ hc.ne']
     _ ≤ ε * 1 := mul_le_mul hcε.le (hy _ trivial) (norm_nonneg _) hε.le
     _ = ε := mul_one _
     

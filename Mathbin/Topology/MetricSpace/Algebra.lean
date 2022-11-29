@@ -99,7 +99,8 @@ instance Real.hasLipschitzAdd :
     ⟨2, by
       rw [lipschitz_with_iff_dist_le_mul]
       intro p q
-      simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one, Nnreal.coe_bit0]
+      simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one,
+        Nnreal.coe_bit0]
       convert le_trans (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
         
@@ -175,7 +176,8 @@ instance (priority := 100) HasBoundedSmul.has_continuous_smul :
       
     · have : δ ≤ _ := min_le_right _ _
       have : δ ≤ _ := min_le_left _ _
-      have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by rw [inv_mul_lt_iff] <;> nlinarith
+      have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by
+        rw [inv_mul_lt_iff] <;> nlinarith
       nlinarith
       
 #align has_bounded_smul.has_continuous_smul HasBoundedSmul.has_continuous_smul
@@ -194,9 +196,11 @@ instance Nnreal.hasBoundedSmul : HasBoundedSmul ℝ≥0 ℝ≥0 where
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
 instance HasBoundedSmul.op [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
-  dist_smul_pair' := MulOpposite.rec fun x y₁ y₂ => by simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
+  dist_smul_pair' :=
+    MulOpposite.rec fun x y₁ y₂ => by simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
   dist_pair_smul' :=
-    MulOpposite.rec fun x₁ => MulOpposite.rec fun x₂ y => by simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
+    MulOpposite.rec fun x₁ =>
+      MulOpposite.rec fun x₂ y => by simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
 #align has_bounded_smul.op HasBoundedSmul.op
 
 end HasBoundedSmul

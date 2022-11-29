@@ -80,11 +80,13 @@ theorem singleton_unop (x : αᵒᵖ) : ({x} : Set αᵒᵖ).unop = {unop x} :=
 #align set.singleton_unop Set.singleton_unop
 
 @[simp]
-theorem singleton_op_unop (x : α) : ({op x} : Set αᵒᵖ).unop = {x} := by simp only [singleton_unop, Opposite.unop_op]
+theorem singleton_op_unop (x : α) : ({op x} : Set αᵒᵖ).unop = {x} := by
+  simp only [singleton_unop, Opposite.unop_op]
 #align set.singleton_op_unop Set.singleton_op_unop
 
 @[simp]
-theorem singleton_unop_op (x : αᵒᵖ) : ({unop x} : Set α).op = {x} := by simp only [singleton_op, Opposite.op_unop]
+theorem singleton_unop_op (x : αᵒᵖ) : ({unop x} : Set α).op = {x} := by
+  simp only [singleton_op, Opposite.op_unop]
 #align set.singleton_unop_op Set.singleton_unop_op
 
 end Set

@@ -49,7 +49,8 @@ def Prj.abs ⦃α : Typevec n⦄ : (Prj.p i).Obj α → Prj i α
 #align mvqpf.prj.abs Mvqpf.Prj.abs
 
 /-- Representation function of the `qpf` instance -/
-def Prj.repr ⦃α : Typevec n⦄ : Prj i α → (Prj.p i).Obj α := fun x : α i => ⟨⟨⟩, fun j ⟨⟨h⟩⟩ => (h.rec x : α j)⟩
+def Prj.repr ⦃α : Typevec n⦄ : Prj i α → (Prj.p i).Obj α := fun x : α i =>
+  ⟨⟨⟩, fun j ⟨⟨h⟩⟩ => (h.rec x : α j)⟩
 #align mvqpf.prj.repr Mvqpf.Prj.repr
 
 instance Prj.mvqpf : Mvqpf (Prj i) where

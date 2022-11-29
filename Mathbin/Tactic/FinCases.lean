@@ -28,7 +28,8 @@ unsafe def guard_mem_fin (e : expr) : tactic expr := do
   let t ← infer_type e
   let α ← mk_mvar
   to_expr ``(_ ∈ (_ : Finset $(α))) tt ff >>= unify t <|>
-      to_expr ``(_ ∈ (_ : Multiset $(α))) tt ff >>= unify t <|> to_expr ``(_ ∈ (_ : List $(α))) tt ff >>= unify t
+      to_expr ``(_ ∈ (_ : Multiset $(α))) tt ff >>= unify t <|>
+        to_expr ``(_ ∈ (_ : List $(α))) tt ff >>= unify t
   instantiate_mvars α
 #align tactic.guard_mem_fin tactic.guard_mem_fin
 
@@ -64,7 +65,9 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
             _ =>
             try <|
               tactic.interactive.conv (some sn) none <|
-                to_rhs >> conv.interactive.norm_num [simp_arg_type.expr ``(max_def'), simp_arg_type.expr ``(min_def)]
+                to_rhs >>
+                  conv.interactive.norm_num
+                    [simp_arg_type.expr ``(max_def'), simp_arg_type.expr ``(min_def)]
         let s ← get_local sn
         try sorry
         let ng' ← num_goals
@@ -91,7 +94,6 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
       with_list , e
       =>
       focus1
-        <|
         do
           let ty ← try_core <| guard_mem_fin e
             match
@@ -105,7 +107,9 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
                       let
                         i
                           ←
-                          to_expr ` `( Fintype $ ( ty ) ) >>= mk_instance <|> fail "Failed to find `fintype` instance."
+                          to_expr ` `( Fintype $ ( ty ) ) >>= mk_instance
+                            <|>
+                            fail "Failed to find `fintype` instance."
                       let t ← to_expr ` `( $ ( e ) ∈ @ Fintype.elems $ ( ty ) $ ( i ) )
                       let v ← to_expr ` `( @ Fintype.complete $ ( ty ) $ ( i ) $ ( e ) )
                       let h ← assertv ( nm `this ) t v
@@ -120,7 +124,12 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
                           match
                             with_list
                             with
-                            | some e => do let e ← to_expr ` `( ( $ ( e ) : List $ ( ty ) ) ) expr_list_to_list_expr e
+                            |
+                                some e
+                                =>
+                                do
+                                  let e ← to_expr ` `( ( $ ( e ) : List $ ( ty ) ) )
+                                    expr_list_to_list_expr e
                               | none => return [ ]
                       fin_cases_at_aux with_list e
 #align tactic.fin_cases_at tactic.fin_cases_at
@@ -177,7 +186,8 @@ end
 produces three goals with hypotheses
 `ha : a = 0`, `ha : a = 1`, and `ha : a = 2`.
 -/
-unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "using" *> ident)? → tactic Unit
+unsafe def fin_cases :
+    parse hyp → parse (tk "with" *> texpr)? → parse (tk "using" *> ident)? → tactic Unit
   | none, none, nm => do
     let ctx ← local_context
     ctx (fin_cases_at nm none) <|>
@@ -193,8 +203,8 @@ unsafe def fin_cases : parse hyp → parse (tk "with" *> texpr)? → parse (tk "
 end Interactive
 
 add_tactic_doc
-  { Name := "fin_cases", category := DocCategory.tactic, declNames := [`tactic.interactive.fin_cases],
-    tags := ["case bashing"] }
+  { Name := "fin_cases", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.fin_cases], tags := ["case bashing"] }
 
 end Tactic
 

@@ -32,7 +32,8 @@ section
 
 variable [Semiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
-/-- Every polynomial with coefficients in a topological semiring gives a (bundled) continuous function.
+/--
+Every polynomial with coefficients in a topological semiring gives a (bundled) continuous function.
 -/
 @[simps]
 def toContinuousMap (p : R[X]) : C(R, R) :=
@@ -54,16 +55,18 @@ end
 
 section
 
-variable {α : Type _} [TopologicalSpace α] [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
+variable {α : Type _} [TopologicalSpace α] [CommSemiring R] [TopologicalSpace R]
+  [TopologicalSemiring R]
 
 @[simp]
-theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) : ((Polynomial.aeval f) g) x = g.eval (f x) := by
+theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) :
+    ((Polynomial.aeval f) g) x = g.eval (f x) := by
   apply Polynomial.induction_on' g
   · intro p q hp hq
     simp [hp, hq]
     
   · intro n a
-    simp [Pi.pow_apply, ContinuousMap.coe_pow]
+    simp [Pi.pow_apply]
     
 #align polynomial.aeval_continuous_map_apply Polynomial.aeval_continuous_map_apply
 
@@ -133,7 +136,8 @@ section
 
 variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
-/-- The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological semiring
+/--
+The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological semiring
 `R`.
 -/
 def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
@@ -151,11 +155,11 @@ theorem polynomial_functions_coe (X : Set R) :
 -- if `f : R → R` is an affine equivalence, then pulling back along `f`
 -- induces a normed algebra isomorphism between `polynomial_functions X` and
 -- `polynomial_functions (f ⁻¹' X)`, intertwining the pullback along `f` of `C(R, R)` to itself.
-theorem polynomial_functions_separates_points (X : Set R) : (polynomialFunctions X).SeparatesPoints := fun x y h => by
+theorem polynomial_functions_separates_points (X : Set R) :
+    (polynomialFunctions X).SeparatesPoints := fun x y h => by
   -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
-  dsimp
-  simp only [Polynomial.eval_X]
+  dsimp; simp only [Polynomial.eval_X]
   exact fun h' => h (Subtype.ext h')
 #align polynomial_functions_separates_points polynomial_functions_separates_points
 
@@ -179,11 +183,11 @@ theorem polynomialFunctions.comap_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h 
     · simp
       
     · ext x
-      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ring_hom, Polynomial.eval_X,
-        Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul, smul_eq_mul, Polynomial.eval_mul,
-        Polynomial.eval_add, Polynomial.coe_aeval_eq_eval, Polynomial.eval_comp,
-        Polynomial.to_continuous_map_on_alg_hom_apply, Polynomial.to_continuous_map_on_apply,
-        Polynomial.to_continuous_map_apply]
+      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ring_hom,
+        Polynomial.eval_X, Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul,
+        smul_eq_mul, Polynomial.eval_mul, Polynomial.eval_add, Polynomial.coe_aeval_eq_eval,
+        Polynomial.eval_comp, Polynomial.to_continuous_map_on_alg_hom_apply,
+        Polynomial.to_continuous_map_on_apply, Polynomial.to_continuous_map_apply]
       convert w ⟨_, _⟩ <;> clear w
       · -- why does `comm_ring.add` appear here!?
         change x = (iccHomeoI a b h).symm ⟨_ + _, _⟩

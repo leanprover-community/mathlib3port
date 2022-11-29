@@ -58,13 +58,14 @@ end CharP
 
 section Homomorphism
 
-theorem map_range_eq_map {R S : Type _} [CommRing R] [CommRing S] (p : MvPolynomial σ R) (f : R →+* S) :
-    Finsupp.mapRange f f.map_zero p = map f p := by
+theorem map_range_eq_map {R S : Type _} [CommRing R] [CommRing S] (p : MvPolynomial σ R)
+    (f : R →+* S) : Finsupp.mapRange f f.map_zero p = map f p := by
   -- `finsupp.map_range_finset_sum` expects `f : R →+ S`
   change Finsupp.mapRange (f : R →+ S) (f : R →+ S).map_zero p = map f p
   rw [p.as_sum, Finsupp.map_range_finset_sum, (map f).map_sum]
   refine' Finset.sum_congr rfl fun n _ => _
-  rw [map_monomial, ← single_eq_monomial, Finsupp.map_range_single, single_eq_monomial, f.coe_add_monoid_hom]
+  rw [map_monomial, ← single_eq_monomial, Finsupp.map_range_single, single_eq_monomial,
+    f.coe_add_monoid_hom]
 #align mv_polynomial.map_range_eq_map MvPolynomial.map_range_eq_map
 
 end Homomorphism
@@ -84,7 +85,8 @@ def restrictDegree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
 
 variable {R}
 
-theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrictTotalDegree σ R m ↔ p.totalDegree ≤ m := by
+theorem mem_restrict_total_degree (p : MvPolynomial σ R) :
+    p ∈ restrictTotalDegree σ R m ↔ p.totalDegree ≤ m := by
   rw [total_degree, Finset.sup_le_iff]
   rfl
 #align mv_polynomial.mem_restrict_total_degree MvPolynomial.mem_restrict_total_degree
@@ -97,7 +99,8 @@ theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
 
 theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
     p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n := by
-  simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
+  simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_to_multiset,
+    Finset.sup_le_iff]
   exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 #align mv_polynomial.mem_restrict_degree_iff_sup MvPolynomial.mem_restrict_degree_iff_sup
 
@@ -109,7 +112,8 @@ def basisMonomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
 #align mv_polynomial.basis_monomials MvPolynomial.basisMonomials
 
 @[simp]
-theorem coe_basis_monomials : (basisMonomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
+theorem coe_basis_monomials :
+    (basisMonomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
   rfl
 #align mv_polynomial.coe_basis_monomials MvPolynomial.coe_basis_monomials
 

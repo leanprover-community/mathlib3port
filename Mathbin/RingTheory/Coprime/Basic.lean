@@ -47,14 +47,14 @@ theorem is_coprime_comm : IsCoprime x y ↔ IsCoprime y x :=
 #align is_coprime_comm is_coprime_comm
 
 theorem is_coprime_self : IsCoprime x x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, h⟩ => is_unit_of_mul_eq_one x (a + b) <| by rwa [mul_comm, add_mul], fun h =>
-    let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 h
+  ⟨fun ⟨a, b, h⟩ => isUnit_of_mul_eq_one x (a + b) <| by rwa [mul_comm, add_mul], fun h =>
+    let ⟨b, hb⟩ := isUnit_iff_exists_inv'.1 h
     ⟨b, 0, by rwa [zero_mul, add_zero]⟩⟩
 #align is_coprime_self is_coprime_self
 
 theorem is_coprime_zero_left : IsCoprime 0 x ↔ IsUnit x :=
-  ⟨fun ⟨a, b, H⟩ => is_unit_of_mul_eq_one x b <| by rwa [mul_zero, zero_add, mul_comm] at H, fun H =>
-    let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 H
+  ⟨fun ⟨a, b, H⟩ => isUnit_of_mul_eq_one x b <| by rwa [mul_zero, zero_add, mul_comm] at H, fun H =>
+    let ⟨b, hb⟩ := isUnit_iff_exists_inv'.1 H
     ⟨1, b, by rwa [one_mul, zero_add]⟩⟩
 #align is_coprime_zero_left is_coprime_zero_left
 
@@ -97,7 +97,9 @@ theorem IsCoprime.mul_left (H1 : IsCoprime x z) (H2 : IsCoprime y z) : IsCoprime
   let ⟨c, d, h2⟩ := H2
   ⟨a * c, a * x * d + b * c * y + b * d * z,
     calc
-      a * c * (x * y) + (a * x * d + b * c * y + b * d * z) * z = (a * x + b * z) * (c * y + d * z) := by ring
+      a * c * (x * y) + (a * x * d + b * c * y + b * d * z) * z =
+          (a * x + b * z) * (c * y + d * z) :=
+        by ring
       _ = 1 := by rw [h1, h2, mul_one]
       ⟩
 #align is_coprime.mul_left IsCoprime.mul_left
@@ -161,11 +163,13 @@ theorem IsCoprime.is_unit_of_dvd (H : IsCoprime x y) (d : x ∣ y) : IsUnit x :=
   is_coprime_self.1 <| IsCoprime.of_mul_right_left <| show IsCoprime x (x * k) from hk ▸ H
 #align is_coprime.is_unit_of_dvd IsCoprime.is_unit_of_dvd
 
-theorem IsCoprime.is_unit_of_dvd' {a b x : R} (h : IsCoprime a b) (ha : x ∣ a) (hb : x ∣ b) : IsUnit x :=
+theorem IsCoprime.is_unit_of_dvd' {a b x : R} (h : IsCoprime a b) (ha : x ∣ a) (hb : x ∣ b) :
+    IsUnit x :=
   (h.of_coprime_of_dvd_left ha).is_unit_of_dvd hb
 #align is_coprime.is_unit_of_dvd' IsCoprime.is_unit_of_dvd'
 
-theorem IsCoprime.map (H : IsCoprime x y) {S : Type v} [CommSemiring S] (f : R →+* S) : IsCoprime (f x) (f y) :=
+theorem IsCoprime.map (H : IsCoprime x y) {S : Type v} [CommSemiring S] (f : R →+* S) :
+    IsCoprime (f x) (f y) :=
   let ⟨a, b, h⟩ := H
   ⟨f a, f b, by rw [← f.map_mul, ← f.map_mul, ← f.map_add, h, f.map_one]⟩
 #align is_coprime.map IsCoprime.map
@@ -175,7 +179,8 @@ variable {x y z}
 theorem IsCoprime.of_add_mul_left_left (h : IsCoprime (x + y * z) y) : IsCoprime x y :=
   let ⟨a, b, H⟩ := h
   ⟨a, a * z + b, by
-    simpa only [add_mul, mul_add, add_assoc, add_comm, add_left_comm, mul_assoc, mul_comm, mul_left_comm] using H⟩
+    simpa only [add_mul, mul_add, add_assoc, add_comm, add_left_comm, mul_assoc, mul_comm,
+      mul_left_comm] using H⟩
 #align is_coprime.of_add_mul_left_left IsCoprime.of_add_mul_left_left
 
 theorem IsCoprime.of_add_mul_right_left (h : IsCoprime (x + z * y) y) : IsCoprime x y := by
@@ -217,8 +222,8 @@ end CommSemiring
 
 section ScalarTower
 
-variable {R G : Type _} [CommSemiring R] [Group G] [MulAction G R] [SmulCommClass G R R] [IsScalarTower G R R] (x : G)
-  (y z : R)
+variable {R G : Type _} [CommSemiring R] [Group G] [MulAction G R] [SmulCommClass G R R]
+  [IsScalarTower G R R] (x : G) (y z : R)
 
 theorem is_coprime_group_smul_left : IsCoprime (x • y) z ↔ IsCoprime y z :=
   ⟨fun ⟨a, b, h⟩ => ⟨x • a, b, by rwa [smul_mul_assoc, ← mul_smul_comm]⟩, fun ⟨a, b, h⟩ =>
@@ -372,7 +377,8 @@ theorem neg_neg_iff (x y : R) : IsCoprime (-x) (-y) ↔ IsCoprime x y :=
 
 end CommRing
 
-theorem sq_add_sq_ne_zero {R : Type _} [LinearOrderedCommRing R] {a b : R} (h : IsCoprime a b) : a ^ 2 + b ^ 2 ≠ 0 := by
+theorem sq_add_sq_ne_zero {R : Type _} [LinearOrderedCommRing R] {a b : R} (h : IsCoprime a b) :
+    a ^ 2 + b ^ 2 ≠ 0 := by
   intro h'
   obtain ⟨ha, hb⟩ := (add_eq_zero_iff' (sq_nonneg a) (sq_nonneg b)).mp h'
   obtain rfl := pow_eq_zero ha

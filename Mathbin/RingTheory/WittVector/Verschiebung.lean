@@ -39,8 +39,9 @@ def verschiebungFun (x : 𝕎 R) : 𝕎 R :=
   (mk p) fun n => if n = 0 then 0 else x.coeff (n - 1)
 #align witt_vector.verschiebung_fun WittVector.verschiebungFun
 
-theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) :=
-  by rw [verschiebung_fun, coeff_mk]
+theorem verschiebung_fun_coeff (x : 𝕎 R) (n : ℕ) :
+    (verschiebungFun x).coeff n = if n = 0 then 0 else x.coeff (n - 1) := by
+  rw [verschiebung_fun, coeff_mk]
 #align witt_vector.verschiebung_fun_coeff WittVector.verschiebung_fun_coeff
 
 theorem verschiebung_fun_coeff_zero (x : 𝕎 R) : (verschiebungFun x).coeff 0 = 0 := by
@@ -48,26 +49,30 @@ theorem verschiebung_fun_coeff_zero (x : 𝕎 R) : (verschiebungFun x).coeff 0 =
 #align witt_vector.verschiebung_fun_coeff_zero WittVector.verschiebung_fun_coeff_zero
 
 @[simp]
-theorem verschiebung_fun_coeff_succ (x : 𝕎 R) (n : ℕ) : (verschiebungFun x).coeff n.succ = x.coeff n :=
+theorem verschiebung_fun_coeff_succ (x : 𝕎 R) (n : ℕ) :
+    (verschiebungFun x).coeff n.succ = x.coeff n :=
   rfl
 #align witt_vector.verschiebung_fun_coeff_succ WittVector.verschiebung_fun_coeff_succ
 
 include hp
 
 @[ghost_simps]
-theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) : ghostComponent 0 (verschiebungFun x) = 0 := by
-  rw [ghost_component_apply, aeval_witt_polynomial, Finset.range_one, Finset.sum_singleton, verschiebung_fun_coeff_zero,
-    pow_zero, pow_zero, pow_one, one_mul]
-#align witt_vector.ghost_component_zero_verschiebung_fun WittVector.ghost_component_zero_verschiebung_fun
+theorem ghost_component_zero_verschiebung_fun (x : 𝕎 R) :
+    ghostComponent 0 (verschiebungFun x) = 0 := by
+  rw [ghost_component_apply, aeval_witt_polynomial, Finset.range_one, Finset.sum_singleton,
+    verschiebung_fun_coeff_zero, pow_zero, pow_zero, pow_one, one_mul]
+#align
+  witt_vector.ghost_component_zero_verschiebung_fun WittVector.ghost_component_zero_verschiebung_fun
 
 @[ghost_simps]
 theorem ghost_component_verschiebung_fun (x : 𝕎 R) (n : ℕ) :
     ghostComponent (n + 1) (verschiebungFun x) = p * ghostComponent n x := by
   simp only [ghost_component_apply, aeval_witt_polynomial]
-  rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _), mul_zero, add_zero,
-    Finset.mul_sum, Finset.sum_congr rfl]
+  rw [Finset.sum_range_succ', verschiebung_fun_coeff, if_pos rfl, zero_pow (pow_pos hp.1.Pos _),
+    mul_zero, add_zero, Finset.mul_sum, Finset.sum_congr rfl]
   rintro i -
-  simp only [pow_succ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i), Nat.succ_sub_succ, tsub_zero]
+  simp only [pow_succ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i),
+    Nat.succ_sub_succ, tsub_zero]
 #align witt_vector.ghost_component_verschiebung_fun WittVector.ghost_component_verschiebung_fun
 
 omit hp
@@ -84,13 +89,13 @@ theorem verschiebung_poly_zero : verschiebungPoly 0 = 0 :=
   rfl
 #align witt_vector.verschiebung_poly_zero WittVector.verschiebung_poly_zero
 
-theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) : aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n :=
-  by
+theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) :
+    aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n := by
   cases n
   · simp only [verschiebung_poly, verschiebung_fun_coeff_zero, if_pos rfl, AlgHom.map_zero]
     
-  · rw [verschiebung_poly, verschiebung_fun_coeff_succ, if_neg n.succ_ne_zero, aeval_X, Nat.succ_eq_add_one,
-      add_tsub_cancel_right]
+  · rw [verschiebung_poly, verschiebung_fun_coeff_succ, if_neg n.succ_ne_zero, aeval_X,
+      Nat.succ_eq_add_one, add_tsub_cancel_right]
     
 #align witt_vector.aeval_verschiebung_poly' WittVector.aeval_verschiebung_poly'
 
@@ -108,14 +113,17 @@ variable {p}
 
 include hp
 
-/-- `verschiebung x` shifts the coefficients of `x` up by one, by inserting 0 as the 0th coefficient.
+/--
+`verschiebung x` shifts the coefficients of `x` up by one, by inserting 0 as the 0th coefficient.
 `x.coeff i` then becomes `(verchiebung x).coeff (i + 1)`.
 
 This is a additive monoid hom with underlying function `verschiebung_fun`.
 -/
 noncomputable def verschiebung : 𝕎 R →+ 𝕎 R where
   toFun := verschiebungFun
-  map_zero' := by ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;> simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
+  map_zero' := by
+    ext ⟨⟩ <;> rw [verschiebung_fun_coeff] <;>
+      simp only [if_true, eq_self_iff_true, zero_coeff, if_t_t]
   map_add' := by
     ghost_calc _ _
     rintro ⟨⟩ <;> ghost_simp
@@ -133,7 +141,8 @@ include hp
 
 /-- verschiebung is a natural transformation -/
 @[simp]
-theorem map_verschiebung (f : R →+* S) (x : 𝕎 R) : map f (verschiebung x) = verschiebung (map f x) := by
+theorem map_verschiebung (f : R →+* S) (x : 𝕎 R) :
+    map f (verschiebung x) = verschiebung (map f x) := by
   ext ⟨-, -⟩
   exact f.map_zero
   rfl
@@ -165,13 +174,16 @@ theorem verschiebung_coeff_succ (x : 𝕎 R) (n : ℕ) : (verschiebung x).coeff 
   rfl
 #align witt_vector.verschiebung_coeff_succ WittVector.verschiebung_coeff_succ
 
-theorem aeval_verschiebung_poly (x : 𝕎 R) (n : ℕ) : aeval x.coeff (verschiebungPoly n) = (verschiebung x).coeff n :=
+theorem aeval_verschiebung_poly (x : 𝕎 R) (n : ℕ) :
+    aeval x.coeff (verschiebungPoly n) = (verschiebung x).coeff n :=
   aeval_verschiebung_poly' x n
 #align witt_vector.aeval_verschiebung_poly WittVector.aeval_verschiebung_poly
 
 @[simp]
 theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
-    bind₁ verschiebungPoly (wittPolynomial p ℤ n) = if n = 0 then 0 else p * wittPolynomial p ℤ (n - 1) := by
+    bind₁ verschiebungPoly (wittPolynomial p ℤ n) =
+      if n = 0 then 0 else p * wittPolynomial p ℤ (n - 1) :=
+  by
   apply MvPolynomial.funext
   intro x
   split_ifs with hn
@@ -192,7 +204,8 @@ theorem bind₁_verschiebung_poly_witt_polynomial (n : ℕ) :
       rfl
       
     
-#align witt_vector.bind₁_verschiebung_poly_witt_polynomial WittVector.bind₁_verschiebung_poly_witt_polynomial
+#align
+  witt_vector.bind₁_verschiebung_poly_witt_polynomial WittVector.bind₁_verschiebung_poly_witt_polynomial
 
 end WittVector
 

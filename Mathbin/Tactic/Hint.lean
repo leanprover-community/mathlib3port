@@ -19,8 +19,8 @@ unsafe def hint_tactic_attribute : user_attribute where
 #align tactic.hint.hint_tactic_attribute tactic.hint.hint_tactic_attribute
 
 add_tactic_doc
-  { Name := "hint_tactic", category := DocCategory.attr, declNames := [`tactic.hint.hint_tactic_attribute],
-    tags := ["rewrite", "search"] }
+  { Name := "hint_tactic", category := DocCategory.attr,
+    declNames := [`tactic.hint.hint_tactic_attribute], tags := ["rewrite", "search"] }
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
@@ -38,7 +38,7 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
   let s ← eval_expr String e
   let t := "`[" ++ s ++ "]"
   let (t, _) ← with_input parser.pexpr t
-  of_tactic <| do
+  of_tactic do
       let h := .str s "_hint"
       let t ←
         to_expr
@@ -49,8 +49,8 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
 #align tactic.hint.add_hint_tactic tactic.hint.add_hint_tactic
 
 add_tactic_doc
-  { Name := "add_hint_tactic", category := DocCategory.cmd, declNames := [`tactic.hint.add_hint_tactic],
-    tags := ["search"] }
+  { Name := "add_hint_tactic", category := DocCategory.cmd,
+    declNames := [`tactic.hint.add_hint_tactic], tags := ["search"] }
 
 add_hint_tactic rfl
 
@@ -106,7 +106,8 @@ unsafe def hint : tactic Unit := do
           hints fun p => tactic.trace f! "Try this: {p.1}"
 #align tactic.interactive.hint tactic.interactive.hint
 
-/-- `hint` lists possible tactics which will make progress (that is, not fail) against the current goal.
+/--
+`hint` lists possible tactics which will make progress (that is, not fail) against the current goal.
 
 ```lean
 example {P Q : Prop} (p : P) (h : P → Q) : Q :=

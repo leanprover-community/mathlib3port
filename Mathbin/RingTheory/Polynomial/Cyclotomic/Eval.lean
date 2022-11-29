@@ -26,33 +26,34 @@ open Finset Nat
 open BigOperators
 
 @[simp]
-theorem eval_one_cyclotomic_prime {R : Type _} [CommRing R] {p : ℕ} [hn : Fact p.Prime] : eval 1 (cyclotomic p R) = p :=
-  by
-  simp only [cyclotomic_prime, eval_X, one_pow, Finset.sum_const, eval_pow, eval_finset_sum, Finset.card_range,
-    smul_one_eq_coe]
+theorem eval_one_cyclotomic_prime {R : Type _} [CommRing R] {p : ℕ} [hn : Fact p.Prime] :
+    eval 1 (cyclotomic p R) = p := by
+  simp only [cyclotomic_prime, eval_X, one_pow, Finset.sum_const, eval_pow, eval_finset_sum,
+    Finset.card_range, smul_one_eq_coe]
 #align polynomial.eval_one_cyclotomic_prime Polynomial.eval_one_cyclotomic_prime
 
 @[simp]
-theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRing R] [Semiring S] (f : R →+* S) {p : ℕ} [Fact p.Prime] :
-    eval₂ f 1 (cyclotomic p R) = p := by simp
+theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRing R] [Semiring S] (f : R →+* S) {p : ℕ}
+    [Fact p.Prime] : eval₂ f 1 (cyclotomic p R) = p := by simp
 #align polynomial.eval₂_one_cyclotomic_prime Polynomial.eval₂_one_cyclotomic_prime
 
 @[simp]
-theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRing R] {p : ℕ} (k : ℕ) [hn : Fact p.Prime] :
-    eval 1 (cyclotomic (p ^ (k + 1)) R) = p := by
-  simp only [cyclotomic_prime_pow_eq_geom_sum hn.out, eval_X, one_pow, Finset.sum_const, eval_pow, eval_finset_sum,
-    Finset.card_range, smul_one_eq_coe]
+theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRing R] {p : ℕ} (k : ℕ)
+    [hn : Fact p.Prime] : eval 1 (cyclotomic (p ^ (k + 1)) R) = p := by
+  simp only [cyclotomic_prime_pow_eq_geom_sum hn.out, eval_X, one_pow, Finset.sum_const, eval_pow,
+    eval_finset_sum, Finset.card_range, smul_one_eq_coe]
 #align polynomial.eval_one_cyclotomic_prime_pow Polynomial.eval_one_cyclotomic_prime_pow
 
 @[simp]
-theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRing R] [Semiring S] (f : R →+* S) {p : ℕ} (k : ℕ)
-    [Fact p.Prime] : eval₂ f 1 (cyclotomic (p ^ (k + 1)) R) = p := by simp
+theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRing R] [Semiring S] (f : R →+* S)
+    {p : ℕ} (k : ℕ) [Fact p.Prime] : eval₂ f 1 (cyclotomic (p ^ (k + 1)) R) = p := by simp
 #align polynomial.eval₂_one_cyclotomic_prime_pow Polynomial.eval₂_one_cyclotomic_prime_pow
 
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
   haveI := NeZero.of_gt hn
-  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_int_cast_map, Int.coe_cast_ring_hom, Int.cast_pos]
+  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_int_cast_map,
+    Int.coe_cast_ring_hom, Int.cast_pos]
   suffices 0 < eval (↑(-1 : ℤ)) (cyclotomic n ℝ) by
     rw [← map_cyclotomic_int n ℝ, eval_int_cast_map, Int.coe_cast_ring_hom] at this
     exact_mod_cast this
@@ -67,15 +68,16 @@ private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrdered
   exact hn.not_le LinearOrderedRing.order_of_le_two
 #align polynomial.cyclotomic_neg_one_pos polynomial.cyclotomic_neg_one_pos
 
-theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x : R) : 0 < eval x (cyclotomic n R) := by
+theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x : R) :
+    0 < eval x (cyclotomic n R) := by
   induction' n using Nat.strong_induction_on with n ih
   have hn' : 0 < n := pos_of_gt hn
   have hn'' : 1 < n := one_lt_two.trans hn
   dsimp at ih
   have := prod_cyclotomic_eq_geom_sum hn' R
   apply_fun eval x  at this
-  rw [divisors_eq_proper_divisors_insert_self_of_pos hn', Finset.erase_insert_of_ne hn''.ne', Finset.prod_insert,
-    eval_mul, eval_geom_sum] at this
+  rw [divisors_eq_proper_divisors_insert_self_of_pos hn', Finset.erase_insert_of_ne hn''.ne',
+    Finset.prod_insert, eval_mul, eval_geom_sum] at this
   swap
   · simp only [proper_divisors.not_self_mem, mem_erase, and_false_iff, not_false_iff]
     
@@ -129,8 +131,9 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
 theorem cyclotomic_pos_and_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] (x : R) :
     (1 < x → 0 < eval x (cyclotomic n R)) ∧ (1 ≤ x → 0 ≤ eval x (cyclotomic n R)) := by
   rcases n with (_ | _ | _ | n) <;>
-    simp only [cyclotomic_zero, cyclotomic_one, cyclotomic_two, succ_eq_add_one, eval_X, eval_one, eval_add, eval_sub,
-      sub_nonneg, sub_pos, zero_lt_one, zero_le_one, imp_true_iff, imp_self, and_self_iff]
+    simp only [cyclotomic_zero, cyclotomic_one, cyclotomic_two, succ_eq_add_one, eval_X, eval_one,
+      eval_add, eval_sub, sub_nonneg, sub_pos, zero_lt_one, zero_le_one, imp_true_iff, imp_self,
+      and_self_iff]
   · constructor <;> intro <;> linarith
     
   · have : 2 < n + 3 := by decide
@@ -141,17 +144,19 @@ theorem cyclotomic_pos_and_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] (x : R
 /-- Cyclotomic polynomials are always positive on inputs larger than one.
 Similar to `cyclotomic_pos` but with the condition on the input rather than index of the
 cyclotomic polynomial. -/
-theorem cyclotomic_pos' (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 < x) : 0 < eval x (cyclotomic n R) :=
+theorem cyclotomic_pos' (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 < x) :
+    0 < eval x (cyclotomic n R) :=
   (cyclotomic_pos_and_nonneg n x).1 hx
 #align polynomial.cyclotomic_pos' Polynomial.cyclotomic_pos'
 
 /-- Cyclotomic polynomials are always nonnegative on inputs one or more. -/
-theorem cyclotomic_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 ≤ x) : 0 ≤ eval x (cyclotomic n R) :=
+theorem cyclotomic_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 ≤ x) :
+    0 ≤ eval x (cyclotomic n R) :=
   (cyclotomic_pos_and_nonneg n x).2 hx
 #align polynomial.cyclotomic_nonneg Polynomial.cyclotomic_nonneg
 
-theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ} (h : ∀ {p : ℕ}, p.Prime → ∀ k : ℕ, p ^ k ≠ n) :
-    eval 1 (cyclotomic n R) = 1 := by
+theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
+    (h : ∀ {p : ℕ}, p.Prime → ∀ k : ℕ, p ^ k ≠ n) : eval 1 (cyclotomic n R) = 1 := by
   rcases n.eq_zero_or_pos with (rfl | hn')
   · simp
     
@@ -181,8 +186,8 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ} (h : �
   rw [← Finset.prod_sdiff <| show {n} ⊆ _ from _] at this
   any_goals infer_instance
   swap
-  · simp only [singleton_subset_iff, mem_sdiff, mem_erase, Ne.def, mem_divisors, dvd_refl, true_and_iff, mem_image,
-      mem_range, exists_prop, not_exists, not_and]
+  · simp only [singleton_subset_iff, mem_sdiff, mem_erase, Ne.def, mem_divisors, dvd_refl,
+      true_and_iff, mem_image, mem_range, exists_prop, not_exists, not_and]
     exact ⟨⟨hn.ne', hn'.ne'⟩, fun t _ => h hp _⟩
     
   rw [← Int.natAbs_ofNat p, Int.nat_abs_dvd_iff_dvd] at hpe
@@ -231,30 +236,32 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
       Units.mk0 ‖(cyclotomic n ℂ).eval q‖₊ (by simp [this])
     by
     simp only [← Units.coe_lt_coe, Units.coe_pow, Units.coe_mk0, ← Nnreal.coe_lt_coe, hq'.le,
-      Real.to_nnreal_lt_to_nnreal_iff_of_nonneg, coe_nnnorm, Complex.norm_eq_abs, Nnreal.coe_pow, Real.coe_to_nnreal',
-      max_eq_left, sub_nonneg] at this
+      Real.to_nnreal_lt_to_nnreal_iff_of_nonneg, coe_nnnorm, Complex.norm_eq_abs, Nnreal.coe_pow,
+      Real.coe_to_nnreal', max_eq_left, sub_nonneg] at this
     convert this
     erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ), eq_comm]
-    simp only [cyclotomic_nonneg n hq'.le, Complex.coe_algebra_map, Complex.abs_of_real, abs_eq_self]
-  simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub, nnnorm_prod,
-    Units.mk0_prod]
+    simp only [cyclotomic_nonneg n hq'.le, Complex.coe_algebra_map, Complex.abs_of_real,
+      abs_eq_self]
+  simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub,
+    nnnorm_prod, Units.mk0_prod]
   convert Finset.prod_lt_prod' _ _
   swap
   · exact fun _ => Units.mk0 (Real.toNnreal (q - 1)) (by simp [hq'])
     
   · simp only [Complex.card_primitive_roots, prod_const, card_attach]
     
-  · simp only [Subtype.coe_mk, Finset.mem_attach, forall_true_left, Subtype.forall, ← Units.coe_le_coe, ←
-      Nnreal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.coe_mk0, Real.coe_to_nnreal', coe_nnnorm,
-      Complex.norm_eq_abs, max_le_iff, tsub_le_iff_right]
+  · simp only [Subtype.coe_mk, Finset.mem_attach, forall_true_left, Subtype.forall, ←
+      Units.coe_le_coe, ← Nnreal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.coe_mk0,
+      Real.coe_to_nnreal', coe_nnnorm, Complex.norm_eq_abs, max_le_iff, tsub_le_iff_right]
     intro x hx
     simpa only [and_true_iff, tsub_le_iff_right] using hfor x hx
     
-  · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ← Nnreal.coe_lt_coe, ←
-      Units.coe_lt_coe, Units.coe_mk0 _, coe_nnnorm]
+  · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ←
+      Nnreal.coe_lt_coe, ← Units.coe_lt_coe, Units.coe_mk0 _, coe_nnnorm]
     simpa only [hq'.le, Real.coe_to_nnreal', max_eq_left, sub_nonneg] using hex
     
-#align polynomial.sub_one_pow_totient_lt_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_cyclotomic_eval
+#align
+  polynomial.sub_one_pow_totient_lt_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_cyclotomic_eval
 
 theorem cyclotomic_eval_lt_sub_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ n) (hq' : 1 < q) :
     (cyclotomic n ℝ).eval q < (q + 1) ^ totient n := by
@@ -301,35 +308,36 @@ theorem cyclotomic_eval_lt_sub_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
       Units.mk0 (Real.toNnreal (q + 1)) (by simp <;> linarith) ^ totient n
     by
     simp only [← Units.coe_lt_coe, Units.coe_pow, Units.coe_mk0, ← Nnreal.coe_lt_coe, hq'.le,
-      Real.to_nnreal_lt_to_nnreal_iff_of_nonneg, coe_nnnorm, Complex.norm_eq_abs, Nnreal.coe_pow, Real.coe_to_nnreal',
-      max_eq_left, sub_nonneg] at this
+      Real.to_nnreal_lt_to_nnreal_iff_of_nonneg, coe_nnnorm, Complex.norm_eq_abs, Nnreal.coe_pow,
+      Real.coe_to_nnreal', max_eq_left, sub_nonneg] at this
     convert this
     · erw [cyclotomic.eval_apply q n (algebraMap ℝ ℂ), eq_comm]
       simp [cyclotomic_nonneg n hq'.le]
       
     rw [eq_comm, max_eq_left_iff]
     linarith
-  simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub, nnnorm_prod,
-    Units.mk0_prod]
+  simp only [cyclotomic_eq_prod_X_sub_primitive_roots hζ, eval_prod, eval_C, eval_X, eval_sub,
+    nnnorm_prod, Units.mk0_prod]
   convert Finset.prod_lt_prod' _ _
   swap
   · exact fun _ => Units.mk0 (Real.toNnreal (q + 1)) (by simp <;> linarith only [hq'])
     
   · simp [Complex.card_primitive_roots]
     
-  · simp only [Subtype.coe_mk, Finset.mem_attach, forall_true_left, Subtype.forall, ← Units.coe_le_coe, ←
-      Nnreal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.coe_mk0, Real.coe_to_nnreal, coe_nnnorm, Complex.norm_eq_abs,
-      max_le_iff]
+  · simp only [Subtype.coe_mk, Finset.mem_attach, forall_true_left, Subtype.forall, ←
+      Units.coe_le_coe, ← Nnreal.coe_le_coe, complex.abs.nonneg, hq'.le, Units.coe_mk0,
+      Real.coe_to_nnreal, coe_nnnorm, Complex.norm_eq_abs, max_le_iff]
     intro x hx
     have : Complex.abs _ ≤ _ := hfor x hx
     simp [this]
     
-  · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ← Nnreal.coe_lt_coe, ←
-      Units.coe_lt_coe, Units.coe_mk0 _, coe_nnnorm]
+  · simp only [Subtype.coe_mk, Finset.mem_attach, exists_true_left, Subtype.exists, ←
+      Nnreal.coe_lt_coe, ← Units.coe_lt_coe, Units.coe_mk0 _, coe_nnnorm]
     obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
     exact ⟨ζ, hζ, by simp [hhζ]⟩
     
-#align polynomial.cyclotomic_eval_lt_sub_one_pow_totient Polynomial.cyclotomic_eval_lt_sub_one_pow_totient
+#align
+  polynomial.cyclotomic_eval_lt_sub_one_pow_totient Polynomial.cyclotomic_eval_lt_sub_one_pow_totient
 
 theorem sub_one_lt_nat_abs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq' : q ≠ 1) :
     q - 1 < ((cyclotomic n ℤ).eval ↑q).natAbs := by

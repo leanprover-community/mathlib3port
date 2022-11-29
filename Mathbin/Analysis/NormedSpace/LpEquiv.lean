@@ -95,7 +95,8 @@ theorem coe_add_equiv_lp_pi_Lp [Fact (1 ≤ p)] (f : lp E p) : AddEquiv.lpPiLp f
   rfl
 #align coe_add_equiv_lp_pi_Lp coe_add_equiv_lp_pi_Lp
 
-theorem coe_add_equiv_lp_pi_Lp_symm [Fact (1 ≤ p)] (f : PiLp p E) : (AddEquiv.lpPiLp.symm f : ∀ i, E i) = f :=
+theorem coe_add_equiv_lp_pi_Lp_symm [Fact (1 ≤ p)] (f : PiLp p E) :
+    (AddEquiv.lpPiLp.symm f : ∀ i, E i) = f :=
   rfl
 #align coe_add_equiv_lp_pi_Lp_symm coe_add_equiv_lp_pi_Lp_symm
 

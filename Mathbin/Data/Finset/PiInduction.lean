@@ -33,13 +33,14 @@ namespace Finset
 
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
-    (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.erase x)) {p : (∀ i, Finset (α i)) → Prop}
-    (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
-    (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), r i x (g i) → p g → p (update g i (insert x (g i)))) : p f :=
-  by
+    (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.erase x))
+    {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
+    (step :
+      ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
+        r i x (g i) → p g → p (update g i (insert x (g i)))) :
+    p f := by
   cases nonempty_fintype ι
-  induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f
-  subst s
+  induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f; subst s
   cases' eq_empty_or_nonempty (univ.sigma f) with he hne
   · convert h0
     simpa [funext_iff] using he
@@ -69,8 +70,12 @@ maps provided that it is true on `λ _, ∅` and for any function `g : Π i, fin
 See also `finset.induction_on_pi_max` and `finset.induction_on_pi_min` for specialized versions
 that require `Π i, linear_order (α i)`.  -/
 theorem induction_on_pi {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
-    (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i) (hx : x ∉ g i), p g → p (update g i (insert x (g i)))) : p f :=
-  induction_on_pi_of_choice (fun i x s => x ∉ s) (fun i s ⟨x, hx⟩ => ⟨x, hx, not_mem_erase x s⟩) f h0 step
+    (step :
+      ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i) (hx : x ∉ g i),
+        p g → p (update g i (insert x (g i)))) :
+    p f :=
+  induction_on_pi_of_choice (fun i x s => x ∉ s) (fun i s ⟨x, hx⟩ => ⟨x, hx, not_mem_erase x s⟩) f
+    h0 step
 #align finset.induction_on_pi Finset.induction_on_pi
 
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all
@@ -80,9 +85,11 @@ maps provided that it is true on `λ _, ∅` and for any function `g : Π i, fin
 
 This lemma requires `linear_order` instances on all `α i`. See also `finset.induction_on_pi` for a
 version that `x ∉ g i` instead of ` does not need `Π i, linear_order (α i)`. -/
-theorem induction_on_pi_max [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i))
-    (h0 : p fun _ => ∅)
-    (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀ y ∈ g i, y < x) → p g → p (update g i (insert x (g i)))) :
+theorem induction_on_pi_max [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α i)) → Prop}
+    (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
+    (step :
+      ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
+        (∀ y ∈ g i, y < x) → p g → p (update g i (insert x (g i)))) :
     p f :=
   induction_on_pi_of_choice (fun i x s => ∀ y ∈ s, y < x)
     (fun i s hs => ⟨s.max' hs, s.max'_mem hs, fun y => s.lt_max'_of_mem_erase_max' _⟩) f h0 step
@@ -95,9 +102,11 @@ maps provided that it is true on `λ _, ∅` and for any function `g : Π i, fin
 
 This lemma requires `linear_order` instances on all `α i`. See also `finset.induction_on_pi` for a
 version that `x ∉ g i` instead of ` does not need `Π i, linear_order (α i)`. -/
-theorem induction_on_pi_min [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i))
-    (h0 : p fun _ => ∅)
-    (step : ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i), (∀ y ∈ g i, x < y) → p g → p (update g i (insert x (g i)))) :
+theorem induction_on_pi_min [∀ i, LinearOrder (α i)] {p : (∀ i, Finset (α i)) → Prop}
+    (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
+    (step :
+      ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
+        (∀ y ∈ g i, x < y) → p g → p (update g i (insert x (g i)))) :
     p f :=
   @induction_on_pi_max ι (fun i => (α i)ᵒᵈ) _ _ _ _ _ _ h0 step
 #align finset.induction_on_pi_min Finset.induction_on_pi_min

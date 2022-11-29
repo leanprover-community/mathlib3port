@@ -65,7 +65,8 @@ section Preorder
 variable [∀ i, Preorder (α i)]
 
 instance : Preorder (Π₀ i, α i) :=
-  { Dfinsupp.hasLe α with le_refl := fun f i => le_rfl, le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
+  { Dfinsupp.hasLe α with le_refl := fun f i => le_rfl,
+    le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
 theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f g => le_def.1
 #align dfinsupp.coe_fn_mono Dfinsupp.coe_fn_mono
@@ -73,7 +74,8 @@ theorem coe_fn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun 
 end Preorder
 
 instance [∀ i, PartialOrder (α i)] : PartialOrder (Π₀ i, α i) :=
-  { Dfinsupp.preorder α with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
+  { Dfinsupp.preorder α with
+    le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
   { Dfinsupp.partialOrder α with inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem,
@@ -124,7 +126,8 @@ instance (α : ι → Type _) [∀ i, OrderedAddCommMonoid (α i)] : OrderedAddC
       rw [add_apply, add_apply]
       exact add_le_add_left (h i) (c i) }
 
-instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] : OrderedCancelAddCommMonoid (Π₀ i, α i) :=
+instance (α : ι → Type _) [∀ i, OrderedCancelAddCommMonoid (α i)] :
+    OrderedCancelAddCommMonoid (Π₀ i, α i) :=
   { Dfinsupp.orderedAddCommMonoid α with
     le_of_add_le_add_left := fun f g h H i => by
       specialize H i
@@ -144,7 +147,7 @@ variable (α) [∀ i, CanonicallyOrderedAddMonoid (α i)]
 
 instance : OrderBot (Π₀ i, α i) where
   bot := 0
-  bot_le := by simp only [le_def, Dfinsupp.coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
+  bot_le := by simp only [le_def, coe_zero, Pi.zero_apply, imp_true_iff, zero_le]
 
 variable {α}
 
@@ -153,7 +156,8 @@ protected theorem bot_eq_zero : (⊥ : Π₀ i, α i) = 0 :=
 #align dfinsupp.bot_eq_zero Dfinsupp.bot_eq_zero
 
 @[simp]
-theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 := by simp [ext_iff, forall_and]
+theorem add_eq_zero_iff (f g : Π₀ i, α i) : f + g = 0 ↔ f = 0 ∧ g = 0 := by
+  simp [ext_iff, forall_and]
 #align dfinsupp.add_eq_zero_iff Dfinsupp.add_eq_zero_iff
 
 section Le
@@ -171,8 +175,8 @@ theorem le_iff : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
 
 variable (α)
 
-instance decidableLe [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@LE.le (Π₀ i, α i) _) := fun f g =>
-  decidable_of_iff _ le_iff.symm
+instance decidableLe [∀ i, DecidableRel (@LE.le (α i) _)] : DecidableRel (@LE.le (Π₀ i, α i) _) :=
+  fun f g => decidable_of_iff _ le_iff.symm
 #align dfinsupp.decidable_le Dfinsupp.decidableLe
 
 variable {α}
@@ -238,8 +242,8 @@ theorem single_tsub : single i (a - b) = single i a - single i b := by
 variable [∀ (i) (x : α i), Decidable (x ≠ 0)]
 
 theorem support_tsub : (f - g).support ⊆ f.support := by
-  simp (config := { contextual := true }) only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff, Ne.def, coe_tsub,
-    Pi.sub_apply, not_imp_not, zero_le, imp_true_iff]
+  simp (config := { contextual := true }) only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff,
+    Ne.def, coe_tsub, Pi.sub_apply, not_imp_not, zero_le, imp_true_iff]
 #align dfinsupp.support_tsub Dfinsupp.support_tsub
 
 theorem subset_support_tsub : f.support \ g.support ⊆ (f - g).support := by
@@ -255,7 +259,8 @@ variable [∀ i, CanonicallyLinearOrderedAddMonoid (α i)] [DecidableEq ι] {f g
 @[simp]
 theorem support_inf : (f ⊓ g).support = f.support ∩ g.support := by
   ext
-  simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
+  simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter,
+    Finset.mem_inter]
   simp only [inf_eq_min, ← nonpos_iff_eq_zero, min_le_iff, not_or]
 #align dfinsupp.support_inf Dfinsupp.support_inf
 
@@ -267,7 +272,8 @@ theorem support_sup : (f ⊔ g).support = f.support ∪ g.support := by
 #align dfinsupp.support_sup Dfinsupp.support_sup
 
 theorem disjoint_iff : Disjoint f g ↔ Disjoint f.support g.support := by
-  rw [disjoint_iff, disjoint_iff, Dfinsupp.bot_eq_zero, ← Dfinsupp.support_eq_empty, Dfinsupp.support_inf]
+  rw [disjoint_iff, disjoint_iff, Dfinsupp.bot_eq_zero, ← Dfinsupp.support_eq_empty,
+    Dfinsupp.support_inf]
   rfl
 #align dfinsupp.disjoint_iff Dfinsupp.disjoint_iff
 

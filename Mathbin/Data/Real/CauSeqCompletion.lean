@@ -123,12 +123,12 @@ private theorem one_def : 1 = mk 1 :=
 
 instance : AddGroup Cauchy := by
   refine'
-      { add := (· + ·), zero := (0 : Cauchy), sub := Sub.sub, neg := Neg.neg, sub_eq_add_neg := _, nsmul := nsmulRec,
-        zsmul := zsmulRec.. } <;>
-    try intros <;> rfl <;>
-      · repeat' refine' fun a => Quotient.induction_on a fun _ => _
-        simp [zero_def, add_comm, add_left_comm, sub_eq_neg_add]
-        
+        { add := (· + ·), zero := (0 : Cauchy), sub := Sub.sub, neg := Neg.neg, sub_eq_add_neg := _,
+          nsmul := nsmulRec, zsmul := zsmulRec.. } <;>
+      try intros <;> rfl <;>
+    · repeat' refine' fun a => Quotient.induction_on a fun _ => _
+      simp [zero_def, add_comm, add_left_comm, sub_eq_neg_add]
+      
 
 instance : AddGroupWithOne Cauchy :=
   { Cauchy.add_group with natCast := fun n => mk n, nat_cast_zero := congr_arg mk Nat.cast_zero,
@@ -148,12 +148,13 @@ theorem of_rat_int_cast (z : ℤ) : of_rat z = z :=
 
 instance : CommRing Cauchy := by
   refine'
-      { Cauchy.add_group_with_one with add := (· + ·), zero := (0 : Cauchy), mul := (· * ·), one := 1,
-        npow := npowRec.. } <;>
-    try intros <;> rfl <;>
-      · repeat' refine' fun a => Quotient.induction_on a fun _ => _
-        simp [zero_def, one_def, mul_left_comm, mul_comm, mul_add, add_comm, add_left_comm, sub_eq_add_neg]
-        
+        { Cauchy.add_group_with_one with add := (· + ·), zero := (0 : Cauchy), mul := (· * ·),
+          one := 1, npow := npowRec.. } <;>
+      try intros <;> rfl <;>
+    · repeat' refine' fun a => Quotient.induction_on a fun _ => _
+      simp [zero_def, one_def, mul_left_comm, mul_comm, mul_add, add_comm, add_left_comm,
+        sub_eq_add_neg]
+      
 
 -- shortcut instance to ensure computability
 instance : Ring Cauchy :=
@@ -231,8 +232,7 @@ theorem zero_ne_one : (0 : Cauchy) ≠ 1 := fun h => cau_seq_zero_ne_one <| mk_e
 
 protected theorem inv_mul_cancel {x : Cauchy} : x ≠ 0 → x⁻¹ * x = 1 :=
   (Quotient.induction_on x) fun f hf => by
-    simp at hf
-    simp [hf]
+    simp at hf; simp [hf]
     exact Quotient.sound (CauSeq.inv_mul_cancel hf)
 #align cau_seq.completion.inv_mul_cancel CauSeq.Completion.inv_mul_cancel
 
@@ -245,7 +245,8 @@ noncomputable instance : Field Cauchy :=
   { CauchyCat.commRing with inv := Inv.inv,
     mul_inv_cancel := fun x x0 => by rw [mul_comm, CauSeq.Completion.inv_mul_cancel x0],
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩, inv_zero, ratCast := fun q => ofRat q,
-    rat_cast_mk := fun n d hd hnd => by rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
+    rat_cast_mk := fun n d hd hnd => by
+      rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
 
 theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by
   simp only [div_eq_inv_mul, of_rat_inv, of_rat_mul]
@@ -321,14 +322,16 @@ theorem lim_const (x : β) : lim (const abv x) = x :=
 theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
   eq_lim_of_const_equiv <|
     show LimZero (const abv (lim f + lim g) - (f + g)) by
-      rw [const_add, add_sub_add_comm] <;> exact add_lim_zero (Setoid.symm (equiv_lim f)) (Setoid.symm (equiv_lim g))
+      rw [const_add, add_sub_add_comm] <;>
+        exact add_lim_zero (Setoid.symm (equiv_lim f)) (Setoid.symm (equiv_lim g))
 #align cau_seq.lim_add CauSeq.lim_add
 
 theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
   eq_lim_of_const_equiv <|
     show LimZero (const abv (lim f * lim g) - f * g) by
       have h :
-        const abv (lim f * lim g) - f * g = (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
+        const abv (lim f * lim g) - f * g =
+          (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
         by simp [const_mul (lim f), mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm]
       rw [h] <;>
         exact
@@ -336,17 +339,21 @@ theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
             (mul_lim_zero_right _ (Setoid.symm (equiv_lim _)))
 #align cau_seq.lim_mul_lim CauSeq.lim_mul_lim
 
-theorem lim_mul (f : CauSeq β abv) (x : β) : lim f * x = lim (f * const abv x) := by rw [← lim_mul_lim, lim_const]
+theorem lim_mul (f : CauSeq β abv) (x : β) : lim f * x = lim (f * const abv x) := by
+  rw [← lim_mul_lim, lim_const]
 #align cau_seq.lim_mul CauSeq.lim_mul
 
 theorem lim_neg (f : CauSeq β abv) : lim (-f) = -lim f :=
   lim_eq_of_equiv_const
     (show LimZero (-f - const abv (-lim f)) by
-      rw [const_neg, sub_neg_eq_add, add_comm, ← sub_eq_add_neg] <;> exact Setoid.symm (equiv_lim f))
+      rw [const_neg, sub_neg_eq_add, add_comm, ← sub_eq_add_neg] <;>
+        exact Setoid.symm (equiv_lim f))
 #align cau_seq.lim_neg CauSeq.lim_neg
 
 theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
-  ⟨fun h => by have hf := equiv_lim f <;> rw [h] at hf <;> exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
+  ⟨fun h => by
+    have hf := equiv_lim f <;> rw [h] at hf <;>
+      exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
     fun h => by
     have h₁ : f = f - const abv 0 := ext fun n => by simp [sub_apply, const_apply]
     rw [h₁] at h <;> exact lim_eq_of_equiv_const h⟩
@@ -362,10 +369,14 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
   have hl : lim f ≠ 0 := by rwa [← lim_eq_zero_iff] at hf
   lim_eq_of_equiv_const <|
     show LimZero (inv f hf - const abv (lim f)⁻¹) from
-      have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬LimZero f), LimZero (g - f * inv f hf * g) := fun g f hf => by
+      have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬LimZero f), LimZero (g - f * inv f hf * g) :=
+        fun g f hf => by
         rw [← one_mul g, ← mul_assoc, ← sub_mul, mul_one, mul_comm, mul_comm f] <;>
           exact mul_lim_zero_right _ (Setoid.symm (CauSeq.inv_mul_cancel _))
-      have h₂ : LimZero (inv f hf - const abv (lim f)⁻¹ - (const abv (lim f) - f) * (inv f hf * const abv (lim f)⁻¹)) :=
+      have h₂ :
+        LimZero
+          (inv f hf - const abv (lim f)⁻¹ -
+            (const abv (lim f) - f) * (inv f hf * const abv (lim f)⁻¹)) :=
         by
         rw [sub_mul, ← sub_add, sub_sub, sub_add_eq_sub_sub, sub_right_comm, sub_add] <;>
           exact

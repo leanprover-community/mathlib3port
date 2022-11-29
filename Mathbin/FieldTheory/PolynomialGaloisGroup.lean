@@ -67,7 +67,8 @@ instance applyMulSemiringAction : MulSemiringAction p.Gal p.SplittingField :=
 theorem ext {σ τ : p.Gal} (h : ∀ x ∈ p.rootSet p.SplittingField, σ x = τ x) : σ = τ := by
   refine'
     AlgEquiv.ext fun x =>
-      (AlgHom.mem_equalizer σ.to_alg_hom τ.to_alg_hom x).mp ((set_like.ext_iff.mp _ x).mpr Algebra.mem_top)
+      (AlgHom.mem_equalizer σ.to_alg_hom τ.to_alg_hom x).mp
+        ((set_like.ext_iff.mp _ x).mpr Algebra.mem_top)
   rwa [eq_top_iff, ← splitting_field.adjoin_roots, Algebra.adjoin_le_iff]
 #align polynomial.gal.ext Polynomial.Gal.ext
 
@@ -77,7 +78,8 @@ def uniqueGalOfSplits (h : p.Splits (RingHom.id F)) : Unique p.Gal where
   uniq f :=
     AlgEquiv.ext fun x => by
       obtain ⟨y, rfl⟩ :=
-        algebra.mem_bot.mp ((set_like.ext_iff.mp ((is_splitting_field.splits_iff _ p).mp h) x).mp Algebra.mem_top)
+        algebra.mem_bot.mp
+          ((set_like.ext_iff.mp ((is_splitting_field.splits_iff _ p).mp h) x).mp Algebra.mem_top)
       rw [AlgEquiv.commutes, AlgEquiv.commutes]
 #align polynomial.gal.unique_gal_of_splits Polynomial.Gal.uniqueGalOfSplits
 
@@ -112,7 +114,8 @@ instance [h : Fact (p.Splits (algebraMap F E))] : Algebra p.SplittingField E :=
   (IsSplittingField.lift p.SplittingField p h.1).toRingHom.toAlgebra
 
 instance [h : Fact (p.Splits (algebraMap F E))] : IsScalarTower F p.SplittingField E :=
-  IsScalarTower.of_algebra_map_eq fun x => ((IsSplittingField.lift p.SplittingField p h.1).commutes x).symm
+  IsScalarTower.of_algebra_map_eq fun x =>
+    ((IsSplittingField.lift p.SplittingField p h.1).commutes x).symm
 
 -- The `algebra p.splitting_field E` instance above behaves badly when
 -- `E := p.splitting_field`, since it may result in a unification problem
@@ -125,7 +128,8 @@ def restrict [Fact (p.Splits (algebraMap F E))] : (E ≃ₐ[F] E) →* p.Gal :=
   AlgEquiv.restrictNormalHom p.SplittingField
 #align polynomial.gal.restrict Polynomial.Gal.restrict
 
-theorem restrict_surjective [Fact (p.Splits (algebraMap F E))] [Normal F E] : Function.Surjective (restrict p E) :=
+theorem restrict_surjective [Fact (p.Splits (algebraMap F E))] [Normal F E] :
+    Function.Surjective (restrict p E) :=
   AlgEquiv.restrict_normal_hom_surjective E
 #align polynomial.gal.restrict_surjective Polynomial.Gal.restrict_surjective
 
@@ -133,7 +137,8 @@ section RootsAction
 
 /-- The function taking `roots p p.splitting_field` to `roots p E`. This is actually a bijection,
 see `polynomial.gal.map_roots_bijective`. -/
-def mapRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingField → rootSet p E := fun x =>
+def mapRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingField → rootSet p E :=
+  fun x =>
   ⟨IsScalarTower.toAlgHom F p.SplittingField E x, by
     have key := Subtype.mem x
     by_cases p = 0
@@ -144,7 +149,8 @@ def mapRoots [Fact (p.Splits (algebraMap F E))] : rootSet p p.SplittingField →
       ⟩
 #align polynomial.gal.map_roots Polynomial.Gal.mapRoots
 
-theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] : Function.Bijective (mapRoots p E) := by
+theorem map_roots_bijective [h : Fact (p.Splits (algebraMap F E))] :
+    Function.Bijective (mapRoots p E) := by
   constructor
   · exact fun _ _ h => Subtype.ext (RingHom.injective _ (subtype.ext_iff.mp h))
     
@@ -214,13 +220,14 @@ def galActionHom [Fact (p.Splits (algebraMap F E))] : p.Gal →* Equiv.Perm (roo
   MulAction.toPermHom _ _
 #align polynomial.gal.gal_action_hom Polynomial.Gal.galActionHom
 
-theorem gal_action_hom_restrict [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x : rootSet p E) :
-    ↑(galActionHom p E (restrict p E ϕ) x) = ϕ x :=
+theorem gal_action_hom_restrict [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E)
+    (x : rootSet p E) : ↑(galActionHom p E (restrict p E ϕ) x) = ϕ x :=
   restrict_smul ϕ x
 #align polynomial.gal.gal_action_hom_restrict Polynomial.Gal.gal_action_hom_restrict
 
 /-- `gal p` embeds as a subgroup of permutations of the roots of `p` in `E`. -/
-theorem gal_action_hom_injective [Fact (p.Splits (algebraMap F E))] : Function.Injective (galActionHom p E) := by
+theorem gal_action_hom_injective [Fact (p.Splits (algebraMap F E))] :
+    Function.Injective (galActionHom p E) := by
   rw [injective_iff_map_eq_one]
   intro ϕ hϕ
   ext (x hx)
@@ -240,10 +247,13 @@ variable {p q}
 /-- `polynomial.gal.restrict`, when both fields are splitting fields of polynomials. -/
 def restrictDvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
   if hq : q = 0 then 1
-  else @restrict F _ p _ _ _ ⟨splitsOfSplitsOfDvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
+  else
+    @restrict F _ p _ _ _
+      ⟨splitsOfSplitsOfDvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
 #align polynomial.gal.restrict_dvd Polynomial.Gal.restrictDvd
 
-theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjective (restrictDvd hpq) := by
+theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) :
+    Function.Surjective (restrictDvd hpq) := by
   simp only [restrict_dvd, dif_neg hq, restrict_surjective]
 #align polynomial.gal.restrict_dvd_surjective Polynomial.Gal.restrict_dvd_surjective
 
@@ -293,7 +303,8 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
 #align polynomial.gal.restrict_prod_injective Polynomial.Gal.restrict_prod_injective
 
 theorem mulSplitsInSplittingFieldOfMul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ : q₁ ≠ 0) (hq₂ : q₂ ≠ 0)
-    (h₁ : p₁.Splits (algebraMap F q₁.SplittingField)) (h₂ : p₂.Splits (algebraMap F q₂.SplittingField)) :
+    (h₁ : p₁.Splits (algebraMap F q₁.SplittingField))
+    (h₂ : p₂.Splits (algebraMap F q₂.SplittingField)) :
     (p₁ * p₂).Splits (algebraMap F (q₁ * q₂).SplittingField) := by
   apply splits_mul
   · rw [←
@@ -308,10 +319,12 @@ theorem mulSplitsInSplittingFieldOfMul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ : q�
             (dvd_mul_left q₂ q₁))).comp_algebra_map]
     exact splits_comp_of_splits _ _ h₂
     
-#align polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mulSplitsInSplittingFieldOfMul
+#align
+  polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mulSplitsInSplittingFieldOfMul
 
 /-- `p` splits in the splitting field of `p ∘ q`, for `q` non-constant. -/
-theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebraMap F (p.comp q).SplittingField) := by
+theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) :
+    p.Splits (algebraMap F (p.comp q).SplittingField) := by
   let P : F[X] → Prop := fun r => r.Splits (algebraMap F (r.comp q).SplittingField)
   have key1 : ∀ {r : F[X]}, Irreducible r → P r := by
     intro r hr
@@ -320,7 +333,10 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
       
     obtain ⟨x, hx⟩ :=
       exists_root_of_splits _ (splitting_field.splits (r.comp q)) fun h =>
-        hr' ((mul_eq_zero.mp (nat_degree_comp.symm.trans (nat_degree_eq_of_degree_eq_some h))).resolve_right hq)
+        hr'
+          ((mul_eq_zero.mp
+                (nat_degree_comp.symm.trans (nat_degree_eq_of_degree_eq_some h))).resolve_right
+            hq)
     rw [← aeval_def, aeval_comp] at hx
     have h_normal : Normal F (r.comp q).SplittingField := splitting_field.normal (r.comp q)
     have qx_int := Normal.is_integral h_normal (aeval x q)
@@ -348,7 +364,8 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
     have key := mul_splits_in_splitting_field_of_mul h₁ h₂ hp₁ hp₂
     rwa [← mul_comp] at key
   exact
-    WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _) fun _ _ _ h => key2 (key1 h)
+    WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _)
+      fun _ _ _ h => key2 (key1 h)
 #align polynomial.gal.splits_in_splitting_field_of_comp Polynomial.Gal.splitsInSplittingFieldOfComp
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
@@ -356,8 +373,8 @@ def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
   @restrict F _ p _ _ _ ⟨splitsInSplittingFieldOfComp p q hq⟩
 #align polynomial.gal.restrict_comp Polynomial.Gal.restrictComp
 
-theorem restrict_comp_surjective (hq : q.natDegree ≠ 0) : Function.Surjective (restrictComp p q hq) := by
-  simp only [restrict_comp, restrict_surjective]
+theorem restrict_comp_surjective (hq : q.natDegree ≠ 0) :
+    Function.Surjective (restrictComp p q hq) := by simp only [restrict_comp, restrict_surjective]
 #align polynomial.gal.restrict_comp_surjective Polynomial.Gal.restrict_comp_surjective
 
 variable {p q}
@@ -374,12 +391,15 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
 theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.natDegree.Prime) :
     p.natDegree ∣ Fintype.card p.Gal := by
   rw [gal.card_of_separable p_irr.separable]
-  have hp : p.degree ≠ 0 := fun h => Nat.Prime.ne_zero p_deg (nat_degree_eq_zero_iff_degree_le_zero.mpr (le_of_eq h))
-  let α : p.splitting_field := root_of_splits (algebraMap F p.splitting_field) (splitting_field.splits p) hp
+  have hp : p.degree ≠ 0 := fun h =>
+    Nat.Prime.ne_zero p_deg (nat_degree_eq_zero_iff_degree_le_zero.mpr (le_of_eq h))
+  let α : p.splitting_field :=
+    root_of_splits (algebraMap F p.splitting_field) (splitting_field.splits p) hp
   have hα : IsIntegral F α := Algebra.is_integral_of_finite _ _ α
   use FiniteDimensional.finrank F⟮⟯ p.splitting_field
   suffices (minpoly F α).natDegree = p.nat_degree by
-    rw [← FiniteDimensional.finrank_mul_finrank F F⟮⟯ p.splitting_field, IntermediateField.adjoin.finrank hα, this]
+    rw [← FiniteDimensional.finrank_mul_finrank F F⟮⟯ p.splitting_field,
+      IntermediateField.adjoin.finrank hα, this]
   suffices minpoly F α ∣ p by
     have key := (minpoly.irreducible hα).dvd_symm p_irr this
     apply le_antisymm
@@ -403,7 +423,8 @@ attribute [local instance] splits_ℚ_ℂ
     the number of roots not fixed by complex conjugation (i.e. with some imaginary component). -/
 theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     (p.rootSet ℂ).toFinset.card =
-      (p.rootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
+      (p.rootSet ℝ).toFinset.card +
+        (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
   by
   by_cases hp : p = 0
   · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_add]
@@ -412,7 +433,8 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     infer_instance
     
   have inj : Function.Injective (IsScalarTower.toAlgHom ℚ ℝ ℂ) := (algebraMap ℝ ℂ).Injective
-  rw [← Finset.card_image_of_injective _ Subtype.coe_injective, ← Finset.card_image_of_injective _ inj]
+  rw [← Finset.card_image_of_injective _ Subtype.coe_injective, ←
+    Finset.card_image_of_injective _ inj]
   let a : Finset ℂ := _
   let b : Finset ℂ := _
   let c : Finset ℂ := _
@@ -434,7 +456,8 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
       exact ⟨z.re, inj (by rwa [← aeval_alg_hom_apply, key, AlgHom.map_zero]), key⟩
       
   have hc0 :
-    ∀ w : p.root_set ℂ, gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)) w = w ↔ w.val.im = 0 :=
+    ∀ w : p.root_set ℂ,
+      gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)) w = w ↔ w.val.im = 0 :=
     by
     intro w
     rw [Subtype.ext_iff, gal_action_hom_restrict]
@@ -465,9 +488,10 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   polynomial.gal.card_complex_roots_eq_card_real_add_card_not_gal_inv Polynomial.Gal.card_complex_roots_eq_card_real_add_card_not_gal_inv
 
 /-- An irreducible polynomial of prime degree with two non-real roots has full Galois group. -/
-theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible p) (p_deg : p.natDegree.Prime)
-    (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) : Function.Bijective (galActionHom p ℂ) :=
-  by
+theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible p)
+    (p_deg : p.natDegree.Prime)
+    (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) :
+    Function.Bijective (galActionHom p ℂ) := by
   have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree := by
     simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]
     rw [Multiset.to_finset_card_of_nodup, ← nat_degree_eq_card_roots]
@@ -480,7 +504,8 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   let conj := restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)
   refine'
     ⟨gal_action_hom_injective p ℂ, fun x =>
-      (congr_arg (Membership.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
+      (congr_arg (Membership.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr
+        (Subgroup.mem_top x)⟩
   apply Equiv.Perm.subgroup_eq_top_of_swap_mem
   · rwa [h1]
     
@@ -495,21 +520,24 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
     rw [← p_roots, ← Set.to_finset_card (root_set p ℝ), ← Set.to_finset_card (root_set p ℂ)]
     exact (card_complex_roots_eq_card_real_add_card_not_gal_inv p).symm
     
-#align polynomial.gal.gal_action_hom_bijective_of_prime_degree Polynomial.Gal.gal_action_hom_bijective_of_prime_degree
+#align
+  polynomial.gal.gal_action_hom_bijective_of_prime_degree Polynomial.Gal.gal_action_hom_bijective_of_prime_degree
 
 /-- An irreducible polynomial of prime degree with 1-3 non-real roots has full Galois group. -/
-theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreducible p) (p_deg : p.natDegree.Prime)
+theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreducible p)
+    (p_deg : p.natDegree.Prime)
     (p_roots1 : Fintype.card (p.rootSet ℝ) + 1 ≤ Fintype.card (p.rootSet ℂ))
-    (p_roots2 : Fintype.card (p.rootSet ℂ) ≤ Fintype.card (p.rootSet ℝ) + 3) : Function.Bijective (galActionHom p ℂ) :=
-  by
+    (p_roots2 : Fintype.card (p.rootSet ℂ) ≤ Fintype.card (p.rootSet ℝ) + 3) :
+    Function.Bijective (galActionHom p ℂ) := by
   apply gal_action_hom_bijective_of_prime_degree p_irr p_deg
   let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).support.card
   have hn : 2 ∣ n :=
     Equiv.Perm.two_dvd_card_support
       (by
         rw [← MonoidHom.map_pow, ← MonoidHom.map_pow,
-          show AlgEquiv.restrictScalars ℚ Complex.conjAe ^ 2 = 1 from AlgEquiv.ext Complex.conj_conj, MonoidHom.map_one,
-          MonoidHom.map_one])
+          show AlgEquiv.restrictScalars ℚ Complex.conjAe ^ 2 = 1 from
+            AlgEquiv.ext Complex.conj_conj,
+          MonoidHom.map_one, MonoidHom.map_one])
   have key := card_complex_roots_eq_card_real_add_card_not_gal_inv p
   simp_rw [Set.to_finset_card] at key
   rw [key, add_le_add_iff_left] at p_roots1 p_roots2
@@ -517,9 +545,13 @@ theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreduci
   suffices ∀ m : ℕ, 2 ∣ m → 1 ≤ m → m ≤ 3 → m = 2 by exact this n hn p_roots1 p_roots2
   rintro m ⟨k, rfl⟩ h2 h3
   exact
-    le_antisymm (nat.lt_succ_iff.mp (lt_of_le_of_ne h3 (show 2 * k ≠ 2 * 1 + 1 from Nat.two_mul_ne_two_mul_add_one)))
-      (nat.succ_le_iff.mpr (lt_of_le_of_ne h2 (show 2 * 0 + 1 ≠ 2 * k from nat.two_mul_ne_two_mul_add_one.symm)))
-#align polynomial.gal.gal_action_hom_bijective_of_prime_degree' Polynomial.Gal.gal_action_hom_bijective_of_prime_degree'
+    le_antisymm
+      (nat.lt_succ_iff.mp
+        (lt_of_le_of_ne h3 (show 2 * k ≠ 2 * 1 + 1 from Nat.two_mul_ne_two_mul_add_one)))
+      (nat.succ_le_iff.mpr
+        (lt_of_le_of_ne h2 (show 2 * 0 + 1 ≠ 2 * k from nat.two_mul_ne_two_mul_add_one.symm)))
+#align
+  polynomial.gal.gal_action_hom_bijective_of_prime_degree' Polynomial.Gal.gal_action_hom_bijective_of_prime_degree'
 
 end Rationals
 

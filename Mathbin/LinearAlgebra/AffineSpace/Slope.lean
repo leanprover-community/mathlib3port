@@ -47,7 +47,8 @@ theorem slope_fun_def_field (f : k → k) (a : k) : slope f a = fun b => (f b - 
 #align slope_fun_def_field slope_fun_def_field
 
 @[simp]
-theorem slope_same (f : k → PE) (a : k) : (slope f a a : E) = 0 := by rw [slope, sub_self, inv_zero, zero_smul]
+theorem slope_same (f : k → PE) (a : k) : (slope f a a : E) = 0 := by
+  rw [slope, sub_self, inv_zero, zero_smul]
 #align slope_same slope_same
 
 include E
@@ -76,7 +77,8 @@ theorem slope_vadd_const (f : k → E) (c : PE) : (slope fun x => f x +ᵥ c) = 
 #align slope_vadd_const slope_vadd_const
 
 @[simp]
-theorem slope_sub_smul (f : k → E) {a b : k} (h : a ≠ b) : slope (fun x => (x - a) • f x) a b = f b := by
+theorem slope_sub_smul (f : k → E) {a b : k} (h : a ≠ b) :
+    slope (fun x => (x - a) • f x) a b = f b := by
   simp [slope, inv_smul_smul₀ (sub_ne_zero.2 h.symm)]
 #align slope_sub_smul slope_sub_smul
 
@@ -84,13 +86,13 @@ theorem eq_of_slope_eq_zero {f : k → PE} {a b : k} (h : slope f a b = (0 : E))
   rw [← sub_smul_slope_vadd f a b, h, smul_zero, zero_vadd]
 #align eq_of_slope_eq_zero eq_of_slope_eq_zero
 
-theorem AffineMap.slope_comp {F PF : Type _} [AddCommGroup F] [Module k F] [AddTorsor F PF] (f : PE →ᵃ[k] PF)
-    (g : k → PE) (a b : k) : slope (f ∘ g) a b = f.linear (slope g a b) := by
+theorem AffineMap.slope_comp {F PF : Type _} [AddCommGroup F] [Module k F] [AddTorsor F PF]
+    (f : PE →ᵃ[k] PF) (g : k → PE) (a b : k) : slope (f ∘ g) a b = f.linear (slope g a b) := by
   simp only [slope, (· ∘ ·), f.linear.map_smul, f.linear_map_vsub]
 #align affine_map.slope_comp AffineMap.slope_comp
 
-theorem LinearMap.slope_comp {F : Type _} [AddCommGroup F] [Module k F] (f : E →ₗ[k] F) (g : k → E) (a b : k) :
-    slope (f ∘ g) a b = f (slope g a b) :=
+theorem LinearMap.slope_comp {F : Type _} [AddCommGroup F] [Module k F] (f : E →ₗ[k] F) (g : k → E)
+    (a b : k) : slope (f ∘ g) a b = f (slope g a b) :=
   f.toAffineMap.slope_comp g a b
 #align linear_map.slope_comp LinearMap.slope_comp
 
@@ -112,31 +114,35 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
     · rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
       
     
-  by_cases hbc : b = c
+  by_cases hbc : b = c;
   · subst hbc
     simp [sub_ne_zero.2 (Ne.symm hab)]
     
   rw [add_comm]
-  simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add, smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab),
-    smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc), vsub_add_vsub_cancel]
-#align sub_div_sub_smul_slope_add_sub_div_sub_smul_slope sub_div_sub_smul_slope_add_sub_div_sub_smul_slope
+  simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add,
+    smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab), smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc),
+    vsub_add_vsub_cancel]
+#align
+  sub_div_sub_smul_slope_add_sub_div_sub_smul_slope sub_div_sub_smul_slope_add_sub_div_sub_smul_slope
 
 /-- `slope f a c` is an affine combination of `slope f a b` and `slope f b c`. This version uses
 `line_map` to express this property. -/
 theorem line_map_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c) :
     lineMap (slope f a b) (slope f b c) ((c - b) / (c - a)) = slope f a c := by
-  field_simp [sub_ne_zero.2 h.symm, ← sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c, line_map_apply_module]
+  field_simp [sub_ne_zero.2 h.symm, ← sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c,
+    line_map_apply_module]
 #align line_map_slope_slope_sub_div_sub line_map_slope_slope_sub_div_sub
 
 /-- `slope f a b` is an affine combination of `slope f a (line_map a b r)` and
 `slope f (line_map a b r) b`. We use `line_map` to express this property. -/
 theorem line_map_slope_line_map_slope_line_map (f : k → PE) (a b r : k) :
     lineMap (slope f (lineMap a b r) b) (slope f a (lineMap a b r)) r = slope f a b := by
-  obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _
+  obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _;
   · simp
     
   rw [slope_comm _ a, slope_comm _ a, slope_comm _ _ b]
   convert line_map_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
-  rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub, sub_sub_cancel]
+  rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub,
+    sub_sub_cancel]
 #align line_map_slope_line_map_slope_line_map line_map_slope_line_map_slope_line_map
 

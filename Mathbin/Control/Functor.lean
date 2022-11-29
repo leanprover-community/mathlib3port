@@ -40,17 +40,18 @@ variable [Functor F] [IsLawfulFunctor F]
 theorem Functor.map_id : (· <$> ·) id = (id : F α → F α) := by apply funext <;> apply id_map
 #align functor.map_id Functor.map_id
 
-theorem Functor.map_comp_map (f : α → β) (g : β → γ) : ((· <$> ·) g ∘ (· <$> ·) f : F α → F γ) = (· <$> ·) (g ∘ f) := by
+theorem Functor.map_comp_map (f : α → β) (g : β → γ) :
+    ((· <$> ·) g ∘ (· <$> ·) f : F α → F γ) = (· <$> ·) (g ∘ f) := by
   apply funext <;> intro <;> rw [comp_map]
 #align functor.map_comp_map Functor.map_comp_map
 
 theorem Functor.ext {F} :
     ∀ {F1 : Functor F} {F2 : Functor F} [@IsLawfulFunctor F F1] [@IsLawfulFunctor F F2]
-      (H : ∀ (α β) (f : α → β) (x : F α), @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x), F1 = F2
+      (H : ∀ (α β) (f : α → β) (x : F α), @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x),
+      F1 = F2
   | ⟨m, mc⟩, ⟨m', mc'⟩, H1, H2, H => by
     cases show @m = @m' by funext α β f x <;> apply H
-    congr
-    funext α β
+    congr ; funext α β
     have E1 := @map_const_eq _ ⟨@m, @mc⟩ H1
     have E2 := @map_const_eq _ ⟨@m, @mc'⟩ H2
     exact E1.trans E2.symm
@@ -189,7 +190,8 @@ theorem map_mk {α β} (h : α → β) (x : F (G α)) : h <$> Comp.mk x = Comp.m
 #align functor.comp.map_mk Functor.Comp.map_mk
 
 @[simp]
-protected theorem run_map {α β} (h : α → β) (x : Comp F G α) : (h <$> x).run = (· <$> ·) h <$> x.run :=
+protected theorem run_map {α β} (h : α → β) (x : Comp F G α) :
+    (h <$> x).run = (· <$> ·) h <$> x.run :=
   rfl
 #align functor.comp.run_map Functor.Comp.run_map
 
@@ -201,7 +203,8 @@ protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
   | comp.mk x => by simp [comp.map, Functor.map_id]
 #align functor.comp.id_map Functor.Comp.id_map
 
-protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
+protected theorem comp_map (g' : α → β) (h : β → γ) :
+    ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
   | comp.mk x => by simp [comp.map, Functor.map_comp_map g' h, functor_norm]
 #align functor.comp.comp_map Functor.Comp.comp_map
 
@@ -279,7 +282,8 @@ def supp {α : Type u} (x : F α) : Set α :=
   { y : α | ∀ ⦃p⦄, Liftp p x → p y }
 #align functor.supp Functor.supp
 
-theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀ y ∈ supp x, p y := fun y hy => hy h
+theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : Liftp p x) : ∀ y ∈ supp x, p y :=
+  fun y hy => hy h
 #align functor.of_mem_supp Functor.of_mem_supp
 
 end Functor

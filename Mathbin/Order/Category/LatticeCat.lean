@@ -91,14 +91,16 @@ def dual : LatticeCat ⥤ LatticeCat where
 /-- The equivalence between `Lattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LatticeCat ≌ LatticeCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Lattice.dual_equiv LatticeCat.dualEquiv
 
 end LatticeCat
 
 theorem Lattice_dual_comp_forget_to_PartialOrder :
-    LatticeCat.dual ⋙ forget₂ LatticeCat PartialOrderCat = forget₂ LatticeCat PartialOrderCat ⋙ PartialOrderCat.dual :=
+    LatticeCat.dual ⋙ forget₂ LatticeCat PartialOrderCat =
+      forget₂ LatticeCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
 #align Lattice_dual_comp_forget_to_PartialOrder Lattice_dual_comp_forget_to_PartialOrder
 

@@ -49,24 +49,26 @@ theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef :
     
 #align matrix.pos_def.pos_semidef Matrix.PosDef.posSemidef
 
-theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m ≃ n) : (M.submatrix e e).PosSemidef := by
+theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m ≃ n) :
+    (M.submatrix e e).PosSemidef := by
   refine' ⟨hM.1.submatrix e, fun x => _⟩
   have : (M.submatrix (⇑e) ⇑e).mulVec x = (M.mul_vec fun i : n => x (e.symm i)) ∘ e := by
     ext i
     dsimp only [(· ∘ ·), mul_vec, dot_product]
     rw [Finset.sum_bij' (fun i _ => e i) _ _ fun i _ => e.symm i] <;>
-      simp only [eq_self_iff_true, imp_true_iff, Equiv.symm_apply_apply, Finset.mem_univ, submatrix_apply,
-        Equiv.apply_symm_apply]
+      simp only [eq_self_iff_true, imp_true_iff, Equiv.symm_apply_apply, Finset.mem_univ,
+        submatrix_apply, Equiv.apply_symm_apply]
   rw [this]
   convert hM.2 fun i => x (e.symm i) using 3
   unfold dot_product
   rw [Finset.sum_bij' (fun i _ => e i) _ _ fun i _ => e.symm i] <;>
-    simp only [eq_self_iff_true, imp_true_iff, Equiv.symm_apply_apply, Finset.mem_univ, submatrix_apply,
-      Equiv.apply_symm_apply, Pi.star_apply]
+    simp only [eq_self_iff_true, imp_true_iff, Equiv.symm_apply_apply, Finset.mem_univ,
+      submatrix_apply, Equiv.apply_symm_apply, Pi.star_apply]
 #align matrix.pos_semidef.submatrix Matrix.PosSemidef.submatrix
 
 @[simp]
-theorem pos_semidef_submatrix_equiv {M : Matrix n n 𝕜} (e : m ≃ n) : (M.submatrix e e).PosSemidef ↔ M.PosSemidef :=
+theorem pos_semidef_submatrix_equiv {M : Matrix n n 𝕜} (e : m ≃ n) :
+    (M.submatrix e e).PosSemidef ↔ M.PosSemidef :=
   ⟨fun h => by simpa using h.submatrix e.symm, fun h => h.submatrix _⟩
 #align matrix.pos_semidef_submatrix_equiv Matrix.pos_semidef_submatrix_equiv
 
@@ -76,15 +78,16 @@ theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef := 
   rw [mul_vec_transpose, Matrix.dot_product_mul_vec, star_star, dot_product_comm]
 #align matrix.pos_def.transpose Matrix.PosDef.transpose
 
-theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm) (hMq : M.toQuadraticForm'.PosDef) :
-    M.PosDef := by
+theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
+    (hMq : M.toQuadraticForm'.PosDef) : M.PosDef := by
   refine' ⟨hM, fun x hx => _⟩
-  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply'] at
-    hMq
+  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.to_quadratic_form_apply,
+    Matrix.to_bilin'_apply'] at hMq
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDefOfToQuadraticForm'
 
-theorem pos_def_to_quadratic_form' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) : M.toQuadraticForm'.PosDef := by
+theorem pos_def_to_quadratic_form' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
+    M.toQuadraticForm'.PosDef := by
   intro x hx
   simp only [to_quadratic_form', BilinForm.to_quadratic_form_apply, Matrix.to_bilin'_apply']
   apply hM.2 x hx
@@ -102,8 +105,10 @@ theorem det_pos [DecidableEq n] : 0 < det M := by
   intro i _
   rw [hM.is_hermitian.eigenvalues_eq]
   apply hM.2 _ fun h => _
-  have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 := Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_fun h j
-  simpa only [h_det, not_is_unit_zero] using is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
+  have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 :=
+    Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_fun h j
+  simpa only [h_det, not_is_unit_zero] using
+    is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
 #align matrix.pos_def.det_pos Matrix.PosDef.det_pos
 
 end PosDef
@@ -114,13 +119,16 @@ namespace QuadraticForm
 
 variable {n : Type _} [Fintype n]
 
-theorem pos_def_of_to_matrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.toMatrix'.PosDef) : Q.PosDef := by
+theorem pos_def_of_to_matrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)}
+    (hQ : Q.toMatrix'.PosDef) : Q.PosDef := by
   rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
   apply Matrix.pos_def_to_quadratic_form' hQ
 #align quadratic_form.pos_def_of_to_matrix' QuadraticForm.pos_def_of_to_matrix'
 
-theorem posDefToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) : Q.toMatrix'.PosDef := by
-  rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ
+theorem posDefToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
+    Q.toMatrix'.PosDef := by
+  rw [← to_quadratic_form_associated ℝ Q, ←
+    bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ
   apply Matrix.posDefOfToQuadraticForm' (is_symm_to_matrix' Q) hQ
 #align quadratic_form.pos_def_to_matrix' QuadraticForm.posDefToMatrix'
 
@@ -131,11 +139,13 @@ namespace Matrix
 variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
 
 /-- A positive definite matrix `M` induces an inner product `⟪x, y⟫ = xᴴMy`. -/
-noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) : InnerProductSpace 𝕜 (n → 𝕜) :=
+noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
+    InnerProductSpace 𝕜 (n → 𝕜) :=
   InnerProductSpace.ofCore
     { inner := fun x y => dotProduct (star x) (M.mulVec y),
       conj_sym := fun x y => by
-        rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec, hM.is_hermitian.eq],
+        rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec,
+          hM.is_hermitian.eq],
       nonneg_re := fun x => by
         by_cases h : x = 0
         · simp [h]
@@ -146,7 +156,8 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
         by_contra' h
         simpa [hx, lt_self_iff_false] using hM.2 x h,
       add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const],
-      smul_left := fun x y r => by rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
+      smul_left := fun x y r => by
+        rw [← smul_eq_mul, ← smul_dot_product, star_ring_end_apply, ← star_smul] }
 #align matrix.inner_product_space.of_matrix Matrix.InnerProductSpace.ofMatrix
 
 end Matrix

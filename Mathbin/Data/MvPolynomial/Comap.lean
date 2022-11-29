@@ -32,7 +32,8 @@ variable {σ : Type _} {τ : Type _} {υ : Type _} {R : Type _} [CommSemiring R]
 and a variable evaluation `v : τ → R`,
 `comap f v` produces a variable evaluation `σ → R`.
 -/
-noncomputable def comap (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) : (τ → R) → σ → R := fun x i => aeval x (f (x i))
+noncomputable def comap (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) : (τ → R) → σ → R :=
+  fun x i => aeval x (f (x i))
 #align mv_polynomial.comap MvPolynomial.comap
 
 @[simp]
@@ -56,8 +57,9 @@ theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id := by
 
 variable {σ R}
 
-theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R)
-    (x : υ → R) : comap (g.comp f) x = comap f (comap g x) := by
+theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
+    (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) (x : υ → R) :
+    comap (g.comp f) x = comap f (comap g x) := by
   funext i
   trans aeval x (aeval (fun i => g (X i)) (f (X i)))
   · apply eval₂_hom_congr rfl rfl
@@ -72,14 +74,14 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g 
     
 #align mv_polynomial.comap_comp_apply MvPolynomial.comap_comp_apply
 
-theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) :
-    comap (g.comp f) = comap f ∘ comap g := by
+theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
+    (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) : comap (g.comp f) = comap f ∘ comap g := by
   funext x
   exact comap_comp_apply _ _ _
 #align mv_polynomial.comap_comp MvPolynomial.comap_comp
 
-theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R) (hf : ∀ φ, f φ = φ) (x : σ → R) :
-    comap f x = x := by
+theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R) (hf : ∀ φ, f φ = φ)
+    (x : σ → R) : comap f x = x := by
   convert comap_id_apply x
   ext1 φ
   rw [hf, AlgHom.id_apply]
@@ -111,7 +113,8 @@ noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R)
 #align mv_polynomial.comap_equiv MvPolynomial.comapEquiv
 
 @[simp]
-theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) : (comapEquiv f : (τ → R) → σ → R) = comap f :=
+theorem comap_equiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
+    (comapEquiv f : (τ → R) → σ → R) = comap f :=
   rfl
 #align mv_polynomial.comap_equiv_coe MvPolynomial.comap_equiv_coe
 

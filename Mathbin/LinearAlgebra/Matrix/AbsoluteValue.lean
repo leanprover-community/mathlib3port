@@ -40,16 +40,21 @@ theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i 
   calc
     abv A.det = abv (∑ σ : Perm n, _) := congr_arg abv (det_apply _)
     _ ≤ ∑ σ : Perm n, abv _ := abv.sum_le _ _
-    _ = ∑ σ : Perm n, ∏ i, abv (A (σ i) i) := sum_congr rfl fun σ hσ => by rw [abv.map_units_int_smul, abv.map_prod]
-    _ ≤ ∑ σ : Perm n, ∏ i : n, x := sum_le_sum fun _ _ => prod_le_prod (fun _ _ => abv.Nonneg _) fun _ _ => hx _ _
-    _ = ∑ σ : Perm n, x ^ Fintype.card n := sum_congr rfl fun _ _ => by rw [prod_const, Finset.card_univ]
-    _ = Nat.factorial (Fintype.card n) • x ^ Fintype.card n := by rw [sum_const, Finset.card_univ, Fintype.card_perm]
+    _ = ∑ σ : Perm n, ∏ i, abv (A (σ i) i) :=
+      sum_congr rfl fun σ hσ => by rw [abv.map_units_int_smul, abv.map_prod]
+    _ ≤ ∑ σ : Perm n, ∏ i : n, x :=
+      sum_le_sum fun _ _ => prod_le_prod (fun _ _ => abv.Nonneg _) fun _ _ => hx _ _
+    _ = ∑ σ : Perm n, x ^ Fintype.card n :=
+      sum_congr rfl fun _ _ => by rw [prod_const, Finset.card_univ]
+    _ = Nat.factorial (Fintype.card n) • x ^ Fintype.card n := by
+      rw [sum_const, Finset.card_univ, Fintype.card_perm]
     
 #align matrix.det_le Matrix.det_le
 
-theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv : AbsoluteValue R S} {x : S}
-    (hx : ∀ k i j, abv (A k i j) ≤ x) :
-    abv (det (∑ k in s, A k)) ≤ Nat.factorial (Fintype.card n) • (Finset.card s • x) ^ Fintype.card n :=
+theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv : AbsoluteValue R S}
+    {x : S} (hx : ∀ k i j, abv (A k i j) ≤ x) :
+    abv (det (∑ k in s, A k)) ≤
+      Nat.factorial (Fintype.card n) • (Finset.card s • x) ^ Fintype.card n :=
   det_le fun i j =>
     calc
       abv ((∑ k in s, A k) i j) = abv (∑ k in s, A k i j) := by simp only [sum_apply]
@@ -59,9 +64,12 @@ theorem det_sum_le {ι : Type _} (s : Finset ι) {A : ι → Matrix n n R} {abv 
       
 #align matrix.det_sum_le Matrix.det_sum_le
 
-theorem det_sum_smul_le {ι : Type _} (s : Finset ι) {c : ι → R} {A : ι → Matrix n n R} {abv : AbsoluteValue R S} {x : S}
-    (hx : ∀ k i j, abv (A k i j) ≤ x) {y : S} (hy : ∀ k, abv (c k) ≤ y) :
-    abv (det (∑ k in s, c k • A k)) ≤ Nat.factorial (Fintype.card n) • (Finset.card s • y * x) ^ Fintype.card n := by
+theorem det_sum_smul_le {ι : Type _} (s : Finset ι) {c : ι → R} {A : ι → Matrix n n R}
+    {abv : AbsoluteValue R S} {x : S} (hx : ∀ k i j, abv (A k i j) ≤ x) {y : S}
+    (hy : ∀ k, abv (c k) ≤ y) :
+    abv (det (∑ k in s, c k • A k)) ≤
+      Nat.factorial (Fintype.card n) • (Finset.card s • y * x) ^ Fintype.card n :=
+  by
   simpa only [smul_mul_assoc] using
     det_sum_le s fun k i j =>
       calc

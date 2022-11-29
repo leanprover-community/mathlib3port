@@ -81,7 +81,8 @@ theorem to_left_inverse (hf : IsFixedPt f x) (h : LeftInverse g f) : IsFixedPt g
 
 /-- If `g` (semi)conjugates `fa` to `fb`, then it sends fixed points of `fa` to fixed points
 of `fb`. -/
-protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semiconj g fa fb) : IsFixedPt fb (g x) :=
+protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semiconj g fa fb) :
+    IsFixedPt fb (g x) :=
   calc
     fb (g x) = g (fa x) := (h.Eq x).symm
     _ = g x := congr_arg g hx
@@ -91,8 +92,8 @@ protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semico
 protected theorem apply {x : α} (hx : IsFixedPt f x) : IsFixedPt f (f x) := by convert hx
 #align function.is_fixed_pt.apply Function.IsFixedPt.apply
 
-theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : ℕ) : IsFixedPt (Set.preimage (f^[n])) s :=
-  by
+theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : ℕ) :
+    IsFixedPt (Set.preimage (f^[n])) s := by
   rw [Set.preimage_iterate_eq]
   exact h.iterate n
 #align function.is_fixed_pt.preimage_iterate Function.IsFixedPt.preimage_iterate
@@ -100,7 +101,8 @@ theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : �
 end IsFixedPt
 
 @[simp]
-theorem Injective.is_fixed_pt_apply_iff (hf : Injective f) {x : α} : IsFixedPt f (f x) ↔ IsFixedPt f x :=
+theorem Injective.is_fixed_pt_apply_iff (hf : Injective f) {x : α} :
+    IsFixedPt f (f x) ↔ IsFixedPt f x :=
   ⟨fun h => hf h.Eq, IsFixedPt.apply⟩
 #align function.injective.is_fixed_pt_apply_iff Function.Injective.is_fixed_pt_apply_iff
 
@@ -109,7 +111,8 @@ def fixedPoints (f : α → α) : Set α :=
   { x : α | IsFixedPt f x }
 #align function.fixed_points Function.fixedPoints
 
-instance fixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) : Decidable (x ∈ fixedPoints f) :=
+instance fixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) :
+    Decidable (x ∈ fixedPoints f) :=
   is_fixed_pt.decidable
 #align function.fixed_points.decidable Function.fixedPoints.decidable
 
@@ -118,7 +121,8 @@ theorem mem_fixed_points : x ∈ fixedPoints f ↔ IsFixedPt f x :=
   Iff.rfl
 #align function.mem_fixed_points Function.mem_fixed_points
 
-theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ fixedPoints f ↔ f x = x := by rfl
+theorem mem_fixed_points_iff {α : Type _} {f : α → α} {x : α} : x ∈ fixedPoints f ↔ f x = x := by
+  rfl
 #align function.mem_fixed_points_iff Function.mem_fixed_points_iff
 
 @[simp]
@@ -137,18 +141,20 @@ theorem Semiconj.maps_to_fixed_pts {g : α → β} (h : Semiconj g fa fb) :
 
 /-- Any two maps `f : α → β` and `g : β → α` are inverse of each other on the sets of fixed points
 of `f ∘ g` and `g ∘ f`, respectively. -/
-theorem inv_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
+theorem inv_on_fixed_pts_comp (f : α → β) (g : β → α) :
+    Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
   ⟨fun x => id, fun x => id⟩
 #align function.inv_on_fixed_pts_comp Function.inv_on_fixed_pts_comp
 
 /-- Any map `f` sends fixed points of `g ∘ f` to fixed points of `f ∘ g`. -/
-theorem maps_to_fixed_pts_comp (f : α → β) (g : β → α) : Set.MapsTo f (fixed_points <| g ∘ f) (fixed_points <| f ∘ g) :=
-  fun x hx => hx.map fun x => rfl
+theorem maps_to_fixed_pts_comp (f : α → β) (g : β → α) :
+    Set.MapsTo f (fixed_points <| g ∘ f) (fixed_points <| f ∘ g) := fun x hx => hx.map fun x => rfl
 #align function.maps_to_fixed_pts_comp Function.maps_to_fixed_pts_comp
 
 /-- Given two maps `f : α → β` and `g : β → α`, `g` is a bijective map between the fixed points
 of `f ∘ g` and the fixed points of `g ∘ f`. The inverse map is `f`, see `inv_on_fixed_pts_comp`. -/
-theorem bij_on_fixed_pts_comp (f : α → β) (g : β → α) : Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
+theorem bij_on_fixed_pts_comp (f : α → β) (g : β → α) :
+    Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
   (inv_on_fixed_pts_comp f g).BijOn (maps_to_fixed_pts_comp g f) (maps_to_fixed_pts_comp f g)
 #align function.bij_on_fixed_pts_comp Function.bij_on_fixed_pts_comp
 

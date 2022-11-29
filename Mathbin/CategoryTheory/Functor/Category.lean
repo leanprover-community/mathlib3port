@@ -69,7 +69,8 @@ theorem id_app (F : C ⥤ D) (X : C) : (𝟙 F : F ⟶ F).app X = 𝟙 (F.obj X)
 #align category_theory.nat_trans.id_app CategoryTheory.NatTrans.id_app
 
 @[simp]
-theorem comp_app {F G H : C ⥤ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : (α ≫ β).app X = α.app X ≫ β.app X :=
+theorem comp_app {F G H : C ⥤ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) :
+    (α ≫ β).app X = α.app X ≫ β.app X :=
   rfl
 #align category_theory.nat_trans.comp_app CategoryTheory.NatTrans.comp_app
 
@@ -102,7 +103,8 @@ theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
 def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I where
   app := fun X : C => β.app (F.obj X) ≫ I.map (α.app X)
   naturality' X Y f := by
-    rw [functor.comp_map, functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality, map_comp, assoc]
+    rw [functor.comp_map, functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality,
+      map_comp, assoc]
 #align category_theory.nat_trans.hcomp CategoryTheory.NatTrans.hcomp
 
 -- mathport name: «expr ◫ »
@@ -137,9 +139,7 @@ namespace Functor
 protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E where
   obj k :=
     { obj := fun j => (F.obj j).obj k, map := fun j j' f => (F.map f).app k,
-      map_id' := fun X => by
-        rw [CategoryTheory.Functor.map_id]
-        rfl,
+      map_id' := fun X => by rw [CategoryTheory.Functor.map_id]; rfl,
       map_comp' := fun X Y Z f g => by rw [map_comp, ← comp_app] }
   map c c' f := { app := fun j => (F.obj j).map f }
 #align category_theory.functor.flip CategoryTheory.Functor.flip
@@ -148,12 +148,14 @@ end Functor
 
 @[simp, reassoc]
 theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by simp [← nat_trans.comp_app, ← functor.map_comp]
+    (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
+  simp [← nat_trans.comp_app, ← functor.map_comp]
 #align category_theory.map_hom_inv_app CategoryTheory.map_hom_inv_app
 
 @[simp, reassoc]
 theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by simp [← nat_trans.comp_app, ← functor.map_comp]
+    (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
+  simp [← nat_trans.comp_app, ← functor.map_comp]
 #align category_theory.map_inv_hom_app CategoryTheory.map_inv_hom_app
 
 end CategoryTheory

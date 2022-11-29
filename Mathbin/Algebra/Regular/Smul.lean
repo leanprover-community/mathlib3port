@@ -43,12 +43,14 @@ theorem is_left_regular_iff [Mul R] {a : R} : IsLeftRegular a ↔ IsSmulRegular 
   Iff.rfl
 #align is_left_regular_iff is_left_regular_iff
 
-theorem IsRightRegular.is_smul_regular [Mul R] {c : R} (h : IsRightRegular c) : IsSmulRegular R (MulOpposite.op c) :=
+theorem IsRightRegular.is_smul_regular [Mul R] {c : R} (h : IsRightRegular c) :
+    IsSmulRegular R (MulOpposite.op c) :=
   h
 #align is_right_regular.is_smul_regular IsRightRegular.is_smul_regular
 
 /-- Right-regular multiplication on `R` is equivalent to `Rᵐᵒᵖ`-regularity of `R` itself. -/
-theorem is_right_regular_iff [Mul R] {a : R} : IsRightRegular a ↔ IsSmulRegular R (MulOpposite.op a) :=
+theorem is_right_regular_iff [Mul R] {a : R} :
+    IsRightRegular a ↔ IsSmulRegular R (MulOpposite.op a) :=
   Iff.rfl
 #align is_right_regular_iff is_right_regular_iff
 
@@ -61,14 +63,15 @@ section HasSmul
 variable [HasSmul R M] [HasSmul R S] [HasSmul S M] [IsScalarTower R S M]
 
 /-- The product of `M`-regular elements is `M`-regular. -/
-theorem smul (ra : IsSmulRegular M a) (rs : IsSmulRegular M s) : IsSmulRegular M (a • s) := fun a b ab =>
-  rs (ra ((smul_assoc _ _ _).symm.trans (ab.trans (smul_assoc _ _ _))))
+theorem smul (ra : IsSmulRegular M a) (rs : IsSmulRegular M s) : IsSmulRegular M (a • s) :=
+  fun a b ab => rs (ra ((smul_assoc _ _ _).symm.trans (ab.trans (smul_assoc _ _ _))))
 #align is_smul_regular.smul IsSmulRegular.smul
 
 /-- If an element `b` becomes `M`-regular after multiplying it on the left by an `M`-regular
 element, then `b` is `M`-regular. -/
 theorem of_smul (a : R) (ab : IsSmulRegular M (a • s)) : IsSmulRegular M s :=
-  @Function.Injective.of_comp _ _ _ (fun m : M => a • m) _ fun c d cd => ab (by rwa [smul_assoc, smul_assoc])
+  @Function.Injective.of_comp _ _ _ (fun m : M => a • m) _ fun c d cd =>
+    ab (by rwa [smul_assoc, smul_assoc])
 #align is_smul_regular.of_smul IsSmulRegular.of_smul
 
 /-- An element is `M`-regular if and only if multiplying it on the left by an `M`-regular element
@@ -82,15 +85,18 @@ theorem is_left_regular [Mul R] {a : R} (h : IsSmulRegular R a) : IsLeftRegular 
   h
 #align is_smul_regular.is_left_regular IsSmulRegular.is_left_regular
 
-theorem is_right_regular [Mul R] {a : R} (h : IsSmulRegular R (MulOpposite.op a)) : IsRightRegular a :=
+theorem is_right_regular [Mul R] {a : R} (h : IsSmulRegular R (MulOpposite.op a)) :
+    IsRightRegular a :=
   h
 #align is_smul_regular.is_right_regular IsSmulRegular.is_right_regular
 
-theorem mul [Mul R] [IsScalarTower R R M] (ra : IsSmulRegular M a) (rb : IsSmulRegular M b) : IsSmulRegular M (a * b) :=
+theorem mul [Mul R] [IsScalarTower R R M] (ra : IsSmulRegular M a) (rb : IsSmulRegular M b) :
+    IsSmulRegular M (a * b) :=
   ra.smul rb
 #align is_smul_regular.mul IsSmulRegular.mul
 
-theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSmulRegular M (a * b)) : IsSmulRegular M b := by
+theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSmulRegular M (a * b)) : IsSmulRegular M b :=
+  by
   rw [← smul_eq_mul] at ab
   exact ab.of_smul _
 #align is_smul_regular.of_mul IsSmulRegular.of_mul
@@ -172,8 +178,8 @@ end MonoidSmul
 
 section MonoidWithZero
 
-variable [MonoidWithZero R] [MonoidWithZero S] [Zero M] [MulActionWithZero R M] [MulActionWithZero R S]
-  [MulActionWithZero S M] [IsScalarTower R S M]
+variable [MonoidWithZero R] [MonoidWithZero S] [Zero M] [MulActionWithZero R M]
+  [MulActionWithZero R S] [MulActionWithZero S M] [IsScalarTower R S M]
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
 protected theorem subsingleton (h : IsSmulRegular M (0 : R)) : Subsingleton M :=

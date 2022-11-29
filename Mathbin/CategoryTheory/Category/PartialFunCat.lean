@@ -93,14 +93,16 @@ This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
 def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
   obj X := { x : X // x ≠ X.point }
   map X Y f := Pfun.toSubtype _ f.toFun ∘ Subtype.val
-  map_id' X := Pfun.ext fun a b => Pfun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
+  map_id' X :=
+    Pfun.ext fun a b => Pfun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
   map_comp' X Y Z f g :=
     Pfun.ext fun a c => by
       refine' (pfun.mem_to_subtype_iff.trans _).trans part.mem_bind_iff.symm
       simp_rw [Pfun.mem_to_subtype_iff, Subtype.exists]
       refine'
         ⟨fun h =>
-          ⟨f.to_fun a, fun ha => c.2 <| h.trans ((congr_arg g.to_fun ha : g.to_fun _ = _).trans g.map_point), rfl, h⟩,
+          ⟨f.to_fun a, fun ha =>
+            c.2 <| h.trans ((congr_arg g.to_fun ha : g.to_fun _ = _).trans g.map_point), rfl, h⟩,
           _⟩
       rintro ⟨b, _, rfl : b = _, h⟩
       exact h
@@ -114,7 +116,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         "The functor which maps undefined values to a new point. This makes the maps total and creates\npointed types. This the noncomputable part of the equivalence `PartialFun_equiv_Pointed`. It can't\nbe computable because `= option.none` is decidable while the domain of a general `part` isn't. -/")]
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (Attr.simps "simps" [] (Attr.simpsArgsRest [] [(group `map)])))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (Attr.simps "simps" [] (Attr.simpsArgsRest [] [(group `map)])))]
         "]")]
       []
       [(Command.noncomputable "noncomputable")]
@@ -125,7 +129,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       (Command.declId `partialFunToPointed [])
       (Command.optDeclSig
        []
-       [(Term.typeSpec ":" (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_» `PartialFunCat " ⥤ " `PointedCat))])
+       [(Term.typeSpec
+         ":"
+         (CategoryTheory.CategoryTheory.Functor.Basic.«term_⥤_» `PartialFunCat " ⥤ " `PointedCat))])
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -145,7 +151,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 ":="
                 (Term.fun
                  "fun"
-                 (Term.basicFun [`X] [] "=>" (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
+                 (Term.basicFun
+                  [`X]
+                  []
+                  "=>"
+                  (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `map [])
@@ -160,7 +170,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    "⟨"
                    [(Term.app
                      `Option.elim'
-                     [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+                     [`none
+                      (Term.fun
+                       "fun"
+                       (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
                     ","
                     `rfl]
                    "⟩"))))
@@ -189,7 +202,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         (Term.app `Option.recOn [`o `rfl])
                         [(Term.fun
                           "fun"
-                          (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
+                          (Term.basicFun
+                           [`a]
+                           []
+                           "=>"
+                           (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `map_comp' [])
@@ -219,7 +236,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            [`a]
                            []
                            "=>"
-                           (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
+                           (Term.app
+                            `Part.bind_to_option
+                            [(Term.hole "_") (Term.hole "_")])))])))])))))]
               (Term.optEllipsis [])
               []
               "}")))])))
@@ -246,7 +265,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                ":="
                (Term.fun
                 "fun"
-                (Term.basicFun [`X] [] "=>" (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
+                (Term.basicFun
+                 [`X]
+                 []
+                 "=>"
+                 (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
               ","
               (Term.structInstField
                (Term.structInstLVal `map [])
@@ -261,7 +284,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   "⟨"
                   [(Term.app
                     `Option.elim'
-                    [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+                    [`none
+                     (Term.fun
+                      "fun"
+                      (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
                    ","
                    `rfl]
                   "⟩"))))
@@ -290,7 +316,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        (Term.app `Option.recOn [`o `rfl])
                        [(Term.fun
                          "fun"
-                         (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
+                         (Term.basicFun
+                          [`a]
+                          []
+                          "=>"
+                          (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
               ","
               (Term.structInstField
                (Term.structInstLVal `map_comp' [])
@@ -320,7 +350,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           [`a]
                           []
                           "=>"
-                          (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
+                          (Term.app
+                           `Part.bind_to_option
+                           [(Term.hole "_") (Term.hole "_")])))])))])))))]
              (Term.optEllipsis [])
              []
              "}")))])))
@@ -339,7 +371,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            ":="
            (Term.fun
             "fun"
-            (Term.basicFun [`X] [] "=>" (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
+            (Term.basicFun
+             [`X]
+             []
+             "=>"
+             (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
           ","
           (Term.structInstField
            (Term.structInstLVal `map [])
@@ -354,7 +390,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               "⟨"
               [(Term.app
                 `Option.elim'
-                [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+                [`none
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
                ","
                `rfl]
               "⟩"))))
@@ -383,7 +422,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    (Term.app `Option.recOn [`o `rfl])
                    [(Term.fun
                      "fun"
-                     (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
           ","
           (Term.structInstField
            (Term.structInstLVal `map_comp' [])
@@ -428,7 +471,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           ":="
           (Term.fun
            "fun"
-           (Term.basicFun [`X] [] "=>" (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
+           (Term.basicFun
+            [`X]
+            []
+            "=>"
+            (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
          ","
          (Term.structInstField
           (Term.structInstLVal `map [])
@@ -443,7 +490,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              "⟨"
              [(Term.app
                `Option.elim'
-               [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+               [`none
+                (Term.fun
+                 "fun"
+                 (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
               ","
               `rfl]
              "⟩"))))
@@ -472,7 +522,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   (Term.app `Option.recOn [`o `rfl])
                   [(Term.fun
                     "fun"
-                    (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
          ","
          (Term.structInstField
           (Term.structInstLVal `map_comp' [])
@@ -513,7 +567,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
        [(Term.structInstField
          (Term.structInstLVal `obj [])
          ":="
-         (Term.fun "fun" (Term.basicFun [`X] [] "=>" (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`X]
+           []
+           "=>"
+           (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩"))))
         ","
         (Term.structInstField
          (Term.structInstLVal `map [])
@@ -528,7 +588,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             "⟨"
             [(Term.app
               `Option.elim'
-              [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+              [`none
+               (Term.fun
+                "fun"
+                (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
              ","
              `rfl]
             "⟩"))))
@@ -557,7 +620,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  (Term.app `Option.recOn [`o `rfl])
                  [(Term.fun
                    "fun"
-                   (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
         ","
         (Term.structInstField
          (Term.structInstLVal `map_comp' [])
@@ -614,7 +681,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               (Term.app `Option.recOn [`o `rfl])
               [(Term.fun
                 "fun"
-                (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))]))))
+                (Term.basicFun
+                 [`a]
+                 []
+                 "=>"
+                 (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
        (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
@@ -631,7 +702,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             (Term.app `Option.recOn [`o `rfl])
             [(Term.fun
               "fun"
-              (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))]))
+              (Term.basicFun
+               [`a]
+               []
+               "=>"
+               (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `funext
@@ -645,7 +720,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            (Term.app `Option.recOn [`o `rfl])
            [(Term.fun
              "fun"
-             (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])
+             (Term.basicFun
+              [`a]
+              []
+              "=>"
+              (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -659,39 +738,57 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
          (Term.app `Option.recOn [`o `rfl])
          [(Term.fun
            "fun"
-           (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))
+           (Term.basicFun
+            [`a]
+            []
+            "=>"
+            (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.app `Option.recOn [`o `rfl])
        [(Term.fun
          "fun"
-         (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])
+         (Term.basicFun
+          [`a]
+          []
+          "=>"
+          (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`a]
+        []
+        "=>"
+        (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Part.bind_to_option
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`o `rfl])
@@ -699,16 +796,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `o
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Option.recOn [`o `rfl]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -716,11 +817,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `o
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
@@ -728,15 +831,18 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Hom.ext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -744,31 +850,36 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Z
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Y
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -791,7 +902,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              "=>"
              (Term.app
               (Term.app `Option.recOn [`o `rfl])
-              [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))]))))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`a]
+                 []
+                 "=>"
+                 (Term.app `Part.some_to_option [(Term.hole "_")])))])))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
        (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
@@ -806,7 +923,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            "=>"
            (Term.app
             (Term.app `Option.recOn [`o `rfl])
-            [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))]))
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `funext
@@ -818,7 +937,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           "=>"
           (Term.app
            (Term.app `Option.recOn [`o `rfl])
-           [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])
+           [(Term.fun
+             "fun"
+             (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -830,32 +951,41 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         "=>"
         (Term.app
          (Term.app `Option.recOn [`o `rfl])
-         [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.app `Option.recOn [`o `rfl])
-       [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])
+       [(Term.fun
+         "fun"
+         (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Part.some_to_option [(Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Part.some_to_option
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`o `rfl])
@@ -863,16 +993,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `o
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Option.recOn [`o `rfl]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -880,11 +1014,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `o
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
@@ -892,15 +1028,18 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Hom.ext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -908,7 +1047,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -922,7 +1062,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
          "⟨"
          [(Term.app
            `Option.elim'
-           [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+           [`none
+            (Term.fun
+             "fun"
+             (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
           ","
           `rfl]
          "⟩")))
@@ -931,17 +1074,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
        "⟨"
        [(Term.app
          `Option.elim'
-         [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+         [`none
+          (Term.fun
+           "fun"
+           (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
         ","
         `rfl]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `Option.elim'
-       [`none (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
+       [`none
+        (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.proj (Term.app `f [`a]) "." `toOption)))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -954,78 +1102,100 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `f [`a]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `none
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Y
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`X] [] "=>" (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩")))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`X]
+        []
+        "=>"
+        (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [(Term.app `Option [`X]) "," `none] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `none
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Option [`X])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1060,14 +1230,21 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 ,
                 map_id'
                   :=
-                  fun X => PointedCat.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.some_to_option _
+                  fun
+                    X
+                      =>
+                      PointedCat.Hom.ext _ _
+                        <|
+                        funext fun o => Option.recOn o rfl fun a => Part.some_to_option _
                 ,
                 map_comp'
                   :=
                   fun
                     X Y Z f g
                       =>
-                      PointedCat.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.bind_to_option _ _
+                      PointedCat.Hom.ext _ _
+                        <|
+                        funext fun o => Option.recOn o rfl fun a => Part.bind_to_option _ _
               }
 #align PartialFun_to_Pointed partialFunToPointed
 
@@ -1134,7 +1311,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            [`a]
                            []
                            "=>"
-                           (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                           (Term.anonymousCtor
+                            "⟨"
+                            [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                            "⟩"))))
                         ","
                         (Term.structInstField
                          (Term.structInstLVal `invFun [])
@@ -1157,7 +1337,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          ":="
                          (Term.fun
                           "fun"
-                          (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                          (Term.basicFun
+                           [`a]
+                           []
+                           "=>"
+                           (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                         ","
                         (Term.structInstField
                          (Term.structInstLVal `right_inv [])
@@ -1210,12 +1394,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            []
                            (Tactic.dsimp "dsimp" [] [] [] [] [])
                            []
-                           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                           (Tactic.rwSeq
+                            "rw"
+                            []
+                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                            [])
                            []
                            (Tactic.refine'
                             "refine'"
                             (Term.app
-                             (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                             (Term.proj
+                              (Term.app `part.mem_bind_iff.trans [(Term.hole "_")])
+                              "."
+                              `trans)
                              [`pfun.mem_to_subtype_iff.symm]))
                            []
                            (Std.Tactic.obtain
@@ -1225,11 +1416,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                 "⟨"
                                 [(Std.Tactic.RCases.rcasesPatLo
                                   (Std.Tactic.RCases.rcasesPatMed
-                                   [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                                   [(Std.Tactic.RCases.rcasesPat.one `b)
+                                    "|"
+                                    (Std.Tactic.RCases.rcasesPat.one `b)])
                                   [])
                                  ","
                                  (Std.Tactic.RCases.rcasesPatLo
-                                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                                  (Std.Tactic.RCases.rcasesPatMed
+                                   [(Std.Tactic.RCases.rcasesPat.one `hb)])
                                   [])]
                                 "⟩")])]
                             []
@@ -1237,7 +1431,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            []
                            («tactic___;_»
                             (cdotTk (patternIgnore (token.«·» "·")))
-                            [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                            [(group
+                              (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
+                              [])])
                            []
                            (Tactic.dsimp "dsimp" [] [] [] [] [])
                            []
@@ -1257,7 +1453,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                              "]")
                             [])
                            []
-                           (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                           (Tactic.refine'
+                            "refine'"
+                            (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                            []
                            (Tactic.exact "exact" `eq_comm)])))))])))])
                (Term.app
@@ -1296,7 +1494,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                             "then"
                             `none
                             "else"
-                            (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
+                            (Term.app
+                             `some
+                             [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
                         ","
                         (Term.structInstField
                          (Term.structInstLVal `left_inv [])
@@ -1316,7 +1516,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                []
                                "=>"
                                («term_<|_»
-                                (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                                (Term.proj
+                                 (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+                                 "."
+                                 `trans)
                                 "<|"
                                 (Term.byTactic
                                  "by"
@@ -1356,7 +1559,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                   `Option.elim'
                                   [(Term.hole "_")
                                    (Term.hole "_")
-                                   (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+                                   (Term.app
+                                    `dite
+                                    [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
                                  "="
                                  (Term.hole "_"))
                                 [])
@@ -1365,7 +1570,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                []
                                («tactic___;_»
                                 (cdotTk (patternIgnore (token.«·» "·")))
-                                [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                                [(group
+                                  (Tactic.rwSeq
+                                   "rw"
+                                   []
+                                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                                   [])
+                                  [])
                                  (group (Tactic.tacticRfl "rfl") [])])
                                []
                                («tactic___;_»
@@ -1411,7 +1622,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                 (Tactic.change
                                  "change"
                                  («term_=_»
-                                  (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                                  (Term.app
+                                   `Option.elim'
+                                   [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
                                   "="
                                   (Term.hole "_"))
                                  [])
@@ -1419,7 +1632,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                 (Tactic.rwSeq
                                  "rw"
                                  []
-                                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                                 (Tactic.rwRuleSeq
+                                  "["
+                                  [(Tactic.rwRule [] `Part.elim_to_option)]
+                                  "]")
                                  [])
                                 []
                                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
@@ -1431,7 +1647,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                 («tactic___;_»
                                  (cdotTk (patternIgnore (token.«·» "·")))
                                  [(group
-                                   (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                                   (Tactic.exact
+                                    "exact"
+                                    (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
                                    [])])])))))])))]))))])])))])))
        [])
       []
@@ -1475,7 +1693,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           [`a]
                           []
                           "=>"
-                          (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                          (Term.anonymousCtor
+                           "⟨"
+                           [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                           "⟩"))))
                        ","
                        (Term.structInstField
                         (Term.structInstLVal `invFun [])
@@ -1498,7 +1719,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         ":="
                         (Term.fun
                          "fun"
-                         (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                         (Term.basicFun
+                          [`a]
+                          []
+                          "=>"
+                          (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                        ","
                        (Term.structInstField
                         (Term.structInstLVal `right_inv [])
@@ -1551,12 +1776,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           []
                           (Tactic.dsimp "dsimp" [] [] [] [] [])
                           []
-                          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                          (Tactic.rwSeq
+                           "rw"
+                           []
+                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                           [])
                           []
                           (Tactic.refine'
                            "refine'"
                            (Term.app
-                            (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                            (Term.proj
+                             (Term.app `part.mem_bind_iff.trans [(Term.hole "_")])
+                             "."
+                             `trans)
                             [`pfun.mem_to_subtype_iff.symm]))
                           []
                           (Std.Tactic.obtain
@@ -1566,11 +1798,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                "⟨"
                                [(Std.Tactic.RCases.rcasesPatLo
                                  (Std.Tactic.RCases.rcasesPatMed
-                                  [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                                  [(Std.Tactic.RCases.rcasesPat.one `b)
+                                   "|"
+                                   (Std.Tactic.RCases.rcasesPat.one `b)])
                                  [])
                                 ","
                                 (Std.Tactic.RCases.rcasesPatLo
-                                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                                 (Std.Tactic.RCases.rcasesPatMed
+                                  [(Std.Tactic.RCases.rcasesPat.one `hb)])
                                  [])]
                                "⟩")])]
                            []
@@ -1578,7 +1813,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           []
                           («tactic___;_»
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                           [(group
+                             (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
+                             [])])
                           []
                           (Tactic.dsimp "dsimp" [] [] [] [] [])
                           []
@@ -1598,7 +1835,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                             "]")
                            [])
                           []
-                          (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                          (Tactic.refine'
+                           "refine'"
+                           (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                           []
                           (Tactic.exact "exact" `eq_comm)])))))])))])
               (Term.app
@@ -1637,7 +1876,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            "then"
                            `none
                            "else"
-                           (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
+                           (Term.app
+                            `some
+                            [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
                        ","
                        (Term.structInstField
                         (Term.structInstLVal `left_inv [])
@@ -1657,7 +1898,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                               []
                               "=>"
                               («term_<|_»
-                               (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                               (Term.proj
+                                (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+                                "."
+                                `trans)
                                "<|"
                                (Term.byTactic
                                 "by"
@@ -1697,7 +1941,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                  `Option.elim'
                                  [(Term.hole "_")
                                   (Term.hole "_")
-                                  (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+                                  (Term.app
+                                   `dite
+                                   [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
                                 "="
                                 (Term.hole "_"))
                                [])
@@ -1706,7 +1952,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                               []
                               («tactic___;_»
                                (cdotTk (patternIgnore (token.«·» "·")))
-                               [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                               [(group
+                                 (Tactic.rwSeq
+                                  "rw"
+                                  []
+                                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                                  [])
+                                 [])
                                 (group (Tactic.tacticRfl "rfl") [])])
                               []
                               («tactic___;_»
@@ -1752,7 +2004,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                (Tactic.change
                                 "change"
                                 («term_=_»
-                                 (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                                 (Term.app
+                                  `Option.elim'
+                                  [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
                                  "="
                                  (Term.hole "_"))
                                 [])
@@ -1772,7 +2026,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                («tactic___;_»
                                 (cdotTk (patternIgnore (token.«·» "·")))
                                 [(group
-                                  (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                                  (Tactic.exact
+                                   "exact"
+                                   (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
                                   [])])])))))])))]))))])])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1808,7 +2064,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       [`a]
                       []
                       "=>"
-                      (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                      (Term.anonymousCtor
+                       "⟨"
+                       [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                       "⟩"))))
                    ","
                    (Term.structInstField
                     (Term.structInstLVal `invFun [])
@@ -1831,7 +2090,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     ":="
                     (Term.fun
                      "fun"
-                     (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                    ","
                    (Term.structInstField
                     (Term.structInstLVal `right_inv [])
@@ -1884,7 +2147,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       (Tactic.dsimp "dsimp" [] [] [] [] [])
                       []
-                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                      (Tactic.rwSeq
+                       "rw"
+                       []
+                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                       [])
                       []
                       (Tactic.refine'
                        "refine'"
@@ -1899,11 +2166,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            "⟨"
                            [(Std.Tactic.RCases.rcasesPatLo
                              (Std.Tactic.RCases.rcasesPatMed
-                              [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                              [(Std.Tactic.RCases.rcasesPat.one `b)
+                               "|"
+                               (Std.Tactic.RCases.rcasesPat.one `b)])
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `hb)])
                              [])]
                            "⟩")])]
                        []
@@ -1911,7 +2181,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       («tactic___;_»
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                       [(group
+                         (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
+                         [])])
                       []
                       (Tactic.dsimp "dsimp" [] [] [] [] [])
                       []
@@ -1931,7 +2203,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         "]")
                        [])
                       []
-                      (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                      (Tactic.refine'
+                       "refine'"
+                       (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                       []
                       (Tactic.exact "exact" `eq_comm)])))))])))])
           (Term.app
@@ -1990,7 +2264,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           []
                           "=>"
                           («term_<|_»
-                           (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                           (Term.proj
+                            (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+                            "."
+                            `trans)
                            "<|"
                            (Term.byTactic
                             "by"
@@ -2039,7 +2316,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           []
                           («tactic___;_»
                            (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                           [(group
+                             (Tactic.rwSeq
+                              "rw"
+                              []
+                              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                              [])
+                             [])
                             (group (Tactic.tacticRfl "rfl") [])])
                           []
                           («tactic___;_»
@@ -2085,7 +2368,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            (Tactic.change
                             "change"
                             («term_=_»
-                             (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                             (Term.app
+                              `Option.elim'
+                              [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
                              "="
                              (Term.hole "_"))
                             [])
@@ -2105,7 +2390,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            («tactic___;_»
                             (cdotTk (patternIgnore (token.«·» "·")))
                             [(group
-                              (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                              (Tactic.exact
+                               "exact"
+                               (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
                               [])])])))))])))]))))])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
@@ -2137,7 +2424,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      [`a]
                      []
                      "=>"
-                     (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                     (Term.anonymousCtor
+                      "⟨"
+                      [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                      "⟩"))))
                   ","
                   (Term.structInstField
                    (Term.structInstLVal `invFun [])
@@ -2158,7 +2448,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   (Term.structInstField
                    (Term.structInstLVal `left_inv [])
                    ":="
-                   (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                   ","
                   (Term.structInstField
                    (Term.structInstLVal `right_inv [])
@@ -2211,7 +2507,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      []
                      (Tactic.dsimp "dsimp" [] [] [] [] [])
                      []
-                     (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                     (Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                      [])
                      []
                      (Tactic.refine'
                       "refine'"
@@ -2226,7 +2526,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           "⟨"
                           [(Std.Tactic.RCases.rcasesPatLo
                             (Std.Tactic.RCases.rcasesPatMed
-                             [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                             [(Std.Tactic.RCases.rcasesPat.one `b)
+                              "|"
+                              (Std.Tactic.RCases.rcasesPat.one `b)])
                             [])
                            ","
                            (Std.Tactic.RCases.rcasesPatLo
@@ -2238,7 +2540,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      []
                      («tactic___;_»
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                      [(group
+                        (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
+                        [])])
                      []
                      (Tactic.dsimp "dsimp" [] [] [] [] [])
                      []
@@ -2258,7 +2562,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        "]")
                       [])
                      []
-                     (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                     (Tactic.refine'
+                      "refine'"
+                      (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                      []
                      (Tactic.exact "exact" `eq_comm)])))))])))])
          (Term.app
@@ -2317,7 +2623,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          []
                          "=>"
                          («term_<|_»
-                          (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                          (Term.proj
+                           (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+                           "."
+                           `trans)
                           "<|"
                           (Term.byTactic
                            "by"
@@ -2366,7 +2675,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          []
                          («tactic___;_»
                           (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                          [(group
+                            (Tactic.rwSeq
+                             "rw"
+                             []
+                             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                             [])
+                            [])
                            (group (Tactic.tacticRfl "rfl") [])])
                          []
                          («tactic___;_»
@@ -2412,21 +2727,31 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           (Tactic.change
                            "change"
                            («term_=_»
-                            (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                            (Term.app
+                             `Option.elim'
+                             [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
                             "="
                             (Term.hole "_"))
                            [])
                           []
-                          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                          (Tactic.rwSeq
+                           "rw"
+                           []
+                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                           [])
                           []
                           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                           []
-                          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                          («tactic___;_»
+                           (cdotTk (patternIgnore (token.«·» "·")))
+                           [(group (Tactic.tacticRfl "rfl") [])])
                           []
                           («tactic___;_»
                            (cdotTk (patternIgnore (token.«·» "·")))
                            [(group
-                             (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                             (Tactic.exact
+                              "exact"
+                              (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
                              [])])])))))])))]))))])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -2456,7 +2781,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     [`a]
                     []
                     "=>"
-                    (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                    (Term.anonymousCtor
+                     "⟨"
+                     [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                     "⟩"))))
                  ","
                  (Term.structInstField
                   (Term.structInstLVal `invFun [])
@@ -2477,7 +2805,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  (Term.structInstField
                   (Term.structInstLVal `left_inv [])
                   ":="
-                  (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                  ","
                  (Term.structInstField
                   (Term.structInstLVal `right_inv [])
@@ -2530,7 +2864,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     []
                     (Tactic.dsimp "dsimp" [] [] [] [] [])
                     []
-                    (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                    (Tactic.rwSeq
+                     "rw"
+                     []
+                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                     [])
                     []
                     (Tactic.refine'
                      "refine'"
@@ -2545,7 +2883,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          "⟨"
                          [(Std.Tactic.RCases.rcasesPatLo
                            (Std.Tactic.RCases.rcasesPatMed
-                            [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                            [(Std.Tactic.RCases.rcasesPat.one `b)
+                             "|"
+                             (Std.Tactic.RCases.rcasesPat.one `b)])
                            [])
                           ","
                           (Std.Tactic.RCases.rcasesPatLo
@@ -2557,7 +2897,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     []
                     («tactic___;_»
                      (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                     [(group
+                       (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim))
+                       [])])
                     []
                     (Tactic.dsimp "dsimp" [] [] [] [] [])
                     []
@@ -2577,7 +2919,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       "]")
                      [])
                     []
-                    (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                    (Tactic.refine'
+                     "refine'"
+                     (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                     []
                     (Tactic.exact "exact" `eq_comm)])))))])))])
         (Term.app
@@ -2636,7 +2980,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         []
                         "=>"
                         («term_<|_»
-                         (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                         (Term.proj
+                          (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+                          "."
+                          `trans)
                          "<|"
                          (Term.byTactic
                           "by"
@@ -2685,7 +3032,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         []
                         («tactic___;_»
                          (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                         [(group
+                           (Tactic.rwSeq
+                            "rw"
+                            []
+                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                            [])
+                           [])
                           (group (Tactic.tacticRfl "rfl") [])])
                         []
                         («tactic___;_»
@@ -2731,16 +3084,24 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          (Tactic.change
                           "change"
                           («term_=_»
-                           (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                           (Term.app
+                            `Option.elim'
+                            [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
                            "="
                            (Term.hole "_"))
                           [])
                          []
-                         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                         (Tactic.rwSeq
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                          [])
                          []
                          (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                          []
-                         («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                         («tactic___;_»
+                          (cdotTk (patternIgnore (token.«·» "·")))
+                          [(group (Tactic.tacticRfl "rfl") [])])
                          []
                          («tactic___;_»
                           (cdotTk (patternIgnore (token.«·» "·")))
@@ -2806,7 +3167,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       "=>"
                       («term_<|_»
-                       (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                       (Term.proj
+                        (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+                        "."
+                        `trans)
                        "<|"
                        (Term.byTactic
                         "by"
@@ -2855,7 +3219,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       («tactic___;_»
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                       [(group
+                         (Tactic.rwSeq
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                          [])
+                         [])
                         (group (Tactic.tacticRfl "rfl") [])])
                       []
                       («tactic___;_»
@@ -2906,11 +3276,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          (Term.hole "_"))
                         [])
                        []
-                       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                       (Tactic.rwSeq
+                        "rw"
+                        []
+                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                        [])
                        []
                        (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                        []
-                       («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                       («tactic___;_»
+                        (cdotTk (patternIgnore (token.«·» "·")))
+                        [(group (Tactic.tacticRfl "rfl") [])])
                        []
                        («tactic___;_»
                         (cdotTk (patternIgnore (token.«·» "·")))
@@ -2961,11 +3337,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        (Term.hole "_"))
                       [])
                      []
-                     (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                     (Tactic.rwSeq
+                      "rw"
+                      []
+                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                      [])
                      []
                      (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                      []
-                     («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                     («tactic___;_»
+                      (cdotTk (patternIgnore (token.«·» "·")))
+                      [(group (Tactic.tacticRfl "rfl") [])])
                      []
                      («tactic___;_»
                       (cdotTk (patternIgnore (token.«·» "·")))
@@ -3008,15 +3390,23 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      (Term.hole "_"))
                     [])
                    []
-                   (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                   (Tactic.rwSeq
+                    "rw"
+                    []
+                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                    [])
                    []
                    (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                    []
-                   («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                   («tactic___;_»
+                    (cdotTk (patternIgnore (token.«·» "·")))
+                    [(group (Tactic.tacticRfl "rfl") [])])
                    []
                    («tactic___;_»
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])))]))
+                    [(group
+                      (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                      [])])])))))])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `funext
@@ -3050,15 +3440,23 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     (Term.hole "_"))
                    [])
                   []
-                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                   [])
                   []
                   (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                   []
-                  («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                  («tactic___;_»
+                   (cdotTk (patternIgnore (token.«·» "·")))
+                   [(group (Tactic.tacticRfl "rfl") [])])
                   []
                   («tactic___;_»
                    (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])))])
+                   [(group
+                     (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                     [])])])))))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3092,15 +3490,23 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   (Term.hole "_"))
                  [])
                 []
-                (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                 [])
                 []
                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                («tactic___;_»
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(group (Tactic.tacticRfl "rfl") [])])
                 []
                 («tactic___;_»
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])))
+                 [(group
+                   (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                   [])])])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.app `Option.recOn [`a `f.map_point.symm])
@@ -3126,15 +3532,23 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 (Term.hole "_"))
                [])
               []
-              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+               [])
               []
               (Mathlib.Tactic.splitIfs "split_ifs" [] [])
               []
-              («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+              («tactic___;_»
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(group (Tactic.tacticRfl "rfl") [])])
               []
               («tactic___;_»
                (cdotTk (patternIgnore (token.«·» "·")))
-               [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])
+               [(group
+                 (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                 [])])])))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3154,18 +3568,29 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             (Tactic.change
              "change"
-             («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+             («term_=_»
+              (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+              "="
+              (Term.hole "_"))
              [])
             []
-            (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+             [])
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+            («tactic___;_»
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(group (Tactic.tacticRfl "rfl") [])])
             []
             («tactic___;_»
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))
+             [(group
+               (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+               [])])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -3177,18 +3602,29 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           []
           (Tactic.change
            "change"
-           («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+           («term_=_»
+            (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+            "="
+            (Term.hole "_"))
            [])
           []
-          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+          (Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+           [])
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.tacticRfl "rfl") [])])
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
-           [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))
+           [(group
+             (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+             [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_»
@@ -3206,15 +3642,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `of_not_not
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `of_not_not [`h]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Eq.symm
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -3231,38 +3671,50 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Part.elim_to_option
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.change
        "change"
-       («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+       («term_=_»
+        (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+        "="
+        (Term.hole "_"))
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
+      («term_=_»
+       (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+       "="
+       (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -3278,7 +3730,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`a `f.map_point.symm])
@@ -3286,28 +3739,37 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f.map_point.symm
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Option.recOn [`a `f.map_point.symm]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Option.recOn [`a `f.map_point.symm])
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
@@ -3315,15 +3777,18 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Hom.ext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -3331,19 +3796,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Y
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app
@@ -3450,7 +3918,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      []
                      («tactic___;_»
                       (cdotTk (patternIgnore (token.«·» "·")))
-                      [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                      [(group
+                        (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                        [])
                        (group (Tactic.tacticRfl "rfl") [])])
                      []
                      («tactic___;_»
@@ -3565,7 +4035,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    []
                    («tactic___;_»
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                    [(group
+                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                      [])
                      (group (Tactic.tacticRfl "rfl") [])])
                    []
                    («tactic___;_»
@@ -3672,10 +4144,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  []
                  («tactic___;_»
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                  [(group
+                    (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                    [])
                    (group (Tactic.tacticRfl "rfl") [])])
                  []
-                 («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                 («tactic___;_»
+                  (cdotTk (patternIgnore (token.«·» "·")))
+                  [(group (Tactic.tacticRfl "rfl") [])])]))))))]
          (Term.optEllipsis [])
          []
          "}")
@@ -3684,7 +4160,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInst', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -3771,7 +4248,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 («term_=_»
                  (Term.app
                   `Option.elim'
-                  [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+                  [(Term.hole "_")
+                   (Term.hole "_")
+                   (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
                  "="
                  (Term.hole "_"))
                 [])
@@ -3780,10 +4259,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                []
                («tactic___;_»
                 (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                [(group
+                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                  [])
                  (group (Tactic.tacticRfl "rfl") [])])
                []
-               («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(group (Tactic.tacticRfl "rfl") [])])]))))))]
        (Term.optEllipsis [])
        []
        "}")
@@ -3804,7 +4287,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              («term_=_»
               (Term.app
                `Option.elim'
-               [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+               [(Term.hole "_")
+                (Term.hole "_")
+                (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
               "="
               (Term.hole "_"))
              [])
@@ -3813,10 +4298,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             («tactic___;_»
              (cdotTk (patternIgnore (token.«·» "·")))
-             [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+             [(group
+               (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+               [])
               (group (Tactic.tacticRfl "rfl") [])])
             []
-            («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])])))))
+            («tactic___;_»
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(group (Tactic.tacticRfl "rfl") [])])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -3827,7 +4316,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            («term_=_»
             (Term.app
              `Option.elim'
-             [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+             [(Term.hole "_")
+              (Term.hole "_")
+              (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
             "="
             (Term.hole "_"))
            [])
@@ -3839,7 +4330,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
             (group (Tactic.tacticRfl "rfl") [])])
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])])))
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.tacticRfl "rfl") [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
@@ -3859,7 +4352,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3871,7 +4365,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
        («term_=_»
         (Term.app
          `Option.elim'
-         [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+         [(Term.hole "_")
+          (Term.hole "_")
+          (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
         "="
         (Term.hole "_"))
        [])
@@ -3879,16 +4375,21 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       («term_=_»
        (Term.app
         `Option.elim'
-        [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+        [(Term.hole "_")
+         (Term.hole "_")
+         (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
        "="
        (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app
        `Option.elim'
-       [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+       [(Term.hole "_")
+        (Term.hole "_")
+        (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3897,21 +4398,26 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `dite
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
@@ -3920,15 +4426,18 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -3938,7 +4447,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4092,17 +4602,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.coe_eta
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.val_eq_coe
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
@@ -4116,12 +4629,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `dif_neg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -4129,7 +4647,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
@@ -4141,21 +4660,27 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `dif_pos
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023,
+     term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")])
@@ -4166,7 +4691,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4203,18 +4729,23 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       (Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `some
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `none
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» `a "=" (Term.proj `X "." `point))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4222,7 +4753,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -4233,7 +4765,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4242,7 +4775,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.val
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4250,26 +4784,32 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Iso.mk
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `nat_iso.of_components
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 0, term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -4320,7 +4860,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 "=>"
                 (Term.app
-                 (Term.paren "(" (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")]) ")")
+                 (Term.paren
+                  "("
+                  (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")])
+                  ")")
                  [(Term.fun
                    "fun"
                    (Term.basicFun
@@ -4328,7 +4871,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     []
                     "=>"
                     («term_<|_»
-                     (Term.proj (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")") "." `trans)
+                     (Term.proj
+                      (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")")
+                      "."
+                      `trans)
                      "<|"
                      (Term.byTactic
                       "by"
@@ -4368,7 +4914,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        `Option.elim'
                        [(Term.hole "_")
                         (Term.hole "_")
-                        (Term.paren "(" (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) ")")])
+                        (Term.paren
+                         "("
+                         (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                         ")")])
                       "="
                       (Term.hole "_"))
                      [])
@@ -4377,7 +4926,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     []
                     («tactic___;_»
                      (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                     [(group
+                       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") [])
+                       [])
                       (group (Tactic.tacticRfl "rfl") [])])
                     []
                     («tactic___;_»
@@ -4441,7 +4992,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   []
                   "=>"
                   (Term.app
-                   (Term.paren "(" (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")]) ")")
+                   (Term.paren
+                    "("
+                    (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")])
+                    ")")
                    [(Term.fun
                      "fun"
                      (Term.basicFun
@@ -4492,7 +5046,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                          `Option.elim'
                          [(Term.hole "_")
                           (Term.hole "_")
-                          (Term.paren "(" (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) ")")])
+                          (Term.paren
+                           "("
+                           (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                           ")")])
                         "="
                         (Term.hole "_"))
                        [])
@@ -4501,7 +5058,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       («tactic___;_»
                        (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                       [(group
+                         (Tactic.rwSeq
+                          "rw"
+                          []
+                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]")
+                          [])
+                         [])
                         (group (Tactic.tacticRfl "rfl") [])])
                       []
                       («tactic___;_»
@@ -4553,16 +5116,24 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                         (Term.hole "_"))
                        [])
                       []
-                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                      (Tactic.rwSeq
+                       "rw"
+                       []
+                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                       [])
                       []
                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                       []
-                      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                      («tactic___;_»
+                       (cdotTk (patternIgnore (token.«·» "·")))
+                       [(group (Tactic.tacticRfl "rfl") [])])
                       []
                       («tactic___;_»
                        (cdotTk (patternIgnore (token.«·» "·")))
                        [(group
-                         (Tactic.exact "exact" (Term.app `Eq.symm [(Term.paren "(" (Term.app `of_not_not [`h]) ")")]))
+                         (Tactic.exact
+                          "exact"
+                          (Term.app `Eq.symm [(Term.paren "(" (Term.app `of_not_not [`h]) ")")]))
                          [])])])))))])))]))))])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -4591,7 +5162,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`a]
                   []
                   "=>"
-                  (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                   "⟩"))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `invFun [])
@@ -4612,7 +5186,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                (Term.structInstField
                 (Term.structInstLVal `left_inv [])
                 ":="
-                (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`a]
+                  []
+                  "=>"
+                  (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
@@ -4665,7 +5245,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   []
                   (Tactic.dsimp "dsimp" [] [] [] [] [])
                   []
-                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                  (Tactic.rwSeq
+                   "rw"
+                   []
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                   [])
                   []
                   (Tactic.refine'
                    "refine'"
@@ -4680,7 +5264,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        "⟨"
                        [(Std.Tactic.RCases.rcasesPatLo
                          (Std.Tactic.RCases.rcasesPatMed
-                          [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                          [(Std.Tactic.RCases.rcasesPat.one `b)
+                           "|"
+                           (Std.Tactic.RCases.rcasesPat.one `b)])
                          [])
                         ","
                         (Std.Tactic.RCases.rcasesPatLo
@@ -4712,7 +5298,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     "]")
                    [])
                   []
-                  (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                  (Tactic.refine'
+                   "refine'"
+                   (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                   []
                   (Tactic.exact "exact" `eq_comm)])))))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -4740,7 +5328,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 (Tactic.dsimp "dsimp" [] [] [] [] [])
                 []
-                (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                (Tactic.rwSeq
+                 "rw"
+                 []
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                 [])
                 []
                 (Tactic.refine'
                  "refine'"
@@ -4755,7 +5347,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      "⟨"
                      [(Std.Tactic.RCases.rcasesPatLo
                        (Std.Tactic.RCases.rcasesPatMed
-                        [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                        [(Std.Tactic.RCases.rcasesPat.one `b)
+                         "|"
+                         (Std.Tactic.RCases.rcasesPat.one `b)])
                        [])
                       ","
                       (Std.Tactic.RCases.rcasesPatLo
@@ -4787,7 +5381,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   "]")
                  [])
                 []
-                (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                (Tactic.refine'
+                 "refine'"
+                 (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                 []
                 (Tactic.exact "exact" `eq_comm)])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4807,7 +5403,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               []
               (Tactic.dsimp "dsimp" [] [] [] [] [])
               []
-              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+              (Tactic.rwSeq
+               "rw"
+               []
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+               [])
               []
               (Tactic.refine'
                "refine'"
@@ -4822,7 +5422,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    "⟨"
                    [(Std.Tactic.RCases.rcasesPatLo
                      (Std.Tactic.RCases.rcasesPatMed
-                      [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                      [(Std.Tactic.RCases.rcasesPat.one `b)
+                       "|"
+                       (Std.Tactic.RCases.rcasesPat.one `b)])
                      [])
                     ","
                     (Std.Tactic.RCases.rcasesPatLo
@@ -4874,7 +5476,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             (Tactic.dsimp "dsimp" [] [] [] [] [])
             []
-            (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+            (Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+             [])
             []
             (Tactic.refine'
              "refine'"
@@ -4988,7 +5594,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       (Tactic.exact "exact" `eq_comm)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `eq_comm
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
@@ -4998,10 +5605,12 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `part.mem_to_option.symm.trans
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5022,19 +5631,24 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `exists_eq_right'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `some_inj
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `exists_prop
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.mk_eq_mk
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Part.mem_some_iff
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.dsimp "dsimp" [] [] [] [] [])
@@ -5053,13 +5667,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hb [`rfl]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5073,13 +5690,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
              [])
             ","
-            (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)]) [])]
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+             [])]
            "⟩")])]
        []
        [":=" [`b]])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.refine'
@@ -5095,7 +5715,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `pfun.mem_to_subtype_iff.symm
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -5104,20 +5725,27 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `part.mem_bind_iff.trans
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `part.mem_bind_iff.trans [(Term.hole "_")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Part.bind_some
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.dsimp "dsimp" [] [] [] [] [])
@@ -5131,36 +5759,42 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Pfun.ext
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Y
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app
@@ -5185,7 +5819,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  [`a]
                  []
                  "=>"
-                 (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                 (Term.anonymousCtor
+                  "⟨"
+                  [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                  "⟩"))))
               ","
               (Term.structInstField
                (Term.structInstLVal `invFun [])
@@ -5199,12 +5836,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  («term_<|_»
                   `get
                   "<|"
-                  (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
+                  (Term.app
+                   (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+                   [(Term.proj `a "." (fieldIdx "2"))])))))
               ","
               (Term.structInstField
                (Term.structInstLVal `left_inv [])
                ":="
-               (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`a]
+                 []
+                 "=>"
+                 (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
               ","
               (Term.structInstField
                (Term.structInstLVal `right_inv [])
@@ -5258,7 +5903,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                [`a]
                []
                "=>"
-               (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                "⟩"))))
             ","
             (Term.structInstField
              (Term.structInstLVal `invFun [])
@@ -5272,12 +5920,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                («term_<|_»
                 `get
                 "<|"
-                (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
+                (Term.app
+                 (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+                 [(Term.proj `a "." (fieldIdx "2"))])))))
             ","
             (Term.structInstField
              (Term.structInstLVal `left_inv [])
              ":="
-             (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+             (Term.fun
+              "fun"
+              (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
             ","
             (Term.structInstField
              (Term.structInstLVal `right_inv [])
@@ -5323,7 +5975,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              [`a]
              []
              "=>"
-             (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+              "⟩"))))
           ","
           (Term.structInstField
            (Term.structInstLVal `invFun [])
@@ -5337,12 +5992,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              («term_<|_»
               `get
               "<|"
-              (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
+              (Term.app
+               (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+               [(Term.proj `a "." (fieldIdx "2"))])))))
           ","
           (Term.structInstField
            (Term.structInstLVal `left_inv [])
            ":="
-           (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+           (Term.fun
+            "fun"
+            (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
           ","
           (Term.structInstField
            (Term.structInstLVal `right_inv [])
@@ -5402,12 +6061,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            («term_<|_»
             `get
             "<|"
-            (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
+            (Term.app
+             (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+             [(Term.proj `a "." (fieldIdx "2"))])))))
         ","
         (Term.structInstField
          (Term.structInstLVal `left_inv [])
          ":="
-         (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+         (Term.fun
+          "fun"
+          (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
         ","
         (Term.structInstField
          (Term.structInstLVal `right_inv [])
@@ -5500,17 +6163,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.coe_eta
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `some_get
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Subtype.val_eq_coe
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -5518,33 +6184,40 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")])))
+      (Term.fun
+       "fun"
+       (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `get_some [(Term.hole "_") (Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `get_some
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5557,14 +6230,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         («term_<|_»
          `get
          "<|"
-         (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))]))))
+         (Term.app
+          (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+          [(Term.proj `a "." (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
        `get
        "<|"
-       (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))]))
+       (Term.app
+        (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+        [(Term.proj `a "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])
+      (Term.app
+       (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+       [(Term.proj `a "." (fieldIdx "2"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5572,14 +6251,17 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `ne_none_iff_is_some
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `get
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
@@ -5589,7 +6271,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5608,10 +6291,12 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `some_ne_none
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `some [`a])
@@ -5619,34 +6304,42 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `some
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PartialFunCat.Iso.mk
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `X
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `nat_iso.of_components
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 0, term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -5672,7 +6365,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 [`a]
                 []
                 "=>"
-                (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                (Term.anonymousCtor
+                 "⟨"
+                 [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                 "⟩"))))
              ","
              (Term.structInstField
               (Term.structInstLVal `invFun [])
@@ -5686,12 +6382,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 («term_<|_»
                  `get
                  "<|"
-                 (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
+                 (Term.app
+                  (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+                  [(Term.proj `a "." (fieldIdx "2"))])))))
              ","
              (Term.structInstField
               (Term.structInstLVal `left_inv [])
               ":="
-              (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+              (Term.fun
+               "fun"
+               (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
              ","
              (Term.structInstField
               (Term.structInstLVal `right_inv [])
@@ -5751,7 +6451,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`a]
                   []
                   "=>"
-                  (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])]
+                   "⟩"))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `invFun [])
@@ -5772,7 +6475,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                (Term.structInstField
                 (Term.structInstLVal `left_inv [])
                 ":="
-                (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`a]
+                  []
+                  "=>"
+                  (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
@@ -5826,12 +6535,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  []
                  (Tactic.dsimp "dsimp" [] [] [] [] [])
                  []
-                 (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                 (Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]")
+                  [])
                  []
                  (Tactic.refine'
                   "refine'"
                   (Term.app
-                   (Term.proj (Term.paren "(" (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) ")") "." `trans)
+                   (Term.proj
+                    (Term.paren "(" (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) ")")
+                    "."
+                    `trans)
                    [`pfun.mem_to_subtype_iff.symm]))
                  []
                  (Std.Tactic.obtain
@@ -5841,7 +6557,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       "⟨"
                       [(Std.Tactic.RCases.rcasesPatLo
                         (Std.Tactic.RCases.rcasesPatMed
-                         [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                         [(Std.Tactic.RCases.rcasesPat.one `b)
+                          "|"
+                          (Std.Tactic.RCases.rcasesPat.one `b)])
                         [])
                        ","
                        (Std.Tactic.RCases.rcasesPatLo
@@ -5853,7 +6571,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  []
                  («tactic___;_»
                   (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" (Term.proj (Term.paren "(" (Term.app `hb [`rfl]) ")") "." `elim)) [])])
+                  [(group
+                    (Tactic.exact
+                     "exact"
+                     (Term.proj (Term.paren "(" (Term.app `hb [`rfl]) ")") "." `elim))
+                    [])])
                  []
                  (Tactic.dsimp "dsimp" [] [] [] [] [])
                  []
@@ -5873,7 +6595,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    "]")
                   [])
                  []
-                 (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                 (Tactic.refine'
+                  "refine'"
+                  (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                  []
                  (Tactic.exact "exact" `eq_comm)])))))])))])
      ")")
@@ -5881,17 +6605,20 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `pointedToPartialFun
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `partialFunToPointed
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `equivalence.mk
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -5933,7 +6660,12 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                               ,
                               left_inv := fun a => get_some _ _
                               ,
-                              right_inv := fun a => by simp only [ Subtype.val_eq_coe , some_get , Subtype.coe_eta ]
+                              right_inv
+                                :=
+                                fun
+                                  a
+                                    =>
+                                    by simp only [ Subtype.val_eq_coe , some_get , Subtype.coe_eta ]
                             }
                   fun
                     X Y f
@@ -5946,12 +6678,23 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                               unfold_projs
                                 dsimp
                                 rw [ Part.bind_some ]
-                                refine' part.mem_bind_iff.trans _ . trans pfun.mem_to_subtype_iff.symm
+                                refine'
+                                  part.mem_bind_iff.trans _ . trans pfun.mem_to_subtype_iff.symm
                                 obtain ⟨ b | b , hb ⟩ := b
                                 · exact hb rfl . elim
                                 dsimp
                                 simp_rw
-                                  [ Part.mem_some_iff , Subtype.mk_eq_mk , exists_prop , some_inj , exists_eq_right' ]
+                                  [
+                                    Part.mem_some_iff
+                                      ,
+                                      Subtype.mk_eq_mk
+                                      ,
+                                      exists_prop
+                                      ,
+                                      some_inj
+                                      ,
+                                      exists_eq_right'
+                                    ]
                                 refine' part.mem_to_option.symm.trans _
                                 exact eq_comm
                 nat_iso.of_components
@@ -5962,7 +6705,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           {
                               toFun := Option.elim' X . point Subtype.val
                                 ,
-                                invFun := fun a => if h : a = X . point then none else some ⟨ _ , h ⟩
+                                invFun
+                                  :=
+                                  fun a => if h : a = X . point then none else some ⟨ _ , h ⟩
                                 ,
                                 left_inv
                                   :=
@@ -5975,11 +6720,27 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                             =>
                                             dif_neg a . 2 . trans
                                               <|
-                                              by simp only [ Option.elim' , Subtype.val_eq_coe , Subtype.coe_eta ]
+                                              by
+                                                simp
+                                                  only
+                                                  [
+                                                    Option.elim'
+                                                      ,
+                                                      Subtype.val_eq_coe
+                                                      ,
+                                                      Subtype.coe_eta
+                                                    ]
                                 ,
                                 right_inv
                                   :=
-                                  fun a => by change Option.elim' _ _ dite _ _ _ = _ split_ifs · rw [ h ] rfl · rfl
+                                  fun
+                                    a
+                                      =>
+                                      by
+                                        change Option.elim' _ _ dite _ _ _ = _
+                                          split_ifs
+                                          · rw [ h ] rfl
+                                          · rfl
                               }
                             rfl
                   fun
@@ -6008,9 +6769,12 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 /-- Forgetting that maps are total and making them total again by adding a point is the same as just
 adding a point. -/
 @[simps]
-noncomputable def typeToPartialFunIsoPartialFunToPointed : typeToPartialFun ⋙ partialFunToPointed ≅ typeToPointed :=
-  (NatIso.ofComponents fun X => { Hom := ⟨id, rfl⟩, inv := ⟨id, rfl⟩, hom_inv_id' := rfl, inv_hom_id' := rfl })
+noncomputable def typeToPartialFunIsoPartialFunToPointed :
+    typeToPartialFun ⋙ partialFunToPointed ≅ typeToPointed :=
+  (NatIso.ofComponents fun X =>
+      { Hom := ⟨id, rfl⟩, inv := ⟨id, rfl⟩, hom_inv_id' := rfl, inv_hom_id' := rfl })
     fun X Y f =>
-    PointedCat.Hom.ext _ _ <| funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_to_option _
+    PointedCat.Hom.ext _ _ <|
+      funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_to_option _
 #align Type_to_PartialFun_iso_PartialFun_to_Pointed typeToPartialFunIsoPartialFunToPointed
 

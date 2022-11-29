@@ -65,7 +65,9 @@ class LaxMonoidal (F : C → D) [Functorial.{v₁, v₂} F] where
   ε : 𝟙_ D ⟶ F (𝟙_ C)
   -- tensorator
   μ : ∀ X Y : C, F X ⊗ F Y ⟶ F (X ⊗ Y)
-  μ_natural' : ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) := by
+  μ_natural' :
+    ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'),
+      (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) := by
     obviously
   -- associativity of the tensorator
   associativity' :
@@ -74,8 +76,10 @@ class LaxMonoidal (F : C → D) [Functorial.{v₁, v₂} F] where
         (α_ (F X) (F Y) (F Z)).Hom ≫ (𝟙 (F X) ⊗ μ Y Z) ≫ μ X (Y ⊗ Z) := by
     obviously
   -- unitality
-  left_unitality' : ∀ X : C, (λ_ (F X)).Hom = (ε ⊗ 𝟙 (F X)) ≫ μ (𝟙_ C) X ≫ map F (λ_ X).Hom := by obviously
-  right_unitality' : ∀ X : C, (ρ_ (F X)).Hom = (𝟙 (F X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map F (ρ_ X).Hom := by obviously
+  left_unitality' : ∀ X : C, (λ_ (F X)).Hom = (ε ⊗ 𝟙 (F X)) ≫ μ (𝟙_ C) X ≫ map F (λ_ X).Hom := by
+    obviously
+  right_unitality' : ∀ X : C, (ρ_ (F X)).Hom = (𝟙 (F X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map F (ρ_ X).Hom := by
+    obviously
 #align category_theory.lax_monoidal CategoryTheory.LaxMonoidal
 
 restate_axiom lax_monoidal.μ_natural'
@@ -98,7 +102,8 @@ namespace LaxMonoidalFunctor
 and `functorial` and `lax_monoidal` typeclasses.
 -/
 @[simps]
-def of (F : C → D) [I₁ : Functorial.{v₁, v₂} F] [I₂ : LaxMonoidal.{v₁, v₂} F] : LaxMonoidalFunctor.{v₁, v₂} C D :=
+def of (F : C → D) [I₁ : Functorial.{v₁, v₂} F] [I₂ : LaxMonoidal.{v₁, v₂} F] :
+    LaxMonoidalFunctor.{v₁, v₂} C D :=
   { I₁, I₂ with obj := F }
 #align category_theory.lax_monoidal_functor.of CategoryTheory.LaxMonoidalFunctor.of
 

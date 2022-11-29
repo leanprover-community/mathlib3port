@@ -47,7 +47,8 @@ section Foldr
 given by `foldr Q f hf n (ι Q m * x) = f m (foldr Q f hf n x)`.
 
 For example, `foldr f hf n (r • ι R u + ι R v * ι R w) = r • f u n + f v (f w n)`. -/
-def foldr (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x) : N →ₗ[R] CliffordAlgebra Q →ₗ[R] N :=
+def foldr (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x) :
+    N →ₗ[R] CliffordAlgebra Q →ₗ[R] N :=
   (CliffordAlgebra.lift Q ⟨f, fun v => LinearMap.ext <| hf v⟩).toLinearMap.flip
 #align clifford_algebra.foldr CliffordAlgebra.foldr
 
@@ -57,7 +58,8 @@ theorem foldr_ι (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (m : M) : foldr Q 
 #align clifford_algebra.foldr_ι CliffordAlgebra.foldr_ι
 
 @[simp]
-theorem foldr_algebra_map (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (r : R) : foldr Q f hf n (algebraMap R _ r) = r • n :=
+theorem foldr_algebra_map (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (r : R) :
+    foldr Q f hf n (algebraMap R _ r) = r • n :=
   LinearMap.congr_fun (AlgHom.commutes _ r) n
 #align clifford_algebra.foldr_algebra_map CliffordAlgebra.foldr_algebra_map
 
@@ -90,7 +92,8 @@ section Foldl
 given by `foldl Q f hf n (ι Q m * x) = f m (foldl Q f hf n x)`.
 
 For example, `foldl f hf n (r • ι R u + ι R v * ι R w) = r • f u n + f v (f w n)`. -/
-def foldl (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x) : N →ₗ[R] CliffordAlgebra Q →ₗ[R] N :=
+def foldl (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x) :
+    N →ₗ[R] CliffordAlgebra Q →ₗ[R] N :=
   LinearMap.compl₂ (foldr Q f hf) reverse
 #align clifford_algebra.foldl CliffordAlgebra.foldl
 
@@ -112,7 +115,8 @@ theorem foldl_ι (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (m : M) : foldl Q 
 #align clifford_algebra.foldl_ι CliffordAlgebra.foldl_ι
 
 @[simp]
-theorem foldl_algebra_map (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (r : R) : foldl Q f hf n (algebraMap R _ r) = r • n := by
+theorem foldl_algebra_map (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (r : R) :
+    foldl Q f hf n (algebraMap R _ r) = r • n := by
   rw [← foldr_reverse, reverse.commutes, foldr_algebra_map]
 #align clifford_algebra.foldl_algebra_map CliffordAlgebra.foldl_algebra_map
 
@@ -168,16 +172,19 @@ theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alge
 
 
 /-- Auxiliary definition for `clifford_algebra.foldr'` -/
-def foldr'Aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) : M →ₗ[R] Module.EndCat R (CliffordAlgebra Q × N) := by
+def foldr'Aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) :
+    M →ₗ[R] Module.EndCat R (CliffordAlgebra Q × N) := by
   have v_mul := (Algebra.lmul R (CliffordAlgebra Q)).toLinearMap ∘ₗ ι Q
   have l := v_mul.compl₂ (LinearMap.fst _ _ N)
   exact
     { toFun := fun m => (l m).Prod (f m),
       map_add' := fun v₂ v₂ =>
-        LinearMap.ext fun x => Prod.ext (LinearMap.congr_fun (l.map_add _ _) x) (LinearMap.congr_fun (f.map_add _ _) x),
+        LinearMap.ext fun x =>
+          Prod.ext (LinearMap.congr_fun (l.map_add _ _) x) (LinearMap.congr_fun (f.map_add _ _) x),
       map_smul' := fun c v =>
         LinearMap.ext fun x =>
-          Prod.ext (LinearMap.congr_fun (l.map_smul _ _) x) (LinearMap.congr_fun (f.map_smul _ _) x) }
+          Prod.ext (LinearMap.congr_fun (l.map_smul _ _) x)
+            (LinearMap.congr_fun (f.map_smul _ _) x) }
 #align clifford_algebra.foldr'_aux CliffordAlgebra.foldr'Aux
 
 theorem foldr'_aux_apply_apply (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) (m : M) (x_fx) :
@@ -197,18 +204,20 @@ theorem foldr'_aux_foldr'_aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] 
 given by `foldr' Q f hf n (ι Q m * x) = f m (x, foldr' Q f hf n x)`.
 Note this is like `clifford_algebra.foldr`, but with an extra `x` argument.
 Implement the recursion scheme `F[n0](m * x) = f(m, (x, F[n0](x)))`. -/
-def foldr' (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx)
-    (n : N) : CliffordAlgebra Q →ₗ[R] N :=
+def foldr' (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
+    (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx) (n : N) : CliffordAlgebra Q →ₗ[R] N :=
   LinearMap.snd _ _ _ ∘ₗ foldr Q (foldr'Aux Q f) (foldr'_aux_foldr'_aux Q _ hf) (1, n)
 #align clifford_algebra.foldr' CliffordAlgebra.foldr'
 
 theorem foldr'_algebra_map (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
-    (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx) (n r) : foldr' Q f hf n (algebraMap R _ r) = r • n :=
+    (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx) (n r) :
+    foldr' Q f hf n (algebraMap R _ r) = r • n :=
   congr_arg Prod.snd (foldr_algebra_map _ _ _ _ _)
 #align clifford_algebra.foldr'_algebra_map CliffordAlgebra.foldr'_algebra_map
 
-theorem foldr'_ι (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx)
-    (n m) : foldr' Q f hf n (ι Q m) = f m (1, n) :=
+theorem foldr'_ι (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
+    (hf : ∀ m x fx, f m (ι Q m * x, f m (x, fx)) = Q m • fx) (n m) :
+    foldr' Q f hf n (ι Q m) = f m (1, n) :=
   congr_arg Prod.snd (foldr_ι _ _ _ _ _)
 #align clifford_algebra.foldr'_ι CliffordAlgebra.foldr'_ι
 

@@ -55,7 +55,8 @@ section Ring
 variable [Ring R] [CharP R 2]
 
 @[simp]
-theorem neg_eq (x : R) : -x = x := by rw [neg_eq_iff_add_eq_zero, ← two_smul R x, two_eq_zero, zero_smul]
+theorem neg_eq (x : R) : -x = x := by
+  rw [neg_eq_iff_add_eq_zero, ← two_smul R x, two_eq_zero, zero_smul]
 #align char_two.neg_eq CharTwo.neg_eq
 
 theorem neg_eq' : Neg.neg = (id : R → R) :=
@@ -80,7 +81,8 @@ theorem add_sq (x y : R) : (x + y) ^ 2 = x ^ 2 + y ^ 2 :=
   add_pow_char _ _ _
 #align char_two.add_sq CharTwo.add_sq
 
-theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by rw [← pow_two, ← pow_two, ← pow_two, add_sq]
+theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by
+  rw [← pow_two, ← pow_two, ← pow_two, add_sq]
 #align char_two.add_mul_self CharTwo.add_mul_self
 
 open BigOperators
@@ -97,16 +99,16 @@ theorem multiset_sum_sq (l : Multiset R) : l.Sum ^ 2 = (l.map (· ^ 2)).Sum :=
   multiset_sum_pow_char _ _
 #align char_two.multiset_sum_sq CharTwo.multiset_sum_sq
 
-theorem multiset_sum_mul_self (l : Multiset R) : l.Sum * l.Sum = (Multiset.map (fun x => x * x) l).Sum := by
-  simp_rw [← pow_two, multiset_sum_sq]
+theorem multiset_sum_mul_self (l : Multiset R) :
+    l.Sum * l.Sum = (Multiset.map (fun x => x * x) l).Sum := by simp_rw [← pow_two, multiset_sum_sq]
 #align char_two.multiset_sum_mul_self CharTwo.multiset_sum_mul_self
 
 theorem sum_sq (s : Finset ι) (f : ι → R) : (∑ i in s, f i) ^ 2 = ∑ i in s, f i ^ 2 :=
   sum_pow_char _ _ _
 #align char_two.sum_sq CharTwo.sum_sq
 
-theorem sum_mul_self (s : Finset ι) (f : ι → R) : ((∑ i in s, f i) * ∑ i in s, f i) = ∑ i in s, f i * f i := by
-  simp_rw [← pow_two, sum_sq]
+theorem sum_mul_self (s : Finset ι) (f : ι → R) :
+    ((∑ i in s, f i) * ∑ i in s, f i) = ∑ i in s, f i * f i := by simp_rw [← pow_two, sum_sq]
 #align char_two.sum_mul_self CharTwo.sum_mul_self
 
 end CommSemiring

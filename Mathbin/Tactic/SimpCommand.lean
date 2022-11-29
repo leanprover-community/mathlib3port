@@ -15,14 +15,16 @@ namespace Tactic
 
 /-- Strip all annotations of non local constants in the passed `expr`. (This is required in an
 incantation later on in order to make the C++ simplifier happy.) -/
-private unsafe def strip_annotations_from_all_non_local_consts {elab : Bool} (e : expr elab) : expr elab :=
+private unsafe def strip_annotations_from_all_non_local_consts {elab : Bool} (e : expr elab) :
+    expr elab :=
   expr.unsafe_cast <|
     e.unsafe_cast.replace fun e n =>
       match e.is_annotation with
       | some (_, expr.local_const _ _ _ _) => none
       | some (_, _) => e.erase_annotations
       | _ => none
-#align tactic.strip_annotations_from_all_non_local_consts tactic.strip_annotations_from_all_non_local_consts
+#align
+  tactic.strip_annotations_from_all_non_local_consts tactic.strip_annotations_from_all_non_local_consts
 
 /-- `simp_arg_type.to_pexpr` retrieves the `pexpr` underlying the given `simp_arg_type`, if there is
 one. -/
@@ -35,14 +37,16 @@ unsafe def simp_arg_type.to_pexpr : simp_arg_type → Option pexpr
 /-- Incantation which prepares a `pexpr` in a `simp_arg_type` for use by the simplifier after
 `expr.replace_subexprs` as been called to replace some of its local variables. -/
 private unsafe def replace_subexprs_for_simp_arg (e : pexpr) (rules : List (expr × expr)) : pexpr :=
-  strip_annotations_from_all_non_local_consts <| pexpr.of_expr <| e.unsafe_cast.replace_subexprs rules
+  strip_annotations_from_all_non_local_consts <|
+    pexpr.of_expr <| e.unsafe_cast.replace_subexprs rules
 #align tactic.replace_subexprs_for_simp_arg tactic.replace_subexprs_for_simp_arg
 
 /-- `simp_arg_type.replace_subexprs` calls `expr.replace_subexprs` on the underlying `pexpr`, if
 there is one, and then prepares the result for use by the simplifier. -/
 unsafe def simp_arg_type.replace_subexprs : simp_arg_type → List (expr × expr) → simp_arg_type
   | simp_arg_type.expr e, rules => simp_arg_type.expr <| replace_subexprs_for_simp_arg e rules
-  | simp_arg_type.symm_expr e, rules => simp_arg_type.symm_expr <| replace_subexprs_for_simp_arg e rules
+  | simp_arg_type.symm_expr e, rules =>
+    simp_arg_type.symm_expr <| replace_subexprs_for_simp_arg e rules
   | sat, rules => sat
 #align tactic.simp_arg_type.replace_subexprs tactic.simp_arg_type.replace_subexprs
 
@@ -104,11 +108,13 @@ unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
           ts
   -- Trace the result.
       when
-      (¬is_trace_enabled_for `silence_simp_if_true ∨ simp_result ≠ expr.const `true []) (trace simp_result)
+      (¬is_trace_enabled_for `silence_simp_if_true ∨ simp_result ≠ expr.const `true [])
+      (trace simp_result)
 #align tactic.simp_cmd tactic.simp_cmd
 
 add_tactic_doc
-  { Name := "#simp", category := DocCategory.cmd, declNames := [`tactic.simp_cmd], tags := ["simplification"] }
+  { Name := "#simp", category := DocCategory.cmd, declNames := [`tactic.simp_cmd],
+    tags := ["simplification"] }
 
 end Tactic
 

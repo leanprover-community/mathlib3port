@@ -32,8 +32,8 @@ open Nat
 namespace Int
 
 instance : LinearOrderedCommRing ℤ :=
-  { Int.commRing, Int.linearOrder, Int.nontrivial with add_le_add_left := @Int.add_le_add_left, mul_pos := @Int.mul_pos,
-    zero_le_one := le_of_lt Int.zero_lt_one }
+  { Int.commRing, Int.linearOrder, Int.nontrivial with add_le_add_left := @Int.add_le_add_left,
+    mul_pos := @Int.mul_pos, zero_le_one := le_of_lt Int.zero_lt_one }
 
 /-! ### Extra instances to short-circuit type class resolution
 -/
@@ -128,8 +128,8 @@ theorem one_le_abs {z : ℤ} (h₀ : z ≠ 0) : 1 ≤ |z| :=
 /-- Inductively define a function on `ℤ` by defining it at `b`, for the `succ` of a number greater
 than `b`, and the `pred` of a number less than `b`. -/
 @[elab_as_elim]
-protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b) (Hs : ∀ k, b ≤ k → C k → C (k + 1))
-    (Hp : ∀ k ≤ b, C k → C (k - 1)) : C z := by
+protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b)
+    (Hs : ∀ k, b ≤ k → C k → C (k + 1)) (Hp : ∀ k ≤ b, C k → C (k - 1)) : C z := by
   -- Note that we use `convert` here where possible as we are constructing data, and this reduces
   -- the number of times `eq.mpr` appears in the term.
   rw [← sub_add_cancel z b]
@@ -153,8 +153,8 @@ protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b) (
 -/
 
 /-- See `int.induction_on'` for an induction in both directions. -/
-protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m) (h1 : ∀ n : ℤ, m ≤ n → P n → P (n + 1)) (n : ℤ) :
-    m ≤ n → P n := by
+protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m)
+    (h1 : ∀ n : ℤ, m ≤ n → P n → P (n + 1)) (n : ℤ) : m ≤ n → P n := by
   apply Int.inductionOn' n m
   · intro
     exact h0
@@ -169,8 +169,8 @@ protected theorem le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m) (h1 : ∀
 #align int.le_induction Int.le_induction
 
 /-- See `int.induction_on'` for an induction in both directions. -/
-protected theorem le_induction_down {P : ℤ → Prop} {m : ℤ} (h0 : P m) (h1 : ∀ n : ℤ, n ≤ m → P n → P (n - 1)) (n : ℤ) :
-    n ≤ m → P n := by
+protected theorem le_induction_down {P : ℤ → Prop} {m : ℤ} (h0 : P m)
+    (h1 : ∀ n : ℤ, n ≤ m → P n → P (n - 1)) (n : ℤ) : n ≤ m → P n := by
   apply Int.inductionOn' n m
   · intro
     exact h0
@@ -204,12 +204,13 @@ theorem nat_abs_dvd_iff_dvd {a b : ℤ} : a.natAbs ∣ b.natAbs ↔ a ∣ b := b
 
 /- warning: int.div_nonpos -> Int.div_nonpos is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (LE.le.{0} Int Int.hasLe b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LE.le.{0} Int Int.hasLe (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (LE.le.{0} Int Int.hasLe b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LE.le.{0} Int Int.hasLe (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LE.le.{0} Int Int.instLEInt (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall {a : Int} {b : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LE.le.{0} Int Int.instLEInt (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.div_nonpos Int.div_nonposₓ'. -/
 protected theorem div_nonpos {a b : ℤ} (Ha : 0 ≤ a) (Hb : b ≤ 0) : a / b ≤ 0 :=
-  nonpos_of_neg_nonneg <| by rw [← Int.div_neg] <;> exact Int.div_nonneg Ha (neg_nonneg_of_nonpos Hb)
+  nonpos_of_neg_nonneg <| by
+    rw [← Int.div_neg] <;> exact Int.div_nonneg Ha (neg_nonneg_of_nonpos Hb)
 #align int.div_nonpos Int.div_nonpos
 
 theorem div_eq_zero_of_lt_abs {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < |b|) : a / b = 0 :=
@@ -232,7 +233,8 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
           
         · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑(Nat.succ k) = ↑n - ((m / Nat.succ k : ℕ) + 1)
           rw [← sub_sub, ← sub_sub, ← neg_sub (m : ℤ), ← neg_sub _ (n : ℤ), ← Int.ofNat_sub h, ←
-            Int.ofNat_sub ((Nat.le_div_iff_mul_le k.succ_pos).2 h), ← neg_succ_of_nat_coe', ← neg_succ_of_nat_coe']
+            Int.ofNat_sub ((Nat.le_div_iff_mul_le k.succ_pos).2 h), ← neg_succ_of_nat_coe', ←
+            neg_succ_of_nat_coe']
           · apply congr_arg neg_succ_of_nat
             rw [mul_comm, Nat.sub_mul_div]
             rwa [mul_comm]
@@ -242,23 +244,25 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
     match c, eq_succ_of_zero_lt H, b with
     | _, ⟨k, rfl⟩, (n : ℕ) => this
     | _, ⟨k, rfl⟩, -[n+1] =>
-      show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from eq_sub_of_add_eq <| by rw [← this, sub_add_cancel]
+      show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from
+        eq_sub_of_add_eq <| by rw [← this, sub_add_cancel]
   match lt_trichotomy c 0 with
   | Or.inl hlt =>
-    neg_inj.1 <| by rw [← Int.div_neg, neg_add, ← Int.div_neg, ← neg_mul_neg] <;> apply this (neg_pos_of_neg hlt)
+    neg_inj.1 <| by
+      rw [← Int.div_neg, neg_add, ← Int.div_neg, ← neg_mul_neg] <;> apply this (neg_pos_of_neg hlt)
   | Or.inr (Or.inl HEq) => absurd HEq H
   | Or.inr (Or.inr hgt) => this hgt
 #align int.add_mul_div_right Int.add_mul_div_right
 
-protected theorem add_mul_div_left (a : ℤ) {b : ℤ} (c : ℤ) (H : b ≠ 0) : (a + b * c) / b = a / b + c := by
-  rw [mul_comm, Int.add_mul_div_right _ _ H]
+protected theorem add_mul_div_left (a : ℤ) {b : ℤ} (c : ℤ) (H : b ≠ 0) :
+    (a + b * c) / b = a / b + c := by rw [mul_comm, Int.add_mul_div_right _ _ H]
 #align int.add_mul_div_left Int.add_mul_div_left
 
 /- warning: int.mul_div_cancel -> Int.mul_div_cancel is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) b) a)
+  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) b) a)
 but is expected to have type
-  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) b) a)
+  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) b) a)
 Case conversion may be inaccurate. Consider using '#align int.mul_div_cancel Int.mul_div_cancelₓ'. -/
 @[simp]
 protected theorem mul_div_cancel (a : ℤ) {b : ℤ} (H : b ≠ 0) : a * b / b = a := by
@@ -267,9 +271,9 @@ protected theorem mul_div_cancel (a : ℤ) {b : ℤ} (H : b ≠ 0) : a * b / b =
 
 /- warning: int.mul_div_cancel_left -> Int.mul_div_cancel_left is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} (b : Int), (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) a) b)
+  forall {a : Int} (b : Int), (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) a) b)
 but is expected to have type
-  forall {a : Int} (b : Int), (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) a) b)
+  forall {a : Int} (b : Int), (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) a) b)
 Case conversion may be inaccurate. Consider using '#align int.mul_div_cancel_left Int.mul_div_cancel_leftₓ'. -/
 @[simp]
 protected theorem mul_div_cancel_left {a : ℤ} (b : ℤ) (H : a ≠ 0) : a * b / a = b := by
@@ -278,9 +282,9 @@ protected theorem mul_div_cancel_left {a : ℤ} (b : ℤ) (H : a ≠ 0) : a * b 
 
 /- warning: int.div_self -> Int.div_self is a dubious translation:
 lean 3 declaration is
-  forall {a : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
+  forall {a : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))
 but is expected to have type
-  forall {a : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
+  forall {a : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.div_self Int.div_selfₓ'. -/
 @[simp]
 protected theorem div_self {a : ℤ} (H : a ≠ 0) : a / a = 1 := by
@@ -296,8 +300,8 @@ protected theorem add_div_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / c
   cases' H with k hk
   rw [hk]
   change c ≠ 0 at h1
-  rw [mul_comm c k, Int.add_mul_div_right _ _ h1, ← zero_add (k * c), Int.add_mul_div_right _ _ h1, Int.zero_div,
-    zero_add]
+  rw [mul_comm c k, Int.add_mul_div_right _ _ h1, ← zero_add (k * c), Int.add_mul_div_right _ _ h1,
+    Int.zero_div, zero_add]
 #align int.add_div_of_dvd_right Int.add_div_of_dvd_right
 
 protected theorem add_div_of_dvd_left {a b c : ℤ} (H : c ∣ a) : (a + b) / c = a / c + b / c := by
@@ -314,20 +318,21 @@ theorem mod_abs (a b : ℤ) : a % |b| = a % b :=
 
 /- warning: int.mod_nonneg -> Int.mod_nonneg is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) a b))
+  forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LE.le.{0} Int Int.hasLe (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a b))
 but is expected to have type
-  forall {a : Int} (b : Int), (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) a b))
+  forall {a : Int} (b : Int), (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) a b))
 Case conversion may be inaccurate. Consider using '#align int.mod_nonneg Int.mod_nonnegₓ'. -/
 theorem mod_nonneg : ∀ (a : ℤ) {b : ℤ}, b ≠ 0 → 0 ≤ a % b
   | (m : ℕ), n, H => ofNat_zero_le _
-  | -[m+1], n, H => sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
+  | -[m+1], n, H =>
+    sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
 #align int.mod_nonneg Int.mod_nonneg
 
 /- warning: int.mod_lt_of_pos -> Int.mod_lt_of_pos is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) a b) b)
+  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a b) b)
 but is expected to have type
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) a b) b)
+  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) a b) b)
 Case conversion may be inaccurate. Consider using '#align int.mod_lt_of_pos Int.mod_lt_of_posₓ'. -/
 theorem mod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
   match a, b, eq_succ_of_zero_lt H with
@@ -335,21 +340,25 @@ theorem mod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
   | -[m+1], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt <| Nat.succ_pos _)
 #align int.mod_lt_of_pos Int.mod_lt_of_pos
 
-theorem mod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
+theorem mod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by
+  rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
 #align int.mod_lt Int.mod_lt
 
 @[simp]
 theorem add_mul_mod_self {a b c : ℤ} : (a + b * c) % c = a % c :=
   if cz : c = 0 then by rw [cz, mul_zero, add_zero]
-  else by rw [mod_def, mod_def, Int.add_mul_div_right _ _ cz, mul_add, mul_comm, add_sub_add_right_eq_sub]
+  else by
+    rw [mod_def, mod_def, Int.add_mul_div_right _ _ cz, mul_add, mul_comm, add_sub_add_right_eq_sub]
 #align int.add_mul_mod_self Int.add_mul_mod_self
 
 @[simp]
-theorem add_mul_mod_self_left (a b c : ℤ) : (a + b * c) % b = a % b := by rw [mul_comm, add_mul_mod_self]
+theorem add_mul_mod_self_left (a b c : ℤ) : (a + b * c) % b = a % b := by
+  rw [mul_comm, add_mul_mod_self]
 #align int.add_mul_mod_self_left Int.add_mul_mod_self_left
 
 @[simp]
-theorem add_mod_self {a b : ℤ} : (a + b) % b = a % b := by have := add_mul_mod_self_left a b 1 <;> rwa [mul_one] at this
+theorem add_mod_self {a b : ℤ} : (a + b) % b = a % b := by
+  have := add_mul_mod_self_left a b 1 <;> rwa [mul_one] at this
 #align int.add_mod_self Int.add_mod_self
 
 @[simp]
@@ -358,26 +367,30 @@ theorem add_mod_self_left {a b : ℤ} : (a + b) % a = b % a := by rw [add_comm, 
 
 @[simp]
 theorem mod_add_mod (m n k : ℤ) : (m % n + k) % n = (m + k) % n := by
-  have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;> rwa [add_right_comm, mod_add_div] at this
+  have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;>
+    rwa [add_right_comm, mod_add_div] at this
 #align int.mod_add_mod Int.mod_add_mod
 
 @[simp]
-theorem add_mod_mod (m n k : ℤ) : (m + n % k) % k = (m + n) % k := by rw [add_comm, mod_add_mod, add_comm]
+theorem add_mod_mod (m n k : ℤ) : (m + n % k) % k = (m + n) % k := by
+  rw [add_comm, mod_add_mod, add_comm]
 #align int.add_mod_mod Int.add_mod_mod
 
 theorem add_mod (a b n : ℤ) : (a + b) % n = (a % n + b % n) % n := by rw [add_mod_mod, mod_add_mod]
 #align int.add_mod Int.add_mod
 
-theorem add_mod_eq_add_mod_right {m n k : ℤ} (i : ℤ) (H : m % n = k % n) : (m + i) % n = (k + i) % n := by
-  rw [← mod_add_mod, ← mod_add_mod k, H]
+theorem add_mod_eq_add_mod_right {m n k : ℤ} (i : ℤ) (H : m % n = k % n) :
+    (m + i) % n = (k + i) % n := by rw [← mod_add_mod, ← mod_add_mod k, H]
 #align int.add_mod_eq_add_mod_right Int.add_mod_eq_add_mod_right
 
-theorem add_mod_eq_add_mod_left {m n k : ℤ} (i : ℤ) (H : m % n = k % n) : (i + m) % n = (i + k) % n := by
-  rw [add_comm, add_mod_eq_add_mod_right _ H, add_comm]
+theorem add_mod_eq_add_mod_left {m n k : ℤ} (i : ℤ) (H : m % n = k % n) :
+    (i + m) % n = (i + k) % n := by rw [add_comm, add_mod_eq_add_mod_right _ H, add_comm]
 #align int.add_mod_eq_add_mod_left Int.add_mod_eq_add_mod_left
 
 theorem mod_add_cancel_right {m n k : ℤ} (i) : (m + i) % n = (k + i) % n ↔ m % n = k % n :=
-  ⟨fun H => by have := add_mod_eq_add_mod_right (-i) H <;> rwa [add_neg_cancel_right, add_neg_cancel_right] at this,
+  ⟨fun H => by
+    have := add_mod_eq_add_mod_right (-i) H <;>
+      rwa [add_neg_cancel_right, add_neg_cancel_right] at this,
     add_mod_eq_add_mod_right _⟩
 #align int.mod_add_cancel_right Int.mod_add_cancel_right
 
@@ -391,19 +404,20 @@ theorem mod_sub_cancel_right {m n k : ℤ} (i) : (m - i) % n = (k - i) % n ↔ m
 
 /- warning: int.mul_mod_left -> Int.mul_mod_left is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) b) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
+  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) b) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
 but is expected to have type
-  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
+  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
 Case conversion may be inaccurate. Consider using '#align int.mul_mod_left Int.mul_mod_leftₓ'. -/
 @[simp]
-theorem mul_mod_left (a b : ℤ) : a * b % b = 0 := by rw [← zero_add (a * b), add_mul_mod_self, zero_mod]
+theorem mul_mod_left (a b : ℤ) : a * b % b = 0 := by
+  rw [← zero_add (a * b), add_mul_mod_self, zero_mod]
 #align int.mul_mod_left Int.mul_mod_left
 
 /- warning: int.mul_mod_right -> Int.mul_mod_right is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
+  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
 but is expected to have type
-  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
+  forall (a : Int) (b : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
 Case conversion may be inaccurate. Consider using '#align int.mul_mod_right Int.mul_mod_rightₓ'. -/
 @[simp]
 theorem mul_mod_right (a b : ℤ) : a * b % a = 0 := by rw [mul_comm, mul_mod_left]
@@ -411,15 +425,15 @@ theorem mul_mod_right (a b : ℤ) : a * b % a = 0 := by rw [mul_comm, mul_mod_le
 
 theorem mul_mod (a b n : ℤ) : a * b % n = a % n * (b % n) % n := by
   conv_lhs =>
-    rw [← mod_add_div a n, ← mod_add_div' b n, right_distrib, left_distrib, left_distrib, mul_assoc, mul_assoc, ←
-      left_distrib n _ _, add_mul_mod_self_left, ← mul_assoc, add_mul_mod_self]
+    rw [← mod_add_div a n, ← mod_add_div' b n, right_distrib, left_distrib, left_distrib, mul_assoc,
+      mul_assoc, ← left_distrib n _ _, add_mul_mod_self_left, ← mul_assoc, add_mul_mod_self]
 #align int.mul_mod Int.mul_mod
 
 /- warning: int.mod_self -> Int.mod_self is a dubious translation:
 lean 3 declaration is
-  forall {a : Int}, Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) a a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
+  forall {a : Int}, Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) a a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))
 but is expected to have type
-  forall {a : Int}, Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) a a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
+  forall {a : Int}, Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) a a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
 Case conversion may be inaccurate. Consider using '#align int.mod_self Int.mod_selfₓ'. -/
 -- Will be generalized to Euclidean domains.
 @[local simp]
@@ -431,8 +445,7 @@ theorem mod_mod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m :
   conv =>
   rhs
   rw [← mod_add_div n k]
-  rcases h with ⟨t, rfl⟩
-  rw [mul_assoc, add_mul_mod_self_left]
+  rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_mod_self_left]
 #align int.mod_mod_of_dvd Int.mod_mod_of_dvd
 
 @[simp]
@@ -446,7 +459,8 @@ theorem sub_mod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n := by
   rw [sub_add_cancel, ← add_mod_mod, sub_add_cancel, mod_mod]
 #align int.sub_mod Int.sub_mod
 
-protected theorem div_mod_unique {a b r q : ℤ} (h : 0 < b) : a / b = q ∧ a % b = r ↔ r + b * q = a ∧ 0 ≤ r ∧ r < b := by
+protected theorem div_mod_unique {a b r q : ℤ} (h : 0 < b) :
+    a / b = q ∧ a % b = r ↔ r + b * q = a ∧ 0 ≤ r ∧ r < b := by
   constructor
   · rintro ⟨rfl, rfl⟩
     exact ⟨mod_add_div a b, mod_nonneg _ h.ne.symm, mod_lt_of_pos _ h⟩
@@ -479,9 +493,9 @@ theorem neg_mod_two (i : ℤ) : -i % 2 = i % 2 := by
 
 /- warning: int.lt_div_add_one_mul_self -> Int.lt_div_add_one_mul_self is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) b))
+  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (LT.lt.{0} Int Int.hasLt a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) b))
 but is expected to have type
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) b))
+  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (LT.lt.{0} Int Int.instLTInt a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) b))
 Case conversion may be inaccurate. Consider using '#align int.lt_div_add_one_mul_self Int.lt_div_add_one_mul_selfₓ'. -/
 theorem lt_div_add_one_mul_self (a : ℤ) {b : ℤ} (H : 0 < b) : a < (a / b + 1) * b := by
   rw [add_mul, one_mul, mul_comm, ← sub_lt_iff_lt_add', ← mod_def]
@@ -522,9 +536,9 @@ theorem mod_two_eq_zero_or_one (n : ℤ) : n % 2 = 0 ∨ n % 2 = 1 :=
 
 /- warning: int.dvd_of_mod_eq_zero -> Int.dvd_of_mod_eq_zero is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, (Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) b a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b)
+  forall {a : Int} {b : Int}, (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b)
 but is expected to have type
-  forall {a : Int} {b : Int}, (Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) b a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt a b)
+  forall {a : Int} {b : Int}, (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) b a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt a b)
 Case conversion may be inaccurate. Consider using '#align int.dvd_of_mod_eq_zero Int.dvd_of_mod_eq_zeroₓ'. -/
 theorem dvd_of_mod_eq_zero {a b : ℤ} (H : b % a = 0) : a ∣ b :=
   ⟨b / a, (mul_div_cancel_of_mod_eq_zero H).symm⟩
@@ -532,9 +546,9 @@ theorem dvd_of_mod_eq_zero {a b : ℤ} (H : b % a = 0) : a ∣ b :=
 
 /- warning: int.mod_eq_zero_of_dvd -> Int.mod_eq_zero_of_dvd is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) -> (Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) b a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+  forall {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) -> (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) b a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) b a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.mod_eq_zero_of_dvd Int.mod_eq_zero_of_dvdₓ'. -/
 theorem mod_eq_zero_of_dvd : ∀ {a b : ℤ}, a ∣ b → b % a = 0
   | a, _, ⟨c, rfl⟩ => mul_mod_right _ _
@@ -542,9 +556,9 @@ theorem mod_eq_zero_of_dvd : ∀ {a b : ℤ}, a ∣ b → b % a = 0
 
 /- warning: int.dvd_iff_mod_eq_zero -> Int.dvd_iff_mod_eq_zero is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) (b : Int), Iff (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) (Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) b a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+  forall (a : Int) (b : Int), Iff (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b a) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall (a : Int) (b : Int), Iff (Dvd.dvd.{0} Int Int.instDvdInt a b) (Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.instModInt) b a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall (a : Int) (b : Int), Iff (Dvd.dvd.{0} Int Int.instDvdInt a b) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt) b a) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.dvd_iff_mod_eq_zero Int.dvd_iff_mod_eq_zeroₓ'. -/
 theorem dvd_iff_mod_eq_zero (a b : ℤ) : a ∣ b ↔ b % a = 0 :=
   ⟨mod_eq_zero_of_dvd, dvd_of_mod_eq_zero⟩
@@ -577,9 +591,9 @@ instance decidableDvd : @DecidableRel ℤ (· ∣ ·) := fun a n =>
 
 /- warning: int.div_mul_cancel -> Int.div_mul_cancel is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) b) a)
+  forall {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) b) a)
 but is expected to have type
-  forall {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) b) a)
+  forall {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) b) a)
 Case conversion may be inaccurate. Consider using '#align int.div_mul_cancel Int.div_mul_cancelₓ'. -/
 protected theorem div_mul_cancel {a b : ℤ} (H : b ∣ a) : a / b * b = a :=
   div_mul_cancel_of_mod_eq_zero (mod_eq_zero_of_dvd H)
@@ -587,30 +601,33 @@ protected theorem div_mul_cancel {a b : ℤ} (H : b ∣ a) : a / b * b = a :=
 
 /- warning: int.mul_div_cancel' -> Int.mul_div_cancel' is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b a)) b)
+  forall {a : Int} {b : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b a)) b)
 but is expected to have type
-  forall {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b a)) b)
+  forall {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b a)) b)
 Case conversion may be inaccurate. Consider using '#align int.mul_div_cancel' Int.mul_div_cancel'ₓ'. -/
-protected theorem mul_div_cancel' {a b : ℤ} (H : a ∣ b) : a * (b / a) = b := by rw [mul_comm, Int.div_mul_cancel H]
+protected theorem mul_div_cancel' {a b : ℤ} (H : a ∣ b) : a * (b / a) = b := by
+  rw [mul_comm, Int.div_mul_cancel H]
 #align int.mul_div_cancel' Int.mul_div_cancel'
 
 /- warning: int.div_dvd_div -> Int.div_dvd_div is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b c) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b a) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) c a))
+  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) a b) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b c) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) c a))
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Dvd.dvd.{0} Int Int.instDvdInt b c) -> (Dvd.dvd.{0} Int Int.instDvdInt (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b a) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) c a))
+  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt a b) -> (Dvd.dvd.{0} Int Int.instDvdInt b c) -> (Dvd.dvd.{0} Int Int.instDvdInt (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) c a))
 Case conversion may be inaccurate. Consider using '#align int.div_dvd_div Int.div_dvd_divₓ'. -/
 theorem div_dvd_div : ∀ {a b c : ℤ} (H1 : a ∣ b) (H2 : b ∣ c), b / a ∣ c / a
   | a, _, _, ⟨b, rfl⟩, ⟨c, rfl⟩ =>
     if az : a = 0 then by simp [az]
-    else by rw [Int.mul_div_cancel_left _ az, mul_assoc, Int.mul_div_cancel_left _ az] <;> apply dvd_mul_right
+    else by
+      rw [Int.mul_div_cancel_left _ az, mul_assoc, Int.mul_div_cancel_left _ az] <;>
+        apply dvd_mul_right
 #align int.div_dvd_div Int.div_dvd_div
 
 /- warning: int.eq_mul_of_div_eq_right -> Int.eq_mul_of_div_eq_right is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c))
+  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c))
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c))
+  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c))
 Case conversion may be inaccurate. Consider using '#align int.eq_mul_of_div_eq_right Int.eq_mul_of_div_eq_rightₓ'. -/
 protected theorem eq_mul_of_div_eq_right {a b c : ℤ} (H1 : b ∣ a) (H2 : a / b = c) : a = b * c := by
   rw [← H2, Int.mul_div_cancel' H1]
@@ -618,9 +635,9 @@ protected theorem eq_mul_of_div_eq_right {a b c : ℤ} (H1 : b ∣ a) (H2 : a / 
 
 /- warning: int.div_eq_of_eq_mul_right -> Int.div_eq_of_eq_mul_right is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c)) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c)
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c)
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c)
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c)
 Case conversion may be inaccurate. Consider using '#align int.div_eq_of_eq_mul_right Int.div_eq_of_eq_mul_rightₓ'. -/
 protected theorem div_eq_of_eq_mul_right {a b c : ℤ} (H1 : b ≠ 0) (H2 : a = b * c) : a / b = c := by
   rw [H2, Int.mul_div_cancel_left _ H1]
@@ -628,9 +645,9 @@ protected theorem div_eq_of_eq_mul_right {a b c : ℤ} (H1 : b ≠ 0) (H2 : a = 
 
 /- warning: int.eq_div_of_mul_eq_right -> Int.eq_div_of_mul_eq_right is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) -> (Eq.{1} Int b (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) c a))
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) -> (Eq.{1} Int b (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) c a))
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) -> (Eq.{1} Int b (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) c a))
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) -> (Eq.{1} Int b (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) c a))
 Case conversion may be inaccurate. Consider using '#align int.eq_div_of_mul_eq_right Int.eq_div_of_mul_eq_rightₓ'. -/
 protected theorem eq_div_of_mul_eq_right {a b c : ℤ} (H1 : a ≠ 0) (H2 : a * b = c) : b = c / a :=
   Eq.symm <| Int.div_eq_of_eq_mul_right H1 H2.symm
@@ -638,29 +655,30 @@ protected theorem eq_div_of_mul_eq_right {a b c : ℤ} (H1 : a ≠ 0) (H2 : a * 
 
 /- warning: int.div_eq_iff_eq_mul_right -> Int.div_eq_iff_eq_mul_right is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c)))
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) b c)))
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)))
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) b c)))
 Case conversion may be inaccurate. Consider using '#align int.div_eq_iff_eq_mul_right Int.div_eq_iff_eq_mul_rightₓ'. -/
-protected theorem div_eq_iff_eq_mul_right {a b c : ℤ} (H : b ≠ 0) (H' : b ∣ a) : a / b = c ↔ a = b * c :=
+protected theorem div_eq_iff_eq_mul_right {a b c : ℤ} (H : b ≠ 0) (H' : b ∣ a) :
+    a / b = c ↔ a = b * c :=
   ⟨Int.eq_mul_of_div_eq_right H', Int.div_eq_of_eq_mul_right H⟩
 #align int.div_eq_iff_eq_mul_right Int.div_eq_iff_eq_mul_right
 
 /- warning: int.div_eq_iff_eq_mul_left -> Int.div_eq_iff_eq_mul_left is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)))
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)))
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)))
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)))
 Case conversion may be inaccurate. Consider using '#align int.div_eq_iff_eq_mul_left Int.div_eq_iff_eq_mul_leftₓ'. -/
-protected theorem div_eq_iff_eq_mul_left {a b c : ℤ} (H : b ≠ 0) (H' : b ∣ a) : a / b = c ↔ a = c * b := by
-  rw [mul_comm] <;> exact Int.div_eq_iff_eq_mul_right H H'
+protected theorem div_eq_iff_eq_mul_left {a b c : ℤ} (H : b ≠ 0) (H' : b ∣ a) :
+    a / b = c ↔ a = c * b := by rw [mul_comm] <;> exact Int.div_eq_iff_eq_mul_right H H'
 #align int.div_eq_iff_eq_mul_left Int.div_eq_iff_eq_mul_left
 
 /- warning: int.eq_mul_of_div_eq_left -> Int.eq_mul_of_div_eq_left is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b))
+  forall {a : Int} {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) b a) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b))
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b))
+  forall {a : Int} {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt b a) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b))
 Case conversion may be inaccurate. Consider using '#align int.eq_mul_of_div_eq_left Int.eq_mul_of_div_eq_leftₓ'. -/
 protected theorem eq_mul_of_div_eq_left {a b c : ℤ} (H1 : b ∣ a) (H2 : a / b = c) : a = c * b := by
   rw [mul_comm, Int.eq_mul_of_div_eq_right H1 H2]
@@ -668,9 +686,9 @@ protected theorem eq_mul_of_div_eq_left {a b c : ℤ} (H1 : b ∣ a) (H2 : a / b
 
 /- warning: int.div_eq_of_eq_mul_left -> Int.div_eq_of_eq_mul_left is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c)
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) c)
 but is expected to have type
-  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int a (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c)
+  forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int a (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) c)
 Case conversion may be inaccurate. Consider using '#align int.div_eq_of_eq_mul_left Int.div_eq_of_eq_mul_leftₓ'. -/
 protected theorem div_eq_of_eq_mul_left {a b c : ℤ} (H1 : b ≠ 0) (H2 : a = c * b) : a / b = c :=
   Int.div_eq_of_eq_mul_right H1 (by rw [mul_comm, H2])
@@ -678,9 +696,9 @@ protected theorem div_eq_of_eq_mul_left {a b c : ℤ} (H1 : b ≠ 0) (H2 : a = c
 
 /- warning: int.eq_zero_of_div_eq_zero -> Int.eq_zero_of_div_eq_zero is a dubious translation:
 lean 3 declaration is
-  forall {d : Int} {n : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) d n) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n d) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+  forall {d : Int} {n : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) d n) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) n d) (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
-  forall {d : Int} {n : Int}, (Dvd.dvd.{0} Int Int.instDvdInt d n) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) n d) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
+  forall {d : Int} {n : Int}, (Dvd.dvd.{0} Int Int.instDvdInt d n) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) n d) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_div_eq_zero Int.eq_zero_of_div_eq_zeroₓ'. -/
 protected theorem eq_zero_of_div_eq_zero {d n : ℤ} (h : d ∣ n) (H : n / d = 0) : n = 0 := by
   rw [← Int.mul_div_cancel' h, H, mul_zero]
@@ -688,9 +706,9 @@ protected theorem eq_zero_of_div_eq_zero {d n : ℤ} (h : d ∣ n) (H : n / d = 
 
 /- warning: int.div_left_inj -> Int.div_left_inj is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int} {d : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) d a) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) d b) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a d) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b d)) (Eq.{1} Int a b))
+  forall {a : Int} {b : Int} {d : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) d a) -> (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) d b) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a d) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b d)) (Eq.{1} Int a b))
 but is expected to have type
-  forall {a : Int} {b : Int} {d : Int}, (Dvd.dvd.{0} Int Int.instDvdInt d a) -> (Dvd.dvd.{0} Int Int.instDvdInt d b) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a d) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b d)) (Eq.{1} Int a b))
+  forall {a : Int} {b : Int} {d : Int}, (Dvd.dvd.{0} Int Int.instDvdInt d a) -> (Dvd.dvd.{0} Int Int.instDvdInt d b) -> (Iff (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a d) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b d)) (Eq.{1} Int a b))
 Case conversion may be inaccurate. Consider using '#align int.div_left_inj Int.div_left_injₓ'. -/
 @[simp]
 protected theorem div_left_inj {a b d : ℤ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
@@ -704,7 +722,8 @@ theorem abs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : |z.sign| = 1 := by
 
 /-- If `n > 0` then `m` is not divisible by `n` iff it is between `n * k` and `n * (k + 1)`
   for some `k`. -/
-theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) : (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m := by
+theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
+    (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m := by
   constructor
   · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩
     rw [mul_lt_mul_left hn] at h1k h2k
@@ -725,9 +744,9 @@ attribute [local simp] Int.div_zero
 
 /- warning: int.mul_div_assoc -> Int.mul_div_assoc is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) c b) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b c)))
+  forall (a : Int) {b : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) c b) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) b c)))
 but is expected to have type
-  forall (a : Int) {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt c b) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b c)))
+  forall (a : Int) {b : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt c b) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) b c)))
 Case conversion may be inaccurate. Consider using '#align int.mul_div_assoc Int.mul_div_assocₓ'. -/
 protected theorem mul_div_assoc (a : ℤ) : ∀ {b c : ℤ}, c ∣ b → a * b / c = a * (b / c)
   | _, c, ⟨d, rfl⟩ =>
@@ -737,9 +756,9 @@ protected theorem mul_div_assoc (a : ℤ) : ∀ {b c : ℤ}, c ∣ b → a * b /
 
 /- warning: int.mul_div_assoc' -> Int.mul_div_assoc' is a dubious translation:
 lean 3 declaration is
-  forall (b : Int) {a : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) c a) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a c) b))
+  forall (b : Int) {a : Int} {c : Int}, (Dvd.Dvd.{0} Int (semigroupHasDvd.{0} Int Int.semigroup) c a) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a c) b))
 but is expected to have type
-  forall (b : Int) {a : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt c a) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a c) b))
+  forall (b : Int) {a : Int} {c : Int}, (Dvd.dvd.{0} Int Int.instDvdInt c a) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a c) b))
 Case conversion may be inaccurate. Consider using '#align int.mul_div_assoc' Int.mul_div_assoc'ₓ'. -/
 protected theorem mul_div_assoc' (b : ℤ) {a c : ℤ} (h : c ∣ a) : a * b / c = a / c * b := by
   rw [mul_comm, Int.mul_div_assoc _ h, mul_comm]
@@ -763,12 +782,13 @@ theorem sub_div_of_dvd_sub {a b c : ℤ} (hcab : c ∣ a - b) : (a - b) / c = a 
 
 /- warning: int.sign_eq_div_abs -> Int.sign_eq_div_abs is a dubious translation:
 lean 3 declaration is
-  forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a))
+  forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.hasNeg (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (LinearOrder.toLattice.{0} Int Int.linearOrder)))) a))
 but is expected to have type
-  forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a (Int.ofNat (Int.natAbs a)))
+  forall (a : Int), Eq.{1} Int (Int.sign a) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a (Int.ofNat (Int.natAbs a)))
 Case conversion may be inaccurate. Consider using '#align int.sign_eq_div_abs Int.sign_eq_div_absₓ'. -/
 protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / |a| :=
-  if az : a = 0 then by simp [az] else (Int.div_eq_of_eq_mul_left (mt abs_eq_zero.1 az) (sign_mul_abs _).symm).symm
+  if az : a = 0 then by simp [az]
+  else (Int.div_eq_of_eq_mul_left (mt abs_eq_zero.1 az) (sign_mul_abs _).symm).symm
 #align int.sign_eq_div_abs Int.sign_eq_div_abs
 
 /-! ### `/` and ordering -/
@@ -791,7 +811,8 @@ protected theorem mul_le_of_le_div {a b c : ℤ} (H1 : 0 < c) (H2 : a ≤ b / c)
 #align int.mul_le_of_le_div Int.mul_le_of_le_div
 
 protected theorem le_div_of_mul_le {a b c : ℤ} (H1 : 0 < c) (H2 : a * c ≤ b) : a ≤ b / c :=
-  le_of_lt_add_one <| lt_of_mul_lt_mul_right (lt_of_le_of_lt H2 (lt_div_add_one_mul_self _ H1)) (le_of_lt H1)
+  le_of_lt_add_one <|
+    lt_of_mul_lt_mul_right (lt_of_le_of_lt H2 (lt_div_add_one_mul_self _ H1)) (le_of_lt H1)
 #align int.le_div_of_mul_le Int.le_div_of_mul_le
 
 protected theorem le_div_iff_mul_le {a b c : ℤ} (H : 0 < c) : a ≤ b / c ↔ a * c ≤ b :=
@@ -814,15 +835,17 @@ protected theorem div_lt_iff_lt_mul {a b c : ℤ} (H : 0 < c) : a / c < b ↔ a 
   ⟨Int.lt_mul_of_div_lt H, Int.div_lt_of_lt_mul H⟩
 #align int.div_lt_iff_lt_mul Int.div_lt_iff_lt_mul
 
-protected theorem le_mul_of_div_le {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ a) (H3 : a / b ≤ c) : a ≤ c * b := by
-  rw [← Int.div_mul_cancel H2] <;> exact mul_le_mul_of_nonneg_right H3 H1
+protected theorem le_mul_of_div_le {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ a) (H3 : a / b ≤ c) :
+    a ≤ c * b := by rw [← Int.div_mul_cancel H2] <;> exact mul_le_mul_of_nonneg_right H3 H1
 #align int.le_mul_of_div_le Int.le_mul_of_div_le
 
-protected theorem lt_div_of_mul_lt {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ c) (H3 : a * b < c) : a < c / b :=
+protected theorem lt_div_of_mul_lt {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ c) (H3 : a * b < c) :
+    a < c / b :=
   lt_of_not_ge <| mt (Int.le_mul_of_div_le H1 H2) (not_le_of_gt H3)
 #align int.lt_div_of_mul_lt Int.lt_div_of_mul_lt
 
-protected theorem lt_div_iff_mul_lt {a b : ℤ} (c : ℤ) (H : 0 < c) (H' : c ∣ b) : a < b / c ↔ a * c < b :=
+protected theorem lt_div_iff_mul_lt {a b : ℤ} (c : ℤ) (H : 0 < c) (H' : c ∣ b) :
+    a < b / c ↔ a * c < b :=
   ⟨Int.mul_lt_of_lt_div H, Int.lt_div_of_mul_lt (le_of_lt H) H'⟩
 #align int.lt_div_iff_mul_lt Int.lt_div_iff_mul_lt
 
@@ -834,8 +857,8 @@ theorem nat_abs_eq_of_dvd_dvd {s t : ℤ} (hst : s ∣ t) (hts : t ∣ s) : natA
   Nat.dvd_antisymm (nat_abs_dvd_iff_dvd.mpr hst) (nat_abs_dvd_iff_dvd.mpr hts)
 #align int.nat_abs_eq_of_dvd_dvd Int.nat_abs_eq_of_dvd_dvd
 
-theorem div_eq_div_of_mul_eq_mul {a b c d : ℤ} (H2 : d ∣ c) (H3 : b ≠ 0) (H4 : d ≠ 0) (H5 : a * d = b * c) :
-    a / b = c / d :=
+theorem div_eq_div_of_mul_eq_mul {a b c d : ℤ} (H2 : d ∣ c) (H3 : b ≠ 0) (H4 : d ≠ 0)
+    (H5 : a * d = b * c) : a / b = c / d :=
   Int.div_eq_of_eq_mul_right H3 <| by
     rw [← Int.mul_div_assoc _ H2] <;> exact (Int.div_eq_of_eq_mul_left H4 H5.symm).symm
 #align int.div_eq_div_of_mul_eq_mul Int.div_eq_div_of_mul_eq_mul
@@ -853,7 +876,8 @@ theorem div_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
 
 @[simp]
 theorem to_nat_le {a : ℤ} {n : ℕ} : toNat a ≤ n ↔ a ≤ n := by
-  rw [(coe_nat_le_coe_nat_iff _ _).symm, to_nat_eq_max, max_le_iff] <;> exact and_iff_left (coe_zero_le _)
+  rw [(coe_nat_le_coe_nat_iff _ _).symm, to_nat_eq_max, max_le_iff] <;>
+    exact and_iff_left (coe_zero_le _)
 #align int.to_nat_le Int.to_nat_le
 
 @[simp]
@@ -863,7 +887,8 @@ theorem lt_to_nat {n : ℕ} {a : ℤ} : n < toNat a ↔ (n : ℤ) < a :=
 
 @[simp]
 theorem coe_nat_nonpos_iff {n : ℕ} : (n : ℤ) ≤ 0 ↔ n = 0 :=
-  ⟨fun h => le_antisymm (Int.coe_nat_le.mp (h.trans Int.ofNat_zero.le)) n.zero_le, fun h => (coe_nat_eq_zero.mpr h).le⟩
+  ⟨fun h => le_antisymm (Int.coe_nat_le.mp (h.trans Int.ofNat_zero.le)) n.zero_le, fun h =>
+    (coe_nat_eq_zero.mpr h).le⟩
 #align int.coe_nat_nonpos_iff Int.coe_nat_nonpos_iff
 
 theorem to_nat_le_to_nat {a b : ℤ} (h : a ≤ b) : toNat a ≤ toNat b := by
@@ -871,14 +896,8 @@ theorem to_nat_le_to_nat {a b : ℤ} (h : a ≤ b) : toNat a ≤ toNat b := by
 #align int.to_nat_le_to_nat Int.to_nat_le_to_nat
 
 theorem to_nat_lt_to_nat {a b : ℤ} (hb : 0 < b) : toNat a < toNat b ↔ a < b :=
-  ⟨fun h => by
-    cases a
-    exact lt_to_nat.1 h
-    exact lt_trans (neg_succ_of_nat_lt_zero a) hb, fun h => by
-    rw [lt_to_nat]
-    cases a
-    exact h
-    exact hb⟩
+  ⟨fun h => by cases a; exact lt_to_nat.1 h; exact lt_trans (neg_succ_of_nat_lt_zero a) hb, fun h =>
+    by rw [lt_to_nat]; cases a; exact h; exact hb⟩
 #align int.to_nat_lt_to_nat Int.to_nat_lt_to_nat
 
 theorem lt_of_to_nat_lt {a b : ℤ} (h : toNat a < toNat b) : a < b :=

@@ -28,7 +28,9 @@ theorem nth_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList := by
 
 theorem mem_iff_nth (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
   simp only [List.mem_iff_nth_le, Fin.exists_iff, Vector.nth_eq_nth_le] <;>
-    exact ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length], h⟩⟩
+    exact
+      ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ =>
+        ⟨i, by rwa [to_list_length], h⟩⟩
 #align vector.mem_iff_nth Vector.mem_iff_nth
 
 theorem not_mem_nil : a ∉ (Vector.nil : Vector α 0).toList :=
@@ -69,7 +71,8 @@ theorem mem_of_mem_tail (v : Vector α n) (ha : a ∈ v.tail.toList) : a ∈ v.t
     
 #align vector.mem_of_mem_tail Vector.mem_of_mem_tail
 
-theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) : b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by
+theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) :
+    b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by
   rw [Vector.to_list_map, List.mem_map]
 #align vector.mem_map_iff Vector.mem_map_iff
 

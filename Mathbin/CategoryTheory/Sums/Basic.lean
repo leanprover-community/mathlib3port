@@ -121,7 +121,8 @@ namespace Swap
 
 /-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
 def equivalence : Sum C D ≌ Sum D C :=
-  Equivalence.mk (swap C D) (swap D C) (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
+  Equivalence.mk (swap C D) (swap D C)
+    (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
     (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
 #align category_theory.sum.swap.equivalence CategoryTheory.sum.swap.equivalence
 
@@ -138,8 +139,8 @@ end Swap
 
 end Sum
 
-variable {A : Type u₁} [Category.{v₁} A] {B : Type u₁} [Category.{v₁} B] {C : Type u₁} [Category.{v₁} C] {D : Type u₁}
-  [Category.{v₁} D]
+variable {A : Type u₁} [Category.{v₁} A] {B : Type u₁} [Category.{v₁} B] {C : Type u₁}
+  [Category.{v₁} C] {D : Type u₁} [Category.{v₁} D]
 
 namespace Functor
 
@@ -153,12 +154,7 @@ def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D where
     match X, Y, f with
     | inl X, inl Y, f => F.map f
     | inr X, inr Y, f => G.map f
-  map_id' X := by
-    cases X <;> unfold_aux
-    erw [F.map_id]
-    rfl
-    erw [G.map_id]
-    rfl
+  map_id' X := by cases X <;> unfold_aux; erw [F.map_id]; rfl; erw [G.map_id]; rfl
   map_comp' X Y Z f g :=
     match X, Y, Z, f, g with
     | inl X, inl Y, inl Z, f, g => by
@@ -182,12 +178,14 @@ theorem sum_obj_inr (F : A ⥤ B) (G : C ⥤ D) (c : C) : (F.Sum G).obj (inr c) 
 #align category_theory.functor.sum_obj_inr CategoryTheory.Functor.sum_obj_inr
 
 @[simp]
-theorem sum_map_inl (F : A ⥤ B) (G : C ⥤ D) {a a' : A} (f : inl a ⟶ inl a') : (F.Sum G).map f = F.map f :=
+theorem sum_map_inl (F : A ⥤ B) (G : C ⥤ D) {a a' : A} (f : inl a ⟶ inl a') :
+    (F.Sum G).map f = F.map f :=
   rfl
 #align category_theory.functor.sum_map_inl CategoryTheory.Functor.sum_map_inl
 
 @[simp]
-theorem sum_map_inr (F : A ⥤ B) (G : C ⥤ D) {c c' : C} (f : inr c ⟶ inr c') : (F.Sum G).map f = G.map f :=
+theorem sum_map_inr (F : A ⥤ B) (G : C ⥤ D) {c c' : C} (f : inr c ⟶ inr c') :
+    (F.Sum G).map f = G.map f :=
   rfl
 #align category_theory.functor.sum_map_inr CategoryTheory.Functor.sum_map_inr
 
@@ -203,23 +201,19 @@ def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H 
     | inr X => β.app X
   naturality' X Y f :=
     match X, Y, f with
-    | inl X, inl Y, f => by
-      unfold_aux
-      erw [α.naturality]
-      rfl
-    | inr X, inr Y, f => by
-      unfold_aux
-      erw [β.naturality]
-      rfl
+    | inl X, inl Y, f => by unfold_aux; erw [α.naturality]; rfl
+    | inr X, inr Y, f => by unfold_aux; erw [β.naturality]; rfl
 #align category_theory.nat_trans.sum CategoryTheory.NatTrans.sum
 
 @[simp]
-theorem sum_app_inl {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (a : A) : (sum α β).app (inl a) = α.app a :=
+theorem sum_app_inl {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (a : A) :
+    (sum α β).app (inl a) = α.app a :=
   rfl
 #align category_theory.nat_trans.sum_app_inl CategoryTheory.NatTrans.sum_app_inl
 
 @[simp]
-theorem sum_app_inr {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (c : C) : (sum α β).app (inr c) = β.app c :=
+theorem sum_app_inr {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (c : C) :
+    (sum α β).app (inr c) = β.app c :=
   rfl
 #align category_theory.nat_trans.sum_app_inr CategoryTheory.NatTrans.sum_app_inr
 

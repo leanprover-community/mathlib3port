@@ -44,8 +44,8 @@ theorem cast_ne_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) ≠
 #align int.cast_ne_zero Int.cast_ne_zero
 
 @[simp, norm_cast]
-theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) : ((m / n : ℤ) : k) = m / n :=
-  by
+theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) :
+    ((m / n : ℤ) : k) = m / n := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp [Int.div_zero]
     
@@ -55,7 +55,8 @@ theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dv
 
 end Int
 
-theorem RingHom.injective_int {α : Type _} [NonAssocRing α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=
+theorem RingHom.injective_int {α : Type _} [NonAssocRing α] (f : ℤ →+* α) [CharZero α] :
+    Function.Injective f :=
   Subsingleton.elim (Int.castRingHom _) f ▸ Int.cast_injective
 #align ring_hom.injective_int RingHom.injective_int
 

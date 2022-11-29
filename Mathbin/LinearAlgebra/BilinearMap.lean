@@ -76,7 +76,8 @@ variable (ρ₁₂ σ₁₂)
 /-- Create a bilinear map from a function that is semilinear in each component.
 See `mk₂'` and `mk₂` for the linear case. -/
 def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n)
-    (H2 : ∀ (c : R) (m n), f (c • m) n = ρ₁₂ c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
+    (H2 : ∀ (c : R) (m n), f (c • m) n = ρ₁₂ c • f m n)
+    (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
     (H4 : ∀ (c : S) (m n), f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P where
   toFun m := { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m }
   map_add' m₁ m₂ := LinearMap.ext <| H1 m₁ m₂
@@ -96,7 +97,8 @@ variable (R S)
 /-- Create a bilinear map from a function that is linear in each component.
 See `mk₂` for the special case where both arguments come from modules over the same ring. -/
 def mk₂' (f : M → N → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n)
-    (H2 : ∀ (c : R) (m n), f (c • m) n = c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
+    (H2 : ∀ (c : R) (m n), f (c • m) n = c • f m n)
+    (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
     (H4 : ∀ (c : S) (m n), f m (c • n) = c • f m n) : M →ₗ[R] N →ₗ[S] Pₗ :=
   mk₂'ₛₗ (RingHom.id R) (RingHom.id S) f H1 H2 H3 H4
 #align linear_map.mk₂' LinearMap.mk₂'
@@ -124,8 +126,9 @@ attribute [local instance] SmulCommClass.symm
 /-- Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map from `M × N` to
 `P`, change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
 def flip (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) : N →ₛₗ[σ₁₂] M →ₛₗ[ρ₁₂] P :=
-  mk₂'ₛₗ σ₁₂ ρ₁₂ (fun n m => f m n) (fun n₁ n₂ m => (f m).map_add _ _) (fun c n m => (f m).map_smulₛₗ _ _)
-    (fun n m₁ m₂ => by rw [f.map_add] <;> rfl) fun c n m => by rw [f.map_smulₛₗ] <;> rfl
+  mk₂'ₛₗ σ₁₂ ρ₁₂ (fun n m => f m n) (fun n₁ n₂ m => (f m).map_add _ _)
+    (fun c n m => (f m).map_smulₛₗ _ _) (fun n m₁ m₂ => by rw [f.map_add] <;> rfl) fun c n m => by
+    rw [f.map_smulₛₗ] <;> rfl
 #align linear_map.flip LinearMap.flip
 
 end
@@ -181,7 +184,8 @@ theorem map_sum₂ {ι : Type _} (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂
 def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) : M →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P where
   toFun m := (f m).domRestrict q
   map_add' m₁ m₂ := LinearMap.ext fun _ => by simp only [map_add, dom_restrict_apply, add_apply]
-  map_smul' c m := LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
+  map_smul' c m :=
+    LinearMap.ext fun _ => by simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
 #align linear_map.dom_restrict₂ LinearMap.domRestrict₂
 
 theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
@@ -190,12 +194,13 @@ theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P
 #align linear_map.dom_restrict₂_apply LinearMap.dom_restrict₂_apply
 
 /-- Restricting a bilinear map in both components -/
-def domRestrict₁₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N) : p →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P :=
+def domRestrict₁₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N) :
+    p →ₛₗ[ρ₁₂] q →ₛₗ[σ₁₂] P :=
   (f.domRestrict p).domRestrict₂ q
 #align linear_map.dom_restrict₁₂ LinearMap.domRestrict₁₂
 
-theorem dom_restrict₁₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N) (x : p) (y : q) :
-    f.domRestrict₁₂ p q x y = f x y :=
+theorem dom_restrict₁₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (p : Submodule R M) (q : Submodule S N)
+    (x : p) (y : q) : f.domRestrict₁₂ p q x y = f x y :=
   rfl
 #align linear_map.dom_restrict₁₂_apply LinearMap.dom_restrict₁₂_apply
 
@@ -233,7 +238,8 @@ variable (R)
 
 This is a shorthand for `mk₂'` for the common case when `R = S`. -/
 def mk₂ (f : M → Nₗ → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁ + m₂) n = f m₁ n + f m₂ n)
-    (H2 : ∀ (c : R) (m n), f (c • m) n = c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
+    (H2 : ∀ (c : R) (m n), f (c • m) n = c • f m n)
+    (H3 : ∀ m n₁ n₂, f m (n₁ + n₂) = f m n₁ + f m n₂)
     (H4 : ∀ (c : R) (m n), f m (c • n) = c • f m n) : M →ₗ[R] Nₗ →ₗ[R] Pₗ :=
   mk₂' R R f H1 H2 H3 H4
 #align linear_map.mk₂ LinearMap.mk₂
@@ -294,7 +300,8 @@ variable {P σ₂₃}
 include σ₁₃
 
 @[simp]
-theorem lcompₛₗ_apply (f : M →ₛₗ[σ₁₂] N) (g : N →ₛₗ[σ₂₃] P) (x : M) : lcompₛₗ P σ₂₃ f g x = g (f x) :=
+theorem lcompₛₗ_apply (f : M →ₛₗ[σ₁₂] N) (g : N →ₛₗ[σ₂₃] P) (x : M) :
+    lcompₛₗ P σ₂₃ f g x = g (f x) :=
   rfl
 #align linear_map.lcompₛₗ_apply LinearMap.lcompₛₗ_apply
 
@@ -314,7 +321,8 @@ variable {R M Nₗ Pₗ}
 section
 
 @[simp]
-theorem llcomp_apply (f : Nₗ →ₗ[R] Pₗ) (g : M →ₗ[R] Nₗ) (x : M) : llcomp R M Nₗ Pₗ f g x = f (g x) :=
+theorem llcomp_apply (f : Nₗ →ₗ[R] Pₗ) (g : M →ₗ[R] Nₗ) (x : M) :
+    llcomp R M Nₗ Pₗ f g x = f (g x) :=
   rfl
 #align linear_map.llcomp_apply LinearMap.llcomp_apply
 
@@ -347,13 +355,14 @@ theorem compl₂_id : f.compl₂ LinearMap.id = f := by
 
 /-- Composing linear maps `Q → M` and `Q' → N` with a bilinear map `M → N → P` to
 form a bilinear map `Q → Q' → P`. -/
-def compl₁₂ (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] Mₗ) (g' : Qₗ' →ₗ[R] Nₗ) : Qₗ →ₗ[R] Qₗ' →ₗ[R] Pₗ :=
+def compl₁₂ (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] Mₗ) (g' : Qₗ' →ₗ[R] Nₗ) :
+    Qₗ →ₗ[R] Qₗ' →ₗ[R] Pₗ :=
   (f.comp g).compl₂ g'
 #align linear_map.compl₁₂ LinearMap.compl₁₂
 
 @[simp]
-theorem compl₁₂_apply (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] Mₗ) (g' : Qₗ' →ₗ[R] Nₗ) (x : Qₗ) (y : Qₗ') :
-    f.compl₁₂ g g' x y = f (g x) (g' y) :=
+theorem compl₁₂_apply (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Qₗ →ₗ[R] Mₗ) (g' : Qₗ' →ₗ[R] Nₗ) (x : Qₗ)
+    (y : Qₗ') : f.compl₁₂ g g' x y = f (g x) (g' y) :=
   rfl
 #align linear_map.compl₁₂_apply LinearMap.compl₁₂_apply
 
@@ -363,8 +372,9 @@ theorem compl₁₂_id_id (f : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ) : f.compl₁�
   simp_rw [compl₁₂_apply, id_coe, id.def]
 #align linear_map.compl₁₂_id_id LinearMap.compl₁₂_id_id
 
-theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Qₗ →ₗ[R] Mₗ} {g' : Qₗ' →ₗ[R] Nₗ} (hₗ : Function.Surjective g)
-    (hᵣ : Function.Surjective g') : f₁.compl₁₂ g g' = f₂.compl₁₂ g g' ↔ f₁ = f₂ := by
+theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Qₗ →ₗ[R] Mₗ} {g' : Qₗ' →ₗ[R] Nₗ}
+    (hₗ : Function.Surjective g) (hᵣ : Function.Surjective g') :
+    f₁.compl₁₂ g g' = f₂.compl₁₂ g g' ↔ f₁ = f₂ := by
   constructor <;> intro h
   · -- B₁.comp l r = B₂.comp l r → B₁ = B₂
     ext (x y)
@@ -386,7 +396,8 @@ def compr₂ (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) : M
 #align linear_map.compr₂ LinearMap.compr₂
 
 @[simp]
-theorem compr₂_apply (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) (m : M) (n : Nₗ) : f.compr₂ g m n = g (f m n) :=
+theorem compr₂_apply (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) (m : M) (n : Nₗ) :
+    f.compr₂ g m n = g (f m n) :=
   rfl
 #align linear_map.compr₂_apply LinearMap.compr₂_apply
 
@@ -432,7 +443,8 @@ variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 variable (b₁ : Basis ι₁ R M) (b₂ : Basis ι₂ S N) (b₁' : Basis ι₁ R Mₗ) (b₂' : Basis ι₂ R Nₗ)
 
 /-- Two bilinear maps are equal when they are equal on all basis vectors. -/
-theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) : B = B' :=
+theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : ∀ i j, B (b₁ i) (b₂ j) = B' (b₁ i) (b₂ j)) :
+    B = B' :=
   b₁.ext fun i => b₂.ext fun j => h i j
 #align linear_map.ext_basis LinearMap.ext_basis
 
@@ -440,18 +452,24 @@ theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : �
 
 Version for semi-bilinear maps, see `sum_repr_mul_repr_mul` for the bilinear version. -/
 theorem sum_repr_mul_repr_mulₛₗ {B : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (x y) :
-    ((b₁.repr x).Sum fun i xi => (b₂.repr y).Sum fun j yj => ρ₁₂ xi • σ₁₂ yj • B (b₁ i) (b₂ j)) = B x y := by
+    ((b₁.repr x).Sum fun i xi => (b₂.repr y).Sum fun j yj => ρ₁₂ xi • σ₁₂ yj • B (b₁ i) (b₂ j)) =
+      B x y :=
+  by
   conv_rhs => rw [← b₁.total_repr x, ← b₂.total_repr y]
-  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smulₛₗ₂, LinearMap.map_smulₛₗ]
+  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smulₛₗ₂,
+    LinearMap.map_smulₛₗ]
 #align linear_map.sum_repr_mul_repr_mulₛₗ LinearMap.sum_repr_mul_repr_mulₛₗ
 
 /-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis.
 
 Version for bilinear maps, see `sum_repr_mul_repr_mulₛₗ` for the semi-bilinear version. -/
 theorem sum_repr_mul_repr_mul {B : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} (x y) :
-    ((b₁'.repr x).Sum fun i xi => (b₂'.repr y).Sum fun j yj => xi • yj • B (b₁' i) (b₂' j)) = B x y := by
+    ((b₁'.repr x).Sum fun i xi => (b₂'.repr y).Sum fun j yj => xi • yj • B (b₁' i) (b₂' j)) =
+      B x y :=
+  by
   conv_rhs => rw [← b₁'.total_repr x, ← b₂'.total_repr y]
-  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smul₂, LinearMap.map_smul]
+  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smul₂,
+    LinearMap.map_smul]
 #align linear_map.sum_repr_mul_repr_mul LinearMap.sum_repr_mul_repr_mul
 
 end AddCommMonoid
@@ -462,7 +480,8 @@ variable [AddCommGroup M] [AddCommGroup N] [AddCommGroup P]
 
 variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
-theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) : Function.Injective (lsmul R M x) :=
+theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) :
+    Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx
 #align linear_map.lsmul_injective LinearMap.lsmul_injective
 

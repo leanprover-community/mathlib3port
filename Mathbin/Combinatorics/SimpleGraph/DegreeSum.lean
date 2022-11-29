@@ -77,14 +77,15 @@ theorem dart_card_eq_sum_degrees : Fintype.card G.Dart = ∑ v, G.degree v := by
 
 variable {G} [DecidableEq V]
 
-theorem Dart.edge_fiber (d : G.Dart) : (univ.filter fun d' : G.Dart => d'.edge = d.edge) = {d, d.symm} :=
+theorem Dart.edge_fiber (d : G.Dart) :
+    (univ.filter fun d' : G.Dart => d'.edge = d.edge) = {d, d.symm} :=
   Finset.ext fun d' => by simpa using dart_edge_eq_iff d' d
 #align simple_graph.dart.edge_fiber SimpleGraph.Dart.edge_fiber
 
 variable (G)
 
-theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edgeSet) : (univ.filter fun d : G.Dart => d.edge = e).card = 2 :=
-  by
+theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edgeSet) :
+    (univ.filter fun d : G.Dart => d.edge = e).card = 2 := by
   refine' Sym2.ind (fun v w h => _) e h
   let d : G.dart := ⟨(v, w), h⟩
   convert congr_arg card d.edge_fiber
@@ -156,8 +157,8 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
     
 #align simple_graph.odd_card_odd_degree_vertices_ne SimpleGraph.odd_card_odd_degree_vertices_ne
 
-theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V) (h : Odd (G.degree v)) :
-    ∃ w : V, w ≠ v ∧ Odd (G.degree w) := by
+theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V)
+    (h : Odd (G.degree v)) : ∃ w : V, w ≠ v ∧ Odd (G.degree w) := by
   haveI := Classical.decEq V
   rcases G.odd_card_odd_degree_vertices_ne v h with ⟨k, hg⟩
   have hg' : (filter (fun w : V => w ≠ v ∧ Odd (G.degree w)) univ).card > 0 := by
@@ -166,7 +167,8 @@ theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Ad
   rcases card_pos.mp hg' with ⟨w, hw⟩
   simp only [true_and_iff, mem_filter, mem_univ, Ne.def] at hw
   exact ⟨w, hw⟩
-#align simple_graph.exists_ne_odd_degree_of_exists_odd_degree SimpleGraph.exists_ne_odd_degree_of_exists_odd_degree
+#align
+  simple_graph.exists_ne_odd_degree_of_exists_odd_degree SimpleGraph.exists_ne_odd_degree_of_exists_odd_degree
 
 end SimpleGraph
 

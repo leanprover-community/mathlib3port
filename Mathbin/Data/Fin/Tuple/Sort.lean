@@ -79,7 +79,8 @@ def sort (f : Fin n → α) : Equiv.Perm (Fin n) :=
   (graphEquiv₂ f).toEquiv.trans (graphEquiv₁ f).symm
 #align tuple.sort Tuple.sort
 
-theorem graph_equiv₂_apply (f : Fin n → α) (i : Fin n) : graphEquiv₂ f i = graphEquiv₁ f (sort f i) :=
+theorem graph_equiv₂_apply (f : Fin n → α) (i : Fin n) :
+    graphEquiv₂ f i = graphEquiv₁ f (sort f i) :=
   ((graphEquiv₁ f).apply_symm_apply _).symm
 #align tuple.graph_equiv₂_apply Tuple.graph_equiv₂_apply
 
@@ -109,10 +110,11 @@ open List
 variable {n : ℕ} {α : Type _}
 
 /-- If two permutations of a tuple `f` are both monotone, then they are equal. -/
-theorem unique_monotone [PartialOrder α] {f : Fin n → α} {σ τ : Equiv.Perm (Fin n)} (hfσ : Monotone (f ∘ σ))
-    (hfτ : Monotone (f ∘ τ)) : f ∘ σ = f ∘ τ :=
+theorem unique_monotone [PartialOrder α] {f : Fin n → α} {σ τ : Equiv.Perm (Fin n)}
+    (hfσ : Monotone (f ∘ σ)) (hfτ : Monotone (f ∘ τ)) : f ∘ σ = f ∘ τ :=
   of_fn_injective <|
-    eq_of_perm_of_sorted ((σ.of_fn_comp_perm f).trans (τ.of_fn_comp_perm f).symm) hfσ.of_fn_sorted hfτ.of_fn_sorted
+    eq_of_perm_of_sorted ((σ.of_fn_comp_perm f).trans (τ.of_fn_comp_perm f).symm) hfσ.of_fn_sorted
+      hfτ.of_fn_sorted
 #align tuple.unique_monotone Tuple.unique_monotone
 
 variable [LinearOrder α] {f : Fin n → α} {σ : Equiv.Perm (Fin n)}
@@ -133,7 +135,8 @@ theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans <| graphEquiv₁ f) 
 /-- A permutation `σ` equals `sort f` if and only if `f ∘ σ` is monotone and whenever `i < j`
 and `f (σ i) = f (σ j)`, then `σ i < σ j`. This means that `sort f` is the lexicographically
 smallest permutation `σ` such that `f ∘ σ` is monotone. -/
-theorem eq_sort_iff : σ = sort f ↔ Monotone (f ∘ σ) ∧ ∀ i j, i < j → f (σ i) = f (σ j) → σ i < σ j := by
+theorem eq_sort_iff :
+    σ = sort f ↔ Monotone (f ∘ σ) ∧ ∀ i j, i < j → f (σ i) = f (σ j) → σ i < σ j := by
   rw [eq_sort_iff']
   refine' ⟨fun h => ⟨(monotone_proj f).comp h.Monotone, fun i j hij hfij => _⟩, fun h i j hij => _⟩
   · exact (((Prod.Lex.lt_iff _ _).1 <| h hij).resolve_left hfij.not_lt).2
@@ -163,7 +166,8 @@ theorem comp_perm_comp_sort_eq_comp_sort : (f ∘ σ) ∘ sort (f ∘ σ) = f �
 
 /-- If a permutation `f ∘ σ` of the tuple `f` is not the same as `f ∘ sort f`, then `f ∘ σ`
 has a pair of strictly decreasing entries. -/
-theorem antitone_pair_of_not_sorted' (h : f ∘ σ ≠ f ∘ sort f) : ∃ i j, i < j ∧ (f ∘ σ) j < (f ∘ σ) i := by
+theorem antitone_pair_of_not_sorted' (h : f ∘ σ ≠ f ∘ sort f) :
+    ∃ i j, i < j ∧ (f ∘ σ) j < (f ∘ σ) i := by
   contrapose! h
   exact comp_sort_eq_comp_iff_monotone.mpr (monotone_iff_forall_lt.mpr h)
 #align tuple.antitone_pair_of_not_sorted' Tuple.antitone_pair_of_not_sorted'

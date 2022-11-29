@@ -222,7 +222,8 @@ def iccHomeoI (a b : 𝕜) (h : a < b) : Set.icc a b ≃ₜ Set.icc (0 : 𝕜) (
 #align Icc_homeo_I iccHomeoI
 
 @[simp]
-theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.icc a b) : ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
+theorem Icc_homeo_I_apply_coe (a b : 𝕜) (h : a < b) (x : Set.icc a b) :
+    ((iccHomeoI a b h) x : 𝕜) = (x - a) / (b - a) :=
   rfl
 #align Icc_homeo_I_apply_coe Icc_homeo_I_apply_coe
 

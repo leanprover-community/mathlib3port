@@ -40,7 +40,8 @@ variable [Mul α]
 
 /-- An element `a` of a type `α` with multiplication satisfies `is_square a` if `a = r * r`,
 for some `r : α`. -/
-@[to_additive "An element `a` of a type `α` with addition satisfies `even a` if `a = r + r`,\nfor some `r : α`."]
+@[to_additive
+      "An element `a` of a type `α` with addition satisfies `even a` if `a = r + r`,\nfor some `r : α`."]
 def IsSquare (a : α) : Prop :=
   ∃ r, a = r * r
 #align is_square IsSquare
@@ -79,10 +80,14 @@ theorem is_square_iff_exists_sq (m : α) : IsSquare m ↔ ∃ c, m = c ^ 2 := by
 
 alias is_square_iff_exists_sq ↔ IsSquare.exists_sq is_square_of_exists_sq
 
-attribute [to_additive Even.exists_two_nsmul "Alias of the forwards direction of\n`even_iff_exists_two_nsmul`."]
+attribute
+  [to_additive Even.exists_two_nsmul
+      "Alias of the forwards direction of\n`even_iff_exists_two_nsmul`."]
   IsSquare.exists_sq
 
-attribute [to_additive even_of_exists_two_nsmul "Alias of the backwards direction of\n`even_iff_exists_two_nsmul`."]
+attribute
+  [to_additive even_of_exists_two_nsmul
+      "Alias of the backwards direction of\n`even_iff_exists_two_nsmul`."]
   is_square_of_exists_sq
 
 @[to_additive Even.nsmul]
@@ -170,7 +175,8 @@ theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (|a|) �
 #align even_abs even_abs
 
 @[to_additive]
-theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : IsSquare b) : IsSquare (a / b) := by
+theorem IsSquare.div [DivisionCommMonoid α] {a b : α} (ha : IsSquare a) (hb : IsSquare b) :
+    IsSquare (a / b) := by
   rw [div_eq_mul_inv]
   exact ha.mul hb.inv
 #align is_square.div IsSquare.div
@@ -183,7 +189,8 @@ theorem Even.is_square_zpow [Group α] {n : ℤ} : Even n → ∀ a : α, IsSqua
 
 -- `odd.tsub` requires `canonically_linear_ordered_semiring`, which we don't have
 theorem Even.tsub [CanonicallyLinearOrderedAddMonoid α] [Sub α] [HasOrderedSub α]
-    [ContravariantClass α α (· + ·) (· ≤ ·)] {m n : α} (hm : Even m) (hn : Even n) : Even (m - n) := by
+    [ContravariantClass α α (· + ·) (· ≤ ·)] {m n : α} (hm : Even m) (hn : Even n) : Even (m - n) :=
+  by
   obtain ⟨a, rfl⟩ := hm
   obtain ⟨b, rfl⟩ := hn
   refine' ⟨a - b, _⟩
@@ -204,14 +211,16 @@ section Semiring
 
 variable [Semiring α] [Semiring β] {m n : α}
 
-theorem even_iff_exists_two_mul (m : α) : Even m ↔ ∃ c, m = 2 * c := by simp [even_iff_exists_two_nsmul]
+theorem even_iff_exists_two_mul (m : α) : Even m ↔ ∃ c, m = 2 * c := by
+  simp [even_iff_exists_two_nsmul]
 #align even_iff_exists_two_mul even_iff_exists_two_mul
 
 theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd, two_mul]
 #align even_iff_two_dvd even_iff_two_dvd
 
 @[simp]
-theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = { a | Even a } := by
+theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = { a | Even a } :=
+  by
   ext x
   simp [eq_comm, two_mul, Even]
 #align range_two_mul range_two_mul
@@ -268,7 +277,8 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
 #align odd_bit1 odd_bit1
 
 @[simp]
-theorem range_two_mul_add_one (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x + 1) = { a | Odd a } := by
+theorem range_two_mul_add_one (α : Type _) [Semiring α] :
+    (Set.range fun x : α => 2 * x + 1) = { a | Odd a } := by
   ext x
   simp [Odd, eq_comm]
 #align range_two_mul_add_one range_two_mul_add_one
@@ -286,7 +296,8 @@ theorem Odd.add_even (hm : Odd m) (hn : Even n) : Odd (m + n) := by
 theorem Odd.add_odd : Odd m → Odd n → Even (m + n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨n + m + 1, _⟩
-  rw [← two_mul, ← add_assoc, add_comm _ (2 * n), ← add_assoc, ← mul_add, add_assoc, mul_add _ (n + m), mul_one]
+  rw [← two_mul, ← add_assoc, add_comm _ (2 * n), ← add_assoc, ← mul_add, add_assoc,
+    mul_add _ (n + m), mul_one]
   rfl
 #align odd.add_odd Odd.add_odd
 
@@ -309,8 +320,8 @@ theorem Odd.map [RingHomClass F α β] (f : F) : Odd m → Odd (f m) := by
 theorem Odd.mul : Odd m → Odd n → Odd (m * n) := by
   rintro ⟨m, rfl⟩ ⟨n, rfl⟩
   refine' ⟨2 * m * n + n + m, _⟩
-  rw [mul_add, add_mul, mul_one, ← add_assoc, one_mul, mul_assoc, ← mul_add, ← mul_add, ← mul_assoc, ← Nat.cast_two, ←
-    Nat.cast_comm]
+  rw [mul_add, add_mul, mul_one, ← add_assoc, one_mul, mul_assoc, ← mul_add, ← mul_add, ← mul_assoc,
+    ← Nat.cast_two, ← Nat.cast_comm]
 #align odd.mul Odd.mul
 
 theorem Odd.pow (hm : Odd m) : ∀ {a : ℕ}, Odd (m ^ a)
@@ -365,7 +376,8 @@ theorem even_neg_two : Even (-2 : α) := by simp only [even_neg, even_two]
 theorem Odd.neg (hp : Odd a) : Odd (-a) := by
   obtain ⟨k, hk⟩ := hp
   use -(k + 1)
-  rw [mul_neg, mul_add, neg_add, add_assoc, two_mul (1 : α), neg_add, neg_add_cancel_right, ← neg_add, hk]
+  rw [mul_neg, mul_add, neg_add, add_assoc, two_mul (1 : α), neg_add, neg_add_cancel_right, ←
+    neg_add, hk]
 #align odd.neg Odd.neg
 
 @[simp]
@@ -392,7 +404,8 @@ theorem Odd.sub_odd (ha : Odd a) (hb : Odd b) : Even (a - b) := by
   exact ha.add_odd hb.neg
 #align odd.sub_odd Odd.sub_odd
 
-theorem odd_abs [LinearOrder α] : Odd (abs a) ↔ Odd a := by cases' abs_choice a with h h <;> simp only [h, odd_neg]
+theorem odd_abs [LinearOrder α] : Odd (abs a) ↔ Odd a := by
+  cases' abs_choice a with h h <;> simp only [h, odd_neg]
 #align odd_abs odd_abs
 
 end Ring

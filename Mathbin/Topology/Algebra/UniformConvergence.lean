@@ -102,7 +102,8 @@ section Group
 variable {α G ι : Type _} [Group G] {𝔖 : Set <| Set α} [UniformSpace G] [UniformGroup G]
 
 /-- If `G` is a uniform group, then `α →ᵤ G` is a uniform group as well. -/
-@[to_additive "If `G` is a uniform additive group, then `α →ᵤ G` is a uniform additive group\nas well."]
+@[to_additive
+      "If `G` is a uniform additive group, then `α →ᵤ G` is a uniform additive group\nas well."]
 instance : UniformGroup (α →ᵤ G) :=
   ⟨(-- Since `(/) : G × G → G` is uniformly continuous,
           -- `uniform_fun.postcomp_uniform_continuous` tells us that
@@ -115,8 +116,8 @@ instance : UniformGroup (α →ᵤ G) :=
 
 @[to_additive]
 protected theorem UniformFun.has_basis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
-    (h : (𝓝 1 : Filter G).HasBasis p b) : (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => { f : α →ᵤ G | ∀ x, f x ∈ b i } :=
-  by
+    (h : (𝓝 1 : Filter G).HasBasis p b) :
+    (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => { f : α →ᵤ G | ∀ x, f x ∈ b i } := by
   have := h.comap fun p : G × G => p.2 / p.1
   rw [← uniformity_eq_comap_nhds_one] at this
   convert UniformFun.has_basis_nhds_of_basis α _ 1 this
@@ -126,7 +127,8 @@ protected theorem UniformFun.has_basis_nhds_one_of_basis {p : ι → Prop} {b : 
 
 @[to_additive]
 protected theorem UniformFun.has_basis_nhds_one :
-    (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V => { f : α → G | ∀ x, f x ∈ V } :=
+    (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V =>
+      { f : α → G | ∀ x, f x ∈ V } :=
   UniformFun.has_basis_nhds_one_of_basis (basis_sets _)
 #align uniform_fun.has_basis_nhds_one UniformFun.has_basis_nhds_one
 
@@ -146,7 +148,8 @@ instance : UniformGroup (α →ᵤ[𝔖] G) :=
 
 @[to_additive]
 protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
-    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {b : ι → Set G} (h : (𝓝 1 : Filter G).HasBasis p b) :
+    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {b : ι → Set G}
+    (h : (𝓝 1 : Filter G).HasBasis p b) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
       { f : α →ᵤ[𝔖] G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   by
@@ -158,8 +161,10 @@ protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α
 #align uniform_on_fun.has_basis_nhds_one_of_basis UniformOnFun.has_basis_nhds_one_of_basis
 
 @[to_additive]
-protected theorem UniformOnFun.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
-    (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
+protected theorem UniformOnFun.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
+    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
+    (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis
+      (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
       { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
   UniformOnFun.has_basis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
 #align uniform_on_fun.has_basis_nhds_one UniformOnFun.has_basis_nhds_one
@@ -168,9 +173,9 @@ end Group
 
 section Module
 
-variable (𝕜 α E H : Type _) {hom : Type _} [NormedField 𝕜] [AddCommGroup H] [Module 𝕜 H] [AddCommGroup E] [Module 𝕜 E]
-  [TopologicalSpace H] [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E] {𝔖 : Set <| Set α}
-  [LinearMapClass hom 𝕜 H (α →ᵤ[𝔖] E)]
+variable (𝕜 α E H : Type _) {hom : Type _} [NormedField 𝕜] [AddCommGroup H] [Module 𝕜 H]
+  [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace H] [UniformSpace E] [UniformAddGroup E]
+  [HasContinuousSmul 𝕜 E] {𝔖 : Set <| Set α} [LinearMapClass hom 𝕜 H (α →ᵤ[𝔖] E)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
@@ -181,8 +186,9 @@ For convenience, we don't literally ask for `H : submodule (α →ᵤ[𝔖] E)`.
 result for any vector space `H` equipped with a linear inducing to `α →ᵤ[𝔖] E`, which is often
 easier to use. We also state the `submodule` version as
 `uniform_on_fun.has_continuous_smul_submodule_of_image_bounded`. -/
-theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖)
-    (φ : hom) (hφ : Inducing φ) (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) :
+theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
+    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (φ : hom) (hφ : Inducing φ)
+    (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) :
     HasContinuousSmul 𝕜 H := by
   have : TopologicalAddGroup H := by
     rw [hφ.induced]
@@ -192,7 +198,8 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
     exact (UniformOnFun.has_basis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
   refine' HasContinuousSmul.of_basis_zero this _ _ _
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
-    have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) := continuous_smul.tendsto (0 : 𝕜 × E)
+    have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) :=
+      continuous_smul.tendsto (0 : 𝕜 × E)
     rw [zero_smul, nhds_prod_eq] at this
     have := this hV
     rw [mem_map, mem_prod_iff] at this
@@ -236,10 +243,13 @@ theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : �
 equipped with the topology of `𝔖`-convergence, is a TVS.
 
 If you have a hard time using this lemma, try the one above instead. -/
-theorem UniformOnFun.has_continuous_smul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖)
-    (H : Submodule 𝕜 (α →ᵤ[𝔖] E)) (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
-    @HasContinuousSmul 𝕜 H _ _ ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
-  haveI : TopologicalAddGroup H := topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
+theorem UniformOnFun.has_continuous_smul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
+    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (H : Submodule 𝕜 (α →ᵤ[𝔖] E))
+    (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
+    @HasContinuousSmul 𝕜 H _ _
+      ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
+  haveI : TopologicalAddGroup H :=
+    topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
   UniformOnFun.has_continuous_smul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
     (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
 #align

@@ -57,6 +57,8 @@ by its variant `haveI` described below.
 -/
 add_tactic_doc
   { Name := "Instance cache tactics", category := DocCategory.tactic,
-    declNames := [`` resetI, `` unfreezingI, `` casesI, `` substI, `` introI, `` introsI, `` haveI, `` letI, `` exactI],
+    declNames :=
+      [`` resetI, `` unfreezingI, `` casesI, `` substI, `` introI, `` introsI, `` haveI, `` letI,
+        `` exactI],
     tags := ["type class", "context management"] }
 

@@ -58,7 +58,8 @@ variable {K : Type u} [Monoid K]
 @[to_additive Discrete.addMonoidalFunctorComp
       "The monoidal natural isomorphism corresponding to\ncomposing two additive morphisms."]
 def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
-    Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅ Discrete.monoidalFunctor (G.comp F) where
+    Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅
+      Discrete.monoidalFunctor (G.comp F) where
   Hom := { app := fun X => 𝟙 _ }
   inv := { app := fun X => 𝟙 _ }
 #align category_theory.discrete.monoidal_functor_comp CategoryTheory.Discrete.monoidalFunctorComp

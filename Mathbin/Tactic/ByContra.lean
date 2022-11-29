@@ -51,8 +51,8 @@ begin
 end
 ```
 -/
-unsafe def by_contra' (h : parse (parser.optional ident)) (t : parse (parser.optional (tk ":" *> texpr))) :
-    tactic Unit := do
+unsafe def by_contra' (h : parse (parser.optional ident))
+    (t : parse (parser.optional (tk ":" *> texpr))) : tactic Unit := do
   let h := h.getOrElse `this
   let tgt ← target
   mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply
@@ -73,8 +73,8 @@ unsafe def by_contra' (h : parse (parser.optional ident)) (t : parse (parser.opt
 #align tactic.interactive.by_contra' tactic.interactive.by_contra'
 
 add_tactic_doc
-  { Name := "by_contra'", category := DocCategory.tactic, declNames := [`tactic.interactive.by_contra'],
-    tags := ["logic"] }
+  { Name := "by_contra'", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.by_contra'], tags := ["logic"] }
 
 end Interactive
 

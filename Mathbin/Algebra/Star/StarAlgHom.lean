@@ -46,8 +46,9 @@ non-unital, algebra, morphism, star
 /-- A *non-unital ⋆-algebra homomorphism* is a non-unital algebra homomorphism between
 non-unital `R`-algebras `A` and `B` equipped with a `star` operation, and this homomorphism is
 also `star`-preserving. -/
-structure NonUnitalStarAlgHom (R A B : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
-  [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B] extends A →ₙₐ[R] B where
+structure NonUnitalStarAlgHom (R A B : Type _) [Monoid R] [NonUnitalNonAssocSemiring A]
+  [DistribMulAction R A] [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
+  [HasStar B] extends A →ₙₐ[R] B where
   map_star' : ∀ a : A, to_fun (star a) = star (to_fun a)
 #align non_unital_star_alg_hom NonUnitalStarAlgHom
 
@@ -63,9 +64,10 @@ add_decl_doc NonUnitalStarAlgHom.toNonUnitalAlgHom
 
 /-- `non_unital_star_alg_hom_class F R A B` asserts `F` is a type of bundled non-unital ⋆-algebra
 homomorphisms from `A` to `B`. -/
-class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
-  [Monoid R] [HasStar A] [HasStar B] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B] [DistribMulAction R A]
-  [DistribMulAction R B] extends NonUnitalAlgHomClass F R A B, StarHomClass F A B
+class NonUnitalStarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
+  (B : outParam (Type _)) [Monoid R] [HasStar A] [HasStar B] [NonUnitalNonAssocSemiring A]
+  [NonUnitalNonAssocSemiring B] [DistribMulAction R A] [DistribMulAction R B] extends
+  NonUnitalAlgHomClass F R A B, StarHomClass F A B
 #align non_unital_star_alg_hom_class NonUnitalStarAlgHomClass
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
@@ -80,7 +82,8 @@ variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [HasStar A]
 variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B]
 
 instance [NonUnitalStarAlgHomClass F R A B] :
-    CoeTC F (A →⋆ₙₐ[R] B) where coe f := { (f : A →ₙₐ[R] B) with toFun := f, map_star' := map_star f }
+    CoeTC F
+      (A →⋆ₙₐ[R] B) where coe f := { (f : A →ₙₐ[R] B) with toFun := f, map_star' := map_star f }
 
 end NonUnitalStarAlgHomClass
 
@@ -122,7 +125,8 @@ theorem coe_coe {F : Type _} [NonUnitalStarAlgHomClass F R A B] (f : F) : ⇑(f 
 @[simp]
 theorem coe_to_non_unital_alg_hom {f : A →⋆ₙₐ[R] B} : (f.toNonUnitalAlgHom : A → B) = f :=
   rfl
-#align non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_to_non_unital_alg_hom
+#align
+  non_unital_star_alg_hom.coe_to_non_unital_alg_hom NonUnitalStarAlgHom.coe_to_non_unital_alg_hom
 
 @[ext.1]
 theorem ext {f g : A →⋆ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
@@ -150,12 +154,14 @@ theorem copy_eq (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f
 #align non_unital_star_alg_hom.copy_eq NonUnitalStarAlgHom.copy_eq
 
 @[simp]
-theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅) : ((⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) : A → B) = f :=
+theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅) :
+    ((⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) : A → B) = f :=
   rfl
 #align non_unital_star_alg_hom.coe_mk NonUnitalStarAlgHom.coe_mk
 
 @[simp]
-theorem mk_coe (f : A →⋆ₙₐ[R] B) (h₁ h₂ h₃ h₄ h₅) : (⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) = f := by
+theorem mk_coe (f : A →⋆ₙₐ[R] B) (h₁ h₂ h₃ h₄ h₅) : (⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) = f :=
+  by
   ext
   rfl
 #align non_unital_star_alg_hom.mk_coe NonUnitalStarAlgHom.mk_coe
@@ -181,8 +187,8 @@ homomorphism. -/
 def comp (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) : A →⋆ₙₐ[R] C :=
   { f.toNonUnitalAlgHom.comp g.toNonUnitalAlgHom with
     map_star' := by
-      simp only [map_star, NonUnitalAlgHom.to_fun_eq_coe, eq_self_iff_true, NonUnitalAlgHom.coe_comp,
-        coe_to_non_unital_alg_hom, Function.comp_apply, forall_const] }
+      simp only [map_star, NonUnitalAlgHom.to_fun_eq_coe, eq_self_iff_true,
+        NonUnitalAlgHom.coe_comp, coe_to_non_unital_alg_hom, Function.comp_apply, forall_const] }
 #align non_unital_star_alg_hom.comp NonUnitalStarAlgHom.comp
 
 @[simp]
@@ -196,7 +202,8 @@ theorem comp_apply (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) (a : A) :
 #align non_unital_star_alg_hom.comp_apply NonUnitalStarAlgHom.comp_apply
 
 @[simp]
-theorem comp_assoc (f : C →⋆ₙₐ[R] D) (g : B →⋆ₙₐ[R] C) (h : A →⋆ₙₐ[R] B) : (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : C →⋆ₙₐ[R] D) (g : B →⋆ₙₐ[R] C) (h : A →⋆ₙₐ[R] B) :
+    (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align non_unital_star_alg_hom.comp_assoc NonUnitalStarAlgHom.comp_assoc
 
@@ -244,8 +251,8 @@ instance : Inhabited (A →⋆ₙₐ[R] B) :=
   ⟨0⟩
 
 instance : MonoidWithZero (A →⋆ₙₐ[R] A) :=
-  { NonUnitalStarAlgHom.monoid, NonUnitalStarAlgHom.hasZero with zero_mul := fun f => ext fun x => rfl,
-    mul_zero := fun f => ext fun x => map_zero f }
+  { NonUnitalStarAlgHom.monoid, NonUnitalStarAlgHom.hasZero with
+    zero_mul := fun f => ext fun x => rfl, mul_zero := fun f => ext fun x => map_zero f }
 
 @[simp]
 theorem coe_zero : ((0 : A →⋆ₙₐ[R] B) : A → B) = 0 :=
@@ -267,8 +274,8 @@ section Unital
 
 /-- A *⋆-algebra homomorphism* is an algebra homomorphism between `R`-algebras `A` and `B`
 equipped with a `star` operation, and this homomorphism is also `star`-preserving. -/
-structure StarAlgHom (R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B]
-  [HasStar B] extends AlgHom R A B where
+structure StarAlgHom (R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A]
+  [Semiring B] [Algebra R B] [HasStar B] extends AlgHom R A B where
   map_star' : ∀ x : A, to_fun (star x) = star (to_fun x)
 #align star_alg_hom StarAlgHom
 
@@ -285,9 +292,9 @@ add_decl_doc StarAlgHom.toAlgHom
 /-- `star_alg_hom_class F R A B` states that `F` is a type of ⋆-algebra homomorphisms.
 
 You should also extend this typeclass when you extend `star_alg_hom`. -/
-class StarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
-  [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B] [HasStar B] extends
-  AlgHomClass F R A B, StarHomClass F A B
+class StarAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
+  (B : outParam (Type _)) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B]
+  [Algebra R B] [HasStar B] extends AlgHomClass F R A B, StarHomClass F A B
 #align star_alg_hom_class StarAlgHomClass
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
@@ -303,21 +310,26 @@ include hF
 
 -- See note [lower instance priority]
 instance (priority := 100) toNonUnitalStarAlgHomClass : NonUnitalStarAlgHomClass F R A B :=
-  { StarAlgHomClass.toAlgHomClass F R A B, StarAlgHomClass.toStarHomClass F R A B with map_smul := map_smul }
-#align star_alg_hom_class.to_non_unital_star_alg_hom_class StarAlgHomClass.toNonUnitalStarAlgHomClass
+  { StarAlgHomClass.toAlgHomClass F R A B, StarAlgHomClass.toStarHomClass F R A B with
+    map_smul := map_smul }
+#align
+  star_alg_hom_class.to_non_unital_star_alg_hom_class StarAlgHomClass.toNonUnitalStarAlgHomClass
 
-instance : CoeTC F (A →⋆ₐ[R] B) where coe f := { (f : A →ₐ[R] B) with toFun := f, map_star' := map_star f }
+instance :
+    CoeTC F (A →⋆ₐ[R] B) where coe f := { (f : A →ₐ[R] B) with toFun := f, map_star' := map_star f }
 
 end StarAlgHomClass
 
 namespace StarAlgHom
 
-variable {F R A B C D : Type _} [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B]
-  [HasStar B] [Semiring C] [Algebra R C] [HasStar C] [Semiring D] [Algebra R D] [HasStar D]
+variable {F R A B C D : Type _} [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B]
+  [Algebra R B] [HasStar B] [Semiring C] [Algebra R C] [HasStar C] [Semiring D] [Algebra R D]
+  [HasStar D]
 
 instance : StarAlgHomClass (A →⋆ₐ[R] B) R A B where
   coe f := f.toFun
-  coe_injective' f g h := by obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
+  coe_injective' f g h := by
+    obtain ⟨_, _, _, _, _, _, _⟩ := f <;> obtain ⟨_, _, _, _, _, _, _⟩ := g <;> congr
   map_mul := map_mul'
   map_one := map_one'
   map_add := map_add'
@@ -369,12 +381,14 @@ theorem copy_eq (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h
 #align star_alg_hom.copy_eq StarAlgHom.copy_eq
 
 @[simp]
-theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅ h₆) : ((⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) : A → B) = f :=
+theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅ h₆) :
+    ((⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) : A → B) = f :=
   rfl
 #align star_alg_hom.coe_mk StarAlgHom.coe_mk
 
 @[simp]
-theorem mk_coe (f : A →⋆ₐ[R] B) (h₁ h₂ h₃ h₄ h₅ h₆) : (⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) = f := by
+theorem mk_coe (f : A →⋆ₐ[R] B) (h₁ h₂ h₃ h₄ h₅ h₆) :
+    (⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) = f := by
   ext
   rfl
 #align star_alg_hom.mk_coe StarAlgHom.mk_coe
@@ -402,8 +416,8 @@ instance : Inhabited (A →⋆ₐ[R] A) :=
 def comp (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) : A →⋆ₐ[R] C :=
   { f.toAlgHom.comp g.toAlgHom with
     map_star' := by
-      simp only [map_star, AlgHom.to_fun_eq_coe, AlgHom.coe_comp, coe_to_alg_hom, Function.comp_apply, eq_self_iff_true,
-        forall_const] }
+      simp only [map_star, AlgHom.to_fun_eq_coe, AlgHom.coe_comp, coe_to_alg_hom,
+        Function.comp_apply, eq_self_iff_true, forall_const] }
 #align star_alg_hom.comp StarAlgHom.comp
 
 @[simp]
@@ -417,7 +431,8 @@ theorem comp_apply (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) (a : A) : comp 
 #align star_alg_hom.comp_apply StarAlgHom.comp_apply
 
 @[simp]
-theorem comp_assoc (f : C →⋆ₐ[R] D) (g : B →⋆ₐ[R] C) (h : A →⋆ₐ[R] B) : (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : C →⋆ₐ[R] D) (g : B →⋆ₐ[R] C) (h : A →⋆ₐ[R] B) :
+    (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align star_alg_hom.comp_assoc StarAlgHom.comp_assoc
 
@@ -461,9 +476,9 @@ namespace NonUnitalStarAlgHom
 
 section Prod
 
-variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [HasStar A]
-  [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B] [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
-  [HasStar C]
+variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
+  [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B]
+  [NonUnitalNonAssocSemiring C] [DistribMulAction R C] [HasStar C]
 
 /-- The first projection of a product is a non-unital ⋆-algebra homomoprhism. -/
 @[simps]
@@ -482,7 +497,8 @@ variable {R A B C}
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : A →⋆ₙₐ[R] B × C :=
-  { f.toNonUnitalAlgHom.Prod g.toNonUnitalAlgHom with map_star' := fun x => by simp [map_star, Prod.star_def] }
+  { f.toNonUnitalAlgHom.Prod g.toNonUnitalAlgHom with
+    map_star' := fun x => by simp [map_star, Prod.star_def] }
 #align non_unital_star_alg_hom.prod NonUnitalStarAlgHom.prod
 
 theorem coe_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
@@ -490,11 +506,13 @@ theorem coe_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : ⇑(f.Pro
 #align non_unital_star_alg_hom.coe_prod NonUnitalStarAlgHom.coe_prod
 
 @[simp]
-theorem fst_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
+theorem fst_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by
+  ext <;> rfl
 #align non_unital_star_alg_hom.fst_prod NonUnitalStarAlgHom.fst_prod
 
 @[simp]
-theorem snd_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
+theorem snd_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by
+  ext <;> rfl
 #align non_unital_star_alg_hom.snd_prod NonUnitalStarAlgHom.snd_prod
 
 @[simp]
@@ -516,9 +534,9 @@ end Prod
 
 section InlInr
 
-variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [StarAddMonoid A]
-  [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [StarAddMonoid B] [NonUnitalNonAssocSemiring C]
-  [DistribMulAction R C] [StarAddMonoid C]
+variable (R A B C : Type _) [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
+  [StarAddMonoid A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [StarAddMonoid B]
+  [NonUnitalNonAssocSemiring C] [DistribMulAction R C] [StarAddMonoid C]
 
 /-- The left injection into a product is a non-unital algebra homomorphism. -/
 def inl : A →⋆ₙₐ[R] A × B :=
@@ -556,8 +574,8 @@ end NonUnitalStarAlgHom
 
 namespace StarAlgHom
 
-variable (R A B C : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B] [Algebra R B]
-  [HasStar B] [Semiring C] [Algebra R C] [HasStar C]
+variable (R A B C : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B]
+  [Algebra R B] [HasStar B] [Semiring C] [Algebra R C] [HasStar C]
 
 /-- The first projection of a product is a ⋆-algebra homomoprhism. -/
 @[simps]
@@ -584,11 +602,13 @@ theorem coe_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : ⇑(f.Prod g) =
 #align star_alg_hom.coe_prod StarAlgHom.coe_prod
 
 @[simp]
-theorem fst_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
+theorem fst_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (fst R B C).comp (prod f g) = f := by
+  ext <;> rfl
 #align star_alg_hom.fst_prod StarAlgHom.fst_prod
 
 @[simp]
-theorem snd_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
+theorem snd_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : (snd R B C).comp (prod f g) = g := by
+  ext <;> rfl
 #align star_alg_hom.snd_prod StarAlgHom.snd_prod
 
 @[simp]
@@ -615,8 +635,8 @@ end StarAlgHom
 multiplication and the star operation, which allows for considering both unital and non-unital
 equivalences with a single structure. Currently, `alg_equiv` requires unital algebras, which is
 why this structure does not extend it. -/
-structure StarAlgEquiv (R A B : Type _) [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B] [HasSmul R B]
-  [HasStar B] extends A ≃+* B where
+structure StarAlgEquiv (R A B : Type _) [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B]
+  [HasSmul R B] [HasStar B] extends A ≃+* B where
   map_star' : ∀ a : A, to_fun (star a) = star (to_fun a)
   map_smul' : ∀ (r : R) (a : A), to_fun (r • a) = r • to_fun a
 #align star_alg_equiv StarAlgEquiv
@@ -635,8 +655,9 @@ add_decl_doc StarAlgEquiv.toRingEquiv
 `A` and `B`.
 
 You should also extend this typeclass when you extend `star_alg_equiv`. -/
-class StarAlgEquivClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _)) [Add A]
-  [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B] [HasSmul R B] [HasStar B] extends RingEquivClass F A B where
+class StarAlgEquivClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
+  (B : outParam (Type _)) [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B] [HasSmul R B]
+  [HasStar B] extends RingEquivClass F A B where
   map_star : ∀ (f : F) (a : A), f (star a) = star (f a)
   map_smul : ∀ (f : F) (r : R) (a : A), f (r • a) = r • f a
 #align star_alg_equiv_class StarAlgEquivClass
@@ -647,31 +668,33 @@ attribute [nolint dangerous_instance] StarAlgEquivClass.toRingEquivClass
 namespace StarAlgEquivClass
 
 -- See note [lower instance priority]
-instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B] [HasSmul R B]
-    [HasStar B] [hF : StarAlgEquivClass F R A B] : StarHomClass F A B :=
+instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B]
+    [Mul B] [HasSmul R B] [HasStar B] [hF : StarAlgEquivClass F R A B] : StarHomClass F A B :=
   { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective }
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgEquivClass.starHomClass
 
 -- See note [lower instance priority]
-instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasStar A] [HasSmul R A] [Add B] [Mul B] [HasSmul R B]
-    [HasStar B] [hF : StarAlgEquivClass F R A B] : SmulHomClass F R A B :=
+instance (priority := 50) {F R A B : Type _} [Add A] [Mul A] [HasStar A] [HasSmul R A] [Add B]
+    [Mul B] [HasSmul R B] [HasStar B] [hF : StarAlgEquivClass F R A B] : SmulHomClass F R A B :=
   { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective }
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 attribute [nolint dangerous_instance] StarAlgEquivClass.smulHomClass
 
 -- See note [lower instance priority]
-instance (priority := 100) {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
-    [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B] [HasStar B] [hF : StarAlgEquivClass F R A B] :
-    NonUnitalStarAlgHomClass F R A B :=
+instance (priority := 100) {F R A B : Type _} [Monoid R] [NonUnitalNonAssocSemiring A]
+    [DistribMulAction R A] [HasStar A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
+    [HasStar B] [hF : StarAlgEquivClass F R A B] : NonUnitalStarAlgHomClass F R A B :=
   { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective, map_zero := map_zero }
 
 -- See note [lower instance priority]
-instance (priority := 100) (F R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [HasStar A] [Semiring B]
-    [Algebra R B] [HasStar B] [hF : StarAlgEquivClass F R A B] : StarAlgHomClass F R A B :=
-  { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective, map_one := map_one, map_zero := map_zero,
+instance (priority := 100) (F R A B : Type _) [CommSemiring R] [Semiring A] [Algebra R A]
+    [HasStar A] [Semiring B] [Algebra R B] [HasStar B] [hF : StarAlgEquivClass F R A B] :
+    StarAlgHomClass F R A B :=
+  { hF with coe := fun f => f, coe_injective' := FunLike.coe_injective, map_one := map_one,
+    map_zero := map_zero,
     commutes := fun f r => by simp only [Algebra.algebra_map_eq_smul_one, map_smul, map_one] }
 
 end StarAlgEquivClass
@@ -680,8 +703,8 @@ namespace StarAlgEquiv
 
 section Basic
 
-variable {F R A B C : Type _} [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B] [HasSmul R B] [HasStar B]
-  [Add C] [Mul C] [HasSmul R C] [HasStar C]
+variable {F R A B C : Type _} [Add A] [Mul A] [HasSmul R A] [HasStar A] [Add B] [Mul B]
+  [HasSmul R B] [HasStar B] [Add C] [Mul C] [HasSmul R C] [HasStar C]
 
 instance : StarAlgEquivClass (A ≃⋆ₐ[R] B) R A B where
   coe := toFun
@@ -760,7 +783,8 @@ theorem symm_bijective : Function.Bijective (symm : (A ≃⋆ₐ[R] B) → B ≃
 #align star_alg_equiv.symm_bijective StarAlgEquiv.symm_bijective
 
 @[simp]
-theorem mk_coe' (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) : (⟨f, e, h₁, h₂, h₃, h₄, h₅, h₆⟩ : B ≃⋆ₐ[R] A) = e.symm :=
+theorem mk_coe' (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) :
+    (⟨f, e, h₁, h₂, h₃, h₄, h₅, h₆⟩ : B ≃⋆ₐ[R] A) = e.symm :=
   symm_bijective.Injective <| ext fun x => rfl
 #align star_alg_equiv.mk_coe' StarAlgEquiv.mk_coe'
 
@@ -791,9 +815,11 @@ theorem symm_to_ring_equiv (e : A ≃⋆ₐ[R] B) : (e.symm : B ≃+* A) = (e : 
 def trans (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) : A ≃⋆ₐ[R] C :=
   { e₁.toRingEquiv.trans e₂.toRingEquiv with
     map_smul' := fun r a =>
-      show e₂.toFun (e₁.toFun (r • a)) = r • e₂.toFun (e₁.toFun a) by rw [e₁.map_smul', e₂.map_smul'],
+      show e₂.toFun (e₁.toFun (r • a)) = r • e₂.toFun (e₁.toFun a) by
+        rw [e₁.map_smul', e₂.map_smul'],
     map_star' := fun a =>
-      show e₂.toFun (e₁.toFun (star a)) = star (e₂.toFun (e₁.toFun a)) by rw [e₁.map_star', e₂.map_star'] }
+      show e₂.toFun (e₁.toFun (star a)) = star (e₂.toFun (e₁.toFun a)) by
+        rw [e₁.map_star', e₂.map_star'] }
 #align star_alg_equiv.trans StarAlgEquiv.trans
 
 @[simp]
@@ -807,7 +833,8 @@ theorem symm_apply_apply (e : A ≃⋆ₐ[R] B) : ∀ x, e.symm (e x) = x :=
 #align star_alg_equiv.symm_apply_apply StarAlgEquiv.symm_apply_apply
 
 @[simp]
-theorem symm_trans_apply (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) (x : C) : (e₁.trans e₂).symm x = e₁.symm (e₂.symm x) :=
+theorem symm_trans_apply (e₁ : A ≃⋆ₐ[R] B) (e₂ : B ≃⋆ₐ[R] C) (x : C) :
+    (e₁.trans e₂).symm x = e₁.symm (e₂.symm x) :=
   rfl
 #align star_alg_equiv.symm_trans_apply StarAlgEquiv.symm_trans_apply
 
@@ -859,16 +886,18 @@ def ofStarAlgHom (f : F) (g : G) (h₁ : ∀ x, g (f x) = x) (h₂ : ∀ x, f (g
 
 /-- Promote a bijective star algebra homomorphism to a star algebra equivalence. -/
 noncomputable def ofBijective (f : F) (hf : Function.Bijective f) : A ≃⋆ₐ[R] B :=
-  { RingEquiv.ofBijective f (hf : Function.Bijective (f : A → B)) with toFun := f, map_star' := map_star f,
-    map_smul' := map_smul f }
+  { RingEquiv.ofBijective f (hf : Function.Bijective (f : A → B)) with toFun := f,
+    map_star' := map_star f, map_smul' := map_smul f }
 #align star_alg_equiv.of_bijective StarAlgEquiv.ofBijective
 
 @[simp]
-theorem coe_of_bijective {f : F} (hf : Function.Bijective f) : (StarAlgEquiv.ofBijective f hf : A → B) = f :=
+theorem coe_of_bijective {f : F} (hf : Function.Bijective f) :
+    (StarAlgEquiv.ofBijective f hf : A → B) = f :=
   rfl
 #align star_alg_equiv.coe_of_bijective StarAlgEquiv.coe_of_bijective
 
-theorem of_bijective_apply {f : F} (hf : Function.Bijective f) (a : A) : (StarAlgEquiv.ofBijective f hf) a = f a :=
+theorem of_bijective_apply {f : F} (hf : Function.Bijective f) (a : A) :
+    (StarAlgEquiv.ofBijective f hf) a = f a :=
   rfl
 #align star_alg_equiv.of_bijective_apply StarAlgEquiv.of_bijective_apply
 

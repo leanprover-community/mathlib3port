@@ -44,7 +44,9 @@ variable {R : Type _} [CommRing R] (abv : R → 𝕜) [IsAbsoluteValue abv]
 def uniformSpaceCore : UniformSpace.Core R where
   uniformity := ⨅ ε > 0, 𝓟 { p : R × R | abv (p.2 - p.1) < ε }
   refl :=
-    le_infi fun ε => le_infi fun ε_pos => principal_mono.2 fun ⟨x, y⟩ h => by simpa [show x = y from h, abv_zero abv]
+    le_infi fun ε =>
+      le_infi fun ε_pos =>
+        principal_mono.2 fun ⟨x, y⟩ h => by simpa [show x = y from h, abv_zero abv]
   symm :=
     tendsto_infi.2 fun ε =>
       tendsto_infi.2 fun h =>
@@ -56,8 +58,11 @@ def uniformSpaceCore : UniformSpace.Core R where
   comp :=
     le_infi fun ε =>
       le_infi fun h =>
-        lift'_le (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <| by
-          have : ∀ a b c : R, abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε := fun a b c hac hcb =>
+        lift'_le
+            (mem_infi_of_mem (ε / 2) <| mem_infi_of_mem (div_pos h zero_lt_two) (Subset.refl _)) <|
+          by
+          have : ∀ a b c : R, abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε :=
+            fun a b c hac hcb =>
             calc
               abv (b - a) ≤ _ := abv_sub_le abv b c a
               _ = abv (c - a) + abv (b - c) := add_comm _ _
@@ -81,7 +86,8 @@ theorem mem_uniformity {s : Set (R × R)} :
   · simp [subset_def]
     
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
-    exact ⟨⟨min r p, lt_min hr hp⟩, by simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]⟩
+    exact
+      ⟨⟨min r p, lt_min hr hp⟩, by simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]⟩
     
 #align is_absolute_value.mem_uniformity IsAbsoluteValue.mem_uniformity
 

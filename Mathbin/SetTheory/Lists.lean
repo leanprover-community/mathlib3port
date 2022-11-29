@@ -82,7 +82,8 @@ def toList : ∀ {b}, Lists' α b → List (Lists α)
 #align lists'.to_list Lists'.toList
 
 @[simp]
-theorem to_list_cons (a : Lists α) (l) : toList (cons a l) = a :: l.toList := by cases a <;> simp [cons]
+theorem to_list_cons (a : Lists α) (l) : toList (cons a l) = a :: l.toList := by
+  cases a <;> simp [cons]
 #align lists'.to_list_cons Lists'.to_list_cons
 
 /-- Converts a `list` of ZFA lists to a proper ZFA prelist. -/
@@ -104,14 +105,13 @@ theorem of_to_list : ∀ l : Lists' α true, ofList (toList l) = l :=
       ofList (toList l') = l'
     from this _ rfl
   fun b h l => by
-  induction l
+  induction l;
   · cases h
-    
+    ;
   · exact rfl
     
   case cons' b a l IH₁ IH₂ =>
-  intro
-  change l' with cons' a l
+  intro ; change l' with cons' a l
   simpa [cons] using IH₂ rfl
 #align lists'.of_to_list Lists'.of_to_list
 
@@ -120,12 +120,15 @@ end Lists'
 mutual
   inductive Lists.Equiv : Lists α → Lists α → Prop
     | refl (l) : Lists.Equiv l l
-    | antisymm {l₁ l₂ : Lists' α true} : Lists'.Subset l₁ l₂ → Lists'.Subset l₂ l₁ → Lists.Equiv ⟨_, l₁⟩ ⟨_, l₂⟩
+    |
+    antisymm {l₁ l₂ : Lists' α true} :
+      Lists'.Subset l₁ l₂ → Lists'.Subset l₂ l₁ → Lists.Equiv ⟨_, l₁⟩ ⟨_, l₂⟩
   inductive Lists'.Subset : Lists' α true → Lists' α true → Prop
     | nil {l} : Lists'.Subset Lists'.nil l
     |
     cons {a a' l l'} :
-      Lists.Equiv a a' → a' ∈ Lists'.toList l' → Lists'.Subset l l' → Lists'.Subset (Lists'.cons a l) l'
+      Lists.Equiv a a' →
+        a' ∈ Lists'.toList l' → Lists'.Subset l l' → Lists'.Subset (Lists'.cons a l) l'
 end
 #align lists.equiv Lists.Equiv
 #align lists'.subset Lists'.Subset
@@ -154,29 +157,27 @@ theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a
 #align lists'.mem_def Lists'.mem_def
 
 @[simp]
-theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by simp [mem_def, or_and_right, exists_or]
+theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
+  simp [mem_def, or_and_right, exists_or]
 #align lists'.mem_cons Lists'.mem_cons
 
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ := by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
   generalize h' : Lists'.cons a l₁ = l₁' at h
-  cases' h with l a' a'' l l' e m s
+  cases' h with l a' a'' l l' e m s;
   · cases a
     cases h'
     
-  cases a
-  cases a'
-  cases h'
-  exact ⟨⟨_, m, e⟩, s⟩
+  cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 #align lists'.cons_subset Lists'.cons_subset
 
-theorem of_list_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) : Lists'.ofList l₁ ⊆ Lists'.ofList l₂ := by
-  induction l₁
+theorem of_list_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
+    Lists'.ofList l₁ ⊆ Lists'.ofList l₂ := by
+  induction l₁;
   · exact subset.nil
     
   refine' subset.cons (Lists.Equiv.refl _) _ (l₁_ih (List.subset_of_cons_subset h))
-  simp at h
-  simp [h]
+  simp at h; simp [h]
 #align lists'.of_list_subset Lists'.of_list_subset
 
 @[refl]
@@ -186,26 +187,24 @@ theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
 
 theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil := by
   rw [← of_to_list l]
-  induction to_list l <;> intro h
+  induction to_list l <;> intro h;
   · rfl
     
   rcases cons_subset.1 h with ⟨⟨_, ⟨⟩, _⟩, _⟩
 #align lists'.subset_nil Lists'.subset_nil
 
 theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ := by
-  induction' s with _ a a' l l' e m s IH
+  induction' s with _ a a' l l' e m s IH;
   · cases h
     
-  simp at h
-  rcases h with (rfl | h)
+  simp at h; rcases h with (rfl | h)
   exacts[⟨_, m, e⟩, IH h]
 #align lists'.mem_of_subset' Lists'.mem_of_subset'
 
 theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H, fun H => by
     rw [← of_to_list l₁]
-    revert H
-    induction to_list l₁ <;> intro
+    revert H; induction to_list l₁ <;> intro
     · exact subset.nil
       
     · simp at H
@@ -264,8 +263,9 @@ instance [DecidableEq α] : DecidableEq (Lists α) := by unfold Lists <;> infer_
 instance [SizeOf α] : SizeOf (Lists α) := by unfold Lists <;> infer_instance
 
 /-- A recursion principle for pairs of ZFA lists and proper ZFA prelists. -/
-def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 : ∀ a, C (atom a)) (C1 : ∀ l, D l → C (of' l))
-    (D0 : D Lists'.nil) (D1 : ∀ a l, C a → D l → D (Lists'.cons a l)) : PProd (∀ l, C l) (∀ l, D l) := by
+def inductionMut (C : Lists α → Sort _) (D : Lists' α true → Sort _) (C0 : ∀ a, C (atom a))
+    (C1 : ∀ l, D l → C (of' l)) (D0 : D Lists'.nil) (D1 : ∀ a l, C a → D l → D (Lists'.cons a l)) :
+    PProd (∀ l, C l) (∀ l, D l) := by
   suffices
     ∀ {b} (l : Lists' α b),
       PProd (C ⟨_, l⟩)
@@ -305,7 +305,7 @@ theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ �
   refine' ⟨fun h => _, fun ⟨h₁, h₂⟩ => equiv.antisymm h₁ h₂⟩
   cases' h with _ _ _ h₁ h₂
   · simp [Lists'.Subset.refl]
-    
+    ;
   · exact ⟨h₁, h₂⟩
     
 #align lists.equiv.antisymm_iff Lists.Equiv.antisymm_iff
@@ -362,7 +362,9 @@ section Decidable
 
 @[simp]
 def Equiv.decidableMeas :
-    (PSum (Σ'l₁ : Lists α, Lists α) <| PSum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) → ℕ
+    (PSum (Σ'l₁ : Lists α, Lists α) <|
+        PSum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) →
+      ℕ
   | PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
   | PSum.inr <| PSum.inl ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
   | PSum.inr <| PSum.inr ⟨l₁, l₂⟩ => SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂
@@ -376,7 +378,7 @@ theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
       andthen unfold_sizeof trivial_nat_lt
 #align lists.sizeof_pos Lists.sizeof_pos
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
     SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
   run_tac
@@ -384,14 +386,15 @@ theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
   apply sizeof_pos
 #align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 mutual
   @[instance]
   def Equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)
-    | ⟨ff, l₁⟩, ⟨ff, l₂⟩ => decidable_of_iff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
+    | ⟨ff, l₁⟩, ⟨ff, l₂⟩ =>
+      decidable_of_iff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
     | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => is_false <| by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => is_false <| by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨tt, l₂⟩ => by
@@ -418,11 +421,15 @@ mutual
     | @Lists'.cons' _ b a l₁, l₂ => by
       haveI :=
         have :
-          SizeOf.sizeOf (⟨b, a⟩ : Lists α) + SizeOf.sizeOf l₂ < SizeOf.sizeOf (Lists'.cons' a l₁) + SizeOf.sizeOf l₂ :=
+          SizeOf.sizeOf (⟨b, a⟩ : Lists α) + SizeOf.sizeOf l₂ <
+            SizeOf.sizeOf (Lists'.cons' a l₁) + SizeOf.sizeOf l₂ :=
           add_lt_add_right (lt_sizeof_cons' _ _) _
         mem.decidable ⟨b, a⟩ l₂
       haveI :=
-        have : SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂ < SizeOf.sizeOf (Lists'.cons' a l₁) + SizeOf.sizeOf l₂ := by
+        have :
+          SizeOf.sizeOf l₁ + SizeOf.sizeOf l₂ <
+            SizeOf.sizeOf (Lists'.cons' a l₁) + SizeOf.sizeOf l₂ :=
+          by
           run_tac
             default_dec_tac
         subset.decidable l₁ l₂
@@ -433,17 +440,20 @@ mutual
     | a, Lists'.cons' b l₂ => by
       haveI :=
         have :
-          SizeOf.sizeOf a + SizeOf.sizeOf (⟨_, b⟩ : Lists α) < SizeOf.sizeOf a + SizeOf.sizeOf (Lists'.cons' b l₂) :=
+          SizeOf.sizeOf a + SizeOf.sizeOf (⟨_, b⟩ : Lists α) <
+            SizeOf.sizeOf a + SizeOf.sizeOf (Lists'.cons' b l₂) :=
           add_lt_add_left (lt_sizeof_cons' _ _) _
         equiv.decidable a ⟨_, b⟩
       haveI :=
-        have : SizeOf.sizeOf a + SizeOf.sizeOf l₂ < SizeOf.sizeOf a + SizeOf.sizeOf (Lists'.cons' b l₂) := by
+        have :
+          SizeOf.sizeOf a + SizeOf.sizeOf l₂ <
+            SizeOf.sizeOf a + SizeOf.sizeOf (Lists'.cons' b l₂) :=
+          by
           run_tac
             default_dec_tac
         mem.decidable a l₂
       refine' decidable_of_iff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
-      rw [← Lists'.mem_cons]
-      rfl
+      rw [← Lists'.mem_cons]; rfl
 end termination_by' ⟨_, measure_wf equiv.decidable_meas⟩
 #align lists.equiv.decidable Lists.Equiv.decidable
 #align lists.subset.decidable Lists.Subset.decidable

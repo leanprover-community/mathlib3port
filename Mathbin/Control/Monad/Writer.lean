@@ -96,16 +96,16 @@ instance (m) [Monad m] [One ω] : HasMonadLift m (WriterT ω m) :=
   ⟨fun α => WriterT.lift⟩
 
 @[inline]
-protected def monadMap {m m'} [Monad m] [Monad m'] {α} (f : ∀ {α}, m α → m' α) : WriterT ω m α → WriterT ω m' α :=
-  fun x => ⟨f x.run⟩
+protected def monadMap {m m'} [Monad m] [Monad m'] {α} (f : ∀ {α}, m α → m' α) :
+    WriterT ω m α → WriterT ω m' α := fun x => ⟨f x.run⟩
 #align writer_t.monad_map WriterTₓ.monadMap
 
 instance (m m') [Monad m] [Monad m'] : MonadFunctor m m' (WriterT ω m) (WriterT ω m') :=
   ⟨@WriterT.monadMap ω m m' _ _⟩
 
 @[inline]
-protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m α → WriterT ω' m α := fun x =>
-  ⟨Prod.map id f <$> x.run⟩
+protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m α → WriterT ω' m α :=
+  fun x => ⟨Prod.map id f <$> x.run⟩
 #align writer_t.adapt WriterTₓ.adapt
 
 instance (ε) [One ω] [Monad m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) where
@@ -142,7 +142,8 @@ instance {ω : Type u} {m : Type u → Type v} [Monad m] : MonadWriter ω (Write
   listen α := WriterT.listen
   pass α := WriterT.pass
 
-instance {ω ρ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (ReaderT ρ m) where
+instance {ω ρ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
+    MonadWriter ω (ReaderT ρ m) where
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨fun r => listen (cmd r)⟩
   pass := fun α ⟨cmd⟩ => ⟨fun r => pass (cmd r)⟩
@@ -151,7 +152,8 @@ def swapRight {α β γ} : (α × β) × γ → (α × γ) × β
   | ⟨⟨x, y⟩, z⟩ => ((x, z), y)
 #align swap_right swapRight
 
-instance {ω σ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (StateT σ m) where
+instance {ω σ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
+    MonadWriter ω (StateT σ m) where
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨fun r => swapRight <$> listen (cmd r)⟩
   pass := fun α ⟨cmd⟩ => ⟨fun r => pass (swapRight <$> cmd r)⟩
@@ -163,7 +165,8 @@ def ExceptT.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε α 
   | Except.ok (x, y) => (Except.ok x, y)
 #align except_t.pass_aux ExceptTₓ.passAux
 
-instance {ω ε : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (ExceptT ε m) where
+instance {ω ε : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
+    MonadWriter ω (ExceptT ε m) where
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (ExceptT.passAux <$> cmd)⟩
@@ -173,7 +176,8 @@ def OptionT.passAux {α ω} : Option (α × (ω → ω)) → Option α × (ω �
   | some (x, y) => (some x, y)
 #align option_t.pass_aux OptionTₓ.passAux
 
-instance {ω : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : MonadWriter ω (OptionT m) where
+instance {ω : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
+    MonadWriter ω (OptionT m) where
   tell x := monadLift (tell x : m PUnit)
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (OptionT.passAux <$> cmd)⟩
@@ -211,8 +215,8 @@ Currently that is not a problem, as there are almost no instances of `monad_func
 
 see Note [lower instance priority] -/
 @[nolint dangerous_instance]
-instance (priority := 100) monadWriterAdapterTrans {n n' : Type u → Type v} [MonadWriterAdapter ω ω' m m']
-    [MonadFunctor m m' n n'] : MonadWriterAdapter ω ω' n n' :=
+instance (priority := 100) monadWriterAdapterTrans {n n' : Type u → Type v}
+    [MonadWriterAdapter ω ω' m m'] [MonadFunctor m m' n n'] : MonadWriterAdapter ω ω' n n' :=
   ⟨fun α f => monadMap fun α => (adaptWriter f : m α → m' α)⟩
 #align monad_writer_adapter_trans monadWriterAdapterTrans
 
@@ -226,8 +230,8 @@ instance (ω : Type u) (m out) [MonadRun out m] : MonadRun (fun α => out (α ×
 
 /-- reduce the equivalence between two writer monads to the equivalence between
 their underlying monad -/
-def WriterT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ω₁ : Type u₀} {α₂ ω₂ : Type u₁}
-    (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) : WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂ α₂ where
+def WriterT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ω₁ : Type u₀}
+    {α₂ ω₂ : Type u₁} (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) : WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
   left_inv := fun ⟨f⟩ => congr_arg WriterT.mk <| F.left_inv _

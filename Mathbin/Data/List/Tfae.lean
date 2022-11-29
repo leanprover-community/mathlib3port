@@ -48,8 +48,8 @@ theorem tfae_cons_cons {a b} {l : List Prop} : Tfae (a :: b :: l) ↔ (a ↔ b) 
   tfae_cons_of_mem (Or.inl rfl)
 #align list.tfae_cons_cons List.tfae_cons_cons
 
-theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a ∈ l, a ↔ b) : Tfae l := fun a₁ h₁ a₂ h₂ =>
-  (h _ h₁).trans (h _ h₂).symm
+theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a ∈ l, a ↔ b) : Tfae l :=
+  fun a₁ h₁ a₂ h₂ => (h _ h₁).trans (h _ h₂).symm
 #align list.tfae_of_forall List.tfae_of_forall
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:219:4: warning: unsupported binary notation `«->» -/

@@ -125,7 +125,8 @@ abbrev homMk {f g : MonoOver X} (h : f.obj.left ⟶ g.obj.left) (w : h ≫ g.arr
 
 /-- Convenience constructor for an isomorphism in monomorphisms over `X`. -/
 @[simps]
-def isoMk {f g : MonoOver X} (h : f.obj.left ≅ g.obj.left) (w : h.Hom ≫ g.arrow = f.arrow) : f ≅ g where
+def isoMk {f g : MonoOver X} (h : f.obj.left ≅ g.obj.left) (w : h.Hom ≫ g.arrow = f.arrow) :
+    f ≅ g where
   Hom := homMk h.Hom w
   inv := homMk h.inv (by rw [h.inv_comp_eq, w])
 #align category_theory.mono_over.iso_mk CategoryTheory.MonoOver.isoMk
@@ -141,7 +142,8 @@ def mk'ArrowIso {X : C} (f : MonoOver X) : mk' f.arrow ≅ f :=
 given suitable evidence that morphisms are taken to monomorphisms.
 -/
 @[simps]
-def lift {Y : D} (F : Over Y ⥤ Over X) (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
+def lift {Y : D} (F : Over Y ⥤ Over X)
+    (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
     MonoOver Y ⥤ MonoOver X where
   obj f := ⟨_, h f⟩
   map _ _ k := (MonoOver.forget X).preimage ((MonoOver.forget Y ⋙ F).map k)
@@ -165,7 +167,8 @@ def liftId : (lift (𝟭 (Over X)) fun f => f.2) ≅ 𝟭 _ :=
 #align category_theory.mono_over.lift_id CategoryTheory.MonoOver.liftId
 
 @[simp]
-theorem lift_comm (F : Over Y ⥤ Over X) (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
+theorem lift_comm (F : Over Y ⥤ Over X)
+    (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
     lift F h ⋙ MonoOver.forget X = MonoOver.forget Y ⋙ F :=
   rfl
 #align category_theory.mono_over.lift_comm CategoryTheory.MonoOver.lift_comm
@@ -184,8 +187,11 @@ def slice {A : C} {f : Over A} (h₁ h₂) : MonoOver f ≌ MonoOver f.left wher
   Functor := MonoOver.lift f.iteratedSliceEquiv.Functor h₁
   inverse := MonoOver.lift f.iteratedSliceEquiv.inverse h₂
   unitIso :=
-    MonoOver.liftId.symm ≪≫ MonoOver.liftIso _ _ f.iteratedSliceEquiv.unitIso ≪≫ (MonoOver.liftComp _ _ _ _).symm
-  counitIso := MonoOver.liftComp _ _ _ _ ≪≫ MonoOver.liftIso _ _ f.iteratedSliceEquiv.counitIso ≪≫ mono_over.lift_id
+    MonoOver.liftId.symm ≪≫
+      MonoOver.liftIso _ _ f.iteratedSliceEquiv.unitIso ≪≫ (MonoOver.liftComp _ _ _ _).symm
+  counitIso :=
+    MonoOver.liftComp _ _ _ _ ≪≫
+      MonoOver.liftIso _ _ f.iteratedSliceEquiv.counitIso ≪≫ mono_over.lift_id
 #align category_theory.mono_over.slice CategoryTheory.MonoOver.slice
 
 section Pullback
@@ -214,12 +220,14 @@ def pullbackId : pullback (𝟙 X) ≅ 𝟭 _ :=
 #align category_theory.mono_over.pullback_id CategoryTheory.MonoOver.pullbackId
 
 @[simp]
-theorem pullback_obj_left (f : X ⟶ Y) (g : MonoOver Y) : ((pullback f).obj g : C) = Limits.pullback g.arrow f :=
+theorem pullback_obj_left (f : X ⟶ Y) (g : MonoOver Y) :
+    ((pullback f).obj g : C) = Limits.pullback g.arrow f :=
   rfl
 #align category_theory.mono_over.pullback_obj_left CategoryTheory.MonoOver.pullback_obj_left
 
 @[simp]
-theorem pullback_obj_arrow (f : X ⟶ Y) (g : MonoOver Y) : ((pullback f).obj g).arrow = pullback.snd :=
+theorem pullback_obj_arrow (f : X ⟶ Y) (g : MonoOver Y) :
+    ((pullback f).obj g).arrow = pullback.snd :=
   rfl
 #align category_theory.mono_over.pullback_obj_arrow CategoryTheory.MonoOver.pullback_obj_arrow
 
@@ -305,7 +313,8 @@ variable [HasPullbacks C]
 
 /-- `map f` is left adjoint to `pullback f` when `f` is a monomorphism -/
 def mapPullbackAdj (f : X ⟶ Y) [Mono f] : map f ⊣ pullback f :=
-  Adjunction.restrictFullyFaithful (forget X) (forget Y) (Over.mapPullbackAdj f) (Iso.refl _) (Iso.refl _)
+  Adjunction.restrictFullyFaithful (forget X) (forget Y) (Over.mapPullbackAdj f) (Iso.refl _)
+    (Iso.refl _)
 #align category_theory.mono_over.map_pullback_adj CategoryTheory.MonoOver.mapPullbackAdj
 
 /-- `mono_over.map f` followed by `mono_over.pullback f` is the identity. -/
@@ -427,8 +436,8 @@ def existsIsoMap (f : X ⟶ Y) [Mono f] : exists f ≅ map f :=
 
 /-- `exists` is adjoint to `pullback` when images exist -/
 def existsPullbackAdj (f : X ⟶ Y) [HasPullbacks C] : exists f ⊣ pullback f :=
-  Adjunction.restrictFullyFaithful (forget X) (𝟭 _) ((Over.mapPullbackAdj f).comp imageForgetAdj) (Iso.refl _)
-    (Iso.refl _)
+  Adjunction.restrictFullyFaithful (forget X) (𝟭 _) ((Over.mapPullbackAdj f).comp imageForgetAdj)
+    (Iso.refl _) (Iso.refl _)
 #align category_theory.mono_over.exists_pullback_adj CategoryTheory.MonoOver.existsPullbackAdj
 
 end Exists

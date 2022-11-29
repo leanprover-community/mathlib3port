@@ -41,12 +41,14 @@ namespace Complex
 /-- `complex.re` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_homeomorphic_trivial_fiber_bundle_re : IsHomeomorphicTrivialFiberBundle ℝ re :=
   ⟨equivRealProdₗ.toHomeomorph, fun z => rfl⟩
-#align complex.is_homeomorphic_trivial_fiber_bundle_re Complex.is_homeomorphic_trivial_fiber_bundle_re
+#align
+  complex.is_homeomorphic_trivial_fiber_bundle_re Complex.is_homeomorphic_trivial_fiber_bundle_re
 
 /-- `complex.im` turns `ℂ` into a trivial topological fiber bundle over `ℝ`. -/
 theorem is_homeomorphic_trivial_fiber_bundle_im : IsHomeomorphicTrivialFiberBundle ℝ im :=
   ⟨equivRealProdₗ.toHomeomorph.trans (Homeomorph.prodComm ℝ ℝ), fun z => rfl⟩
-#align complex.is_homeomorphic_trivial_fiber_bundle_im Complex.is_homeomorphic_trivial_fiber_bundle_im
+#align
+  complex.is_homeomorphic_trivial_fiber_bundle_im Complex.is_homeomorphic_trivial_fiber_bundle_im
 
 theorem is_open_map_re : IsOpenMap re :=
   is_homeomorphic_trivial_fiber_bundle_re.is_open_map_proj
@@ -177,7 +179,8 @@ theorem interior_re_prod_im (s t : Set ℝ) : interior (s ×ℂ t) = interior s 
   rw [re_prod_im, re_prod_im, interior_inter, interior_preimage_re, interior_preimage_im]
 #align complex.interior_re_prod_im Complex.interior_re_prod_im
 
-theorem frontier_re_prod_im (s t : Set ℝ) : frontier (s ×ℂ t) = closure s ×ℂ frontier t ∪ frontier s ×ℂ closure t := by
+theorem frontier_re_prod_im (s t : Set ℝ) :
+    frontier (s ×ℂ t) = closure s ×ℂ frontier t ∪ frontier s ×ℂ closure t := by
   simpa only [← preimage_eq_preimage equiv_real_prodₗ.symm.to_homeomorph.surjective,
     equiv_real_prodₗ.symm.to_homeomorph.preimage_frontier] using frontier_prod_eq s t
 #align complex.frontier_re_prod_im Complex.frontier_re_prod_im
@@ -189,7 +192,8 @@ theorem frontier_set_of_le_re_and_le_im (a b : ℝ) :
 
 theorem frontier_set_of_le_re_and_im_le (a b : ℝ) :
     frontier { z | a ≤ re z ∧ im z ≤ b } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b } := by
-  simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using frontier_re_prod_im (Ici a) (Iic b)
+  simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using
+    frontier_re_prod_im (Ici a) (Iic b)
 #align complex.frontier_set_of_le_re_and_im_le Complex.frontier_set_of_le_re_and_im_le
 
 end Complex

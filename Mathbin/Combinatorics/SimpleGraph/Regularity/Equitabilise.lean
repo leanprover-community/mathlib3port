@@ -44,7 +44,8 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   · refine' ⟨⊥, by simp, _, by simpa using hs.symm⟩
     simp only [le_zero_iff, card_eq_zero, mem_bUnion, exists_prop, mem_filter, id.def, and_assoc',
       sdiff_eq_empty_iff_subset, subset_iff]
-    exact fun x hx a ha => ⟨{a}, mem_map_of_mem _ (P.le hx ha), singleton_subset_iff.2 ha, mem_singleton_self _⟩
+    exact fun x hx a ha =>
+      ⟨{a}, mem_map_of_mem _ (P.le hx ha), singleton_subset_iff.2 ha, mem_singleton_self _⟩
     
   -- Prove the case `m > 0` by strong induction on `s`
   induction' s using Finset.strongInduction with s ih generalizing P a b
@@ -60,7 +61,9 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   -- Some easy facts about it
   obtain ⟨hn₀, hn₁, hn₂, hn₃⟩ :
     0 < n ∧
-      n ≤ m + 1 ∧ n ≤ a * m + b * (m + 1) ∧ ite (0 < a) (a - 1) a * m + ite (0 < a) b (b - 1) * (m + 1) = s.card - n :=
+      n ≤ m + 1 ∧
+        n ≤ a * m + b * (m + 1) ∧
+          ite (0 < a) (a - 1) a * m + ite (0 < a) b (b - 1) * (m + 1) = s.card - n :=
     by
     rw [hn, ← hs]
     split_ifs <;> rw [tsub_mul, one_mul]
@@ -82,8 +85,8 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     have hcard : ite (0 < a) (a - 1) a * m + ite (0 < a) b (b - 1) * (m + 1) = (s \ t).card := by
       rw [card_sdiff ‹t ⊆ s›, htn, hn₃]
     obtain ⟨R, hR₁, hR₂, hR₃⟩ :=
-      @ih (s \ t) (sdiff_ssubset hts ‹t.nonempty›) (P.avoid t) (if 0 < a then a - 1 else a) (if 0 < a then b else b - 1)
-        hcard
+      @ih (s \ t) (sdiff_ssubset hts ‹t.nonempty›) (P.avoid t) (if 0 < a then a - 1 else a)
+        (if 0 < a then b else b - 1) hcard
     refine' ⟨R.extend ht.ne_empty sdiff_disjoint (sdiff_sup_cancel hts), _, _, _⟩
     · simp only [extend_parts, mem_insert, forall_eq_or_imp, and_iff_left hR₁, htn, hn]
       exact ite_eq_or_eq _ _ _
@@ -125,7 +128,8 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
         (card_le_of_subset fun i => _).trans
           (hR₂ (u \ t) <| P.mem_avoid.2 ⟨u, hu₁, fun i => hut <| i.antisymm htu, rfl⟩)
       simp only [not_exists, mem_bUnion, and_imp, mem_union, mem_filter, mem_sdiff, id.def, not_or]
-      exact fun hi₁ hi₂ hi₃ => ⟨⟨hi₁, hi₂⟩, fun x hx hx' => hi₃ _ hx <| hx'.trans <| sdiff_subset _ _⟩
+      exact fun hi₁ hi₂ hi₃ =>
+        ⟨⟨hi₁, hi₂⟩, fun x hx hx' => hi₃ _ hx <| hx'.trans <| sdiff_subset _ _⟩
       
     · apply sdiff_subset_sdiff subset.rfl (bUnion_subset_bUnion_of_subset_left _ _)
       exact filter_subset_filter _ (subset_insert _ _)
@@ -133,7 +137,8 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
     simp only [avoid, of_erase, mem_erase, mem_image, bot_eq_empty]
     exact
       ⟨(nonempty_of_mem_parts _ <| mem_of_mem_erase hx).ne_empty, _, mem_of_mem_erase hx,
-        (disjoint_of_subset_right htu <| P.disjoint (mem_of_mem_erase hx) hu₁ <| ne_of_mem_erase hx).sdiff_eq_left⟩
+        (disjoint_of_subset_right htu <|
+            P.disjoint (mem_of_mem_erase hx) hu₁ <| ne_of_mem_erase hx).sdiff_eq_left⟩
     
   simp only [extend_parts, filter_insert, htn, hn, m.succ_ne_self.symm.ite_eq_right_iff]
   split_ifs
@@ -157,7 +162,8 @@ noncomputable def equitabilise : Finpartition s :=
 
 variable {P h}
 
-theorem card_eq_of_mem_parts_equitabilise : t ∈ (P.equitabilise h).parts → t.card = m ∨ t.card = m + 1 :=
+theorem card_eq_of_mem_parts_equitabilise :
+    t ∈ (P.equitabilise h).parts → t.card = m ∨ t.card = m + 1 :=
   (P.equitabilise_aux h).some_spec.1 _
 #align finpartition.card_eq_of_mem_parts_equitabilise Finpartition.card_eq_of_mem_parts_equitabilise
 
@@ -167,7 +173,8 @@ theorem equitabiliseIsEquipartition : (P.equitabilise h).IsEquipartition :=
 
 variable (P h)
 
-theorem card_filter_equitabilise_big : ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m + 1).card = b :=
+theorem card_filter_equitabilise_big :
+    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m + 1).card = b :=
   (P.equitabilise_aux h).some_spec.2.2
 #align finpartition.card_filter_equitabilise_big Finpartition.card_filter_equitabilise_big
 
@@ -177,13 +184,14 @@ theorem card_filter_equitabilise_small (hm : m ≠ 0) :
   rw [h, ← (P.equitabilise h).sum_card_parts]
   have hunion :
     (P.equitabilise h).parts =
-      ((P.equitabilise h).parts.filter fun u => u.card = m) ∪ (P.equitabilise h).parts.filter fun u => u.card = m + 1 :=
+      ((P.equitabilise h).parts.filter fun u => u.card = m) ∪
+        (P.equitabilise h).parts.filter fun u => u.card = m + 1 :=
     by
     rw [← filter_or, filter_true_of_mem]
     exact fun x => card_eq_of_mem_parts_equitabilise
   nth_rw 1 [hunion]
-  rw [sum_union, sum_const_nat fun x hx => (mem_filter.1 hx).2, sum_const_nat fun x hx => (mem_filter.1 hx).2,
-    P.card_filter_equitabilise_big]
+  rw [sum_union, sum_const_nat fun x hx => (mem_filter.1 hx).2,
+    sum_const_nat fun x hx => (mem_filter.1 hx).2, P.card_filter_equitabilise_big]
   refine' disjoint_filter_filter' _ _ _
   intro x ha hb i h
   apply succ_ne_self m _
@@ -209,9 +217,12 @@ theorem exists_equipartition_card_eq (hn : n ≠ 0) (hs : n ≤ s.card) :
     ∃ P : Finpartition s, P.IsEquipartition ∧ P.parts.card = n := by
   rw [← pos_iff_ne_zero] at hn
   have : (n - s.card % n) * (s.card / n) + s.card % n * (s.card / n + 1) = s.card := by
-    rw [tsub_mul, mul_add, ← add_assoc, tsub_add_cancel_of_le (Nat.mul_le_mul_right _ (mod_lt _ hn).le), mul_one,
-      add_comm, mod_add_div]
-  refine' ⟨(indiscrete (card_pos.1 <| hn.trans_le hs).ne_empty).equitabilise this, equitabilise_is_equipartition, _⟩
+    rw [tsub_mul, mul_add, ← add_assoc,
+      tsub_add_cancel_of_le (Nat.mul_le_mul_right _ (mod_lt _ hn).le), mul_one, add_comm,
+      mod_add_div]
+  refine'
+    ⟨(indiscrete (card_pos.1 <| hn.trans_le hs).ne_empty).equitabilise this,
+      equitabilise_is_equipartition, _⟩
   rw [card_parts_equitabilise _ _ (Nat.div_pos hs hn).ne', tsub_add_cancel_of_le (mod_lt _ hn).le]
 #align finpartition.exists_equipartition_card_eq Finpartition.exists_equipartition_card_eq
 

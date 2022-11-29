@@ -43,13 +43,13 @@ theorem centralizer_to_subsemigroup : (centralizer S).toSubsemigroup = Subsemigr
   rfl
 #align submonoid.centralizer_to_subsemigroup Submonoid.centralizer_to_subsemigroup
 
-theorem _root_.add_submonoid.centralizer_to_add_subsemigroup {M} [AddMonoid M] (S : Set M) :
+theorem AddSubmonoid.centralizer_to_add_subsemigroup {M} [AddMonoid M] (S : Set M) :
     (AddSubmonoid.centralizer S).toAddSubsemigroup = AddSubsemigroup.centralizer S :=
   rfl
-#align
-  submonoid._root_.add_submonoid.centralizer_to_add_subsemigroup submonoid._root_.add_submonoid.centralizer_to_add_subsemigroup
+#align add_submonoid.centralizer_to_add_subsemigroup AddSubmonoid.centralizer_to_add_subsemigroup
 
-attribute [to_additive AddSubmonoid.centralizer_to_add_subsemigroup] Submonoid.centralizer_to_subsemigroup
+attribute [to_additive AddSubmonoid.centralizer_to_add_subsemigroup]
+  Submonoid.centralizer_to_subsemigroup
 
 variable {S}
 

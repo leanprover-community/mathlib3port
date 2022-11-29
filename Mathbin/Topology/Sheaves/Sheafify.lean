@@ -44,11 +44,13 @@ namespace TopCat.Presheaf
 
 namespace Sheafify
 
-/-- The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
+/--
+The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
 def isGerm : PrelocalPredicate fun x => F.stalk x where
   pred U f := ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g
-  res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
+  res := fun V U i f ⟨g, p⟩ =>
+    ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩
 #align Top.presheaf.sheafify.is_germ TopCat.Presheaf.Sheafify.isGerm
 
 /-- The local predicate on functions into the stalks,
@@ -104,13 +106,9 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
   rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩
   rcases hV ⟨x, V.2⟩ with ⟨V', mV, iV, gV, wV⟩
   have wUx := wU ⟨x, mU⟩
-  dsimp at wUx
-  erw [wUx] at e
-  clear wUx
+  dsimp at wUx; erw [wUx] at e; clear wUx
   have wVx := wV ⟨x, mV⟩
-  dsimp at wVx
-  erw [wVx] at e
-  clear wVx
+  dsimp at wVx; erw [wVx] at e; clear wVx
   rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', e'⟩
   dsimp at e'
   use ⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩
@@ -127,8 +125,8 @@ theorem stalk_to_fiber_injective (x : X) : Function.Injective (F.stalkToFiber x)
     dsimp at wU
     specialize wV ⟨w.1, w.2.2.2⟩
     dsimp at wV
-    erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩, CategoryTheory.types_comp_apply,
-      CategoryTheory.types_comp_apply, e']
+    erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩,
+      CategoryTheory.types_comp_apply, CategoryTheory.types_comp_apply, e']
     
 #align Top.presheaf.stalk_to_fiber_injective TopCat.Presheaf.stalk_to_fiber_injective
 

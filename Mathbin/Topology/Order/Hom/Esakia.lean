@@ -41,8 +41,8 @@ structure PseudoEpimorphism (α β : Type _) [Preorder α] [Preorder β] extends
 #align pseudo_epimorphism PseudoEpimorphism
 
 /-- The type of Esakia morphisms, aka continuous pseudo-epimorphisms, from `α` to `β`. -/
-structure EsakiaHom (α β : Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] extends
-  α →Co β where
+structure EsakiaHom (α β : Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
+  [Preorder β] extends α →Co β where
   exists_map_eq_of_map_le' ⦃a : α⦄ ⦃b : β⦄ : to_fun a ≤ b → ∃ c, a ≤ c ∧ to_fun c = b
 #align esakia_hom EsakiaHom
 
@@ -51,16 +51,16 @@ section
 /-- `pseudo_epimorphism_class F α β` states that `F` is a type of `⊔`-preserving morphisms.
 
 You should extend this class when you extend `pseudo_epimorphism`. -/
-class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] extends
-  RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
+class PseudoEpimorphismClass (F : Type _) (α β : outParam <| Type _) [Preorder α]
+  [Preorder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 #align pseudo_epimorphism_class PseudoEpimorphismClass
 
 /-- `esakia_hom_class F α β` states that `F` is a type of lattice morphisms.
 
 You should extend this class when you extend `esakia_hom`. -/
-class EsakiaHomClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Preorder α] [TopologicalSpace β]
-  [Preorder β] extends ContinuousOrderHomClass F α β where
+class EsakiaHomClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [Preorder α]
+  [TopologicalSpace β] [Preorder β] extends ContinuousOrderHomClass F α β where
   exists_map_eq_of_map_le (f : F) ⦃a : α⦄ ⦃b : β⦄ : f a ≤ b → ∃ c, a ≤ c ∧ f c = b
 #align esakia_hom_class EsakiaHomClass
 
@@ -69,8 +69,8 @@ end
 export PseudoEpimorphismClass (exists_map_eq_of_map_le)
 
 -- See note [lower instance priority]
-instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrder α] [OrderTop α] [Preorder β] [OrderTop β]
-    [PseudoEpimorphismClass F α β] : TopHomClass F α β :=
+instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrder α] [OrderTop α]
+    [Preorder β] [OrderTop β] [PseudoEpimorphismClass F α β] : TopHomClass F α β :=
   { ‹PseudoEpimorphismClass F α β› with
     map_top := fun f => by
       let ⟨b, h⟩ := exists_map_eq_of_map_le f (@le_top _ _ _ <| f ⊤)
@@ -78,10 +78,11 @@ instance (priority := 100) PseudoEpimorphismClass.toTopHomClass [PartialOrder α
 #align pseudo_epimorphism_class.to_top_hom_class PseudoEpimorphismClass.toTopHomClass
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIsoClass.toPseudoEpimorphismClass [Preorder α] [Preorder β] [OrderIsoClass F α β] :
-    PseudoEpimorphismClass F α β :=
+instance (priority := 100) OrderIsoClass.toPseudoEpimorphismClass [Preorder α] [Preorder β]
+    [OrderIsoClass F α β] : PseudoEpimorphismClass F α β :=
   { OrderIsoClass.toOrderHomClass with
-    exists_map_eq_of_map_le := fun f a b h => ⟨EquivLike.inv f b, (le_map_inv_iff f).2 h, EquivLike.right_inv _ _⟩ }
+    exists_map_eq_of_map_le := fun f a b h =>
+      ⟨EquivLike.inv f b, (le_map_inv_iff f).2 h, EquivLike.right_inv _ _⟩ }
 #align order_iso_class.to_pseudo_epimorphism_class OrderIsoClass.toPseudoEpimorphismClass
 
 -- See note [lower instance priority]
@@ -90,11 +91,12 @@ instance (priority := 100) EsakiaHomClass.toPseudoEpimorphismClass [TopologicalS
   { ‹EsakiaHomClass F α β› with }
 #align esakia_hom_class.to_pseudo_epimorphism_class EsakiaHomClass.toPseudoEpimorphismClass
 
-instance [Preorder α] [Preorder β] [PseudoEpimorphismClass F α β] : CoeTC F (PseudoEpimorphism α β) :=
+instance [Preorder α] [Preorder β] [PseudoEpimorphismClass F α β] :
+    CoeTC F (PseudoEpimorphism α β) :=
   ⟨fun f => ⟨f, exists_map_eq_of_map_le f⟩⟩
 
-instance [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] [EsakiaHomClass F α β] :
-    CoeTC F (EsakiaHom α β) :=
+instance [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β]
+    [EsakiaHomClass F α β] : CoeTC F (EsakiaHom α β) :=
   ⟨fun f => ⟨f, exists_map_eq_of_map_le f⟩⟩
 
 /-! ### Pseudo-epimorphisms -/
@@ -179,7 +181,8 @@ def comp (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) : PseudoEpi
 #align pseudo_epimorphism.comp PseudoEpimorphism.comp
 
 @[simp]
-theorem coe_comp (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) : (g.comp f : α → γ) = g ∘ f :=
+theorem coe_comp (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) :
+    (g.comp f : α → γ) = g ∘ f :=
   rfl
 #align pseudo_epimorphism.coe_comp PseudoEpimorphism.coe_comp
 
@@ -190,13 +193,14 @@ theorem coe_comp_order_hom (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism 
 #align pseudo_epimorphism.coe_comp_order_hom PseudoEpimorphism.coe_comp_order_hom
 
 @[simp]
-theorem comp_apply (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) (a : α) : (g.comp f) a = g (f a) :=
+theorem comp_apply (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) (a : α) :
+    (g.comp f) a = g (f a) :=
   rfl
 #align pseudo_epimorphism.comp_apply PseudoEpimorphism.comp_apply
 
 @[simp]
-theorem comp_assoc (h : PseudoEpimorphism γ δ) (g : PseudoEpimorphism β γ) (f : PseudoEpimorphism α β) :
-    (h.comp g).comp f = h.comp (g.comp f) :=
+theorem comp_assoc (h : PseudoEpimorphism γ δ) (g : PseudoEpimorphism β γ)
+    (f : PseudoEpimorphism α β) : (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 #align pseudo_epimorphism.comp_assoc PseudoEpimorphism.comp_assoc
 
@@ -210,8 +214,8 @@ theorem id_comp (f : PseudoEpimorphism α β) : (PseudoEpimorphism.id β).comp f
   ext fun a => rfl
 #align pseudo_epimorphism.id_comp PseudoEpimorphism.id_comp
 
-theorem cancel_right {g₁ g₂ : PseudoEpimorphism β γ} {f : PseudoEpimorphism α β} (hf : Surjective f) :
-    g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+theorem cancel_right {g₁ g₂ : PseudoEpimorphism β γ} {f : PseudoEpimorphism α β}
+    (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align pseudo_epimorphism.cancel_right PseudoEpimorphism.cancel_right
 
@@ -227,8 +231,8 @@ end PseudoEpimorphism
 
 namespace EsakiaHom
 
-variable [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] [TopologicalSpace γ] [Preorder γ]
-  [TopologicalSpace δ] [Preorder δ]
+variable [TopologicalSpace α] [Preorder α] [TopologicalSpace β] [Preorder β] [TopologicalSpace γ]
+  [Preorder γ] [TopologicalSpace δ] [Preorder δ]
 
 /-- Reinterpret an `esakia_hom` as a `pseudo_epimorphism`. -/
 def toPseudoEpimorphism (f : EsakiaHom α β) : PseudoEpimorphism α β :=
@@ -263,7 +267,8 @@ theorem ext {f g : EsakiaHom α β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of an `esakia_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : EsakiaHom α β :=
-  ⟨f.toContinuousOrderHom.copy f' h, by simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
+  ⟨f.toContinuousOrderHom.copy f' h, by
+    simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
 #align esakia_hom.copy EsakiaHom.copy
 
 @[simp]
@@ -296,7 +301,8 @@ theorem coe_id_continuous_order_hom : (EsakiaHom.id α : α →Co α) = Continuo
 #align esakia_hom.coe_id_continuous_order_hom EsakiaHom.coe_id_continuous_order_hom
 
 @[simp]
-theorem coe_id_pseudo_epimorphism : (EsakiaHom.id α : PseudoEpimorphism α α) = PseudoEpimorphism.id α :=
+theorem coe_id_pseudo_epimorphism :
+    (EsakiaHom.id α : PseudoEpimorphism α α) = PseudoEpimorphism.id α :=
   rfl
 #align esakia_hom.coe_id_pseudo_epimorphism EsakiaHom.coe_id_pseudo_epimorphism
 
@@ -358,7 +364,8 @@ theorem cancel_right {g₁ g₂ : EsakiaHom β γ} {f : EsakiaHom α β} (hf : S
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align esakia_hom.cancel_right EsakiaHom.cancel_right
 
-theorem cancel_left {g : EsakiaHom β γ} {f₁ f₂ : EsakiaHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+theorem cancel_left {g : EsakiaHom β γ} {f₁ f₂ : EsakiaHom α β} (hg : Injective g) :
+    g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align esakia_hom.cancel_left EsakiaHom.cancel_left
 

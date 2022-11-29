@@ -55,18 +55,21 @@ theorem nodup_antidiagonal (n : ℕ) : Nodup (antidiagonal n) :=
 #align multiset.nat.nodup_antidiagonal Multiset.Nat.nodup_antidiagonal
 
 @[simp]
-theorem antidiagonal_succ {n : ℕ} : antidiagonal (n + 1) = (0, n + 1) ::ₘ (antidiagonal n).map (Prod.map Nat.succ id) :=
-  by simp only [antidiagonal, List.Nat.antidiagonal_succ, coe_map, cons_coe]
+theorem antidiagonal_succ {n : ℕ} :
+    antidiagonal (n + 1) = (0, n + 1) ::ₘ (antidiagonal n).map (Prod.map Nat.succ id) := by
+  simp only [antidiagonal, List.Nat.antidiagonal_succ, coe_map, cons_coe]
 #align multiset.nat.antidiagonal_succ Multiset.Nat.antidiagonal_succ
 
 theorem antidiagonal_succ' {n : ℕ} :
     antidiagonal (n + 1) = (n + 1, 0) ::ₘ (antidiagonal n).map (Prod.map id Nat.succ) := by
-  rw [antidiagonal, List.Nat.antidiagonal_succ', ← coe_add, add_comm, antidiagonal, coe_map, coe_add,
-    List.singleton_append, cons_coe]
+  rw [antidiagonal, List.Nat.antidiagonal_succ', ← coe_add, add_comm, antidiagonal, coe_map,
+    coe_add, List.singleton_append, cons_coe]
 #align multiset.nat.antidiagonal_succ' Multiset.Nat.antidiagonal_succ'
 
 theorem antidiagonal_succ_succ' {n : ℕ} :
-    antidiagonal (n + 2) = (0, n + 2) ::ₘ (n + 2, 0) ::ₘ (antidiagonal n).map (Prod.map Nat.succ Nat.succ) := by
+    antidiagonal (n + 2) =
+      (0, n + 2) ::ₘ (n + 2, 0) ::ₘ (antidiagonal n).map (Prod.map Nat.succ Nat.succ) :=
+  by
   rw [antidiagonal_succ, antidiagonal_succ', map_cons, map_map, Prod_map]
   rfl
 #align multiset.nat.antidiagonal_succ_succ' Multiset.Nat.antidiagonal_succ_succ'

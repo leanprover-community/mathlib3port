@@ -113,8 +113,8 @@ variable {α : Type u} {β : Type _}
 `zero_le_one` field. -/
 
 
-theorem add_one_le_two_mul [LE α] [Semiring α] [CovariantClass α α (· + ·) (· ≤ ·)] {a : α} (a1 : 1 ≤ a) :
-    a + 1 ≤ 2 * a :=
+theorem add_one_le_two_mul [LE α] [Semiring α] [CovariantClass α α (· + ·) (· ≤ ·)] {a : α}
+    (a1 : 1 ≤ a) : a + 1 ≤ 2 * a :=
   calc
     a + 1 ≤ a + a := add_le_add_left a1 a
     _ = 2 * a := (two_mul _).symm
@@ -162,7 +162,8 @@ class OrderedCommRing (α : Type u) extends OrderedRing α, CommRing α
 /-- A `strict_ordered_semiring` is a nontrivial semiring with a partial order such that addition is
 strictly monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
-class StrictOrderedSemiring (α : Type u) extends Semiring α, OrderedCancelAddCommMonoid α, Nontrivial α where
+class StrictOrderedSemiring (α : Type u) extends Semiring α, OrderedCancelAddCommMonoid α,
+  Nontrivial α where
   zero_le_one : (0 : α) ≤ 1
   mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → c * a < c * b
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → a * c < b * c
@@ -202,7 +203,8 @@ search loops. -/
 /-- A `linear_ordered_semiring` is a nontrivial semiring with a linear order such that
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
-class LinearOrderedSemiring (α : Type u) extends StrictOrderedSemiring α, LinearOrderedAddCommMonoid α
+class LinearOrderedSemiring (α : Type u) extends StrictOrderedSemiring α,
+  LinearOrderedAddCommMonoid α
 #align linear_ordered_semiring LinearOrderedSemiring
 -/
 
@@ -210,7 +212,8 @@ class LinearOrderedSemiring (α : Type u) extends StrictOrderedSemiring α, Line
 /-- A `linear_ordered_comm_semiring` is a nontrivial commutative semiring with a linear order such
 that addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
-class LinearOrderedCommSemiring (α : Type _) extends StrictOrderedCommSemiring α, LinearOrderedSemiring α
+class LinearOrderedCommSemiring (α : Type _) extends StrictOrderedCommSemiring α,
+  LinearOrderedSemiring α
 #align linear_ordered_comm_semiring LinearOrderedCommSemiring
 -/
 
@@ -240,9 +243,9 @@ instance (priority := 100) OrderedSemiring.zeroLeOneClass : ZeroLeOneClass α :=
 #align ordered_semiring.zero_le_one_class OrderedSemiring.zeroLeOneClass
 
 -- see Note [lower instance priority]
-instance (priority := 200) OrderedSemiring.toPosMulMono : PosMulMono α :=
+instance (priority := 200) OrderedSemiring.to_pos_mul_mono : PosMulMono α :=
   ⟨fun x a b h => OrderedSemiring.mul_le_mul_of_nonneg_left _ _ _ h x.2⟩
-#align ordered_semiring.to_pos_mul_mono OrderedSemiring.toPosMulMono
+#align ordered_semiring.to_pos_mul_mono OrderedSemiring.to_pos_mul_mono
 
 -- see Note [lower instance priority]
 instance (priority := 200) OrderedSemiring.to_mul_pos_mono : MulPosMono α :=
@@ -254,9 +257,9 @@ theorem bit1_mono : Monotone (bit1 : α → α) := fun a b h => add_le_add_right
 
 /- warning: pow_nonneg -> pow_nonneg is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] {a : α}, (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u 0 u} α Nat α (instHPow.{u 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
+  forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] {a : α}, (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u, 0, u} α Nat α (instHPow.{u, 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))))) a n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.676))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_nonneg pow_nonnegₓ'. -/
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
@@ -308,8 +311,8 @@ theorem Antitone.const_mul (hf : Antitone f) (ha : 0 ≤ a) : Antitone fun x => 
   (monotone_mul_left_of_nonneg ha).comp_antitone hf
 #align antitone.const_mul Antitone.const_mul
 
-theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf₀ : ∀ x, 0 ≤ f x) (hg₀ : ∀ x, 0 ≤ g x) : Monotone (f * g) :=
-  fun b c h => mul_le_mul (hf h) (hg h) (hg₀ _) (hf₀ _)
+theorem Monotone.mul (hf : Monotone f) (hg : Monotone g) (hf₀ : ∀ x, 0 ≤ f x) (hg₀ : ∀ x, 0 ≤ g x) :
+    Monotone (f * g) := fun b c h => mul_le_mul (hf h) (hg h) (hg₀ _) (hf₀ _)
 #align monotone.mul Monotone.mul
 
 end Monotone
@@ -444,27 +447,33 @@ theorem mul_nonneg_of_nonpos_of_nonpos (ha : a ≤ 0) (hb : b ≤ 0) : 0 ≤ a *
   simpa only [zero_mul] using mul_le_mul_of_nonpos_right ha hb
 #align mul_nonneg_of_nonpos_of_nonpos mul_nonneg_of_nonpos_of_nonpos
 
-theorem mul_le_mul_of_nonneg_of_nonpos (hca : c ≤ a) (hbd : b ≤ d) (hc : 0 ≤ c) (hb : b ≤ 0) : a * b ≤ c * d :=
+theorem mul_le_mul_of_nonneg_of_nonpos (hca : c ≤ a) (hbd : b ≤ d) (hc : 0 ≤ c) (hb : b ≤ 0) :
+    a * b ≤ c * d :=
   (mul_le_mul_of_nonpos_right hca hb).trans <| mul_le_mul_of_nonneg_left hbd hc
 #align mul_le_mul_of_nonneg_of_nonpos mul_le_mul_of_nonneg_of_nonpos
 
-theorem mul_le_mul_of_nonneg_of_nonpos' (hca : c ≤ a) (hbd : b ≤ d) (ha : 0 ≤ a) (hd : d ≤ 0) : a * b ≤ c * d :=
+theorem mul_le_mul_of_nonneg_of_nonpos' (hca : c ≤ a) (hbd : b ≤ d) (ha : 0 ≤ a) (hd : d ≤ 0) :
+    a * b ≤ c * d :=
   (mul_le_mul_of_nonneg_left hbd ha).trans <| mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonneg_of_nonpos' mul_le_mul_of_nonneg_of_nonpos'
 
-theorem mul_le_mul_of_nonpos_of_nonneg (hac : a ≤ c) (hdb : d ≤ b) (hc : c ≤ 0) (hb : 0 ≤ b) : a * b ≤ c * d :=
+theorem mul_le_mul_of_nonpos_of_nonneg (hac : a ≤ c) (hdb : d ≤ b) (hc : c ≤ 0) (hb : 0 ≤ b) :
+    a * b ≤ c * d :=
   (mul_le_mul_of_nonneg_right hac hb).trans <| mul_le_mul_of_nonpos_left hdb hc
 #align mul_le_mul_of_nonpos_of_nonneg mul_le_mul_of_nonpos_of_nonneg
 
-theorem mul_le_mul_of_nonpos_of_nonneg' (hca : c ≤ a) (hbd : b ≤ d) (ha : 0 ≤ a) (hd : d ≤ 0) : a * b ≤ c * d :=
+theorem mul_le_mul_of_nonpos_of_nonneg' (hca : c ≤ a) (hbd : b ≤ d) (ha : 0 ≤ a) (hd : d ≤ 0) :
+    a * b ≤ c * d :=
   (mul_le_mul_of_nonneg_left hbd ha).trans <| mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonpos_of_nonneg' mul_le_mul_of_nonpos_of_nonneg'
 
-theorem mul_le_mul_of_nonpos_of_nonpos (hca : c ≤ a) (hdb : d ≤ b) (hc : c ≤ 0) (hb : b ≤ 0) : a * b ≤ c * d :=
+theorem mul_le_mul_of_nonpos_of_nonpos (hca : c ≤ a) (hdb : d ≤ b) (hc : c ≤ 0) (hb : b ≤ 0) :
+    a * b ≤ c * d :=
   (mul_le_mul_of_nonpos_right hca hb).trans <| mul_le_mul_of_nonpos_left hdb hc
 #align mul_le_mul_of_nonpos_of_nonpos mul_le_mul_of_nonpos_of_nonpos
 
-theorem mul_le_mul_of_nonpos_of_nonpos' (hca : c ≤ a) (hdb : d ≤ b) (ha : a ≤ 0) (hd : d ≤ 0) : a * b ≤ c * d :=
+theorem mul_le_mul_of_nonpos_of_nonpos' (hca : c ≤ a) (hdb : d ≤ b) (ha : a ≤ 0) (hd : d ≤ 0) :
+    a * b ≤ c * d :=
   (mul_le_mul_of_nonpos_left hdb ha).trans <| mul_le_mul_of_nonpos_right hca hd
 #align mul_le_mul_of_nonpos_of_nonpos' mul_le_mul_of_nonpos_of_nonpos'
 
@@ -496,16 +505,18 @@ theorem Antitone.mul_const_of_nonpos (hf : Antitone f) (ha : a ≤ 0) : Monotone
   (antitone_mul_right ha).comp hf
 #align antitone.mul_const_of_nonpos Antitone.mul_const_of_nonpos
 
-theorem Antitone.mul_monotone (hf : Antitone f) (hg : Monotone g) (hf₀ : ∀ x, f x ≤ 0) (hg₀ : ∀ x, 0 ≤ g x) :
-    Antitone (f * g) := fun b c h => mul_le_mul_of_nonpos_of_nonneg (hf h) (hg h) (hf₀ _) (hg₀ _)
+theorem Antitone.mul_monotone (hf : Antitone f) (hg : Monotone g) (hf₀ : ∀ x, f x ≤ 0)
+    (hg₀ : ∀ x, 0 ≤ g x) : Antitone (f * g) := fun b c h =>
+  mul_le_mul_of_nonpos_of_nonneg (hf h) (hg h) (hf₀ _) (hg₀ _)
 #align antitone.mul_monotone Antitone.mul_monotone
 
-theorem Monotone.mul_antitone (hf : Monotone f) (hg : Antitone g) (hf₀ : ∀ x, 0 ≤ f x) (hg₀ : ∀ x, g x ≤ 0) :
-    Antitone (f * g) := fun b c h => mul_le_mul_of_nonneg_of_nonpos (hf h) (hg h) (hf₀ _) (hg₀ _)
+theorem Monotone.mul_antitone (hf : Monotone f) (hg : Antitone g) (hf₀ : ∀ x, 0 ≤ f x)
+    (hg₀ : ∀ x, g x ≤ 0) : Antitone (f * g) := fun b c h =>
+  mul_le_mul_of_nonneg_of_nonpos (hf h) (hg h) (hf₀ _) (hg₀ _)
 #align monotone.mul_antitone Monotone.mul_antitone
 
-theorem Antitone.mul (hf : Antitone f) (hg : Antitone g) (hf₀ : ∀ x, f x ≤ 0) (hg₀ : ∀ x, g x ≤ 0) : Monotone (f * g) :=
-  fun b c h => mul_le_mul_of_nonpos_of_nonpos (hf h) (hg h) (hf₀ _) (hg₀ _)
+theorem Antitone.mul (hf : Antitone f) (hg : Antitone g) (hf₀ : ∀ x, f x ≤ 0) (hg₀ : ∀ x, g x ≤ 0) :
+    Monotone (f * g) := fun b c h => mul_le_mul_of_nonpos_of_nonpos (hf h) (hg h) (hf₀ _) (hg₀ _)
 #align antitone.mul Antitone.mul
 
 end Monotone
@@ -534,9 +545,9 @@ section StrictOrderedSemiring
 variable [StrictOrderedSemiring α] {a b c d : α}
 
 -- see Note [lower instance priority]
-instance (priority := 200) StrictOrderedSemiring.toPosMulStrictMono : PosMulStrictMono α :=
+instance (priority := 200) StrictOrderedSemiring.to_pos_mul_strict_mono : PosMulStrictMono α :=
   ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_left _ _ _ h x.Prop⟩
-#align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.toPosMulStrictMono
+#align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.to_pos_mul_strict_mono
 
 -- see Note [lower instance priority]
 instance (priority := 200) StrictOrderedSemiring.to_mul_pos_strict_mono : MulPosStrictMono α :=
@@ -590,9 +601,9 @@ theorem mul_lt_mul' (hac : a ≤ c) (hbd : b < d) (hb : 0 ≤ b) (hc : 0 < c) : 
 
 /- warning: pow_pos -> pow_pos is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : StrictOrderedSemiring.{u} α] {a : α}, (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u 0 u} α Nat α (instHPow.{u 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
+  forall {α : Type.{u}} [_inst_1 : StrictOrderedSemiring.{u} α] {a : α}, (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u, 0, u} α Nat α (instHPow.{u, 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))))) a n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedMonoidWithZero.toPartialOrder.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedMonoidWithZero.toPartialOrder.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (OrderedMonoidWithZero.toMonoidWithZero.{u_1} α (instOrderedMonoidWithZero.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.568))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_pos pow_posₓ'. -/
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
@@ -613,13 +624,13 @@ theorem mul_self_lt_mul_self (h1 : 0 ≤ a) (h2 : a < b) : a * a < b * b :=
 -- As this lemma is not used outside this file,
 -- and the import for `set.Ici` is not otherwise needed until later,
 -- we choose not to use it here.
-theorem strict_mono_on_mul_self : StrictMonoOn (fun x : α => x * x) { x | 0 ≤ x } := fun x hx y hy hxy =>
-  mul_self_lt_mul_self hx hxy
+theorem strict_mono_on_mul_self : StrictMonoOn (fun x : α => x * x) { x | 0 ≤ x } :=
+  fun x hx y hy hxy => mul_self_lt_mul_self hx hxy
 #align strict_mono_on_mul_self strict_mono_on_mul_self
 
 -- See Note [decidable namespace]
-protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a < c) (h2 : b < d) (h3 : 0 ≤ a) (h4 : 0 ≤ b) :
-    a * b < c * d :=
+protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a < c) (h2 : b < d)
+    (h3 : 0 ≤ a) (h4 : 0 ≤ b) : a * b < c * d :=
   h4.lt_or_eq_dec.elim (fun b0 => mul_lt_mul h1 h2.le b0 <| h3.trans h1.le) fun b0 => by
     rw [← b0, mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
 #align decidable.mul_lt_mul'' Decidable.mul_lt_mul''
@@ -681,8 +692,9 @@ protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a 
       (Tactic.exact "exact" `Decidable.mul_lt_mul'')
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Decidable.mul_lt_mul''
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -695,7 +707,10 @@ protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-theorem mul_lt_mul'' : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d := by skip <;> exact Decidable.mul_lt_mul''
+theorem
+  mul_lt_mul''
+  : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d
+  := by skip <;> exact Decidable.mul_lt_mul''
 #align mul_lt_mul'' mul_lt_mul''
 
 theorem lt_mul_left (hn : 0 < a) (hm : 1 < b) : a < b * a := by
@@ -740,16 +755,19 @@ theorem StrictAnti.const_mul (hf : StrictAnti f) (ha : 0 < a) : StrictAnti fun x
   (strict_mono_mul_left_of_pos ha).comp_strict_anti hf
 #align strict_anti.const_mul StrictAnti.const_mul
 
-theorem StrictMono.mul_monotone (hf : StrictMono f) (hg : Monotone g) (hf₀ : ∀ x, 0 ≤ f x) (hg₀ : ∀ x, 0 < g x) :
-    StrictMono (f * g) := fun b c h => mul_lt_mul (hf h) (hg h.le) (hg₀ _) (hf₀ _)
+theorem StrictMono.mul_monotone (hf : StrictMono f) (hg : Monotone g) (hf₀ : ∀ x, 0 ≤ f x)
+    (hg₀ : ∀ x, 0 < g x) : StrictMono (f * g) := fun b c h =>
+  mul_lt_mul (hf h) (hg h.le) (hg₀ _) (hf₀ _)
 #align strict_mono.mul_monotone StrictMono.mul_monotone
 
-theorem Monotone.mul_strict_mono (hf : Monotone f) (hg : StrictMono g) (hf₀ : ∀ x, 0 < f x) (hg₀ : ∀ x, 0 ≤ g x) :
-    StrictMono (f * g) := fun b c h => mul_lt_mul' (hf h.le) (hg h) (hg₀ _) (hf₀ _)
+theorem Monotone.mul_strict_mono (hf : Monotone f) (hg : StrictMono g) (hf₀ : ∀ x, 0 < f x)
+    (hg₀ : ∀ x, 0 ≤ g x) : StrictMono (f * g) := fun b c h =>
+  mul_lt_mul' (hf h.le) (hg h) (hg₀ _) (hf₀ _)
 #align monotone.mul_strict_mono Monotone.mul_strict_mono
 
-theorem StrictMono.mul (hf : StrictMono f) (hg : StrictMono g) (hf₀ : ∀ x, 0 ≤ f x) (hg₀ : ∀ x, 0 ≤ g x) :
-    StrictMono (f * g) := fun b c h => mul_lt_mul'' (hf h) (hg h) (hf₀ _) (hg₀ _)
+theorem StrictMono.mul (hf : StrictMono f) (hg : StrictMono g) (hf₀ : ∀ x, 0 ≤ f x)
+    (hg₀ : ∀ x, 0 ≤ g x) : StrictMono (f * g) := fun b c h =>
+  mul_lt_mul'' (hf h) (hg h) (hf₀ _) (hg₀ _)
 #align strict_mono.mul StrictMono.mul
 
 end Monotone
@@ -785,14 +803,18 @@ variable [StrictOrderedCommSemiring α]
 /-- A choice-free version of `strict_ordered_comm_semiring.to_ordered_comm_semiring` to avoid using
 choice in basic `nat` lemmas. -/
 @[reducible]
-def StrictOrderedCommSemiring.toOrderedCommSemiring' [@DecidableRel α (· ≤ ·)] : OrderedCommSemiring α :=
+def StrictOrderedCommSemiring.toOrderedCommSemiring' [@DecidableRel α (· ≤ ·)] :
+    OrderedCommSemiring α :=
   { ‹StrictOrderedCommSemiring α›, StrictOrderedSemiring.toOrderedSemiring' with }
-#align strict_ordered_comm_semiring.to_ordered_comm_semiring' StrictOrderedCommSemiring.toOrderedCommSemiring'
+#align
+  strict_ordered_comm_semiring.to_ordered_comm_semiring' StrictOrderedCommSemiring.toOrderedCommSemiring'
 
 -- see Note [lower instance priority]
-instance (priority := 100) StrictOrderedCommSemiring.toOrderedCommSemiring : OrderedCommSemiring α :=
+instance (priority := 100) StrictOrderedCommSemiring.toOrderedCommSemiring :
+    OrderedCommSemiring α :=
   { ‹StrictOrderedCommSemiring α›, StrictOrderedSemiring.toOrderedSemiring with }
-#align strict_ordered_comm_semiring.to_ordered_comm_semiring StrictOrderedCommSemiring.toOrderedCommSemiring
+#align
+  strict_ordered_comm_semiring.to_ordered_comm_semiring StrictOrderedCommSemiring.toOrderedCommSemiring
 
 end StrictOrderedCommSemiring
 
@@ -802,7 +824,8 @@ variable [StrictOrderedRing α] {a b c : α}
 
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedRing.toStrictOrderedSemiring : StrictOrderedSemiring α :=
-  { ‹StrictOrderedRing α›, Ring.toSemiring with le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _,
+  { ‹StrictOrderedRing α›, Ring.toSemiring with
+    le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _,
     mul_lt_mul_of_pos_left := fun a b c h hc => by
       simpa only [mul_sub, sub_pos] using StrictOrderedRing.mul_pos _ _ hc (sub_pos.2 h),
     mul_lt_mul_of_pos_right := fun a b c h hc => by
@@ -858,19 +881,23 @@ theorem strict_anti_mul_right {a : α} (ha : a < 0) : StrictAnti fun x => x * a 
   mul_lt_mul_of_neg_right b_lt_c ha
 #align strict_anti_mul_right strict_anti_mul_right
 
-theorem StrictMono.const_mul_of_neg (hf : StrictMono f) (ha : a < 0) : StrictAnti fun x => a * f x :=
+theorem StrictMono.const_mul_of_neg (hf : StrictMono f) (ha : a < 0) :
+    StrictAnti fun x => a * f x :=
   (strict_anti_mul_left ha).comp_strict_mono hf
 #align strict_mono.const_mul_of_neg StrictMono.const_mul_of_neg
 
-theorem StrictMono.mul_const_of_neg (hf : StrictMono f) (ha : a < 0) : StrictAnti fun x => f x * a :=
+theorem StrictMono.mul_const_of_neg (hf : StrictMono f) (ha : a < 0) :
+    StrictAnti fun x => f x * a :=
   (strict_anti_mul_right ha).comp_strict_mono hf
 #align strict_mono.mul_const_of_neg StrictMono.mul_const_of_neg
 
-theorem StrictAnti.const_mul_of_neg (hf : StrictAnti f) (ha : a < 0) : StrictMono fun x => a * f x :=
+theorem StrictAnti.const_mul_of_neg (hf : StrictAnti f) (ha : a < 0) :
+    StrictMono fun x => a * f x :=
   (strict_anti_mul_left ha).comp hf
 #align strict_anti.const_mul_of_neg StrictAnti.const_mul_of_neg
 
-theorem StrictAnti.mul_const_of_neg (hf : StrictAnti f) (ha : a < 0) : StrictMono fun x => f x * a :=
+theorem StrictAnti.mul_const_of_neg (hf : StrictAnti f) (ha : a < 0) :
+    StrictMono fun x => f x * a :=
   (strict_anti_mul_right ha).comp hf
 #align strict_anti.mul_const_of_neg StrictAnti.mul_const_of_neg
 
@@ -891,9 +918,11 @@ def StrictOrderedCommRing.toOrderedCommRing' [@DecidableRel α (· ≤ ·)] : Or
 #align strict_ordered_comm_ring.to_ordered_comm_ring' StrictOrderedCommRing.toOrderedCommRing'
 
 -- See note [lower instance priority]
-instance (priority := 100) StrictOrderedCommRing.toStrictOrderedCommSemiring : StrictOrderedCommSemiring α :=
+instance (priority := 100) StrictOrderedCommRing.toStrictOrderedCommSemiring :
+    StrictOrderedCommSemiring α :=
   { ‹StrictOrderedCommRing α›, StrictOrderedRing.toStrictOrderedSemiring with }
-#align strict_ordered_comm_ring.to_strict_ordered_comm_semiring StrictOrderedCommRing.toStrictOrderedCommSemiring
+#align
+  strict_ordered_comm_ring.to_strict_ordered_comm_semiring StrictOrderedCommRing.toStrictOrderedCommSemiring
 
 -- See note [lower instance priority]
 instance (priority := 100) StrictOrderedCommRing.toOrderedCommRing : OrderedCommRing α :=
@@ -907,26 +936,26 @@ section LinearOrderedSemiring
 variable [LinearOrderedSemiring α] {a b c d : α}
 
 -- see Note [lower instance priority]
-instance (priority := 200) LinearOrderedSemiring.to_pos_mul_reflect_lt : PosMulReflectLt α :=
+instance (priority := 200) LinearOrderedSemiring.to_pos_mul_reflect_lt : PosMulReflectLT α :=
   ⟨fun a b c => (monotone_mul_left_of_nonneg a.2).reflect_lt⟩
 #align linear_ordered_semiring.to_pos_mul_reflect_lt LinearOrderedSemiring.to_pos_mul_reflect_lt
 
 -- see Note [lower instance priority]
-instance (priority := 200) LinearOrderedSemiring.to_mul_pos_reflect_lt : MulPosReflectLt α :=
+instance (priority := 200) LinearOrderedSemiring.to_mul_pos_reflect_lt : MulPosReflectLT α :=
   ⟨fun a b c => (monotone_mul_right_of_nonneg a.2).reflect_lt⟩
 #align linear_ordered_semiring.to_mul_pos_reflect_lt LinearOrderedSemiring.to_mul_pos_reflect_lt
 
 attribute [local instance] LinearOrderedSemiring.decidableLe LinearOrderedSemiring.decidableLt
 
-theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b) : 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 := by
+theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg (hab : 0 ≤ a * b) :
+    0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 := by
   refine' Decidable.or_iff_not_and_not.2 _
-  simp only [not_and, not_le]
-  intro ab nab
-  apply not_lt_of_le hab _
+  simp only [not_and, not_le]; intro ab nab; apply not_lt_of_le hab _
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
   exacts[mul_neg_of_pos_of_neg ha (ab ha.le), ((ab le_rfl).asymm (nab le_rfl)).elim,
     mul_neg_of_neg_of_pos ha (nab ha.le)]
-#align nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
+#align
+  nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg
 
 theorem nonneg_of_mul_nonneg_left (h : 0 ≤ a * b) (hb : 0 < b) : 0 ≤ a :=
   le_of_not_gt fun ha => (mul_neg_of_neg_of_pos ha hb).not_le h
@@ -993,7 +1022,8 @@ theorem add_le_mul_of_right_le_left (b2 : 2 ≤ b) (ba : b ≤ a) : a + b ≤ a 
 #align add_le_mul_of_right_le_left add_le_mul_of_right_le_left
 
 theorem add_le_mul (a2 : 2 ≤ a) (b2 : 2 ≤ b) : a + b ≤ a * b :=
-  if hab : a ≤ b then add_le_mul_of_left_le_right a2 hab else add_le_mul_of_right_le_left b2 (le_of_not_le hab)
+  if hab : a ≤ b then add_le_mul_of_left_le_right a2 hab
+  else add_le_mul_of_right_le_left b2 (le_of_not_le hab)
 #align add_le_mul add_le_mul
 
 theorem add_le_mul' (a2 : 2 ≤ a) (b2 : 2 ≤ b) : a + b ≤ b * a :=
@@ -1033,11 +1063,13 @@ theorem one_lt_bit1 : (1 : α) < bit1 a ↔ 0 < a := by
 #align one_lt_bit1 one_lt_bit1
 
 @[simp]
-theorem zero_le_bit0 : (0 : α) ≤ bit0 a ↔ 0 ≤ a := by rw [bit0, ← two_mul, zero_le_mul_left (zero_lt_two : 0 < (2 : α))]
+theorem zero_le_bit0 : (0 : α) ≤ bit0 a ↔ 0 ≤ a := by
+  rw [bit0, ← two_mul, zero_le_mul_left (zero_lt_two : 0 < (2 : α))]
 #align zero_le_bit0 zero_le_bit0
 
 @[simp]
-theorem zero_lt_bit0 : (0 : α) < bit0 a ↔ 0 < a := by rw [bit0, ← two_mul, zero_lt_mul_left (zero_lt_two : 0 < (2 : α))]
+theorem zero_lt_bit0 : (0 : α) < bit0 a ↔ 0 < a := by
+  rw [bit0, ← two_mul, zero_lt_mul_left (zero_lt_two : 0 < (2 : α))]
 #align zero_lt_bit0 zero_lt_bit0
 
 end
@@ -1060,7 +1092,8 @@ theorem nonpos_of_mul_nonneg_right (h : 0 ≤ a * b) (ha : a < 0) : b ≤ 0 :=
 
 @[simp]
 theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
-  have : ∀ {u : αˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h => (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
+  have : ∀ {u : αˣ}, (0 : α) < u → (0 : α) < ↑u⁻¹ := fun u h =>
+    (zero_lt_mul_left h).mp <| u.mul_inv.symm ▸ zero_lt_one
   ⟨this, this⟩
 #align units.inv_pos Units.inv_pos
 
@@ -1118,8 +1151,8 @@ theorem mul_self_inj {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a * a = b * b �
 end LinearOrderedSemiring
 
 -- See note [lower instance priority]
-instance (priority := 100) LinearOrderedCommSemiring.toLinearOrderedCancelAddCommMonoid [LinearOrderedCommSemiring α] :
-    LinearOrderedCancelAddCommMonoid α :=
+instance (priority := 100) LinearOrderedCommSemiring.toLinearOrderedCancelAddCommMonoid
+    [LinearOrderedCommSemiring α] : LinearOrderedCancelAddCommMonoid α :=
   { ‹LinearOrderedCommSemiring α› with }
 #align
   linear_ordered_comm_semiring.to_linear_ordered_cancel_add_comm_monoid LinearOrderedCommSemiring.toLinearOrderedCancelAddCommMonoid
@@ -1136,24 +1169,26 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedSemiring : LinearOrd
 #align linear_ordered_ring.to_linear_ordered_semiring LinearOrderedRing.toLinearOrderedSemiring
 
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup : LinearOrderedAddCommGroup α :=
+instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup :
+    LinearOrderedAddCommGroup α :=
   { ‹LinearOrderedRing α› with }
-#align linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
+#align
+  linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
   { ‹LinearOrderedRing α› with
     eq_zero_or_eq_zero_of_mul_eq_zero := by
       intro a b hab
-      refine' Decidable.or_iff_not_and_not.2 fun h => _
-      revert hab
+      refine' Decidable.or_iff_not_and_not.2 fun h => _; revert hab
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
-      exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne, (mul_neg_of_pos_of_neg ha hb).Ne,
-        (mul_pos ha hb).Ne.symm] }
+      exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
+        (mul_neg_of_pos_of_neg ha hb).Ne, (mul_pos ha hb).Ne.symm] }
 #align linear_ordered_ring.is_domain LinearOrderedRing.is_domain
 
 theorem mul_pos_iff : 0 < a * b ↔ 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 :=
-  ⟨pos_and_pos_or_neg_and_neg_of_mul_pos, fun h => h.elim (and_imp.2 mul_pos) (and_imp.2 mul_pos_of_neg_of_neg)⟩
+  ⟨pos_and_pos_or_neg_and_neg_of_mul_pos, fun h =>
+    h.elim (and_imp.2 mul_pos) (and_imp.2 mul_pos_of_neg_of_neg)⟩
 #align mul_pos_iff mul_pos_iff
 
 theorem mul_neg_iff : a * b < 0 ↔ 0 < a ∧ b < 0 ∨ a < 0 ∧ 0 < b := by
@@ -1167,7 +1202,9 @@ theorem mul_nonneg_iff : 0 ≤ a * b ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b �
 
 /-- Out of three elements of a `linear_ordered_ring`, two must have the same sign. -/
 theorem mul_nonneg_of_three (a b c : α) : 0 ≤ a * b ∨ 0 ≤ b * c ∨ 0 ≤ c * a := by
-  iterate 3 rw [mul_nonneg_iff] <;> have := le_total 0 a <;> have := le_total 0 b <;> have := le_total 0 c <;> itauto
+  iterate 3 rw [mul_nonneg_iff] <;> have := le_total 0 a <;> have := le_total 0 b <;>
+      have := le_total 0 c <;>
+    itauto
 #align mul_nonneg_of_three mul_nonneg_of_three
 
 theorem mul_nonpos_iff : a * b ≤ 0 ↔ 0 ≤ a ∧ b ≤ 0 ∨ a ≤ 0 ∧ 0 ≤ b := by
@@ -1265,7 +1302,8 @@ theorem mul_self_pos {a : α} : 0 < a * a ↔ a ≠ 0 := by
 
 theorem mul_self_le_mul_self_of_le_of_neg_le {x y : α} (h₁ : x ≤ y) (h₂ : -x ≤ y) : x * x ≤ y * y :=
   (le_total 0 x).elim (fun h => mul_le_mul h₁ h₁ h (h.trans h₁)) fun h =>
-    le_of_eq_of_le (neg_mul_neg x x).symm (mul_le_mul h₂ h₂ (neg_nonneg.mpr h) ((neg_nonneg.mpr h).trans h₂))
+    le_of_eq_of_le (neg_mul_neg x x).symm
+      (mul_le_mul h₂ h₂ (neg_nonneg.mpr h) ((neg_nonneg.mpr h).trans h₂))
 #align mul_self_le_mul_self_of_le_of_neg_le mul_self_le_mul_self_of_le_of_neg_le
 
 theorem nonneg_of_mul_nonpos_left {a b : α} (h : a * b ≤ 0) (hb : b < 0) : 0 ≤ a :=
@@ -1304,22 +1342,25 @@ theorem eq_zero_of_mul_self_add_mul_self_eq_zero (h : a * a + b * b = 0) : a = 0
 end LinearOrderedRing
 
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedCommRing.toStrictOrderedCommRing [d : LinearOrderedCommRing α] :
-    StrictOrderedCommRing α :=
+instance (priority := 100) LinearOrderedCommRing.toStrictOrderedCommRing
+    [d : LinearOrderedCommRing α] : StrictOrderedCommRing α :=
   { d with }
-#align linear_ordered_comm_ring.to_strict_ordered_comm_ring LinearOrderedCommRing.toStrictOrderedCommRing
+#align
+  linear_ordered_comm_ring.to_strict_ordered_comm_ring LinearOrderedCommRing.toStrictOrderedCommRing
 
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedCommRing.toLinearOrderedCommSemiring [d : LinearOrderedCommRing α] :
-    LinearOrderedCommSemiring α :=
+instance (priority := 100) LinearOrderedCommRing.toLinearOrderedCommSemiring
+    [d : LinearOrderedCommRing α] : LinearOrderedCommSemiring α :=
   { d, LinearOrderedRing.toLinearOrderedSemiring with }
-#align linear_ordered_comm_ring.to_linear_ordered_comm_semiring LinearOrderedCommRing.toLinearOrderedCommSemiring
+#align
+  linear_ordered_comm_ring.to_linear_ordered_comm_semiring LinearOrderedCommRing.toLinearOrderedCommSemiring
 
 section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing α] {a b c d : α}
 
-theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) : max (a * b) (d * c) ≤ max a c * max d b :=
+theorem max_mul_mul_le_max_mul_max (b c : α) (ha : 0 ≤ a) (hd : 0 ≤ d) :
+    max (a * b) (d * c) ≤ max a c * max d b :=
   have ba : b * a ≤ max d b * max c a :=
     mul_le_mul (le_max_right d b) (le_max_right c a) ha (le_trans hd (le_max_left d b))
   have cd : c * d ≤ max a c * max b d :=

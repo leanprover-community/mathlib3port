@@ -33,23 +33,28 @@ theorem hasDerivAtTan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 
 
 open TopologicalSpace
 
-theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
+theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) :
+    Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
   simp only [tan_eq_sin_div_cos, ← norm_eq_abs, norm_div]
   have A : sin x ≠ 0 := fun h => by simpa [*, sq] using sin_sq_add_cos_sq x
-  have B : tendsto cos (𝓝[≠] x) (𝓝[≠] 0) := hx ▸ (has_deriv_at_cos x).tendsto_punctured_nhds (neg_ne_zero.2 A)
+  have B : tendsto cos (𝓝[≠] x) (𝓝[≠] 0) :=
+    hx ▸ (has_deriv_at_cos x).tendsto_punctured_nhds (neg_ne_zero.2 A)
   exact
     continuous_sin.continuous_within_at.norm.mul_at_top (norm_pos_iff.2 A)
       (tendsto_norm_nhds_within_zero.comp B).inv_tendsto_zero
 #align complex.tendsto_abs_tan_of_cos_eq_zero Complex.tendsto_abs_tan_of_cos_eq_zero
 
-theorem tendsto_abs_tan_at_top (k : ℤ) : Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
+theorem tendsto_abs_tan_at_top (k : ℤ) :
+    Tendsto (fun x => abs (tan x)) (𝓝[≠] ((2 * k + 1) * π / 2)) atTop :=
   tendsto_abs_tan_of_cos_eq_zero <| cos_eq_zero_iff.2 ⟨k, rfl⟩
 #align complex.tendsto_abs_tan_at_top Complex.tendsto_abs_tan_at_top
 
 @[simp]
 theorem continuous_at_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 := by
   refine' ⟨fun hc h₀ => _, fun h => (has_deriv_at_tan h).ContinuousAt⟩
-  exact not_tendsto_nhds_of_tendsto_at_top (tendsto_abs_tan_of_cos_eq_zero h₀) _ (hc.norm.tendsto.mono_left inf_le_left)
+  exact
+    not_tendsto_nhds_of_tendsto_at_top (tendsto_abs_tan_of_cos_eq_zero h₀) _
+      (hc.norm.tendsto.mono_left inf_le_left)
 #align complex.continuous_at_tan Complex.continuous_at_tan
 
 @[simp]

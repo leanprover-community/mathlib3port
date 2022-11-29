@@ -61,7 +61,8 @@ theorem mem_carrier_iff (A : Subspace K V) (x : ℙ K V) : x ∈ A.carrier ↔ x
 #align projectivization.subspace.mem_carrier_iff Projectivization.Subspace.mem_carrier_iff
 
 theorem mem_add (T : Subspace K V) (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
-    Projectivization.mk K v hv ∈ T → Projectivization.mk K w hw ∈ T → Projectivization.mk K (v + w) hvw ∈ T :=
+    Projectivization.mk K v hv ∈ T →
+      Projectivization.mk K w hw ∈ T → Projectivization.mk K (v + w) hvw ∈ T :=
   T.mem_add' v w hv hw hvw
 #align projectivization.subspace.mem_add Projectivization.Subspace.mem_add
 
@@ -112,7 +113,9 @@ theorem span_coe (W : Subspace K V) : span ↑W = W :=
 
 /-- The infimum of two subspaces exists. -/
 instance hasInf : HasInf (Subspace K V) :=
-  ⟨fun A B => ⟨A ⊓ B, fun v w hv hw hvw h1 h2 => ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
+  ⟨fun A B =>
+    ⟨A ⊓ B, fun v w hv hw hvw h1 h2 =>
+      ⟨A.mem_add _ _ hv hw _ h1.1 h2.1, B.mem_add _ _ hv hw _ h1.2 h2.2⟩⟩⟩
 #align projectivization.subspace.has_inf Projectivization.Subspace.hasInf
 
 /- warning: projectivization.subspace.has_Inf clashes with projectivization.subspace.has_inf -> Projectivization.Subspace.hasInf
@@ -168,7 +171,8 @@ theorem monotone_span : Monotone (span : Set (ℙ K V) → Subspace K V) :=
   gi.gc.monotone_l
 #align projectivization.subspace.monotone_span Projectivization.Subspace.monotone_span
 
-theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T ⊆ span U) : S ⊆ span U :=
+theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T ⊆ span U) :
+    S ⊆ span U :=
   gi.gc.le_u_l_trans hST hTU
 #align projectivization.subspace.subset_span_trans Projectivization.Subspace.subset_span_trans
 
@@ -185,15 +189,18 @@ theorem span_Union {ι} (s : ι → Set (ℙ K V)) : span (⋃ i, s i) = ⨆ i, 
 
 /-- The supremum of a subspace and the span of a set of points is equal to the span of the union of
 the subspace and the set of points. -/
-theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W ⊔ span S = span (W ∪ S) := by rw [span_union, span_coe]
+theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W ⊔ span S = span (W ∪ S) := by
+  rw [span_union, span_coe]
 #align projectivization.subspace.sup_span Projectivization.Subspace.sup_span
 
-theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S ∪ W) := by rw [span_union, span_coe]
+theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S ∪ W) := by
+  rw [span_union, span_coe]
 #align projectivization.subspace.span_sup Projectivization.Subspace.span_sup
 
 /-- A point in a projective space is contained in the span of a set of points if and only if the
 point is contained in all subspaces of the projective space which contain the set of points. -/
-theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Subspace K V, S ⊆ W → u ∈ W := by
+theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Subspace K V, S ⊆ W → u ∈ W :=
+  by
   simp_rw [← span_le_subspace_iff]
   exact ⟨fun hu W hW => hW hu, fun W => W (span S) (le_refl _)⟩
 #align projectivization.subspace.mem_span Projectivization.Subspace.mem_span
@@ -214,7 +221,8 @@ theorem span_eq_Inf {S : Set (ℙ K V)} : span S = inf { W | S ⊆ W } := by
 /-- If a set of points in projective space is contained in a subspace, and that subspace is
 contained in the span of the set of points, then the span of the set of points is equal to
 the subspace. -/
-theorem span_eq_of_le {S : Set (ℙ K V)} {W : Subspace K V} (hS : S ⊆ W) (hW : W ≤ span S) : span S = W :=
+theorem span_eq_of_le {S : Set (ℙ K V)} {W : Subspace K V} (hS : S ⊆ W) (hW : W ≤ span S) :
+    span S = W :=
   le_antisymm (span_le_subspace_iff.mpr hS) hW
 #align projectivization.subspace.span_eq_of_le Projectivization.Subspace.span_eq_of_le
 

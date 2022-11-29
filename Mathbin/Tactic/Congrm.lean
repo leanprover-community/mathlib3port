@@ -87,12 +87,16 @@ It appears to be the list of arguments of a function application.
 
 `g` is possibly the proof of an equality?  It is extracted from the first `list expr`.
 -/
-private unsafe def extract_subgoals : List expr → List CongrArgKind → List expr → tactic (List (expr × expr))
+private unsafe def extract_subgoals :
+    List expr → List CongrArgKind → List expr → tactic (List (expr × expr))
   | _ :: _ :: g :: prf_args, CongrArgKind.eq :: kinds, pat :: pat_args =>
     (fun rest => (g, pat) :: rest) <$> extract_subgoals prf_args kinds pat_args
-  | _ :: prf_args, CongrArgKind.fixed :: kinds, _ :: pat_args => extract_subgoals prf_args kinds pat_args
-  | prf_args, CongrArgKind.fixed_no_param :: kinds, _ :: pat_args => extract_subgoals prf_args kinds pat_args
-  | _ :: _ :: prf_args, CongrArgKind.cast :: kinds, _ :: pat_args => extract_subgoals prf_args kinds pat_args
+  | _ :: prf_args, CongrArgKind.fixed :: kinds, _ :: pat_args =>
+    extract_subgoals prf_args kinds pat_args
+  | prf_args, CongrArgKind.fixed_no_param :: kinds, _ :: pat_args =>
+    extract_subgoals prf_args kinds pat_args
+  | _ :: _ :: prf_args, CongrArgKind.cast :: kinds, _ :: pat_args =>
+    extract_subgoals prf_args kinds pat_args
   | _, _, [] => pure []
   | _, _, _ => fail "unsupported congr lemma"
 #align tactic.extract_subgoals tactic.extract_subgoals
@@ -137,21 +141,33 @@ private unsafe def extract_subgoals : List expr → List CongrArgKind → List e
                       all_goals' <| try <| clear H_congr_lemma
                       set_goals [ ]
                       let prf ← instantiate_mvars prf
-                      let subgoals ← extract_subgoals prf . get_app_args cl . arg_kinds pat . get_app_args
+                      let
+                        subgoals
+                          ←
+                          extract_subgoals prf . get_app_args cl . arg_kinds pat . get_app_args
                       let
                         subgoals
                           ←
                           subgoals . mmap
-                            fun ⟨ subgoal , subpat ⟩ => do set_goals [ subgoal ] equate_with_pattern_core subpat
+                            fun
+                              ⟨ subgoal , subpat ⟩
+                                =>
+                                do set_goals [ subgoal ] equate_with_pattern_core subpat
                       pure subgoals
                 |
                   expr.lam _ _ _ body
                   =>
-                  do applyc ` ` _root_.funext let x ← intro pat . binding_name equate_with_pattern_core <| body x
+                  do
+                    applyc ` ` _root_.funext
+                      let x ← intro pat . binding_name
+                      equate_with_pattern_core <| body x
                 |
                   expr.pi _ _ _ codomain
                   =>
-                  do applyc ` ` _root_.pi_congr let x ← intro pat . binding_name equate_with_pattern_core <| codomain x
+                  do
+                    applyc ` ` _root_.pi_congr
+                      let x ← intro pat . binding_name
+                      equate_with_pattern_core <| codomain x
                 | _ => do let pat ← pp pat fail <| to_fmt "unsupported pattern:\n" ++ pat
 #align tactic.equate_with_pattern_core tactic.equate_with_pattern_core
 

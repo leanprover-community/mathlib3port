@@ -63,21 +63,27 @@ theorem transpose_has_orthogonal_cols_iff_has_orthogonal_rows [Fintype n] :
 
 variable {A}
 
-theorem HasOrthogonalRows.has_orthogonal_cols [Fintype m] (h : Aᵀ.HasOrthogonalRows) : A.HasOrthogonalCols :=
+theorem HasOrthogonalRows.has_orthogonal_cols [Fintype m] (h : Aᵀ.HasOrthogonalRows) :
+    A.HasOrthogonalCols :=
   h
 #align matrix.has_orthogonal_rows.has_orthogonal_cols Matrix.HasOrthogonalRows.has_orthogonal_cols
 
-theorem HasOrthogonalCols.transpose_has_orthogonal_rows [Fintype m] (h : A.HasOrthogonalCols) : Aᵀ.HasOrthogonalRows :=
+theorem HasOrthogonalCols.transpose_has_orthogonal_rows [Fintype m] (h : A.HasOrthogonalCols) :
+    Aᵀ.HasOrthogonalRows :=
   h
-#align matrix.has_orthogonal_cols.transpose_has_orthogonal_rows Matrix.HasOrthogonalCols.transpose_has_orthogonal_rows
+#align
+  matrix.has_orthogonal_cols.transpose_has_orthogonal_rows Matrix.HasOrthogonalCols.transpose_has_orthogonal_rows
 
-theorem HasOrthogonalCols.has_orthogonal_rows [Fintype n] (h : Aᵀ.HasOrthogonalCols) : A.HasOrthogonalRows :=
+theorem HasOrthogonalCols.has_orthogonal_rows [Fintype n] (h : Aᵀ.HasOrthogonalCols) :
+    A.HasOrthogonalRows :=
   h
 #align matrix.has_orthogonal_cols.has_orthogonal_rows Matrix.HasOrthogonalCols.has_orthogonal_rows
 
-theorem HasOrthogonalRows.transpose_has_orthogonal_cols [Fintype n] (h : A.HasOrthogonalRows) : Aᵀ.HasOrthogonalCols :=
+theorem HasOrthogonalRows.transpose_has_orthogonal_cols [Fintype n] (h : A.HasOrthogonalRows) :
+    Aᵀ.HasOrthogonalCols :=
   h
-#align matrix.has_orthogonal_rows.transpose_has_orthogonal_cols Matrix.HasOrthogonalRows.transpose_has_orthogonal_cols
+#align
+  matrix.has_orthogonal_rows.transpose_has_orthogonal_cols Matrix.HasOrthogonalRows.transpose_has_orthogonal_cols
 
 end Matrix
 

@@ -65,7 +65,8 @@ Given a lemma of the form `∀ ..., f ≫ g = h`, proves a new lemma of the form
 unsafe def prove_reassoc (h : expr) : tactic (expr × expr) := do
   let (vs, t) ← infer_type h >>= open_pis
   let (lhs, rhs) ← match_eq t
-  let struct_inst ← get_cat_inst lhs <|> get_cat_inst rhs <|> fail "no composition found in statement"
+  let struct_inst ←
+    get_cat_inst lhs <|> get_cat_inst rhs <|> fail "no composition found in statement"
   let q(@Quiver.Hom _ $(hom_inst) $(X) $(Y)) ← infer_type lhs
   let C ← infer_type X
   let X' ← mk_local' `X' BinderInfo.implicit C
@@ -132,7 +133,8 @@ unsafe def reassoc_attr : user_attribute Unit (Option Name) where
 #align tactic.reassoc_attr tactic.reassoc_attr
 
 add_tactic_doc
-  { Name := "reassoc", category := DocCategory.attr, declNames := [`tactic.reassoc_attr], tags := ["category theory"] }
+  { Name := "reassoc", category := DocCategory.attr, declNames := [`tactic.reassoc_attr],
+    tags := ["category theory"] }
 
 /-- When declaring a class of categories, the axioms can be reformulated to be more amenable
 to manipulation in right associated expressions:
@@ -162,7 +164,7 @@ attribute [simp, reassoc] some_class.bar
 @[user_command]
 unsafe def reassoc_cmd (_ : parse <| tk "reassoc_axiom") : lean.parser Unit := do
   let n ← ident
-  of_tactic <| do
+  of_tactic do
       let n ← resolve_constant n
       reassoc_axiom n
 #align tactic.reassoc_cmd tactic.reassoc_cmd
@@ -219,7 +221,8 @@ begin
 end
 ```
 -/
-theorem CategoryTheory.reassoc_of {α} (hh : α) {β} (x : Tactic.CalculatedProp β hh := by derive_reassoc_proof) : β :=
+theorem CategoryTheory.reassoc_of {α} (hh : α) {β}
+    (x : Tactic.CalculatedProp β hh := by derive_reassoc_proof) : β :=
   x
 #align category_theory.reassoc_of CategoryTheory.reassoc_of
 
@@ -247,6 +250,6 @@ Although `reassoc_of` is not a tactic or a meta program, its type is generated
 through meta-programming to make it usable inside normal expressions.
 -/
 add_tactic_doc
-  { Name := "category_theory.reassoc_of", category := DocCategory.tactic, declNames := [`category_theory.reassoc_of],
-    tags := ["category theory"] }
+  { Name := "category_theory.reassoc_of", category := DocCategory.tactic,
+    declNames := [`category_theory.reassoc_of], tags := ["category theory"] }
 

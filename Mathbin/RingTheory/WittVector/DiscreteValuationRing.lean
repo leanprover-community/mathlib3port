@@ -44,10 +44,12 @@ variable {k : Type _} [CommRing k] [CharP k p]
 
 /-- This is the `n+1`st coefficient of our inverse. -/
 def succNthValUnits (n : ℕ) (a : Units k) (A : 𝕎 k) (bs : Fin (n + 1) → k) : k :=
-  -↑(a⁻¹ ^ p ^ (n + 1)) * (A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) + nthRemainder p n (truncateFun (n + 1) A) bs)
+  -↑(a⁻¹ ^ p ^ (n + 1)) *
+    (A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) + nthRemainder p n (truncateFun (n + 1) A) bs)
 #align witt_vector.succ_nth_val_units WittVector.succNthValUnits
 
-/-- Recursively defines the sequence of coefficients for the inverse to a Witt vector whose first entry
+/--
+Recursively defines the sequence of coefficients for the inverse to a Witt vector whose first entry
 is a unit.
 -/
 noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
@@ -55,7 +57,8 @@ noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val decreasing_by apply Fin.is_lt
 #align witt_vector.inverse_coeff WittVector.inverseCoeff
 
-/-- Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.
+/--
+Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.
 -/
 def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
   Units.mkOfMulEqOne A (WittVector.mk p (inverseCoeff a A))
@@ -71,8 +74,8 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
       linear_combination (norm := skip) -H_coeff * H
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by exact_mod_cast inv_pow _ _
-      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe, one_coeff_eq_of_pos,
-        Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
+      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, Fin.val_eq_coe,
+        one_coeff_eq_of_pos, Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
       ring!)
 #align witt_vector.mk_unit WittVector.mkUnit
 
@@ -127,7 +130,8 @@ section PerfectRing
 
 variable {k : Type _} [CommRing k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
+theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) :
+    ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
@@ -152,7 +156,8 @@ section PerfectField
 
 variable {k : Type _} [Field k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b := by
+theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b :=
+  by
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl

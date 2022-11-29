@@ -22,7 +22,8 @@ section Pointwise
 
 variable {R : Type _} {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
-theorem mul_to_submodule_le (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule ≤ (S ⊔ T).toSubmodule := by
+theorem mul_to_submodule_le (S T : Subalgebra R A) :
+    S.toSubmodule * T.toSubmodule ≤ (S ⊔ T).toSubmodule := by
   rw [Submodule.mul_le]
   intro y hy z hz
   show y * z ∈ S ⊔ T
@@ -47,7 +48,9 @@ theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemirin
     (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S ⊔ T).toSubmodule := by
   refine' le_antisymm (mul_to_submodule_le _ _) _
   rintro x (hx : x ∈ Algebra.adjoin R (S ∪ T : Set A))
-  refine' Algebra.adjoin_induction hx (fun x hx => _) (fun r => _) (fun _ _ => Submodule.add_mem _) fun x y hx hy => _
+  refine'
+    Algebra.adjoin_induction hx (fun x hx => _) (fun r => _) (fun _ _ => Submodule.add_mem _)
+      fun x y hx hy => _
   · cases' hx with hxS hxT
     · rw [← mul_one x]
       exact Submodule.mul_mem_mul hxS (show (1 : A) ∈ T from one_mem T)
@@ -60,8 +63,8 @@ theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemirin
     exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) (algebra_map_mem _ _)
     
   have := Submodule.mul_mem_mul hx hy
-  rwa [mul_assoc, mul_comm _ T.to_submodule, ← mul_assoc _ _ S.to_submodule, mul_self, mul_comm T.to_submodule, ←
-    mul_assoc, mul_self] at this
+  rwa [mul_assoc, mul_comm _ T.to_submodule, ← mul_assoc _ _ S.to_submodule, mul_self,
+    mul_comm T.to_submodule, ← mul_assoc, mul_self] at this
 #align subalgebra.mul_to_submodule Subalgebra.mul_to_submodule
 
 variable {R' : Type _} [Semiring R'] [MulSemiringAction R' A] [SmulCommClass R' R A]
@@ -72,7 +75,8 @@ This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction R' (Subalgebra R A) where
   smul a S := S.map (MulSemiringAction.toAlgHom _ _ a)
   one_smul S := (congr_arg (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
-  mul_smul a₁ a₂ S := (congr_arg (fun f => S.map f) (AlgHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
+  mul_smul a₁ a₂ S :=
+    (congr_arg (fun f => S.map f) (AlgHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 #align subalgebra.pointwise_mul_action Subalgebra.pointwiseMulAction
 
 scoped[Pointwise] attribute [instance] Subalgebra.pointwiseMulAction
@@ -85,18 +89,21 @@ theorem coe_pointwise_smul (m : R') (S : Subalgebra R A) : ↑(m • S) = m • 
 #align subalgebra.coe_pointwise_smul Subalgebra.coe_pointwise_smul
 
 @[simp]
-theorem pointwise_smul_to_subsemiring (m : R') (S : Subalgebra R A) : (m • S).toSubsemiring = m • S.toSubsemiring :=
+theorem pointwise_smul_to_subsemiring (m : R') (S : Subalgebra R A) :
+    (m • S).toSubsemiring = m • S.toSubsemiring :=
   rfl
 #align subalgebra.pointwise_smul_to_subsemiring Subalgebra.pointwise_smul_to_subsemiring
 
 @[simp]
-theorem pointwise_smul_to_submodule (m : R') (S : Subalgebra R A) : (m • S).toSubmodule = m • S.toSubmodule :=
+theorem pointwise_smul_to_submodule (m : R') (S : Subalgebra R A) :
+    (m • S).toSubmodule = m • S.toSubmodule :=
   rfl
 #align subalgebra.pointwise_smul_to_submodule Subalgebra.pointwise_smul_to_submodule
 
 @[simp]
-theorem pointwise_smul_to_subring {R' R A : Type _} [Semiring R'] [CommRing R] [Ring A] [MulSemiringAction R' A]
-    [Algebra R A] [SmulCommClass R' R A] (m : R') (S : Subalgebra R A) : (m • S).toSubring = m • S.toSubring :=
+theorem pointwise_smul_to_subring {R' R A : Type _} [Semiring R'] [CommRing R] [Ring A]
+    [MulSemiringAction R' A] [Algebra R A] [SmulCommClass R' R A] (m : R') (S : Subalgebra R A) :
+    (m • S).toSubring = m • S.toSubring :=
   rfl
 #align subalgebra.pointwise_smul_to_subring Subalgebra.pointwise_smul_to_subring
 

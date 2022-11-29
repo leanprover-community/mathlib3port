@@ -67,8 +67,7 @@ def equiv : Discrete PUnit ⥤ C ≌ C where
   counitIso := by
     refine' nat_iso.of_components iso.refl _
     intro X Y f
-    dsimp
-    simp
+    dsimp; simp
 #align category_theory.functor.equiv CategoryTheory.Functor.equiv
 
 -- See note [dsimp, simp].
@@ -76,8 +75,8 @@ end Functor
 
 /-- A category being equivalent to `punit` is equivalent to it having a unique morphism between
   any two objects. (In fact, such a category is also a groupoid; see `groupoid.of_hom_unique`) -/
-theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) :=
-  by
+theorem equiv_punit_iff_unique :
+    Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) := by
   constructor
   · rintro ⟨h⟩
     refine' ⟨⟨h.inverse.obj ⟨⟨⟩⟩⟩, fun x y => Nonempty.intro _⟩

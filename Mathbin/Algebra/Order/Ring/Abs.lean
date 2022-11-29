@@ -30,9 +30,9 @@ theorem abs_two : |(2 : α)| = 2 :=
 
 theorem abs_mul (a b : α) : |a * b| = |a| * |b| := by
   rw [abs_eq (mul_nonneg (abs_nonneg a) (abs_nonneg b))]
-  cases' le_total a 0 with ha ha <;>
-    cases' le_total b 0 with hb hb <;>
-      simp only [abs_of_nonpos, abs_of_nonneg, true_or_iff, or_true_iff, eq_self_iff_true, neg_mul, mul_neg, neg_neg, *]
+  cases' le_total a 0 with ha ha <;> cases' le_total b 0 with hb hb <;>
+    simp only [abs_of_nonpos, abs_of_nonneg, true_or_iff, or_true_iff, eq_self_iff_true, neg_mul,
+      mul_neg, neg_neg, *]
 #align abs_mul abs_mul
 
 /-- `abs` as a `monoid_with_zero_hom`. -/
@@ -104,7 +104,8 @@ variable [LinearOrderedCommRing α] {a b c d : α}
 
 theorem abs_sub_sq (a b : α) : |a - b| * |a - b| = a * a + b * b - (1 + 1) * a * b := by
   rw [abs_mul_abs_self]
-  simp only [mul_add, add_comm, add_left_comm, mul_comm, sub_eq_add_neg, mul_one, mul_neg, neg_add_rev, neg_neg]
+  simp only [mul_add, add_comm, add_left_comm, mul_comm, sub_eq_add_neg, mul_one, mul_neg,
+    neg_add_rev, neg_neg]
 #align abs_sub_sq abs_sub_sq
 
 end LinearOrderedCommRing
@@ -114,7 +115,8 @@ section
 variable [Ring α] [LinearOrder α] {a b : α}
 
 @[simp]
-theorem abs_dvd (a b : α) : |a| ∣ b ↔ a ∣ b := by cases' abs_choice a with h h <;> simp only [h, neg_dvd]
+theorem abs_dvd (a b : α) : |a| ∣ b ↔ a ∣ b := by
+  cases' abs_choice a with h h <;> simp only [h, neg_dvd]
 #align abs_dvd abs_dvd
 
 theorem abs_dvd_self (a : α) : |a| ∣ a :=
@@ -122,7 +124,8 @@ theorem abs_dvd_self (a : α) : |a| ∣ a :=
 #align abs_dvd_self abs_dvd_self
 
 @[simp]
-theorem dvd_abs (a b : α) : a ∣ |b| ↔ a ∣ b := by cases' abs_choice b with h h <;> simp only [h, dvd_neg]
+theorem dvd_abs (a b : α) : a ∣ |b| ↔ a ∣ b := by
+  cases' abs_choice b with h h <;> simp only [h, dvd_neg]
 #align dvd_abs dvd_abs
 
 theorem self_dvd_abs (a : α) : a ∣ |a| :=

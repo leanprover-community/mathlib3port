@@ -65,7 +65,8 @@ structure Comma (L : A ⥤ T) (R : B ⥤ T) : Type max u₁ u₂ v₃ where
 
 -- Satisfying the inhabited linter
 instance Comma.inhabited [Inhabited T] :
-    Inhabited (Comma (𝟭 T) (𝟭 T)) where default := { left := default, right := default, Hom := 𝟙 default }
+    Inhabited
+      (Comma (𝟭 T) (𝟭 T)) where default := { left := default, right := default, Hom := 𝟙 default }
 #align category_theory.comma.inhabited CategoryTheory.Comma.inhabited
 
 variable {L : A ⥤ T} {R : B ⥤ T}
@@ -81,7 +82,8 @@ structure CommaMorphism (X Y : Comma L R) where
 #align category_theory.comma_morphism CategoryTheory.CommaMorphism
 
 -- Satisfying the inhabited linter
-instance CommaMorphism.inhabited [Inhabited (Comma L R)] : Inhabited (CommaMorphism (default : Comma L R) default) :=
+instance CommaMorphism.inhabited [Inhabited (Comma L R)] :
+    Inhabited (CommaMorphism (default : Comma L R) default) :=
   ⟨⟨𝟙 _, 𝟙 _⟩⟩
 #align category_theory.comma_morphism.inhabited CategoryTheory.CommaMorphism.inhabited
 
@@ -232,7 +234,8 @@ def mapRightId : mapRight L (𝟙 R) ≅ 𝟭 _ where
     `r : R₁ ⟶ R₂` and `r' : R₂ ⟶ R₃` is naturally isomorphic to the composition of the functors
     induced by these natural transformations. -/
 @[simps]
-def mapRightComp (r : R₁ ⟶ R₂) (r' : R₂ ⟶ R₃) : mapRight L (r ≫ r') ≅ mapRight L r ⋙ mapRight L r' where
+def mapRightComp (r : R₁ ⟶ R₂) (r' : R₂ ⟶ R₃) :
+    mapRight L (r ≫ r') ≅ mapRight L r ⋙ mapRight L r' where
   Hom := { app := fun X => { left := 𝟙 _, right := 𝟙 _ } }
   inv := { app := fun X => { left := 𝟙 _, right := 𝟙 _ } }
 #align category_theory.comma.map_right_comp CategoryTheory.Comma.mapRightComp
@@ -261,7 +264,8 @@ def preRight (L : A ⥤ T) (F : C ⥤ B) (R : B ⥤ T) : Comma L (F ⋙ R) ⥤ C
 @[simps]
 def post (L : A ⥤ T) (R : B ⥤ T) (F : T ⥤ C) : Comma L R ⥤ Comma (L ⋙ F) (R ⋙ F) where
   obj X := { left := X.left, right := X.right, Hom := F.map X.Hom }
-  map X Y f := { left := f.left, right := f.right, w' := by simp only [functor.comp_map, ← F.map_comp, f.w] }
+  map X Y f :=
+    { left := f.left, right := f.right, w' := by simp only [functor.comp_map, ← F.map_comp, f.w] }
 #align category_theory.comma.post CategoryTheory.Comma.post
 
 end

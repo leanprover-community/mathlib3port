@@ -40,9 +40,10 @@ instance : TopologicalSpace (Ultrafilter α) :=
 theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafilterBasis α) :=
   ⟨by
     rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ u ⟨ua, ub⟩
-    refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;>
-      apply mem_of_superset hv <;> simp [inter_subset_right a b],
-    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩, rfl⟩
+    refine' ⟨_, ⟨a ∩ b, rfl⟩, inter_mem ua ub, fun v hv => ⟨_, _⟩⟩ <;> apply mem_of_superset hv <;>
+      simp [inter_subset_right a b],
+    eq_univ_of_univ_subset <| subset_sUnion_of_mem <| ⟨univ, eq_univ_of_forall fun u => univ_mem⟩,
+    rfl⟩
 #align ultrafilter_basis_is_basis ultrafilter_basis_is_basis
 
 /-- The basic open sets for the topology on ultrafilters are open. -/
@@ -60,10 +61,12 @@ theorem ultrafilterIsClosedBasic (s : Set α) : IsClosed { u : Ultrafilter α | 
 
 /-- Every ultrafilter `u` on `ultrafilter α` converges to a unique
   point of `ultrafilter α`, namely `mjoin u`. -/
-theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultrafilter α} : ↑u ≤ 𝓝 x ↔ x = joinM u := by
+theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultrafilter α} :
+    ↑u ≤ 𝓝 x ↔ x = joinM u := by
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
   change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u
-  simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, ultrafilterBasis, le_principal_iff, mem_set_of_eq]
+  simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, ultrafilterBasis, le_principal_iff,
+    mem_set_of_eq]
   constructor
   · intro h a ha
     exact h _ ⟨ha, a, rfl⟩
@@ -74,7 +77,8 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
 #align ultrafilter_converges_iff ultrafilter_converges_iff
 
 instance ultrafilter_compact : CompactSpace (Ultrafilter α) :=
-  ⟨is_compact_iff_ultrafilter_le_nhds.mpr fun f _ => ⟨joinM f, trivial, ultrafilter_converges_iff.mpr rfl⟩⟩
+  ⟨is_compact_iff_ultrafilter_le_nhds.mpr fun f _ =>
+      ⟨joinM f, trivial, ultrafilter_converges_iff.mpr rfl⟩⟩
 #align ultrafilter_compact ultrafilter_compact
 
 instance Ultrafilter.t2Space : T2Space (Ultrafilter α) :=
@@ -119,12 +123,13 @@ open TopologicalSpace
 
 /-- The range of `pure : α → ultrafilter α` is dense in `ultrafilter α`. -/
 theorem dense_range_pure : DenseRange (pure : α → Ultrafilter α) := fun x =>
-  mem_closure_iff_ultrafilter.mpr ⟨x.map pure, range_mem_map, ultrafilter_converges_iff.mpr (bind_pure x).symm⟩
+  mem_closure_iff_ultrafilter.mpr
+    ⟨x.map pure, range_mem_map, ultrafilter_converges_iff.mpr (bind_pure x).symm⟩
 #align dense_range_pure dense_range_pure
 
 /-- The map `pure : α → ultra_filter α` induces on `α` the discrete topology. -/
-theorem induced_topology_pure : TopologicalSpace.induced (pure : α → Ultrafilter α) Ultrafilter.topologicalSpace = ⊥ :=
-  by
+theorem induced_topology_pure :
+    TopologicalSpace.induced (pure : α → Ultrafilter α) Ultrafilter.topologicalSpace = ⊥ := by
   apply eq_bot_of_singletons_open
   intro x
   use { u : Ultrafilter α | {x} ∈ u }, ultrafilter_is_open_basic _
@@ -175,7 +180,8 @@ variable [CompactSpace γ]
 theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) := by
   have : ∀ b : Ultrafilter α, ∃ c, Tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
     -- b.map f is an ultrafilter on γ, which is compact, so it converges to some c in γ.
-    let ⟨c, _, h⟩ := is_compact_univ.ultrafilter_le_nhds (b.map f) (by rw [le_principal_iff] <;> exact univ_mem)
+    let ⟨c, _, h⟩ :=
+      is_compact_univ.ultrafilter_le_nhds (b.map f) (by rw [le_principal_iff] <;> exact univ_mem)
     ⟨c, le_trans (map_mono (ultrafilter_comap_pure_nhds _)) h⟩
   letI : TopologicalSpace α := ⊥
   haveI : NormalSpace γ := normalOfCompactT2
@@ -198,7 +204,8 @@ theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} 
     rw [ultrafilter_extend_extends]
     exact le_rfl, fun h =>
     letI : TopologicalSpace α := ⊥
-    dense_inducing_pure.extend_eq_of_tendsto (le_trans (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
+    dense_inducing_pure.extend_eq_of_tendsto
+      (le_trans (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
 #align ultrafilter_extend_eq_iff ultrafilter_extend_eq_iff
 
 end Extension
@@ -218,10 +225,11 @@ variable (α : Type u) [TopologicalSpace α]
 instance stoneCechSetoid : Setoid (Ultrafilter α) where
   R x y :=
     ∀ (γ : Type u) [TopologicalSpace γ],
-      ∀ [T2Space γ] [CompactSpace γ] (f : α → γ) (hf : Continuous f), Ultrafilter.extend f x = Ultrafilter.extend f y
+      ∀ [T2Space γ] [CompactSpace γ] (f : α → γ) (hf : Continuous f),
+        Ultrafilter.extend f x = Ultrafilter.extend f y
   iseqv :=
-    ⟨fun x γ tγ h₁ h₂ f hf => rfl, fun x y xy γ tγ h₁ h₂ f hf => (xy γ f hf).symm, fun x y z xy yz γ tγ h₁ h₂ f hf =>
-      (xy γ f hf).trans (yz γ f hf)⟩
+    ⟨fun x γ tγ h₁ h₂ f hf => rfl, fun x y xy γ tγ h₁ h₂ f hf => (xy γ f hf).symm,
+      fun x y z xy yz γ tγ h₁ h₂ f hf => (xy γ f hf).trans (yz γ f hf)⟩
 #align stone_cech_setoid stoneCechSetoid
 
 /-- The Stone-Čech compactification of a topological space. -/
@@ -279,14 +287,13 @@ theorem stone_cech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous
 
 end Extension
 
-theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x) : u ≈ pure x := fun γ tγ h₁ h₂ f hf => by
+theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x) : u ≈ pure x :=
+  fun γ tγ h₁ h₂ f hf => by
   skip
-  trans f x
-  swap
-  symm
+  trans f x; swap; symm
   all_goals refine' ultrafilter_extend_eq_iff.mpr (le_trans (map_mono _) (hf.tendsto _))
   · apply pure_le_nhds
-    
+    ;
   · exact ux
     
 #align convergent_eqv_pure convergent_eqv_pure

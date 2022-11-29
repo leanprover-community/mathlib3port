@@ -56,14 +56,17 @@ unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where
     { dependencies := [],
       mk_cache :=
         List.foldlM
-          (fun cache d => native.rb_map.insert cache d <$> parse_name_list <$> nolint_attr.get_param_untyped d)
+          (fun cache d =>
+            native.rb_map.insert cache d <$> parse_name_list <$> nolint_attr.get_param_untyped d)
           mk_name_map }
   parser := parser.many ident
 #align nolint_attr nolint_attr
 
 end
 
-add_tactic_doc { Name := "nolint", category := DocCategory.attr, declNames := [`nolint_attr], tags := ["linting"] }
+add_tactic_doc
+  { Name := "nolint", category := DocCategory.attr, declNames := [`nolint_attr],
+    tags := ["linting"] }
 
 /-- `should_be_linted linter decl` returns true if `decl` should be checked
 using `linter`, i.e., if there is no `nolint` attribute. -/
@@ -95,7 +98,8 @@ unsafe structure linter where
 /-- Takes a list of names that resolve to declarations of type `linter`,
 and produces a list of linters. -/
 unsafe def get_linters (l : List Name) : tactic (List (Name × linter)) :=
-  l.mmap fun n => Prod.mk n.last <$> (mk_const n >>= eval_expr linter) <|> fail f! "invalid linter: {n}"
+  l.mmap fun n =>
+    Prod.mk n.last <$> (mk_const n >>= eval_expr linter) <|> fail f! "invalid linter: {n}"
 #align get_linters get_linters
 
 /-- Defines the user attribute `linter` for adding a linter to the default set.
@@ -110,5 +114,7 @@ unsafe def linter_attr : user_attribute Unit Unit where
   after_set := some fun nm _ _ => mk_const nm >>= infer_type >>= unify q(linter)
 #align linter_attr linter_attr
 
-add_tactic_doc { Name := "linter", category := DocCategory.attr, declNames := [`linter_attr], tags := ["linting"] }
+add_tactic_doc
+  { Name := "linter", category := DocCategory.attr, declNames := [`linter_attr],
+    tags := ["linting"] }
 

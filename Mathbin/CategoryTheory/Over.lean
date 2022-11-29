@@ -40,7 +40,8 @@ def Over (X : T) :=
 #align category_theory.over CategoryTheory.Over
 
 -- Satisfying the inhabited linter
-instance Over.inhabited [Inhabited T] : Inhabited (Over (default : T)) where default := { left := default, Hom := 𝟙 _ }
+instance Over.inhabited [Inhabited T] :
+    Inhabited (Over (default : T)) where default := { left := default, Hom := 𝟙 _ }
 #align category_theory.over.inhabited CategoryTheory.Over.inhabited
 
 namespace Over
@@ -48,7 +49,8 @@ namespace Over
 variable {X : T}
 
 @[ext.1]
-theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by tidy
+theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g := by
+  tidy
 #align category_theory.over.over_morphism.ext CategoryTheory.Over.OverMorphism.ext
 
 @[simp]
@@ -102,7 +104,8 @@ def homMk {U V : Over X} (f : U.left ⟶ V.left) (w : f ≫ V.Hom = U.Hom := by 
 direction gives a commutative triangle.
 -/
 @[simps]
-def isoMk {f g : Over X} (hl : f.left ≅ g.left) (hw : hl.Hom ≫ g.Hom = f.Hom := by obviously) : f ≅ g :=
+def isoMk {f g : Over X} (hl : f.left ≅ g.left) (hw : hl.Hom ≫ g.Hom = f.Hom := by obviously) :
+    f ≅ g :=
   CostructuredArrow.isoMk hl hw
 #align category_theory.over.iso_mk CategoryTheory.Over.isoMk
 
@@ -179,14 +182,17 @@ instance forget_reflects_iso :
     ReflectsIsomorphisms
       (forget
         X) where reflects Y Z f t :=
-    ⟨⟨over.hom_mk (inv ((forget X).map f)) ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm), by tidy⟩⟩
+    ⟨⟨over.hom_mk (inv ((forget X).map f))
+          ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm),
+        by tidy⟩⟩
 #align category_theory.over.forget_reflects_iso CategoryTheory.Over.forget_reflects_iso
 
 instance forget_faithful : Faithful (forget X) where
 #align category_theory.over.forget_faithful CategoryTheory.Over.forget_faithful
 
 -- TODO: Show the converse holds if `T` has binary products.
-/-- If `k.left` is an epimorphism, then `k` is an epimorphism. In other words, `over.forget X` reflects
+/--
+If `k.left` is an epimorphism, then `k` is an epimorphism. In other words, `over.forget X` reflects
 epimorphisms.
 The converse does not hold without additional assumptions on the underlying category, see
 `category_theory.over.epi_left_of_epi`.
@@ -195,7 +201,8 @@ theorem epi_of_epi_left {f g : Over X} (k : f ⟶ g) [hk : Epi k.left] : Epi k :
   (forget X).epi_of_epi_map hk
 #align category_theory.over.epi_of_epi_left CategoryTheory.Over.epi_of_epi_left
 
-/-- If `k.left` is a monomorphism, then `k` is a monomorphism. In other words, `over.forget X` reflects
+/--
+If `k.left` is a monomorphism, then `k` is a monomorphism. In other words, `over.forget X` reflects
 monomorphisms.
 The converse of `category_theory.over.mono_left_of_mono`.
 
@@ -205,7 +212,8 @@ theorem mono_of_mono_left {f g : Over X} (k : f ⟶ g) [hk : Mono k.left] : Mono
   (forget X).mono_of_mono_map hk
 #align category_theory.over.mono_of_mono_left CategoryTheory.Over.mono_of_mono_left
 
-/-- If `k` is a monomorphism, then `k.left` is a monomorphism. In other words, `over.forget X` preserves
+/--
+If `k` is a monomorphism, then `k.left` is a monomorphism. In other words, `over.forget X` preserves
 monomorphisms.
 The converse of `category_theory.over.mono_of_mono_left`.
 -/
@@ -251,7 +259,8 @@ def iteratedSliceEquiv : Over f ≌ Over f.left where
   Functor := iteratedSliceForward f
   inverse := iteratedSliceBackward f
   unitIso :=
-    NatIso.ofComponents (fun g => Over.isoMk (Over.isoMk (Iso.refl _) (by tidy)) (by tidy)) fun X Y g => by
+    NatIso.ofComponents (fun g => Over.isoMk (Over.isoMk (Iso.refl _) (by tidy)) (by tidy))
+      fun X Y g => by
       ext
       dsimp
       simp
@@ -262,11 +271,14 @@ def iteratedSliceEquiv : Over f ≌ Over f.left where
       simp
 #align category_theory.over.iterated_slice_equiv CategoryTheory.Over.iteratedSliceEquiv
 
-theorem iterated_slice_forward_forget : iteratedSliceForward f ⋙ forget f.left = forget f ⋙ forget X :=
+theorem iterated_slice_forward_forget :
+    iteratedSliceForward f ⋙ forget f.left = forget f ⋙ forget X :=
   rfl
-#align category_theory.over.iterated_slice_forward_forget CategoryTheory.Over.iterated_slice_forward_forget
+#align
+  category_theory.over.iterated_slice_forward_forget CategoryTheory.Over.iterated_slice_forward_forget
 
-theorem iterated_slice_backward_forget_forget : iteratedSliceBackward f ⋙ forget f ⋙ forget X = forget f.left :=
+theorem iterated_slice_backward_forget_forget :
+    iteratedSliceBackward f ⋙ forget f ⋙ forget X = forget f.left :=
   rfl
 #align
   category_theory.over.iterated_slice_backward_forget_forget CategoryTheory.Over.iterated_slice_backward_forget_forget
@@ -304,7 +316,8 @@ namespace Under
 variable {X : T}
 
 @[ext.1]
-theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g := by tidy
+theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g :=
+  by tidy
 #align category_theory.under.under_morphism.ext CategoryTheory.Under.UnderMorphism.ext
 
 @[simp]
@@ -424,7 +437,8 @@ instance forget_reflects_iso :
     ReflectsIsomorphisms
       (forget
         X) where reflects Y Z f t :=
-    ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by tidy⟩⟩
+    ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by
+        tidy⟩⟩
 #align category_theory.under.forget_reflects_iso CategoryTheory.Under.forget_reflects_iso
 
 instance forget_faithful : Faithful (forget X) where
@@ -440,7 +454,8 @@ theorem mono_of_mono_right {f g : Under X} (k : f ⟶ g) [hk : Mono k.right] : M
   (forget X).mono_of_mono_map hk
 #align category_theory.under.mono_of_mono_right CategoryTheory.Under.mono_of_mono_right
 
-/-- If `k.right` is a epimorphism, then `k` is a epimorphism. In other words, `under.forget X` reflects
+/--
+If `k.right` is a epimorphism, then `k` is a epimorphism. In other words, `under.forget X` reflects
 epimorphisms.
 The converse of `category_theory.under.epi_right_of_epi`.
 
@@ -450,7 +465,8 @@ theorem epi_of_epi_right {f g : Under X} (k : f ⟶ g) [hk : Epi k.right] : Epi 
   (forget X).epi_of_epi_map hk
 #align category_theory.under.epi_of_epi_right CategoryTheory.Under.epi_of_epi_right
 
-/-- If `k` is a epimorphism, then `k.right` is a epimorphism. In other words, `under.forget X` preserves
+/--
+If `k` is a epimorphism, then `k.right` is a epimorphism. In other words, `under.forget X` preserves
 epimorphisms.
 The converse of `category_theory.under.epi_of_epi_right`.
 -/

@@ -27,20 +27,24 @@ For example with three ideals : `I ⊔ J = I ⊔ K = J ⊔ K = ⊤ ↔ (I ⊓ J)
 When ideals are all of the form `I i = R ∙ s i`, this is equivalent to the
 `exists_sum_eq_one_iff_pairwise_coprime` lemma.-/
 theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι → Ideal R) :
-    (⨆ i ∈ t, ⨅ (j) (hj : j ∈ t) (ij : j ≠ i), I j) = ⊤ ↔ (t : Set ι).Pairwise fun i j => I i ⊔ I j = ⊤ := by
+    (⨆ i ∈ t, ⨅ (j) (hj : j ∈ t) (ij : j ≠ i), I j) = ⊤ ↔
+      (t : Set ι).Pairwise fun i j => I i ⊔ I j = ⊤ :=
+  by
   haveI : DecidableEq ι := Classical.decEq ι
   rw [eq_top_iff_one, Submodule.mem_supr_finset_iff_exists_sum]
   refine' h.cons_induction _ _ <;> clear t h
   · simp only [Finset.sum_singleton, Finset.coe_singleton, Set.pairwise_singleton, iff_true_iff]
     refine' fun a => ⟨fun i => if h : i = a then ⟨1, _⟩ else 0, _⟩
     · rw [h]
-      simp only [Finset.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true, infi_false]
+      simp only [Finset.mem_singleton, Ne.def, infi_infi_eq_left, eq_self_iff_true, not_true,
+        infi_false]
       
     · simp only [dif_pos, dif_ctx_congr, Submodule.coe_mk, eq_self_iff_true]
       
     
   intro a t hat h ih
-  rw [Finset.coe_cons, Set.pairwise_insert_of_symmetric fun i j (h : I i ⊔ I j = ⊤) => sup_comm.trans h]
+  rw [Finset.coe_cons,
+    Set.pairwise_insert_of_symmetric fun i j (h : I i ⊔ I j = ⊤) => sup_comm.trans h]
   constructor
   · rintro ⟨μ, hμ⟩
     rw [Finset.sum_cons] at hμ
@@ -61,7 +65,8 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       intro j hj ij
       exact this _ (Finset.subset_cons _ hj) ij
       
-    · rw [← @if_pos _ _ h.some_spec R (μ a) 0, ← Finset.sum_pi_single', ← Finset.sum_add_distrib] at hμ
+    · rw [← @if_pos _ _ h.some_spec R (μ a) 0, ← Finset.sum_pi_single', ← Finset.sum_add_distrib] at
+        hμ
       convert hμ
       ext i
       rw [Pi.add_apply, Submodule.coe_add, Submodule.coe_mk]

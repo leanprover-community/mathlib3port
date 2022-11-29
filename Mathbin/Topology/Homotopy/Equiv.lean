@@ -123,7 +123,8 @@ def Simps.symmApply (h : X ≃ₕ Y) : Y → X :=
   h.symm
 #align continuous_map.homotopy_equiv.simps.symm_apply ContinuousMap.HomotopyEquiv.Simps.symmApply
 
-initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_fun → symmApply, -toFun, -invFun)
+initialize_simps_projections HomotopyEquiv (to_fun_to_fun → apply, inv_fun_to_fun → symmApply,
+  -toFun, -invFun)
 
 /-- Any topological space is homotopy equivalent to itself.
 -/
@@ -135,7 +136,8 @@ def refl (X : Type u) [TopologicalSpace X] : X ≃ₕ X :=
 instance : Inhabited (HomotopyEquiv Unit Unit) :=
   ⟨refl Unit⟩
 
-/-- If `X` is homotopy equivalent to `Y`, and `Y` is homotopy equivalent to `Z`, then `X` is homotopy
+/--
+If `X` is homotopy equivalent to `Y`, and `Y` is homotopy equivalent to `Z`, then `X` is homotopy
 equivalent to `Z`.
 -/
 @[simps]
@@ -159,7 +161,8 @@ def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : X ≃ₕ Z where
     rw [id_comp]
 #align continuous_map.homotopy_equiv.trans ContinuousMap.HomotopyEquiv.trans
 
-theorem symm_trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : (h₁.trans h₂).symm = h₂.symm.trans h₁.symm := by ext <;> rfl
+theorem symm_trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : (h₁.trans h₂).symm = h₂.symm.trans h₁.symm := by
+  ext <;> rfl
 #align continuous_map.homotopy_equiv.symm_trans ContinuousMap.HomotopyEquiv.symm_trans
 
 end HomotopyEquiv

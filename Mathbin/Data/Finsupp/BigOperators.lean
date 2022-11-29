@@ -51,7 +51,8 @@ theorem Multiset.support_sum_subset [AddCommMonoid M] (s : Multiset (ι →₀ M
 #align multiset.support_sum_subset Multiset.support_sum_subset
 
 theorem Finset.support_sum_subset [AddCommMonoid M] (s : Finset (ι →₀ M)) :
-    (s.Sum id).support ⊆ Finset.sup s Finsupp.support := by classical convert Multiset.support_sum_subset s.1 <;> simp
+    (s.Sum id).support ⊆ Finset.sup s Finsupp.support := by
+  classical convert Multiset.support_sum_subset s.1 <;> simp
 #align finset.support_sum_subset Finset.support_sum_subset
 
 theorem List.mem_foldr_sup_support_iff [Zero M] {l : List (ι →₀ M)} {x : ι} :
@@ -87,7 +88,8 @@ theorem Finset.mem_sup_support_iff [Zero M] {s : Finset (ι →₀ M)} {x : ι} 
   Multiset.mem_sup_map_support_iff
 #align finset.mem_sup_support_iff Finset.mem_sup_support_iff
 
-theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M)) (hl : l.Pairwise (Disjoint on Finsupp.support)) :
+theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
+    (hl : l.Pairwise (Disjoint on Finsupp.support)) :
     l.Sum.support = l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ := by
   induction' l with hd tl IH
   · simp
@@ -108,7 +110,8 @@ theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M)) (hl : l.Pairw
 #align list.support_sum_eq List.support_sum_eq
 
 theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
-    (hs : s.Pairwise (Disjoint on Finsupp.support)) : s.Sum.support = (s.map Finsupp.support).sup := by
+    (hs : s.Pairwise (Disjoint on Finsupp.support)) : s.Sum.support = (s.map Finsupp.support).sup :=
+  by
   induction s using Quot.induction_on
   obtain ⟨l, hl, hd⟩ := hs
   convert List.support_sum_eq _ _
@@ -122,8 +125,8 @@ theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
 #align multiset.support_sum_eq Multiset.support_sum_eq
 
 theorem Finset.support_sum_eq [AddCommMonoid M] (s : Finset (ι →₀ M))
-    (hs : (s : Set (ι →₀ M)).PairwiseDisjoint Finsupp.support) : (s.Sum id).support = Finset.sup s Finsupp.support := by
-  classical
+    (hs : (s : Set (ι →₀ M)).PairwiseDisjoint Finsupp.support) :
+    (s.Sum id).support = Finset.sup s Finsupp.support := by classical
   convert Multiset.support_sum_eq s.1 _
   · exact (Finset.sum_val _).symm
     

@@ -79,21 +79,25 @@ end BoolRingCat
 @[simps]
 instance BoolRingCat.hasForgetToBoolAlg :
     HasForget₂ BoolRingCat
-      BoolAlgCat where forget₂ := { obj := fun X => BoolAlgCat.of (AsBoolalg X), map := fun X Y => RingHom.asBoolalg }
+      BoolAlgCat where forget₂ :=
+    { obj := fun X => BoolAlgCat.of (AsBoolalg X), map := fun X Y => RingHom.asBoolalg }
 #align BoolRing.has_forget_to_BoolAlg BoolRingCat.hasForgetToBoolAlg
 
 @[simps]
 instance BoolAlgCat.hasForgetToBoolRing :
     HasForget₂ BoolAlgCat
       BoolRingCat where forget₂ :=
-    { obj := fun X => BoolRingCat.of (AsBoolring X), map := fun X Y => BoundedLatticeHom.asBoolring }
+    { obj := fun X => BoolRingCat.of (AsBoolring X),
+      map := fun X Y => BoundedLatticeHom.asBoolring }
 #align BoolAlg.has_forget_to_BoolRing BoolAlgCat.hasForgetToBoolRing
 
 /-- The equivalence between Boolean rings and Boolean algebras. This is actually an isomorphism. -/
 @[simps Functor inverse]
 def boolRingEquivBoolAlg : BoolRingCat ≌ BoolAlgCat :=
   Equivalence.mk (forget₂ BoolRingCat BoolAlgCat) (forget₂ BoolAlgCat BoolRingCat)
-    ((NatIso.ofComponents fun X => BoolRingCat.Iso.mk <| (RingEquiv.asBoolringAsBoolalg X).symm) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => BoolAlgCat.Iso.mk <| OrderIso.asBoolalgAsBoolring X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => BoolRingCat.Iso.mk <| (RingEquiv.asBoolringAsBoolalg X).symm)
+      fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => BoolAlgCat.Iso.mk <| OrderIso.asBoolalgAsBoolring X) fun X Y f =>
+      rfl)
 #align BoolRing_equiv_BoolAlg boolRingEquivBoolAlg
 

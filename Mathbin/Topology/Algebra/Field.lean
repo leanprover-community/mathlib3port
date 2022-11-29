@@ -60,7 +60,8 @@ instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuo
     let mulR := fun p : R × R => p.1 * p.2
     let mulRx := fun p : Rˣ × Rˣ => p.1 * p.2
     have key : coe ∘ mulRx = mulR ∘ fun p => (p.1.val, p.2.val) := rfl
-    rw [continuous_iff_le_induced, units_topology_eq R, prod_induced_induced, induced_compose, key, ← induced_compose]
+    rw [continuous_iff_le_induced, units_topology_eq R, prod_induced_induced, induced_compose, key,
+      ← induced_compose]
     apply induced_mono
     rw [← continuous_iff_le_induced]
     exact continuous_mul⟩
@@ -120,9 +121,10 @@ theorem units_top_group : TopologicalGroup Kˣ :=
     continuous_inv := by
       rw [continuous_iff_continuous_at]
       intro x
-      rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, ← Function.Semiconj.filter_comap Units.coe_inv _]
+      rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, ←
+        Function.Semiconj.filter_comap Units.val_inv_eq_inv_val _]
       apply comap_mono
-      rw [← tendsto_iff_comap, Units.coe_inv]
+      rw [← tendsto_iff_comap, Units.val_inv_eq_inv_val]
       exact continuous_at_inv₀ x.ne_zero }
 #align topological_division_ring.units_top_group TopologicalDivisionRing.units_top_group
 
@@ -145,7 +147,8 @@ happens to be a field is enough.
 
 variable {𝕜 : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜]
 
-/-- The map `λ x, a * x + b`, as a homeomorphism from `𝕜` (a topological field) to itself, when `a ≠ 0`.
+/--
+The map `λ x, a * x + b`, as a homeomorphism from `𝕜` (a topological field) to itself, when `a ≠ 0`.
 -/
 @[simps]
 def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜 where
@@ -165,7 +168,8 @@ variable {α β : Type _} [TopologicalSpace α] [LinearOrderedSemifield β] {a :
 
 open TopologicalSpace
 
-theorem IsLocalMin.inv {f : α → β} {a : α} (h1 : IsLocalMin f a) (h2 : ∀ᶠ z in 𝓝 a, 0 < f z) : IsLocalMax f⁻¹ a := by
+theorem IsLocalMin.inv {f : α → β} {a : α} (h1 : IsLocalMin f a) (h2 : ∀ᶠ z in 𝓝 a, 0 < f z) :
+    IsLocalMax f⁻¹ a := by
   filter_upwards [h1, h2] with z h3 h4 using(inv_le_inv h4 h2.self_of_nhds).mpr h3
 #align is_local_min.inv IsLocalMin.inv
 

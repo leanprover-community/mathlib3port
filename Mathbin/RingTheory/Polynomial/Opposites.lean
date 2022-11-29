@@ -34,10 +34,12 @@ def opRingEquiv (R : Type _) [Semiring R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
 
 -- for maintenance purposes: `by simp [op_ring_equiv]` proves this lemma
 @[simp]
-theorem op_ring_equiv_op_monomial (n : ℕ) (r : R) : opRingEquiv R (op (monomial n r : R[X])) = monomial n (op r) := by
-  simp only [op_ring_equiv, RingEquiv.trans_apply, RingEquiv.op_apply_apply, RingEquiv.to_add_equiv_eq_coe,
-    AddEquiv.mul_op_apply, AddEquiv.to_fun_eq_coe, AddEquiv.coe_trans, op_add_equiv_apply, RingEquiv.coe_to_add_equiv,
-    op_add_equiv_symm_apply, Function.comp_apply, unop_op, to_finsupp_iso_apply, to_finsupp_monomial,
+theorem op_ring_equiv_op_monomial (n : ℕ) (r : R) :
+    opRingEquiv R (op (monomial n r : R[X])) = monomial n (op r) := by
+  simp only [op_ring_equiv, RingEquiv.trans_apply, RingEquiv.op_apply_apply,
+    RingEquiv.to_add_equiv_eq_coe, AddEquiv.mul_op_apply, AddEquiv.to_fun_eq_coe,
+    AddEquiv.coe_trans, op_add_equiv_apply, RingEquiv.coe_to_add_equiv, op_add_equiv_symm_apply,
+    Function.comp_apply, unop_op, to_finsupp_iso_apply, to_finsupp_monomial,
     AddMonoidAlgebra.op_ring_equiv_single, to_finsupp_iso_symm_apply, of_finsupp_single]
 #align polynomial.op_ring_equiv_op_monomial Polynomial.op_ring_equiv_op_monomial
 
@@ -51,7 +53,8 @@ theorem op_ring_equiv_op_X : opRingEquiv R (op (x : R[X])) = X :=
   op_ring_equiv_op_monomial 1 1
 #align polynomial.op_ring_equiv_op_X Polynomial.op_ring_equiv_op_X
 
-theorem op_ring_equiv_op_C_mul_X_pow (r : R) (n : ℕ) : opRingEquiv R (op (c r * X ^ n : R[X])) = c (op r) * X ^ n := by
+theorem op_ring_equiv_op_C_mul_X_pow (r : R) (n : ℕ) :
+    opRingEquiv R (op (c r * X ^ n : R[X])) = c (op r) * X ^ n := by
   simp only [X_pow_mul, op_mul, op_pow, map_mul, map_pow, op_ring_equiv_op_X, op_ring_equiv_op_C]
 #align polynomial.op_ring_equiv_op_C_mul_X_pow Polynomial.op_ring_equiv_op_C_mul_X_pow
 
@@ -84,7 +87,8 @@ theorem op_ring_equiv_symm_C_mul_X_pow (r : Rᵐᵒᵖ) (n : ℕ) :
 
 
 @[simp]
-theorem coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) (n : ℕ) : (opRingEquiv R p).coeff n = op ((unop p).coeff n) := by
+theorem coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) (n : ℕ) :
+    (opRingEquiv R p).coeff n = op ((unop p).coeff n) := by
   induction p using MulOpposite.rec
   cases p
   rfl
@@ -98,7 +102,8 @@ theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = 
 #align polynomial.support_op_ring_equiv Polynomial.support_op_ring_equiv
 
 @[simp]
-theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegree = (unop p).natDegree := by
+theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegree = (unop p).natDegree :=
+  by
   by_cases p0 : p = 0
   · simp only [p0, _root_.map_zero, nat_degree_zero, unop_zero]
     
@@ -108,7 +113,8 @@ theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegr
 #align polynomial.nat_degree_op_ring_equiv Polynomial.nat_degree_op_ring_equiv
 
 @[simp]
-theorem leading_coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).leadingCoeff = op (unop p).leadingCoeff := by
+theorem leading_coeff_op_ring_equiv (p : R[X]ᵐᵒᵖ) :
+    (opRingEquiv R p).leadingCoeff = op (unop p).leadingCoeff := by
   rw [leading_coeff, coeff_op_ring_equiv, nat_degree_op_ring_equiv, leading_coeff]
 #align polynomial.leading_coeff_op_ring_equiv Polynomial.leading_coeff_op_ring_equiv
 

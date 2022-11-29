@@ -45,8 +45,9 @@ open GeneralizedContinuedFraction (of)
 
 open GeneralizedContinuedFraction
 
-theorem GeneralizedContinuedFraction.ofIsSimpleContinuedFraction : (of v).IsSimpleContinuedFraction :=
-  fun _ _ nth_part_num_eq => of_part_num_eq_one nth_part_num_eq
+theorem GeneralizedContinuedFraction.ofIsSimpleContinuedFraction :
+    (of v).IsSimpleContinuedFraction := fun _ _ nth_part_num_eq =>
+  of_part_num_eq_one nth_part_num_eq
 #align
   generalized_continued_fraction.of_is_simple_continued_fraction GeneralizedContinuedFraction.ofIsSimpleContinuedFraction
 
@@ -55,9 +56,11 @@ def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
   ⟨of v, GeneralizedContinuedFraction.ofIsSimpleContinuedFraction v⟩
 #align simple_continued_fraction.of SimpleContinuedFraction.of
 
-theorem SimpleContinuedFraction.of_is_continued_fraction : (SimpleContinuedFraction.of v).IsContinuedFraction :=
-  fun _ denom nth_part_denom_eq => lt_of_lt_of_le zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
-#align simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_is_continued_fraction
+theorem SimpleContinuedFraction.of_is_continued_fraction :
+    (SimpleContinuedFraction.of v).IsContinuedFraction := fun _ denom nth_part_denom_eq =>
+  lt_of_lt_of_le zero_lt_one (of_one_le_nth_part_denom nth_part_denom_eq)
+#align
+  simple_continued_fraction.of_is_continued_fraction SimpleContinuedFraction.of_is_continued_fraction
 
 /-- Creates the continued fraction of a value. -/
 def ContinuedFraction.of : ContinuedFraction K :=
@@ -84,7 +87,8 @@ variable [Archimedean K]
 
 open Nat
 
-theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convergents n| < ε := by
+theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v - (of v).convergents n| < ε :=
+  by
   intro ε ε_pos
   -- use the archimedean property to obtian a suitable N
   rcases(exists_nat_gt (1 / ε) : ∃ N' : ℕ, 1 / ε < N') with ⟨N', one_div_ε_lt_N'⟩
@@ -101,7 +105,8 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     
   · let B := g.denominators n
     let nB := g.denominators (n + 1)
-    have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) := abs_sub_convergents_le not_terminated_at_n
+    have abs_v_sub_conv_le : |v - g.convergents n| ≤ 1 / (B * nB) :=
+      abs_sub_convergents_le not_terminated_at_n
     suffices : 1 / (B * nB) < ε
     exact lt_of_le_of_lt abs_v_sub_conv_le this
     -- show that `0 < (B * nB)` and then multiply by `B * nB` to get rid of the division
@@ -125,7 +130,8 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
     have one_lt_ε_mul_N : 1 < ε * n := by
       have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).elimLeft one_div_ε_lt_N'
       have : (N' : K) ≤ N := by exact_mod_cast le_max_left _ _
-      have : ε * N' ≤ ε * n := (mul_le_mul_left ε_pos).elimRight (le_trans this (by exact_mod_cast n_ge_N))
+      have : ε * N' ≤ ε * n :=
+        (mul_le_mul_left ε_pos).elimRight (le_trans this (by exact_mod_cast n_ge_N))
       exact lt_of_lt_of_le one_lt_ε_mul_N' this
     suffices : ε * n ≤ ε * (B * nB)
     exact lt_of_lt_of_le one_lt_ε_mul_N this
@@ -138,15 +144,19 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
       _ ≤ fib (n + 1) := by exact_mod_cast fib_le_fib_succ
       _ ≤ fib (n + 1) * fib (n + 1) := by exact_mod_cast (fib (n + 1)).le_mul_self
       _ ≤ fib (n + 1) * fib (n + 2) :=
-        mul_le_mul_of_nonneg_left (by exact_mod_cast fib_le_fib_succ) (by exact_mod_cast (fib (n + 1)).zero_le)
-      _ ≤ B * nB := mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
+        mul_le_mul_of_nonneg_left (by exact_mod_cast fib_le_fib_succ)
+          (by exact_mod_cast (fib (n + 1)).zero_le)
+      _ ≤ B * nB :=
+        mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
       
     
-#align generalized_continued_fraction.of_convergence_epsilon GeneralizedContinuedFraction.of_convergence_epsilon
+#align
+  generalized_continued_fraction.of_convergence_epsilon GeneralizedContinuedFraction.of_convergence_epsilon
 
 attribute [local instance] Preorder.topology
 
-theorem of_convergence [OrderTopology K] : Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
+theorem of_convergence [OrderTopology K] :
+    Filter.Tendsto (of v).convergents Filter.atTop <| nhds v := by
   simpa [LinearOrderedAddCommGroup.tendsto_nhds, abs_sub_comm] using of_convergence_epsilon v
 #align generalized_continued_fraction.of_convergence GeneralizedContinuedFraction.of_convergence
 

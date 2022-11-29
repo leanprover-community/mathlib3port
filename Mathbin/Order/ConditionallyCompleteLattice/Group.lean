@@ -14,41 +14,44 @@ import Mathbin.Algebra.Order.Group.TypeTags
 
 section Group
 
-variable {α : Type _} {ι : Sort _} {ι' : Sort _} [Nonempty ι] [Nonempty ι'] [ConditionallyCompleteLattice α] [Group α]
+variable {α : Type _} {ι : Sort _} {ι' : Sort _} [Nonempty ι] [Nonempty ι']
+  [ConditionallyCompleteLattice α] [Group α]
 
 @[to_additive]
-theorem le_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α} (H : ∀ j, a ≤ g * h j) :
-    a ≤ g * infi h :=
+theorem le_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α}
+    (H : ∀ j, a ≤ g * h j) : a ≤ g * infi h :=
   inv_mul_le_iff_le_mul.mp <| le_cinfi fun hi => inv_mul_le_iff_le_mul.mpr <| H _
 #align le_mul_cinfi le_mul_cinfi
 
 @[to_additive]
-theorem mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α} (H : ∀ j, g * h j ≤ a) :
-    g * supr h ≤ a :=
+theorem mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α}
+    (H : ∀ j, g * h j ≤ a) : g * supr h ≤ a :=
   @le_mul_cinfi αᵒᵈ _ _ _ _ _ _ _ _ H
 #align mul_csupr_le mul_csupr_le
 
 @[to_additive]
-theorem le_cinfi_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : α}
-    (H : ∀ i, a ≤ g i * h) : a ≤ infi g * h :=
+theorem le_cinfi_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α}
+    {h : α} (H : ∀ i, a ≤ g i * h) : a ≤ infi g * h :=
   mul_inv_le_iff_le_mul.mp <| le_cinfi fun gi => mul_inv_le_iff_le_mul.mpr <| H _
 #align le_cinfi_mul le_cinfi_mul
 
 @[to_additive]
-theorem csupr_mul_le [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : α}
-    (H : ∀ i, g i * h ≤ a) : supr g * h ≤ a :=
+theorem csupr_mul_le [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α}
+    {h : α} (H : ∀ i, g i * h ≤ a) : supr g * h ≤ a :=
   @le_cinfi_mul αᵒᵈ _ _ _ _ _ _ _ _ H
 #align csupr_mul_le csupr_mul_le
 
 @[to_additive]
-theorem le_cinfi_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
-    {a : α} {g : ι → α} {h : ι' → α} (H : ∀ i j, a ≤ g i * h j) : a ≤ infi g * infi h :=
+theorem le_cinfi_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)]
+    [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : ι' → α}
+    (H : ∀ i j, a ≤ g i * h j) : a ≤ infi g * infi h :=
   le_cinfi_mul fun i => le_mul_cinfi <| H _
 #align le_cinfi_mul_cinfi le_cinfi_mul_cinfi
 
 @[to_additive]
-theorem csupr_mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
-    {a : α} {g : ι → α} {h : ι' → α} (H : ∀ i j, g i * h j ≤ a) : supr g * supr h ≤ a :=
+theorem csupr_mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)]
+    [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : ι' → α}
+    (H : ∀ i j, g i * h j ≤ a) : supr g * supr h ≤ a :=
   csupr_mul_le fun i => mul_csupr_le <| H _
 #align csupr_mul_csupr_le csupr_mul_csupr_le
 

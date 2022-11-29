@@ -45,7 +45,8 @@ theorem prod_top_top : prod (⊤ : Ideal R) (⊤ : Ideal S) = ⊤ :=
 
 /-- Every ideal of the product ring is of the form `I × J`, where `I` and `J` can be explicitly
     given as the image under the projection maps. -/
-theorem ideal_prod_eq (I : Ideal (R × S)) : I = Ideal.prod (map (RingHom.fst R S) I) (map (RingHom.snd R S) I) := by
+theorem ideal_prod_eq (I : Ideal (R × S)) :
+    I = Ideal.prod (map (RingHom.fst R S) I) (map (RingHom.snd R S) I) := by
   apply Ideal.ext
   rintro ⟨r, s⟩
   rw [mem_prod, mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjective,
@@ -76,7 +77,8 @@ theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I
 #align ideal.map_snd_prod Ideal.map_snd_prod
 
 @[simp]
-theorem map_prod_comm_prod : map ((RingEquiv.prodComm : R × S ≃+* S × R) : R × S →+* S × R) (prod I J) = prod J I := by
+theorem map_prod_comm_prod :
+    map ((RingEquiv.prodComm : R × S ≃+* S × R) : R × S →+* S × R) (prod I J) = prod J I := by
   refine' trans (ideal_prod_eq _) _
   simp [map_map]
 #align ideal.map_prod_comm_prod Ideal.map_prod_comm_prod
@@ -91,15 +93,18 @@ def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S where
 #align ideal.ideal_prod_equiv Ideal.idealProdEquiv
 
 @[simp]
-theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv.symm ⟨I, J⟩ = prod I J :=
+theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) :
+    idealProdEquiv.symm ⟨I, J⟩ = prod I J :=
   rfl
 #align ideal.ideal_prod_equiv_symm_apply Ideal.ideal_prod_equiv_symm_apply
 
-theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
+theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' :=
+  by
   simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
 #align ideal.prod.ext_iff Ideal.prod.ext_iff
 
-theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.IsPrime := by
+theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) :
+    I.IsPrime := by
   constructor
   · contrapose! h
     simp [is_prime_iff, h]
@@ -112,7 +117,8 @@ theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Id
     
 #align ideal.is_prime_of_is_prime_prod_top Ideal.is_prime_of_is_prime_prod_top
 
-theorem is_prime_of_is_prime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) : I.IsPrime := by
+theorem is_prime_of_is_prime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) :
+    I.IsPrime := by
   apply @is_prime_of_is_prime_prod_top _ R
   rw [← map_prod_comm_prod]
   exact map_is_prime_of_equiv _
@@ -133,13 +139,15 @@ theorem is_prime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : I
     
 #align ideal.is_prime_ideal_prod_top Ideal.is_prime_ideal_prod_top
 
-theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime := by
+theorem is_prime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime :=
+  by
   rw [← map_prod_comm_prod]
   apply map_is_prime_of_equiv _
   exact is_prime_ideal_prod_top
 #align ideal.is_prime_ideal_prod_top' Ideal.is_prime_ideal_prod_top'
 
-theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ := by
+theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} :
+    (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ := by
   contrapose!
   simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or]
   exact fun ⟨hI, hJ⟩ hIJ => ⟨⟨0, 1⟩, ⟨1, 0⟩, by simp, by simp [hJ], by simp [hI]⟩
@@ -148,7 +156,10 @@ theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} : (Ideal.prod I J).IsPr
 /-- Classification of prime ideals in product rings: the prime ideals of `R × S` are precisely the
     ideals of the form `p × S` or `R × p`, where `p` is a prime ideal of `R` or `S`. -/
 theorem ideal_prod_prime (I : Ideal (R × S)) :
-    I.IsPrime ↔ (∃ p : Ideal R, p.IsPrime ∧ I = Ideal.prod p ⊤) ∨ ∃ p : Ideal S, p.IsPrime ∧ I = Ideal.prod ⊤ p := by
+    I.IsPrime ↔
+      (∃ p : Ideal R, p.IsPrime ∧ I = Ideal.prod p ⊤) ∨
+        ∃ p : Ideal S, p.IsPrime ∧ I = Ideal.prod ⊤ p :=
+  by
   constructor
   · rw [ideal_prod_eq I]
     intro hI

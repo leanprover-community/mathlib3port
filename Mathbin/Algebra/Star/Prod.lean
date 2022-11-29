@@ -47,8 +47,9 @@ instance [AddMonoid R] [AddMonoid S] [StarAddMonoid R] [StarAddMonoid S] :
 instance [NonUnitalSemiring R] [NonUnitalSemiring S] [StarRing R] [StarRing S] : StarRing (R × S) :=
   { Prod.starAddMonoid, (Prod.starSemigroup : StarSemigroup (R × S)) with }
 
-instance {α : Type w} [HasSmul α R] [HasSmul α S] [HasStar α] [HasStar R] [HasStar S] [StarModule α R]
-    [StarModule α S] : StarModule α (R × S) where star_smul r x := Prod.ext (star_smul _ _) (star_smul _ _)
+instance {α : Type w} [HasSmul α R] [HasSmul α S] [HasStar α] [HasStar R] [HasStar S]
+    [StarModule α R] [StarModule α S] :
+    StarModule α (R × S) where star_smul r x := Prod.ext (star_smul _ _) (star_smul _ _)
 
 end Prod
 

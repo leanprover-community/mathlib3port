@@ -27,7 +27,8 @@ namespace Localization
 
 /-- If `L : C ⥤ D` satisfies the universal property of the localisation
 for `W : morphism_property C`, then `L.op` also does. -/
-def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E] (h : StrictUniversalPropertyFixedTarget L W Eᵒᵖ) :
+def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
+    (h : StrictUniversalPropertyFixedTarget L W Eᵒᵖ) :
     StrictUniversalPropertyFixedTarget L.op W.op E where
   inverts := h.inverts.op
   lift F hF := (h.lift F.rightOp hF.rightOp).leftOp
@@ -35,7 +36,8 @@ def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E] (h : StrictU
     convert congr_arg functor.left_op (h.fac F.right_op hF.right_op)
     exact F.right_op_left_op_eq.symm
   uniq F₁ F₂ eq := by
-    suffices F₁.right_op = F₂.right_op by rw [← F₁.right_op_left_op_eq, ← F₂.right_op_left_op_eq, this]
+    suffices F₁.right_op = F₂.right_op by
+      rw [← F₁.right_op_left_op_eq, ← F₂.right_op_left_op_eq, this]
     have eq' := congr_arg functor.right_op Eq
     exact h.uniq _ _ eq'
 #align
@@ -44,7 +46,8 @@ def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E] (h : StrictU
 instance is_localization_op : W.q.op.IsLocalization W.op :=
   Functor.IsLocalization.mk' W.q.op W.op (strictUniversalPropertyFixedTargetQ W _).op
     (strictUniversalPropertyFixedTargetQ W _).op
-#align category_theory.localization.is_localization_op CategoryTheory.Localization.is_localization_op
+#align
+  category_theory.localization.is_localization_op CategoryTheory.Localization.is_localization_op
 
 end Localization
 

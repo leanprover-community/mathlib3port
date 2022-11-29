@@ -156,7 +156,8 @@ instance : MulAction α (UpperSet α) :=
 
 @[to_additive]
 instance : CommSemigroup (UpperSet α) :=
-  { (SetLike.coe_injective.CommSemigroup _ coe_mul : CommSemigroup (UpperSet α)) with mul := (· * ·) }
+  { (SetLike.coe_injective.CommSemigroup _ coe_mul : CommSemigroup (UpperSet α)) with
+    mul := (· * ·) }
 
 @[to_additive]
 private theorem one_mul (s : UpperSet α) : 1 * s = s :=
@@ -219,7 +220,8 @@ instance : MulAction α (LowerSet α) :=
 
 @[to_additive]
 instance : CommSemigroup (LowerSet α) :=
-  { (SetLike.coe_injective.CommSemigroup _ coe_mul : CommSemigroup (LowerSet α)) with mul := (· * ·) }
+  { (SetLike.coe_injective.CommSemigroup _ coe_mul : CommSemigroup (LowerSet α)) with
+    mul := (· * ·) }
 
 @[to_additive]
 private theorem one_mul (s : LowerSet α) : 1 * s = s :=
@@ -262,14 +264,14 @@ theorem lower_closure_smul : lowerClosure (a • s) = a • lowerClosure s :=
 
 @[to_additive]
 theorem mul_upper_closure : s * upperClosure t = upperClosure (s * t) := by
-  simp_rw [← smul_eq_mul, ← bUnion_smul_set, upper_closure_Union, upper_closure_smul, UpperSet.coe_infi₂,
-    UpperSet.coe_smul]
+  simp_rw [← smul_eq_mul, ← bUnion_smul_set, upper_closure_Union, upper_closure_smul,
+    UpperSet.coe_infi₂, UpperSet.coe_smul]
 #align mul_upper_closure mul_upper_closure
 
 @[to_additive]
 theorem mul_lower_closure : s * lowerClosure t = lowerClosure (s * t) := by
-  simp_rw [← smul_eq_mul, ← bUnion_smul_set, lower_closure_Union, lower_closure_smul, LowerSet.coe_supr₂,
-    LowerSet.coe_smul]
+  simp_rw [← smul_eq_mul, ← bUnion_smul_set, lower_closure_Union, lower_closure_smul,
+    LowerSet.coe_supr₂, LowerSet.coe_smul]
 #align mul_lower_closure mul_lower_closure
 
 @[to_additive]
@@ -286,12 +288,14 @@ theorem lower_closure_mul : ↑(lowerClosure s) * t = lowerClosure (s * t) := by
 
 @[simp, to_additive]
 theorem upper_closure_mul_distrib : upperClosure (s * t) = upperClosure s * upperClosure t :=
-  SetLike.coe_injective <| by rw [UpperSet.coe_mul, mul_upper_closure, upper_closure_mul, UpperSet.upper_closure]
+  SetLike.coe_injective <| by
+    rw [UpperSet.coe_mul, mul_upper_closure, upper_closure_mul, UpperSet.upper_closure]
 #align upper_closure_mul_distrib upper_closure_mul_distrib
 
 @[simp, to_additive]
 theorem lower_closure_mul_distrib : lowerClosure (s * t) = lowerClosure s * lowerClosure t :=
-  SetLike.coe_injective <| by rw [LowerSet.coe_mul, mul_lower_closure, lower_closure_mul, LowerSet.lower_closure]
+  SetLike.coe_injective <| by
+    rw [LowerSet.coe_mul, mul_lower_closure, lower_closure_mul, LowerSet.lower_closure]
 #align lower_closure_mul_distrib lower_closure_mul_distrib
 
 end OrderedCommGroup

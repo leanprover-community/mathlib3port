@@ -38,8 +38,8 @@ def divX (p : R[X]) : R[X] :=
 
 @[simp]
 theorem coeff_div_X : (divX p).coeff n = p.coeff (n + 1) := by
-  simp only [div_X, coeff_monomial, true_and_iff, finset_sum_coeff, not_lt, mem_Ico, zero_le, Finset.sum_ite_eq',
-    ite_eq_left_iff]
+  simp only [div_X, coeff_monomial, true_and_iff, finset_sum_coeff, not_lt, mem_Ico, zero_le,
+    Finset.sum_ite_eq', ite_eq_left_iff]
   intro h
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_le h)]
 #align polynomial.coeff_div_X Polynomial.coeff_div_X
@@ -70,7 +70,8 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
           rw [eq_C_of_degree_le_zero h, div_X_C, degree_zero, zero_mul, zero_add]
           exact lt_of_le_of_ne bot_le (Ne.symm (mt degree_eq_bot.1 <| by simp [h']))
         else by
-          have hXp0 : div_X p ≠ 0 := by simpa [div_X_eq_zero_iff, -not_le, degree_le_zero_iff] using h
+          have hXp0 : div_X p ≠ 0 := by
+            simpa [div_X_eq_zero_iff, -not_le, degree_le_zero_iff] using h
           have : leading_coeff (div_X p) * leading_coeff X ≠ 0 := by simpa
           have : degree (C (p.coeff 0)) < degree (div_X p * X) :=
             calc
@@ -93,14 +94,16 @@ theorem degree_div_X_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
 
 /- warning: polynomial.rec_on_horner -> Polynomial.recOnHorner is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u}} [_inst_1 : Semiring.{u} R] {M : (Polynomial.{u} R _inst_1) -> Sort.{u_1}} (p : Polynomial.{u} R _inst_1), (M (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (forall (p : Polynomial.{u} R _inst_1) (a : R), (Eq.{succ u} R (Polynomial.coeff.{u} R _inst_1 p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (Ne.{succ u} R a (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (M p) -> (M (HAdd.hAdd.{u u u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHAdd.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasAdd.{u} R _inst_1)) p (coeFn.{succ u succ u} (RingHom.{u u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (fun (_x : RingHom.{u u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) => R -> (Polynomial.{u} R _inst_1)) (RingHom.hasCoeToFun.{u u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (Polynomial.c.{u} R _inst_1) a)))) -> (forall (p : Polynomial.{u} R _inst_1), (Ne.{succ u} (Polynomial.{u} R _inst_1) p (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (M p) -> (M (HMul.hMul.{u u u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHMul.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasMul.{u} R _inst_1)) p (Polynomial.x.{u} R _inst_1)))) -> (M p)
+  forall {R : Type.{u}} [_inst_1 : Semiring.{u} R] {M : (Polynomial.{u} R _inst_1) -> Sort.{u_1}} (p : Polynomial.{u} R _inst_1), (M (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (forall (p : Polynomial.{u} R _inst_1) (a : R), (Eq.{succ u} R (Polynomial.coeff.{u} R _inst_1 p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (Ne.{succ u} R a (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (M p) -> (M (HAdd.hAdd.{u, u, u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHAdd.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasAdd.{u} R _inst_1)) p (coeFn.{succ u, succ u} (RingHom.{u, u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (fun (_x : RingHom.{u, u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) => R -> (Polynomial.{u} R _inst_1)) (RingHom.hasCoeToFun.{u, u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (Polynomial.c.{u} R _inst_1) a)))) -> (forall (p : Polynomial.{u} R _inst_1), (Ne.{succ u} (Polynomial.{u} R _inst_1) p (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (M p) -> (M (HMul.hMul.{u, u, u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHMul.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasMul.{u} R _inst_1)) p (Polynomial.x.{u} R _inst_1)))) -> (M p)
 but is expected to have type
-  forall {R : Type.{u}} [_inst_1 : Semiring.{u} R] {M : (Polynomial.{u} R _inst_1) -> Sort.{_aux_param_0}} (p : Polynomial.{u} R _inst_1), (M (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (forall (p : Polynomial.{u} R _inst_1) (a : R), (Eq.{succ u} R (Polynomial.coeff.{u} R _inst_1 p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (Ne.{succ u} R a (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (M p) -> (M (HAdd.hAdd.{u u u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHAdd.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasAdd.{u} R _inst_1)) p (coeFn.{succ u succ u} (RingHom.{u u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (fun (_x : RingHom.{u u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) => R -> (Polynomial.{u} R _inst_1)) (RingHom.hasCoeToFun.{u u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (Polynomial.c.{u} R _inst_1) a)))) -> (forall (p : Polynomial.{u} R _inst_1), (Ne.{succ u} (Polynomial.{u} R _inst_1) p (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (M p) -> (M (HMul.hMul.{u u u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHMul.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasMul.{u} R _inst_1)) p (Polynomial.x.{u} R _inst_1)))) -> (M p)
+  forall {R : Type.{u}} [_inst_1 : Semiring.{u} R] {M : (Polynomial.{u} R _inst_1) -> Sort.{_aux_param_0}} (p : Polynomial.{u} R _inst_1), (M (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (forall (p : Polynomial.{u} R _inst_1) (a : R), (Eq.{succ u} R (Polynomial.coeff.{u} R _inst_1 p (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (Ne.{succ u} R a (OfNat.ofNat.{u} R 0 (OfNat.mk.{u} R 0 (Zero.zero.{u} R (MulZeroClass.toHasZero.{u} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} R (Semiring.toNonAssocSemiring.{u} R _inst_1)))))))) -> (M p) -> (M (HAdd.hAdd.{u, u, u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHAdd.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasAdd.{u} R _inst_1)) p (coeFn.{succ u, succ u} (RingHom.{u, u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (fun (_x : RingHom.{u, u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) => R -> (Polynomial.{u} R _inst_1)) (RingHom.hasCoeToFun.{u, u} R (Polynomial.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} R _inst_1) (Semiring.toNonAssocSemiring.{u} (Polynomial.{u} R _inst_1) (Polynomial.semiring.{u} R _inst_1))) (Polynomial.c.{u} R _inst_1) a)))) -> (forall (p : Polynomial.{u} R _inst_1), (Ne.{succ u} (Polynomial.{u} R _inst_1) p (OfNat.ofNat.{u} (Polynomial.{u} R _inst_1) 0 (OfNat.mk.{u} (Polynomial.{u} R _inst_1) 0 (Zero.zero.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasZero.{u} R _inst_1))))) -> (M p) -> (M (HMul.hMul.{u, u, u} (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (Polynomial.{u} R _inst_1) (instHMul.{u} (Polynomial.{u} R _inst_1) (Polynomial.hasMul.{u} R _inst_1)) p (Polynomial.x.{u} R _inst_1)))) -> (M p)
 Case conversion may be inaccurate. Consider using '#align polynomial.rec_on_horner Polynomial.recOnHornerₓ'. -/
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
 @[elab_as_elim]
 noncomputable def recOnHorner {M : R[X] → Sort _} :
-    ∀ p : R[X], M 0 → (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * X)) → M p
+    ∀ p : R[X],
+      M 0 →
+        (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * X)) → M p
   | p => fun M0 MC MX =>
     if hp : p = 0 then Eq.recOn hp.symm M0
     else by
@@ -109,7 +112,8 @@ noncomputable def recOnHorner {M : R[X] → Sort _} :
         exact
           if hcp0 : coeff p 0 = 0 then by
             rw [hcp0, C_0, add_zero] <;>
-              exact MX _ (fun h : div_X p = 0 => by simpa [h, hcp0] using hp) (rec_on_horner _ M0 MC MX)
+              exact
+                MX _ (fun h : div_X p = 0 => by simpa [h, hcp0] using hp) (rec_on_horner _ M0 MC MX)
           else
             MC _ _ (coeff_mul_X_zero _) hcp0
               (if hpX0 : div_X p = 0 then show M (div_X p * X) by rw [hpX0, zero_mul] <;> exact M0
@@ -126,12 +130,14 @@ with appropriate restrictions on each term.
 See `nat_degree_ne_zero_induction_on` for a similar statement involving no explicit multiplication.
  -/
 @[elab_as_elim]
-theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree p) (hC : ∀ {a}, a ≠ 0 → P (c a * X))
-    (hX : ∀ {p}, 0 < degree p → P p → P (p * X)) (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p + c a)) : P p :=
+theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree p)
+    (hC : ∀ {a}, a ≠ 0 → P (c a * X)) (hX : ∀ {p}, 0 < degree p → P p → P (p * X))
+    (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p + c a)) : P p :=
   recOnHorner p (fun h => by rw [degree_zero] at h <;> exact absurd h (by decide))
     (fun p a _ _ ih h0 =>
       have : 0 < degree p :=
-        lt_of_not_ge fun h => not_lt_of_ge degree_C_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
+        lt_of_not_ge fun h =>
+          not_lt_of_ge degree_C_le <| by rwa [eq_C_of_degree_le_zero h, ← C_add] at h0
       hadd this (ih this))
     (fun p _ ih h0' =>
       if h0 : 0 < degree p then hX h0 (ih h0)

@@ -70,8 +70,9 @@ def recF {α : Typevec n} {β : Type _} (g : F (α.append1 β) → β) : q.p.W �
   q.p.wRec fun a f' f rec => g (abs ⟨a, splitFun f' rec⟩)
 #align mvqpf.recF Mvqpf.recF
 
-theorem recF_eq {α : Typevec n} {β : Type _} (g : F (α.append1 β) → β) (a : q.p.A) (f' : q.p.drop.B a ⟹ α)
-    (f : q.p.last.B a → q.p.W α) : recF g (q.p.wMk a f' f) = g (abs ⟨a, splitFun f' (recF g ∘ f)⟩) := by
+theorem recF_eq {α : Typevec n} {β : Type _} (g : F (α.append1 β) → β) (a : q.p.A)
+    (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
+    recF g (q.p.wMk a f' f) = g (abs ⟨a, splitFun f' (recF g ∘ f)⟩) := by
   rw [recF, Mvpfunctor.W_rec_eq] <;> rfl
 #align mvqpf.recF_eq Mvqpf.recF_eq
 
@@ -89,8 +90,8 @@ inductive WequivCat {α : Typevec n} : q.p.W α → q.p.W α → Prop
   ind (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f₀ f₁ : q.p.last.B a → q.p.W α) :
     (∀ x, Wequiv (f₀ x) (f₁ x)) → Wequiv (q.p.wMk a f' f₀) (q.p.wMk a f' f₁)
   |
-  abs (a₀ : q.p.A) (f'₀ : q.p.drop.B a₀ ⟹ α) (f₀ : q.p.last.B a₀ → q.p.W α) (a₁ : q.p.A) (f'₁ : q.p.drop.B a₁ ⟹ α)
-    (f₁ : q.p.last.B a₁ → q.p.W α) :
+  abs (a₀ : q.p.A) (f'₀ : q.p.drop.B a₀ ⟹ α) (f₀ : q.p.last.B a₀ → q.p.W α) (a₁ : q.p.A)
+    (f'₁ : q.p.drop.B a₁ ⟹ α) (f₁ : q.p.last.B a₁ → q.p.W α) :
     abs ⟨a₀, q.p.appendContents f'₀ f₀⟩ = abs ⟨a₁, q.p.appendContents f'₁ f₁⟩ →
       Wequiv (q.p.wMk a₀ f'₀ f₀) (q.p.wMk a₁ f'₁ f₁)
   | trans (u v w : q.p.W α) : Wequiv u v → Wequiv v w → Wequiv u w
@@ -102,15 +103,14 @@ theorem recF_eq_of_Wequiv (α : Typevec n) {β : Type _} (u : F (α.append1 β) 
   intro a₀ f'₀ f₀
   apply q.P.W_cases _ y
   intro a₁ f'₁ f₁
-  intro h
-  induction h
+  intro h; induction h
   case ind a f' f₀ f₁ h ih => simp only [recF_eq, Function.comp, ih]
   case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => simp only [recF_eq', abs_map, Mvpfunctor.W_dest'_W_mk, h]
   case trans x y z e₁ e₂ ih₁ ih₂ => exact Eq.trans ih₁ ih₂
 #align mvqpf.recF_eq_of_Wequiv Mvqpf.recF_eq_of_Wequiv
 
-theorem WequivCat.abs' {α : Typevec n} (x y : q.p.W α) (h : abs (q.p.wDest' x) = abs (q.p.wDest' y)) : WequivCat x y :=
-  by
+theorem WequivCat.abs' {α : Typevec n} (x y : q.p.W α)
+    (h : abs (q.p.wDest' x) = abs (q.p.wDest' y)) : WequivCat x y := by
   revert h
   apply q.P.W_cases _ x
   intro a₀ f'₀ f₀
@@ -124,8 +124,7 @@ theorem WequivCat.refl {α : Typevec n} (x : q.p.W α) : WequivCat x x := by
 #align mvqpf.Wequiv.refl Mvqpf.WequivCat.refl
 
 theorem WequivCat.symm {α : Typevec n} (x y : q.p.W α) : WequivCat x y → WequivCat y x := by
-  intro h
-  induction h
+  intro h; induction h
   case ind a f' f₀ f₁ h ih => exact Wequiv.ind _ _ _ _ ih
   case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => exact Wequiv.abs _ _ _ _ _ _ h.symm
   case trans x y z e₁ e₂ ih₁ ih₂ => exact Mvqpf.WequivCat.trans _ _ _ ih₂ ih₁
@@ -136,41 +135,34 @@ def wrepr {α : Typevec n} : q.p.W α → q.p.W α :=
   recF (q.p.wMk' ∘ repr)
 #align mvqpf.Wrepr Mvqpf.wrepr
 
-theorem Wrepr_W_mk {α : Typevec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
-    wrepr (q.p.wMk a f' f) = q.p.wMk' (repr (abs (appendFun id wrepr <$$> ⟨a, q.p.appendContents f' f⟩))) := by
-  rw [Wrepr, recF_eq', q.P.W_dest'_W_mk] <;> rfl
+theorem Wrepr_W_mk {α : Typevec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α)
+    (f : q.p.last.B a → q.p.W α) :
+    wrepr (q.p.wMk a f' f) =
+      q.p.wMk' (repr (abs (appendFun id wrepr <$$> ⟨a, q.p.appendContents f' f⟩))) :=
+  by rw [Wrepr, recF_eq', q.P.W_dest'_W_mk] <;> rfl
 #align mvqpf.Wrepr_W_mk Mvqpf.Wrepr_W_mk
 
 theorem Wrepr_equiv {α : Typevec n} (x : q.p.W α) : WequivCat (wrepr x) x := by
-  apply q.P.W_ind _ x
-  intro a f' f ih
+  apply q.P.W_ind _ x; intro a f' f ih
   apply Wequiv.trans _ (q.P.W_mk' (append_fun id Wrepr <$$> ⟨a, q.P.append_contents f' f⟩))
   · apply Wequiv.abs'
     rw [Wrepr_W_mk, q.P.W_dest'_W_mk', q.P.W_dest'_W_mk', abs_repr]
     
   rw [q.P.map_eq, Mvpfunctor.wMk', append_fun_comp_split_fun, id_comp]
-  apply Wequiv.ind
-  exact ih
+  apply Wequiv.ind; exact ih
 #align mvqpf.Wrepr_equiv Mvqpf.Wrepr_equiv
 
-theorem Wequiv_map {α β : Typevec n} (g : α ⟹ β) (x y : q.p.W α) : WequivCat x y → WequivCat (g <$$> x) (g <$$> y) := by
-  intro h
-  induction h
-  case ind a f' f₀ f₁ h ih =>
-  rw [q.P.W_map_W_mk, q.P.W_map_W_mk]
-  apply Wequiv.ind
-  apply ih
+theorem Wequiv_map {α β : Typevec n} (g : α ⟹ β) (x y : q.p.W α) :
+    WequivCat x y → WequivCat (g <$$> x) (g <$$> y) := by
+  intro h; induction h
+  case ind a f' f₀ f₁ h ih => rw [q.P.W_map_W_mk, q.P.W_map_W_mk]; apply Wequiv.ind; apply ih
   case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h =>
-  rw [q.P.W_map_W_mk, q.P.W_map_W_mk]
-  apply Wequiv.abs
+  rw [q.P.W_map_W_mk, q.P.W_map_W_mk]; apply Wequiv.abs
   show
     abs (q.P.obj_append1 a₀ (g ⊚ f'₀) fun x => q.P.W_map g (f₀ x)) =
       abs (q.P.obj_append1 a₁ (g ⊚ f'₁) fun x => q.P.W_map g (f₁ x))
   rw [← q.P.map_obj_append1, ← q.P.map_obj_append1, abs_map, abs_map, h]
-  case trans x y z e₁ e₂ ih₁ ih₂ =>
-  apply Mvqpf.WequivCat.trans
-  apply ih₁
-  apply ih₂
+  case trans x y z e₁ e₂ ih₁ ih₂ => apply Mvqpf.WequivCat.trans; apply ih₁; apply ih₂
 #align mvqpf.Wequiv_map Mvqpf.Wequiv_map
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation.
@@ -245,14 +237,12 @@ theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
 theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
     Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦q.p.wMk a f' f⟧ := by
   have : Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.p.wMk a f' f)⟧ := by
-    apply Quot.sound
-    apply Wequiv.abs'
+    apply Quot.sound; apply Wequiv.abs'
     rw [Mvpfunctor.W_dest'_W_mk', abs_map, abs_repr, ← abs_map, Mvpfunctor.map_eq]
     conv =>
     rhs
     rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]
-    congr 2
-    rw [Mvpfunctor.appendContents, Mvpfunctor.appendContents]
+    congr 2; rw [Mvpfunctor.appendContents, Mvpfunctor.appendContents]
     rw [append_fun, append_fun, ← split_fun_comp, ← split_fun_comp]
     rfl
   rw [this]
@@ -262,7 +252,8 @@ theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a →
 
 theorem Fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
     (h :
-      ∀ x : F (append1 α (Fix F α)), appendFun id g₁ <$$> x = appendFun id g₂ <$$> x → g₁ (Fix.mk x) = g₂ (Fix.mk x)) :
+      ∀ x : F (append1 α (Fix F α)),
+        appendFun id g₁ <$$> x = appendFun id g₂ <$$> x → g₁ (Fix.mk x) = g₂ (Fix.mk x)) :
     ∀ x, g₁ x = g₂ x := by
   apply Quot.ind
   intro x
@@ -291,11 +282,9 @@ theorem Fix.rec_unique {β : Type _} (g : F (append1 α β) → β) (h : Fix F �
 theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
   change (fix.mk ∘ fix.dest) x = x
   apply fix.ind_rec
-  intro x
-  dsimp
+  intro x; dsimp
   rw [fix.dest, fix.rec_eq, ← comp_map, ← append_fun_comp, id_comp]
-  intro h
-  rw [h]
+  intro h; rw [h]
   show fix.mk (append_fun id id <$$> x) = fix.mk x
   rw [append_fun_id_id, Mvfunctor.id_map]
 #align mvqpf.fix.mk_dest Mvqpf.Fix.mk_dest
@@ -317,8 +306,7 @@ theorem Fix.ind {α : Typevec n} (p : Fix F α → Prop)
     (h : ∀ x : F (α.append1 (Fix F α)), Liftp (PredLast α p) x → p (Fix.mk x)) : ∀ x, p x := by
   apply Quot.ind
   intro x
-  apply q.P.W_ind _ x
-  intro a f' f ih
+  apply q.P.W_ind _ x; intro a f' f ih
   change p ⟦q.P.W_mk a f' f⟧
   rw [← fix.ind_aux a f' f]
   apply h
@@ -343,20 +331,18 @@ instance mvqpfFix : Mvqpf (Fix F) where
     apply Quot.sound
     apply Wrepr_equiv
   abs_map := by
-    intro α β g x
-    conv =>
+    intro α β g x; conv =>
     rhs
     dsimp [Mvfunctor.map]
-    rw [fix.map]
-    apply Quot.sound
+    rw [fix.map]; apply Quot.sound
     apply Wequiv.refl
 #align mvqpf.mvqpf_fix Mvqpf.mvqpfFix
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Dependent recursor for `fix F` -/
-def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x))
-    (x : Fix F α) : β x :=
+def Fix.drec {β : Fix F α → Type u}
+    (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x)) (x : Fix F α) : β x :=
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
     symm

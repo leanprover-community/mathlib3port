@@ -59,7 +59,8 @@ This differs from `has_quotient.quotient'` in that the `A` argument is explicit,
 to make Lean show the notation in the goal state.
 -/
 @[reducible, nolint has_nonempty_instance]
-def HasQuotient.quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B] (b : B) : Type max u v :=
+def HasQuotient.quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B] (b : B) :
+    Type max u v :=
   HasQuotient.Quotient' b
 #align has_quotient.quotient HasQuotient.quotient
 -/

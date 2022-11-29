@@ -26,18 +26,18 @@ group_theory
 -- The next four lemmas are not general purpose lemmas, they are intended for use only by
 -- the `group` tactic.
 @[to_additive]
-theorem Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : ℤ) : a * b ^ n * b ^ m = a * b ^ (n + m) := by
-  rw [mul_assoc, ← zpow_add]
+theorem Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : ℤ) :
+    a * b ^ n * b ^ m = a * b ^ (n + m) := by rw [mul_assoc, ← zpow_add]
 #align tactic.group.zpow_trick Tactic.Group.zpow_trick
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) : a * b * b ^ m = a * b ^ (m + 1) := by
-  rw [mul_assoc, mul_self_zpow]
+theorem Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) :
+    a * b * b ^ m = a * b ^ (m + 1) := by rw [mul_assoc, mul_self_zpow]
 #align tactic.group.zpow_trick_one Tactic.Group.zpow_trick_one
 
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) : a * b ^ n * b = a * b ^ (n + 1) := by
-  rw [mul_assoc, mul_zpow_self]
+theorem Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) :
+    a * b ^ n * b = a * b ^ (n + 1) := by rw [mul_assoc, mul_zpow_self]
 #align tactic.group.zpow_trick_one' Tactic.Group.zpow_trick_one'
 
 @[to_additive]
@@ -53,14 +53,17 @@ open Tactic.SimpArgType Interactive Tactic.Group
 /-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
 unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
   simp_core { failIfUnchanged := false } skip true
-      [expr ``(commutatorElement_def), expr ``(mul_one), expr ``(one_mul), expr ``(one_pow), expr ``(one_zpow),
-        expr ``(sub_self), expr ``(add_neg_self), expr ``(neg_add_self), expr ``(neg_neg), expr ``(tsub_self),
-        expr ``(Int.ofNat_add), expr ``(Int.ofNat_mul), expr ``(Int.ofNat_zero), expr ``(Int.ofNat_one),
-        expr ``(Int.coe_nat_bit0), expr ``(Int.coe_nat_bit1), expr ``(Int.mul_neg_eq_neg_mul_symm),
-        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_coe_nat), symm_expr ``(zpow_neg_one),
-        symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one), symm_expr ``(zpow_one_add), symm_expr ``(zpow_add),
-        expr ``(mul_zpow_neg_one), expr ``(zpow_zero), expr ``(mul_zpow), symm_expr ``(mul_assoc), expr ``(zpow_trick),
-        expr ``(zpow_trick_one), expr ``(zpow_trick_one'), expr ``(zpow_trick_sub), expr ``(Tactic.Ring.horner)]
+      [expr ``(commutatorElement_def), expr ``(mul_one), expr ``(one_mul), expr ``(one_pow),
+        expr ``(one_zpow), expr ``(sub_self), expr ``(add_neg_self), expr ``(neg_add_self),
+        expr ``(neg_neg), expr ``(tsub_self), expr ``(Int.ofNat_add), expr ``(Int.ofNat_mul),
+        expr ``(Int.ofNat_zero), expr ``(Int.ofNat_one), expr ``(Int.ofNat_bit0),
+        expr ``(Int.ofNat_bit1), expr ``(Int.mul_neg_eq_neg_mul_symm),
+        expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_coe_nat),
+        symm_expr ``(zpow_neg_one), symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one),
+        symm_expr ``(zpow_one_add), symm_expr ``(zpow_add), expr ``(mul_zpow_neg_one),
+        expr ``(zpow_zero), expr ``(mul_zpow), symm_expr ``(mul_assoc), expr ``(zpow_trick),
+        expr ``(zpow_trick_one), expr ``(zpow_trick_one'), expr ``(zpow_trick_sub),
+        expr ``(Tactic.Ring.horner)]
       [] locat >>
     skip
 #align tactic.aux_group₁ tactic.aux_group₁

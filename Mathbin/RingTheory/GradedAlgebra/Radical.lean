@@ -49,8 +49,10 @@ variable [SetLike σ A] [AddSubmonoidClass σ A] {𝒜 : ι → σ} [GradedRing 
 include A
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI : I.IsHomogeneous 𝒜) (I_ne_top : I ≠ ⊤)
-    (homogeneous_mem_or_mem : ∀ {x y : A}, IsHomogeneous 𝒜 x → IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I) :
+theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A}
+    (hI : I.IsHomogeneous 𝒜) (I_ne_top : I ≠ ⊤)
+    (homogeneous_mem_or_mem :
+      ∀ {x y : A}, IsHomogeneous 𝒜 x → IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I) :
     Ideal.IsPrime I :=
   ⟨I_ne_top, by
     intro x y hxy
@@ -73,7 +75,8 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       -/
     set set₁ := (decompose 𝒜 x).support.filter fun i => proj 𝒜 i x ∉ I with set₁_eq
     set set₂ := (decompose 𝒜 y).support.filter fun i => proj 𝒜 i y ∉ I with set₂_eq
-    have nonempty : ∀ x : A, x ∉ I → ((decompose 𝒜 x).support.filter fun i => proj 𝒜 i x ∉ I).Nonempty := by
+    have nonempty :
+      ∀ x : A, x ∉ I → ((decompose 𝒜 x).support.filter fun i => proj 𝒜 i x ∉ I).Nonempty := by
       intro x hx
       rw [filter_nonempty_iff]
       contrapose! hx
@@ -87,7 +90,9 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
     replace hxy : proj 𝒜 (max₁ + max₂) (x * y) ∈ I := hI _ hxy
     have mem_I : proj 𝒜 max₁ x * proj 𝒜 max₂ y ∈ I := by
       set antidiag :=
-        ((decompose 𝒜 x).support ×ˢ (decompose 𝒜 y).support).filter fun z : ι × ι => z.1 + z.2 = max₁ + max₂ with ha
+        ((decompose 𝒜 x).support ×ˢ (decompose 𝒜 y).support).filter fun z : ι × ι =>
+          z.1 + z.2 = max₁ + max₂ with
+        ha
       have mem_antidiag : (max₁, max₂) ∈ antidiag := by
         simp only [add_sum_erase, mem_filter, mem_product]
         exact ⟨⟨mem_of_mem_filter _ mem_max₁, mem_of_mem_filter _ mem_max₂⟩, rfl⟩
@@ -95,7 +100,9 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
         calc
           proj 𝒜 (max₁ + max₂) (x * y) = ∑ ij in antidiag, proj 𝒜 ij.1 x * proj 𝒜 ij.2 y := by
             simp_rw [ha, proj_apply, DirectSum.decompose_mul, DirectSum.coe_mul_apply 𝒜]
-          _ = proj 𝒜 max₁ x * proj 𝒜 max₂ y + ∑ ij in antidiag.erase (max₁, max₂), proj 𝒜 ij.1 x * proj 𝒜 ij.2 y :=
+          _ =
+              proj 𝒜 max₁ x * proj 𝒜 max₂ y +
+                ∑ ij in antidiag.erase (max₁, max₂), proj 𝒜 ij.1 x * proj 𝒜 ij.2 y :=
             (add_sum_erase _ _ mem_antidiag).symm
           
       rw [eq_sub_of_add_eq eq_add_sum.symm]
@@ -116,13 +123,15 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
           
       cases max_lt
       · -- in this case `max₁ < i`, then `xᵢ ∈ I`; for otherwise `i ∈ set₁` then `i ≤ max₁`.
-        have not_mem : i ∉ set₁ := fun h => lt_irrefl _ ((max'_lt_iff set₁ (Nonempty x rid₁)).mp max_lt i h)
+        have not_mem : i ∉ set₁ := fun h =>
+          lt_irrefl _ ((max'_lt_iff set₁ (Nonempty x rid₁)).mp max_lt i h)
         rw [set₁_eq] at not_mem
         simp only [not_and, not_not, Ne.def, mem_filter] at not_mem
         exact Ideal.mul_mem_right _ I (not_mem H₂)
         
       · -- in this case  `max₂ < j`, then `yⱼ ∈ I`; for otherwise `j ∈ set₂`, then `j ≤ max₂`.
-        have not_mem : j ∉ set₂ := fun h => lt_irrefl _ ((max'_lt_iff set₂ (Nonempty y rid₂)).mp max_lt j h)
+        have not_mem : j ∉ set₂ := fun h =>
+          lt_irrefl _ ((max'_lt_iff set₂ (Nonempty y rid₂)).mp max_lt j h)
         rw [set₂_eq] at not_mem
         simp only [not_and, not_not, Ne.def, mem_filter] at not_mem
         exact Ideal.mul_mem_left I _ (not_mem H₃)
@@ -138,16 +147,21 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       · apply neither_mem.2 h
         
     exact not_mem_I mem_I⟩
-#align ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem
+#align
+  ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem
 
 theorem Ideal.IsHomogeneous.is_prime_iff {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
     I.IsPrime ↔
-      I ≠ ⊤ ∧ ∀ {x y : A}, SetLike.IsHomogeneous 𝒜 x → SetLike.IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I :=
+      I ≠ ⊤ ∧
+        ∀ {x y : A},
+          SetLike.IsHomogeneous 𝒜 x → SetLike.IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I :=
   ⟨fun HI => ⟨ne_of_apply_ne _ HI.ne_top, fun x y hx hy hxy => Ideal.IsPrime.mem_or_mem HI hxy⟩,
-    fun ⟨I_ne_top, homogeneous_mem_or_mem⟩ => h.is_prime_of_homogeneous_mem_or_mem I_ne_top @homogeneous_mem_or_mem⟩
+    fun ⟨I_ne_top, homogeneous_mem_or_mem⟩ =>
+    h.is_prime_of_homogeneous_mem_or_mem I_ne_top @homogeneous_mem_or_mem⟩
 #align ideal.is_homogeneous.is_prime_iff Ideal.IsHomogeneous.is_prime_iff
 
-theorem Ideal.IsPrime.homogeneous_core {I : Ideal A} (h : I.IsPrime) : (I.homogeneousCore 𝒜).toIdeal.IsPrime := by
+theorem Ideal.IsPrime.homogeneous_core {I : Ideal A} (h : I.IsPrime) :
+    (I.homogeneousCore 𝒜).toIdeal.IsPrime := by
   apply (Ideal.homogeneousCore 𝒜 I).IsHomogeneous.is_prime_of_homogeneous_mem_or_mem
   · exact ne_top_of_le_ne_top h.ne_top (Ideal.to_ideal_homogeneous_core_le 𝒜 I)
     
@@ -174,7 +188,8 @@ theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.IsHomogeneous 𝒜)
     
 #align ideal.is_homogeneous.radical_eq Ideal.IsHomogeneous.radical_eq
 
-theorem Ideal.IsHomogeneous.radical {I : Ideal A} (h : I.IsHomogeneous 𝒜) : I.radical.IsHomogeneous 𝒜 := by
+theorem Ideal.IsHomogeneous.radical {I : Ideal A} (h : I.IsHomogeneous 𝒜) :
+    I.radical.IsHomogeneous 𝒜 := by
   rw [h.radical_eq]
   exact Ideal.IsHomogeneous.Inf fun _ => And.left
 #align ideal.is_homogeneous.radical Ideal.IsHomogeneous.radical
@@ -185,7 +200,8 @@ def HomogeneousIdeal.radical (I : HomogeneousIdeal 𝒜) : HomogeneousIdeal 𝒜
 #align homogeneous_ideal.radical HomogeneousIdeal.radical
 
 @[simp]
-theorem HomogeneousIdeal.coe_radical (I : HomogeneousIdeal 𝒜) : I.radical.toIdeal = I.toIdeal.radical :=
+theorem HomogeneousIdeal.coe_radical (I : HomogeneousIdeal 𝒜) :
+    I.radical.toIdeal = I.toIdeal.radical :=
   rfl
 #align homogeneous_ideal.coe_radical HomogeneousIdeal.coe_radical
 

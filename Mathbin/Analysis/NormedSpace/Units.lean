@@ -118,7 +118,8 @@ theorem inverse_one_sub (t : R) (h : ‖t‖ < 1) : inverse (1 - t) = ↑(Units.
 #align normed_ring.inverse_one_sub NormedRing.inverse_one_sub
 
 /-- The formula `inverse (x + t) = inverse (1 + x⁻¹ * t) * x⁻¹` holds for `t` sufficiently small. -/
-theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inverse (1 + ↑x⁻¹ * t) * ↑x⁻¹ := by
+theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inverse (1 + ↑x⁻¹ * t) * ↑x⁻¹ :=
+  by
   nontriviality R
   rw [eventually_iff, Metric.mem_nhds_iff]
   have hinv : 0 < ‖(↑x⁻¹ : R)‖⁻¹ := by cancel_denoms
@@ -163,7 +164,9 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
 `inverse (x + t) = (∑ i in range n, (- x⁻¹ * t) ^ i) * x⁻¹ + (- x⁻¹ * t) ^ n * inverse (x + t)`
 holds for `t` sufficiently small. -/
 theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
-    ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹ + (-↑x⁻¹ * t) ^ n * inverse (x + t) :=
+    ∀ᶠ t in 𝓝 0,
+      inverse ((x : R) + t) =
+        (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹ + (-↑x⁻¹ * t) ^ n * inverse (x + t) :=
   by
   refine' (inverse_add x).mp _
   have hzero : tendsto (fun t : R => -↑x⁻¹ * t) (𝓝 0) (𝓝 0) := by
@@ -218,7 +221,9 @@ theorem inverse_add_norm (x : Rˣ) : (fun t : R => inverse (↑x + t)) =O[𝓝 0
 `λ t, inverse (x + t) - (∑ i in range n, (- x⁻¹ * t) ^ i) * x⁻¹`
 is `O(t ^ n)` as `t → 0`. -/
 theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
-    (fun t : R => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹) =O[𝓝 (0 : R)] fun t => ‖t‖ ^ n := by
+    (fun t : R => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹) =O[𝓝 (0 : R)]
+      fun t => ‖t‖ ^ n :=
+  by
   by_cases h : n = 0
   · simpa [h] using inverse_add_norm x
     
@@ -227,8 +232,8 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
   cases' is_O_iff.mp (inverse_add_norm x) with C hC
   use C * ‖(1 : ℝ)‖ * ‖(↑x⁻¹ : R)‖ ^ n
   have h :
-    eventually_eq (𝓝 (0 : R)) (fun t => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹) fun t =>
-      (-↑x⁻¹ * t) ^ n * inverse (x + t) :=
+    eventually_eq (𝓝 (0 : R)) (fun t => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹)
+      fun t => (-↑x⁻¹ * t) ^ n * inverse (x + t) :=
     by
     refine' (inverse_add_nth_order x n).mp (eventually_of_forall _)
     intro t ht
@@ -247,12 +252,14 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
       _ = ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := mul_pow _ _ n
       
     exact pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_le (↑x⁻¹) t) n
-  have h'' : 0 ≤ ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := by refine' mul_nonneg _ _ <;> exact pow_nonneg (norm_nonneg _) n
+  have h'' : 0 ≤ ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := by
+    refine' mul_nonneg _ _ <;> exact pow_nonneg (norm_nonneg _) n
   nlinarith [norm_nonneg (inverse (↑x + t))]
 #align normed_ring.inverse_add_norm_diff_nth_order NormedRing.inverse_add_norm_diff_nth_order
 
 /-- The function `λ t, inverse (x + t) - x⁻¹` is `O(t)` as `t → 0`. -/
-theorem inverse_add_norm_diff_first_order (x : Rˣ) : (fun t : R => inverse (↑x + t) - ↑x⁻¹) =O[𝓝 0] fun t => ‖t‖ := by
+theorem inverse_add_norm_diff_first_order (x : Rˣ) :
+    (fun t : R => inverse (↑x + t) - ↑x⁻¹) =O[𝓝 0] fun t => ‖t‖ := by
   simpa using inverse_add_norm_diff_nth_order x 1
 #align normed_ring.inverse_add_norm_diff_first_order NormedRing.inverse_add_norm_diff_first_order
 
@@ -263,8 +270,9 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
     (fun t : R => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) =O[𝓝 0] fun t => ‖t‖ ^ 2 := by
   convert inverse_add_norm_diff_nth_order x 2
   ext t
-  simp only [range_succ, range_one, sum_insert, mem_singleton, sum_singleton, not_false_iff, one_ne_zero, pow_zero,
-    add_mul, pow_one, one_mul, neg_mul, sub_add_eq_sub_sub_swap, sub_neg_eq_add]
+  simp only [range_succ, range_one, sum_insert, mem_singleton, sum_singleton, not_false_iff,
+    one_ne_zero, pow_zero, add_mul, pow_one, one_mul, neg_mul, sub_add_eq_sub_sub_swap,
+    sub_neg_eq_add]
 #align normed_ring.inverse_add_norm_diff_second_order NormedRing.inverse_add_norm_diff_second_order
 
 /-- The function `inverse` is continuous at each unit of `R`. -/
@@ -293,7 +301,8 @@ theorem is_open_map_coe : IsOpenMap (coe : Rˣ → R) := by
   intro x s
   rw [mem_map, mem_nhds_induced]
   rintro ⟨t, ht, hts⟩
-  obtain ⟨u, hu, v, hv, huvt⟩ : ∃ u : Set R, u ∈ 𝓝 ↑x ∧ ∃ v : Set Rᵐᵒᵖ, v ∈ 𝓝 (op ↑x⁻¹) ∧ u ×ˢ v ⊆ t := by
+  obtain ⟨u, hu, v, hv, huvt⟩ :
+    ∃ u : Set R, u ∈ 𝓝 ↑x ∧ ∃ v : Set Rᵐᵒᵖ, v ∈ 𝓝 (op ↑x⁻¹) ∧ u ×ˢ v ⊆ t := by
     simpa [embed_product, mem_nhds_prod_iff] using ht
   have : u ∩ op ∘ Ring.inverse ⁻¹' v ∩ Set.range (coe : Rˣ → R) ∈ 𝓝 ↑x := by
     refine' inter_mem (inter_mem hu _) (Units.nhds x)

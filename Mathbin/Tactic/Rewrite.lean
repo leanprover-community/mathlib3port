@@ -72,7 +72,8 @@ def IdTag.assocProof :=
   ()
 #align tactic.id_tag.assoc_proof Tactic.IdTag.assocProof
 
-unsafe def mk_eq_proof (fn : expr) (e₀ e₁ : List expr) (p : expr) : tactic (expr × expr × expr) := do
+unsafe def mk_eq_proof (fn : expr) (e₀ e₁ : List expr) (p : expr) : tactic (expr × expr × expr) :=
+  do
   let (l, r) ← infer_type p >>= match_eq
   if e₀ ∧ e₁ then pure (l, r, p)
     else do
@@ -154,11 +155,13 @@ unsafe def enum_assoc_subexpr (fn e : expr) : tactic (List expr) :=
 unsafe def mk_assoc_instance (fn : expr) : tactic expr := do
   let t ← mk_mapp `` IsAssociative [none, fn]
   let inst ←
-    Prod.snd <$> solve_aux t assumption <|> mk_instance t >>= assertv `_inst t <|> fail f! "{fn} is not associative"
+    Prod.snd <$> solve_aux t assumption <|>
+        mk_instance t >>= assertv `_inst t <|> fail f! "{fn} is not associative"
   mk_mapp `` IsAssociative.assoc [none, fn, inst]
 #align tactic.mk_assoc_instance tactic.mk_assoc_instance
 
-unsafe def assoc_rewrite (h e : expr) (opt_assoc : Option expr := none) : tactic (expr × expr × List expr) := do
+unsafe def assoc_rewrite (h e : expr) (opt_assoc : Option expr := none) :
+    tactic (expr × expr × List expr) := do
   let (t, vs) ← infer_type h >>= fill_args
   let (lhs, rhs) ← match_eq t
   let fn := lhs.app_fn.app_fn
@@ -257,8 +260,8 @@ unsafe def assoc_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
 
 add_tactic_doc
   { Name := "assoc_rewrite", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.assoc_rewrite, `tactic.interactive.assoc_rw], tags := ["rewriting"],
-    inheritDescriptionFrom := `tactic.interactive.assoc_rewrite }
+    declNames := [`tactic.interactive.assoc_rewrite, `tactic.interactive.assoc_rw],
+    tags := ["rewriting"], inheritDescriptionFrom := `tactic.interactive.assoc_rewrite }
 
 end Interactive
 

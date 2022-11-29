@@ -79,7 +79,8 @@ class CreatesLimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) where
 /-- `F` creates limits if it creates limits of shape `J` for any `J`. -/
 @[nolint check_univs]
 class CreatesLimitsOfSize (F : C ⥤ D) where
-  CreatesLimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesLimitsOfShape J F := by infer_instance
+  CreatesLimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesLimitsOfShape J F := by
+    infer_instance
 #align category_theory.creates_limits_of_size CategoryTheory.CreatesLimitsOfSize
 
 /-- `F` creates small limits if it creates limits of shape `J` for any small `J`. -/
@@ -110,7 +111,8 @@ class CreatesColimitsOfShape (J : Type w) [Category.{w'} J] (F : C ⥤ D) where
 /-- `F` creates colimits if it creates colimits of shape `J` for any small `J`. -/
 @[nolint check_univs]
 class CreatesColimitsOfSize (F : C ⥤ D) where
-  CreatesColimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesColimitsOfShape J F := by infer_instance
+  CreatesColimitsOfShape : ∀ {J : Type w} [Category.{w'} J], CreatesColimitsOfShape J F := by
+    infer_instance
 #align category_theory.creates_colimits_of_size CategoryTheory.CreatesColimitsOfSize
 
 /-- `F` creates small colimits if it creates colimits of shape `J` for any small `J`. -/
@@ -124,32 +126,34 @@ attribute [instance]
 -- see Note [lower instance priority]
 -- Interface to the `creates_limit` class.
 /-- `lift_limit t` is the cone for `K` given by lifting the limit `t` for `K ⋙ F`. -/
-def liftLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)} (t : IsLimit c) : Cone K :=
+def liftLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)} (t : IsLimit c) :
+    Cone K :=
   (CreatesLimit.lifts c t).liftedCone
 #align category_theory.lift_limit CategoryTheory.liftLimit
 
 /-- The lifted cone has an image isomorphic to the original cone. -/
-def liftedLimitMapsToOriginal {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)} (t : IsLimit c) :
-    F.mapCone (liftLimit t) ≅ c :=
+def liftedLimitMapsToOriginal {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)}
+    (t : IsLimit c) : F.mapCone (liftLimit t) ≅ c :=
   (CreatesLimit.lifts c t).validLift
 #align category_theory.lifted_limit_maps_to_original CategoryTheory.liftedLimitMapsToOriginal
 
 /-- The lifted cone is a limit. -/
-def liftedLimitIsLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)} (t : IsLimit c) :
-    IsLimit (liftLimit t) :=
+def liftedLimitIsLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)}
+    (t : IsLimit c) : IsLimit (liftLimit t) :=
   ReflectsLimit.reflects (IsLimit.ofIsoLimit t (liftedLimitMapsToOriginal t).symm)
 #align category_theory.lifted_limit_is_limit CategoryTheory.liftedLimitIsLimit
 
 /-- If `F` creates the limit of `K` and `K ⋙ F` has a limit, then `K` has a limit. -/
-theorem has_limit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasLimit (K ⋙ F)] [CreatesLimit K F] : HasLimit K :=
+theorem has_limit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasLimit (K ⋙ F)] [CreatesLimit K F] :
+    HasLimit K :=
   HasLimit.mk { Cone := liftLimit (limit.isLimit (K ⋙ F)), IsLimit := liftedLimitIsLimit _ }
 #align category_theory.has_limit_of_created CategoryTheory.has_limit_of_created
 
 /-- If `F` creates limits of shape `J`, and `D` has limits of shape `J`, then
 `C` has limits of shape `J`.
 -/
-theorem has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (F : C ⥤ D) [HasLimitsOfShape J D]
-    [CreatesLimitsOfShape J F] : HasLimitsOfShape J C :=
+theorem has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (F : C ⥤ D)
+    [HasLimitsOfShape J D] [CreatesLimitsOfShape J F] : HasLimitsOfShape J C :=
   ⟨fun G => has_limit_of_created G F⟩
 #align
   category_theory.has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape CategoryTheory.has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape
@@ -158,36 +162,40 @@ theorem has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (F : 
 theorem has_limits_of_has_limits_creates_limits (F : C ⥤ D) [HasLimitsOfSize.{w, w'} D]
     [CreatesLimitsOfSize.{w, w'} F] : HasLimitsOfSize.{w, w'} C :=
   ⟨fun J I => has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape F⟩
-#align category_theory.has_limits_of_has_limits_creates_limits CategoryTheory.has_limits_of_has_limits_creates_limits
+#align
+  category_theory.has_limits_of_has_limits_creates_limits CategoryTheory.has_limits_of_has_limits_creates_limits
 
 -- Interface to the `creates_colimit` class.
 /-- `lift_colimit t` is the cocone for `K` given by lifting the colimit `t` for `K ⋙ F`. -/
-def liftColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)} (t : IsColimit c) : Cocone K :=
+def liftColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)}
+    (t : IsColimit c) : Cocone K :=
   (CreatesColimit.lifts c t).liftedCocone
 #align category_theory.lift_colimit CategoryTheory.liftColimit
 
 /-- The lifted cocone has an image isomorphic to the original cocone. -/
-def liftedColimitMapsToOriginal {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)} (t : IsColimit c) :
-    F.mapCocone (liftColimit t) ≅ c :=
+def liftedColimitMapsToOriginal {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)}
+    (t : IsColimit c) : F.mapCocone (liftColimit t) ≅ c :=
   (CreatesColimit.lifts c t).validLift
 #align category_theory.lifted_colimit_maps_to_original CategoryTheory.liftedColimitMapsToOriginal
 
 /-- The lifted cocone is a colimit. -/
-def liftedColimitIsColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)} (t : IsColimit c) :
-    IsColimit (liftColimit t) :=
+def liftedColimitIsColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)}
+    (t : IsColimit c) : IsColimit (liftColimit t) :=
   ReflectsColimit.reflects (IsColimit.ofIsoColimit t (liftedColimitMapsToOriginal t).symm)
 #align category_theory.lifted_colimit_is_colimit CategoryTheory.liftedColimitIsColimit
 
 /-- If `F` creates the limit of `K` and `K ⋙ F` has a limit, then `K` has a limit. -/
-theorem has_colimit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasColimit (K ⋙ F)] [CreatesColimit K F] : HasColimit K :=
-  HasColimit.mk { Cocone := liftColimit (colimit.isColimit (K ⋙ F)), IsColimit := liftedColimitIsColimit _ }
+theorem has_colimit_of_created (K : J ⥤ C) (F : C ⥤ D) [HasColimit (K ⋙ F)] [CreatesColimit K F] :
+    HasColimit K :=
+  HasColimit.mk
+    { Cocone := liftColimit (colimit.isColimit (K ⋙ F)), IsColimit := liftedColimitIsColimit _ }
 #align category_theory.has_colimit_of_created CategoryTheory.has_colimit_of_created
 
 /-- If `F` creates colimits of shape `J`, and `D` has colimits of shape `J`, then
 `C` has colimits of shape `J`.
 -/
-theorem has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape (F : C ⥤ D) [HasColimitsOfShape J D]
-    [CreatesColimitsOfShape J F] : HasColimitsOfShape J C :=
+theorem has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape (F : C ⥤ D)
+    [HasColimitsOfShape J D] [CreatesColimitsOfShape J F] : HasColimitsOfShape J C :=
   ⟨fun G => has_colimit_of_created G F⟩
 #align
   category_theory.has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape CategoryTheory.has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape
@@ -199,23 +207,25 @@ theorem has_colimits_of_has_colimits_creates_colimits (F : C ⥤ D) [HasColimits
 #align
   category_theory.has_colimits_of_has_colimits_creates_colimits CategoryTheory.has_colimits_of_has_colimits_creates_colimits
 
-instance (priority := 10) reflectsLimitsOfShapeOfCreatesLimitsOfShape (F : C ⥤ D) [CreatesLimitsOfShape J F] :
-    ReflectsLimitsOfShape J F where
+instance (priority := 10) reflectsLimitsOfShapeOfCreatesLimitsOfShape (F : C ⥤ D)
+    [CreatesLimitsOfShape J F] : ReflectsLimitsOfShape J F where
 #align
   category_theory.reflects_limits_of_shape_of_creates_limits_of_shape CategoryTheory.reflectsLimitsOfShapeOfCreatesLimitsOfShape
 
-instance (priority := 10) reflectsLimitsOfCreatesLimits (F : C ⥤ D) [CreatesLimitsOfSize.{w, w'} F] :
-    ReflectsLimitsOfSize.{w, w'} F where
-#align category_theory.reflects_limits_of_creates_limits CategoryTheory.reflectsLimitsOfCreatesLimits
+instance (priority := 10) reflectsLimitsOfCreatesLimits (F : C ⥤ D)
+    [CreatesLimitsOfSize.{w, w'} F] : ReflectsLimitsOfSize.{w, w'} F where
+#align
+  category_theory.reflects_limits_of_creates_limits CategoryTheory.reflectsLimitsOfCreatesLimits
 
-instance (priority := 10) reflectsColimitsOfShapeOfCreatesColimitsOfShape (F : C ⥤ D) [CreatesColimitsOfShape J F] :
-    ReflectsColimitsOfShape J F where
+instance (priority := 10) reflectsColimitsOfShapeOfCreatesColimitsOfShape (F : C ⥤ D)
+    [CreatesColimitsOfShape J F] : ReflectsColimitsOfShape J F where
 #align
   category_theory.reflects_colimits_of_shape_of_creates_colimits_of_shape CategoryTheory.reflectsColimitsOfShapeOfCreatesColimitsOfShape
 
-instance (priority := 10) reflectsColimitsOfCreatesColimits (F : C ⥤ D) [CreatesColimitsOfSize.{w, w'} F] :
-    ReflectsColimitsOfSize.{w, w'} F where
-#align category_theory.reflects_colimits_of_creates_colimits CategoryTheory.reflectsColimitsOfCreatesColimits
+instance (priority := 10) reflectsColimitsOfCreatesColimits (F : C ⥤ D)
+    [CreatesColimitsOfSize.{w, w'} F] : ReflectsColimitsOfSize.{w, w'} F where
+#align
+  category_theory.reflects_colimits_of_creates_colimits CategoryTheory.reflectsColimitsOfCreatesColimits
 
 /-- A helper to show a functor creates limits. In particular, if we can show
 that for any limit cone `c` for `K ⋙ F`, there is a lift of it which is
@@ -223,7 +233,8 @@ a limit and `F` reflects isomorphisms, then `F` creates limits.
 Usually, `F` creating limits says that _any_ lift of `c` is a limit, but
 here we only need to show that our particular lift of `c` is a limit.
 -/
-structure LiftsToLimit (K : J ⥤ C) (F : C ⥤ D) (c : Cone (K ⋙ F)) (t : IsLimit c) extends LiftableCone K F c where
+structure LiftsToLimit (K : J ⥤ C) (F : C ⥤ D) (c : Cone (K ⋙ F)) (t : IsLimit c) extends
+  LiftableCone K F c where
   makesLimit : IsLimit lifted_cone
 #align category_theory.lifts_to_limit CategoryTheory.LiftsToLimit
 
@@ -242,8 +253,8 @@ structure LiftsToColimit (K : J ⥤ C) (F : C ⥤ D) (c : Cocone (K ⋙ F)) (t :
 then `F` creates limits.
 In particular here we don't need to assume that F reflects limits.
 -/
-def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms F] (h : ∀ c t, LiftsToLimit K F c t) :
-    CreatesLimit K F where
+def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms F]
+    (h : ∀ c t, LiftsToLimit K F c t) : CreatesLimit K F where
   lifts c t := (h c t).toLiftableCone
   toReflectsLimit :=
     { reflects := fun (d : Cone K) (hd : IsLimit (F.mapCone d)) => by
@@ -251,7 +262,8 @@ def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms 
         let i : F.map_cone d' ≅ F.map_cone d := (h (F.map_cone d) hd).toLiftableCone.validLift
         let hd' : is_limit d' := (h (F.map_cone d) hd).makesLimit
         let f : d ⟶ d' := hd'.lift_cone_morphism d
-        have : (cones.functoriality K F).map f = i.inv := (hd.of_iso_limit i.symm).uniq_cone_morphism
+        have : (cones.functoriality K F).map f = i.inv :=
+          (hd.of_iso_limit i.symm).uniq_cone_morphism
         haveI : is_iso ((cones.functoriality K F).map f) := by
           rw [this]
           infer_instance
@@ -262,15 +274,18 @@ def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
 -- so the constructed limits may not be ideal, definitionally.
-/-- When `F` is fully faithful, to show that `F` creates the limit for `K` it suffices to exhibit a lift
+/--
+When `F` is fully faithful, to show that `F` creates the limit for `K` it suffices to exhibit a lift
 of a limit cone for `K ⋙ F`.
 -/
-def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] {l : Cone (K ⋙ F)} (hl : IsLimit l)
-    (c : Cone K) (i : F.mapCone c ≅ l) : CreatesLimit K F :=
+def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    {l : Cone (K ⋙ F)} (hl : IsLimit l) (c : Cone K) (i : F.mapCone c ≅ l) : CreatesLimit K F :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone := c, validLift := i ≪≫ IsLimit.uniqueUpToIso hl t,
-      makesLimit := IsLimit.ofFaithful F (IsLimit.ofIsoLimit hl i.symm) _ fun s => F.image_preimage _ }
-#align category_theory.creates_limit_of_fully_faithful_of_lift' CategoryTheory.createsLimitOfFullyFaithfulOfLift'
+      makesLimit :=
+        IsLimit.ofFaithful F (IsLimit.ofIsoLimit hl i.symm) _ fun s => F.image_preimage _ }
+#align
+  category_theory.creates_limit_of_fully_faithful_of_lift' CategoryTheory.createsLimitOfFullyFaithfulOfLift'
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
@@ -278,19 +293,21 @@ def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
 /-- When `F` is fully faithful, and `has_limit (K ⋙ F)`, to show that `F` creates the limit for `K`
 it suffices to exhibit a lift of the chosen limit cone for `K ⋙ F`.
 -/
-def createsLimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] [HasLimit (K ⋙ F)] (c : Cone K)
-    (i : F.mapCone c ≅ Limit.cone (K ⋙ F)) : CreatesLimit K F :=
+def createsLimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    [HasLimit (K ⋙ F)] (c : Cone K) (i : F.mapCone c ≅ Limit.cone (K ⋙ F)) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfLift' (limit.isLimit _) c i
-#align category_theory.creates_limit_of_fully_faithful_of_lift CategoryTheory.createsLimitOfFullyFaithfulOfLift
+#align
+  category_theory.creates_limit_of_fully_faithful_of_lift CategoryTheory.createsLimitOfFullyFaithfulOfLift
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
 -- so the constructed limits may not be ideal, definitionally.
-/-- When `F` is fully faithful, to show that `F` creates the limit for `K` it suffices to show that a
+/--
+When `F` is fully faithful, to show that `F` creates the limit for `K` it suffices to show that a
 limit point is in the essential image of `F`.
 -/
-def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] {l : Cone (K ⋙ F)} (hl : IsLimit l)
-    (X : C) (i : F.obj X ≅ l.x) : CreatesLimit K F :=
+def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    {l : Cone (K ⋙ F)} (hl : IsLimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfLift' hl
     { x,
       π :=
@@ -300,7 +317,8 @@ def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
               dsimp
               simpa using (l.w f).symm } }
     (Cones.ext i fun j => by simp only [functor.image_preimage, functor.map_cone_π_app])
-#align category_theory.creates_limit_of_fully_faithful_of_iso' CategoryTheory.createsLimitOfFullyFaithfulOfIso'
+#align
+  category_theory.creates_limit_of_fully_faithful_of_iso' CategoryTheory.createsLimitOfFullyFaithfulOfIso'
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
@@ -308,15 +326,16 @@ def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
 /-- When `F` is fully faithful, and `has_limit (K ⋙ F)`, to show that `F` creates the limit for `K`
 it suffices to show that the chosen limit point is in the essential image of `F`.
 -/
-def createsLimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] [HasLimit (K ⋙ F)] (X : C)
-    (i : F.obj X ≅ limit (K ⋙ F)) : CreatesLimit K F :=
+def createsLimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    [HasLimit (K ⋙ F)] (X : C) (i : F.obj X ≅ limit (K ⋙ F)) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfIso' (limit.isLimit _) X i
-#align category_theory.creates_limit_of_fully_faithful_of_iso CategoryTheory.createsLimitOfFullyFaithfulOfIso
+#align
+  category_theory.creates_limit_of_fully_faithful_of_iso CategoryTheory.createsLimitOfFullyFaithfulOfIso
 
 -- see Note [lower instance priority]
 /-- `F` preserves the limit of `K` if it creates the limit and `K ⋙ F` has the limit. -/
-instance (priority := 100) preservesLimitOfCreatesLimitAndHasLimit (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F]
-    [HasLimit (K ⋙ F)] :
+instance (priority := 100) preservesLimitOfCreatesLimitAndHasLimit (K : J ⥤ C) (F : C ⥤ D)
+    [CreatesLimit K F] [HasLimit (K ⋙ F)] :
     PreservesLimit K
       F where preserves c t :=
     IsLimit.ofIsoLimit (limit.isLimit _)
@@ -327,15 +346,16 @@ instance (priority := 100) preservesLimitOfCreatesLimitAndHasLimit (K : J ⥤ C)
 
 -- see Note [lower instance priority]
 /-- `F` preserves the limit of shape `J` if it creates these limits and `D` has them. -/
-instance (priority := 100) preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape (F : C ⥤ D)
-    [CreatesLimitsOfShape J F] [HasLimitsOfShape J D] : PreservesLimitsOfShape J F where
+instance (priority := 100) preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape
+    (F : C ⥤ D) [CreatesLimitsOfShape J F] [HasLimitsOfShape J D] : PreservesLimitsOfShape J F where
 #align
   category_theory.preserves_limit_of_shape_of_creates_limits_of_shape_and_has_limits_of_shape CategoryTheory.preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape
 
 -- see Note [lower instance priority]
 /-- `F` preserves limits if it creates limits and `D` has limits. -/
-instance (priority := 100) preservesLimitsOfCreatesLimitsAndHasLimits (F : C ⥤ D) [CreatesLimitsOfSize.{w, w'} F]
-    [HasLimitsOfSize.{w, w'} D] : PreservesLimitsOfSize.{w, w'} F where
+instance (priority := 100) preservesLimitsOfCreatesLimitsAndHasLimits (F : C ⥤ D)
+    [CreatesLimitsOfSize.{w, w'} F] [HasLimitsOfSize.{w, w'} D] :
+    PreservesLimitsOfSize.{w, w'} F where
 #align
   category_theory.preserves_limits_of_creates_limits_and_has_limits CategoryTheory.preservesLimitsOfCreatesLimitsAndHasLimits
 
@@ -343,16 +363,18 @@ instance (priority := 100) preservesLimitsOfCreatesLimitsAndHasLimits (F : C ⥤
 then `F` creates colimits.
 In particular here we don't need to assume that F reflects colimits.
 -/
-def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms F] (h : ∀ c t, LiftsToColimit K F c t) :
-    CreatesColimit K F where
+def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms F]
+    (h : ∀ c t, LiftsToColimit K F c t) : CreatesColimit K F where
   lifts c t := (h c t).toLiftableCocone
   toReflectsColimit :=
     { reflects := fun (d : Cocone K) (hd : IsColimit (F.mapCocone d)) => by
         let d' : cocone K := (h (F.map_cocone d) hd).toLiftableCocone.liftedCocone
-        let i : F.map_cocone d' ≅ F.map_cocone d := (h (F.map_cocone d) hd).toLiftableCocone.validLift
+        let i : F.map_cocone d' ≅ F.map_cocone d :=
+          (h (F.map_cocone d) hd).toLiftableCocone.validLift
         let hd' : is_colimit d' := (h (F.map_cocone d) hd).makesColimit
         let f : d' ⟶ d := hd'.desc_cocone_morphism d
-        have : (cocones.functoriality K F).map f = i.hom := (hd.of_iso_colimit i.symm).uniq_cocone_morphism
+        have : (cocones.functoriality K F).map f = i.hom :=
+          (hd.of_iso_colimit i.symm).uniq_cocone_morphism
         haveI : is_iso ((cocones.functoriality K F).map f) := by
           rw [this]
           infer_instance
@@ -363,35 +385,43 @@ def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphism
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
-/-- When `F` is fully faithful, to show that `F` creates the colimit for `K` it suffices to exhibit a
+/--
+When `F` is fully faithful, to show that `F` creates the colimit for `K` it suffices to exhibit a
 lift of a colimit cocone for `K ⋙ F`.
 -/
-def createsColimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] {l : Cocone (K ⋙ F)}
-    (hl : IsColimit l) (c : Cocone K) (i : F.mapCocone c ≅ l) : CreatesColimit K F :=
+def createsColimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    {l : Cocone (K ⋙ F)} (hl : IsColimit l) (c : Cocone K) (i : F.mapCocone c ≅ l) :
+    CreatesColimit K F :=
   createsColimitOfReflectsIso fun c' t =>
     { liftedCocone := c, validLift := i ≪≫ IsColimit.uniqueUpToIso hl t,
-      makesColimit := IsColimit.ofFaithful F (IsColimit.ofIsoColimit hl i.symm) _ fun s => F.image_preimage _ }
-#align category_theory.creates_colimit_of_fully_faithful_of_lift' CategoryTheory.createsColimitOfFullyFaithfulOfLift'
+      makesColimit :=
+        IsColimit.ofFaithful F (IsColimit.ofIsoColimit hl i.symm) _ fun s => F.image_preimage _ }
+#align
+  category_theory.creates_colimit_of_fully_faithful_of_lift' CategoryTheory.createsColimitOfFullyFaithfulOfLift'
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
-/-- When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
+/--
+When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
 it suffices to exhibit a lift of the chosen colimit cocone for `K ⋙ F`.
 -/
-def createsColimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] [HasColimit (K ⋙ F)]
-    (c : Cocone K) (i : F.mapCocone c ≅ Colimit.cocone (K ⋙ F)) : CreatesColimit K F :=
+def createsColimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    [HasColimit (K ⋙ F)] (c : Cocone K) (i : F.mapCocone c ≅ Colimit.cocone (K ⋙ F)) :
+    CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfLift' (colimit.isColimit _) c i
-#align category_theory.creates_colimit_of_fully_faithful_of_lift CategoryTheory.createsColimitOfFullyFaithfulOfLift
+#align
+  category_theory.creates_colimit_of_fully_faithful_of_lift CategoryTheory.createsColimitOfFullyFaithfulOfLift
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
-/-- When `F` is fully faithful, to show that `F` creates the colimit for `K` it suffices to show that
+/--
+When `F` is fully faithful, to show that `F` creates the colimit for `K` it suffices to show that
 a colimit point is in the essential image of `F`.
 -/
-def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] {l : Cocone (K ⋙ F)}
-    (hl : IsColimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesColimit K F :=
+def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    {l : Cocone (K ⋙ F)} (hl : IsColimit l) (X : C) (i : F.obj X ≅ l.x) : CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfLift' hl
     { x,
       ι :=
@@ -401,47 +431,54 @@ def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fa
               dsimp
               simpa [← cancel_mono i.hom] using l.w f } }
     (Cocones.ext i fun j => by simp)
-#align category_theory.creates_colimit_of_fully_faithful_of_iso' CategoryTheory.createsColimitOfFullyFaithfulOfIso'
+#align
+  category_theory.creates_colimit_of_fully_faithful_of_iso' CategoryTheory.createsColimitOfFullyFaithfulOfIso'
 
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
-/-- When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
+/--
+When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
 it suffices to show that the chosen colimit point is in the essential image of `F`.
 -/
-def createsColimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F] [HasColimit (K ⋙ F)] (X : C)
-    (i : F.obj X ≅ colimit (K ⋙ F)) : CreatesColimit K F :=
+def createsColimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faithful F]
+    [HasColimit (K ⋙ F)] (X : C) (i : F.obj X ≅ colimit (K ⋙ F)) : CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfIso' (colimit.isColimit _) X i
-#align category_theory.creates_colimit_of_fully_faithful_of_iso CategoryTheory.createsColimitOfFullyFaithfulOfIso
+#align
+  category_theory.creates_colimit_of_fully_faithful_of_iso CategoryTheory.createsColimitOfFullyFaithfulOfIso
 
 -- see Note [lower instance priority]
 /-- `F` preserves the colimit of `K` if it creates the colimit and `K ⋙ F` has the colimit. -/
-instance (priority := 100) preservesColimitOfCreatesColimitAndHasColimit (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F]
-    [HasColimit (K ⋙ F)] :
+instance (priority := 100) preservesColimitOfCreatesColimitAndHasColimit (K : J ⥤ C) (F : C ⥤ D)
+    [CreatesColimit K F] [HasColimit (K ⋙ F)] :
     PreservesColimit K
       F where preserves c t :=
     IsColimit.ofIsoColimit (colimit.isColimit _)
       ((liftedColimitMapsToOriginal (colimit.isColimit _)).symm ≪≫
-        (Cocones.functoriality K F).mapIso ((liftedColimitIsColimit (colimit.isColimit _)).uniqueUpToIso t))
+        (Cocones.functoriality K F).mapIso
+          ((liftedColimitIsColimit (colimit.isColimit _)).uniqueUpToIso t))
 #align
   category_theory.preserves_colimit_of_creates_colimit_and_has_colimit CategoryTheory.preservesColimitOfCreatesColimitAndHasColimit
 
 -- see Note [lower instance priority]
 /-- `F` preserves the colimit of shape `J` if it creates these colimits and `D` has them. -/
-instance (priority := 100) preservesColimitOfShapeOfCreatesColimitsOfShapeAndHasColimitsOfShape (F : C ⥤ D)
-    [CreatesColimitsOfShape J F] [HasColimitsOfShape J D] : PreservesColimitsOfShape J F where
+instance (priority := 100) preservesColimitOfShapeOfCreatesColimitsOfShapeAndHasColimitsOfShape
+    (F : C ⥤ D) [CreatesColimitsOfShape J F] [HasColimitsOfShape J D] :
+    PreservesColimitsOfShape J F where
 #align
   category_theory.preserves_colimit_of_shape_of_creates_colimits_of_shape_and_has_colimits_of_shape CategoryTheory.preservesColimitOfShapeOfCreatesColimitsOfShapeAndHasColimitsOfShape
 
 -- see Note [lower instance priority]
 /-- `F` preserves limits if it creates limits and `D` has limits. -/
 instance (priority := 100) preservesColimitsOfCreatesColimitsAndHasColimits (F : C ⥤ D)
-    [CreatesColimitsOfSize.{w, w'} F] [HasColimitsOfSize.{w, w'} D] : PreservesColimitsOfSize.{w, w'} F where
+    [CreatesColimitsOfSize.{w, w'} F] [HasColimitsOfSize.{w, w'} D] :
+    PreservesColimitsOfSize.{w, w'} F where
 #align
   category_theory.preserves_colimits_of_creates_colimits_and_has_colimits CategoryTheory.preservesColimitsOfCreatesColimitsAndHasColimits
 
 /-- Transfer creation of limits along a natural isomorphism in the diagram. -/
-def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [CreatesLimit K₁ F] : CreatesLimit K₂ F :=
+def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [CreatesLimit K₁ F] :
+    CreatesLimit K₂ F :=
   { reflectsLimitOfIsoDiagram F h with
     lifts := fun c t =>
       let t' := (IsLimit.postcomposeInvEquiv (isoWhiskerRight h F : _) c).symm t
@@ -469,22 +506,26 @@ def createsLimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimit K F] : Crea
 /-- If `F` creates limits of shape `J` and `F ≅ G`, then `G` creates limits of shape `J`. -/
 def createsLimitsOfShapeOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimitsOfShape J F] :
     CreatesLimitsOfShape J G where CreatesLimit K := createsLimitOfNatIso h
-#align category_theory.creates_limits_of_shape_of_nat_iso CategoryTheory.createsLimitsOfShapeOfNatIso
+#align
+  category_theory.creates_limits_of_shape_of_nat_iso CategoryTheory.createsLimitsOfShapeOfNatIso
 
 /-- If `F` creates limits and `F ≅ G`, then `G` creates limits. -/
 def createsLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesLimitsOfSize.{w, w'} F] :
-    CreatesLimitsOfSize.{w, w'} G where CreatesLimitsOfShape J 𝒥₁ := creates_limits_of_shape_of_nat_iso h
+    CreatesLimitsOfSize.{w, w'}
+      G where CreatesLimitsOfShape J 𝒥₁ := creates_limits_of_shape_of_nat_iso h
 #align category_theory.creates_limits_of_nat_iso CategoryTheory.createsLimitsOfNatIso
 
 /-- Transfer creation of colimits along a natural isomorphism in the diagram. -/
-def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [CreatesColimit K₁ F] : CreatesColimit K₂ F :=
+def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K₂) [CreatesColimit K₁ F] :
+    CreatesColimit K₂ F :=
   { reflectsColimitOfIsoDiagram F h with
     lifts := fun c t =>
       let t' := (IsColimit.precomposeHomEquiv (isoWhiskerRight h F : _) c).symm t
       { liftedCocone := (Cocones.precompose h.inv).obj (liftColimit t'),
         validLift :=
           F.mapCoconePrecompose ≪≫
-            (Cocones.precompose (isoWhiskerRight h F).inv).mapIso (liftedColimitMapsToOriginal t') ≪≫
+            (Cocones.precompose (isoWhiskerRight h F).inv).mapIso
+                (liftedColimitMapsToOriginal t') ≪≫
               Cocones.ext (Iso.refl _) fun j => by
                 dsimp
                 rw [← F.map_comp_assoc]
@@ -494,7 +535,8 @@ def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅
 /-- If `F` creates the colimit of `K` and `F ≅ G`, then `G` creates the colimit of `K`. -/
 def createsColimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimit K F] : CreatesColimit K G where
   lifts c t :=
-    { liftedCocone := liftColimit ((IsColimit.precomposeHomEquiv (isoWhiskerLeft K h : _) c).symm t),
+    { liftedCocone :=
+        liftColimit ((IsColimit.precomposeHomEquiv (isoWhiskerLeft K h : _) c).symm t),
       validLift := by
         refine' (is_colimit.map_cocone_equiv h _).uniqueUpToIso t
         apply is_colimit.of_iso_colimit _ (lifted_colimit_maps_to_original _).symm
@@ -505,17 +547,19 @@ def createsColimitOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimit K F] : 
 /-- If `F` creates colimits of shape `J` and `F ≅ G`, then `G` creates colimits of shape `J`. -/
 def createsColimitsOfShapeOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimitsOfShape J F] :
     CreatesColimitsOfShape J G where CreatesColimit K := createsColimitOfNatIso h
-#align category_theory.creates_colimits_of_shape_of_nat_iso CategoryTheory.createsColimitsOfShapeOfNatIso
+#align
+  category_theory.creates_colimits_of_shape_of_nat_iso CategoryTheory.createsColimitsOfShapeOfNatIso
 
 /-- If `F` creates colimits and `F ≅ G`, then `G` creates colimits. -/
 def createsColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [CreatesColimitsOfSize.{w, w'} F] :
-    CreatesColimitsOfSize.{w, w'} G where CreatesColimitsOfShape J 𝒥₁ := creates_colimits_of_shape_of_nat_iso h
+    CreatesColimitsOfSize.{w, w'}
+      G where CreatesColimitsOfShape J 𝒥₁ := creates_colimits_of_shape_of_nat_iso h
 #align category_theory.creates_colimits_of_nat_iso CategoryTheory.createsColimitsOfNatIso
 
 -- For the inhabited linter later.
 /-- If F creates the limit of K, any cone lifts to a limit. -/
-def liftsToLimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F] (c : Cone (K ⋙ F)) (t : IsLimit c) :
-    LiftsToLimit K F c t where
+def liftsToLimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F] (c : Cone (K ⋙ F))
+    (t : IsLimit c) : LiftsToLimit K F c t where
   liftedCone := liftLimit t
   validLift := liftedLimitMapsToOriginal t
   makesLimit := liftedLimitIsLimit t
@@ -523,8 +567,8 @@ def liftsToLimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F] (c : Co
 
 -- For the inhabited linter later.
 /-- If F creates the colimit of K, any cocone lifts to a colimit. -/
-def liftsToColimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c : Cocone (K ⋙ F)) (t : IsColimit c) :
-    LiftsToColimit K F c t where
+def liftsToColimitOfCreates (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c : Cocone (K ⋙ F))
+    (t : IsColimit c) : LiftsToColimit K F c t where
   liftedCocone := liftColimit t
   validLift := liftedColimitMapsToOriginal t
   makesColimit := liftedColimitIsColimit t
@@ -539,7 +583,9 @@ def idLiftsCone (c : Cone (K ⋙ 𝟭 C)) : LiftableCone K (𝟭 C) c where
 /-- The identity functor creates all limits. -/
 instance idCreatesLimits :
     CreatesLimitsOfSize.{w, w'}
-      (𝟭 C) where CreatesLimitsOfShape J 𝒥 := { CreatesLimit := fun F => { lifts := fun c t => id_lifts_cone c } }
+      (𝟭
+        C) where CreatesLimitsOfShape J 𝒥 :=
+    { CreatesLimit := fun F => { lifts := fun c t => id_lifts_cone c } }
 #align category_theory.id_creates_limits CategoryTheory.idCreatesLimits
 
 /-- Any cocone lifts through the identity functor. -/
@@ -551,7 +597,9 @@ def idLiftsCocone (c : Cocone (K ⋙ 𝟭 C)) : LiftableCocone K (𝟭 C) c wher
 /-- The identity functor creates all colimits. -/
 instance idCreatesColimits :
     CreatesColimitsOfSize.{w, w'}
-      (𝟭 C) where CreatesColimitsOfShape J 𝒥 := { CreatesColimit := fun F => { lifts := fun c t => id_lifts_cocone c } }
+      (𝟭
+        C) where CreatesColimitsOfShape J 𝒥 :=
+    { CreatesColimit := fun F => { lifts := fun c t => id_lifts_cocone c } }
 #align category_theory.id_creates_colimits CategoryTheory.idCreatesColimits
 
 /-- Satisfy the inhabited linter -/
@@ -564,13 +612,13 @@ instance inhabitedLiftableCocone (c : Cocone (K ⋙ 𝟭 C)) : Inhabited (Liftab
 #align category_theory.inhabited_liftable_cocone CategoryTheory.inhabitedLiftableCocone
 
 /-- Satisfy the inhabited linter -/
-instance inhabitedLiftsToLimit (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F] (c : Cone (K ⋙ F)) (t : IsLimit c) :
-    Inhabited (LiftsToLimit _ _ _ t) :=
+instance inhabitedLiftsToLimit (K : J ⥤ C) (F : C ⥤ D) [CreatesLimit K F] (c : Cone (K ⋙ F))
+    (t : IsLimit c) : Inhabited (LiftsToLimit _ _ _ t) :=
   ⟨liftsToLimitOfCreates K F c t⟩
 #align category_theory.inhabited_lifts_to_limit CategoryTheory.inhabitedLiftsToLimit
 
-instance inhabitedLiftsToColimit (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c : Cocone (K ⋙ F)) (t : IsColimit c) :
-    Inhabited (LiftsToColimit _ _ _ t) :=
+instance inhabitedLiftsToColimit (K : J ⥤ C) (F : C ⥤ D) [CreatesColimit K F] (c : Cocone (K ⋙ F))
+    (t : IsColimit c) : Inhabited (LiftsToColimit _ _ _ t) :=
   ⟨liftsToColimitOfCreates K F c t⟩
 #align category_theory.inhabited_lifts_to_colimit CategoryTheory.inhabitedLiftsToColimit
 
@@ -604,7 +652,8 @@ instance compCreatesColimit [CreatesColimit K F] [CreatesColimit (K ⋙ F) G] :
         G) where lifts c t :=
     { liftedCocone := liftColimit (liftedColimitIsColimit t),
       validLift :=
-        (Cocones.functoriality (K ⋙ F) G).mapIso (liftedColimitMapsToOriginal (liftedColimitIsColimit t)) ≪≫
+        (Cocones.functoriality (K ⋙ F) G).mapIso
+            (liftedColimitMapsToOriginal (liftedColimitIsColimit t)) ≪≫
           liftedColimitMapsToOriginal t }
 #align category_theory.comp_creates_colimit CategoryTheory.compCreatesColimit
 

@@ -46,19 +46,23 @@ theorem preimage_Ioi (e : α ≃o β) (b : β) : e ⁻¹' ioi b = ioi (e.symm b)
 #align order_iso.preimage_Ioi OrderIso.preimage_Ioi
 
 @[simp]
-theorem preimage_Icc (e : α ≃o β) (a b : β) : e ⁻¹' icc a b = icc (e.symm a) (e.symm b) := by simp [← Ici_inter_Iic]
+theorem preimage_Icc (e : α ≃o β) (a b : β) : e ⁻¹' icc a b = icc (e.symm a) (e.symm b) := by
+  simp [← Ici_inter_Iic]
 #align order_iso.preimage_Icc OrderIso.preimage_Icc
 
 @[simp]
-theorem preimage_Ico (e : α ≃o β) (a b : β) : e ⁻¹' ico a b = ico (e.symm a) (e.symm b) := by simp [← Ici_inter_Iio]
+theorem preimage_Ico (e : α ≃o β) (a b : β) : e ⁻¹' ico a b = ico (e.symm a) (e.symm b) := by
+  simp [← Ici_inter_Iio]
 #align order_iso.preimage_Ico OrderIso.preimage_Ico
 
 @[simp]
-theorem preimage_Ioc (e : α ≃o β) (a b : β) : e ⁻¹' ioc a b = ioc (e.symm a) (e.symm b) := by simp [← Ioi_inter_Iic]
+theorem preimage_Ioc (e : α ≃o β) (a b : β) : e ⁻¹' ioc a b = ioc (e.symm a) (e.symm b) := by
+  simp [← Ioi_inter_Iic]
 #align order_iso.preimage_Ioc OrderIso.preimage_Ioc
 
 @[simp]
-theorem preimage_Ioo (e : α ≃o β) (a b : β) : e ⁻¹' ioo a b = ioo (e.symm a) (e.symm b) := by simp [← Ioi_inter_Iio]
+theorem preimage_Ioo (e : α ≃o β) (a b : β) : e ⁻¹' ioo a b = ioo (e.symm a) (e.symm b) := by
+  simp [← Ioi_inter_Iio]
 #align order_iso.preimage_Ioo OrderIso.preimage_Ioo
 
 @[simp]
@@ -105,12 +109,14 @@ end Preorder
 
 /-- Order isomorphism between `Iic (⊤ : α)` and `α` when `α` has a top element -/
 def iicTop [Preorder α] [OrderTop α] : Set.iic (⊤ : α) ≃o α :=
-  { @Equiv.subtypeUnivEquiv α (Set.iic (⊤ : α)) fun x => le_top with map_rel_iff' := fun x y => by rfl }
+  { @Equiv.subtypeUnivEquiv α (Set.iic (⊤ : α)) fun x => le_top with
+    map_rel_iff' := fun x y => by rfl }
 #align order_iso.Iic_top OrderIso.iicTop
 
 /-- Order isomorphism between `Ici (⊥ : α)` and `α` when `α` has a bottom element -/
 def iciBot [Preorder α] [OrderBot α] : Set.ici (⊥ : α) ≃o α :=
-  { @Equiv.subtypeUnivEquiv α (Set.ici (⊥ : α)) fun x => bot_le with map_rel_iff' := fun x y => by rfl }
+  { @Equiv.subtypeUnivEquiv α (Set.ici (⊥ : α)) fun x => bot_le with
+    map_rel_iff' := fun x y => by rfl }
 #align order_iso.Ici_bot OrderIso.iciBot
 
 end OrderIso

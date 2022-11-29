@@ -75,23 +75,23 @@ protected theorem mul_inv_of_self (A : Matrix n n α) [Invertible A] : A ⬝ ⅟
 #align matrix.mul_inv_of_self Matrix.mul_inv_of_self
 
 /-- A copy of `inv_of_mul_self_assoc` using `⬝` not `*`. -/
-protected theorem inv_of_mul_self_assoc (A : Matrix n n α) (B : Matrix n m α) [Invertible A] : ⅟ A ⬝ (A ⬝ B) = B := by
-  rw [← Matrix.mul_assoc, Matrix.inv_of_mul_self, Matrix.one_mul]
+protected theorem inv_of_mul_self_assoc (A : Matrix n n α) (B : Matrix n m α) [Invertible A] :
+    ⅟ A ⬝ (A ⬝ B) = B := by rw [← Matrix.mul_assoc, Matrix.inv_of_mul_self, Matrix.one_mul]
 #align matrix.inv_of_mul_self_assoc Matrix.inv_of_mul_self_assoc
 
 /-- A copy of `mul_inv_of_self_assoc` using `⬝` not `*`. -/
-protected theorem mul_inv_of_self_assoc (A : Matrix n n α) (B : Matrix n m α) [Invertible A] : A ⬝ (⅟ A ⬝ B) = B := by
-  rw [← Matrix.mul_assoc, Matrix.mul_inv_of_self, Matrix.one_mul]
+protected theorem mul_inv_of_self_assoc (A : Matrix n n α) (B : Matrix n m α) [Invertible A] :
+    A ⬝ (⅟ A ⬝ B) = B := by rw [← Matrix.mul_assoc, Matrix.mul_inv_of_self, Matrix.one_mul]
 #align matrix.mul_inv_of_self_assoc Matrix.mul_inv_of_self_assoc
 
 /-- A copy of `mul_inv_of_mul_self_cancel` using `⬝` not `*`. -/
-protected theorem mul_inv_of_mul_self_cancel (A : Matrix m n α) (B : Matrix n n α) [Invertible B] : A ⬝ ⅟ B ⬝ B = A :=
-  by rw [Matrix.mul_assoc, Matrix.inv_of_mul_self, Matrix.mul_one]
+protected theorem mul_inv_of_mul_self_cancel (A : Matrix m n α) (B : Matrix n n α) [Invertible B] :
+    A ⬝ ⅟ B ⬝ B = A := by rw [Matrix.mul_assoc, Matrix.inv_of_mul_self, Matrix.mul_one]
 #align matrix.mul_inv_of_mul_self_cancel Matrix.mul_inv_of_mul_self_cancel
 
 /-- A copy of `mul_mul_inv_of_self_cancel` using `⬝` not `*`. -/
-protected theorem mul_mul_inv_of_self_cancel (A : Matrix m n α) (B : Matrix n n α) [Invertible B] : A ⬝ B ⬝ ⅟ B = A :=
-  by rw [Matrix.mul_assoc, Matrix.mul_inv_of_self, Matrix.mul_one]
+protected theorem mul_mul_inv_of_self_cancel (A : Matrix m n α) (B : Matrix n n α) [Invertible B] :
+    A ⬝ B ⬝ ⅟ B = A := by rw [Matrix.mul_assoc, Matrix.mul_inv_of_self, Matrix.mul_one]
 #align matrix.mul_mul_inv_of_self_cancel Matrix.mul_mul_inv_of_self_cancel
 
 variable (A : Matrix n n α) (B : Matrix n n α)
@@ -99,8 +99,10 @@ variable (A : Matrix n n α) (B : Matrix n n α)
 /-- If `A.det` has a constructive inverse, produce one for `A`. -/
 def invertibleOfDetInvertible [Invertible A.det] : Invertible A where
   invOf := ⅟ A.det • A.adjugate
-  mul_inv_of_self := by rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, inv_of_mul_self, one_smul]
-  inv_of_mul_self := by rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, inv_of_mul_self, one_smul]
+  mul_inv_of_self := by
+    rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, inv_of_mul_self, one_smul]
+  inv_of_mul_self := by
+    rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, inv_of_mul_self, one_smul]
 #align matrix.invertible_of_det_invertible Matrix.invertibleOfDetInvertible
 
 theorem inv_of_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate := by
@@ -291,7 +293,8 @@ theorem transpose_nonsing_inv : A⁻¹ᵀ = Aᵀ⁻¹ := by
 #align matrix.transpose_nonsing_inv Matrix.transpose_nonsing_inv
 
 theorem conj_transpose_nonsing_inv [StarRing α] : A⁻¹ᴴ = Aᴴ⁻¹ := by
-  rw [inv_def, inv_def, conj_transpose_smul, det_conj_transpose, adjugate_conj_transpose, Ring.inverse_star]
+  rw [inv_def, inv_def, conj_transpose_smul, det_conj_transpose, adjugate_conj_transpose,
+    Ring.inverse_star]
 #align matrix.conj_transpose_nonsing_inv Matrix.conj_transpose_nonsing_inv
 
 /-- The `nonsing_inv` of `A` is a right inverse. -/
@@ -313,7 +316,8 @@ instance [Invertible A] : Invertible A⁻¹ := by
   infer_instance
 
 @[simp]
-theorem inv_inv_of_invertible [Invertible A] : A⁻¹⁻¹ = A := by simp only [← inv_of_eq_nonsing_inv, inv_of_inv_of]
+theorem inv_inv_of_invertible [Invertible A] : A⁻¹⁻¹ = A := by
+  simp only [← inv_of_eq_nonsing_inv, inv_of_inv_of]
 #align matrix.inv_inv_of_invertible Matrix.inv_inv_of_invertible
 
 @[simp]
@@ -366,12 +370,16 @@ theorem inv_mul_cancel_left_of_invertible (B : Matrix n m α) [Invertible A] : A
   nonsing_inv_mul_cancel_left A B (is_unit_det_of_invertible A)
 #align matrix.inv_mul_cancel_left_of_invertible Matrix.inv_mul_cancel_left_of_invertible
 
-theorem inv_mul_eq_iff_eq_mul_of_invertible (A B C : Matrix n n α) [Invertible A] : A⁻¹ ⬝ B = C ↔ B = A ⬝ C :=
-  ⟨fun h => by rw [← h, mul_inv_cancel_left_of_invertible], fun h => by rw [h, inv_mul_cancel_left_of_invertible]⟩
+theorem inv_mul_eq_iff_eq_mul_of_invertible (A B C : Matrix n n α) [Invertible A] :
+    A⁻¹ ⬝ B = C ↔ B = A ⬝ C :=
+  ⟨fun h => by rw [← h, mul_inv_cancel_left_of_invertible], fun h => by
+    rw [h, inv_mul_cancel_left_of_invertible]⟩
 #align matrix.inv_mul_eq_iff_eq_mul_of_invertible Matrix.inv_mul_eq_iff_eq_mul_of_invertible
 
-theorem mul_inv_eq_iff_eq_mul_of_invertible (A B C : Matrix n n α) [Invertible A] : B ⬝ A⁻¹ = C ↔ B = C ⬝ A :=
-  ⟨fun h => by rw [← h, inv_mul_cancel_right_of_invertible], fun h => by rw [h, mul_inv_cancel_right_of_invertible]⟩
+theorem mul_inv_eq_iff_eq_mul_of_invertible (A B C : Matrix n n α) [Invertible A] :
+    B ⬝ A⁻¹ = C ↔ B = C ⬝ A :=
+  ⟨fun h => by rw [← h, inv_mul_cancel_right_of_invertible], fun h => by
+    rw [h, mul_inv_cancel_right_of_invertible]⟩
 #align matrix.mul_inv_eq_iff_eq_mul_of_invertible Matrix.mul_inv_eq_iff_eq_mul_of_invertible
 
 theorem nonsing_inv_cancel_or_zero : A⁻¹ ⬝ A = 1 ∧ A ⬝ A⁻¹ = 1 ∨ A⁻¹ = 0 := by
@@ -401,7 +409,7 @@ theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det := by
 #align matrix.det_nonsing_inv Matrix.det_nonsing_inv
 
 theorem is_unit_nonsing_inv_det (h : IsUnit A.det) : IsUnit A⁻¹.det :=
-  is_unit_of_mul_eq_one _ _ (A.det_nonsing_inv_mul_det h)
+  isUnit_of_mul_eq_one _ _ (A.det_nonsing_inv_mul_det h)
 #align matrix.is_unit_nonsing_inv_det Matrix.is_unit_nonsing_inv_det
 
 @[simp]
@@ -409,7 +417,8 @@ theorem nonsing_inv_nonsing_inv (h : IsUnit A.det) : A⁻¹⁻¹ = A :=
   calc
     A⁻¹⁻¹ = 1 ⬝ A⁻¹⁻¹ := by rw [Matrix.one_mul]
     _ = A ⬝ A⁻¹ ⬝ A⁻¹⁻¹ := by rw [A.mul_nonsing_inv h]
-    _ = A := by rw [Matrix.mul_assoc, A⁻¹.mul_nonsing_inv (A.is_unit_nonsing_inv_det h), Matrix.mul_one]
+    _ = A := by
+      rw [Matrix.mul_assoc, A⁻¹.mul_nonsing_inv (A.is_unit_nonsing_inv_det h), Matrix.mul_one]
     
 #align matrix.nonsing_inv_nonsing_inv Matrix.nonsing_inv_nonsing_inv
 
@@ -434,7 +443,8 @@ theorem unit_of_det_invertible_eq_nonsing_inv_unit [Invertible A.det] :
     unitOfDetInvertible A = nonsingInvUnit A (is_unit_of_invertible _) := by
   ext
   rfl
-#align matrix.unit_of_det_invertible_eq_nonsing_inv_unit Matrix.unit_of_det_invertible_eq_nonsing_inv_unit
+#align
+  matrix.unit_of_det_invertible_eq_nonsing_inv_unit Matrix.unit_of_det_invertible_eq_nonsing_inv_unit
 
 variable {A} {B}
 
@@ -454,7 +464,8 @@ section InvEqInv
 variable {C : Matrix n n α}
 
 /-- The left inverse of matrix A is unique when existing. -/
-theorem left_inv_eq_left_inv (h : B ⬝ A = 1) (g : C ⬝ A = 1) : B = C := by rw [← inv_eq_left_inv h, ← inv_eq_left_inv g]
+theorem left_inv_eq_left_inv (h : B ⬝ A = 1) (g : C ⬝ A = 1) : B = C := by
+  rw [← inv_eq_left_inv h, ← inv_eq_left_inv g]
 #align matrix.left_inv_eq_left_inv Matrix.left_inv_eq_left_inv
 
 /-- The right inverse of matrix A is unique when existing. -/
@@ -512,7 +523,8 @@ theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : (adjugate A)⁻¹ 
 #align matrix.inv_adjugate Matrix.inv_adjugate
 
 /-- `diagonal v` is invertible if `v` is -/
-def diagonalInvertible {α} [NonAssocSemiring α] (v : n → α) [Invertible v] : Invertible (diagonal v) :=
+def diagonalInvertible {α} [NonAssocSemiring α] (v : n → α) [Invertible v] :
+    Invertible (diagonal v) :=
   Invertible.map (diagonalRingHom n α) v
 #align matrix.diagonal_invertible Matrix.diagonalInvertible
 
@@ -554,7 +566,8 @@ def diagonalInvertibleEquivInvertible (v : n → α) : Invertible (diagonal v) �
 /-- When lowered to a prop, `matrix.diagonal_invertible_equiv_invertible` forms an `iff`. -/
 @[simp]
 theorem is_unit_diagonal {v : n → α} : IsUnit (diagonal v) ↔ IsUnit v := by
-  simp only [← nonempty_invertible_iff_is_unit, (diagonal_invertible_equiv_invertible v).nonempty_congr]
+  simp only [← nonempty_invertible_iff_is_unit,
+    (diagonal_invertible_equiv_invertible v).nonempty_congr]
 #align matrix.is_unit_diagonal Matrix.is_unit_diagonal
 
 theorem inv_diagonal (v : n → α) : (diagonal v)⁻¹ = diagonal (Ring.inverse v) := by
@@ -581,7 +594,8 @@ theorem inv_inv_inv (A : Matrix n n α) : A⁻¹⁻¹⁻¹ = A⁻¹ := by
 
 theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ := by
   simp only [inv_def]
-  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, det_mul, adjugate_mul_distrib, Ring.mul_inverse_rev]
+  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, det_mul, adjugate_mul_distrib,
+    Ring.mul_inverse_rev]
 #align matrix.mul_inv_rev Matrix.mul_inv_rev
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -589,15 +603,16 @@ theorem mul_inv_rev (A B : Matrix n n α) : (A ⬝ B)⁻¹ = B⁻¹ ⬝ A⁻¹ :
 theorem list_prod_inv_reverse : ∀ l : List (Matrix n n α), l.Prod⁻¹ = (l.reverse.map Inv.inv).Prod
   | [] => by rw [List.reverse_nil, List.map_nil, List.prod_nil, inv_one]
   | A::Xs => by
-    rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.mul_eq_mul, Matrix.mul_eq_mul,
-      mul_inv_rev, list_prod_inv_reverse]
+    rw [List.reverse_cons', List.map_concat, List.prod_concat, List.prod_cons, Matrix.mul_eq_mul,
+      Matrix.mul_eq_mul, mul_inv_rev, list_prod_inv_reverse]
 #align matrix.list_prod_inv_reverse Matrix.list_prod_inv_reverse
 
 /-- One form of **Cramer's rule**. See `matrix.mul_vec_cramer` for a stronger form. -/
 @[simp]
 theorem det_smul_inv_mul_vec_eq_cramer (A : Matrix n n α) (b : n → α) (h : IsUnit A.det) :
     A.det • A⁻¹.mulVec b = cramer A b := by
-  rw [cramer_eq_adjugate_mul_vec, A.nonsing_inv_apply h, ← smul_mul_vec_assoc, smul_smul, h.mul_coe_inv, one_smul]
+  rw [cramer_eq_adjugate_mul_vec, A.nonsing_inv_apply h, ← smul_mul_vec_assoc, smul_smul,
+    h.mul_coe_inv, one_smul]
 #align matrix.det_smul_inv_mul_vec_eq_cramer Matrix.det_smul_inv_mul_vec_eq_cramer
 
 /-- One form of **Cramer's rule**. See `matrix.mul_vec_cramer` for a stronger form. -/
@@ -606,7 +621,8 @@ theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → 
     A.det • A⁻¹.vecMul b = cramer Aᵀ b := by
   rw [← A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ← det_transpose,
     Aᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
-#align matrix.det_smul_inv_vec_mul_eq_cramer_transpose Matrix.det_smul_inv_vec_mul_eq_cramer_transpose
+#align
+  matrix.det_smul_inv_vec_mul_eq_cramer_transpose Matrix.det_smul_inv_vec_mul_eq_cramer_transpose
 
 /-! ### More results about determinants -/
 
@@ -616,28 +632,30 @@ section Det
 variable [Fintype m] [DecidableEq m]
 
 /-- A variant of `matrix.det_units_conj`. -/
-theorem det_conj {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) : det (M ⬝ N ⬝ M⁻¹) = det N := by
-  rw [← h.unit_spec, ← coe_units_inv, det_units_conj]
+theorem det_conj {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) : det (M ⬝ N ⬝ M⁻¹) = det N :=
+  by rw [← h.unit_spec, ← coe_units_inv, det_units_conj]
 #align matrix.det_conj Matrix.det_conj
 
 /-- A variant of `matrix.det_units_conj'`. -/
-theorem det_conj' {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) : det (M⁻¹ ⬝ N ⬝ M) = det N := by
-  rw [← h.unit_spec, ← coe_units_inv, det_units_conj']
+theorem det_conj' {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) :
+    det (M⁻¹ ⬝ N ⬝ M) = det N := by rw [← h.unit_spec, ← coe_units_inv, det_units_conj']
 #align matrix.det_conj' Matrix.det_conj'
 
 /-- Determinant of a 2×2 block matrix, expanded around an invertible top left element in terms of
 the Schur complement. -/
-theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α) (D : Matrix n n α) [Invertible A] :
+theorem det_from_blocks₁₁ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α)
+    (D : Matrix n n α) [Invertible A] :
     (Matrix.fromBlocks A B C D).det = det A * det (D - C ⬝ ⅟ A ⬝ B) := by
   have :
     from_blocks A B C D =
-      from_blocks 1 0 (C ⬝ ⅟ A) 1 ⬝ from_blocks A 0 0 (D - C ⬝ ⅟ A ⬝ B) ⬝ from_blocks 1 (⅟ A ⬝ B) 0 1 :=
+      from_blocks 1 0 (C ⬝ ⅟ A) 1 ⬝ from_blocks A 0 0 (D - C ⬝ ⅟ A ⬝ B) ⬝
+        from_blocks 1 (⅟ A ⬝ B) 0 1 :=
     by
-    simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add, Matrix.one_mul,
-      Matrix.mul_one, Matrix.inv_of_mul_self, Matrix.mul_inv_of_self_assoc, Matrix.mul_inv_of_mul_self_cancel,
-      Matrix.mul_assoc, add_sub_cancel'_right]
-  rw [this, det_mul, det_mul, det_from_blocks_zero₂₁, det_from_blocks_zero₂₁, det_from_blocks_zero₁₂, det_one, det_one,
-    one_mul, one_mul, mul_one]
+    simp only [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
+      Matrix.one_mul, Matrix.mul_one, Matrix.inv_of_mul_self, Matrix.mul_inv_of_self_assoc,
+      Matrix.mul_inv_of_mul_self_cancel, Matrix.mul_assoc, add_sub_cancel'_right]
+  rw [this, det_mul, det_mul, det_from_blocks_zero₂₁, det_from_blocks_zero₂₁,
+    det_from_blocks_zero₁₂, det_one, det_one, one_mul, one_mul, mul_one]
 #align matrix.det_from_blocks₁₁ Matrix.det_from_blocks₁₁
 
 @[simp]
@@ -649,7 +667,8 @@ theorem det_from_blocks_one₁₁ (B : Matrix m n α) (C : Matrix n m α) (D : M
 
 /-- Determinant of a 2×2 block matrix, expanded around an invertible bottom right element in terms
 of the Schur complement. -/
-theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α) (D : Matrix n n α) [Invertible D] :
+theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matrix n m α)
+    (D : Matrix n n α) [Invertible D] :
     (Matrix.fromBlocks A B C D).det = det D * det (A - B ⬝ ⅟ D ⬝ C) := by
   have : from_blocks A B C D = (from_blocks D C B A).submatrix (sum_comm _ _) (sum_comm _ _) := by
     ext (i j)
@@ -666,19 +685,22 @@ theorem det_from_blocks_one₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : M
 
 /-- The **Weinstein–Aronszajn identity**. Note the `1` on the LHS is of shape m×m, while the `1` on
 the RHS is of shape n×n. -/
-theorem det_one_add_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 + A ⬝ B) = det (1 + B ⬝ A) :=
+theorem det_one_add_mul_comm (A : Matrix m n α) (B : Matrix n m α) :
+    det (1 + A ⬝ B) = det (1 + B ⬝ A) :=
   calc
-    det (1 + A ⬝ B) = det (fromBlocks 1 (-A) B 1) := by rw [det_from_blocks_one₂₂, Matrix.neg_mul, sub_neg_eq_add]
+    det (1 + A ⬝ B) = det (fromBlocks 1 (-A) B 1) := by
+      rw [det_from_blocks_one₂₂, Matrix.neg_mul, sub_neg_eq_add]
     _ = det (1 + B ⬝ A) := by rw [det_from_blocks_one₁₁, Matrix.mul_neg, sub_neg_eq_add]
     
 #align matrix.det_one_add_mul_comm Matrix.det_one_add_mul_comm
 
 /-- Alternate statement of the **Weinstein–Aronszajn identity** -/
-theorem det_mul_add_one_comm (A : Matrix m n α) (B : Matrix n m α) : det (A ⬝ B + 1) = det (B ⬝ A + 1) := by
-  rw [add_comm, det_one_add_mul_comm, add_comm]
+theorem det_mul_add_one_comm (A : Matrix m n α) (B : Matrix n m α) :
+    det (A ⬝ B + 1) = det (B ⬝ A + 1) := by rw [add_comm, det_one_add_mul_comm, add_comm]
 #align matrix.det_mul_add_one_comm Matrix.det_mul_add_one_comm
 
-theorem det_one_sub_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 - A ⬝ B) = det (1 - B ⬝ A) := by
+theorem det_one_sub_mul_comm (A : Matrix m n α) (B : Matrix n m α) :
+    det (1 - A ⬝ B) = det (1 - B ⬝ A) := by
   rw [sub_eq_add_neg, ← Matrix.neg_mul, det_one_add_mul_comm, Matrix.mul_neg, ← sub_eq_add_neg]
 #align matrix.det_one_sub_mul_comm Matrix.det_one_sub_mul_comm
 
@@ -686,7 +708,8 @@ theorem det_one_sub_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 - 
 
 TODO: show this more generally. -/
 theorem det_one_add_col_mul_row (u v : m → α) : det (1 + col u ⬝ row v) = 1 + v ⬝ᵥ u := by
-  rw [det_one_add_mul_comm, det_unique, Pi.add_apply, Pi.add_apply, Matrix.one_apply_eq, Matrix.row_mul_col_apply]
+  rw [det_one_add_mul_comm, det_unique, Pi.add_apply, Pi.add_apply, Matrix.one_apply_eq,
+    Matrix.row_mul_col_apply]
 #align matrix.det_one_add_col_mul_row Matrix.det_one_add_col_mul_row
 
 end Det

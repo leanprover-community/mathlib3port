@@ -62,8 +62,8 @@ def splitLower (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 theorem coe_split_lower : (splitLower I i x : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } := by
   rw [split_lower, coe_mk']
   ext y
-  simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and, ← Pi.le_def, le_update_iff,
-    le_min_iff, and_assoc', and_forall_ne i, mem_def]
+  simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and, ← Pi.le_def,
+    le_update_iff, le_min_iff, and_assoc', and_forall_ne i, mem_def]
   rw [and_comm' (y i ≤ x), Pi.le_def]
 #align box_integral.box.coe_split_lower BoxIntegral.Box.coe_split_lower
 
@@ -78,12 +78,14 @@ theorem split_lower_eq_bot {i x} : I.splitLower i x = ⊥ ↔ x ≤ I.lower i :=
 #align box_integral.box.split_lower_eq_bot BoxIntegral.Box.split_lower_eq_bot
 
 @[simp]
-theorem split_lower_eq_self : I.splitLower i x = I ↔ I.upper i ≤ x := by simp [split_lower, update_eq_iff]
+theorem split_lower_eq_self : I.splitLower i x = I ↔ I.upper i ≤ x := by
+  simp [split_lower, update_eq_iff]
 #align box_integral.box.split_lower_eq_self BoxIntegral.Box.split_lower_eq_self
 
 theorem split_lower_def [DecidableEq ι] {i x} (h : x ∈ ioo (I.lower i) (I.upper i))
     (h' : ∀ j, I.lower j < update I.upper i x j :=
-      (forall_update_iff I.upper fun j y => I.lower j < y).2 ⟨h.1, fun j hne => I.lower_lt_upper _⟩) :
+      (forall_update_iff I.upper fun j y => I.lower j < y).2
+        ⟨h.1, fun j hne => I.lower_lt_upper _⟩) :
     I.splitLower i x = (⟨I.lower, update I.upper i x, h'⟩ : Box ι) := by
   simp only [split_lower, mk'_eq_coe, min_eq_left h.2.le]
   use rfl
@@ -103,7 +105,8 @@ theorem coe_split_upper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ { y | x 
   rw [split_upper, coe_mk']
   ext y
   simp only [mem_univ_pi, mem_Ioc, mem_inter_iff, mem_coe, mem_set_of_eq, forall_and,
-    forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc' (x < y i), and_forall_ne i, mem_def]
+    forall_update_iff I.lower fun j z => z < y j, max_lt_iff, and_assoc' (x < y i), and_forall_ne i,
+    mem_def]
   exact and_comm' _ _
 #align box_integral.box.coe_split_upper BoxIntegral.Box.coe_split_upper
 
@@ -118,27 +121,31 @@ theorem split_upper_eq_bot {i x} : I.splitUpper i x = ⊥ ↔ I.upper i ≤ x :=
 #align box_integral.box.split_upper_eq_bot BoxIntegral.Box.split_upper_eq_bot
 
 @[simp]
-theorem split_upper_eq_self : I.splitUpper i x = I ↔ x ≤ I.lower i := by simp [split_upper, update_eq_iff]
+theorem split_upper_eq_self : I.splitUpper i x = I ↔ x ≤ I.lower i := by
+  simp [split_upper, update_eq_iff]
 #align box_integral.box.split_upper_eq_self BoxIntegral.Box.split_upper_eq_self
 
 theorem split_upper_def [DecidableEq ι] {i x} (h : x ∈ ioo (I.lower i) (I.upper i))
     (h' : ∀ j, update I.lower i x j < I.upper j :=
-      (forall_update_iff I.lower fun j y => y < I.upper j).2 ⟨h.2, fun j hne => I.lower_lt_upper _⟩) :
+      (forall_update_iff I.lower fun j y => y < I.upper j).2
+        ⟨h.2, fun j hne => I.lower_lt_upper _⟩) :
     I.splitUpper i x = (⟨update I.lower i x, I.upper, h'⟩ : Box ι) := by
   simp only [split_upper, mk'_eq_coe, max_eq_left h.1.le]
   refine' ⟨_, rfl⟩
   congr
 #align box_integral.box.split_upper_def BoxIntegral.Box.split_upper_def
 
-theorem disjoint_split_lower_split_upper (I : Box ι) (i : ι) (x : ℝ) : Disjoint (I.splitLower i x) (I.splitUpper i x) :=
-  by
+theorem disjoint_split_lower_split_upper (I : Box ι) (i : ι) (x : ℝ) :
+    Disjoint (I.splitLower i x) (I.splitUpper i x) := by
   rw [← disjoint_with_bot_coe, coe_split_lower, coe_split_upper]
   refine' (Disjoint.inf_left' _ _).inf_right' _
   rw [Set.disjoint_left]
   exact fun y (hle : y i ≤ x) hlt => not_lt_of_le hle hlt
-#align box_integral.box.disjoint_split_lower_split_upper BoxIntegral.Box.disjoint_split_lower_split_upper
+#align
+  box_integral.box.disjoint_split_lower_split_upper BoxIntegral.Box.disjoint_split_lower_split_upper
 
-theorem split_lower_ne_split_upper (I : Box ι) (i : ι) (x : ℝ) : I.splitLower i x ≠ I.splitUpper i x := by
+theorem split_lower_ne_split_upper (I : Box ι) (i : ι) (x : ℝ) :
+    I.splitLower i x ≠ I.splitUpper i x := by
   cases le_or_lt x (I.lower i)
   · rw [split_upper_eq_self.2 h, split_lower_eq_bot.2 h]
     exact WithBot.bot_ne_coe
@@ -170,12 +177,14 @@ def split (I : Box ι) (i : ι) (x : ℝ) : Prepartition I :=
 #align box_integral.prepartition.split BoxIntegral.Prepartition.split
 
 @[simp]
-theorem mem_split_iff : J ∈ split I i x ↔ ↑J = I.splitLower i x ∨ ↑J = I.splitUpper i x := by simp [split]
+theorem mem_split_iff : J ∈ split I i x ↔ ↑J = I.splitLower i x ∨ ↑J = I.splitUpper i x := by
+  simp [split]
 #align box_integral.prepartition.mem_split_iff BoxIntegral.Prepartition.mem_split_iff
 
 theorem mem_split_iff' :
-    J ∈ split I i x ↔ (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } ∨ (J : Set (ι → ℝ)) = I ∩ { y | x < y i } := by
-  simp [mem_split_iff, ← box.with_bot_coe_inj]
+    J ∈ split I i x ↔
+      (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } ∨ (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
+  by simp [mem_split_iff, ← box.with_bot_coe_inj]
 #align box_integral.prepartition.mem_split_iff' BoxIntegral.Prepartition.mem_split_iff'
 
 @[simp]
@@ -188,15 +197,14 @@ theorem isPartitionSplit (I : Box ι) (i : ι) (x : ℝ) : IsPartition (split I 
 #align box_integral.prepartition.is_partition_split BoxIntegral.Prepartition.isPartitionSplit
 
 theorem sum_split_boxes {M : Type _} [AddCommMonoid M] (I : Box ι) (i : ι) (x : ℝ) (f : Box ι → M) :
-    (∑ J in (split I i x).boxes, f J) = (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f := by
-  rw [split, sum_of_with_bot, Finset.sum_pair (I.split_lower_ne_split_upper i x)]
+    (∑ J in (split I i x).boxes, f J) = (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f :=
+  by rw [split, sum_of_with_bot, Finset.sum_pair (I.split_lower_ne_split_upper i x)]
 #align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxes
 
 /-- If `x ∉ (I.lower i, I.upper i)`, then the hyperplane `{y | y i = x}` does not split `I`. -/
 theorem split_of_not_mem_Ioo (h : x ∉ ioo (I.lower i) (I.upper i)) : split I i x = ⊤ := by
   refine' ((is_partition_top I).eq_of_boxes_subset fun J hJ => _).symm
-  rcases mem_top.1 hJ with rfl
-  clear hJ
+  rcases mem_top.1 hJ with rfl; clear hJ
   rw [mem_boxes, mem_split_iff]
   rw [mem_Ioo, not_and_or, not_lt, not_lt] at h
   cases h <;> [right, left]
@@ -206,19 +214,21 @@ theorem split_of_not_mem_Ioo (h : x ∉ ioo (I.lower i) (I.upper i)) : split I i
     
 #align box_integral.prepartition.split_of_not_mem_Ioo BoxIntegral.Prepartition.split_of_not_mem_Ioo
 
-theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J) (h₃ : y i ≤ x) :
-    (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
+theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
+    (h₃ : y i ≤ x) : (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
   (mem_split_iff'.1 h₁).resolve_right fun H => by
     rw [← box.mem_coe, H] at h₂
     exact h₃.not_lt h₂.2
-#align box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_le
+#align
+  box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_le
 
-theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J) (h₃ : x < y i) :
-    (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
+theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
+    (h₃ : x < y i) : (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
   (mem_split_iff'.1 h₁).resolve_left fun H => by
     rw [← box.mem_coe, H] at h₂
     exact h₃.not_le h₂.2
-#align box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_mem
+#align
+  box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_mem
 
 @[simp]
 theorem restrict_split (h : I ≤ J) (i : ι) (x : ℝ) : (split J i x).restrict I = split I i x := by
@@ -228,7 +238,8 @@ theorem restrict_split (h : I ≤ J) (i : ι) (x : ℝ) : (split J i x).restrict
   rintro J₁ ⟨J₂, H₂ | H₂, H₁⟩ <;> [left, right] <;> simp [H₁, H₂, inter_left_comm ↑I, this]
 #align box_integral.prepartition.restrict_split BoxIntegral.Prepartition.restrict_split
 
-theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) : π ⊓ split I i x = π.bUnion fun J => split J i x :=
+theorem inf_split (π : Prepartition I) (i : ι) (x : ℝ) :
+    π ⊓ split I i x = π.bUnion fun J => split J i x :=
   (bUnion_congr_of_le rfl) fun J hJ => restrict_split hJ i x
 #align box_integral.prepartition.inf_split BoxIntegral.Prepartition.inf_split
 
@@ -257,7 +268,8 @@ theorem split_many_le_split (I : Box ι) {s : Finset (ι × ℝ)} {p : ι × ℝ
 theorem isPartitionSplitMany (I : Box ι) (s : Finset (ι × ℝ)) : IsPartition (splitMany I s) :=
   (Finset.induction_on s (by simp only [split_many_empty, is_partition_top])) fun a s ha hs => by
     simpa only [split_many_insert, inf_split] using hs.bUnion fun J hJ => is_partition_split _ _ _
-#align box_integral.prepartition.is_partition_split_many BoxIntegral.Prepartition.isPartitionSplitMany
+#align
+  box_integral.prepartition.is_partition_split_many BoxIntegral.Prepartition.isPartitionSplitMany
 
 @[simp]
 theorem Union_split_many (I : Box ι) (s : Finset (ι × ℝ)) : (splitMany I s).union = I :=
@@ -278,8 +290,8 @@ pairs `(i, r)`. Suppose that this set contains all faces of a box `J`. The hyper
 a box `I` into subboxes. Let `Js` be one of them. If `J` and `Js` have nonempty intersection, then
 `Js` is a subbox of `J`.  -/
 theorem not_disjoint_imp_le_of_subset_of_mem_split_many {I J Js : Box ι} {s : Finset (ι × ℝ)}
-    (H : ∀ i, {(i, J i), (i, J.upper i)} ⊆ s) (HJs : Js ∈ splitMany I s) (Hn : ¬Disjoint (J : WithBot (Box ι)) Js) :
-    Js ≤ J := by
+    (H : ∀ i, {(i, J i), (i, J.upper i)} ⊆ s) (HJs : Js ∈ splitMany I s)
+    (Hn : ¬Disjoint (J : WithBot (Box ι)) Js) : Js ≤ J := by
   simp only [Finset.insert_subset, Finset.singleton_subset_iff] at H
   rcases box.not_disjoint_coe_iff_nonempty_inter.mp Hn with ⟨x, hx, hxs⟩
   refine' fun y hy i => ⟨_, _⟩
@@ -312,14 +324,16 @@ theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (Box ι)) :
   cases nonempty_fintype ι
   refine'
     eventually_at_top.2
-      ⟨s.bUnion fun J => finset.univ.bUnion fun i => {(i, J i), (i, J.upper i)}, fun t ht I J hJ J' hJ' =>
-        not_disjoint_imp_le_of_subset_of_mem_split_many (fun i => _) hJ'⟩
+      ⟨s.bUnion fun J => finset.univ.bUnion fun i => {(i, J i), (i, J.upper i)},
+        fun t ht I J hJ J' hJ' => not_disjoint_imp_le_of_subset_of_mem_split_many (fun i => _) hJ'⟩
   exact fun p hp => ht (Finset.mem_bUnion.2 ⟨J, hJ, Finset.mem_bUnion.2 ⟨i, Finset.mem_univ _, hp⟩⟩)
 #align
   box_integral.prepartition.eventually_not_disjoint_imp_le_of_mem_split_many BoxIntegral.Prepartition.eventually_not_disjoint_imp_le_of_mem_split_many
 
 theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
-    ∀ᶠ t : Finset (ι × ℝ) in at_top, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.union := by
+    ∀ᶠ t : Finset (ι × ℝ) in at_top,
+      π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.union :=
+  by
   refine' (eventually_not_disjoint_imp_le_of_mem_split_many π.boxes).mono fun t ht => _
   refine' le_antisymm ((bUnion_le_iff _).2 fun J hJ => _) (le_inf (fun J hJ => _) (filter_le _ _))
   · refine' of_with_bot_mono _
@@ -337,7 +351,8 @@ theorem eventually_split_many_inf_eq_filter (π : Prepartition I) :
   box_integral.prepartition.eventually_split_many_inf_eq_filter BoxIntegral.Prepartition.eventually_split_many_inf_eq_filter
 
 theorem exists_split_many_inf_eq_filter_of_finite (s : Set (Prepartition I)) (hs : s.Finite) :
-    ∃ t : Finset (ι × ℝ), ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.union :=
+    ∃ t : Finset (ι × ℝ),
+      ∀ π ∈ s, π ⊓ splitMany I t = (splitMany I t).filter fun J => ↑J ⊆ π.union :=
   haveI := fun π (hπ : π ∈ s) => eventually_split_many_inf_eq_filter π
   (hs.eventually_all.2 this).exists
 #align
@@ -355,7 +370,8 @@ theorem IsPartition.exists_split_many_le {I : Box ι} {π : Prepartition I} (h :
 
 /-- For every prepartition `π` of `I` there exists a prepartition that covers exactly
 `I \ π.Union`. -/
-theorem exists_Union_eq_diff (π : Prepartition I) : ∃ π' : Prepartition I, π'.union = I \ π.union := by
+theorem exists_Union_eq_diff (π : Prepartition I) : ∃ π' : Prepartition I, π'.union = I \ π.union :=
+  by
   rcases π.eventually_split_many_inf_eq_filter.exists with ⟨s, hs⟩
   use (split_many I s).filter fun J => ¬(J : Set (ι → ℝ)) ⊆ π.Union
   simp [← hs]
@@ -382,7 +398,8 @@ theorem compl_congr {π₁ π₂ : Prepartition I} (h : π₁.union = π₂.unio
 
 theorem IsPartition.compl_eq_bot {π : Prepartition I} (h : IsPartition π) : π.compl = ⊥ := by
   rw [← Union_eq_empty, Union_compl, h.Union_eq, diff_self]
-#align box_integral.prepartition.is_partition.compl_eq_bot BoxIntegral.Prepartition.IsPartition.compl_eq_bot
+#align
+  box_integral.prepartition.is_partition.compl_eq_bot BoxIntegral.Prepartition.IsPartition.compl_eq_bot
 
 @[simp]
 theorem compl_top : (⊤ : Prepartition I).compl = ⊥ :=

@@ -22,7 +22,8 @@ namespace Tactic
 such that `val'` does not have any free variables from elements of `ctxt` whose types are
 propositions. This is done by applying `function.sometimes` to abstract over all the propositional
 arguments. -/
-unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr × expr → tactic (expr × expr)
+unsafe def mk_sometimes (u : level) (α nonemp p : expr) :
+    List expr → expr × expr → tactic (expr × expr)
   | [], (val, spec) => pure (val, spec)
   | e :: ctxt, (val, spec) => do
     let (val, spec) ← mk_sometimes ctxt (val, spec)
@@ -56,7 +57,8 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
     unsafe
   def
     choose1
-    ( nondep : Bool ) ( h : expr ) ( data : Name ) ( spec : Name ) : tactic ( expr × Option ( Option expr ) )
+    ( nondep : Bool ) ( h : expr ) ( data : Name ) ( spec : Name )
+      : tactic ( expr × Option ( Option expr ) )
     :=
       do
         let t ← infer_type h
@@ -98,7 +100,13 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
                                                       let b ← is_proof e
                                                         Monad.unlessb b
                                                           <|
-                                                          ( mk_app ` ` Nonempty.intro [ e ] >>= note_anon none ) $> ( )
+                                                          (
+                                                              mk_app ` ` Nonempty.intro [ e ]
+                                                                >>=
+                                                                note_anon none
+                                                              )
+                                                            $>
+                                                            ( )
                                               reset_instance_cache
                                               apply_instance
                                               instantiate_mvars m
@@ -121,7 +129,8 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) : List expr → expr ×
                                 ,
                                 expr.const ` ` Classical.choose_spec [ u ] α p ( h ctxt )
                               )
-                    dependent_pose_core [ ( value , value_proof ctxt' ) , ( spec , spec_proof ctxt ) ]
+                    dependent_pose_core
+                      [ ( value , value_proof ctxt' ) , ( spec , spec_proof ctxt ) ]
                     try ( tactic.clear h )
                     intro1
                     let e ← intro1
@@ -146,7 +155,8 @@ has been useful so far. The tactic fails if `nondep` is true, and nondep elimina
 attempted at least once, and it fails every time it is attempted, in which case it returns
 an error complaining about the first attempt.
 -/
-unsafe def choose (nondep : Bool) : expr → List Name → optParam (Option (Option expr)) none → tactic Unit
+unsafe def choose (nondep : Bool) :
+    expr → List Name → optParam (Option (Option expr)) none → tactic Unit
   | h, [], _ => fail "expect list of variables"
   | h, [n], some (some Ne) => do
     let g ← mk_meta_var Ne
@@ -213,14 +223,17 @@ begin
 end
 ```
 -/
-unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ident) (names : parse (parser.many ident))
-    (tgt : parse (parser.optional (tk "using" *> texpr))) : tactic Unit := do
+unsafe def choose (nondep : parse (parser.optional (tk "!"))) (first : parse ident)
+    (names : parse (parser.many ident)) (tgt : parse (parser.optional (tk "using" *> texpr))) :
+    tactic Unit := do
   let tgt ←
     match tgt with
       | none => get_local `this
       | some e => tactic.i_to_expr_strict e
   tactic.choose nondep tgt (first :: names)
-  try (interactive.simp none none tt [simp_arg_type.expr ``(exists_prop)] [] (loc.ns <| some <$> names))
+  try
+      (interactive.simp none none tt [simp_arg_type.expr ``(exists_prop)] []
+        (loc.ns <| some <$> names))
   try (tactic.clear tgt)
 #align tactic.interactive.choose tactic.interactive.choose
 

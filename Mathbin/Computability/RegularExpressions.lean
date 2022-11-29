@@ -196,10 +196,12 @@ def rmatch : RegularExpression α → List α → Bool
 #align regular_expression.rmatch RegularExpression.rmatch
 
 @[simp]
-theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by induction x <;> simp [rmatch, match_epsilon, *]
+theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by
+  induction x <;> simp [rmatch, match_epsilon, *]
 #align regular_expression.zero_rmatch RegularExpression.zero_rmatch
 
-theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by induction x <;> simp [rmatch, match_epsilon, *]
+theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
+  induction x <;> simp [rmatch, match_epsilon, *]
 #align regular_expression.one_rmatch_iff RegularExpression.one_rmatch_iff
 
 theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] := by
@@ -216,7 +218,8 @@ theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] :
   tauto
 #align regular_expression.char_rmatch_iff RegularExpression.char_rmatch_iff
 
-theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) : (P + Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x := by
+theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) :
+    (P + Q).rmatch x ↔ P.rmatch x ∨ Q.rmatch x := by
   induction' x with _ _ ih generalizing P Q
   · simp only [rmatch, match_epsilon, Bool.or_coe_iff]
     
@@ -361,7 +364,8 @@ theorem star_rmatch_iff (P : RegularExpression α) :
 #align regular_expression.star_rmatch_iff RegularExpression.star_rmatch_iff
 
 @[simp]
-theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches := by
+theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches :=
+  by
   intro x
   induction P generalizing x
   all_goals
@@ -383,7 +387,8 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
   rw [add_rmatch_iff, ih₁, ih₂]
   rfl
   case comp P Q ih₁ ih₂ =>
-  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_left, Set.mem_image2, Set.image_prod]
+  simp only [mul_rmatch_iff, comp_def, Language.mul_def, exists_and_left, Set.mem_image2,
+    Set.image_prod]
   constructor
   · rintro ⟨x, y, hsum, hmatch₁, hmatch₂⟩
     rw [ih₁] at hmatch₁
@@ -431,7 +436,8 @@ def map (f : α → β) : RegularExpression α → RegularExpression β
 #align regular_expression.map RegularExpression.map
 
 @[simp]
-protected theorem map_pow (f : α → β) (P : RegularExpression α) : ∀ n : ℕ, map f (P ^ n) = map f P ^ n
+protected theorem map_pow (f : α → β) (P : RegularExpression α) :
+    ∀ n : ℕ, map f (P ^ n) = map f P ^ n
   | 0 => rfl
   | n + 1 => (congr_arg ((· * ·) (map f P)) (map_pow n) : _)
 #align regular_expression.map_pow RegularExpression.map_pow
@@ -458,7 +464,8 @@ theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, 
 
 /-- The language of the map is the map of the language. -/
 @[simp]
-theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).matches = Language.map f P.matches
+theorem matches_map (f : α → β) :
+    ∀ P : RegularExpression α, (P.map f).matches = Language.map f P.matches
   | 0 => (map_zero _).symm
   | 1 => (map_one _).symm
   | Char a => by

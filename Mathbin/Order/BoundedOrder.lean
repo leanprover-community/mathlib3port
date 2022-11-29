@@ -205,8 +205,8 @@ theorem not_is_min_top : ¬IsMin (⊤ : α) := fun h =>
 
 end OrderTop
 
-theorem StrictMono.maximal_preimage_top [LinearOrder α] [Preorder β] [OrderTop β] {f : α → β} (H : StrictMono f) {a}
-    (h_top : f a = ⊤) (x : α) : x ≤ a :=
+theorem StrictMono.maximal_preimage_top [LinearOrder α] [Preorder β] [OrderTop β] {f : α → β}
+    (H : StrictMono f) {a} (h_top : f a = ⊤) (x : α) : x ≤ a :=
   H.maximal_of_maximal_image
     (fun p => by
       rw [h_top]
@@ -214,7 +214,8 @@ theorem StrictMono.maximal_preimage_top [LinearOrder α] [Preorder β] [OrderTop
     x
 #align strict_mono.maximal_preimage_top StrictMono.maximal_preimage_top
 
-theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : PartialOrder α} (B : OrderTop α)
+theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : PartialOrder α}
+    (B : OrderTop α)
     (H :
       ∀ x y : α,
         (haveI := hA
@@ -229,8 +230,7 @@ theorem OrderTop.ext_top {α} {hA : PartialOrder α} (A : OrderTop α) {hB : Par
 
 theorem OrderTop.ext {α} [PartialOrder α] {A B : OrderTop α} : A = B := by
   have tt := OrderTop.ext_top A B fun _ _ => Iff.rfl
-  cases' A with _ ha
-  cases' B with _ hb
+  cases' A with _ ha; cases' B with _ hb
   congr
   exact le_antisymm (hb _) (ha _)
 #align order_top.ext OrderTop.ext
@@ -415,8 +415,8 @@ theorem not_is_max_bot : ¬IsMax (⊥ : α) :=
 
 end OrderBot
 
-theorem StrictMono.minimal_preimage_bot [LinearOrder α] [PartialOrder β] [OrderBot β] {f : α → β} (H : StrictMono f) {a}
-    (h_bot : f a = ⊥) (x : α) : a ≤ x :=
+theorem StrictMono.minimal_preimage_bot [LinearOrder α] [PartialOrder β] [OrderBot β] {f : α → β}
+    (H : StrictMono f) {a} (h_bot : f a = ⊥) (x : α) : a ≤ x :=
   H.minimal_of_minimal_image
     (fun p => by
       rw [h_bot]
@@ -424,7 +424,8 @@ theorem StrictMono.minimal_preimage_bot [LinearOrder α] [PartialOrder β] [Orde
     x
 #align strict_mono.minimal_preimage_bot StrictMono.minimal_preimage_bot
 
-theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : PartialOrder α} (B : OrderBot α)
+theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : PartialOrder α}
+    (B : OrderBot α)
     (H :
       ∀ x y : α,
         (haveI := hA
@@ -439,8 +440,7 @@ theorem OrderBot.ext_bot {α} {hA : PartialOrder α} (A : OrderBot α) {hB : Par
 
 theorem OrderBot.ext {α} [PartialOrder α] {A B : OrderBot α} : A = B := by
   have tt := OrderBot.ext_bot A B fun _ _ => Iff.rfl
-  cases' A with a ha
-  cases' B with b hb
+  cases' A with a ha; cases' B with b hb
   congr
   exact le_antisymm (ha _) (hb _)
 #align order_bot.ext OrderBot.ext
@@ -554,13 +554,13 @@ section Preorder
 
 variable [Preorder α]
 
-theorem monotone_and {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) : Monotone fun x => p x ∧ q x :=
-  fun a b h => And.imp (m_p h) (m_q h)
+theorem monotone_and {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
+    Monotone fun x => p x ∧ q x := fun a b h => And.imp (m_p h) (m_q h)
 #align monotone_and monotone_and
 
 -- Note: by finish [monotone] doesn't work
-theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) : Monotone fun x => p x ∨ q x := fun a b h =>
-  Or.imp (m_p h) (m_q h)
+theorem monotone_or {p q : α → Prop} (m_p : Monotone p) (m_q : Monotone q) :
+    Monotone fun x => p x ∨ q x := fun a b h => Or.imp (m_p h) (m_q h)
 #align monotone_or monotone_or
 
 theorem monotone_le {x : α} : Monotone ((· ≤ ·) x) := fun y z h' h => h.trans h'
@@ -575,12 +575,12 @@ theorem antitone_le {x : α} : Antitone (· ≤ x) := fun y z h' h => h'.trans h
 theorem antitone_lt {x : α} : Antitone (· < x) := fun y z h' h => h'.trans_lt h
 #align antitone_lt antitone_lt
 
-theorem Monotone.forall {P : β → α → Prop} (hP : ∀ x, Monotone (P x)) : Monotone fun y => ∀ x, P x y :=
-  fun y y' hy h x => hP x hy <| h x
+theorem Monotone.forall {P : β → α → Prop} (hP : ∀ x, Monotone (P x)) :
+    Monotone fun y => ∀ x, P x y := fun y y' hy h x => hP x hy <| h x
 #align monotone.forall Monotone.forall
 
-theorem Antitone.forall {P : β → α → Prop} (hP : ∀ x, Antitone (P x)) : Antitone fun y => ∀ x, P x y :=
-  fun y y' hy h x => hP x hy (h x)
+theorem Antitone.forall {P : β → α → Prop} (hP : ∀ x, Antitone (P x)) :
+    Antitone fun y => ∀ x, P x y := fun y y' hy h x => hP x hy (h x)
 #align antitone.forall Antitone.forall
 
 theorem Monotone.ball {P : β → α → Prop} {s : Set β} (hP : ∀ x ∈ s, Monotone (P x)) :
@@ -597,7 +597,8 @@ section SemilatticeSup
 
 variable [SemilatticeSup α]
 
-theorem exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Monotone P) : (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
+theorem exists_ge_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Monotone P) :
+    (∃ x, x₀ ≤ x ∧ P x) ↔ ∃ x, P x :=
   ⟨fun h => h.imp fun x h => h.2, fun ⟨x, hx⟩ => ⟨x ⊔ x₀, le_sup_right, hP le_sup_left hx⟩⟩
 #align exists_ge_and_iff_exists exists_ge_and_iff_exists
 
@@ -607,7 +608,8 @@ section SemilatticeInf
 
 variable [SemilatticeInf α]
 
-theorem exists_le_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Antitone P) : (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
+theorem exists_le_and_iff_exists {P : α → Prop} {x₀ : α} (hP : Antitone P) :
+    (∃ x, x ≤ x₀ ∧ P x) ↔ ∃ x, P x :=
   exists_ge_and_iff_exists hP.dual_left
 #align exists_le_and_iff_exists exists_le_and_iff_exists
 
@@ -670,7 +672,8 @@ theorem eq_top_of_bot_eq_top (hα : (⊥ : α) = ⊤) (x : α) : x = (⊤ : α) 
 #align eq_top_of_bot_eq_top eq_top_of_bot_eq_top
 
 theorem subsingleton_of_top_le_bot (h : (⊤ : α) ≤ (⊥ : α)) : Subsingleton α :=
-  ⟨fun a b => le_antisymm (le_trans le_top <| le_trans h bot_le) (le_trans le_top <| le_trans h bot_le)⟩
+  ⟨fun a b =>
+    le_antisymm (le_trans le_top <| le_trans h bot_le) (le_trans le_top <| le_trans h bot_le)⟩
 #align subsingleton_of_top_le_bot subsingleton_of_top_le_bot
 
 theorem subsingleton_of_bot_eq_top (hα : (⊥ : α) = (⊤ : α)) : Subsingleton α :=
@@ -688,8 +691,8 @@ section lift
 -- See note [reducible non-instances]
 /-- Pullback an `order_top`. -/
 @[reducible]
-def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
-    (map_top : f ⊤ = ⊤) : OrderTop α :=
+def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β)
+    (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) : OrderTop α :=
   ⟨⊤, fun a =>
     map_le _ _ <| by
       rw [map_top]
@@ -699,8 +702,8 @@ def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β) (map
 -- See note [reducible non-instances]
 /-- Pullback an `order_bot`. -/
 @[reducible]
-def OrderBot.lift [LE α] [HasBot α] [LE β] [OrderBot β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
-    (map_bot : f ⊥ = ⊥) : OrderBot α :=
+def OrderBot.lift [LE α] [HasBot α] [LE β] [OrderBot β] (f : α → β)
+    (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_bot : f ⊥ = ⊥) : OrderBot α :=
   ⟨⊥, fun a =>
     map_le _ _ <| by
       rw [map_bot]
@@ -743,7 +746,8 @@ protected def orderTop [LE α] [OrderTop α] (htop : p ⊤) : OrderTop { x : α 
 -- See note [reducible non-instances]
 /-- A subtype remains a bounded order if the property holds at `⊥` and `⊤`. -/
 @[reducible]
-protected def boundedOrder [LE α] [BoundedOrder α] (hbot : p ⊥) (htop : p ⊤) : BoundedOrder (Subtype p) :=
+protected def boundedOrder [LE α] [BoundedOrder α] (hbot : p ⊥) (htop : p ⊤) :
+    BoundedOrder (Subtype p) :=
   { Subtype.orderTop htop, Subtype.orderBot hbot with }
 #align subtype.bounded_order Subtype.boundedOrder
 
@@ -768,13 +772,13 @@ theorem coe_top [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) : ((⊤ : Su
 #align subtype.coe_top Subtype.coe_top
 
 @[simp]
-theorem coe_eq_bot_iff [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) {x : { x // p x }} : (x : α) = ⊥ ↔ x = ⊥ := by
-  rw [← coe_bot hbot, ext_iff]
+theorem coe_eq_bot_iff [OrderBot α] [OrderBot (Subtype p)] (hbot : p ⊥) {x : { x // p x }} :
+    (x : α) = ⊥ ↔ x = ⊥ := by rw [← coe_bot hbot, ext_iff]
 #align subtype.coe_eq_bot_iff Subtype.coe_eq_bot_iff
 
 @[simp]
-theorem coe_eq_top_iff [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) {x : { x // p x }} : (x : α) = ⊤ ↔ x = ⊤ := by
-  rw [← coe_top htop, ext_iff]
+theorem coe_eq_top_iff [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) {x : { x // p x }} :
+    (x : α) = ⊤ ↔ x = ⊤ := by rw [← coe_top htop, ext_iff]
 #align subtype.coe_eq_top_iff Subtype.coe_eq_top_iff
 
 @[simp]

@@ -83,13 +83,13 @@ instance small_subtype (α : Type v) [Small.{w} α] (P : α → Prop) : Small.{w
   small_map (equivShrink α).subtypeEquivOfSubtype'
 #align small_subtype small_subtype
 
-theorem small_of_injective {α : Type v} {β : Type w} [Small.{u} β] {f : α → β} (hf : Function.Injective f) :
-    Small.{u} α :=
+theorem small_of_injective {α : Type v} {β : Type w} [Small.{u} β] {f : α → β}
+    (hf : Function.Injective f) : Small.{u} α :=
   small_map (Equiv.ofInjective f hf)
 #align small_of_injective small_of_injective
 
-theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α → β} (hf : Function.Surjective f) :
-    Small.{u} β :=
+theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α → β}
+    (hf : Function.Surjective f) : Small.{u} β :=
   small_of_injective (Function.injective_surjInv hf)
 #align small_of_surjective small_of_surjective
 
@@ -113,12 +113,14 @@ to keep imports to `logic` to a minimum.
 -/
 
 
-instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (∀ a, β a) :=
+instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] :
+    Small.{w} (∀ a, β a) :=
   ⟨⟨∀ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
       ⟨Equiv.piCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 #align small_Pi small_Pi
 
-instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σa, β a) :=
+instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] :
+    Small.{w} (Σa, β a) :=
   ⟨⟨Σa' : Shrink α, Shrink (β ((equivShrink α).symm a')),
       ⟨Equiv.sigmaCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 #align small_sigma small_sigma
@@ -135,11 +137,13 @@ instance small_set {α} [Small.{w} α] : Small.{w} (Set α) :=
   ⟨⟨Set (Shrink α), ⟨Equiv.Set.congr (equivShrink α)⟩⟩⟩
 #align small_set small_set
 
-instance small_range {α : Type v} {β : Type w} (f : α → β) [Small.{u} α] : Small.{u} (Set.range f) :=
+instance small_range {α : Type v} {β : Type w} (f : α → β) [Small.{u} α] :
+    Small.{u} (Set.range f) :=
   small_of_surjective Set.surjective_onto_range
 #align small_range small_range
 
-instance small_image {α : Type v} {β : Type w} (f : α → β) (S : Set α) [Small.{u} S] : Small.{u} (f '' S) :=
+instance small_image {α : Type v} {β : Type w} (f : α → β) (S : Set α) [Small.{u} S] :
+    Small.{u} (f '' S) :=
   small_of_surjective Set.surjective_onto_image
 #align small_image small_image
 

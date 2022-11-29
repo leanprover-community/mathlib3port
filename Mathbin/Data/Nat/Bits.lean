@@ -34,7 +34,8 @@ theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = ff 
   appending `ff` to `0`. Here, we allow you to explicitly say that that case is not happening, i.e.
   supplying `n = 0 → b = tt`. -/
 theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bit b n)} (b n)
-    (h : f false 0 z = z ∨ (n = 0 → b = tt)) : binaryRec z f (bit b n) = f b n (binaryRec z f n) := by
+    (h : f false 0 z = z ∨ (n = 0 → b = tt)) : binaryRec z f (bit b n) = f b n (binaryRec z f n) :=
+  by
   rw [binary_rec]
   split_ifs with h'
   · rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
@@ -53,7 +54,8 @@ theorem binary_rec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (b
 /-- The same as `binary_rec`, but the induction step can assume that if `n=0`,
   the bit being appended is `tt`-/
 @[elab_as_elim]
-def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = tt) → C n → C (bit b n)) : ∀ n, C n :=
+def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = tt) → C n → C (bit b n)) :
+    ∀ n, C n :=
   binaryRec z fun b n ih =>
     if h : n = 0 → b = tt then f b n h ih
     else by
@@ -64,7 +66,8 @@ def binaryRec' {C : ℕ → Sort _} (z : C 0) (f : ∀ b n, (n = 0 → b = tt) �
 
 /-- The same as `binary_rec`, but special casing both 0 and 1 as base cases -/
 @[elab_as_elim]
-def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n, n ≠ 0 → C n → C (bit b n)) : ∀ n, C n :=
+def binaryRecFromOne {C : ℕ → Sort _} (z₀ : C 0) (z₁ : C 1) (f : ∀ b n, n ≠ 0 → C n → C (bit b n)) :
+    ∀ n, C n :=
   binaryRec' z₀ fun b n h ih =>
     if h' : n = 0 then by
       rw [h', h h']
@@ -77,7 +80,8 @@ theorem zero_bits : bits 0 = [] := by simp [Nat.bits]
 #align nat.zero_bits Nat.zero_bits
 
 @[simp]
-theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = tt) : (bit b n).bits = b :: n.bits := by
+theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = tt) : (bit b n).bits = b :: n.bits :=
+  by
   rw [Nat.bits, binary_rec_eq']
   simpa
 #align nat.bits_append_bit Nat.bits_append_bit
@@ -98,24 +102,25 @@ theorem one_bits : Nat.bits 1 = [true] := by
   simp
 #align nat.one_bits Nat.one_bits
 
-example : bits 3423 = [true, true, true, true, true, false, true, false, true, false, true, true] := by norm_num
+example : bits 3423 = [true, true, true, true, true, false, true, false, true, false, true, true] :=
+  by norm_num
 
 theorem bodd_eq_bits_head (n : ℕ) : n.bodd = n.bits.head := by
-  induction' n using Nat.binaryRec' with b n h ih
+  induction' n using Nat.binaryRec' with b n h ih;
   · simp
     
   simp [bodd_bit, bits_append_bit _ _ h]
 #align nat.bodd_eq_bits_head Nat.bodd_eq_bits_head
 
 theorem div2_bits_eq_tail (n : ℕ) : n.div2.bits = n.bits.tail := by
-  induction' n using Nat.binaryRec' with b n h ih
+  induction' n using Nat.binaryRec' with b n h ih;
   · simp
     
   simp [div2_bit, bits_append_bit _ _ h]
 #align nat.div2_bits_eq_tail Nat.div2_bits_eq_tail
 
 theorem size_eq_bits_len (n : ℕ) : n.bits.length = n.size := by
-  induction' n using Nat.binaryRec' with b n h ih
+  induction' n using Nat.binaryRec' with b n h ih;
   · simp
     
   rw [size_bit, bits_append_bit _ _ h]

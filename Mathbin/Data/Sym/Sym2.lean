@@ -118,11 +118,13 @@ protected theorem induction_on₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 �
     exact hf _ _ _ _
 #align sym2.induction_on₂ Sym2.induction_on₂
 
-protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
+protected theorem exists {α : Sort _} {f : Sym2 α → Prop} :
+    (∃ x : Sym2 α, f x) ↔ ∃ x y, f ⟦(x, y)⟧ :=
   (surjective_quotient_mk _).exists.trans Prod.exists
 #align sym2.exists Sym2.exists
 
-protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f ⟦(x, y)⟧ :=
+protected theorem forall {α : Sort _} {f : Sym2 α → Prop} :
+    (∀ x : Sym2 α, f x) ↔ ∀ x y, f ⟦(x, y)⟧ :=
   (surjective_quotient_mk _).forall.trans Prod.forall
 #align sym2.forall Sym2.forall
 
@@ -182,13 +184,15 @@ theorem lift_mk (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a�
 #align sym2.lift_mk Sym2.lift_mk
 
 @[simp]
-theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) : (lift.symm F : α → α → β) a₁ a₂ = F ⟦(a₁, a₂)⟧ :=
+theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) :
+    (lift.symm F : α → α → β) a₁ a₂ = F ⟦(a₁, a₂)⟧ :=
   rfl
 #align sym2.coe_lift_symm_apply Sym2.coe_lift_symm_apply
 
 /-- A two-argument version of `sym2.lift`. -/
 def lift₂ :
-    { f : α → α → β → β → γ // ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ } ≃
+    { f : α → α → β → β → γ //
+        ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ } ≃
       (Sym2 α → Sym2 β → γ) where
   toFun f :=
     Quotient.lift₂ (fun (a : α × α) (b : β × β) => f.1 a.1 a.2 b.1 b.2)
@@ -205,7 +209,9 @@ def lift₂ :
 
 @[simp]
 theorem lift₂_mk
-    (f : { f : α → α → β → β → γ // ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ })
+    (f :
+      { f : α → α → β → β → γ //
+        ∀ a₁ a₂ b₁ b₂, f a₁ a₂ b₁ b₂ = f a₂ a₁ b₁ b₂ ∧ f a₁ a₂ b₁ b₂ = f a₁ a₂ b₂ b₁ })
     (a₁ a₂ : α) (b₁ b₂ : β) : lift₂ f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ = (f : α → α → β → β → γ) a₁ a₂ b₁ b₂ :=
   rfl
 #align sym2.lift₂_mk Sym2.lift₂_mk
@@ -318,7 +324,8 @@ noncomputable def Mem.other {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
 #align sym2.mem.other Sym2.Mem.other
 
 @[simp]
-theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by erw [← Classical.choose_spec h]
+theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z := by
+  erw [← Classical.choose_spec h]
 #align sym2.other_spec Sym2.other_spec
 
 theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z := by
@@ -337,8 +344,8 @@ theorem mem_and_mem_iff {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y
     
 #align sym2.mem_and_mem_iff Sym2.mem_and_mem_iff
 
-theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h2 : y ∈ z) (h3 : x ∈ z') (h4 : y ∈ z') :
-    z = z' :=
+theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h2 : y ∈ z) (h3 : x ∈ z')
+    (h4 : y ∈ z') : z = z' :=
   ((mem_and_mem_iff h).mp ⟨h1, h2⟩).trans ((mem_and_mem_iff h).mp ⟨h3, h4⟩).symm
 #align sym2.eq_of_ne_mem Sym2.eq_of_ne_mem
 
@@ -346,11 +353,9 @@ theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h
 protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z' := by
   induction' z using Sym2.ind with x y
   induction' z' using Sym2.ind with x' y'
-  have hx := h x
-  have hy := h y
-  have hx' := h x'
-  have hy' := h y'
-  simp only [mem_iff, eq_self_iff_true, or_true_iff, iff_true_iff, true_or_iff, true_iff_iff] at hx hy hx' hy'
+  have hx := h x; have hy := h y; have hx' := h x'; have hy' := h y'
+  simp only [mem_iff, eq_self_iff_true, or_true_iff, iff_true_iff, true_or_iff, true_iff_iff] at
+    hx hy hx' hy'
   cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
   simp only [Sym2.eq_swap]
 #align sym2.ext Sym2.ext
@@ -402,7 +407,8 @@ def diag (x : α) : Sym2 α :=
   ⟦(x, x)⟧
 #align sym2.diag Sym2.diag
 
-theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun x y h => by cases Quotient.exact h <;> rfl
+theorem diag_injective : Function.Injective (Sym2.diag : α → Sym2 α) := fun x y h => by
+  cases Quotient.exact h <;> rfl
 #align sym2.diag_injective Sym2.diag_injective
 
 /-- A predicate for testing whether an element of `sym2 α` is on the diagonal.
@@ -485,7 +491,8 @@ theorem from_rel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.uni
   simp [-Set.top_eq_univ, PropCat.top_eq_true]
 #align sym2.from_rel_top Sym2.from_rel_top
 
-theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z ∈ fromRel Sym → ¬IsDiag z :=
+theorem from_rel_irreflexive {sym : Symmetric r} :
+    Irreflexive r ↔ ∀ {z}, z ∈ fromRel Sym → ¬IsDiag z :=
   { mp := fun h =>
       Sym2.ind <| by
         rintro a b hr (rfl : a = b)
@@ -493,13 +500,13 @@ theorem from_rel_irreflexive {sym : Symmetric r} : Irreflexive r ↔ ∀ {z}, z 
     mpr := fun h x hr => h (from_rel_prop.mpr hr) rfl }
 #align sym2.from_rel_irreflexive Sym2.from_rel_irreflexive
 
-theorem mem_from_rel_irrefl_other_ne {sym : Symmetric r} (irrefl : Irreflexive r) {a : α} {z : Sym2 α}
-    (hz : z ∈ fromRel Sym) (h : a ∈ z) : h.other ≠ a :=
+theorem mem_from_rel_irrefl_other_ne {sym : Symmetric r} (irrefl : Irreflexive r) {a : α}
+    {z : Sym2 α} (hz : z ∈ fromRel Sym) (h : a ∈ z) : h.other ≠ a :=
   other_ne (from_rel_irreflexive.mp irrefl hz) h
 #align sym2.mem_from_rel_irrefl_other_ne Sym2.mem_from_rel_irrefl_other_ne
 
-instance fromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] : DecidablePred (· ∈ Sym2.fromRel Sym) :=
-  fun z => Quotient.recOnSubsingleton z fun x => h _ _
+instance fromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] :
+    DecidablePred (· ∈ Sym2.fromRel Sym) := fun z => Quotient.recOnSubsingleton z fun x => h _ _
 #align sym2.from_rel.decidable_pred Sym2.fromRel.decidablePred
 
 /-- The inverse to `sym2.from_rel`. Given a set on `sym2 α`, give a symmetric relation on `α`
@@ -537,7 +544,8 @@ private def from_vector : Vector α 2 → α × α
   | ⟨[a, b], h⟩ => (a, b)
 #align sym2.from_vector sym2.from_vector
 
-private theorem perm_card_two_iff {a₁ b₁ a₂ b₂ : α} : [a₁, b₁].Perm [a₂, b₂] ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ a₁ = b₂ ∧ b₁ = a₂ :=
+private theorem perm_card_two_iff {a₁ b₁ a₂ b₂ : α} :
+    [a₁, b₁].Perm [a₂, b₂] ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ a₁ = b₂ ∧ b₁ = a₂ :=
   { mp := by
       simp [← Multiset.coe_eq_coe, ← Multiset.cons_coe, Multiset.cons_eq_cons]
       tidy,
@@ -563,31 +571,29 @@ def sym2EquivSym' : Equiv (Sym2 α) (Sym' α 2) where
     Quotient.map fromVector
       (by
         rintro ⟨x, hx⟩ ⟨y, hy⟩ h
-        cases' x with _ x
+        cases' x with _ x;
         · simpa using hx
           
-        cases' x with _ x
+        cases' x with _ x;
         · simpa using hx
           
-        cases' x with _ x
-        swap
+        cases' x with _ x; swap;
         · exfalso
           simp at hx
           linarith [hx]
           
-        cases' y with _ y
+        cases' y with _ y;
         · simpa using hy
           
-        cases' y with _ y
+        cases' y with _ y;
         · simpa using hy
           
-        cases' y with _ y
-        swap
+        cases' y with _ y; swap;
         · exfalso
           simp at hy
           linarith [hy]
           
-        rcases perm_card_two_iff.mp h with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+        rcases perm_card_two_iff.mp h with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩);
         · rfl
           
         apply Sym2.Rel.swap)
@@ -636,17 +642,14 @@ def relBool [DecidableEq α] (x y : α × α) : Bool :=
 #align sym2.rel_bool Sym2.relBool
 
 theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y := by
-  cases' x with x₁ x₂
-  cases' y with y₁ y₂
-  dsimp [rel_bool]
-  split_ifs <;> simp only [false_iff_iff, Bool.coe_sort_ff, Bool.of_decide_iff]
-  rotate_left 2
+  cases' x with x₁ x₂; cases' y with y₁ y₂
+  dsimp [rel_bool]; split_ifs <;> simp only [false_iff_iff, Bool.coe_sort_ff, Bool.of_decide_iff]
+  rotate_left 2;
   · contrapose! h
     cases h <;> cc
     
   all_goals
-  subst x₁
-  constructor <;> intro h1
+  subst x₁; constructor <;> intro h1
   · subst h1 <;> apply Sym2.Rel.swap
     
   · cases h1 <;> cc
@@ -661,7 +664,8 @@ instance (α : Type _) [DecidableEq α] : DecidableRel (Sym2.Rel α) := fun x y 
 /-! ### The other element of an element of the symmetric square -/
 
 
-/-- A function that gives the other element of a pair given one of the elements.  Used in `mem.other'`.
+/--
+A function that gives the other element of a pair given one of the elements.  Used in `mem.other'`.
 -/
 private def pair_other [DecidableEq α] (a : α) (z : α × α) : α :=
   if a = z.1 then z.2 else z.1
@@ -677,35 +681,29 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
       intro x y h
       ext hy
       convert_to pair_other a x = _
-      · have h' : ∀ {c e h}, @Eq.ndrec _ ⟦x⟧ (fun s => a ∈ s → α) (fun _ => pair_other a x) c e h = pair_other a x := by
+      · have h' :
+          ∀ {c e h},
+            @Eq.ndrec _ ⟦x⟧ (fun s => a ∈ s → α) (fun _ => pair_other a x) c e h = pair_other a x :=
+          by
           intro _ e _
           subst e
         apply h'
         
       have h' := (rel_bool_spec x y).mpr h
-      cases' x with x₁ x₂
-      cases' y with y₁ y₂
-      cases' mem_iff.mp hy with hy' <;>
-        subst a <;>
-          dsimp [rel_bool] at h' <;>
-            split_ifs  at h' <;>
-              try
-                rw [Bool.of_decide_iff] at h'
-                subst x₁
-                subst x₂ <;> dsimp [pair_other]
+      cases' x with x₁ x₂; cases' y with y₁ y₂
+      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h' <;> split_ifs  at h' <;>
+          try rw [Bool.of_decide_iff] at h'; subst x₁; subst x₂ <;>
+        dsimp [pair_other]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
-      exfalso
-      exact Bool.not_false' h'
+      exfalso; exact Bool.not_false' h'
       simp only [h_1, if_true, eq_self_iff_true, if_false]
-      exfalso
-      exact Bool.not_false' h')
+      exfalso; exact Bool.not_false' h')
     z h
 #align sym2.mem.other' Sym2.Mem.other'
 
 @[simp]
 theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other')⟧ = z := by
-  induction z
-  cases' z with x y
+  induction z; cases' z with x y
   have h' := mem_iff.mp h
   dsimp [mem.other', Quot.rec, pair_other]
   cases h' <;> subst a
@@ -731,21 +729,20 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
   exact other_mem h
 #align sym2.other_mem' Sym2.other_mem'
 
-theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) : hb.other' = a := by
-  induction z
-  cases' z with x y
+theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) :
+    hb.other' = a := by
+  induction z; cases' z with x y
   dsimp [mem.other', Quot.rec, pair_other] at hb
   split_ifs  at hb <;> dsimp [mem.other', Quot.rec, pair_other]
   simp only [h, if_true, eq_self_iff_true]
-  split_ifs
-  assumption
-  rfl
+  split_ifs; assumption; rfl
   simp only [h, if_false, eq_self_iff_true]
   exact ((mem_iff.mp ha).resolve_left h).symm
   rfl
 #align sym2.other_invol' Sym2.other_invol'
 
-theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by classical
+theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by
+  classical
   rw [other_eq_other'] at hb⊢
   convert other_invol' ha hb
   rw [other_eq_other']
@@ -771,7 +768,9 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
-    (((s ×ˢ s).image Quotient.mk'').filter fun a : Sym2 α => ¬a.IsDiag) = s.offDiag.image Quotient.mk'' := by
+    (((s ×ˢ s).image Quotient.mk'').filter fun a : Sym2 α => ¬a.IsDiag) =
+      s.offDiag.image Quotient.mk'' :=
+  by
   ext z
   induction z using Quotient.induction_on
   rcases z with ⟨x, y⟩

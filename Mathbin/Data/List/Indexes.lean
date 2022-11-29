@@ -38,8 +38,8 @@ theorem map_with_index_core_eq (l : List α) (f : ℕ → α → β) (n : ℕ) :
     
 #align list.map_with_index_core_eq List.map_with_index_core_eq
 
-theorem map_with_index_eq_enum_map (l : List α) (f : ℕ → α → β) : l.mapWithIndex f = l.enum.map (Function.uncurry f) :=
-  by
+theorem map_with_index_eq_enum_map (l : List α) (f : ℕ → α → β) :
+    l.mapWithIndex f = l.enum.map (Function.uncurry f) := by
   induction' l with hd tl hl generalizing f
   · simp [List.enum_eq_zip_range]
     
@@ -51,8 +51,8 @@ theorem map_with_index_eq_enum_map (l : List α) (f : ℕ → α → β) : l.map
 @[simp]
 theorem map_with_index_cons {α β} (l : List α) (f : ℕ → α → β) (a : α) :
     mapWithIndex f (a :: l) = f 0 a :: mapWithIndex (fun i => f (i + 1)) l := by
-  simp [map_with_index_eq_enum_map, enum_eq_zip_range, map_uncurry_zip_eq_zip_with, range_succ_eq_map,
-    zip_with_map_left]
+  simp [map_with_index_eq_enum_map, enum_eq_zip_range, map_uncurry_zip_eq_zip_with,
+    range_succ_eq_map, zip_with_map_left]
 #align list.map_with_index_cons List.map_with_index_cons
 
 theorem map_with_index_append {α} (K L : List α) (f : ℕ → α → β) :
@@ -65,7 +65,8 @@ theorem map_with_index_append {α} (K L : List α) (f : ℕ → α → β) :
 #align list.map_with_index_append List.map_with_index_append
 
 @[simp]
-theorem length_map_with_index {α β} (l : List α) (f : ℕ → α → β) : (l.mapWithIndex f).length = l.length := by
+theorem length_map_with_index {α β} (l : List α) (f : ℕ → α → β) :
+    (l.mapWithIndex f).length = l.length := by
   induction' l with hd tl IH generalizing f
   · simp
     
@@ -76,7 +77,8 @@ theorem length_map_with_index {α β} (l : List α) (f : ℕ → α → β) : (l
 @[simp]
 theorem nth_le_map_with_index {α β} (l : List α) (f : ℕ → α → β) (i : ℕ) (h : i < l.length)
     (h' : i < (l.mapWithIndex f).length := h.trans_le (l.length_map_with_index f).ge) :
-    (l.mapWithIndex f).nthLe i h' = f i (l.nthLe i h) := by simp [map_with_index_eq_enum_map, enum_eq_zip_range]
+    (l.mapWithIndex f).nthLe i h' = f i (l.nthLe i h) := by
+  simp [map_with_index_eq_enum_map, enum_eq_zip_range]
 #align list.nth_le_map_with_index List.nth_le_map_with_index
 
 theorem map_with_index_eq_of_fn {α β} (l : List α) (f : ℕ → α → β) :
@@ -98,7 +100,8 @@ def foldrWithIndexAuxSpec (f : ℕ → α → β → β) (start : ℕ) (b : β) 
 #align list.foldr_with_index_aux_spec List.foldrWithIndexAuxSpec
 
 theorem foldr_with_index_aux_spec_cons (f : ℕ → α → β → β) (start b a as) :
-    foldrWithIndexAuxSpec f start b (a :: as) = f start a (foldrWithIndexAuxSpec f (start + 1) b as) :=
+    foldrWithIndexAuxSpec f start b (a :: as) =
+      f start a (foldrWithIndexAuxSpec f (start + 1) b as) :=
   rfl
 #align list.foldr_with_index_aux_spec_cons List.foldr_with_index_aux_spec_cons
 
@@ -109,11 +112,13 @@ theorem foldr_with_index_aux_eq_foldr_with_index_aux_spec (f : ℕ → α → β
     
   · simp only [foldr_with_index_aux, foldr_with_index_aux_spec_cons, *]
     
-#align list.foldr_with_index_aux_eq_foldr_with_index_aux_spec List.foldr_with_index_aux_eq_foldr_with_index_aux_spec
+#align
+  list.foldr_with_index_aux_eq_foldr_with_index_aux_spec List.foldr_with_index_aux_eq_foldr_with_index_aux_spec
 
 theorem foldr_with_index_eq_foldr_enum (f : ℕ → α → β → β) (b : β) (as : List α) :
     foldrWithIndex f b as = foldr (uncurry f) b (enum as) := by
-  simp only [foldr_with_index, foldr_with_index_aux_spec, foldr_with_index_aux_eq_foldr_with_index_aux_spec, enum]
+  simp only [foldr_with_index, foldr_with_index_aux_spec,
+    foldr_with_index_aux_eq_foldr_with_index_aux_spec, enum]
 #align list.foldr_with_index_eq_foldr_enum List.foldr_with_index_eq_foldr_enum
 
 end FoldrWithIndex
@@ -125,7 +130,8 @@ theorem indexes_values_eq_filter_enum (p : α → Prop) [DecidablePred p] (as : 
 
 theorem find_indexes_eq_map_indexes_values (p : α → Prop) [DecidablePred p] (as : List α) :
     findIndexes p as = map Prod.fst (indexesValues p as) := by
-  simp only [indexes_values_eq_filter_enum, map_filter_eq_foldr, find_indexes, foldr_with_index_eq_foldr_enum, uncurry]
+  simp only [indexes_values_eq_filter_enum, map_filter_eq_foldr, find_indexes,
+    foldr_with_index_eq_foldr_enum, uncurry]
 #align list.find_indexes_eq_map_indexes_values List.find_indexes_eq_map_indexes_values
 
 section FoldlWithIndex
@@ -136,7 +142,8 @@ def foldlWithIndexAuxSpec (f : ℕ → α → β → α) (start : ℕ) (a : α) 
 #align list.foldl_with_index_aux_spec List.foldlWithIndexAuxSpec
 
 theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) (start a b bs) :
-    foldlWithIndexAuxSpec f start a (b :: bs) = foldlWithIndexAuxSpec f (start + 1) (f start a b) bs :=
+    foldlWithIndexAuxSpec f start a (b :: bs) =
+      foldlWithIndexAuxSpec f (start + 1) (f start a b) bs :=
   rfl
 #align list.foldl_with_index_aux_spec_cons List.foldl_with_index_aux_spec_cons
 
@@ -147,11 +154,13 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
     
   · simp [foldl_with_index_aux, foldl_with_index_aux_spec_cons, *]
     
-#align list.foldl_with_index_aux_eq_foldl_with_index_aux_spec List.foldl_with_index_aux_eq_foldl_with_index_aux_spec
+#align
+  list.foldl_with_index_aux_eq_foldl_with_index_aux_spec List.foldl_with_index_aux_eq_foldl_with_index_aux_spec
 
 theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
     foldlWithIndex f a bs = foldl (fun a (p : ℕ × β) => f p.fst a p.snd) a (enum bs) := by
-  simp only [foldl_with_index, foldl_with_index_aux_spec, foldl_with_index_aux_eq_foldl_with_index_aux_spec, enum]
+  simp only [foldl_with_index, foldl_with_index_aux_spec,
+    foldl_with_index_aux_eq_foldl_with_index_aux_spec, enum]
 #align list.foldl_with_index_eq_foldl_enum List.foldl_with_index_eq_foldl_enum
 
 end FoldlWithIndex
@@ -165,7 +174,8 @@ theorem mfoldr_with_index_eq_mfoldr_enum {α β} (f : ℕ → α → β → m β
   simp only [mfoldr_with_index, mfoldr_eq_foldr, foldr_with_index_eq_foldr_enum, uncurry]
 #align list.mfoldr_with_index_eq_mfoldr_enum List.mfoldr_with_index_eq_mfoldr_enum
 
-theorem mfoldl_with_index_eq_mfoldl_enum [LawfulMonad m] {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) :
+theorem mfoldl_with_index_eq_mfoldl_enum [LawfulMonad m] {α β} (f : ℕ → β → α → m β) (b : β)
+    (as : List α) :
     mfoldlWithIndex f b as = foldlM (fun b (p : ℕ × α) => f p.fst b p.snd) b (enum as) := by
   rw [mfoldl_with_index, mfoldl_eq_foldl, foldl_with_index_eq_foldl_enum]
 #align list.mfoldl_with_index_eq_mfoldl_enum List.mfoldl_with_index_eq_mfoldl_enum
@@ -184,22 +194,25 @@ def mmapWithIndexAuxSpec {α β} (f : ℕ → α → m β) (start : ℕ) (as : L
 -- Note: `traverse` the class method would require a less universe-polymorphic
 -- `m : Type u → Type u`.
 theorem mmap_with_index_aux_spec_cons {α β} (f : ℕ → α → m β) (start : ℕ) (a : α) (as : List α) :
-    mmapWithIndexAuxSpec f start (a :: as) = List.cons <$> f start a <*> mmapWithIndexAuxSpec f (start + 1) as :=
+    mmapWithIndexAuxSpec f start (a :: as) =
+      List.cons <$> f start a <*> mmapWithIndexAuxSpec f (start + 1) as :=
   rfl
 #align list.mmap_with_index_aux_spec_cons List.mmap_with_index_aux_spec_cons
 
-theorem mmap_with_index_aux_eq_mmap_with_index_aux_spec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) :
-    mmapWithIndexAux f start as = mmapWithIndexAuxSpec f start as := by
+theorem mmap_with_index_aux_eq_mmap_with_index_aux_spec {α β} (f : ℕ → α → m β) (start : ℕ)
+    (as : List α) : mmapWithIndexAux f start as = mmapWithIndexAuxSpec f start as := by
   induction as generalizing start
   · rfl
     
   · simp [mmap_with_index_aux, mmap_with_index_aux_spec_cons, *]
     
-#align list.mmap_with_index_aux_eq_mmap_with_index_aux_spec List.mmap_with_index_aux_eq_mmap_with_index_aux_spec
+#align
+  list.mmap_with_index_aux_eq_mmap_with_index_aux_spec List.mmap_with_index_aux_eq_mmap_with_index_aux_spec
 
 theorem mmap_with_index_eq_mmap_enum {α β} (f : ℕ → α → m β) (as : List α) :
     mmapWithIndex f as = List.traverse (uncurry f) (enum as) := by
-  simp only [mmap_with_index, mmap_with_index_aux_spec, mmap_with_index_aux_eq_mmap_with_index_aux_spec, enum]
+  simp only [mmap_with_index, mmap_with_index_aux_spec,
+    mmap_with_index_aux_eq_mmap_with_index_aux_spec, enum]
 #align list.mmap_with_index_eq_mmap_enum List.mmap_with_index_eq_mmap_enum
 
 end MmapWithIndex
@@ -208,14 +221,18 @@ section MmapWithIndex'
 
 variable {m : Type u → Type v} [Applicative m] [LawfulApplicative m]
 
-theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m PUnit) (start : ℕ) (as : List α) :
-    mmapWithIndex'Aux f start as = mmapWithIndexAux f start as *> pure PUnit.unit := by
+theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m PUnit) (start : ℕ)
+    (as : List α) : mmapWithIndex'Aux f start as = mmapWithIndexAux f start as *> pure PUnit.unit :=
+  by
   induction as generalizing start <;>
-    simp [mmap_with_index'_aux, mmap_with_index_aux, *, seq_right_eq, const, -comp_const, functor_norm]
-#align list.mmap_with_index'_aux_eq_mmap_with_index_aux List.mmap_with_index'_aux_eq_mmap_with_index_aux
+    simp [mmap_with_index'_aux, mmap_with_index_aux, *, seq_right_eq, const, -comp_const,
+      functor_norm]
+#align
+  list.mmap_with_index'_aux_eq_mmap_with_index_aux List.mmap_with_index'_aux_eq_mmap_with_index_aux
 
 theorem mmap_with_index'_eq_mmap_with_index {α} (f : ℕ → α → m PUnit) (as : List α) :
-    mmapWithIndex' f as = mmapWithIndex f as *> pure PUnit.unit := by apply mmap_with_index'_aux_eq_mmap_with_index_aux
+    mmapWithIndex' f as = mmapWithIndex f as *> pure PUnit.unit := by
+  apply mmap_with_index'_aux_eq_mmap_with_index_aux
 #align list.mmap_with_index'_eq_mmap_with_index List.mmap_with_index'_eq_mmap_with_index
 
 end MmapWithIndex'

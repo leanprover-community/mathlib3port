@@ -93,7 +93,8 @@ variable {σ} (p)
 
 section Degrees
 
-theorem degrees_neg (p : MvPolynomial σ R) : (-p).degrees = p.degrees := by rw [degrees, support_neg] <;> rfl
+theorem degrees_neg (p : MvPolynomial σ R) : (-p).degrees = p.degrees := by
+  rw [degrees, support_neg] <;> rfl
 #align mv_polynomial.degrees_neg MvPolynomial.degrees_neg
 
 theorem degrees_sub (p q : MvPolynomial σ R) : (p - q).degrees ≤ p.degrees ⊔ q.degrees := by
@@ -176,7 +177,8 @@ section DegreeOf
 
 theorem degree_of_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
-    (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k := by
+    (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k :=
+  by
   rw [degree_of_lt_iff h]
   intro m hm
   by_contra hc
@@ -199,7 +201,8 @@ theorem total_degree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.totalDeg
   simp only [total_degree, support_neg]
 #align mv_polynomial.total_degree_neg MvPolynomial.total_degree_neg
 
-theorem total_degree_sub (a b : MvPolynomial σ R) : (a - b).totalDegree ≤ max a.totalDegree b.totalDegree :=
+theorem total_degree_sub (a b : MvPolynomial σ R) :
+    (a - b).totalDegree ≤ max a.totalDegree b.totalDegree :=
   calc
     (a - b).totalDegree = (a + -b).totalDegree := by rw [sub_eq_add_neg]
     _ ≤ max a.totalDegree (-b).totalDegree := total_degree_add a (-b)

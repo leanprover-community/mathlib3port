@@ -182,7 +182,8 @@ theorem think_empty : empty α = think (empty α) :=
 #align computation.think_empty Computation.think_empty
 
 /-- Recursion principle for computations, compare with `list.rec_on`. -/
-def recOn {C : Computation α → Sort v} (s : Computation α) (h1 : ∀ a, C (return a)) (h2 : ∀ s, C (think s)) : C s := by
+def recOn {C : Computation α → Sort v} (s : Computation α) (h1 : ∀ a, C (return a))
+    (h2 : ∀ s, C (think s)) : C s := by
   induction' H : destruct s with v v
   · rw [destruct_eq_ret H]
     apply h1
@@ -209,9 +210,7 @@ def corec (f : β → Sum α β) (b : β) : Computation α := by
   refine' ⟨Stream.corec' (corec.F f) (Sum.inr b), fun n a' h => _⟩
   rw [Stream.corec'_eq]
   change Stream.corec' (corec.F f) (corec.F f (Sum.inr b)).2 n = some a'
-  revert h
-  generalize Sum.inr b = o
-  revert o
+  revert h; generalize Sum.inr b = o; revert o
   induction' n with n IH <;> intro o
   · change (corec.F f o).1 = some a' → (corec.F f (corec.F f o).2).1 = some a'
     cases' o with a b <;> intro h
@@ -248,16 +247,14 @@ attribute [simp] lmap rmap
 theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (corec f) (f b) := by
   dsimp [corec, destruct]
   change Stream.corec' (corec.F f) (Sum.inr b) 0 with corec.F._match_1 (f b)
-  induction' h : f b with a b'
+  induction' h : f b with a b';
   · rfl
     
   dsimp [corec.F, destruct]
-  apply congr_arg
-  apply Subtype.eq
+  apply congr_arg; apply Subtype.eq
   dsimp [corec, tail]
   rw [Stream.corec'_eq, Stream.tail_cons]
-  dsimp [corec.F]
-  rw [h]
+  dsimp [corec.F]; rw [h]
 #align computation.corec_eq Computation.corec_eq
 
 section Bisim
@@ -329,10 +326,12 @@ theorem le_stable (s : Computation α) {a m n} (h : m ≤ n) : s.1 m = some a �
 
 theorem mem_unique {s : Computation α} {a b : α} : a ∈ s → b ∈ s → a = b
   | ⟨m, ha⟩, ⟨n, hb⟩ => by
-    injection (le_stable s (le_max_left m n) ha.symm).symm.trans (le_stable s (le_max_right m n) hb.symm)
+    injection
+      (le_stable s (le_max_left m n) ha.symm).symm.trans (le_stable s (le_max_right m n) hb.symm)
 #align computation.mem_unique Computation.mem_unique
 
-theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Computation α → Prop) := fun a s b => mem_unique
+theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Computation α → Prop) := fun a s b =>
+  mem_unique
 #align computation.mem.left_unique Computation.Mem.left_unique
 
 /-- `terminates s` asserts that the computation `s` eventually terminates with some value. -/
@@ -395,13 +394,11 @@ theorem not_terminates_empty : ¬Terminates (empty α) := fun ⟨⟨a, h⟩⟩ =
 #align computation.not_terminates_empty Computation.not_terminates_empty
 
 theorem eq_empty_of_not_terminates {s} (H : ¬Terminates s) : s = empty α := by
-  apply Subtype.eq
-  funext n
-  induction' h : s.val n with
+  apply Subtype.eq; funext n
+  induction' h : s.val n with ;
   · rfl
     
-  refine' absurd _ H
-  exact ⟨⟨_, _, h.symm⟩⟩
+  refine' absurd _ H; exact ⟨⟨_, _, h.symm⟩⟩
 #align computation.eq_empty_of_not_terminates Computation.eq_empty_of_not_terminates
 
 theorem thinkN_mem {s : Computation α} {a} : ∀ n, a ∈ thinkN s n ↔ a ∈ s
@@ -493,12 +490,13 @@ def Results (s : Computation α) (a : α) (n : ℕ) :=
   ∃ h : a ∈ s, @length _ s (terminates_of_mem h) = n
 #align computation.results Computation.Results
 
-theorem results_of_terminates (s : Computation α) [T : Terminates s] : Results s (get s) (length s) :=
+theorem results_of_terminates (s : Computation α) [T : Terminates s] :
+    Results s (get s) (length s) :=
   ⟨get_mem _, rfl⟩
 #align computation.results_of_terminates Computation.results_of_terminates
 
-theorem results_of_terminates' (s : Computation α) [T : Terminates s] {a} (h : a ∈ s) : Results s a (length s) := by
-  rw [← get_eq_of_mem _ h] <;> apply results_of_terminates
+theorem results_of_terminates' (s : Computation α) [T : Terminates s] {a} (h : a ∈ s) :
+    Results s a (length s) := by rw [← get_eq_of_mem _ h] <;> apply results_of_terminates
 #align computation.results_of_terminates' Computation.results_of_terminates'
 
 theorem Results.mem {s : Computation α} {a n} : Results s a n → a ∈ s
@@ -513,12 +511,13 @@ theorem Results.length {s : Computation α} {a n} [T : Terminates s] : Results s
   | ⟨_, h⟩ => h
 #align computation.results.length Computation.Results.length
 
-theorem Results.val_unique {s : Computation α} {a b m n} (h1 : Results s a m) (h2 : Results s b n) : a = b :=
+theorem Results.val_unique {s : Computation α} {a b m n} (h1 : Results s a m) (h2 : Results s b n) :
+    a = b :=
   mem_unique h1.Mem h2.Mem
 #align computation.results.val_unique Computation.Results.val_unique
 
-theorem Results.len_unique {s : Computation α} {a b m n} (h1 : Results s a m) (h2 : Results s b n) : m = n := by
-  haveI := h1.terminates <;> haveI := h2.terminates <;> rw [← h1.length, h2.length]
+theorem Results.len_unique {s : Computation α} {a b m n} (h1 : Results s a m) (h2 : Results s b n) :
+    m = n := by haveI := h1.terminates <;> haveI := h2.terminates <;> rw [← h1.length, h2.length]
 #align computation.results.len_unique Computation.Results.len_unique
 
 theorem exists_results_of_mem {s : Computation α} {a} (h : a ∈ s) : ∃ n, Results s a n :=
@@ -563,7 +562,8 @@ theorem results_think {s : Computation α} {a n} (h : Results s a n) : Results (
   ⟨think_mem h.mem, by rw [length_think, h.length]⟩
 #align computation.results_think Computation.results_think
 
-theorem of_results_think {s : Computation α} {a n} (h : Results (think s) a n) : ∃ m, Results s a m ∧ n = m + 1 := by
+theorem of_results_think {s : Computation α} {a n} (h : Results (think s) a n) :
+    ∃ m, Results s a m ∧ n = m + 1 := by
   haveI := of_think_terminates h.terminates
   have := results_of_terminates' _ (of_think_mem h.mem)
   exact ⟨_, this, results.len_unique h (results_think this)⟩
@@ -576,7 +576,8 @@ theorem results_think_iff {s : Computation α} {a n} : Results (think s) a (n + 
     injection e with h' <;> rwa [h'], results_think⟩
 #align computation.results_think_iff Computation.results_think_iff
 
-theorem results_thinkN {s : Computation α} {a m} : ∀ n, Results s a m → Results (thinkN s n) a (m + n)
+theorem results_thinkN {s : Computation α} {a m} :
+    ∀ n, Results s a m → Results (thinkN s n) a (m + n)
   | 0, h => h
   | n + 1, h => results_think (results_thinkN n h)
 #align computation.results_thinkN Computation.results_thinkN
@@ -586,7 +587,8 @@ theorem results_thinkN_ret (a : α) (n) : Results (thinkN (return a) n) a n := b
 #align computation.results_thinkN_ret Computation.results_thinkN_ret
 
 @[simp]
-theorem length_thinkN (s : Computation α) [h : Terminates s] (n) : length (thinkN s n) = length s + n :=
+theorem length_thinkN (s : Computation α) [h : Terminates s] (n) :
+    length (thinkN s n) = length s + n :=
   (results_thinkN n (results_of_terminates _)).length
 #align computation.length_thinkN Computation.length_thinkN
 
@@ -608,17 +610,17 @@ theorem eq_thinkN {s : Computation α} {a n} (h : Results s a n) : s = thinkN (r
     
 #align computation.eq_thinkN Computation.eq_thinkN
 
-theorem eq_thinkN' (s : Computation α) [h : Terminates s] : s = thinkN (return (get s)) (length s) :=
+theorem eq_thinkN' (s : Computation α) [h : Terminates s] :
+    s = thinkN (return (get s)) (length s) :=
   eq_thinkN (results_of_terminates _)
 #align computation.eq_thinkN' Computation.eq_thinkN'
 
-def memRecOn {C : Computation α → Sort v} {a s} (M : a ∈ s) (h1 : C (return a)) (h2 : ∀ s, C s → C (think s)) : C s :=
-  by
+def memRecOn {C : Computation α → Sort v} {a s} (M : a ∈ s) (h1 : C (return a))
+    (h2 : ∀ s, C s → C (think s)) : C s := by
   haveI T := terminates_of_mem M
   rw [eq_thinkN' s, get_eq_of_mem s M]
   generalize length s = n
-  induction' n with n IH
-  exacts[h1, h2 _ IH]
+  induction' n with n IH; exacts[h1, h2 _ IH]
 #align computation.mem_rec_on Computation.memRecOn
 
 def terminatesRecOn {C : Computation α → Sort v} (s) [Terminates s] (h1 : ∀ a, C (return a))
@@ -633,7 +635,7 @@ def map (f : α → β) : Computation α → Computation β
       dsimp [Stream.map, Stream.nth]
       induction' e : s n with a <;> intro h
       · contradiction
-        
+        ;
       · rw [al e, ← h]
         ⟩
 #align computation.map Computation.map
@@ -643,7 +645,8 @@ def Bind.g : Sum β (Computation β) → Sum β (Sum (Computation α) (Computati
   | Sum.inr cb' => Sum.inr <| Sum.inr cb'
 #align computation.bind.G Computation.Bind.g
 
-def Bind.f (f : α → Computation β) : Sum (Computation α) (Computation β) → Sum β (Sum (Computation α) (Computation β))
+def Bind.f (f : α → Computation β) :
+    Sum (Computation α) (Computation β) → Sum β (Sum (Computation α) (Computation β))
   | Sum.inl ca =>
     match destruct ca with
     | Sum.inl a => bind.G <| destruct (f a)
@@ -701,7 +704,8 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (
 
 @[simp]
 theorem ret_bind (a) (f : α → Computation β) : bind (return a) f = f a := by
-  apply eq_of_bisim fun c₁ c₂ => c₁ = bind (return a) f ∧ c₂ = f a ∨ c₁ = corec (bind.F f) (Sum.inr c₂)
+  apply
+    eq_of_bisim fun c₁ c₂ => c₁ = bind (return a) f ∧ c₂ = f a ∨ c₁ = corec (bind.F f) (Sum.inr c₂)
   · intro c₁ c₂ h
     exact
       match c₁, c₂, h with
@@ -744,7 +748,9 @@ theorem bind_ret' (s : Computation α) : bind s return = s := by
 @[simp]
 theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → Computation γ) :
     bind (bind s f) g = bind s fun x : α => bind (f x) g := by
-  apply eq_of_bisim fun c₁ c₂ => c₁ = c₂ ∨ ∃ s, c₁ = bind (bind s f) g ∧ c₂ = bind s fun x : α => bind (f x) g
+  apply
+    eq_of_bisim fun c₁ c₂ =>
+      c₁ = c₂ ∨ ∃ s, c₁ = bind (bind s f) g ∧ c₂ = bind s fun x : α => bind (f x) g
   · intro c₁ c₂ h
     exact
       match c₁, c₂, h with
@@ -765,8 +771,7 @@ theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → 
 
 theorem results_bind {s : Computation α} {f : α → Computation β} {a b m n} (h1 : Results s a m)
     (h2 : Results (f a) b n) : Results (bind s f) b (n + m) := by
-  have := h1.mem
-  revert m
+  have := h1.mem; revert m
   apply mem_rec_on this _ fun s IH => _ <;> intro m h1
   · rw [ret_bind]
     rw [h1.len_unique (results_ret _)]
@@ -780,27 +785,29 @@ theorem results_bind {s : Computation α} {f : α → Computation β} {a b m n} 
     
 #align computation.results_bind Computation.results_bind
 
-theorem mem_bind {s : Computation α} {f : α → Computation β} {a b} (h1 : a ∈ s) (h2 : b ∈ f a) : b ∈ bind s f :=
+theorem mem_bind {s : Computation α} {f : α → Computation β} {a b} (h1 : a ∈ s) (h2 : b ∈ f a) :
+    b ∈ bind s f :=
   let ⟨m, h1⟩ := exists_results_of_mem h1
   let ⟨n, h2⟩ := exists_results_of_mem h2
   (results_bind h1 h2).Mem
 #align computation.mem_bind Computation.mem_bind
 
-instance terminates_bind (s : Computation α) (f : α → Computation β) [Terminates s] [Terminates (f (get s))] :
-    Terminates (bind s f) :=
+instance terminates_bind (s : Computation α) (f : α → Computation β) [Terminates s]
+    [Terminates (f (get s))] : Terminates (bind s f) :=
   terminates_of_mem (mem_bind (get_mem s) (get_mem (f (get s))))
 #align computation.terminates_bind Computation.terminates_bind
 
 @[simp]
-theorem get_bind (s : Computation α) (f : α → Computation β) [Terminates s] [Terminates (f (get s))] :
-    get (bind s f) = get (f (get s)) :=
+theorem get_bind (s : Computation α) (f : α → Computation β) [Terminates s]
+    [Terminates (f (get s))] : get (bind s f) = get (f (get s)) :=
   get_eq_of_mem _ (mem_bind (get_mem s) (get_mem (f (get s))))
 #align computation.get_bind Computation.get_bind
 
 @[simp]
-theorem length_bind (s : Computation α) (f : α → Computation β) [T1 : Terminates s] [T2 : Terminates (f (get s))] :
-    length (bind s f) = length (f (get s)) + length s :=
-  (results_of_terminates _).len_unique <| results_bind (results_of_terminates _) (results_of_terminates _)
+theorem length_bind (s : Computation α) (f : α → Computation β) [T1 : Terminates s]
+    [T2 : Terminates (f (get s))] : length (bind s f) = length (f (get s)) + length s :=
+  (results_of_terminates _).len_unique <|
+    results_bind (results_of_terminates _) (results_of_terminates _)
 #align computation.length_bind Computation.length_bind
 
 theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
@@ -822,17 +829,17 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
     
 #align computation.of_results_bind Computation.of_results_bind
 
-theorem exists_of_mem_bind {s : Computation α} {f : α → Computation β} {b} (h : b ∈ bind s f) : ∃ a ∈ s, b ∈ f a :=
+theorem exists_of_mem_bind {s : Computation α} {f : α → Computation β} {b} (h : b ∈ bind s f) :
+    ∃ a ∈ s, b ∈ f a :=
   let ⟨k, h⟩ := exists_results_of_mem h
   let ⟨a, m, n, h1, h2, e⟩ := of_results_bind h
   ⟨a, h1.Mem, h2.Mem⟩
 #align computation.exists_of_mem_bind Computation.exists_of_mem_bind
 
-theorem bind_promises {s : Computation α} {f : α → Computation β} {a b} (h1 : s ~> a) (h2 : f a ~> b) : bind s f ~> b :=
-  fun b' bB => by
+theorem bind_promises {s : Computation α} {f : α → Computation β} {a b} (h1 : s ~> a)
+    (h2 : f a ~> b) : bind s f ~> b := fun b' bB => by
   rcases exists_of_mem_bind bB with ⟨a', a's, ba'⟩
-  rw [← h1 a's] at ba'
-  exact h2 ba'
+  rw [← h1 a's] at ba'; exact h2 ba'
 #align computation.bind_promises Computation.bind_promises
 
 instance : Monad Computation where
@@ -869,7 +876,8 @@ theorem mem_map (f : α → β) {a} {s : Computation α} (m : a ∈ s) : f a ∈
   rw [← bind_ret] <;> apply mem_bind m <;> apply ret_mem
 #align computation.mem_map Computation.mem_map
 
-theorem exists_of_mem_map {f : α → β} {b : β} {s : Computation α} (h : b ∈ map f s) : ∃ a, a ∈ s ∧ f a = b := by
+theorem exists_of_mem_map {f : α → β} {b : β} {s : Computation α} (h : b ∈ map f s) :
+    ∃ a, a ∈ s ∧ f a = b := by
   rw [← bind_ret] at h <;>
     exact
       let ⟨a, as, fb⟩ := exists_of_mem_bind h
@@ -923,8 +931,7 @@ theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) 
 @[simp]
 theorem empty_orelse (c) : (empty α <|> c) = c := by
   apply eq_of_bisim (fun c₁ c₂ => (Empty α <|> c₂) = c₁) _ rfl
-  intro s' s h
-  rw [← h]
+  intro s' s h; rw [← h]
   apply rec_on s <;> intro s <;> rw [think_empty] <;> simp
   rw [← think_empty]
 #align computation.empty_orelse Computation.empty_orelse
@@ -932,8 +939,7 @@ theorem empty_orelse (c) : (empty α <|> c) = c := by
 @[simp]
 theorem orelse_empty (c : Computation α) : (c <|> empty α) = c := by
   apply eq_of_bisim (fun c₁ c₂ => (c₂ <|> Empty α) = c₁) _ rfl
-  intro s' s h
-  rw [← h]
+  intro s' s h; rw [← h]
   apply rec_on s <;> intro s <;> rw [think_empty] <;> simp
   rw [← think_empty]
 #align computation.orelse_empty Computation.orelse_empty
@@ -956,7 +962,8 @@ theorem Equiv.symm {s t : Computation α} : s ~ t → t ~ s := fun h a => (h a).
 #align computation.equiv.symm Computation.Equiv.symm
 
 @[trans]
-theorem Equiv.trans {s t u : Computation α} : s ~ t → t ~ u → s ~ u := fun h1 h2 a => (h1 a).trans (h2 a)
+theorem Equiv.trans {s t u : Computation α} : s ~ t → t ~ u → s ~ u := fun h1 h2 a =>
+  (h1 a).trans (h2 a)
 #align computation.equiv.trans Computation.Equiv.trans
 
 theorem Equiv.equivalence : Equivalence (@Equiv α) :=
@@ -975,7 +982,8 @@ theorem promises_congr {c₁ c₂ : Computation α} (h : c₁ ~ c₂) (a) : c₁
   forall_congr' fun a' => imp_congr (h a') Iff.rfl
 #align computation.promises_congr Computation.promises_congr
 
-theorem get_equiv {c₁ c₂ : Computation α} (h : c₁ ~ c₂) [Terminates c₁] [Terminates c₂] : get c₁ = get c₂ :=
+theorem get_equiv {c₁ c₂ : Computation α} (h : c₁ ~ c₂) [Terminates c₁] [Terminates c₂] :
+    get c₁ = get c₂ :=
   get_eq_of_mem _ <| (h _).2 <| get_mem _
 #align computation.get_equiv Computation.get_equiv
 
@@ -985,8 +993,8 @@ theorem think_equiv (s : Computation α) : think s ~ s := fun a => ⟨of_think_m
 theorem thinkN_equiv (s : Computation α) (n) : thinkN s n ~ s := fun a => thinkN_mem n
 #align computation.thinkN_equiv Computation.thinkN_equiv
 
-theorem bind_congr {s1 s2 : Computation α} {f1 f2 : α → Computation β} (h1 : s1 ~ s2) (h2 : ∀ a, f1 a ~ f2 a) :
-    bind s1 f1 ~ bind s2 f2 := fun b =>
+theorem bind_congr {s1 s2 : Computation α} {f1 f2 : α → Computation β} (h1 : s1 ~ s2)
+    (h2 : ∀ a, f1 a ~ f2 a) : bind s1 f1 ~ bind s2 f2 := fun b =>
   ⟨fun h =>
     let ⟨a, ha, hb⟩ := exists_of_mem_bind h
     mem_bind ((h1 a).1 ha) ((h2 a b).1 hb),
@@ -1026,7 +1034,8 @@ theorem LiftRel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (Lif
   ⟨fun a as => ⟨a, as, H a⟩, fun b bs => ⟨b, bs, H b⟩⟩
 #align computation.lift_rel.refl Computation.LiftRel.refl
 
-theorem LiftRel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (LiftRel R) := fun s1 s2 ⟨l, r⟩ =>
+theorem LiftRel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (LiftRel R) :=
+  fun s1 s2 ⟨l, r⟩ =>
   ⟨fun a a2 =>
     let ⟨b, b1, ab⟩ := r a2
     ⟨b, b1, H ab⟩,
@@ -1051,7 +1060,8 @@ theorem LiftRel.equiv (R : α → α → Prop) : Equivalence R → Equivalence (
   | ⟨refl, symm, trans⟩ => ⟨LiftRel.refl R refl, LiftRel.symm R symm, LiftRel.trans R trans⟩
 #align computation.lift_rel.equiv Computation.LiftRel.equiv
 
-theorem LiftRel.imp {R S : α → β → Prop} (H : ∀ {a b}, R a b → S a b) (s t) : LiftRel R s t → LiftRel S s t
+theorem LiftRel.imp {R S : α → β → Prop} (H : ∀ {a b}, R a b → S a b) (s t) :
+    LiftRel R s t → LiftRel S s t
   | ⟨l, r⟩ =>
     ⟨fun a as =>
       let ⟨b, bt, ab⟩ := l as
@@ -1061,7 +1071,8 @@ theorem LiftRel.imp {R S : α → β → Prop} (H : ∀ {a b}, R a b → S a b) 
       ⟨a, as, H ab⟩⟩
 #align computation.lift_rel.imp Computation.LiftRel.imp
 
-theorem terminates_of_lift_rel {R : α → β → Prop} {s t} : LiftRel R s t → (Terminates s ↔ Terminates t)
+theorem terminates_of_lift_rel {R : α → β → Prop} {s t} :
+    LiftRel R s t → (Terminates s ↔ Terminates t)
   | ⟨l, r⟩ =>
     ⟨fun ⟨⟨a, as⟩⟩ =>
       let ⟨b, bt, ab⟩ := l as
@@ -1071,13 +1082,15 @@ theorem terminates_of_lift_rel {R : α → β → Prop} {s t} : LiftRel R s t �
       ⟨⟨a, as⟩⟩⟩
 #align computation.terminates_of_lift_rel Computation.terminates_of_lift_rel
 
-theorem rel_of_lift_rel {R : α → β → Prop} {ca cb} : LiftRel R ca cb → ∀ {a b}, a ∈ ca → b ∈ cb → R a b
+theorem rel_of_lift_rel {R : α → β → Prop} {ca cb} :
+    LiftRel R ca cb → ∀ {a b}, a ∈ ca → b ∈ cb → R a b
   | ⟨l, r⟩, a, b, ma, mb => by
     let ⟨b', mb', ab'⟩ := l ma
     rw [mem_unique mb mb'] <;> exact ab'
 #align computation.rel_of_lift_rel Computation.rel_of_lift_rel
 
-theorem lift_rel_of_mem {R : α → β → Prop} {a b ca cb} (ma : a ∈ ca) (mb : b ∈ cb) (ab : R a b) : LiftRel R ca cb :=
+theorem lift_rel_of_mem {R : α → β → Prop} {a b ca cb} (ma : a ∈ ca) (mb : b ∈ cb) (ab : R a b) :
+    LiftRel R ca cb :=
   ⟨fun a' ma' => by rw [mem_unique ma' ma] <;> exact ⟨b, mb, ab⟩, fun b' mb' => by
     rw [mem_unique mb' mb] <;> exact ⟨a, ma, ab⟩⟩
 #align computation.lift_rel_of_mem Computation.lift_rel_of_mem
@@ -1107,8 +1120,8 @@ theorem lift_rel_def {R : α → β → Prop} {ca cb} :
       ⟨a, ma, r ma mb⟩⟩⟩
 #align computation.lift_rel_def Computation.lift_rel_def
 
-theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α} {s2 : Computation β}
-    {f1 : α → Computation γ} {f2 : β → Computation δ} (h1 : LiftRel R s1 s2)
+theorem lift_rel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
+    {s2 : Computation β} {f1 : α → Computation γ} {f2 : β → Computation δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → LiftRel S (f1 a) (f2 b)) : LiftRel S (bind s1 f1) (bind s2 f2) :=
   let ⟨l1, r1⟩ := h1
   ⟨fun c cB =>
@@ -1139,7 +1152,8 @@ theorem lift_rel_return_right (R : α → β → Prop) (ca : Computation α) (b 
 #align computation.lift_rel_return_right Computation.lift_rel_return_right
 
 @[simp]
-theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) : LiftRel R (return a) (return b) ↔ R a b := by
+theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) :
+    LiftRel R (return a) (return b) ↔ R a b := by
   rw [lift_rel_return_left] <;>
     exact ⟨fun ⟨b', mb', ab'⟩ => by rwa [eq_of_ret_mem mb'] at ab', fun ab => ⟨_, ret_mem _, ab⟩⟩
 #align computation.lift_rel_return Computation.lift_rel_return
@@ -1148,7 +1162,8 @@ theorem lift_rel_return (R : α → β → Prop) (a : α) (b : β) : LiftRel R (
 theorem lift_rel_think_left (R : α → β → Prop) (ca : Computation α) (cb : Computation β) :
     LiftRel R (think ca) cb ↔ LiftRel R ca cb :=
   and_congr (forall_congr' fun b => imp_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
-    (forall_congr' fun b => imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
+    (forall_congr' fun b =>
+      imp_congr Iff.rfl <| exists_congr fun b => and_congr ⟨of_think_mem, think_mem⟩ Iff.rfl)
 #align computation.lift_rel_think_left Computation.lift_rel_think_left
 
 @[simp]
@@ -1162,20 +1177,23 @@ theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a ∈ ca, 
   ⟨fun a ma => (Ha _ ma).left ma, fun b mb => (Hb _ mb).right mb⟩
 #align computation.lift_rel_mem_cases Computation.lift_rel_mem_cases
 
-theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β} (ha : ca ~ ca')
-    (hb : cb ~ cb') : LiftRel R ca cb ↔ LiftRel R ca' cb' :=
-  and_congr (forall_congr' fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
+theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β}
+    (ha : ca ~ ca') (hb : cb ~ cb') : LiftRel R ca cb ↔ LiftRel R ca' cb' :=
+  and_congr
+    (forall_congr' fun a => imp_congr (ha _) <| exists_congr fun b => and_congr (hb _) Iff.rfl)
     (forall_congr' fun b => imp_congr (hb _) <| exists_congr fun a => and_congr (ha _) Iff.rfl)
 #align computation.lift_rel_congr Computation.lift_rel_congr
 
-theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α} {s2 : Computation β} {f1 : α → γ}
-    {f2 : β → δ} (h1 : LiftRel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) :=
-  by rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
+theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
+    {s2 : Computation β} {f1 : α → γ} {f2 : β → δ} (h1 : LiftRel R s1 s2)
+    (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) := by
+  rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
 #align computation.lift_rel_map Computation.lift_rel_map
 
-theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β} (h1 : s1 ~ s2) :
-    map f s1 ~ map f s2 := by
-  rw [← lift_eq_iff_equiv] <;> exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_arg _
+theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β}
+    (h1 : s1 ~ s2) : map f s1 ~ map f s2 := by
+  rw [← lift_eq_iff_equiv] <;>
+    exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_arg _
 #align computation.map_congr Computation.map_congr
 
 def LiftRelAux (R : α → β → Prop) (C : Computation α → Computation β → Prop) :
@@ -1192,27 +1210,29 @@ attribute [simp] lift_rel_aux
 theorem LiftRelAux.ret_left (R : α → β → Prop) (C : Computation α → Computation β → Prop) (a cb) :
     LiftRelAux R C (Sum.inl a) (destruct cb) ↔ ∃ b, b ∈ cb ∧ R a b := by
   apply cb.rec_on (fun b => _) fun cb => _
-  · exact ⟨fun h => ⟨_, ret_mem _, h⟩, fun ⟨b', mb, h⟩ => by rw [mem_unique (ret_mem _) mb] <;> exact h⟩
+  · exact
+      ⟨fun h => ⟨_, ret_mem _, h⟩, fun ⟨b', mb, h⟩ => by rw [mem_unique (ret_mem _) mb] <;> exact h⟩
     
   · rw [destruct_think]
     exact ⟨fun ⟨b, h, r⟩ => ⟨b, think_mem h, r⟩, fun ⟨b, h, r⟩ => ⟨b, of_think_mem h, r⟩⟩
     
 #align computation.lift_rel_aux.ret_left Computation.LiftRelAux.ret_left
 
-theorem LiftRelAux.swap (R : α → β → Prop) (C) (a b) : LiftRelAux (swap R) (swap C) b a = LiftRelAux R C a b := by
+theorem LiftRelAux.swap (R : α → β → Prop) (C) (a b) :
+    LiftRelAux (swap R) (swap C) b a = LiftRelAux R C a b := by
   cases' a with a ca <;> cases' b with b cb <;> simp only [lift_rel_aux]
 #align computation.lift_rel_aux.swap Computation.LiftRelAux.swap
 
 @[simp]
 theorem LiftRelAux.ret_right (R : α → β → Prop) (C : Computation α → Computation β → Prop) (b ca) :
-    LiftRelAux R C (destruct ca) (Sum.inl b) ↔ ∃ a, a ∈ ca ∧ R a b := by rw [← lift_rel_aux.swap, lift_rel_aux.ret_left]
+    LiftRelAux R C (destruct ca) (Sum.inl b) ↔ ∃ a, a ∈ ca ∧ R a b := by
+  rw [← lift_rel_aux.swap, lift_rel_aux.ret_left]
 #align computation.lift_rel_aux.ret_right Computation.LiftRelAux.ret_right
 
 theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computation β → Prop)
-    (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) (a) (ha : a ∈ ca) :
-    LiftRel R ca cb := by
-  revert cb
-  refine' mem_rec_on ha _ fun ca' IH => _ <;> intro cb Hc <;> have h := H Hc
+    (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) (a)
+    (ha : a ∈ ca) : LiftRel R ca cb := by
+  revert cb; refine' mem_rec_on ha _ fun ca' IH => _ <;> intro cb Hc <;> have h := H Hc
   · simp at h
     simp [h]
     
@@ -1225,10 +1245,12 @@ theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computat
 #align computation.lift_rel_rec.lem Computation.LiftRelRec.lem
 
 theorem lift_rel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
-    (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) : LiftRel R ca cb :=
+    (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) :
+    LiftRel R ca cb :=
   lift_rel_mem_cases (LiftRelRec.lem C (@H) ca cb Hc) fun b hb =>
     (LiftRel.swap _ _ _).2 <|
-      LiftRelRec.lem (swap C) (fun cb ca h => cast (LiftRelAux.swap _ _ _ _).symm <| H h) cb ca Hc b hb
+      LiftRelRec.lem (swap C) (fun cb ca h => cast (LiftRelAux.swap _ _ _ _).symm <| H h) cb ca Hc b
+        hb
 #align computation.lift_rel_rec Computation.lift_rel_rec
 
 end Computation

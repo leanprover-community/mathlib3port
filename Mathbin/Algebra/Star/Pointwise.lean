@@ -110,7 +110,8 @@ theorem star_subset_star [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t⋆ �
   Equiv.star.Surjective.preimage_subset_preimage_iff
 #align set.star_subset_star Set.star_subset_star
 
-theorem star_subset [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆ t⋆ := by rw [← star_subset_star, star_star]
+theorem star_subset [HasInvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆ t⋆ := by
+  rw [← star_subset_star, star_star]
 #align set.star_subset Set.star_subset
 
 theorem Finite.star [HasInvolutiveStar α] {s : Set α} (hs : s.Finite) : s⋆.Finite :=
@@ -123,11 +124,13 @@ theorem star_singleton {β : Type _} [HasInvolutiveStar β] (x : β) : ({x} : Se
 #align set.star_singleton Set.star_singleton
 
 protected theorem star_mul [Monoid α] [StarSemigroup α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
-  simp_rw [← image_star, ← image2_mul, image_image2, image2_image_left, image2_image_right, star_mul, image2_swap _ s t]
+  simp_rw [← image_star, ← image2_mul, image_image2, image2_image_left, image2_image_right,
+    star_mul, image2_swap _ s t]
 #align set.star_mul Set.star_mul
 
 protected theorem star_add [AddMonoid α] [StarAddMonoid α] (s t : Set α) : (s + t)⋆ = s⋆ + t⋆ := by
-  simp_rw [← image_star, ← image2_add, image_image2, image2_image_left, image2_image_right, star_add]
+  simp_rw [← image_star, ← image2_add, image_image2, image2_image_left, image2_image_right,
+    star_add]
 #align set.star_add Set.star_add
 
 @[simp]

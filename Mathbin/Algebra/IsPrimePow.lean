@@ -49,7 +49,7 @@ theorem IsUnit.not_is_prime_pow {n : R} (h : IsUnit n) : ¬IsPrimePow n := fun h
 #align is_unit.not_is_prime_pow IsUnit.not_is_prime_pow
 
 theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) :=
-  is_unit_one.not_is_prime_pow
+  isUnit_one.not_is_prime_pow
 #align not_is_prime_pow_one not_is_prime_pow_one
 
 theorem Prime.is_prime_pow {p : R} (hp : Prime p) : IsPrimePow p :=
@@ -65,13 +65,14 @@ theorem IsPrimePow.ne_zero [NoZeroDivisors R] {n : R} (h : IsPrimePow n) : n ≠
   Eq.ndrec not_is_prime_pow_zero t.symm h
 #align is_prime_pow.ne_zero IsPrimePow.ne_zero
 
-theorem IsPrimePow.ne_one {n : R} (h : IsPrimePow n) : n ≠ 1 := fun t => Eq.ndrec not_is_prime_pow_one t.symm h
+theorem IsPrimePow.ne_one {n : R} (h : IsPrimePow n) : n ≠ 1 := fun t =>
+  Eq.ndrec not_is_prime_pow_one t.symm h
 #align is_prime_pow.ne_one IsPrimePow.ne_one
 
 section Nat
 
-theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime p ∧ 0 < k ∧ p ^ k = n := by
-  simp only [is_prime_pow_def, Nat.prime_iff]
+theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime p ∧ 0 < k ∧ p ^ k = n :=
+  by simp only [is_prime_pow_def, Nat.prime_iff]
 #align is_prime_pow_nat_iff is_prime_pow_nat_iff
 
 theorem Nat.Prime.is_prime_pow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=

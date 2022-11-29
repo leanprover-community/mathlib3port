@@ -56,12 +56,14 @@ namespace Karoubi
 variable {C}
 
 @[ext.1]
-theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) : P = Q := by
+theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) :
+    P = Q := by
   cases P
   cases Q
   dsimp at h_X h_p
   subst h_X
-  simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using h_p
+  simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using
+    h_p
 #align category_theory.idempotents.karoubi.ext CategoryTheory.Idempotents.Karoubi.ext
 
 /-- A morphism `P ⟶ Q` in the category `karoubi C` is a morphism in the underlying category
@@ -92,14 +94,15 @@ theorem p_comp {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f := by rw [f.c
 #align category_theory.idempotents.karoubi.p_comp CategoryTheory.Idempotents.Karoubi.p_comp
 
 @[simp, reassoc]
-theorem comp_p {P Q : Karoubi C} (f : Hom P Q) : f.f ≫ Q.p = f.f := by rw [f.comm, assoc, assoc, Q.idem]
+theorem comp_p {P Q : Karoubi C} (f : Hom P Q) : f.f ≫ Q.p = f.f := by
+  rw [f.comm, assoc, assoc, Q.idem]
 #align category_theory.idempotents.karoubi.comp_p CategoryTheory.Idempotents.Karoubi.comp_p
 
 theorem p_comm {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f ≫ Q.p := by rw [p_comp, comp_p]
 #align category_theory.idempotents.karoubi.p_comm CategoryTheory.Idempotents.Karoubi.p_comm
 
-theorem comp_proof {P Q R : Karoubi C} (g : Hom Q R) (f : Hom P Q) : f.f ≫ g.f = P.p ≫ (f.f ≫ g.f) ≫ R.p := by
-  rw [assoc, comp_p, ← assoc, p_comp]
+theorem comp_proof {P Q R : Karoubi C} (g : Hom Q R) (f : Hom P Q) :
+    f.f ≫ g.f = P.p ≫ (f.f ≫ g.f) ≫ R.p := by rw [assoc, comp_p, ← assoc, p_comp]
 #align category_theory.idempotents.karoubi.comp_proof CategoryTheory.Idempotents.Karoubi.comp_proof
 
 /-- The category structure on the karoubi envelope of a category. -/
@@ -109,7 +112,8 @@ instance : Category (Karoubi C) where
   comp P Q R f g := ⟨f.f ≫ g.f, Karoubi.comp_proof g f⟩
 
 @[simp]
-theorem comp {P Q R : Karoubi C} (f : P ⟶ Q) (g : Q ⟶ R) : f ≫ g = ⟨f.f ≫ g.f, comp_proof g f⟩ := by rfl
+theorem comp {P Q R : Karoubi C} (f : P ⟶ Q) (g : Q ⟶ R) : f ≫ g = ⟨f.f ≫ g.f, comp_proof g f⟩ := by
+  rfl
 #align category_theory.idempotents.karoubi.comp CategoryTheory.Idempotents.Karoubi.comp
 
 @[simp]
@@ -131,11 +135,12 @@ theorem coe_p (X : C) : (X : Karoubi C).p = 𝟙 X := by rfl
 #align category_theory.idempotents.karoubi.coe_p CategoryTheory.Idempotents.Karoubi.coe_p
 
 @[simp]
-theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) : Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) :=
-  by
+theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) :
+    Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) := by
   subst h
   simp only [eq_to_hom_refl, karoubi.id_eq, comp_id]
-#align category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eq_to_hom_f
+#align
+  category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eq_to_hom_f
 
 end Karoubi
 
@@ -153,8 +158,8 @@ instance : Faithful (toKaroubi C) where
 
 variable {C}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_left_neg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_comm, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_left_neg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 @[simps]
 instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q) where
   add f g :=
@@ -173,18 +178,19 @@ instance [Preadditive C] {P Q : Karoubi C} : AddCommGroup (P ⟶ Q) where
   add_comm f g := by
     ext
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_comm, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
   neg f := ⟨-f.f, by simpa only [neg_comp, comp_neg, neg_inj] using f.comm⟩
   add_left_neg f := by
     ext
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_left_neg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_left_neg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 
 namespace Karoubi
 
 theorem hom_eq_zero_iff [Preadditive C] {P Q : Karoubi C} {f : Hom P Q} : f = 0 ↔ f.f = 0 :=
   hom_ext
-#align category_theory.idempotents.karoubi.hom_eq_zero_iff CategoryTheory.Idempotents.Karoubi.hom_eq_zero_iff
+#align
+  category_theory.idempotents.karoubi.hom_eq_zero_iff CategoryTheory.Idempotents.Karoubi.hom_eq_zero_iff
 
 /-- The map sending `f : P ⟶ Q` to `f.f : P.X ⟶ Q.X` is additive. -/
 @[simps]
@@ -192,7 +198,8 @@ def inclusionHom [Preadditive C] (P Q : Karoubi C) : AddMonoidHom (P ⟶ Q) (P.x
   toFun f := f.f
   map_zero' := rfl
   map_add' f g := rfl
-#align category_theory.idempotents.karoubi.inclusion_hom CategoryTheory.Idempotents.Karoubi.inclusionHom
+#align
+  category_theory.idempotents.karoubi.inclusion_hom CategoryTheory.Idempotents.Karoubi.inclusionHom
 
 @[simp]
 theorem sum_hom [Preadditive C] {P Q : Karoubi C} {α : Type _} (s : Finset α) (f : α → (P ⟶ Q)) :
@@ -241,7 +248,8 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
 def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
   Equivalence.ofFullyFaithfullyEssSurj (toKaroubi C)
-#align category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
+#align
+  category_theory.idempotents.to_karoubi_is_equivalence CategoryTheory.Idempotents.toKaroubiIsEquivalence
 
 namespace Karoubi
 
@@ -291,7 +299,8 @@ theorem decomp_id_i_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
   category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decomp_id_i_naturality
 
 theorem decomp_id_p_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
-    decompIdP P ≫ f = (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.x : Karoubi C) ⟶ Q.x) ≫ decompIdP Q := by
+    decompIdP P ≫ f = (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.x : Karoubi C) ⟶ Q.x) ≫ decompIdP Q :=
+  by
   ext
   simp only [comp, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
 #align

@@ -111,7 +111,8 @@ def sumInv (pqr : Multiset ℕ+) : ℚ :=
 #align ADE_inequality.sum_inv ADEInequality.sumInv
 
 theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
-  simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons, map_singleton, sum_singleton]
+  simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons,
+    map_singleton, sum_singleton]
 #align ADE_inequality.sum_inv_pqr ADEInequality.sum_inv_pqr
 
 /-- A multiset `pqr` of positive natural numbers is `admissible`
@@ -160,12 +161,11 @@ theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 <
     apply add_pos <;> simp only [PNat.pos, Nat.cast_pos, inv_pos]
     
   · rw [← H, D', sum_inv_pqr]
-    simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one, coe_coe, PNat.coe_bit0, Nat.cast_bit0]
+    simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one, coe_coe, PNat.coe_bit0,
+      Nat.cast_bit0]
     norm_num
     
-  all_goals
-  rw [← H, E', sum_inv_pqr]
-  norm_num
+  all_goals rw [← H, E', sum_inv_pqr]; norm_num
 #align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sum_inv
 
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 := by
@@ -198,7 +198,8 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
   have h6 : (0 : ℚ) < 6 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
-  simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_bit1, Nat.cast_one, PNat.coe_bit1, coe_coe]
+  simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_bit1, Nat.cast_one, PNat.coe_bit1,
+    coe_coe]
   calc
     (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _
     _ = 1 := by norm_num
@@ -206,8 +207,8 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast, norm_num]
 #align ADE_inequality.lt_six ADEInequality.lt_six
 
-theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) :
-    Admissible {p, q, r} := by
+theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r)
+    (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} := by
   have hp3 : p < 3 := lt_three hpq hqr H
   interval_cases p
   · exact admissible_A' q r
@@ -224,17 +225,21 @@ theorem admissible_of_one_lt_sum_inv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : 
     
   · exact admissible_E8
     
-#align ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sum_inv_aux'
+#align
+  ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sum_inv_aux'
 
 theorem admissible_of_one_lt_sum_inv_aux :
-    ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr), Admissible pqr
+    ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr),
+      Admissible pqr
   | [p, q, r], hs, hl, H => by
     obtain ⟨⟨hpq, -⟩, hqr⟩ : (p ≤ q ∧ p ≤ r) ∧ q ≤ r
     simpa using hs
     exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
-#align ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sum_inv_aux
+#align
+  ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sum_inv_aux
 
-theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) : Admissible {p, q, r} := by
+theorem admissible_of_one_lt_sum_inv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
+    Admissible {p, q, r} := by
   simp only [admissible]
   let S := sort ((· ≤ ·) : ℕ+ → ℕ+ → Prop) {p, q, r}
   have hS : S.sorted (· ≤ ·) := sort_sorted _ _

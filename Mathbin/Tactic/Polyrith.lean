@@ -130,7 +130,8 @@ The following section contains code that can convert an `expr` of type `Prop` in
 If `e` appears with index `k` in `vars`, it returns the singleton sum `p = poly.var k`.
 Otherwise it updates `vars`, adding `e` with index `n`, and returns the singleton `p = poly.var n`.
 -/
-unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) : tactic (List expr × poly) := do
+unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) :
+    tactic (List expr × poly) := do
   let index_of_e ←
     vars.mfoldlWithIndex
         (fun n last e' =>
@@ -189,7 +190,13 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
           with
           | some k => do let ( m' , comp ) ← poly_form_of_expr m e return ( m' , comp ^ k )
             | none => poly_form_of_atom red m p
-      | m , e => match e . to_rat with | some z => return ⟨ m , Poly.const z ⟩ | none => poly_form_of_atom red m e
+      |
+        m , e
+        =>
+        match
+          e . to_rat
+          with
+          | some z => return ⟨ m , Poly.const z ⟩ | none => poly_form_of_atom red m e
 #align polyrith.poly_form_of_expr polyrith.poly_form_of_expr
 
 /-!
@@ -219,23 +226,39 @@ The following section contains code that can convert an a `poly` object into a `
       |
         m , poly.var n
         =>
-        do let some e ← return <| m . nth n | throwError "unknown variable poly.var { ← n }" return ` `( $ ( e ) )
+        do
+          let some e ← return <| m . nth n | throwError "unknown variable poly.var { ← n }"
+            return ` `( $ ( e ) )
       |
         m , poly.add p q
         =>
-        do let p_pexpr ← poly.to_pexpr m p let q_pexpr ← poly.to_pexpr m q return ` `( $ ( p_pexpr ) + $ ( q_pexpr ) )
+        do
+          let p_pexpr ← poly.to_pexpr m p
+            let q_pexpr ← poly.to_pexpr m q
+            return ` `( $ ( p_pexpr ) + $ ( q_pexpr ) )
       |
         m , poly.sub p q
         =>
         do
           let p_pexpr ← poly.to_pexpr m p
             let q_pexpr ← poly.to_pexpr m q
-            if p_pexpr = ` `( 0 ) then return ` `( - $ ( q_pexpr ) ) else return ` `( $ ( p_pexpr ) - $ ( q_pexpr ) )
+            if
+              p_pexpr = ` `( 0 )
+              then
+              return ` `( - $ ( q_pexpr ) )
+              else
+              return ` `( $ ( p_pexpr ) - $ ( q_pexpr ) )
       |
         m , poly.mul p q
         =>
-        do let p_pexpr ← poly.to_pexpr m p let q_pexpr ← poly.to_pexpr m q return ` `( $ ( p_pexpr ) * $ ( q_pexpr ) )
-      | m , poly.pow p n => do let p_pexpr ← poly.to_pexpr m p return ` `( $ ( p_pexpr ) ^ n $ ( n.to_pexpr ) )
+        do
+          let p_pexpr ← poly.to_pexpr m p
+            let q_pexpr ← poly.to_pexpr m q
+            return ` `( $ ( p_pexpr ) * $ ( q_pexpr ) )
+      |
+        m , poly.pow p n
+        =>
+        do let p_pexpr ← poly.to_pexpr m p return ` `( $ ( p_pexpr ) ^ n $ ( n.to_pexpr ) )
       | m , poly.neg p => do let p_pexpr ← poly.to_pexpr m p return ` `( - $ ( p_pexpr ) )
 #align polyrith.poly.to_pexpr polyrith.poly.to_pexpr
 
@@ -314,7 +337,8 @@ unsafe def poly_parser : Parser Poly :=
       (var_parser <|>
         const_fraction_parser <|>
           add_parser poly_parser <|>
-            sub_parser poly_parser <|> mul_parser poly_parser <|> pow_parser poly_parser <|> neg_parser poly_parser) <*
+            sub_parser poly_parser <|>
+              mul_parser poly_parser <|> pow_parser poly_parser <|> neg_parser poly_parser) <*
     ch ')'
 #align polyrith.poly_parser polyrith.poly_parser
 
@@ -377,7 +401,8 @@ and converts them into `poly` objects.
   def
     equality_to_left_side
     : expr → tactic expr
-    | q( $ ( lhs ) = $ ( rhs ) ) => to_expr ` `( $ ( lhs ) - $ ( rhs ) ) | e => fail "expression is not an equality"
+    | q( $ ( lhs ) = $ ( rhs ) ) => to_expr ` `( $ ( lhs ) - $ ( rhs ) )
+      | e => fail "expression is not an equality"
 #align polyrith.equality_to_left_side polyrith.equality_to_left_side
 
 /-- `(vars, poly, typ) ← parse_target_to_poly` interprets the current target (an equality over
@@ -393,7 +418,7 @@ unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
 /-- Filter `l` to the elements which are equalities of type `expt`. -/
 unsafe def get_equalities_of_type (expt : expr) (l : List expr) : tactic (List expr) :=
   l.mfilter fun h_eq =>
-    succeeds <| do
+    succeeds do
       let q(@Eq $(R) _ _) ← infer_type h_eq
       unify expt R
 #align polyrith.get_equalities_of_type polyrith.get_equalities_of_type
@@ -527,7 +552,8 @@ initialize
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The first half of `tactic.polyrith` produces a list of arguments to be sent to Sage.
 -/
-unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr × List expr × expr × List String) := do
+unsafe def create_args (only_on : Bool) (hyps : List pexpr) :
+    tactic (List expr × List expr × expr × List String) := do
   let (m, p, R) ← parse_target_to_poly
   let (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
@@ -537,15 +563,17 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr 
 /-- The second half of `tactic.polyrith` processes the output from Sage into
 a call to `linear_combination`.
 -/
-unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) : tactic format :=
-  focus1 <| do
+unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) :
+    tactic format :=
+  focus1 do
     let some coeffs_as_poly ← convert_sage_output sage_out |
       throwError"internal error: No output available"
     let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
     let eq_names_pexpr := eq_names.map to_pexpr
     let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr ``(($(e) : $(R)))
     linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
-    let components := (eq_names.zip coeffs_as_expr).filter fun pr => not <| pr.2.is_app_of `has_zero.zero
+    let components :=
+      (eq_names.zip coeffs_as_expr).filter fun pr => not <| pr.2.is_app_of `has_zero.zero
     let expr_string ← components_to_lc_format components
     let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
     done <|>
@@ -595,7 +623,8 @@ to replace the call to `polyrith` with the appropriate call to
 
 This returns `none` if this was a "dry run" attempt that does not actually invoke sage.
 -/
-unsafe def _root_.tactic.polyrith (only_on : Bool) (hyps : List pexpr) : tactic (Option format) := do
+unsafe def _root_.tactic.polyrith (only_on : Bool) (hyps : List pexpr) : tactic (Option format) :=
+  do
   sleep 10
   let-- otherwise can lead to weird errors when actively editing code with polyrith calls
     (eq_names, m, R, args)
@@ -609,7 +638,7 @@ unsafe def _root_.tactic.polyrith (only_on : Bool) (hyps : List pexpr) : tactic 
             convert_sage_output sage_out
             return none
           else some <$> process_output eq_names m R sage_out
-#align polyrith._root_.tactic.polyrith polyrith._root_.tactic.polyrith
+#align tactic.polyrith tactic.polyrith
 
 /-! # Interactivity -/
 
@@ -653,13 +682,13 @@ by polyrith only [scary c d, h]
 -- Try this: linear_combination scary c d + h
 ```
 -/
-unsafe def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?) (hyps : parse pexpr_list ?) : tactic Unit :=
-  do
+unsafe def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?)
+    (hyps : parse pexpr_list ?) : tactic Unit := do
   let some f ← tactic.polyrith restr.isSome (hyps.getOrElse []) |
     skip
   ← do
       dbg_trace "Try this: {← f}"
-#align polyrith._root_.tactic.interactive.polyrith polyrith._root_.tactic.interactive.polyrith
+#align tactic.interactive.polyrith tactic.interactive.polyrith
 
 add_tactic_doc
   { Name := "polyrith", category := DocCategory.tactic, declNames := [`tactic.interactive.polyrith],

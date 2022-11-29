@@ -62,11 +62,13 @@ theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : �
 #align continuous_map.attach_bound_apply_coe ContinuousMap.attach_bound_apply_coe
 
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
+    (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound =
+      Polynomial.aeval f g :=
+  by
   ext
   simp only [ContinuousMap.coe_comp, Function.comp_apply, ContinuousMap.attach_bound_apply_coe,
-    Polynomial.to_continuous_map_on_apply, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuous_map_apply,
-    Polynomial.to_continuous_map_apply]
+    Polynomial.to_continuous_map_on_apply, Polynomial.aeval_subalgebra_coe,
+    Polynomial.aeval_continuous_map_apply, Polynomial.to_continuous_map_apply]
 #align continuous_map.polynomial_comp_attach_bound ContinuousMap.polynomial_comp_attach_bound
 
 /-- Given a continuous function `f` in a subalgebra of `C(X, ℝ)`, postcomposing by a polynomial
@@ -81,10 +83,11 @@ theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) 
     (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound ∈ A := by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
-#align continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
+#align
+  continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
 
-theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.icc (-‖f‖) ‖f‖, ℝ)) :
-    p.comp (attachBound f) ∈ A.topologicalClosure := by
+theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A)
+    (p : C(Set.icc (-‖f‖) ‖f‖, ℝ)) : p.comp (attachBound f) ∈ A.topologicalClosure := by
   -- `p` itself is in the closure of polynomials, by the Weierstrass theorem,
   have mem_closure : p ∈ (polynomialFunctions (Set.icc (-‖f‖) ‖f‖)).topologicalClosure :=
     continuous_map_mem_polynomial_functions_closure _ _ p
@@ -95,8 +98,9 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
   apply mem_closure_iff_frequently.mpr
   -- To show that, we pull back the polynomials close to `p`,
   refine'
-    ((comp_right_continuous_map ℝ (attach_bound (f : C(X, ℝ)))).ContinuousAt p).Tendsto.frequently_map _ _
-      frequently_mem_polynomials
+    ((comp_right_continuous_map ℝ (attach_bound (f : C(X, ℝ)))).ContinuousAt
+            p).Tendsto.frequently_map
+      _ _ frequently_mem_polynomials
   -- but need to show that those pullbacks are actually in `A`.
   rintro _ ⟨g, ⟨-, rfl⟩⟩
   simp only [SetLike.mem_coe, AlgHom.coe_to_ring_hom, comp_right_continuous_map_apply,
@@ -104,7 +108,8 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
   apply polynomial_comp_attach_bound_mem
 #align continuous_map.comp_attach_bound_mem_closure ContinuousMap.comp_attach_bound_mem_closure
 
-theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
+theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) :
+    (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
   let M := ‖f‖
   let f' := attach_bound (f : C(X, ℝ))
   let abs : C(Set.icc (-‖f‖) ‖f‖, ℝ) := { toFun := fun x : Set.icc (-‖f‖) ‖f‖ => |(x : ℝ)| }
@@ -125,8 +130,8 @@ theorem inf_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   exact_mod_cast abs_mem_subalgebra_closure A _
 #align continuous_map.inf_mem_subalgebra_closure ContinuousMap.inf_mem_subalgebra_closure
 
-theorem inf_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (A : Set C(X, ℝ))) (f g : A) :
-    (f : C(X, ℝ)) ⊓ (g : C(X, ℝ)) ∈ A := by
+theorem inf_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (A : Set C(X, ℝ)))
+    (f g : A) : (f : C(X, ℝ)) ⊓ (g : C(X, ℝ)) ∈ A := by
   convert inf_mem_subalgebra_closure A f g
   apply SetLike.ext'
   symm
@@ -147,8 +152,8 @@ theorem sup_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   exact_mod_cast abs_mem_subalgebra_closure A _
 #align continuous_map.sup_mem_subalgebra_closure ContinuousMap.sup_mem_subalgebra_closure
 
-theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (A : Set C(X, ℝ))) (f g : A) :
-    (f : C(X, ℝ)) ⊔ (g : C(X, ℝ)) ∈ A := by
+theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (A : Set C(X, ℝ)))
+    (f g : A) : (f : C(X, ℝ)) ⊔ (g : C(X, ℝ)) ∈ A := by
   convert sup_mem_subalgebra_closure A f g
   apply SetLike.ext'
   symm
@@ -158,16 +163,19 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
 
 open TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f g «expr ∈ » L) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (f g «expr ∈ » L) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 -- Here's the fun part of Stone-Weierstrass!
 theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
-    (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L) (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L)
-    (sep : L.SeparatesPointsStrongly) : closure L = ⊤ := by
+    (inf_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊓ g ∈ L)
+    (sup_mem : ∀ (f g) (_ : f ∈ L) (_ : g ∈ L), f ⊔ g ∈ L) (sep : L.SeparatesPointsStrongly) :
+    closure L = ⊤ := by
   -- We start by boiling down to a statement about close approximation.
   apply eq_top_iff.mpr
   rintro f -
-  refine' Filter.Frequently.mem_closure ((Filter.HasBasis.frequently_iff Metric.nhds_basis_ball).mpr fun ε pos => _)
+  refine'
+    Filter.Frequently.mem_closure
+      ((Filter.HasBasis.frequently_iff Metric.nhds_basis_ball).mpr fun ε pos => _)
   simp only [exists_prop, Metric.mem_ball]
   -- It will be helpful to assume `X` is nonempty later,
   -- so we get that out of the way here.
@@ -206,12 +214,15 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- Since `X` is compact, for every `x` there is some finset `ys t`
   -- so the union of the `U x y` for `y ∈ ys x` still covers everything.
   let ys : ∀ x, Finset X := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some
-  let ys_w : ∀ x, (⋃ y ∈ ys x, U x y) = ⊤ := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some_spec
-  have ys_nonempty : ∀ x, (ys x).Nonempty := fun x => Set.nonempty_of_union_eq_top_of_nonempty _ _ nX (ys_w x)
+  let ys_w : ∀ x, (⋃ y ∈ ys x, U x y) = ⊤ := fun x =>
+    (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some_spec
+  have ys_nonempty : ∀ x, (ys x).Nonempty := fun x =>
+    Set.nonempty_of_union_eq_top_of_nonempty _ _ nX (ys_w x)
   -- Thus for each `x` we have the desired `h x : A` so `f z - ε < h x z` everywhere
   -- and `h x x = f x`.
   let h : ∀ x, L := fun x =>
-    ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)), Finset.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
+    ⟨(ys x).sup' (ys_nonempty x) fun y => (g x y : C(X, ℝ)),
+      Finset.sup'_mem _ sup_mem _ _ _ fun y _ => (g x y).2⟩
   have lt_h : ∀ x z, f z - ε < h x z := by
     intro x z
     obtain ⟨y, ym, zm⟩ := Set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z
@@ -242,7 +253,8 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- Finally our candidate function is the infimum over `x ∈ xs` of the `h x`.
   -- This function is then globally less than `f z + ε`.
   let k : (L : Type _) :=
-    ⟨xs.inf' xs_nonempty fun x => (h x : C(X, ℝ)), Finset.inf'_mem _ inf_mem _ _ _ fun x _ => (h x).2⟩
+    ⟨xs.inf' xs_nonempty fun x => (h x : C(X, ℝ)),
+      Finset.inf'_mem _ inf_mem _ _ _ fun x _ => (h x).2⟩
   refine' ⟨k.1, _, k.2⟩
   -- We just need to verify the bound, which we do pointwise.
   rw [dist_lt_iff Pos]
@@ -268,19 +280,21 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
 that a subalgebra `A` of `C(X, ℝ)`, where `X` is a compact topological space,
 is dense if it separates points.
 -/
-theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.SeparatesPoints) :
-    A.topologicalClosure = ⊤ := by
+theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebra ℝ C(X, ℝ))
+    (w : A.SeparatesPoints) : A.topologicalClosure = ⊤ := by
   -- The closure of `A` is closed under taking `sup` and `inf`,
   -- and separates points strongly (since `A` does),
   -- so we can apply `sublattice_closure_eq_top`.
   apply SetLike.ext'
   let L := A.topological_closure
-  have n : Set.Nonempty (L : Set C(X, ℝ)) := ⟨(1 : C(X, ℝ)), A.subalgebra_topological_closure A.one_mem⟩
+  have n : Set.Nonempty (L : Set C(X, ℝ)) :=
+    ⟨(1 : C(X, ℝ)), A.subalgebra_topological_closure A.one_mem⟩
   convert
     sublattice_closure_eq_top (L : Set C(X, ℝ)) n
       (fun f fm g gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (fun f fm g gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
-      (Subalgebra.SeparatesPoints.strongly (Subalgebra.separates_points_monotone A.subalgebra_topological_closure w))
+      (Subalgebra.SeparatesPoints.strongly
+        (Subalgebra.separates_points_monotone A.subalgebra_topological_closure w))
   · simp
     
 #align
@@ -291,8 +305,8 @@ theorem subalgebra_topological_closure_eq_top_of_separates_points (A : Subalgebr
 If `A` is a subalgebra of `C(X, ℝ)` which separates points (and `X` is compact),
 every real-valued continuous function on `X` is a uniform limit of elements of `A`.
 -/
-theorem continuous_map_mem_subalgebra_closure_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.SeparatesPoints)
-    (f : C(X, ℝ)) : f ∈ A.topologicalClosure := by
+theorem continuous_map_mem_subalgebra_closure_of_separates_points (A : Subalgebra ℝ C(X, ℝ))
+    (w : A.SeparatesPoints) (f : C(X, ℝ)) : f ∈ A.topologicalClosure := by
   rw [subalgebra_topological_closure_eq_top_of_separates_points A w]
   simp
 #align
@@ -304,9 +318,11 @@ for those who like their epsilons.
 If `A` is a subalgebra of `C(X, ℝ)` which separates points (and `X` is compact),
 every real-valued continuous function on `X` is within any `ε > 0` of some element of `A`.
 -/
-theorem exists_mem_subalgebra_near_continuous_map_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.SeparatesPoints)
-    (f : C(X, ℝ)) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ‖(g : C(X, ℝ)) - f‖ < ε := by
-  have w := mem_closure_iff_frequently.mp (continuous_map_mem_subalgebra_closure_of_separates_points A w f)
+theorem exists_mem_subalgebra_near_continuous_map_of_separates_points (A : Subalgebra ℝ C(X, ℝ))
+    (w : A.SeparatesPoints) (f : C(X, ℝ)) (ε : ℝ) (pos : 0 < ε) :
+    ∃ g : A, ‖(g : C(X, ℝ)) - f‖ < ε := by
+  have w :=
+    mem_closure_iff_frequently.mp (continuous_map_mem_subalgebra_closure_of_separates_points A w f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
   obtain ⟨g, H, m⟩ := w ε Pos
   rw [Metric.mem_ball, dist_eq_norm] at H
@@ -320,8 +336,9 @@ for those who like their epsilons and don't like bundled continuous functions.
 If `A` is a subalgebra of `C(X, ℝ)` which separates points (and `X` is compact),
 every real-valued continuous function on `X` is within any `ε > 0` of some element of `A`.
 -/
-theorem exists_mem_subalgebra_near_continuous_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.SeparatesPoints)
-    (f : X → ℝ) (c : Continuous f) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ∀ x, ‖g x - f x‖ < ε := by
+theorem exists_mem_subalgebra_near_continuous_of_separates_points (A : Subalgebra ℝ C(X, ℝ))
+    (w : A.SeparatesPoints) (f : X → ℝ) (c : Continuous f) (ε : ℝ) (pos : 0 < ε) :
+    ∃ g : A, ∀ x, ‖g x - f x‖ < ε := by
   obtain ⟨g, b⟩ := exists_mem_subalgebra_near_continuous_map_of_separates_points A w ⟨f, c⟩ ε Pos
   use g
   rwa [norm_lt_iff _ Pos] at b
@@ -344,8 +361,8 @@ def ConjInvariantSubalgebra (A : Subalgebra ℝ C(X, 𝕜)) : Prop :=
   A.map (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) ≤ A
 #align continuous_map.conj_invariant_subalgebra ContinuousMap.ConjInvariantSubalgebra
 
-theorem mem_conj_invariant_subalgebra {A : Subalgebra ℝ C(X, 𝕜)} (hA : ConjInvariantSubalgebra A) {f : C(X, 𝕜)}
-    (hf : f ∈ A) : (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ A :=
+theorem mem_conj_invariant_subalgebra {A : Subalgebra ℝ C(X, 𝕜)} (hA : ConjInvariantSubalgebra A)
+    {f : C(X, 𝕜)} (hf : f ∈ A) : (conjAe.toAlgHom.compLeftContinuous ℝ conjCle.Continuous) f ∈ A :=
   hA ⟨f, hf, rfl⟩
 #align continuous_map.mem_conj_invariant_subalgebra ContinuousMap.mem_conj_invariant_subalgebra
 
@@ -378,9 +395,11 @@ open ContinuousMap
 
 /-- If a conjugation-invariant subalgebra of `C(X, 𝕜)` separates points, then the real subalgebra
 of its purely real-valued elements also separates points. -/
-theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, 𝕜)} (hA : A.SeparatesPoints)
-    (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
-    ((A.restrictScalars ℝ).comap (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints := by
+theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, 𝕜)}
+    (hA : A.SeparatesPoints) (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
+    ((A.restrictScalars ℝ).comap
+        (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints :=
+  by
   intro x₁ x₂ hx
   -- Let `f` in the subalgebra `A` separate the points `x₁`, `x₂`
   obtain ⟨_, ⟨f, hfA, rfl⟩, hf⟩ := hA hx
@@ -389,8 +408,8 @@ theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, �
   have hFA : F ∈ A := by
     refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ <| A.smul_mem A.one_mem <| f x₂)
     ext1
-    simp only [ContinuousMap.coe_smul, ContinuousMap.coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul,
-      mul_one, const_apply]
+    simp only [coe_smul, coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul, mul_one,
+      const_apply]
   -- Consider now the function `λ x, |f x - f x₂| ^ 2`
   refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values
@@ -402,7 +421,7 @@ theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, �
     
   · -- And it also separates the points `x₁`, `x₂`
     have : f x₁ - f x₂ ≠ 0 := sub_ne_zero.mpr hf
-    simpa only [comp_apply, ContinuousMap.coe_sub, coe_const, Pi.sub_apply, coe_mk, sub_self, map_zero, Ne.def,
+    simpa only [comp_apply, coe_sub, coe_const, Pi.sub_apply, coe_mk, sub_self, map_zero, Ne.def,
       norm_sq_eq_zero] using this
     
 #align subalgebra.separates_points.is_R_or_C_to_real Subalgebra.SeparatesPoints.is_R_or_C_to_real
@@ -413,8 +432,9 @@ variable [CompactSpace X]
 that a subalgebra `A` of `C(X, 𝕜)`, where `X` is a compact topological space and `is_R_or_C 𝕜`,
 is dense if it is conjugation-invariant and separates points.
 -/
-theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points (A : Subalgebra 𝕜 C(X, 𝕜))
-    (hA : A.SeparatesPoints) (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) : A.topologicalClosure = ⊤ := by
+theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separates_points
+    (A : Subalgebra 𝕜 C(X, 𝕜)) (hA : A.SeparatesPoints)
+    (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) : A.topologicalClosure = ⊤ := by
   rw [Algebra.eq_top_iff]
   -- Let `I` be the natural inclusion of `C(X, ℝ)` into `C(X, 𝕜)`
   let I : C(X, ℝ) →ₗ[ℝ] C(X, 𝕜) := of_real_clm.comp_left_continuous ℝ X
@@ -427,7 +447,8 @@ theorem ContinuousMap.subalgebra_is_R_or_C_topological_closure_eq_top_of_separat
     -- By `subalgebra.separates_points.complex_to_real`, this subalgebra also separates points, so
     -- we may apply the real Stone-Weierstrass result to it.
     have SW : A₀.topological_closure = ⊤ :=
-      haveI := subalgebra_topological_closure_eq_top_of_separates_points _ (hA.is_R_or_C_to_real hA')
+      haveI :=
+        subalgebra_topological_closure_eq_top_of_separates_points _ (hA.is_R_or_C_to_real hA')
       congr_arg Subalgebra.toSubmodule this
     rw [← Submodule.map_top, ← SW]
     -- So it suffices to prove that the image under `I` of the closure of `A₀` is contained in the

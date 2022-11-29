@@ -47,7 +47,8 @@ theorem op_injective : Function.Injective (mop : C → Cᴹᵒᵖ) := fun _ _ =>
 #align category_theory.monoidal_opposite.op_injective CategoryTheory.MonoidalOpposite.op_injective
 
 theorem unop_injective : Function.Injective (unmop : Cᴹᵒᵖ → C) := fun _ _ => id
-#align category_theory.monoidal_opposite.unop_injective CategoryTheory.MonoidalOpposite.unop_injective
+#align
+  category_theory.monoidal_opposite.unop_injective CategoryTheory.MonoidalOpposite.unop_injective
 
 @[simp]
 theorem op_inj_iff (x y : C) : mop x = mop y ↔ x = y :=
@@ -98,11 +99,12 @@ def Quiver.Hom.unmop {X Y : Cᴹᵒᵖ} (f : X ⟶ Y) : unmop X ⟶ unmop Y :=
 
 namespace CategoryTheory
 
-theorem mop_inj {X Y : C} : Function.Injective (Quiver.Hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) := fun _ _ H =>
-  congr_arg Quiver.Hom.unmop H
+theorem mop_inj {X Y : C} : Function.Injective (Quiver.Hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) :=
+  fun _ _ H => congr_arg Quiver.Hom.unmop H
 #align category_theory.mop_inj CategoryTheory.mop_inj
 
-theorem unmop_inj {X Y : Cᴹᵒᵖ} : Function.Injective (Quiver.Hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) := fun _ _ H =>
+theorem unmop_inj {X Y : Cᴹᵒᵖ} :
+    Function.Injective (Quiver.Hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) := fun _ _ H =>
   congr_arg Quiver.Hom.mop H
 #align category_theory.unmop_inj CategoryTheory.unmop_inj
 

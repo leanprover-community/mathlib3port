@@ -21,41 +21,41 @@ open BigOperators
 namespace Pi
 
 @[to_additive]
-theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoid (β a)] (a : α) (l : List (∀ a, β a)) :
-    l.Prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
+theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoid (β a)] (a : α)
+    (l : List (∀ a, β a)) : l.Prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
   (evalMonoidHom β a).map_list_prod _
 #align pi.list_prod_apply Pi.list_prod_apply
 
 @[to_additive]
-theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoid (β a)] (a : α) (s : Multiset (∀ a, β a)) :
-    s.Prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
+theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoid (β a)] (a : α)
+    (s : Multiset (∀ a, β a)) : s.Prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
   (evalMonoidHom β a).map_multiset_prod _
 #align pi.multiset_prod_apply Pi.multiset_prod_apply
 
 end Pi
 
 @[simp, to_additive]
-theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (a : α) (s : Finset γ)
-    (g : γ → ∀ a, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
+theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (a : α)
+    (s : Finset γ) (g : γ → ∀ a, β a) : (∏ c in s, g c) a = ∏ c in s, g c a :=
   (Pi.evalMonoidHom β a).map_prod _ _
 #align finset.prod_apply Finset.prod_apply
 
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[to_additive "An 'unapplied' analogue of `finset.sum_apply`."]
-theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (s : Finset γ) (g : γ → ∀ a, β a) :
-    (∏ c in s, g c) = fun a => ∏ c in s, g c a :=
+theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (s : Finset γ)
+    (g : γ → ∀ a, β a) : (∏ c in s, g c) = fun a => ∏ c in s, g c a :=
   funext fun a => Finset.prod_apply _ _ _
 #align finset.prod_fn Finset.prod_fn
 
 @[simp, to_additive]
-theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintype γ] [∀ a, CommMonoid (β a)] (a : α)
-    (g : γ → ∀ a, β a) : (∏ c, g c) a = ∏ c, g c a :=
+theorem Fintype.prod_apply {α : Type _} {β : α → Type _} {γ : Type _} [Fintype γ]
+    [∀ a, CommMonoid (β a)] (a : α) (g : γ → ∀ a, β a) : (∏ c, g c) a = ∏ c, g c a :=
   Finset.prod_apply a Finset.univ g
 #align fintype.prod_apply Fintype.prod_apply
 
 @[to_additive prod_mk_sum]
-theorem prod_mk_prod {α β γ : Type _} [CommMonoid α] [CommMonoid β] (s : Finset γ) (f : γ → α) (g : γ → β) :
-    (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
+theorem prod_mk_prod {α β γ : Type _} [CommMonoid α] [CommMonoid β] (s : Finset γ) (f : γ → α)
+    (g : γ → β) : (∏ x in s, f x, ∏ x in s, g x) = ∏ x in s, (f x, g x) :=
   haveI := Classical.decEq γ
   Finset.induction_on s rfl (by simp (config := { contextual := true }) [Prod.ext_iff])
 #align prod_mk_prod prod_mk_prod
@@ -83,7 +83,8 @@ theorem AddMonoidHom.functions_ext [Finite I] (G : Type _) [AddCommMonoid G] (g 
 /-- This is used as the ext lemma instead of `add_monoid_hom.functions_ext` for reasons explained in
 note [partially-applied ext lemmas]. -/
 @[ext.1]
-theorem AddMonoidHom.functions_ext' [Finite I] (M : Type _) [AddCommMonoid M] (g h : (∀ i, Z i) →+ M)
+theorem AddMonoidHom.functions_ext' [Finite I] (M : Type _) [AddCommMonoid M]
+    (g h : (∀ i, Z i) →+ M)
     (H : ∀ i, g.comp (AddMonoidHom.single Z i) = h.comp (AddMonoidHom.single Z i)) : g = h :=
   have := fun i => AddMonoidHom.congr_fun (H i)
   -- elab without an expected type
@@ -104,7 +105,8 @@ variable [∀ i, NonAssocSemiring (f i)]
 @[ext.1]
 theorem RingHom.functions_ext [Finite I] (G : Type _) [NonAssocSemiring G] (g h : (∀ i, f i) →+* G)
     (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
-  RingHom.coe_add_monoid_hom_injective <| @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h H
+  RingHom.coe_add_monoid_hom_injective <|
+    @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h H
 #align ring_hom.functions_ext RingHom.functions_ext
 
 end RingHom

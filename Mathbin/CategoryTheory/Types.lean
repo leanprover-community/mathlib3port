@@ -125,8 +125,8 @@ variable {C : Type u} [Category.{v} C] (F G H : C ⥤ Type w) {X Y Z : C}
 variable (σ : F ⟶ G) (τ : G ⟶ H)
 
 @[simp]
-theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) : (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) := by
-  simp [types_comp]
+theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) :
+    (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) := by simp [types_comp]
 #align category_theory.functor_to_types.map_comp_apply CategoryTheory.FunctorToTypes.map_comp_apply
 
 @[simp]
@@ -152,22 +152,26 @@ theorem hcomp (x : (I ⋙ F).obj W) : (ρ ◫ σ).app W x = (G.map (ρ.app W)) (
 @[simp]
 theorem map_inv_map_hom_apply (f : X ≅ Y) (x : F.obj X) : F.map f.inv (F.map f.Hom x) = x :=
   congr_fun (F.mapIso f).hom_inv_id x
-#align category_theory.functor_to_types.map_inv_map_hom_apply CategoryTheory.FunctorToTypes.map_inv_map_hom_apply
+#align
+  category_theory.functor_to_types.map_inv_map_hom_apply CategoryTheory.FunctorToTypes.map_inv_map_hom_apply
 
 @[simp]
 theorem map_hom_map_inv_apply (f : X ≅ Y) (y : F.obj Y) : F.map f.Hom (F.map f.inv y) = y :=
   congr_fun (F.mapIso f).inv_hom_id y
-#align category_theory.functor_to_types.map_hom_map_inv_apply CategoryTheory.FunctorToTypes.map_hom_map_inv_apply
+#align
+  category_theory.functor_to_types.map_hom_map_inv_apply CategoryTheory.FunctorToTypes.map_hom_map_inv_apply
 
 @[simp]
 theorem hom_inv_id_app_apply (α : F ≅ G) (X) (x) : α.inv.app X (α.Hom.app X x) = x :=
   congr_fun (α.hom_inv_id_app X) x
-#align category_theory.functor_to_types.hom_inv_id_app_apply CategoryTheory.FunctorToTypes.hom_inv_id_app_apply
+#align
+  category_theory.functor_to_types.hom_inv_id_app_apply CategoryTheory.FunctorToTypes.hom_inv_id_app_apply
 
 @[simp]
 theorem inv_hom_id_app_apply (α : F ≅ G) (X) (x) : α.Hom.app X (α.inv.app X x) = x :=
   congr_fun (α.inv_hom_id_app X) x
-#align category_theory.functor_to_types.inv_hom_id_app_apply CategoryTheory.FunctorToTypes.inv_hom_id_app_apply
+#align
+  category_theory.functor_to_types.inv_hom_id_app_apply CategoryTheory.FunctorToTypes.inv_hom_id_app_apply
 
 end FunctorToTypes
 
@@ -186,7 +190,8 @@ def uliftFunctor : Type u ⥤ Type max u v where
 #align category_theory.ulift_functor CategoryTheory.uliftFunctor
 
 @[simp]
-theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) : uliftFunctor.map f x = ULift.up (f x.down) :=
+theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
+    uliftFunctor.map f x = ULift.up (f x.down) :=
   rfl
 #align category_theory.ulift_functor_map CategoryTheory.ulift_functor_map
 
@@ -196,7 +201,8 @@ instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (
 instance ulift_functor_faithful :
     Faithful
       uliftFunctor where map_injective' X Y f g p :=
-    funext fun x => congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
+    funext fun x =>
+      congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 #align category_theory.ulift_functor_faithful CategoryTheory.ulift_functor_faithful
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
@@ -274,7 +280,8 @@ theorem of_type_functor_obj : (ofTypeFunctor m).obj = m :=
 #align category_theory.of_type_functor_obj CategoryTheory.of_type_functor_obj
 
 @[simp]
-theorem of_type_functor_map {α β} (f : α → β) : (ofTypeFunctor m).map f = (Functor.map f : m α → m β) :=
+theorem of_type_functor_map {α β} (f : α → β) :
+    (ofTypeFunctor m).map f = (Functor.map f : m α → m β) :=
   rfl
 #align category_theory.of_type_functor_map CategoryTheory.of_type_functor_map
 
@@ -344,7 +351,8 @@ theorem to_equiv_id (X : Type u) : (Iso.refl X).toEquiv = Equiv.refl X :=
 #align category_theory.iso.to_equiv_id CategoryTheory.Iso.to_equiv_id
 
 @[simp]
-theorem to_equiv_comp {X Y Z : Type u} (f : X ≅ Y) (g : Y ≅ Z) : (f ≪≫ g).toEquiv = f.toEquiv.trans g.toEquiv :=
+theorem to_equiv_comp {X Y Z : Type u} (f : X ≅ Y) (g : Y ≅ Z) :
+    (f ≪≫ g).toEquiv = f.toEquiv.trans g.toEquiv :=
   rfl
 #align category_theory.iso.to_equiv_comp CategoryTheory.Iso.to_equiv_comp
 
@@ -354,7 +362,8 @@ namespace CategoryTheory
 
 /-- A morphism in `Type u` is an isomorphism if and only if it is bijective. -/
 theorem is_iso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
-  Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b => IsIso.of_iso (Equiv.ofBijective f b).toIso
+  Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b =>
+    IsIso.of_iso (Equiv.ofBijective f b).toIso
 #align category_theory.is_iso_iff_bijective CategoryTheory.is_iso_iff_bijective
 
 instance :

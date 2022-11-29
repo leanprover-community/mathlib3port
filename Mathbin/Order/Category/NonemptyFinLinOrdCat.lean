@@ -28,7 +28,8 @@ class NonemptyFinLinOrd (α : Type _) extends Fintype α, LinearOrder α where
 
 attribute [instance] NonemptyFinLinOrd.nonempty
 
-instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] : BoundedOrder α :=
+instance (priority := 100) NonemptyFinLinOrd.toBoundedOrder (α : Type _) [NonemptyFinLinOrd α] :
+    BoundedOrder α :=
   Fintype.toBoundedOrder α
 #align nonempty_fin_lin_ord.to_bounded_order NonemptyFinLinOrd.toBoundedOrder
 
@@ -38,7 +39,8 @@ instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit where
 instance Fin.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Fin (n + 1)) where
 #align fin.nonempty_fin_lin_ord Fin.nonemptyFinLinOrd
 
-instance ULift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (ULift.{v} α) :=
+instance ULift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] :
+    NonemptyFinLinOrd (ULift.{v} α) :=
   { LinearOrder.lift' Equiv.ulift (Equiv.injective _) with }
 #align ulift.nonempty_fin_lin_ord ULift.nonemptyFinLinOrd
 
@@ -104,11 +106,13 @@ def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat where
 /-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align NonemptyFinLinOrd.dual_equiv NonemptyFinLinOrdCat.dualEquiv
 
-theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) : Mono f ↔ Function.Injective f := by
+theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
+    Mono f ↔ Function.Injective f := by
   refine' ⟨_, concrete_category.mono_of_injective f⟩
   intro
   intro a₁ a₂ h
@@ -123,7 +127,8 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) : Mono
   rw [Eq]
 #align NonemptyFinLinOrd.mono_iff_injective NonemptyFinLinOrdCat.mono_iff_injective
 
-theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) : Epi f ↔ Function.Surjective f := by
+theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
+    Epi f ↔ Function.Surjective f := by
   constructor
   · intro
     by_contra' hf'
@@ -213,5 +218,6 @@ theorem NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder :
     NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat LinearOrderCat =
       forget₂ NonemptyFinLinOrdCat LinearOrderCat ⋙ LinearOrderCat.dual :=
   rfl
-#align NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder
+#align
+  NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder
 

@@ -102,16 +102,17 @@ def toTrunc (q : Semiquot α) : Trunc α :=
   q.2.map Subtype.val
 #align semiquot.to_trunc Semiquot.toTrunc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
 def liftOn (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b) : β :=
   Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ x.2 _ y.2
 #align semiquot.lift_on Semiquot.liftOn
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » q) -/
-theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b) (a : α)
-    (aq : a ∈ q) : liftOn q f h = f a := by revert h <;> rw [eq_mk_of_mem aq] <;> intro <;> rfl
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), f a = f b)
+    (a : α) (aq : a ∈ q) : liftOn q f h = f a := by
+  revert h <;> rw [eq_mk_of_mem aq] <;> intro <;> rfl
 #align semiquot.lift_on_of_mem Semiquot.lift_on_of_mem
 
 /-- Apply a function to the unknown value stored in a `semiquot α`. -/
@@ -168,7 +169,9 @@ instance : LawfulMonad Semiquot where
   bind_assoc α β γ s f g :=
     ext.2 <| by
       simp <;>
-        exact fun c => ⟨fun ⟨b, ⟨a, as, bf⟩, cg⟩ => ⟨a, as, b, bf, cg⟩, fun ⟨a, as, b, bf, cg⟩ => ⟨b, ⟨a, as, bf⟩, cg⟩⟩
+        exact fun c =>
+          ⟨fun ⟨b, ⟨a, as, bf⟩, cg⟩ => ⟨a, as, b, bf, cg⟩, fun ⟨a, as, b, bf, cg⟩ =>
+            ⟨b, ⟨a, as, bf⟩, cg⟩⟩
   id_map α q := ext.2 <| by simp
   bind_pure_comp_eq_map α β f s := ext.2 <| by simp [eq_comm]
 
@@ -182,7 +185,8 @@ instance : PartialOrder (Semiquot α) where
   le_antisymm s t h₁ h₂ := ext_s.2 (Set.Subset.antisymm h₁ h₂)
 
 instance : SemilatticeSup (Semiquot α) :=
-  { Semiquot.partialOrder with sup := fun s => blur s.s, le_sup_left := fun s t => Set.subset_union_left _ _,
+  { Semiquot.partialOrder with sup := fun s => blur s.s,
+    le_sup_left := fun s t => Set.subset_union_left _ _,
     le_sup_right := fun s t => Set.subset_union_right _ _, sup_le := fun s t u => Set.union_subset }
 
 @[simp]
@@ -190,7 +194,7 @@ theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
   Set.singleton_subset_iff
 #align semiquot.pure_le Semiquot.pure_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » q) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » q) -/
 /-- Assert that a `semiquot` contains only one possible value. -/
 def IsPure (q : Semiquot α) : Prop :=
   ∀ (a b) (_ : a ∈ q) (_ : b ∈ q), a = b
@@ -227,7 +231,8 @@ theorem IsPure.mono {s t : Semiquot α} (st : s ≤ t) (h : IsPure t) : IsPure s
 
 theorem IsPure.min {s t : Semiquot α} (h : IsPure t) : s ≤ t ↔ s = t :=
   ⟨fun st =>
-    le_antisymm st <| by rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st <| get_mem _),
+    le_antisymm st <| by
+      rw [eq_pure h, eq_pure (h.mono st)] <;> simp <;> exact h _ (get_mem _) _ (st <| get_mem _),
     le_of_eq⟩
 #align semiquot.is_pure.min Semiquot.IsPure.min
 

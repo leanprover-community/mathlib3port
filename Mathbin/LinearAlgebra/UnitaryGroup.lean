@@ -61,17 +61,20 @@ variable {n : Type u} [DecidableEq n] [Fintype n]
 
 variable {α : Type v} [CommRing α] [StarRing α]
 
-theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 := by
+theorem mem_unitary_group_iff {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ A * star A = 1 :=
+  by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 #align matrix.mem_unitary_group_iff Matrix.mem_unitary_group_iff
 
-theorem mem_unitary_group_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 := by
+theorem mem_unitary_group_iff' {A : Matrix n n α} : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 1 :=
+  by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
 #align matrix.mem_unitary_group_iff' Matrix.mem_unitary_group_iff'
 
-theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) : A.det ∈ unitary α := by
+theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) :
+    A.det ∈ unitary α := by
   constructor
   · simpa [star, det_transpose] using congr_arg det hA.1
     
@@ -215,12 +218,14 @@ abbrev orthogonalGroup :=
   unitaryGroup n β
 #align matrix.orthogonal_group Matrix.orthogonalGroup
 
-theorem mem_orthogonal_group_iff {A : Matrix n n β} : A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 := by
+theorem mem_orthogonal_group_iff {A : Matrix n n β} :
+    A ∈ Matrix.orthogonalGroup n β ↔ A * star A = 1 := by
   refine' ⟨And.right, fun hA => ⟨_, hA⟩⟩
   simpa only [mul_eq_mul, mul_eq_one_comm] using hA
 #align matrix.mem_orthogonal_group_iff Matrix.mem_orthogonal_group_iff
 
-theorem mem_orthogonal_group_iff' {A : Matrix n n β} : A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 := by
+theorem mem_orthogonal_group_iff' {A : Matrix n n β} :
+    A ∈ Matrix.orthogonalGroup n β ↔ star A * A = 1 := by
   refine' ⟨And.left, fun hA => ⟨hA, _⟩⟩
   rwa [mul_eq_mul, mul_eq_one_comm] at hA
 #align matrix.mem_orthogonal_group_iff' Matrix.mem_orthogonal_group_iff'

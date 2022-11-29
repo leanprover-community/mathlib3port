@@ -26,6 +26,7 @@ instance equivFunctorPerm : EquivFunctor Perm where map α β e p := (e.symm.tra
 instance equivFunctorFinset : EquivFunctor Finset where map α β e s := s.map e.toEmbedding
 #align equiv_functor_finset equivFunctorFinset
 
-instance equivFunctorFintype : EquivFunctor Fintype where map α β e s := Fintype.ofBijective e e.bijective
+instance equivFunctorFintype :
+    EquivFunctor Fintype where map α β e s := Fintype.ofBijective e e.bijective
 #align equiv_functor_fintype equivFunctorFintype
 

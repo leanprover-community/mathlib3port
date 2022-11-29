@@ -37,12 +37,13 @@ arbitrarily close to 1. The statement here is in terms of multiples of
 norms, since in general the existence of an element of norm exactly 1
 is not guaranteed. For a variant giving an element with norm in `[1, R]`, see
 `riesz_lemma_of_norm_lt`. -/
-theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) {r : ℝ} (hr : r < 1) :
-    ∃ x₀ : E, x₀ ∉ F ∧ ∀ y ∈ F, r * ‖x₀‖ ≤ ‖x₀ - y‖ := by classical
+theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) {r : ℝ}
+    (hr : r < 1) : ∃ x₀ : E, x₀ ∉ F ∧ ∀ y ∈ F, r * ‖x₀‖ ≤ ‖x₀ - y‖ := by classical
   obtain ⟨x, hx⟩ : ∃ x : E, x ∉ F := hF
   let d := Metric.infDist x F
   have hFn : (F : Set E).Nonempty := ⟨_, F.zero_mem⟩
-  have hdp : 0 < d := lt_of_le_of_ne Metric.inf_dist_nonneg fun heq => hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
+  have hdp : 0 < d :=
+    lt_of_le_of_ne Metric.inf_dist_nonneg fun heq => hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
   let r' := max r 2⁻¹
   have hr' : r' < 1 := by
     simp [r', hr]
@@ -67,7 +68,8 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     
 #align riesz_lemma riesz_lemma
 
-/-- A version of Riesz lemma: given a strict closed subspace `F`, one may find an element of norm `≤ R`
+/--
+A version of Riesz lemma: given a strict closed subspace `F`, one may find an element of norm `≤ R`
 which is at distance  at least `1` of every element of `F`. Here, `R` is any given constant
 strictly larger than the norm of an element of norm `> 1`. For a version without an `R`, see
 `riesz_lemma`.
@@ -77,14 +79,16 @@ Since we are considering a general nontrivially normed field, there may be a gap
 and require `R > ‖c‖` for some `c : 𝕜` with norm `> 1`.
 -/
 theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖c‖ < R) {F : Subspace 𝕜 E}
-    (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) : ∃ x₀ : E, ‖x₀‖ ≤ R ∧ ∀ y ∈ F, 1 ≤ ‖x₀ - y‖ := by
+    (hFc : IsClosed (F : Set E)) (hF : ∃ x : E, x ∉ F) :
+    ∃ x₀ : E, ‖x₀‖ ≤ R ∧ ∀ y ∈ F, 1 ≤ ‖x₀ - y‖ := by
   have Rpos : 0 < R := (norm_nonneg _).trans_lt hR
   have : ‖c‖ / R < 1 := by
     rw [div_lt_iff Rpos]
     simpa using hR
   rcases riesz_lemma hFc hF this with ⟨x, xF, hx⟩
   have x0 : x ≠ 0 := fun H => by simpa [H] using xF
-  obtain ⟨d, d0, dxlt, ledx, -⟩ : ∃ d : 𝕜, d ≠ 0 ∧ ‖d • x‖ < R ∧ R / ‖c‖ ≤ ‖d • x‖ ∧ ‖d‖⁻¹ ≤ R⁻¹ * ‖c‖ * ‖x‖ :=
+  obtain ⟨d, d0, dxlt, ledx, -⟩ :
+    ∃ d : 𝕜, d ≠ 0 ∧ ‖d • x‖ < R ∧ R / ‖c‖ ≤ ‖d • x‖ ∧ ‖d‖⁻¹ ≤ R⁻¹ * ‖c‖ * ‖x‖ :=
     rescale_to_shell hc Rpos x0
   refine' ⟨d • x, dxlt.le, fun y hy => _⟩
   set y' := d⁻¹ • y with hy'
@@ -96,7 +100,8 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
     _ = ‖d‖ * (‖c‖ / R * ‖x‖) := by
       simp [norm_smul]
       ring
-    _ ≤ ‖d‖ * ‖x - y'‖ := mul_le_mul_of_nonneg_left (hx y' (by simp [hy', Submodule.smul_mem _ _ hy])) (norm_nonneg _)
+    _ ≤ ‖d‖ * ‖x - y'‖ :=
+      mul_le_mul_of_nonneg_left (hx y' (by simp [hy', Submodule.smul_mem _ _ hy])) (norm_nonneg _)
     _ = ‖d • x - y‖ := by simp [yy', ← smul_sub, norm_smul]
     
 #align riesz_lemma_of_norm_lt riesz_lemma_of_norm_lt
@@ -110,5 +115,6 @@ theorem Metric.closed_ball_inf_dist_compl_subset_closure {x : F} {s : Set F} (hx
   · rw [← closure_ball x h₀]
     exact closure_mono ball_inf_dist_compl_subset
     
-#align metric.closed_ball_inf_dist_compl_subset_closure Metric.closed_ball_inf_dist_compl_subset_closure
+#align
+  metric.closed_ball_inf_dist_compl_subset_closure Metric.closed_ball_inf_dist_compl_subset_closure
 

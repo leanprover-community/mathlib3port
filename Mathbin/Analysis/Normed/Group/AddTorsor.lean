@@ -34,8 +34,8 @@ class NormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| Seminor
 #align normed_add_torsor NormedAddTorsor
 
 /-- Shortcut instance to help typeclass inference out. -/
-instance (priority := 100) NormedAddTorsor.toAddTorsor' {V P : Type _} [NormedAddCommGroup V] [MetricSpace P]
-    [NormedAddTorsor V P] : AddTorsor V P :=
+instance (priority := 100) NormedAddTorsor.toAddTorsor' {V P : Type _} [NormedAddCommGroup V]
+    [MetricSpace P] [NormedAddTorsor V P] : AddTorsor V P :=
   NormedAddTorsor.toAddTorsor
 #align normed_add_torsor.to_add_torsor' NormedAddTorsor.toAddTorsor'
 
@@ -50,9 +50,10 @@ instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor :
 -- Because of the add_torsor.nonempty instance.
 /-- A nonempty affine subspace of a `normed_add_torsor` is itself a `normed_add_torsor`. -/
 @[nolint fails_quickly]
-instance AffineSubspace.toNormedAddTorsor {R : Type _} [Ring R] [Module R V] (s : AffineSubspace R P) [Nonempty s] :
-    NormedAddTorsor s.direction s :=
-  { AffineSubspace.toAddTorsor s with dist_eq_norm' := fun x y => NormedAddTorsor.dist_eq_norm' ↑x ↑y }
+instance AffineSubspace.toNormedAddTorsor {R : Type _} [Ring R] [Module R V]
+    (s : AffineSubspace R P) [Nonempty s] : NormedAddTorsor s.direction s :=
+  { AffineSubspace.toAddTorsor s with
+    dist_eq_norm' := fun x y => NormedAddTorsor.dist_eq_norm' ↑x ↑y }
 #align affine_subspace.to_normed_add_torsor AffineSubspace.toNormedAddTorsor
 
 include V
@@ -144,7 +145,8 @@ theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.ball y r = Metric.ba
 #align vadd_ball vadd_ball
 
 @[simp]
-theorem vadd_closed_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.closedBall y r = Metric.closedBall (x +ᵥ y) r :=
+theorem vadd_closed_ball (x : V) (y : P) (r : ℝ) :
+    x +ᵥ Metric.closedBall y r = Metric.closedBall (x +ᵥ y) r :=
   (Isometric.constVadd P x).image_closed_ball y r
 #align vadd_closed_ball vadd_closed_ball
 
@@ -155,29 +157,35 @@ theorem vadd_sphere (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.sphere y r = Metri
 
 end Pointwise
 
-theorem dist_vadd_vadd_le (v v' : V) (p p' : P) : dist (v +ᵥ p) (v' +ᵥ p') ≤ dist v v' + dist p p' := by
+theorem dist_vadd_vadd_le (v v' : V) (p p' : P) :
+    dist (v +ᵥ p) (v' +ᵥ p') ≤ dist v v' + dist p p' := by
   simpa using dist_triangle (v +ᵥ p) (v' +ᵥ p) (v' +ᵥ p')
 #align dist_vadd_vadd_le dist_vadd_vadd_le
 
-theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃ + dist p₂ p₄ := by
+theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
+    dist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ dist p₁ p₃ + dist p₂ p₄ := by
   rw [dist_eq_norm, vsub_sub_vsub_comm, dist_eq_norm_vsub V, dist_eq_norm_vsub V]
   exact norm_sub_le _ _
 #align dist_vsub_vsub_le dist_vsub_vsub_le
 
-theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) : nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
+theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) :
+    nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
   simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
 #align nndist_vadd_vadd_le nndist_vadd_vadd_le
 
-theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by
+theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
+    nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by
   simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vsub_vsub_le]
 #align nndist_vsub_vsub_le nndist_vsub_vsub_le
 
-theorem edist_vadd_vadd_le (v v' : V) (p p' : P) : edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' := by
+theorem edist_vadd_vadd_le (v v' : V) (p p' : P) :
+    edist (v +ᵥ p) (v' +ᵥ p') ≤ edist v v' + edist p p' := by
   simp only [edist_nndist]
   apply_mod_cast nndist_vadd_vadd_le
 #align edist_vadd_vadd_le edist_vadd_vadd_le
 
-theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) : edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ := by
+theorem edist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
+    edist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ edist p₁ p₃ + edist p₂ p₄ := by
   simp only [edist_nndist]
   apply_mod_cast nndist_vsub_vsub_le
 #align edist_vsub_vsub_le edist_vsub_vsub_le
@@ -187,8 +195,8 @@ omit V
 /-- The pseudodistance defines a pseudometric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
-def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V] [AddTorsor V P] :
-    PseudoMetricSpace P where
+def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V]
+    [AddTorsor V P] : PseudoMetricSpace P where
   dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
@@ -197,13 +205,14 @@ def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedA
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
     apply norm_add_le
-#align pseudo_metric_space_of_normed_add_comm_group_of_add_torsor pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor
+#align
+  pseudo_metric_space_of_normed_add_comm_group_of_add_torsor pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor
 
 /-- The distance defines a metric space structure on the torsor. This
 is not an instance because it depends on `V` to define a `metric_space
 P`. -/
-def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V] [AddTorsor V P] :
-    MetricSpace P where
+def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V]
+    [AddTorsor V P] : MetricSpace P where
   dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   eq_of_dist_eq_zero x y h := by simpa using h
@@ -213,23 +222,28 @@ def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGrou
     change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
     apply norm_add_le
-#align metric_space_of_normed_add_comm_group_of_add_torsor metricSpaceOfNormedAddCommGroupOfAddTorsor
+#align
+  metric_space_of_normed_add_comm_group_of_add_torsor metricSpaceOfNormedAddCommGroupOfAddTorsor
 
 include V
 
-theorem LipschitzWith.vadd [PseudoEmetricSpace α] {f : α → V} {g : α → P} {Kf Kg : ℝ≥0} (hf : LipschitzWith Kf f)
-    (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f +ᵥ g) := fun x y =>
+theorem LipschitzWith.vadd [PseudoEmetricSpace α] {f : α → V} {g : α → P} {Kf Kg : ℝ≥0}
+    (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f +ᵥ g) :=
+  fun x y =>
   calc
-    edist (f x +ᵥ g x) (f y +ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) := edist_vadd_vadd_le _ _ _ _
+    edist (f x +ᵥ g x) (f y +ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) :=
+      edist_vadd_vadd_le _ _ _ _
     _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
     _ = (Kf + Kg) * edist x y := (add_mul _ _ _).symm
     
 #align lipschitz_with.vadd LipschitzWith.vadd
 
-theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ≥0} (hf : LipschitzWith Kf f)
-    (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f -ᵥ g) := fun x y =>
+theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ≥0}
+    (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) : LipschitzWith (Kf + Kg) (f -ᵥ g) :=
+  fun x y =>
   calc
-    edist (f x -ᵥ g x) (f y -ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) := edist_vsub_vsub_le _ _ _ _
+    edist (f x -ᵥ g x) (f y -ᵥ g y) ≤ edist (f x) (f y) + edist (g x) (g y) :=
+      edist_vsub_vsub_le _ _ _ _
     _ ≤ Kf * edist x y + Kg * edist x y := add_le_add (hf x y) (hg x y)
     _ = (Kf + Kg) * edist x y := (add_mul _ _ _).symm
     
@@ -251,8 +265,8 @@ theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
   uniform_continuous_vsub.Continuous
 #align continuous_vsub continuous_vsub
 
-theorem Filter.Tendsto.vsub {l : Filter α} {f g : α → P} {x y : P} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
-    Tendsto (f -ᵥ g) l (𝓝 (x -ᵥ y)) :=
+theorem Filter.Tendsto.vsub {l : Filter α} {f g : α → P} {x y : P} (hf : Tendsto f l (𝓝 x))
+    (hg : Tendsto g l (𝓝 y)) : Tendsto (f -ᵥ g) l (𝓝 (x -ᵥ y)) :=
   (continuous_vsub.Tendsto (x, y)).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.vsub Filter.Tendsto.vsub
 
@@ -260,7 +274,8 @@ section
 
 variable [TopologicalSpace α]
 
-theorem Continuous.vsub {f g : α → P} (hf : Continuous f) (hg : Continuous g) : Continuous (f -ᵥ g) :=
+theorem Continuous.vsub {f g : α → P} (hf : Continuous f) (hg : Continuous g) :
+    Continuous (f -ᵥ g) :=
   continuous_vsub.comp (hf.prod_mk hg : _)
 #align continuous.vsub Continuous.vsub
 

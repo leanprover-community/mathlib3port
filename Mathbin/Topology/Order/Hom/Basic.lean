@@ -31,8 +31,8 @@ open Function
 variable {F α β γ δ : Type _}
 
 /-- The type of continuous monotone maps from `α` to `β`, aka Priestley homomorphisms. -/
-structure ContinuousOrderHom (α β : Type _) [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β] extends
-  OrderHom α β where
+structure ContinuousOrderHom (α β : Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
+  [TopologicalSpace β] extends OrderHom α β where
   continuous_to_fun : Continuous to_fun
 #align continuous_order_hom ContinuousOrderHom
 
@@ -44,22 +44,26 @@ section
 /-- `continuous_order_hom_class F α β` states that `F` is a type of continuous monotone maps.
 
 You should extend this class when you extend `continuous_order_hom`. -/
-class ContinuousOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
-  [TopologicalSpace β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
+class ContinuousOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β]
+  [TopologicalSpace α] [TopologicalSpace β] extends
+  RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_continuous (f : F) : Continuous f
 #align continuous_order_hom_class ContinuousOrderHomClass
 
 end
 
 -- See note [lower instance priority]
-instance (priority := 100) ContinuousOrderHomClass.toContinuousMapClass [Preorder α] [Preorder β] [TopologicalSpace α]
-    [TopologicalSpace β] [ContinuousOrderHomClass F α β] : ContinuousMapClass F α β :=
+instance (priority := 100) ContinuousOrderHomClass.toContinuousMapClass [Preorder α] [Preorder β]
+    [TopologicalSpace α] [TopologicalSpace β] [ContinuousOrderHomClass F α β] :
+    ContinuousMapClass F α β :=
   { ‹ContinuousOrderHomClass F α β› with }
-#align continuous_order_hom_class.to_continuous_map_class ContinuousOrderHomClass.toContinuousMapClass
+#align
+  continuous_order_hom_class.to_continuous_map_class ContinuousOrderHomClass.toContinuousMapClass
 
-instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β] [ContinuousOrderHomClass F α β] :
-    CoeTC F (α →Co β) :=
-  ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono f, continuous_to_fun := map_continuous f }⟩
+instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
+    [ContinuousOrderHomClass F α β] : CoeTC F (α →Co β) :=
+  ⟨fun f =>
+    { toFun := f, monotone' := OrderHomClass.mono f, continuous_to_fun := map_continuous f }⟩
 
 /-! ### Top homomorphisms -/
 
@@ -154,7 +158,8 @@ theorem comp_apply (f : β →Co γ) (g : α →Co β) (a : α) : (f.comp g) a =
 #align continuous_order_hom.comp_apply ContinuousOrderHom.comp_apply
 
 @[simp]
-theorem comp_assoc (f : γ →Co δ) (g : β →Co γ) (h : α →Co β) : (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : γ →Co δ) (g : β →Co γ) (h : α →Co β) :
+    (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align continuous_order_hom.comp_assoc ContinuousOrderHom.comp_assoc
 
@@ -168,11 +173,13 @@ theorem id_comp (f : α →Co β) : (ContinuousOrderHom.id β).comp f = f :=
   ext fun a => rfl
 #align continuous_order_hom.id_comp ContinuousOrderHom.id_comp
 
-theorem cancel_right {g₁ g₂ : β →Co γ} {f : α →Co β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+theorem cancel_right {g₁ g₂ : β →Co γ} {f : α →Co β} (hf : Surjective f) :
+    g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_order_hom.cancel_right ContinuousOrderHom.cancel_right
 
-theorem cancel_left {g : β →Co γ} {f₁ f₂ : α →Co β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+theorem cancel_left {g : β →Co γ} {f₁ f₂ : α →Co β} (hg : Injective g) :
+    g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_order_hom.cancel_left ContinuousOrderHom.cancel_left
 

@@ -55,7 +55,8 @@ theorem trace_add (A B : Matrix n n R) : trace (A + B) = trace A + trace B :=
 #align matrix.trace_add Matrix.trace_add
 
 @[simp]
-theorem trace_smul [Monoid α] [DistribMulAction α R] (r : α) (A : Matrix n n R) : trace (r • A) = r • trace A :=
+theorem trace_smul [Monoid α] [DistribMulAction α R] (r : α) (A : Matrix n n R) :
+    trace (r • A) = r • trace A :=
   Finset.smul_sum.symm
 #align matrix.trace_smul Matrix.trace_smul
 
@@ -100,7 +101,8 @@ theorem trace_multiset_sum (s : Multiset (Matrix n n R)) : trace s.Sum = (s.map 
 #align matrix.trace_multiset_sum Matrix.trace_multiset_sum
 
 @[simp]
-theorem trace_sum (s : Finset ι) (f : ι → Matrix n n R) : trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
+theorem trace_sum (s : Finset ι) (f : ι → Matrix n n R) :
+    trace (∑ i in s, f i) = ∑ i in s, trace (f i) :=
   map_sum (traceAddMonoidHom n R) f s
 #align matrix.trace_sum Matrix.trace_sum
 
@@ -145,17 +147,19 @@ theorem trace_mul_comm [AddCommMonoid R] [CommSemigroup R] (A : Matrix m n R) (B
     trace (A ⬝ B) = trace (B ⬝ A) := by rw [← trace_transpose, ← trace_transpose_mul, transpose_mul]
 #align matrix.trace_mul_comm Matrix.trace_mul_comm
 
-theorem trace_mul_cycle [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R) (C : Matrix p m R) :
-    trace (A ⬝ B ⬝ C) = trace (C ⬝ A ⬝ B) := by rw [trace_mul_comm, Matrix.mul_assoc]
+theorem trace_mul_cycle [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R)
+    (C : Matrix p m R) : trace (A ⬝ B ⬝ C) = trace (C ⬝ A ⬝ B) := by
+  rw [trace_mul_comm, Matrix.mul_assoc]
 #align matrix.trace_mul_cycle Matrix.trace_mul_cycle
 
-theorem trace_mul_cycle' [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R) (C : Matrix p m R) :
-    trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) := by rw [← Matrix.mul_assoc, trace_mul_comm]
+theorem trace_mul_cycle' [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matrix n p R)
+    (C : Matrix p m R) : trace (A ⬝ (B ⬝ C)) = trace (C ⬝ (A ⬝ B)) := by
+  rw [← Matrix.mul_assoc, trace_mul_comm]
 #align matrix.trace_mul_cycle' Matrix.trace_mul_cycle'
 
 @[simp]
-theorem trace_col_mul_row [NonUnitalNonAssocSemiring R] (a b : n → R) : trace (col a ⬝ row b) = dotProduct a b := by
-  simp [dot_product, trace]
+theorem trace_col_mul_row [NonUnitalNonAssocSemiring R] (a b : n → R) :
+    trace (col a ⬝ row b) = dotProduct a b := by simp [dot_product, trace]
 #align matrix.trace_col_mul_row Matrix.trace_col_mul_row
 
 end Mul

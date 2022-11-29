@@ -94,8 +94,8 @@ open Submodule
 /-- Multiplicity of the ideal norm, for coprime ideals.
 This is essentially just a repackaging of the Chinese Remainder Theorem.
 -/
-theorem card_quot_mul_of_coprime [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S] {I J : Ideal S}
-    (coprime : I ⊔ J = ⊤) : cardQuot (I * J) = cardQuot I * cardQuot J := by
+theorem card_quot_mul_of_coprime [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S]
+    {I J : Ideal S} (coprime : I ⊔ J = ⊤) : cardQuot (I * J) = cardQuot I * cardQuot J := by
   let b := Module.Free.chooseBasis ℤ S
   cases isEmpty_or_nonempty (Module.Free.ChooseBasisIndex ℤ S)
   · haveI : Subsingleton S := Function.Surjective.subsingleton b.repr.to_equiv.symm.surjective
@@ -116,16 +116,18 @@ theorem card_quot_mul_of_coprime [IsDedekindDomain S] [Module.Free ℤ S] [Modul
   letI := J.fintype_quotient_of_free_of_ne_bot hJ
   letI := (I * J).fintypeQuotientOfFreeOfNeBot hIJ
   rw [card_quot_apply, card_quot_apply, card_quot_apply,
-    fintype.card_eq.mpr ⟨(Ideal.quotientMulEquivQuotientProd I J coprime).toEquiv⟩, Fintype.card_prod]
+    fintype.card_eq.mpr ⟨(Ideal.quotientMulEquivQuotientProd I J coprime).toEquiv⟩,
+    Fintype.card_prod]
 #align card_quot_mul_of_coprime card_quot_mul_of_coprime
 
 /-- If the `d` from `ideal.exists_mul_add_mem_pow_succ` is unique, up to `P`,
 then so are the `c`s, up to `P ^ (i + 1)`.
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.mul_add_mem_pow_succ_inj (P : Ideal S) {i : ℕ} (a d d' e e' : S) (a_mem : a ∈ P ^ i)
-    (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1)) (h : d - d' ∈ P) : a * d + e - (a * d' + e') ∈ P ^ (i + 1) :=
-  by
-  have : a * d - a * d' ∈ P ^ (i + 1) := by convert Ideal.mul_mem_mul a_mem h <;> simp [mul_sub, pow_succ, mul_comm]
+    (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1)) (h : d - d' ∈ P) :
+    a * d + e - (a * d' + e') ∈ P ^ (i + 1) := by
+  have : a * d - a * d' ∈ P ^ (i + 1) := by
+    convert Ideal.mul_mem_mul a_mem h <;> simp [mul_sub, pow_succ, mul_comm]
   convert Ideal.add_mem _ this (Ideal.sub_mem _ e_mem e'_mem)
   ring
 #align ideal.mul_add_mem_pow_succ_inj Ideal.mul_add_mem_pow_succ_inj
@@ -140,7 +142,8 @@ include P_prime hP
 `ideal.mul_add_mem_pow_succ_unique` shows the choice of `d` is unique, up to `P`.
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : S) (a_mem : a ∈ P ^ i)
-    (a_not_mem : a ∉ P ^ (i + 1)) (c_mem : c ∈ P ^ i) : ∃ d : S, ∃ e ∈ P ^ (i + 1), a * d + e = c := by
+    (a_not_mem : a ∉ P ^ (i + 1)) (c_mem : c ∈ P ^ i) : ∃ d : S, ∃ e ∈ P ^ (i + 1), a * d + e = c :=
+  by
   suffices eq_b : P ^ i = Ideal.span {a} ⊔ P ^ (i + 1)
   · rw [eq_b] at c_mem
     simp only [mul_comm a]
@@ -148,14 +151,16 @@ theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : 
     
   refine'
     (Ideal.eq_prime_pow_of_succ_lt_of_le hP (lt_of_le_of_ne le_sup_right _)
-        (sup_le (ideal.span_le.mpr (set.singleton_subset_iff.mpr a_mem)) (Ideal.pow_succ_lt_pow hP i).le)).symm
+        (sup_le (ideal.span_le.mpr (set.singleton_subset_iff.mpr a_mem))
+          (Ideal.pow_succ_lt_pow hP i).le)).symm
   contrapose! a_not_mem with this
   rw [this]
   exact mem_sup.mpr ⟨a, mem_span_singleton_self a, 0, by simp, by simp⟩
 #align ideal.exists_mul_add_mem_pow_succ Ideal.exists_mul_add_mem_pow_succ
 
-theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_prime : P.IsPrime] (hP : P ≠ ⊥) {i : ℕ}
-    {a b : S} (a_not_mem : a ∉ P ^ (i + 1)) (ab_mem : a * b ∈ P ^ (i + 1)) : b ∈ P := by
+theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_prime : P.IsPrime]
+    (hP : P ≠ ⊥) {i : ℕ} {a b : S} (a_not_mem : a ∉ P ^ (i + 1)) (ab_mem : a * b ∈ P ^ (i + 1)) :
+    b ∈ P := by
   simp only [← Ideal.span_singleton_le_iff_mem, ← Ideal.dvd_iff_le, pow_succ, ←
     Ideal.span_singleton_mul_span_singleton] at a_not_mem ab_mem⊢
   exact (prime_pow_succ_dvd_mul (Ideal.prime_of_is_prime hP P_prime) ab_mem).resolve_left a_not_mem
@@ -163,9 +168,9 @@ theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_pri
 
 /-- The choice of `d` in `ideal.exists_mul_add_mem_pow_succ` is unique, up to `P`.
 Inspired by [Neukirch], proposition 6.1 -/
-theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d' e e' : S) (a_not_mem : a ∉ P ^ (i + 1))
-    (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1)) (h : a * d + e - (a * d' + e') ∈ P ^ (i + 1)) : d - d' ∈ P :=
-  by
+theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d' e e' : S)
+    (a_not_mem : a ∉ P ^ (i + 1)) (e_mem : e ∈ P ^ (i + 1)) (e'_mem : e' ∈ P ^ (i + 1))
+    (h : a * d + e - (a * d' + e') ∈ P ^ (i + 1)) : d - d' ∈ P := by
   have : e' - e ∈ P ^ (i + 1) := Ideal.sub_mem _ e'_mem e_mem
   have h' : a * (d - d') ∈ P ^ (i + 1) := by
     convert Ideal.add_mem _ h (Ideal.sub_mem _ e'_mem e_mem)
@@ -187,27 +192,33 @@ theorem card_quot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Modul
   have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
   suffices hquot : map (P ^ i.succ).mkq (P ^ i) ≃ S ⧸ P
   · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
-      card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i), card_quot_apply P]
+      card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
+      card_quot_apply P]
     congr 1
     rw [Fintype.card_eq]
     exact ⟨hquot⟩
     
   choose a a_mem a_not_mem using SetLike.exists_of_lt this
-  choose f g hg hf using fun c (hc : c ∈ P ^ i) => Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
-  choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) => submodule.mem_map.mp hc'
+  choose f g hg hf using fun c (hc : c ∈ P ^ i) =>
+    Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
+  choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) =>
+    submodule.mem_map.mp hc'
   refine' Equiv.ofBijective (fun c' => Quotient.mk' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
   · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
-    rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply, Submodule.Quotient.eq, ←
-      hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
+    rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply,
+      Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
     refine' Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) _
-    simpa only [Submodule.Quotient.mk'_eq_mk, Submodule.Quotient.mk'_eq_mk, Submodule.Quotient.eq] using h
+    simpa only [Submodule.Quotient.mk'_eq_mk, Submodule.Quotient.mk'_eq_mk,
+      Submodule.Quotient.eq] using h
     
   · intro d'
     refine' Quotient.inductionOn' d' fun d => _
     have hd' := mem_map.mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
     refine' ⟨⟨_, hd'⟩, _⟩
-    simp only [Submodule.Quotient.mk'_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq, Subtype.coe_mk]
-    refine' Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _) _
+    simp only [Submodule.Quotient.mk'_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
+      Subtype.coe_mk]
+    refine'
+      Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _) _
     rw [hf, add_zero]
     exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
     
@@ -234,12 +245,13 @@ theorem card_quot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite �
         card_quot_pow_of_prime hI.ne_zero)
       fun I J hIJ =>
       card_quot_mul_of_coprime
-        (ideal.is_unit_iff.mp (hIJ _ (ideal.dvd_iff_le.mpr le_sup_left) (ideal.dvd_iff_le.mpr le_sup_right)))
+        (ideal.is_unit_iff.mp
+          (hIJ _ (ideal.dvd_iff_le.mpr le_sup_left) (ideal.dvd_iff_le.mpr le_sup_right)))
 #align card_quot_mul card_quot_mul
 
 /-- The absolute norm of the ideal `I : ideal R` is the cardinality of the quotient `R ⧸ I`. -/
-noncomputable def Ideal.absNorm [Infinite S] [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S] :
-    Ideal S →*₀ ℕ where
+noncomputable def Ideal.absNorm [Infinite S] [IsDedekindDomain S] [Module.Free ℤ S]
+    [Module.Finite ℤ S] : Ideal S →*₀ ℕ where
   toFun := Submodule.cardQuot
   map_mul' I J := by rw [card_quot_mul]
   map_one' := by rw [Ideal.one_eq_top, card_quot_top]
@@ -263,14 +275,17 @@ theorem abs_norm_top : absNorm (⊤ : Ideal S) = 1 := by rw [← Ideal.one_eq_to
 #align ideal.abs_norm_top Ideal.abs_norm_top
 
 @[simp]
-theorem abs_norm_eq_one_iff {I : Ideal S} : absNorm I = 1 ↔ I = ⊤ := by rw [abs_norm_apply, card_quot_eq_one_iff]
+theorem abs_norm_eq_one_iff {I : Ideal S} : absNorm I = 1 ↔ I = ⊤ := by
+  rw [abs_norm_apply, card_quot_eq_one_iff]
 #align ideal.abs_norm_eq_one_iff Ideal.abs_norm_eq_one_iff
 
 /-- Let `e : S ≃ I` be an additive isomorphism (therefore a `ℤ`-linear equiv).
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `e`.
 See `nat_abs_det_basis_change` for a more familiar formulation of this result. -/
 theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E) :
-    Int.natAbs (LinearMap.det ((Submodule.subtype I).restrictScalars ℤ ∘ₗ AddMonoidHom.toIntLinearMap (e : S →+ I))) =
+    Int.natAbs
+        (LinearMap.det
+          ((Submodule.subtype I).restrictScalars ℤ ∘ₗ AddMonoidHom.toIntLinearMap (e : S →+ I))) =
       Ideal.absNorm I :=
   by
   -- `S ⧸ I` might be infinite if `I = ⊥`, but then `e` can't be an equiv.
@@ -285,7 +300,8 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
   cases isEmpty_or_nonempty ι
   · nontriviality S
     exact
-      (not_nontrivial_iff_subsingleton.mpr (Function.Surjective.subsingleton b.repr.to_equiv.symm.surjective)
+      (not_nontrivial_iff_subsingleton.mpr
+          (Function.Surjective.subsingleton b.repr.to_equiv.symm.surjective)
           (by infer_instance)).elim
     
   -- Thus `(S ⧸ I)` is isomorphic to a product of `zmod`s, so it is a fintype.
@@ -303,7 +319,8 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
     calc
       (LinearMap.det ((Submodule.subtype I).restrictScalars ℤ ∘ₗ _)).natAbs =
           (LinearMap.det
-              ((Submodule.subtype I).restrictScalars ℤ ∘ₗ (↑(AddEquiv.toIntLinearEquiv ↑e) : S →ₗ[ℤ] I))).natAbs :=
+              ((Submodule.subtype I).restrictScalars ℤ ∘ₗ
+                (↑(AddEquiv.toIntLinearEquiv ↑e) : S →ₗ[ℤ] I))).natAbs :=
         rfl
       _ = (LinearMap.det ((Submodule.subtype I).restrictScalars ℤ ∘ₗ _)).natAbs :=
         int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _)
@@ -329,7 +346,8 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
   -- `det f` is equal to `∏ i, a i`,
   letI := Classical.decEq ι
   calc
-    Int.natAbs (LinearMap.det f) = Int.natAbs (LinearMap.toMatrix b' b' f).det := by rw [LinearMap.det_to_matrix]
+    Int.natAbs (LinearMap.det f) = Int.natAbs (LinearMap.toMatrix b' b' f).det := by
+      rw [LinearMap.det_to_matrix]
     _ = Int.natAbs (Matrix.diagonal a).det := _
     _ = Int.natAbs (∏ i, a i) := by rw [Matrix.det_diagonal]
     _ = ∏ i, Int.natAbs (a i) := map_prod Int.natAbsHom a Finset.univ
@@ -339,7 +357,8 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
   -- since `linear_map.to_matrix b' b' f` is the diagonal matrix with `a` along the diagonal.
   · congr
     ext (i j)
-    rw [LinearMap.to_matrix_apply, ha, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_single, smul_eq_mul, mul_one]
+    rw [LinearMap.to_matrix_apply, ha, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_single,
+      smul_eq_mul, mul_one]
     by_cases h : i = j
     · rw [h, Matrix.diagonal_apply_eq, Finsupp.single_eq_same]
       
@@ -348,15 +367,17 @@ theorem nat_abs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : 
     
   -- Now we map everything through the linear equiv `S ≃ₗ (ι → ℤ)`,
   -- which maps `(S ⧸ I)` to `Π i, zmod (a i).nat_abs`.
-  haveI : ∀ i, NeZero (a i).natAbs := fun i => ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
-  simp_rw [fintype.card_eq.mpr ⟨(Ideal.quotientEquivPiZmod I b hI).toEquiv⟩, Fintype.card_pi, Zmod.card]
+  haveI : ∀ i, NeZero (a i).natAbs := fun i =>
+    ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
+  simp_rw [fintype.card_eq.mpr ⟨(Ideal.quotientEquivPiZmod I b hI).toEquiv⟩, Fintype.card_pi,
+    Zmod.card]
 #align ideal.nat_abs_det_equiv Ideal.nat_abs_det_equiv
 
 /-- Let `b` be a basis for `S` over `ℤ` and `bI` a basis for `I` over `ℤ` of the same dimension.
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `bI`
 over `b`. -/
-theorem nat_abs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι ℤ S) (I : Ideal S)
-    (bI : Basis ι ℤ I) : (b.det (coe ∘ bI)).natAbs = Ideal.absNorm I := by
+theorem nat_abs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι ℤ S)
+    (I : Ideal S) (bI : Basis ι ℤ I) : (b.det (coe ∘ bI)).natAbs = Ideal.absNorm I := by
   let e := b.equiv bI (Equiv.refl _)
   calc
     (b.det ((Submodule.subtype I).restrictScalars ℤ ∘ bI)).natAbs =
@@ -367,17 +388,17 @@ theorem nat_abs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b 
 #align ideal.nat_abs_det_basis_change Ideal.nat_abs_det_basis_change
 
 @[simp]
-theorem abs_norm_span_singleton (r : S) : absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs := by
+theorem abs_norm_span_singleton (r : S) :
+    absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs := by
   rw [Algebra.norm_apply]
   by_cases hr : r = 0
-  · simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.abs_norm_bot, LinearMap.det_zero'',
-      Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
+  · simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.abs_norm_bot,
+      LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
     
   letI := Ideal.fintypeQuotientOfFreeOfNeBot (span {r}) (mt span_singleton_eq_bot.mp hr)
   let b := Module.Free.chooseBasis ℤ S
   rw [← nat_abs_det_equiv _ (b.equiv (basis_span_singleton b hr) (Equiv.refl _))]
-  swap
-  infer_instance
+  swap; infer_instance
   congr
   refine' b.ext fun i => _
   simp
@@ -392,24 +413,30 @@ theorem abs_norm_span_insert (r : S) (s : Set S) :
     absNorm (span (insert r s)) ∣ gcd (absNorm (span s)) (Algebra.norm ℤ r).natAbs :=
   (dvd_gcd_iff _ _ _).mpr
     ⟨abs_norm_dvd_abs_norm_of_le (span_mono (Set.subset_insert _ _)),
-      trans (abs_norm_dvd_abs_norm_of_le (span_mono (Set.singleton_subset_iff.mpr (Set.mem_insert _ _))))
+      trans
+        (abs_norm_dvd_abs_norm_of_le
+          (span_mono (Set.singleton_subset_iff.mpr (Set.mem_insert _ _))))
         (by rw [abs_norm_span_singleton])⟩
 #align ideal.abs_norm_span_insert Ideal.abs_norm_span_insert
 
-theorem irreducible_of_irreducible_abs_norm {I : Ideal S} (hI : Irreducible I.absNorm) : Irreducible I :=
+theorem irreducible_of_irreducible_abs_norm {I : Ideal S} (hI : Irreducible I.absNorm) :
+    Irreducible I :=
   irreducible_iff.mpr
-    ⟨fun h => hI.not_unit (by simpa only [Ideal.is_unit_iff, Nat.is_unit_iff, abs_norm_eq_one_iff] using h), by
+    ⟨fun h =>
+      hI.not_unit (by simpa only [Ideal.is_unit_iff, Nat.is_unit_iff, abs_norm_eq_one_iff] using h),
+      by
       rintro a b rfl <;>
         simpa only [Ideal.is_unit_iff, Nat.is_unit_iff, abs_norm_eq_one_iff] using
           hI.is_unit_or_is_unit (_root_.map_mul abs_norm a b)⟩
 #align ideal.irreducible_of_irreducible_abs_norm Ideal.irreducible_of_irreducible_abs_norm
 
 theorem is_prime_of_irreducible_abs_norm {I : Ideal S} (hI : Irreducible I.absNorm) : I.IsPrime :=
-  is_prime_of_prime (UniqueFactorizationMonoid.irreducible_iff_prime.mp (irreducible_of_irreducible_abs_norm hI))
+  is_prime_of_prime
+    (UniqueFactorizationMonoid.irreducible_iff_prime.mp (irreducible_of_irreducible_abs_norm hI))
 #align ideal.is_prime_of_irreducible_abs_norm Ideal.is_prime_of_irreducible_abs_norm
 
-theorem prime_of_irreducible_abs_norm_span {a : S} (ha : a ≠ 0) (hI : Irreducible (Ideal.span ({a} : Set S)).absNorm) :
-    Prime a :=
+theorem prime_of_irreducible_abs_norm_span {a : S} (ha : a ≠ 0)
+    (hI : Irreducible (Ideal.span ({a} : Set S)).absNorm) : Prime a :=
   (Ideal.span_singleton_prime ha).mp (is_prime_of_irreducible_abs_norm hI)
 #align ideal.prime_of_irreducible_abs_norm_span Ideal.prime_of_irreducible_abs_norm_span
 

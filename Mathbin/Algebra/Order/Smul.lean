@@ -44,7 +44,8 @@ open Pointwise
 with a partial order has a scalar multiplication which is compatible with the order.
 -/
 @[protect_proj]
-class OrderedSmul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] : Prop where
+class OrderedSmul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] :
+  Prop where
   smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, a < b → 0 < c → c • a < c • b
   lt_of_smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, c • a < c • b → 0 < c → a < b
 #align ordered_smul OrderedSmul
@@ -68,7 +69,8 @@ instance [MonoidWithZero R] [AddMonoid M] [DistribMulAction R M] : DistribMulAct
   smul_add k a := OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
   smul_zero r := OrderDual.rec (@smul_zero _ M _ _) r
 
-instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] : OrderedSmul R Mᵒᵈ where
+instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] :
+    OrderedSmul R Mᵒᵈ where
   smul_lt_smul_of_pos a b := @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
   lt_of_smul_lt_smul_of_pos a b := @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
@@ -76,7 +78,8 @@ end OrderDual
 
 section OrderedSmul
 
-variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {s : Set M} {a b : M} {c : R}
+variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M]
+  {s : Set M} {a b : M} {c : R}
 
 theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
   OrderedSmul.smul_lt_smul_of_pos
@@ -110,7 +113,8 @@ theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) 
 #align eq_of_smul_eq_smul_of_pos_of_le eq_of_smul_eq_smul_of_pos_of_le
 
 theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
-  hc.eq_or_lt.elim (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
+  hc.eq_or_lt.elim
+    (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
     (OrderedSmul.lt_of_smul_lt_smul_of_pos h)
 #align lt_of_smul_lt_smul_of_nonneg lt_of_smul_lt_smul_of_nonneg
 
@@ -127,18 +131,21 @@ theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
 
 alias smul_pos_iff_of_pos ↔ _ smul_pos
 
-theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) := fun a b h => smul_le_smul_of_nonneg h hc
+theorem monotone_smul_left (hc : 0 ≤ c) : Monotone (HasSmul.smul c : M → M) := fun a b h =>
+  smul_le_smul_of_nonneg h hc
 #align monotone_smul_left monotone_smul_left
 
 theorem strict_mono_smul_left (hc : 0 < c) : StrictMono (HasSmul.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_pos h hc
 #align strict_mono_smul_left strict_mono_smul_left
 
-theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • lowerBounds s ⊆ lowerBounds (c • s) :=
+theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) :
+    c • lowerBounds s ⊆ lowerBounds (c • s) :=
   (monotone_smul_left hc).image_lower_bounds_subset_lower_bounds_image
 #align smul_lower_bounds_subset_lower_bounds_smul smul_lower_bounds_subset_lower_bounds_smul
 
-theorem smul_upper_bounds_subset_upper_bounds_smul (hc : 0 ≤ c) : c • upperBounds s ⊆ upperBounds (c • s) :=
+theorem smul_upper_bounds_subset_upper_bounds_smul (hc : 0 ≤ c) :
+    c • upperBounds s ⊆ upperBounds (c • s) :=
   (monotone_smul_left hc).image_upper_bounds_subset_upper_bounds_image
 #align smul_upper_bounds_subset_upper_bounds_smul smul_upper_bounds_subset_upper_bounds_smul
 
@@ -183,18 +190,20 @@ instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
 #align int.ordered_smul Int.ordered_smul
 
 -- TODO: `linear_ordered_field M → ordered_smul ℚ M`
-instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] : OrderedSmul R R :=
+instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] :
+    OrderedSmul R R :=
   OrderedSmul.mk'' fun c => strict_mono_mul_left_of_pos
 #align linear_ordered_semiring.to_ordered_smul LinearOrderedSemiring.to_ordered_smul
 
 section LinearOrderedSemifield
 
-variable [LinearOrderedSemifield 𝕜] [OrderedAddCommMonoid M] [OrderedAddCommMonoid N] [MulActionWithZero 𝕜 M]
-  [MulActionWithZero 𝕜 N]
+variable [LinearOrderedSemifield 𝕜] [OrderedAddCommMonoid M] [OrderedAddCommMonoid N]
+  [MulActionWithZero 𝕜 M] [MulActionWithZero 𝕜 N]
 
 /-- To prove that a vector space over a linear ordered field is ordered, it suffices to verify only
 the first axiom of `ordered_smul`. -/
-theorem OrderedSmul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a ≤ c • b) : OrderedSmul 𝕜 M := by
+theorem OrderedSmul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a ≤ c • b) :
+    OrderedSmul 𝕜 M := by
   have hlt' : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c → c • a < c • b := by
     refine' fun a b c hab hc => (h hab hc).lt_of_ne _
     rw [Ne.def, hc.ne'.is_unit.smul_left_cancel]
@@ -208,10 +217,11 @@ theorem OrderedSmul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c �
 #align ordered_smul.mk' OrderedSmul.mk'
 
 instance [OrderedSmul 𝕜 M] [OrderedSmul 𝕜 N] : OrderedSmul 𝕜 (M × N) :=
-  OrderedSmul.mk' fun a b c h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+  OrderedSmul.mk' fun a b c h hc =>
+    ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
 
-instance Pi.ordered_smul {M : ι → Type _} [∀ i, OrderedAddCommMonoid (M i)] [∀ i, MulActionWithZero 𝕜 (M i)]
-    [∀ i, OrderedSmul 𝕜 (M i)] : OrderedSmul 𝕜 (∀ i, M i) :=
+instance Pi.ordered_smul {M : ι → Type _} [∀ i, OrderedAddCommMonoid (M i)]
+    [∀ i, MulActionWithZero 𝕜 (M i)] [∀ i, OrderedSmul 𝕜 (M i)] : OrderedSmul 𝕜 (∀ i, M i) :=
   OrderedSmul.mk' fun v u c h hc i => smul_le_smul_of_nonneg (h.le i) hc.le
 #align pi.ordered_smul Pi.ordered_smul
 
@@ -229,8 +239,10 @@ instance Pi.ordered_smul'' : OrderedSmul 𝕜 (ι → 𝕜) :=
 variable [OrderedSmul 𝕜 M] {s : Set M} {a b : M} {c : 𝕜}
 
 theorem smul_le_smul_iff_of_pos (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :=
-  ⟨fun h => inv_smul_smul₀ hc.ne' a ▸ inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg h (inv_nonneg.2 hc.le), fun h =>
-    smul_le_smul_of_nonneg h hc.le⟩
+  ⟨fun h =>
+    inv_smul_smul₀ hc.ne' a ▸
+      inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg h (inv_nonneg.2 hc.le),
+    fun h => smul_le_smul_of_nonneg h hc.le⟩
 #align smul_le_smul_iff_of_pos smul_le_smul_iff_of_pos
 
 theorem inv_smul_le_iff (h : 0 < c) : c⁻¹ • a ≤ b ↔ a ≤ c • b := by
@@ -293,7 +305,8 @@ namespace Tactic
 
 section OrderedSmul
 
-variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a : R} {b : M}
+variable [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a : R}
+  {b : M}
 
 private theorem smul_nonneg_of_pos_of_nonneg (ha : 0 < a) (hb : 0 ≤ b) : 0 ≤ a • b :=
   smul_nonneg ha.le hb
@@ -340,9 +353,18 @@ open Positivity
               strictness_a , strictness_b
               with
               | positive pa , positive pb => positive <$> mk_app ` ` smul_pos [ pa , pb ]
-                | positive pa , nonnegative pb => nonnegative <$> mk_app ` ` smul_nonneg_of_pos_of_nonneg [ pa , pb ]
-                | nonnegative pa , positive pb => nonnegative <$> mk_app ` ` smul_nonneg_of_nonneg_of_pos [ pa , pb ]
-                | nonnegative pa , nonnegative pb => nonnegative <$> mk_app ` ` smul_nonneg [ pa , pb ]
+                |
+                  positive pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` smul_nonneg_of_pos_of_nonneg [ pa , pb ]
+                |
+                  nonnegative pa , positive pb
+                  =>
+                  nonnegative <$> mk_app ` ` smul_nonneg_of_nonneg_of_pos [ pa , pb ]
+                |
+                  nonnegative pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` smul_nonneg [ pa , pb ]
                 |
                   positive pa , nonzero pb
                   =>
@@ -351,7 +373,10 @@ open Positivity
                   nonzero pa , positive pb
                   =>
                   nonzero <$> to_expr ` `( smul_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
-                | nonzero pa , nonzero pb => nonzero <$> to_expr ` `( smul_ne_zero $ ( pa ) $ ( pb ) )
+                |
+                  nonzero pa , nonzero pb
+                  =>
+                  nonzero <$> to_expr ` `( smul_ne_zero $ ( pa ) $ ( pb ) )
                 | sa @ _ , sb @ _ => positivity_fail e a b sa sb
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a • b`"
 #align tactic.positivity_smul tactic.positivity_smul

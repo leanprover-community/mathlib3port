@@ -49,7 +49,8 @@ theorem to_dual_prod_apply (s : NonemptyInterval α) : s.toDualProd = (toDual s.
   Prod.mk.eta.symm
 #align nonempty_interval.to_dual_prod_apply NonemptyInterval.to_dual_prod_apply
 
-theorem to_dual_prod_injective : Injective (toDualProd : NonemptyInterval α → αᵒᵈ × α) := fun s t => (ext_iff _ _).2
+theorem to_dual_prod_injective : Injective (toDualProd : NonemptyInterval α → αᵒᵈ × α) := fun s t =>
+  (ext_iff _ _).2
 #align nonempty_interval.to_dual_prod_injective NonemptyInterval.to_dual_prod_injective
 
 instance [IsEmpty α] : IsEmpty (NonemptyInterval α) :=
@@ -106,7 +107,8 @@ def pure (a : α) : NonemptyInterval α :=
   ⟨⟨a, a⟩, le_rfl⟩
 #align nonempty_interval.pure NonemptyInterval.pure
 
-theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t => congr_arg <| Prod.fst ∘ to_prod
+theorem pure_injective : Injective (pure : α → NonemptyInterval α) := fun s t =>
+  congr_arg <| Prod.fst ∘ to_prod
 #align nonempty_interval.pure_injective NonemptyInterval.pure_injective
 
 @[simp]
@@ -135,7 +137,8 @@ theorem map_pure (f : α →o β) (a : α) : (pure a).map f = pure (f a) :=
 #align nonempty_interval.map_pure NonemptyInterval.map_pure
 
 @[simp]
-theorem map_map (g : β →o γ) (f : α →o β) (a : NonemptyInterval α) : (a.map f).map g = a.map (g.comp f) :=
+theorem map_map (g : β →o γ) (f : α →o β) (a : NonemptyInterval α) :
+    (a.map f).map g = a.map (g.comp f) :=
   rfl
 #align nonempty_interval.map_map NonemptyInterval.map_map
 
@@ -376,7 +379,8 @@ def coeHom : Interval α ↪o Set α :=
     fun s t =>
     match s, t with
     | ⊥, t => iff_of_true bot_le bot_le
-    | some s, ⊥ => iff_of_false (fun h => s.coe_nonempty.ne_empty <| le_bot_iff.1 h) (WithBot.not_coe_le_bot _)
+    | some s, ⊥ =>
+      iff_of_false (fun h => s.coe_nonempty.ne_empty <| le_bot_iff.1 h) (WithBot.not_coe_le_bot _)
     | some s, some t => (@NonemptyInterval.coeHom α _).le_iff_le.trans WithBot.some_le_some.symm
 #align interval.coe_hom Interval.coeHom
 
@@ -443,7 +447,9 @@ instance : Lattice (Interval α) :=
       | s, ⊥ => ⊥
       | some s, some t =>
         if h : s.fst ≤ t.snd ∧ t.fst ≤ s.snd then
-          some ⟨⟨s.fst ⊔ t.fst, s.snd ⊓ t.snd⟩, sup_le (le_inf s.fst_le_snd h.1) <| le_inf h.2 t.fst_le_snd⟩
+          some
+            ⟨⟨s.fst ⊔ t.fst, s.snd ⊓ t.snd⟩,
+              sup_le (le_inf s.fst_le_snd h.1) <| le_inf h.2 t.fst_le_snd⟩
         else ⊥,
     inf_le_left := fun s t =>
       match s, t with
@@ -497,7 +503,9 @@ theorem coe_inf (s t : Interval α) : (↑(s ⊓ t) : Set α) = s ∩ t := by
     
   · exact
       (Icc_eq_empty fun H =>
-          h ⟨le_sup_left.trans <| H.trans inf_le_right, le_sup_right.trans <| H.trans inf_le_left⟩).symm
+          h
+            ⟨le_sup_left.trans <| H.trans inf_le_right,
+              le_sup_right.trans <| H.trans inf_le_left⟩).symm
     
 #align interval.coe_inf Interval.coe_inf
 
@@ -532,7 +540,8 @@ theorem coe_top_interval [BoundedOrder α] : ((⊤ : NonemptyInterval α) : Inte
 end Preorder
 
 @[simp, norm_cast]
-theorem mem_coe_interval [PartialOrder α] {s : NonemptyInterval α} {x : α} : x ∈ (s : Interval α) ↔ x ∈ s :=
+theorem mem_coe_interval [PartialOrder α] {s : NonemptyInterval α} {x : α} :
+    x ∈ (s : Interval α) ↔ x ∈ s :=
   Iff.rfl
 #align nonempty_interval.mem_coe_interval NonemptyInterval.mem_coe_interval
 
@@ -652,25 +661,36 @@ variable [CompleteLattice α]
                               [(Std.Tactic.RCases.rcasesPat.tuple
                                 "⟨"
                                 [(Std.Tactic.RCases.rcasesPatLo
-                                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `s)])
+                                  (Std.Tactic.RCases.rcasesPatMed
+                                   [(Std.Tactic.RCases.rcasesPat.one `s)])
                                   [])
                                  ","
                                  (Std.Tactic.RCases.rcasesPatLo
-                                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)])
+                                  (Std.Tactic.RCases.rcasesPatMed
+                                   [(Std.Tactic.RCases.rcasesPat.one `hs)])
                                   [])
                                  ","
                                  (Std.Tactic.RCases.rcasesPatLo
-                                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                                  (Std.Tactic.RCases.rcasesPatMed
+                                   [(Std.Tactic.RCases.rcasesPat.one `ha)])
                                   [])]
                                 "⟩")])]
                             []
                             [":=" [(Term.app (Term.proj `not_subset "." (fieldIdx "1")) [`h])]])
                            []
-                           (Tactic.lift "lift" `s "to" (Term.app `NonemptyInterval [`α]) ["using" `ha] [])
+                           (Tactic.lift
+                            "lift"
+                            `s
+                            "to"
+                            (Term.app `NonemptyInterval [`α])
+                            ["using" `ha]
+                            [])
                            []
                            (Tactic.exact
                             "exact"
-                            (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                            (Term.app
+                             `infi₂_le_of_le
+                             [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                       "⟩")])))))
                ","
                (Term.structInstField
@@ -742,11 +762,13 @@ variable [CompleteLattice α]
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `hs)])
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `hb)])
                              [])]
                            "⟩")])]
                        []
@@ -757,7 +779,8 @@ variable [CompleteLattice α]
                        `s
                        "to"
                        (Term.app `NonemptyInterval [`α])
-                       ["using" (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
+                       ["using"
+                        (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
                        [])
                       []
                       (Tactic.exact
@@ -817,7 +840,11 @@ variable [CompleteLattice α]
                     "∧"
                     (Term.forall
                      "∀"
-                     [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
+                     [(Term.strictImplicitBinder
+                       "⦃"
+                       [`s]
+                       [":" (Term.app `NonemptyInterval [`α])]
+                       "⦄")]
                      []
                      ","
                      (Term.arrow
@@ -825,7 +852,11 @@ variable [CompleteLattice α]
                       "→"
                       (Term.forall
                        "∀"
-                       [(Term.strictImplicitBinder "⦃" [`t] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
+                       [(Term.strictImplicitBinder
+                         "⦃"
+                         [`t]
+                         [":" (Term.app `NonemptyInterval [`α])]
+                         "⦄")]
                        []
                        ","
                        (Term.arrow
@@ -886,7 +917,10 @@ variable [CompleteLattice α]
                            [`s `hs]
                            []
                            "=>"
-                           («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                           («term_<|_»
+                            `le_infi₂
+                            "<|"
+                            (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
                       "⟩")])
                    "else"
                    (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -914,7 +948,8 @@ variable [CompleteLattice α]
                           `s
                           "to"
                           (Term.app `NonemptyInterval [`α])
-                          ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
+                          ["using"
+                           (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                           [])
                          [])
                         (group
@@ -999,7 +1034,10 @@ variable [CompleteLattice α]
                       (Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+                        "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
                       []
                       (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -1138,25 +1176,36 @@ variable [CompleteLattice α]
                              [(Std.Tactic.RCases.rcasesPat.tuple
                                "⟨"
                                [(Std.Tactic.RCases.rcasesPatLo
-                                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `s)])
+                                 (Std.Tactic.RCases.rcasesPatMed
+                                  [(Std.Tactic.RCases.rcasesPat.one `s)])
                                  [])
                                 ","
                                 (Std.Tactic.RCases.rcasesPatLo
-                                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)])
+                                 (Std.Tactic.RCases.rcasesPatMed
+                                  [(Std.Tactic.RCases.rcasesPat.one `hs)])
                                  [])
                                 ","
                                 (Std.Tactic.RCases.rcasesPatLo
-                                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                                 (Std.Tactic.RCases.rcasesPatMed
+                                  [(Std.Tactic.RCases.rcasesPat.one `ha)])
                                  [])]
                                "⟩")])]
                            []
                            [":=" [(Term.app (Term.proj `not_subset "." (fieldIdx "1")) [`h])]])
                           []
-                          (Tactic.lift "lift" `s "to" (Term.app `NonemptyInterval [`α]) ["using" `ha] [])
+                          (Tactic.lift
+                           "lift"
+                           `s
+                           "to"
+                           (Term.app `NonemptyInterval [`α])
+                           ["using" `ha]
+                           [])
                           []
                           (Tactic.exact
                            "exact"
-                           (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                           (Term.app
+                            `infi₂_le_of_le
+                            [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                      "⟩")])))))
               ","
               (Term.structInstField
@@ -1243,7 +1292,8 @@ variable [CompleteLattice α]
                       `s
                       "to"
                       (Term.app `NonemptyInterval [`α])
-                      ["using" (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
+                      ["using"
+                       (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
                       [])
                      []
                      (Tactic.exact
@@ -1303,7 +1353,11 @@ variable [CompleteLattice α]
                    "∧"
                    (Term.forall
                     "∀"
-                    [(Term.strictImplicitBinder "⦃" [`s] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
+                    [(Term.strictImplicitBinder
+                      "⦃"
+                      [`s]
+                      [":" (Term.app `NonemptyInterval [`α])]
+                      "⦄")]
                     []
                     ","
                     (Term.arrow
@@ -1311,7 +1365,11 @@ variable [CompleteLattice α]
                      "→"
                      (Term.forall
                       "∀"
-                      [(Term.strictImplicitBinder "⦃" [`t] [":" (Term.app `NonemptyInterval [`α])] "⦄")]
+                      [(Term.strictImplicitBinder
+                        "⦃"
+                        [`t]
+                        [":" (Term.app `NonemptyInterval [`α])]
+                        "⦄")]
                       []
                       ","
                       (Term.arrow
@@ -1372,7 +1430,10 @@ variable [CompleteLattice α]
                           [`s `hs]
                           []
                           "=>"
-                          («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                          («term_<|_»
+                           `le_infi₂
+                           "<|"
+                           (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
                      "⟩")])
                   "else"
                   (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -1400,7 +1461,8 @@ variable [CompleteLattice α]
                          `s
                          "to"
                          (Term.app `NonemptyInterval [`α])
-                         ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
+                         ["using"
+                          (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                          [])
                         [])
                        (group
@@ -1485,7 +1547,10 @@ variable [CompleteLattice α]
                      (Tactic.rwSeq
                       "rw"
                       []
-                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+                       "]")
                       [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
                      []
                      (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -1618,21 +1683,31 @@ variable [CompleteLattice α]
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `hs)])
                              [])
                             ","
                             (Std.Tactic.RCases.rcasesPatLo
-                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `ha)])
                              [])]
                            "⟩")])]
                        []
                        [":=" [(Term.app (Term.proj `not_subset "." (fieldIdx "1")) [`h])]])
                       []
-                      (Tactic.lift "lift" `s "to" (Term.app `NonemptyInterval [`α]) ["using" `ha] [])
+                      (Tactic.lift
+                       "lift"
+                       `s
+                       "to"
+                       (Term.app `NonemptyInterval [`α])
+                       ["using" `ha]
+                       [])
                       []
                       (Tactic.exact
                        "exact"
-                       (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                       (Term.app
+                        `infi₂_le_of_le
+                        [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                  "⟩")])))))
           ","
           (Term.structInstField
@@ -1656,7 +1731,9 @@ variable [CompleteLattice α]
                  []
                  (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                  []
-                 («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+                 («tactic___;_»
+                  (cdotTk (patternIgnore (token.«·» "·")))
+                  [(group (Tactic.exact "exact" `bot_le) [])])
                  []
                  («tactic___;_»
                   (cdotTk (patternIgnore (token.«·» "·")))
@@ -1688,7 +1765,9 @@ variable [CompleteLattice α]
                (Tactic.tacticSeq1Indented
                 [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
-                 («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+                 («tactic___;_»
+                  (cdotTk (patternIgnore (token.«·» "·")))
+                  [(group (Tactic.exact "exact" `bot_le) [])])
                  []
                  (Std.Tactic.obtain
                   "obtain"
@@ -1715,7 +1794,8 @@ variable [CompleteLattice α]
                   `s
                   "to"
                   (Term.app `NonemptyInterval [`α])
-                  ["using" (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
+                  ["using"
+                   (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
                   [])
                  []
                  (Tactic.exact
@@ -1844,7 +1924,10 @@ variable [CompleteLattice α]
                       [`s `hs]
                       []
                       "=>"
-                      («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                      («term_<|_»
+                       `le_infi₂
+                       "<|"
+                       (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
                  "⟩")])
               "else"
               (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -1872,7 +1955,8 @@ variable [CompleteLattice α]
                      `s
                      "to"
                      (Term.app `NonemptyInterval [`α])
-                     ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
+                     ["using"
+                      (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                      [])
                     [])
                    (group
@@ -1880,7 +1964,10 @@ variable [CompleteLattice α]
                      "exact"
                      (Term.app
                       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                      [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+                      [(Term.anonymousCtor
+                        "⟨"
+                        [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                        "⟩")]))
                     [])])
                  []
                  («tactic___;_»
@@ -1902,7 +1989,9 @@ variable [CompleteLattice α]
                (Tactic.tacticSeq1Indented
                 [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                  []
-                 («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+                 («tactic___;_»
+                  (cdotTk (patternIgnore (token.«·» "·")))
+                  [(group (Tactic.exact "exact" `bot_le) [])])
                  []
                  (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                  []
@@ -1952,7 +2041,10 @@ variable [CompleteLattice α]
                  (Tactic.rwSeq
                   "rw"
                   []
-                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+                   "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
                  []
                  (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -2095,7 +2187,9 @@ variable [CompleteLattice α]
                      []
                      (Tactic.exact
                       "exact"
-                      (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                      (Term.app
+                       `infi₂_le_of_le
+                       [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                 "⟩")])))))
          ","
          (Term.structInstField
@@ -2119,7 +2213,9 @@ variable [CompleteLattice α]
                 []
                 (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                 []
-                («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+                («tactic___;_»
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(group (Tactic.exact "exact" `bot_le) [])])
                 []
                 («tactic___;_»
                  (cdotTk (patternIgnore (token.«·» "·")))
@@ -2151,7 +2247,9 @@ variable [CompleteLattice α]
               (Tactic.tacticSeq1Indented
                [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
-                («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+                («tactic___;_»
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(group (Tactic.exact "exact" `bot_le) [])])
                 []
                 (Std.Tactic.obtain
                  "obtain"
@@ -2178,7 +2276,8 @@ variable [CompleteLattice α]
                  `s
                  "to"
                  (Term.app `NonemptyInterval [`α])
-                 ["using" (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
+                 ["using"
+                  (Term.app `ne_bot_of_le_ne_bot [`hb (Term.app `ha [(Term.hole "_") `hs])])]
                  [])
                 []
                 (Tactic.exact
@@ -2307,7 +2406,10 @@ variable [CompleteLattice α]
                      [`s `hs]
                      []
                      "=>"
-                     («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                     («term_<|_»
+                      `le_infi₂
+                      "<|"
+                      (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
                 "⟩")])
              "else"
              (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -2335,7 +2437,8 @@ variable [CompleteLattice α]
                     `s
                     "to"
                     (Term.app `NonemptyInterval [`α])
-                    ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
+                    ["using"
+                     (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                     [])
                    [])
                   (group
@@ -2343,7 +2446,10 @@ variable [CompleteLattice α]
                     "exact"
                     (Term.app
                      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                     [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+                     [(Term.anonymousCtor
+                       "⟨"
+                       [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                       "⟩")]))
                    [])])
                 []
                 («tactic___;_»
@@ -2365,7 +2471,9 @@ variable [CompleteLattice α]
               (Tactic.tacticSeq1Indented
                [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                 []
-                («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+                («tactic___;_»
+                 (cdotTk (patternIgnore (token.«·» "·")))
+                 [(group (Tactic.exact "exact" `bot_le) [])])
                 []
                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                 []
@@ -2415,7 +2523,10 @@ variable [CompleteLattice α]
                 (Tactic.rwSeq
                  "rw"
                  []
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+                  "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
                 []
                 (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -2556,7 +2667,9 @@ variable [CompleteLattice α]
                     []
                     (Tactic.exact
                      "exact"
-                     (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                     (Term.app
+                      `infi₂_le_of_le
+                      [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
                "⟩")])))))
         ","
         (Term.structInstField
@@ -2580,7 +2693,9 @@ variable [CompleteLattice α]
                []
                (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                []
-               («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(group (Tactic.exact "exact" `bot_le) [])])
                []
                («tactic___;_»
                 (cdotTk (patternIgnore (token.«·» "·")))
@@ -2612,7 +2727,9 @@ variable [CompleteLattice α]
              (Tactic.tacticSeq1Indented
               [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
-               («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(group (Tactic.exact "exact" `bot_le) [])])
                []
                (Std.Tactic.obtain
                 "obtain"
@@ -2768,7 +2885,10 @@ variable [CompleteLattice α]
                     [`s `hs]
                     []
                     "=>"
-                    («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
+                    («term_<|_»
+                     `le_infi₂
+                     "<|"
+                     (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))])]
                "⟩")])
             "else"
             (Order.BoundedOrder.«term⊥» "⊥")))))
@@ -2796,7 +2916,8 @@ variable [CompleteLattice α]
                    `s
                    "to"
                    (Term.app `NonemptyInterval [`α])
-                   ["using" (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
+                   ["using"
+                    (Term.app `ne_of_mem_of_not_mem [`ha (Term.proj `h "." (fieldIdx "1"))])]
                    [])
                   [])
                  (group
@@ -2804,7 +2925,10 @@ variable [CompleteLattice α]
                    "exact"
                    (Term.app
                     (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                    [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+                    [(Term.anonymousCtor
+                      "⟨"
+                      [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                      "⟩")]))
                   [])])
                []
                («tactic___;_»
@@ -2826,7 +2950,9 @@ variable [CompleteLattice α]
              (Tactic.tacticSeq1Indented
               [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
                []
-               («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+               («tactic___;_»
+                (cdotTk (patternIgnore (token.«·» "·")))
+                [(group (Tactic.exact "exact" `bot_le) [])])
                []
                (Mathlib.Tactic.splitIfs "split_ifs" [] [])
                []
@@ -2876,7 +3002,10 @@ variable [CompleteLattice α]
                (Tactic.rwSeq
                 "rw"
                 []
-                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+                 "]")
                 [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
                []
                (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -2937,7 +3066,9 @@ variable [CompleteLattice α]
           (Tactic.tacticSeq1Indented
            [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
             []
-            («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+            («tactic___;_»
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(group (Tactic.exact "exact" `bot_le) [])])
             []
             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
@@ -2987,7 +3118,10 @@ variable [CompleteLattice α]
             (Tactic.rwSeq
              "rw"
              []
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+              "]")
              [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
             []
             (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -3038,7 +3172,9 @@ variable [CompleteLattice α]
         (Tactic.tacticSeq1Indented
          [(Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" `bot_le) [])])
           []
           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
@@ -3088,7 +3224,10 @@ variable [CompleteLattice α]
           (Tactic.rwSeq
            "rw"
            []
-           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)] "]")
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [] `not_and_or) "," (Tactic.rwRule [] `not_not)]
+            "]")
            [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
           []
           (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
@@ -3181,7 +3320,10 @@ variable [CompleteLattice α]
           («term_<|_»
            (Term.proj
             (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+             («term_<|_»
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+              "<|"
+              (Term.app `ha [(Term.hole "_") `hb]))
              "."
              (fieldIdx "1"))
             "."
@@ -3190,7 +3332,10 @@ variable [CompleteLattice α]
            (Term.app
             `s.fst_le_snd.trans
             [(Term.proj
-              («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+              («term_<|_»
+               (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+               "<|"
+               (Term.app `ha [(Term.hole "_") `hc]))
               "."
               (fieldIdx "2"))]))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -3205,7 +3350,10 @@ variable [CompleteLattice α]
         («term_<|_»
          (Term.proj
           (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+           («term_<|_»
+            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+            "<|"
+            (Term.app `ha [(Term.hole "_") `hb]))
            "."
            (fieldIdx "1"))
           "."
@@ -3214,14 +3362,20 @@ variable [CompleteLattice α]
          (Term.app
           `s.fst_le_snd.trans
           [(Term.proj
-            («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+            («term_<|_»
+             (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+             "<|"
+             (Term.app `ha [(Term.hole "_") `hc]))
             "."
             (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
        (Term.proj
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+         («term_<|_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          "<|"
+          (Term.app `ha [(Term.hole "_") `hb]))
          "."
          (fieldIdx "1"))
         "."
@@ -3230,41 +3384,57 @@ variable [CompleteLattice α]
        (Term.app
         `s.fst_le_snd.trans
         [(Term.proj
-          («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+          («term_<|_»
+           (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+           "<|"
+           (Term.app `ha [(Term.hole "_") `hc]))
           "."
           (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `s.fst_le_snd.trans
        [(Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+         («term_<|_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          "<|"
+          (Term.app `ha [(Term.hole "_") `hc]))
          "."
          (fieldIdx "2"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+       («term_<|_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        "<|"
+        (Term.app `ha [(Term.hole "_") `hc]))
        "."
        (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+      («term_<|_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       "<|"
+       (Term.app `ha [(Term.hole "_") `hc]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hc])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hc
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -3274,44 +3444,63 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+     («term_<|_»
+      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+      "<|"
+      (Term.app `ha [(Term.hole "_") `hc]))
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.fst_le_snd.trans
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj
        (Term.proj
-        («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+        («term_<|_»
+         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+         "<|"
+         (Term.app `ha [(Term.hole "_") `hb]))
         "."
         (fieldIdx "1"))
        "."
        `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+       («term_<|_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        "<|"
+        (Term.app `ha [(Term.hole "_") `hb]))
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+      («term_<|_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       "<|"
+       (Term.app `ha [(Term.hole "_") `hb]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hb])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -3321,7 +3510,10 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+     («term_<|_»
+      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+      "<|"
+      (Term.app `ha [(Term.hole "_") `hb]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
@@ -3331,29 +3523,34 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hc
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3368,15 +3565,18 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -3384,7 +3584,8 @@ variable [CompleteLattice α]
       (Tactic.cases "cases" [(Tactic.casesTarget [] `h)] [] [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.rwSeq
@@ -3395,13 +3596,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `not_not
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `not_and_or
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_»
@@ -3499,7 +3703,10 @@ variable [CompleteLattice α]
               []
               "=>"
               (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+               («term_<|_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                "<|"
+                (Term.app `ha [(Term.hole "_") `hb]))
                "."
                (fieldIdx "1"))))])
           ","
@@ -3512,7 +3719,10 @@ variable [CompleteLattice α]
               []
               "=>"
               (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+               («term_<|_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                "<|"
+                (Term.app `ha [(Term.hole "_") `hb]))
                "."
                (fieldIdx "2"))))])]
          "⟩")])
@@ -3530,7 +3740,10 @@ variable [CompleteLattice α]
             []
             "=>"
             (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+             («term_<|_»
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+              "<|"
+              (Term.app `ha [(Term.hole "_") `hb]))
              "."
              (fieldIdx "1"))))])
         ","
@@ -3543,7 +3756,10 @@ variable [CompleteLattice α]
             []
             "=>"
             (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+             («term_<|_»
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+              "<|"
+              (Term.app `ha [(Term.hole "_") `hb]))
              "."
              (fieldIdx "2"))))])]
        "⟩")
@@ -3557,7 +3773,10 @@ variable [CompleteLattice α]
           []
           "=>"
           (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+           («term_<|_»
+            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+            "<|"
+            (Term.app `ha [(Term.hole "_") `hb]))
            "."
            (fieldIdx "2"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -3570,32 +3789,45 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+         («term_<|_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          "<|"
+          (Term.app `ha [(Term.hole "_") `hb]))
          "."
          (fieldIdx "2"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+       («term_<|_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        "<|"
+        (Term.app `ha [(Term.hole "_") `hb]))
        "."
        (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+      («term_<|_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       "<|"
+       (Term.app `ha [(Term.hole "_") `hb]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hb])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -3605,25 +3837,32 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+     («term_<|_»
+      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+      "<|"
+      (Term.app `ha [(Term.hole "_") `hb]))
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_infi₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -3635,7 +3874,10 @@ variable [CompleteLattice α]
           []
           "=>"
           (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+           («term_<|_»
+            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+            "<|"
+            (Term.app `ha [(Term.hole "_") `hb]))
            "."
            (fieldIdx "1"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -3648,32 +3890,45 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+         («term_<|_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          "<|"
+          (Term.app `ha [(Term.hole "_") `hb]))
          "."
          (fieldIdx "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+       («term_<|_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        "<|"
+        (Term.app `ha [(Term.hole "_") `hb]))
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+      («term_<|_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       "<|"
+       (Term.app `ha [(Term.hole "_") `hb]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hb])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -3683,33 +3938,42 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hb]))
+     («term_<|_»
+      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+      "<|"
+      (Term.app `ha [(Term.hole "_") `hb]))
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `supr₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.some_le_some
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -3717,19 +3981,23 @@ variable [CompleteLattice α]
       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" `bot_le) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `bot_le
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -3737,19 +4005,22 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3781,10 +4052,15 @@ variable [CompleteLattice α]
                 "exact"
                 (Term.app
                  (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-                 [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+                 [(Term.anonymousCtor
+                   "⟨"
+                   [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                   "⟩")]))
                [])])
             []
-            («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])])))))
+            («tactic___;_»
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(group (Tactic.exact "exact" `bot_le) [])])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -3808,18 +4084,26 @@ variable [CompleteLattice α]
               "exact"
               (Term.app
                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-               [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+               [(Term.anonymousCtor
+                 "⟨"
+                 [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+                 "⟩")]))
              [])])
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])])))
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" `bot_le) [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" `bot_le) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `bot_le
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3839,18 +4123,27 @@ variable [CompleteLattice α]
           "exact"
           (Term.app
            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-           [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+           [(Term.anonymousCtor
+             "⟨"
+             [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+             "⟩")]))
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
        (Term.app
         (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-        [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")]))
+        [(Term.anonymousCtor
+          "⟨"
+          [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+          "⟩")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
-       [(Term.anonymousCtor "⟨" [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])] "⟩")])
+       [(Term.anonymousCtor
+         "⟨"
+         [(Term.app `le_supr₂ [`s `ha]) "," (Term.app `infi₂_le [`s `ha])]
+         "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3861,15 +4154,18 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `infi₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `le_supr₂ [`s `ha])
@@ -3877,23 +4173,28 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_supr₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -3913,15 +4214,18 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ne_of_mem_of_not_mem
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
@@ -3929,14 +4233,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3948,19 +4255,22 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4007,7 +4317,9 @@ variable [CompleteLattice α]
                  (Std.ExtendedBinder.extBinderCollection
                   [(Std.ExtendedBinder.extBinderParenthesized
                     "("
-                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                    (Std.ExtendedBinder.extBinder
+                     (Lean.binderIdent `s)
+                     [(group ":" (Term.app `NonemptyInterval [`α]))])
                     ")")
                    (Std.ExtendedBinder.extBinderParenthesized
                     "("
@@ -4024,7 +4336,9 @@ variable [CompleteLattice α]
                  (Std.ExtendedBinder.extBinderCollection
                   [(Std.ExtendedBinder.extBinderParenthesized
                     "("
-                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                    (Std.ExtendedBinder.extBinder
+                     (Lean.binderIdent `s)
+                     [(group ":" (Term.app `NonemptyInterval [`α]))])
                     ")")
                    (Std.ExtendedBinder.extBinderParenthesized
                     "("
@@ -4086,7 +4400,9 @@ variable [CompleteLattice α]
                (Std.ExtendedBinder.extBinderCollection
                 [(Std.ExtendedBinder.extBinderParenthesized
                   "("
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                  (Std.ExtendedBinder.extBinder
+                   (Lean.binderIdent `s)
+                   [(group ":" (Term.app `NonemptyInterval [`α]))])
                   ")")
                  (Std.ExtendedBinder.extBinderParenthesized
                   "("
@@ -4103,7 +4419,9 @@ variable [CompleteLattice α]
                (Std.ExtendedBinder.extBinderCollection
                 [(Std.ExtendedBinder.extBinderParenthesized
                   "("
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                  (Std.ExtendedBinder.extBinder
+                   (Lean.binderIdent `s)
+                   [(group ":" (Term.app `NonemptyInterval [`α]))])
                   ")")
                  (Std.ExtendedBinder.extBinderParenthesized
                   "("
@@ -4129,7 +4447,8 @@ variable [CompleteLattice α]
        (Order.BoundedOrder.«term⊥» "⊥"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Order.BoundedOrder.«term⊥» "⊥")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `some
@@ -4143,7 +4462,9 @@ variable [CompleteLattice α]
               (Std.ExtendedBinder.extBinderCollection
                [(Std.ExtendedBinder.extBinderParenthesized
                  "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `s)
+                  [(group ":" (Term.app `NonemptyInterval [`α]))])
                  ")")
                 (Std.ExtendedBinder.extBinderParenthesized
                  "("
@@ -4160,7 +4481,9 @@ variable [CompleteLattice α]
               (Std.ExtendedBinder.extBinderCollection
                [(Std.ExtendedBinder.extBinderParenthesized
                  "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `s)
+                  [(group ":" (Term.app `NonemptyInterval [`α]))])
                  ")")
                 (Std.ExtendedBinder.extBinderParenthesized
                  "("
@@ -4195,7 +4518,9 @@ variable [CompleteLattice α]
             (Std.ExtendedBinder.extBinderCollection
              [(Std.ExtendedBinder.extBinderParenthesized
                "("
-               (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+               (Std.ExtendedBinder.extBinder
+                (Lean.binderIdent `s)
+                [(group ":" (Term.app `NonemptyInterval [`α]))])
                ")")
               (Std.ExtendedBinder.extBinderParenthesized
                "("
@@ -4212,7 +4537,9 @@ variable [CompleteLattice α]
             (Std.ExtendedBinder.extBinderCollection
              [(Std.ExtendedBinder.extBinderParenthesized
                "("
-               (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+               (Std.ExtendedBinder.extBinder
+                (Lean.binderIdent `s)
+                [(group ":" (Term.app `NonemptyInterval [`α]))])
                ")")
               (Std.ExtendedBinder.extBinderParenthesized
                "("
@@ -4249,7 +4576,11 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
-       (Term.basicFun [`s `hs] [] "=>" («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))
+       (Term.basicFun
+        [`s `hs]
+        []
+        "=>"
+        («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_» `le_infi₂ "<|" (Term.app (Term.proj `h "." (fieldIdx "2")) [`hs]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4258,14 +4589,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `h "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `le_infi₂
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
@@ -4275,17 +4609,20 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `supr₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -4296,11 +4633,15 @@ variable [CompleteLattice α]
           (Std.ExtendedBinder.extBinderCollection
            [(Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `s)
+              [(group ":" (Term.app `NonemptyInterval [`α]))])
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
              ")")]))
          ", "
          (Term.proj `s "." `fst))
@@ -4311,11 +4652,15 @@ variable [CompleteLattice α]
           (Std.ExtendedBinder.extBinderCollection
            [(Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `s)
+              [(group ":" (Term.app `NonemptyInterval [`α]))])
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
              ")")]))
          ", "
          (Term.proj `s "." `snd))]
@@ -4327,11 +4672,15 @@ variable [CompleteLattice α]
         (Std.ExtendedBinder.extBinderCollection
          [(Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `s)
+            [(group ":" (Term.app `NonemptyInterval [`α]))])
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
            ")")]))
        ", "
        (Term.proj `s "." `snd))
@@ -4340,18 +4689,21 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∈_» (coeNotation "↑" `s) "∈" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (coeNotation "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4360,10 +4712,12 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4373,11 +4727,15 @@ variable [CompleteLattice α]
         (Std.ExtendedBinder.extBinderCollection
          [(Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `s)
+            [(group ":" (Term.app `NonemptyInterval [`α]))])
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
            ")")]))
        ", "
        (Term.proj `s "." `fst))
@@ -4386,18 +4744,21 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∈_» (coeNotation "↑" `s) "∈" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (coeNotation "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4406,17 +4767,22 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `some
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∧_»
@@ -4492,7 +4858,8 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `t
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.proj `s "." `fst)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4504,12 +4871,14 @@ variable [CompleteLattice α]
       («term_∈_» (coeNotation "↑" `t) "∈" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (coeNotation "↑" `t)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
@@ -4523,10 +4892,12 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦃»', expected 'group'
 [PrettyPrinter.parenthesize] ...precedences are 25 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -4534,12 +4905,14 @@ variable [CompleteLattice α]
       («term_∈_» (coeNotation "↑" `s) "∈" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (coeNotation "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 0, term) <=? (none, [anonymous])
@@ -4553,10 +4926,12 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«⦃»', expected 'group'
 [PrettyPrinter.parenthesize] ...precedences are 35 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -4564,7 +4939,8 @@ variable [CompleteLattice α]
       («term_∉_» (Order.BoundedOrder.«term⊥» "⊥") "∉" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Order.BoundedOrder.«term⊥» "⊥")
 [PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -4576,7 +4952,8 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4592,7 +4969,9 @@ variable [CompleteLattice α]
           (Tactic.tacticSeq1Indented
            [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
             []
-            («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+            («tactic___;_»
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(group (Tactic.exact "exact" `bot_le) [])])
             []
             (Std.Tactic.obtain
              "obtain"
@@ -4667,7 +5046,9 @@ variable [CompleteLattice α]
         (Tactic.tacticSeq1Indented
          [(Mathlib.Tactic.splitIfs "split_ifs" [] [])
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" `bot_le) [])])
           []
           (Std.Tactic.obtain
            "obtain"
@@ -4789,7 +5170,10 @@ variable [CompleteLattice α]
               []
               "=>"
               (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+               («term_<|_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                "<|"
+                (Term.app `ha [(Term.hole "_") `hc]))
                "."
                (fieldIdx "1"))))])
           ","
@@ -4802,7 +5186,10 @@ variable [CompleteLattice α]
               []
               "=>"
               (Term.proj
-               («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+               («term_<|_»
+                (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+                "<|"
+                (Term.app `ha [(Term.hole "_") `hc]))
                "."
                (fieldIdx "2"))))])]
          "⟩")])
@@ -4820,7 +5207,10 @@ variable [CompleteLattice α]
             []
             "=>"
             (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+             («term_<|_»
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+              "<|"
+              (Term.app `ha [(Term.hole "_") `hc]))
              "."
              (fieldIdx "1"))))])
         ","
@@ -4833,7 +5223,10 @@ variable [CompleteLattice α]
             []
             "=>"
             (Term.proj
-             («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+             («term_<|_»
+              (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+              "<|"
+              (Term.app `ha [(Term.hole "_") `hc]))
              "."
              (fieldIdx "2"))))])]
        "⟩")
@@ -4847,7 +5240,10 @@ variable [CompleteLattice α]
           []
           "=>"
           (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+           («term_<|_»
+            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+            "<|"
+            (Term.app `ha [(Term.hole "_") `hc]))
            "."
            (fieldIdx "2"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -4860,32 +5256,45 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+         («term_<|_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          "<|"
+          (Term.app `ha [(Term.hole "_") `hc]))
          "."
          (fieldIdx "2"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+       («term_<|_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        "<|"
+        (Term.app `ha [(Term.hole "_") `hc]))
        "."
        (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+      («term_<|_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       "<|"
+       (Term.app `ha [(Term.hole "_") `hc]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hc])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hc
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4895,25 +5304,32 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+     («term_<|_»
+      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+      "<|"
+      (Term.app `ha [(Term.hole "_") `hc]))
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hc
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `supr₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -4925,7 +5341,10 @@ variable [CompleteLattice α]
           []
           "=>"
           (Term.proj
-           («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+           («term_<|_»
+            (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+            "<|"
+            (Term.app `ha [(Term.hole "_") `hc]))
            "."
            (fieldIdx "1"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
@@ -4938,32 +5357,45 @@ variable [CompleteLattice α]
         []
         "=>"
         (Term.proj
-         («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+         («term_<|_»
+          (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+          "<|"
+          (Term.app `ha [(Term.hole "_") `hc]))
          "."
          (fieldIdx "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj
-       («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+       («term_<|_»
+        (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+        "<|"
+        (Term.app `ha [(Term.hole "_") `hc]))
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+      («term_<|_»
+       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+       "<|"
+       (Term.app `ha [(Term.hole "_") `hc]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `ha [(Term.hole "_") `hc])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hc
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4973,33 +5405,42 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     («term_<|_» (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1")) "<|" (Term.app `ha [(Term.hole "_") `hc]))
+     («term_<|_»
+      (Term.proj `WithBot.coe_le_coe "." (fieldIdx "1"))
+      "<|"
+      (Term.app `ha [(Term.hole "_") `hc]))
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hc
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `c
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_infi₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `WithBot.coe_le_coe "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.coe_le_coe
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5020,25 +5461,34 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `ha [(Term.hole "_") `hs]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `ha [(Term.hole "_") `hs])
+     ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ne_bot_of_le_ne_bot
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
@@ -5046,14 +5496,17 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.obtain
@@ -5061,11 +5514,17 @@ variable [CompleteLattice α]
        [(Std.Tactic.RCases.rcasesPatMed
          [(Std.Tactic.RCases.rcasesPat.tuple
            "⟨"
-           [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b)]) [])
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `b)])
+             [])
             ","
-            (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)]) [])
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)])
+             [])
             ","
-            (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)]) [])]
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+             [])]
            "⟩")])]
        []
        [":=" [(Term.app (Term.proj `not_subset "." (fieldIdx "1")) [`h])]])
@@ -5075,22 +5534,27 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `not_subset "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `not_subset
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" `bot_le) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `bot_le
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5102,19 +5566,22 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5136,7 +5603,9 @@ variable [CompleteLattice α]
             []
             (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
             []
-            («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+            («tactic___;_»
+             (cdotTk (patternIgnore (token.«·» "·")))
+             [(group (Tactic.exact "exact" `bot_le) [])])
             []
             («tactic___;_»
              (cdotTk (patternIgnore (token.«·» "·")))
@@ -5165,7 +5634,9 @@ variable [CompleteLattice α]
           []
           (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
           []
-          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.exact "exact" `bot_le) [])])
           []
           («tactic___;_»
            (cdotTk (patternIgnore (token.«·» "·")))
@@ -5192,7 +5663,9 @@ variable [CompleteLattice α]
            (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
            [(Term.anonymousCtor
              "⟨"
-             [(Term.app `infi₂_le [(Term.hole "_") `ha]) "," (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+             [(Term.app `infi₂_le [(Term.hole "_") `ha])
+              ","
+              (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
              "⟩")]))
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5202,21 +5675,27 @@ variable [CompleteLattice α]
         (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
         [(Term.anonymousCtor
           "⟨"
-          [(Term.app `infi₂_le [(Term.hole "_") `ha]) "," (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+          [(Term.app `infi₂_le [(Term.hole "_") `ha])
+           ","
+           (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
           "⟩")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
        [(Term.anonymousCtor
          "⟨"
-         [(Term.app `infi₂_le [(Term.hole "_") `ha]) "," (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+         [(Term.app `infi₂_le [(Term.hole "_") `ha])
+          ","
+          (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
        "⟨"
-       [(Term.app `infi₂_le [(Term.hole "_") `ha]) "," (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
+       [(Term.app `infi₂_le [(Term.hole "_") `ha])
+        ","
+        (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `le_supr₂_of_le [(Term.hole "_") `ha `le_rfl])
@@ -5224,20 +5703,24 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `le_rfl
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_supr₂_of_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `infi₂_le [(Term.hole "_") `ha])
@@ -5245,40 +5728,49 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `infi₂_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `WithBot.some_le_some "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `WithBot.some_le_some
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.exact "exact" `bot_le) [])])
+      («tactic___;_»
+       (cdotTk (patternIgnore (token.«·» "·")))
+       [(group (Tactic.exact "exact" `bot_le) [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" `bot_le)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `bot_le
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.cases "cases" [(Tactic.casesTarget [] `s)] [] [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_»
@@ -5294,13 +5786,16 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `h [`ha]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5312,19 +5807,22 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.structInstField', expected 'Lean.Parser.Term.structInstFieldAbbrev'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5354,7 +5852,9 @@ variable [CompleteLattice α]
                  (Std.ExtendedBinder.extBinderCollection
                   [(Std.ExtendedBinder.extBinderParenthesized
                     "("
-                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                    (Std.ExtendedBinder.extBinder
+                     (Lean.binderIdent `s)
+                     [(group ":" (Term.app `NonemptyInterval [`α]))])
                     ")")
                    (Std.ExtendedBinder.extBinderParenthesized
                     "("
@@ -5371,7 +5871,9 @@ variable [CompleteLattice α]
                  (Std.ExtendedBinder.extBinderCollection
                   [(Std.ExtendedBinder.extBinderParenthesized
                     "("
-                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                    (Std.ExtendedBinder.extBinder
+                     (Lean.binderIdent `s)
+                     [(group ":" (Term.app `NonemptyInterval [`α]))])
                     ")")
                    (Std.ExtendedBinder.extBinderParenthesized
                     "("
@@ -5411,7 +5913,9 @@ variable [CompleteLattice α]
                  []
                  (Tactic.exact
                   "exact"
-                  (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                  (Term.app
+                   `infi₂_le_of_le
+                   [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
             "⟩")]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termDepIfThenElse
@@ -5434,7 +5938,9 @@ variable [CompleteLattice α]
                (Std.ExtendedBinder.extBinderCollection
                 [(Std.ExtendedBinder.extBinderParenthesized
                   "("
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                  (Std.ExtendedBinder.extBinder
+                   (Lean.binderIdent `s)
+                   [(group ":" (Term.app `NonemptyInterval [`α]))])
                   ")")
                  (Std.ExtendedBinder.extBinderParenthesized
                   "("
@@ -5451,7 +5957,9 @@ variable [CompleteLattice α]
                (Std.ExtendedBinder.extBinderCollection
                 [(Std.ExtendedBinder.extBinderParenthesized
                   "("
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                  (Std.ExtendedBinder.extBinder
+                   (Lean.binderIdent `s)
+                   [(group ":" (Term.app `NonemptyInterval [`α]))])
                   ")")
                  (Std.ExtendedBinder.extBinderParenthesized
                   "("
@@ -5491,7 +5999,9 @@ variable [CompleteLattice α]
                []
                (Tactic.exact
                 "exact"
-                (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+                (Term.app
+                 `infi₂_le_of_le
+                 [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
           "⟩")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -5506,7 +6016,9 @@ variable [CompleteLattice α]
               (Std.ExtendedBinder.extBinderCollection
                [(Std.ExtendedBinder.extBinderParenthesized
                  "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `s)
+                  [(group ":" (Term.app `NonemptyInterval [`α]))])
                  ")")
                 (Std.ExtendedBinder.extBinderParenthesized
                  "("
@@ -5523,7 +6035,9 @@ variable [CompleteLattice α]
               (Std.ExtendedBinder.extBinderCollection
                [(Std.ExtendedBinder.extBinderParenthesized
                  "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+                 (Std.ExtendedBinder.extBinder
+                  (Lean.binderIdent `s)
+                  [(group ":" (Term.app `NonemptyInterval [`α]))])
                  ")")
                 (Std.ExtendedBinder.extBinderParenthesized
                  "("
@@ -5563,7 +6077,9 @@ variable [CompleteLattice α]
               []
               (Tactic.exact
                "exact"
-               (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+               (Term.app
+                `infi₂_le_of_le
+                [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
@@ -5578,7 +6094,9 @@ variable [CompleteLattice α]
             (Std.ExtendedBinder.extBinderCollection
              [(Std.ExtendedBinder.extBinderParenthesized
                "("
-               (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+               (Std.ExtendedBinder.extBinder
+                (Lean.binderIdent `s)
+                [(group ":" (Term.app `NonemptyInterval [`α]))])
                ")")
               (Std.ExtendedBinder.extBinderParenthesized
                "("
@@ -5595,7 +6113,9 @@ variable [CompleteLattice α]
             (Std.ExtendedBinder.extBinderCollection
              [(Std.ExtendedBinder.extBinderParenthesized
                "("
-               (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+               (Std.ExtendedBinder.extBinder
+                (Lean.binderIdent `s)
+                [(group ":" (Term.app `NonemptyInterval [`α]))])
                ")")
               (Std.ExtendedBinder.extBinderParenthesized
                "("
@@ -5635,7 +6155,9 @@ variable [CompleteLattice α]
             []
             (Tactic.exact
              "exact"
-             (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
+             (Term.app
+              `infi₂_le_of_le
+              [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
@@ -5666,10 +6188,14 @@ variable [CompleteLattice α]
           []
           (Tactic.exact
            "exact"
-           (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))
+           (Term.app
+            `infi₂_le_of_le
+            [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))
+      (Tactic.exact
+       "exact"
+       (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `infi₂_le_of_le [`s `hs (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -5680,56 +6206,71 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s.fst_le_snd
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_supr₂_of_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `le_supr₂_of_le [`s `hs `s.fst_le_snd])
+     ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `infi₂_le_of_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.lift "lift" `s "to" (Term.app `NonemptyInterval [`α]) ["using" `ha] [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ha
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `NonemptyInterval [`α])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.obtain
@@ -5737,11 +6278,17 @@ variable [CompleteLattice α]
        [(Std.Tactic.RCases.rcasesPatMed
          [(Std.Tactic.RCases.rcasesPat.tuple
            "⟨"
-           [(Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `s)]) [])
+           [(Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `s)])
+             [])
             ","
-            (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)]) [])
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hs)])
+             [])
             ","
-            (Std.Tactic.RCases.rcasesPatLo (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)]) [])]
+            (Std.Tactic.RCases.rcasesPatLo
+             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `ha)])
+             [])]
            "⟩")])]
        []
        [":=" [(Term.app (Term.proj `not_subset "." (fieldIdx "1")) [`h])]])
@@ -5751,13 +6298,15 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `not_subset "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `not_subset
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -5770,11 +6319,15 @@ variable [CompleteLattice α]
           (Std.ExtendedBinder.extBinderCollection
            [(Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `s)
+              [(group ":" (Term.app `NonemptyInterval [`α]))])
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
              ")")]))
          ", "
          (Term.proj `s "." `fst))
@@ -5785,11 +6338,15 @@ variable [CompleteLattice α]
           (Std.ExtendedBinder.extBinderCollection
            [(Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `s)
+              [(group ":" (Term.app `NonemptyInterval [`α]))])
              ")")
             (Std.ExtendedBinder.extBinderParenthesized
              "("
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+             (Std.ExtendedBinder.extBinder
+              (Lean.binderIdent `h)
+              [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
              ")")]))
          ", "
          (Term.proj `s "." `snd))]
@@ -5801,11 +6358,15 @@ variable [CompleteLattice α]
         (Std.ExtendedBinder.extBinderCollection
          [(Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `s)
+            [(group ":" (Term.app `NonemptyInterval [`α]))])
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
            ")")]))
        ", "
        (Term.proj `s "." `snd))
@@ -5814,18 +6375,21 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∈_» (coeNotation "↑" `s) "∈" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (coeNotation "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5834,10 +6398,12 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5847,11 +6413,15 @@ variable [CompleteLattice α]
         (Std.ExtendedBinder.extBinderCollection
          [(Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) [(group ":" (Term.app `NonemptyInterval [`α]))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `s)
+            [(group ":" (Term.app `NonemptyInterval [`α]))])
            ")")
           (Std.ExtendedBinder.extBinderParenthesized
            "("
-           (Std.ExtendedBinder.extBinder (Lean.binderIdent `h) [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
+           (Std.ExtendedBinder.extBinder
+            (Lean.binderIdent `h)
+            [(group ":" («term_∈_» (coeNotation "↑" `s) "∈" `S))])
            ")")]))
        ", "
        (Term.proj `s "." `fst))
@@ -5860,18 +6430,21 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Std.ExtendedBinder.extBinderCollection', expected 'Std.ExtendedBinder.extBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∈_» (coeNotation "↑" `s) "∈" `S)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (coeNotation "↑" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (some 1024, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -5880,29 +6453,37 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `α
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `NonemptyInterval
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `some
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Order.BoundedOrder.«term⊥» "⊥")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_⊆_» `S "⊆" («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term{_}» "{" [(Order.BoundedOrder.«term⊥» "⊥")] "}")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Order.BoundedOrder.«term⊥» "⊥")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `S
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -5913,16 +6494,20 @@ variable [CompleteLattice α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `S
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Interval.boundedOrder
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Interval.lattice
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -5979,7 +6564,10 @@ noncomputable
                           · exact h ha . le
                           cases s
                           · exact bot_le
-                          · exact WithBot.some_le_some . 2 ⟨ infi₂_le _ ha , le_supr₂_of_le _ ha le_rfl ⟩
+                          ·
+                            exact
+                              WithBot.some_le_some . 2
+                                ⟨ infi₂_le _ ha , le_supr₂_of_le _ ha le_rfl ⟩
                 ,
                 Sup_le
                   :=
@@ -6095,8 +6683,8 @@ theorem coe_infi (f : ι → Interval α) : ↑(⨅ i, f i) = ⋂ i, (f i : Set 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
-theorem coe_infi₂ (f : ∀ i, κ i → Interval α) : ↑(⨅ (i) (j), f i j) = ⋂ (i) (j), (f i j : Set α) := by
-  simp_rw [coe_infi]
+theorem coe_infi₂ (f : ∀ i, κ i → Interval α) : ↑(⨅ (i) (j), f i j) = ⋂ (i) (j), (f i j : Set α) :=
+  by simp_rw [coe_infi]
 #align interval.coe_infi₂ Interval.coe_infi₂
 
 end CompleteLattice

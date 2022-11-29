@@ -60,7 +60,8 @@ attribute [local ext.1] Functor.ext
 def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C where
   obj := φ.obj
   map X Y f :=
-    @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 <| φ.obj X) (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
+    @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 <| φ.obj X)
+      (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
   map_id' X := by rfl
   map_comp' X Y Z f g := by
     induction' g with _ _ g' p ih _ _ _
@@ -75,7 +76,8 @@ def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C where
 #align category_theory.paths.lift CategoryTheory.Paths.lift
 
 @[simp]
-theorem lift_nil {C} [Category C] (φ : V ⥤q C) (X : V) : (lift φ).map Quiver.Path.nil = 𝟙 (φ.obj X) :=
+theorem lift_nil {C} [Category C] (φ : V ⥤q C) (X : V) :
+    (lift φ).map Quiver.Path.nil = 𝟙 (φ.obj X) :=
   rfl
 #align category_theory.paths.lift_nil CategoryTheory.Paths.lift_nil
 
@@ -86,14 +88,14 @@ theorem lift_cons {C} [Category C] (φ : V ⥤q C) {X Y Z : V} (p : Quiver.Path 
 #align category_theory.paths.lift_cons CategoryTheory.Paths.lift_cons
 
 @[simp]
-theorem lift_to_path {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) : (lift φ).map f.toPath = φ.map f := by
+theorem lift_to_path {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
+    (lift φ).map f.toPath = φ.map f := by
   dsimp [Quiver.Hom.toPath, lift]
   simp
 #align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_to_path
 
 theorem lift_spec {C} [Category C] (φ : V ⥤q C) : (of ⋙q (lift φ).toPrefunctor) = φ := by
-  apply Prefunctor.ext
-  rotate_left
+  apply Prefunctor.ext; rotate_left
   · rintro X
     rfl
     
@@ -104,10 +106,10 @@ theorem lift_spec {C} [Category C] (φ : V ⥤q C) : (of ⋙q (lift φ).toPrefun
     
 #align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
 
-theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C) (hΦ : (of ⋙q Φ.toPrefunctor) = φ) : Φ = lift φ := by
+theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
+    (hΦ : (of ⋙q Φ.toPrefunctor) = φ) : Φ = lift φ := by
   subst_vars
-  apply Functor.ext
-  rotate_left
+  apply Functor.ext; rotate_left
   · rintro X
     rfl
     
@@ -118,7 +120,8 @@ theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C) (hΦ :
       apply Functor.map_id
       
     · simp only [category.comp_id, category.id_comp] at ih⊢
-      have : Φ.map (p.cons f') = Φ.map p ≫ Φ.map f'.to_path := by convert functor.map_comp Φ p f'.to_path
+      have : Φ.map (p.cons f') = Φ.map p ≫ Φ.map f'.to_path := by
+        convert functor.map_comp Φ p f'.to_path
       rw [this, ih]
       
     
@@ -129,7 +132,8 @@ theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C) (hΦ :
 theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.obj)
     (h :
       ∀ (a b : V) (e : a ⟶ b),
-        F.map e.toPath = eqToHom (congr_fun h_obj a) ≫ G.map e.toPath ≫ eqToHom (congr_fun h_obj.symm b)) :
+        F.map e.toPath =
+          eqToHom (congr_fun h_obj a) ≫ G.map e.toPath ≫ eqToHom (congr_fun h_obj.symm b)) :
     F = G := by
   ext (X Y f)
   · induction' f with Y' Z' g e ih
@@ -165,9 +169,9 @@ open Quiver
 
 /- warning: category_theory.compose_path -> CategoryTheory.composePath is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y)
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y)
 but is expected to have type
-  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁ u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁ u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁ u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁ u₁} C _inst_1)) X Y)
+  forall {C : Type.{u₁}} [_inst_1 : CategoryTheory.Category.{v₁, u₁} C] {X : C} {Y : C}, (Quiver.Path.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y) -> (Quiver.Hom.{succ v₁, u₁} C (CategoryTheory.CategoryStruct.toQuiver.{v₁, u₁} C (CategoryTheory.Category.toCategoryStruct.{v₁, u₁} C _inst_1)) X Y)
 Case conversion may be inaccurate. Consider using '#align category_theory.compose_path CategoryTheory.composePathₓ'. -/
 /-- A path in a category can be composed to a single morphism. -/
 @[simp]
@@ -218,7 +222,8 @@ def pathComposition : Paths C ⥤ C where
 /-- The canonical relation on the path category of a category:
 two paths are related if they compose to the same morphism. -/
 @[simp]
-def pathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p = (pathComposition C).map q
+def pathsHomRel : HomRel (Paths C) := fun X Y p q =>
+  (pathComposition C).map p = (pathComposition C).map q
 #align category_theory.paths_hom_rel CategoryTheory.pathsHomRel
 
 /-- The functor from a category to the canonical quotient of its path category. -/
@@ -249,8 +254,7 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C where
         rfl)
       (by
         intros
-        cases X
-        cases Y
+        cases X; cases Y
         induction f
         dsimp
         simp only [category.comp_id, category.id_comp]

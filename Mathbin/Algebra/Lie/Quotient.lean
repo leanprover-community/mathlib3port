@@ -52,7 +52,8 @@ instance addCommGroup : AddCommGroup (M ⧸ N) :=
   Submodule.Quotient.addCommGroup _
 #align lie_submodule.quotient.add_comm_group LieSubmodule.Quotient.addCommGroup
 
-instance module' {S : Type _} [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] : Module S (M ⧸ N) :=
+instance module' {S : Type _} [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] :
+    Module S (M ⧸ N) :=
   Submodule.Quotient.module' _
 #align lie_submodule.quotient.module' LieSubmodule.Quotient.module'
 
@@ -60,8 +61,9 @@ instance module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
 #align lie_submodule.quotient.module LieSubmodule.Quotient.module
 
-instance is_central_scalar {S : Type _} [Semiring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R]
-    [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S (M ⧸ N) :=
+instance is_central_scalar {S : Type _} [Semiring S] [HasSmul S R] [Module S M]
+    [IsScalarTower S R M] [HasSmul Sᵐᵒᵖ R] [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M]
+    [IsCentralScalar S M] : IsCentralScalar S (M ⧸ N) :=
   Submodule.Quotient.is_central_scalar _
 #align lie_submodule.quotient.is_central_scalar LieSubmodule.Quotient.is_central_scalar
 
@@ -91,18 +93,21 @@ variable (N)
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
 def actionAsEndoMap : L →ₗ⁅R⁆ Module.EndCat R (M ⧸ N) :=
   { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lieSubmoduleInvariant with
-    map_lie' := fun x y => Submodule.linear_map_qext _ <| LinearMap.ext fun m => congr_arg mk <| lie_lie _ _ _ }
+    map_lie' := fun x y =>
+      Submodule.linear_map_qext _ <| LinearMap.ext fun m => congr_arg mk <| lie_lie _ _ _ }
 #align lie_submodule.quotient.action_as_endo_map LieSubmodule.Quotient.actionAsEndoMap
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
 instance actionAsEndoMapBracket : Bracket L (M ⧸ N) :=
   ⟨fun x n => actionAsEndoMap N x n⟩
-#align lie_submodule.quotient.action_as_endo_map_bracket LieSubmodule.Quotient.actionAsEndoMapBracket
+#align
+  lie_submodule.quotient.action_as_endo_map_bracket LieSubmodule.Quotient.actionAsEndoMapBracket
 
 instance lieQuotientLieRingModule : LieRingModule L (M ⧸ N) :=
   { LieRingModule.compLieHom _ (actionAsEndoMap N) with bracket := Bracket.bracket }
-#align lie_submodule.quotient.lie_quotient_lie_ring_module LieSubmodule.Quotient.lieQuotientLieRingModule
+#align
+  lie_submodule.quotient.lie_quotient_lie_ring_module LieSubmodule.Quotient.lieQuotientLieRingModule
 
 /-- The quotient of a Lie module by a Lie submodule, is a Lie module. -/
 instance lieQuotientLieModule : LieModule R L (M ⧸ N) :=
@@ -116,7 +121,8 @@ instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
     intro x₁ x₂ y₁ y₂ h₁ h₂
     apply (Submodule.Quotient.eq I.to_submodule).2
     rw [Submodule.quotient_rel_r_def] at h₁ h₂
-    have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by simp [-lie_skew, sub_eq_add_neg, add_assoc]
+    have h : ⁅x₁, x₂⁆ - ⁅y₁, y₂⁆ = ⁅x₁, x₂ - y₂⁆ + ⁅x₁ - y₁, y₂⁆ := by
+      simp [-lie_skew, sub_eq_add_neg, add_assoc]
     rw [h]
     apply Submodule.add_mem
     · apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
@@ -189,7 +195,8 @@ theorem mk'_ker : (mk' N).ker = N := by
 #align lie_submodule.quotient.mk'_ker LieSubmodule.Quotient.mk'_ker
 
 @[simp]
-theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by rw [← LieModuleHom.le_ker_iff_map, mk'_ker]
+theorem map_mk'_eq_bot_le : map (mk' N) N' = ⊥ ↔ N' ≤ N := by
+  rw [← LieModuleHom.le_ker_iff_map, mk'_ker]
 #align lie_submodule.quotient.map_mk'_eq_bot_le LieSubmodule.Quotient.map_mk'_eq_bot_le
 
 /-- Two `lie_module_hom`s from a quotient lie module are equal if their compositions with

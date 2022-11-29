@@ -56,7 +56,8 @@ instance : CommRing ℤ where
   int_cast_neg_succ_of_nat n := rfl
   zsmul := (· * ·)
   zsmul_zero' := Int.zero_mul
-  zsmul_succ' n x := by rw [Nat.succ_eq_add_one, Nat.add_comm, of_nat_add, Int.add_mul, of_nat_one, Int.one_mul]
+  zsmul_succ' n x := by
+    rw [Nat.succ_eq_add_one, Nat.add_comm, of_nat_add, Int.add_mul, of_nat_one, Int.one_mul]
   zsmul_neg' n x := Int.neg_mul_eq_neg_mul_symm (n.succ : ℤ) x
 
 /-! ### Extra instances to short-circuit type class resolution
@@ -124,8 +125,8 @@ section
 attribute [local semireducible] reflected
 
 unsafe instance reflect : has_reflect ℤ :=
-  int.mk_numeral q(ℤ) q((by infer_instance : Zero ℤ)) q((by infer_instance : One ℤ)) q((by infer_instance : Add ℤ))
-    q((by infer_instance : Neg ℤ))
+  int.mk_numeral q(ℤ) q((by infer_instance : Zero ℤ)) q((by infer_instance : One ℤ))
+    q((by infer_instance : Add ℤ)) q((by infer_instance : Neg ℤ))
 #align int.reflect int.reflect
 
 end
@@ -208,9 +209,9 @@ theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 
 /- warning: int.coe_nat_strict_mono -> Int.coe_nat_strictMono is a dubious translation:
 lean 3 declaration is
-  StrictMono.{0 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Int (HasLiftT.mk.{1 1} Nat Int (CoeTCₓ.coe.{1 1} Nat Int (CoeTCₓ.mk.{1 1} Nat Int Int.ofNat))))
+  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.linearOrder)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.linearOrder)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))))
 but is expected to have type
-  StrictMono.{0 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.429 : Nat) => Nat.cast.{0} Int (NonAssocRing.toNatCast.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) x._@.Mathlib.Data.Int.Basic._hyg.429)
+  StrictMono.{0, 0} Nat Int (PartialOrder.toPreorder.{0} Nat (LinearOrder.toPartialOrder.{0} Nat Nat.instLinearOrderNat)) (PartialOrder.toPreorder.{0} Int (LinearOrder.toPartialOrder.{0} Int Int.instLinearOrderInt)) (fun (x._@.Mathlib.Data.Int.Basic._hyg.429 : Nat) => Nat.cast.{0} Int (NonAssocRing.toNatCast.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) x._@.Mathlib.Data.Int.Basic._hyg.429)
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_strict_mono Int.coe_nat_strictMonoₓ'. -/
 theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.coe_nat_lt.2
 #align int.coe_nat_strict_mono Int.coe_nat_strictMono
@@ -280,7 +281,8 @@ theorem succ_neg_succ (a : ℤ) : succ (-succ a) = -a := by rw [neg_succ, succ_p
 -/
 
 #print Int.neg_pred /-
-theorem neg_pred (a : ℤ) : -pred a = succ (-a) := by rw [eq_neg_of_eq_neg (neg_succ (-a)).symm, neg_neg]
+theorem neg_pred (a : ℤ) : -pred a = succ (-a) := by
+  rw [eq_neg_of_eq_neg (neg_succ (-a)).symm, neg_neg]
 #align int.neg_pred Int.neg_pred
 -/
 
@@ -336,7 +338,7 @@ protected theorem induction_on {p : ℤ → Prop} (i : ℤ) (hz : p 0) (hp : ∀
   · have : ∀ n : ℕ, p (-n) := by
       intro n
       induction n
-      · simp [hz, Nat.cast_zero]
+      · simp [hz]
         
       · convert hn _ n_ih using 1
         simp [sub_eq_neg_add]
@@ -357,7 +359,8 @@ attribute [simp] nat_abs nat_abs_of_nat nat_abs_zero nat_abs_one
 theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b := by
   have : ∀ a b : ℕ, nat_abs (sub_nat_nat a (Nat.succ b)) ≤ Nat.succ (a + b) := by
     refine' fun a b : ℕ =>
-      sub_nat_nat_elim a b.succ (fun m n i => n = b.succ → nat_abs i ≤ (m + b).succ) _ (fun i n e => _) rfl
+      sub_nat_nat_elim a b.succ (fun m n i => n = b.succ → nat_abs i ≤ (m + b).succ) _
+        (fun i n e => _) rfl
     · rintro i n rfl
       rw [add_comm _ i, add_assoc]
       exact Nat.le_add_right i (b.succ + b).succ
@@ -366,8 +369,9 @@ theorem natAbs_add_le (a b : ℤ) : natAbs (a + b) ≤ natAbs a + natAbs b := by
       rw [← succ.inj e, ← add_assoc, add_comm]
       apply Nat.le_add_right
       
-  cases a <;>
-    cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;> [skip, rw [add_comm a b]] <;> apply this
+  cases a <;> cases' b with b b <;> simp [nat_abs, Nat.succ_add] <;> try rfl <;> [skip,
+      rw [add_comm a b]] <;>
+    apply this
 #align int.nat_abs_add_le Int.natAbs_add_le
 -/
 
@@ -385,7 +389,8 @@ theorem natAbs_negOfNat (n : ℕ) : natAbs (negOfNat n) = n := by cases n <;> rf
 
 #print Int.natAbs_mul /-
 theorem natAbs_mul (a b : ℤ) : natAbs (a * b) = natAbs a * natAbs b := by
-  cases a <;> cases b <;> simp only [← Int.mul_def, Int.mul, nat_abs_neg_of_nat, eq_self_iff_true, Int.natAbs]
+  cases a <;> cases b <;>
+    simp only [← Int.mul_def, Int.mul, nat_abs_neg_of_nat, eq_self_iff_true, Int.natAbs]
 #align int.nat_abs_mul Int.natAbs_mul
 -/
 
@@ -397,7 +402,8 @@ theorem natAbs_mul_natAbs_eq {a b : ℤ} {c : ℕ} (h : a * b = (c : ℤ)) : a.n
 
 #print Int.natAbs_mul_self' /-
 @[simp]
-theorem natAbs_mul_self' (a : ℤ) : (natAbs a * natAbs a : ℤ) = a * a := by rw [← Int.ofNat_mul, nat_abs_mul_self]
+theorem natAbs_mul_self' (a : ℤ) : (natAbs a * natAbs a : ℤ) = a * a := by
+  rw [← Int.ofNat_mul, nat_abs_mul_self]
 #align int.nat_abs_mul_self' Int.natAbs_mul_self'
 -/
 
@@ -407,7 +413,8 @@ theorem negSucc_eq' (m : ℕ) : -[m+1] = -m - 1 := by simp [neg_succ_of_nat_eq, 
 -/
 
 #print Int.natAbs_ne_zero_of_ne_zero /-
-theorem natAbs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h => hz <| Int.eq_zero_of_natAbs_eq_zero h
+theorem natAbs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h =>
+  hz <| Int.eq_zero_of_natAbs_eq_zero h
 #align int.nat_abs_ne_zero_of_ne_zero Int.natAbs_ne_zero_of_ne_zero
 -/
 
@@ -425,7 +432,8 @@ theorem natAbs_ne_zero {a : ℤ} : a.natAbs ≠ 0 ↔ a ≠ 0 :=
 -/
 
 #print Int.natAbs_lt_natAbs_of_nonneg_of_lt /-
-theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < b) : a.natAbs < b.natAbs := by
+theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < b) :
+    a.natAbs < b.natAbs := by
   lift b to ℕ using le_trans w₁ (le_of_lt w₂)
   lift a to ℕ using w₁
   simpa [coe_nat_lt] using w₂
@@ -435,7 +443,8 @@ theorem natAbs_lt_natAbs_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a 
 #print Int.natAbs_eq_natAbs_iff /-
 theorem natAbs_eq_natAbs_iff {a b : ℤ} : a.natAbs = b.natAbs ↔ a = b ∨ a = -b := by
   constructor <;> intro h
-  · cases' Int.natAbs_eq a with h₁ h₁ <;> cases' Int.natAbs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;> simp [h]
+  · cases' Int.natAbs_eq a with h₁ h₁ <;> cases' Int.natAbs_eq b with h₂ h₂ <;> rw [h₁, h₂] <;>
+      simp [h]
     
   · cases h <;> rw [h]
     rw [Int.natAbs_neg]
@@ -477,8 +486,8 @@ theorem negSucc_ediv (m : ℕ) {b : ℤ} (H : 0 < b) : -[m+1] / b = -(m / b + 1)
 -- Will be generalized to Euclidean domains.
 @[local simp]
 protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
-  | (n : ℕ) => show ofNat _ = _ by simp [Nat.cast_zero]
-  | -[n+1] => show -ofNat _ = _ by simp [Nat.cast_zero]
+  | (n : ℕ) => show ofNat _ = _ by simp
+  | -[n+1] => show -ofNat _ = _ by simp
 #align int.zero_div Int.zero_div
 -/
 
@@ -486,7 +495,7 @@ protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
 -- Will be generalized to Euclidean domains.
 @[local simp]
 protected theorem div_zero : ∀ a : ℤ, a / 0 = 0
-  | (n : ℕ) => show ofNat _ = _ by simp [Nat.cast_zero]
+  | (n : ℕ) => show ofNat _ = _ by simp
   | -[n+1] => rfl
 #align int.div_zero Int.div_zero
 -/
@@ -503,13 +512,14 @@ protected theorem div_neg : ∀ a b : ℤ, a / -b = -(a / b)
 
 /- warning: int.div_of_neg_of_pos -> Int.ediv_of_neg_of_pos is a dubious translation:
 lean 3 declaration is
-  forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.hasLt a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (Neg.neg.{0} Int Int.hasNeg (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HSub.hSub.{0 0 0} Int Int Int (instHSub.{0} Int Int.hasSub) (Neg.neg.{0} Int Int.hasNeg a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) b) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))
+  forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.hasLt a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) -> (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a b) (Neg.neg.{0} Int Int.hasNeg (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.hasSub) (Neg.neg.{0} Int Int.hasNeg a) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne)))) b) (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))
 but is expected to have type
-  forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.instLTInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Eq.{1} Int (Int.ediv a b) (Neg.neg.{0} Int Int.instNegInt (HAdd.hAdd.{0 0 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HSub.hSub.{0 0 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Neg.neg.{0} Int Int.instNegInt a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) b) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))
+  forall {a : Int} {b : Int}, (LT.lt.{0} Int Int.instLTInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Eq.{1} Int (Int.ediv a b) (Neg.neg.{0} Int Int.instNegInt (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (Neg.neg.{0} Int Int.instNegInt a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) b) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))
 Case conversion may be inaccurate. Consider using '#align int.div_of_neg_of_pos Int.ediv_of_neg_of_posₓ'. -/
 theorem ediv_of_neg_of_pos {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b = -((-a - 1) / b + 1) :=
   match a, b, eq_negSucc_of_lt_zero Ha, eq_succ_of_zero_lt Hb with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by change (- -[m+1] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
+    change (- -[m+1] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
 #align int.div_of_neg_of_pos Int.ediv_of_neg_of_pos
 
 protected theorem div_nonneg {a b : ℤ} (Ha : 0 ≤ a) (Hb : 0 ≤ b) : 0 ≤ a / b :=
@@ -660,9 +670,9 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
 
 /- warning: int.mul_div_mul_of_pos_left -> Int.mul_ediv_mul_of_pos_left is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (forall (c : Int), Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)) (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a c))
+  forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) b) -> (forall (c : Int), Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) c b)) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a c))
 but is expected to have type
-  forall (a : Int) {b : Int} (c : Int), (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Eq.{1} Int (Int.ediv (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)) (Int.ediv a c))
+  forall (a : Int) {b : Int} (c : Int), (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Eq.{1} Int (Int.ediv (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) c b)) (Int.ediv a c))
 Case conversion may be inaccurate. Consider using '#align int.mul_div_mul_of_pos_left Int.mul_ediv_mul_of_pos_leftₓ'. -/
 @[simp]
 theorem mul_ediv_mul_of_pos_left (a : ℤ) {b : ℤ} (H : 0 < b) (c : ℤ) : a * b / (c * b) = a / c := by
@@ -671,9 +681,9 @@ theorem mul_ediv_mul_of_pos_left (a : ℤ) {b : ℤ} (H : 0 < b) (c : ℤ) : a *
 
 /- warning: int.mul_mod_mul_of_pos -> Int.mul_emod_mul_of_pos is a dubious translation:
 lean 3 declaration is
-  forall {a : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (forall (b : Int) (c : Int), Eq.{1} Int (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a c)) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (HMod.hMod.{0 0 0} Int Int Int (instHMod.{0} Int Int.hasMod) b c)))
+  forall {a : Int}, (LT.lt.{0} Int Int.hasLt (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))) a) -> (forall (b : Int) (c : Int), Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a c)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.hasMod) b c)))
 but is expected to have type
-  forall {a : Int} (b : Int) (c : Int), (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (Eq.{1} Int (Int.emod (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a c)) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Int.emod b c)))
+  forall {a : Int} (b : Int) (c : Int), (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (Eq.{1} Int (Int.emod (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a c)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Int.emod b c)))
 Case conversion may be inaccurate. Consider using '#align int.mul_mod_mul_of_pos Int.mul_emod_mul_of_posₓ'. -/
 @[simp]
 theorem mul_emod_mul_of_pos {a : ℤ} (H : 0 < a) (b c : ℤ) : a * b % (a * c) = a * (b % c) := by
@@ -694,11 +704,13 @@ lean 3 declaration is
 but is expected to have type
   forall (z : Int), Eq.{1} Nat (Int.natAbs (Int.sign z)) (ite.{1} Nat (Eq.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Int.instDecidableEqInt z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_sign Int.natAbs_signₓ'. -/
-theorem natAbs_sign (z : ℤ) : z.sign.natAbs = if z = 0 then 0 else 1 := by rcases z with ((_ | _) | _) <;> rfl
+theorem natAbs_sign (z : ℤ) : z.sign.natAbs = if z = 0 then 0 else 1 := by
+  rcases z with ((_ | _) | _) <;> rfl
 #align int.nat_abs_sign Int.natAbs_sign
 
 #print Int.natAbs_sign_of_nonzero /-
-theorem natAbs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : z.sign.natAbs = 1 := by rw [Int.natAbs_sign, if_neg hz]
+theorem natAbs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : z.sign.natAbs = 1 := by
+  rw [Int.natAbs_sign, if_neg hz]
 #align int.nat_abs_sign_of_nonzero Int.natAbs_sign_of_nonzero
 -/
 
@@ -717,9 +729,9 @@ theorem sign_neg (z : ℤ) : Int.sign (-z) = -Int.sign z := by rcases z with ((_
 
 /- warning: int.div_sign -> Int.div_sign is a dubious translation:
 lean 3 declaration is
-  forall (a : Int) (b : Int), Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a (Int.sign b)) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (Int.sign b))
+  forall (a : Int) (b : Int), Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.hasDiv) a (Int.sign b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) a (Int.sign b))
 but is expected to have type
-  forall (a : Int) (b : Int), Eq.{1} Int (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a (Int.sign b)) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Int.sign b))
+  forall (a : Int) (b : Int), Eq.{1} Int (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a (Int.sign b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Int.sign b))
 Case conversion may be inaccurate. Consider using '#align int.div_sign Int.div_signₓ'. -/
 theorem div_sign : ∀ a b, a / sign b = a * sign b
   | a, (n + 1 : ℕ) => by unfold sign <;> simp
@@ -771,7 +783,7 @@ theorem negSucc_add_negSucc (m n : ℕ) : -[m+1] + -[n+1] = -[Nat.succ (m + n)+1
 
 /- warning: int.to_nat_eq_max -> Int.toNat_eq_max is a dubious translation:
 lean 3 declaration is
-  forall (a : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Nat Int (HasLiftT.mk.{1 1} Nat Int (CoeTCₓ.coe.{1 1} Nat Int (CoeTCₓ.mk.{1 1} Nat Int Int.ofNat))) (Int.toNat a)) (LinearOrder.max.{0} Int Int.linearOrder a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
+  forall (a : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Int (HasLiftT.mk.{1, 1} Nat Int (CoeTCₓ.coe.{1, 1} Nat Int (CoeTCₓ.mk.{1, 1} Nat Int Int.ofNat))) (Int.toNat a)) (LinearOrder.max.{0} Int Int.linearOrder a (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero))))
 but is expected to have type
   forall (a : Int), Eq.{1} Int (Int.ofNat (Int.toNat a)) (Max.max.{0} Int Int.instMaxInt a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.to_nat_eq_max Int.toNat_eq_maxₓ'. -/
@@ -796,7 +808,8 @@ theorem toNat_one : (1 : ℤ).toNat = 1 :=
 
 #print Int.toNat_of_nonneg /-
 @[simp]
-theorem toNat_of_nonneg {a : ℤ} (h : 0 ≤ a) : (toNat a : ℤ) = a := by rw [to_nat_eq_max, max_eq_left h]
+theorem toNat_of_nonneg {a : ℤ} (h : 0 ≤ a) : (toNat a : ℤ) = a := by
+  rw [to_nat_eq_max, max_eq_left h]
 #align int.to_nat_of_nonneg Int.toNat_of_nonneg
 -/
 

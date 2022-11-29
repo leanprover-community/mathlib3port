@@ -181,8 +181,8 @@ def Prop.cmp (p q : Prop) : Ordering := by
   case and'.and' aq q₁ q₂ => exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
   case or.or q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
   case imp.imp q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
-  exacts[lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt, lt, lt, GT.gt, GT.gt,
-    GT.gt, GT.gt, lt, GT.gt, GT.gt, GT.gt, GT.gt, GT.gt]
+  exacts[lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt,
+    lt, lt, GT.gt, GT.gt, GT.gt, GT.gt, lt, GT.gt, GT.gt, GT.gt, GT.gt, GT.gt]
 #align tactic.itauto.prop.cmp Tactic.Itauto.Prop.cmp
 
 instance : LT Prop :=
@@ -237,9 +237,13 @@ inductive Proof-- ⊢ A, causes failure during reconstruction
   | or_inr (p : proof) : proof-- (p: B) ⊢ A ∨ B
 -- (p₁: A ∨ B) (p₂: (x: A) ⊢ C) (p₃: (x: B) ⊢ C) ⊢ C
 
-  | or_elim' (p₁ : proof) (x : Name) (p₂ p₃ : proof) : proof-- (p₁: decidable A) (p₂: (x: A) ⊢ C) (p₃: (x: ¬ A) ⊢ C) ⊢ C
+  |
+  or_elim' (p₁ : proof) (x : Name) (p₂ p₃ : proof) :
+    proof-- (p₁: decidable A) (p₂: (x: A) ⊢ C) (p₃: (x: ¬ A) ⊢ C) ⊢ C
 
-  | decidable_elim (classical : Bool) (p₁ x : Name) (p₂ p₃ : proof) : proof-- classical = ff: (p: decidable A) ⊢ A ∨ ¬A
+  |
+  decidable_elim (classical : Bool) (p₁ x : Name) (p₂ p₃ : proof) :
+    proof-- classical = ff: (p: decidable A) ⊢ A ∨ ¬A
 -- classical = tt: (p: Prop) ⊢ p ∨ ¬p
 
   |
@@ -271,10 +275,12 @@ unsafe def proof.to_format : Proof → format
   | proof.or_imp_right p => f! "(or_imp_right {p.to_format})"
   | proof.or_inl p => f! "(or.inl {p.to_format})"
   | proof.or_inr p => f! "(or.inr {p.to_format})"
-  | proof.or_elim' p x q r => f! "({p.to_format }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
+  | proof.or_elim' p x q r =>
+    f! "({p.to_format }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
   | proof.em ff p => f! "(decidable.em {p})"
   | proof.em tt p => f! "(classical.em {p})"
-  | proof.decidable_elim _ p x q r => f! "({p }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
+  | proof.decidable_elim _ p x q r =>
+    f! "({p }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
   | proof.imp_imp_simp _ p => f! "(imp_imp_simp {p.to_format})"
 #align tactic.itauto.proof.to_format tactic.itauto.proof.to_format
 
@@ -403,8 +409,8 @@ unsafe def context.add : Prop → Proof → context → Except (Prop → Proof) 
 and a target proposition `B`, so that in the case that `⊥` is found we can skip the continuation
 and just prove `B` outright. -/
 @[inline]
-unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop) (f : context → Prop → ℕ → Bool × proof × ℕ)
-    (n : ℕ) : Bool × proof × ℕ :=
+unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop)
+    (f : context → Prop → ℕ → Bool × proof × ℕ) (n : ℕ) : Bool × proof × ℕ :=
   match Γ.add A p with
   | Except.ok Γ_A => f Γ_A B n
   | Except.error p => (true, p B, n)
@@ -438,7 +444,8 @@ prove `A₁ → A₂`, which can be written `A₂ → C, A₁ ⊢ A₂` (where w
 `(A₁ → A₂) → C`), and one to use the consequent, `C ⊢ B`. The search here is that there are
 potentially many implications to split like this, and we have to try all of them if we want to be
 complete. -/
-unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) : context → Prop → ℕ → Bool × proof × ℕ
+unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) :
+    context → Prop → ℕ → Bool × proof × ℕ
   | Γ, B, n =>
     match Γ.find B with
     | some p => (true, p, n)
@@ -460,7 +467,9 @@ unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) : 
                   let (p₁, n) ←
                     is_ok <|
                         Γ.with_add A₁ (Proof.hyp a) A₂
-                          (fun Γ_A₁ A₂ => Γ_A₁.with_add (Prop.imp A₂ C) (Proof.imp_imp_simp a p) A₂ prove) n
+                          (fun Γ_A₁ A₂ =>
+                            Γ_A₁.with_add (Prop.imp A₂ C) (Proof.imp_imp_simp a p) A₂ prove)
+                          n
                   is_ok <| Γ C (p (proof.intro a p₁)) B prove n
                 | _ => none
             | _ => none
@@ -507,7 +516,8 @@ unsafe def prove : context → Prop → ℕ → Bool × proof × ℕ
           let Γ : context := Γ.erase A
           let (a, n) := fresh_name n
           let (b, p₁, n) := Γ.with_add A₁ (Proof.hyp a) B (fun Γ _ => IH true Γ) n
-          mapProof (proof.or_elim p a p₁) <| whenOk b (Γ.with_add A₂ (Proof.hyp a) B fun Γ _ => IH true Γ) n
+          mapProof (proof.or_elim p a p₁) <|
+            whenOk b (Γ.with_add A₂ (Proof.hyp a) B fun Γ _ => IH true Γ) n
         | _ => IH b Γ n)
       false Γ n
 #align tactic.itauto.prove tactic.itauto.prove
@@ -540,7 +550,10 @@ unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic Prop := do
       | q( @ Eq Prop $ ( a ) $ ( b ) ) => prop.eq <$> reify a <*> reify b
       | q( @ Ne Prop $ ( a ) $ ( b ) ) => prop.not <$> ( prop.eq <$> reify a <*> reify b )
       | q( Implies $ ( a ) $ ( b ) ) => prop.imp <$> reify a <*> reify b
-      | e @ q( $ ( a ) → $ ( b ) ) => if b . has_var then reify_atom atoms e else prop.imp <$> reify a <*> reify b
+      |
+        e @ q( $ ( a ) → $ ( b ) )
+        =>
+        if b . has_var then reify_atom atoms e else prop.imp <$> reify a <*> reify b
       | e => reify_atom atoms e
 #align tactic.itauto.reify tactic.itauto.reify
 
@@ -762,7 +775,8 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
                   | _ => m
               | Except.error _ => native.mk_rb_set
             read_ref atoms >>= fun ats =>
-                (ats.2.iterate (pure decs)) fun i e r => if decided i.1 then r else r >>= fun decs => add_dec ff decs e
+                (ats.2.iterate (pure decs)) fun i e r =>
+                  if decided i.1 then r else r >>= fun decs => add_dec ff decs e
           else pure decs
       let Γ ←
         decs.fold (pure Γ) fun A ⟨cl, pf⟩ r =>

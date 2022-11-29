@@ -18,19 +18,22 @@ open Function
 
 universe u v w
 
-variable {α β γ δ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} {u : δ → δ → Prop}
+variable {α β γ δ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
+  {u : δ → δ → Prop}
 
 namespace RelHomClass
 
 variable {F : Type _}
 
-theorem map_inf [SemilatticeInf α] [LinearOrder β] [RelHomClass F ((· < ·) : β → β → Prop) ((· < ·) : α → α → Prop)]
-    (a : F) (m n : β) : a (m ⊓ n) = a m ⊓ a n :=
+theorem map_inf [SemilatticeInf α] [LinearOrder β]
+    [RelHomClass F ((· < ·) : β → β → Prop) ((· < ·) : α → α → Prop)] (a : F) (m n : β) :
+    a (m ⊓ n) = a m ⊓ a n :=
   (StrictMono.monotone fun x y => map_rel a).map_inf m n
 #align rel_hom_class.map_inf RelHomClass.map_inf
 
-theorem map_sup [SemilatticeSup α] [LinearOrder β] [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)]
-    (a : F) (m n : β) : a (m ⊔ n) = a m ⊔ a n :=
+theorem map_sup [SemilatticeSup α] [LinearOrder β]
+    [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)] (a : F) (m n : β) :
+    a (m ⊔ n) = a m ⊔ a n :=
   @map_inf αᵒᵈ βᵒᵈ _ _ _ _ _ _ _
 #align rel_hom_class.map_sup RelHomClass.map_sup
 
@@ -90,7 +93,8 @@ def RelEmbedding.codRestrict (p : Set β) (f : r ↪r s) (H : ∀ a, f a ∈ p) 
 #align rel_embedding.cod_restrict RelEmbedding.codRestrict
 
 @[simp]
-theorem RelEmbedding.cod_restrict_apply (p) (f : r ↪r s) (H a) : RelEmbedding.codRestrict p f H a = ⟨f a, H a⟩ :=
+theorem RelEmbedding.cod_restrict_apply (p) (f : r ↪r s) (H a) :
+    RelEmbedding.codRestrict p f H a = ⟨f a, H a⟩ :=
   rfl
 #align rel_embedding.cod_restrict_apply RelEmbedding.cod_restrict_apply
 

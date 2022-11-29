@@ -105,7 +105,10 @@ private unsafe
                     match
                       Ne
                       with
-                      | q( ¬ $ ( a ) ) => do let pr ← mk_app ` ` not_not_eq [ a ] return ( some ( a , pr ) )
+                      |
+                          q( ¬ $ ( a ) )
+                          =>
+                          do let pr ← mk_app ` ` not_not_eq [ a ] return ( some ( a , pr ) )
                         |
                           q( $ ( a ) ∧ $ ( b ) )
                           =>
@@ -124,7 +127,9 @@ private unsafe
                         |
                           q( $ ( a ) ∨ $ ( b ) )
                           =>
-                          do let pr ← mk_app ` ` not_or_eq [ a , b ] return ( some ( q( ¬ $ ( a ) ∧ ¬ $ ( b ) ) , pr ) )
+                          do
+                            let pr ← mk_app ` ` not_or_eq [ a , b ]
+                              return ( some ( q( ¬ $ ( a ) ∧ ¬ $ ( b ) ) , pr ) )
                         |
                           q( $ ( a ) ≤ $ ( b ) )
                           =>
@@ -150,7 +155,12 @@ private unsafe
                                   match
                                     p
                                     with
-                                    | lam n bi typ bo => do let body ← mk_app ` ` Not [ bo ] return ( pi n bi typ body )
+                                    |
+                                        lam n bi typ bo
+                                        =>
+                                        do
+                                          let body ← mk_app ` ` Not [ bo ]
+                                            return ( pi n bi typ body )
                                       | _ => tactic.fail "Unexpected failure negating ∃"
                               return ( some ( e , pr ) )
                         |
@@ -271,9 +281,11 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
 #align tactic.interactive.push_neg tactic.interactive.push_neg
 
 add_tactic_doc
-  { Name := "push_neg", category := DocCategory.tactic, declNames := [`tactic.interactive.push_neg], tags := ["logic"] }
+  { Name := "push_neg", category := DocCategory.tactic, declNames := [`tactic.interactive.push_neg],
+    tags := ["logic"] }
 
-theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP => Classical.by_contradiction fun h' => h h' hP
+theorem imp_of_not_imp_not (P Q : Prop) : (¬Q → ¬P) → P → Q := fun h hP =>
+  Classical.by_contradiction fun h' => h h' hP
 #align imp_of_not_imp_not imp_of_not_imp_not
 
 /-- Matches either an identifier "h" or a pair of identifiers "h with k" -/
@@ -299,7 +311,13 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
     |
         some ( h , h' )
         =>
-        ( ( ( get_local h >>= revert ) >> tactic.interactive.contrapose none ) >> intro ( h' . getOrElse h ) ) >> skip
+        (
+            ( ( get_local h >>= revert ) >> tactic.interactive.contrapose none )
+              >>
+              intro ( h' . getOrElse h )
+            )
+          >>
+          skip
       |
         none
         =>
@@ -320,8 +338,8 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
 #align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc
-  { Name := "contrapose", category := DocCategory.tactic, declNames := [`tactic.interactive.contrapose],
-    tags := ["logic"] }
+  { Name := "contrapose", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.contrapose], tags := ["logic"] }
 
 /-!
 ## `#push_neg` command
@@ -373,7 +391,8 @@ unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
 #align tactic.push_neg_cmd tactic.push_neg_cmd
 
 add_tactic_doc
-  { Name := "#push_neg", category := DocCategory.cmd, declNames := [`tactic.push_neg_cmd], tags := ["logic"] }
+  { Name := "#push_neg", category := DocCategory.cmd, declNames := [`tactic.push_neg_cmd],
+    tags := ["logic"] }
 
 end Tactic
 

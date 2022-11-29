@@ -68,7 +68,8 @@ variable (G : D ⥤ C)
 /-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
 theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : SolutionSetCondition G := by
   intro A
-  refine' ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
+  refine'
+    ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
   intro B h
   refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
   rw [← adjunction.hom_equiv_unit, Equiv.apply_symm_apply]
@@ -78,8 +79,8 @@ theorem solution_set_condition_of_is_right_adjoint [IsRightAdjoint G] : Solution
 /-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
 if `G` satisfies the solution set condition then `G` is a right adjoint.
 -/
-noncomputable def isRightAdjointOfPreservesLimitsOfSolutionSetCondition [HasLimits D] [PreservesLimits G]
-    (hG : SolutionSetCondition G) : IsRightAdjoint G := by
+noncomputable def isRightAdjointOfPreservesLimitsOfSolutionSetCondition [HasLimits D]
+    [PreservesLimits G] (hG : SolutionSetCondition G) : IsRightAdjoint G := by
   apply is_right_adjoint_of_structured_arrow_initials _
   intro A
   specialize hG A
@@ -103,8 +104,9 @@ variable {D : Type u'} [Category.{v} D]
 /-- The special adjoint functor theorem: if `G : D ⥤ C` preserves limits and `D` is complete,
 well-powered and has a small coseparating set, then `G` has a left adjoint.
 -/
-noncomputable def isRightAdjointOfPreservesLimitsOfIsCoseparating [HasLimits D] [WellPowered D] {𝒢 : Set D}
-    [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) (G : D ⥤ C) [PreservesLimits G] : IsRightAdjoint G :=
+noncomputable def isRightAdjointOfPreservesLimitsOfIsCoseparating [HasLimits D] [WellPowered D]
+    {𝒢 : Set D} [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) (G : D ⥤ C) [PreservesLimits G] :
+    IsRightAdjoint G :=
   have : ∀ A, HasInitial (StructuredArrow A G) := fun A =>
     has_initial_of_is_coseparating (StructuredArrow.is_coseparating_proj_preimage A G h𝒢)
   is_right_adjoint_of_structured_arrow_initials _
@@ -114,8 +116,9 @@ noncomputable def isRightAdjointOfPreservesLimitsOfIsCoseparating [HasLimits D] 
 /-- The special adjoint functor theorem: if `F : C ⥤ D` preserves colimits and `C` is cocomplete,
 well-copowered and has a small separating set, then `F` has a right adjoint.
 -/
-noncomputable def isLeftAdjointOfPreservesColimitsOfIsSeparatig [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C}
-    [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) (F : C ⥤ D) [PreservesColimits F] : IsLeftAdjoint F :=
+noncomputable def isLeftAdjointOfPreservesColimitsOfIsSeparatig [HasColimits C] [WellPowered Cᵒᵖ]
+    {𝒢 : Set C} [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) (F : C ⥤ D) [PreservesColimits F] :
+    IsLeftAdjoint F :=
   have : ∀ A, HasTerminal (CostructuredArrow F A) := fun A =>
     has_terminal_of_is_separating (CostructuredArrow.is_separating_proj_preimage F A h𝒢)
   is_left_adjoint_of_costructured_arrow_terminals _
@@ -128,8 +131,8 @@ namespace Limits
 
 /-- A consequence of the special adjoint functor theorem: if `C` is complete, well-powered and
     has a small coseparating set, then it is cocomplete. -/
-theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered C] {𝒢 : Set C} [Small.{v} 𝒢]
-    (h𝒢 : IsCoseparating 𝒢) : HasColimits C :=
+theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered C] {𝒢 : Set C}
+    [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) : HasColimits C :=
   { HasColimitsOfShape := fun J hJ =>
       has_colimits_of_shape_iff_is_right_adjoint_const.2
         ⟨is_right_adjoint_of_preserves_limits_of_is_coseparating h𝒢 _⟩ }
@@ -138,10 +141,11 @@ theorem has_colimits_of_has_limits_of_is_coseparating [HasLimits C] [WellPowered
 
 /-- A consequence of the special adjoint functor theorem: if `C` is cocomplete, well-copowered and
     has a small separating set, then it is complete. -/
-theorem has_limits_of_has_colimits_of_is_separating [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C} [Small.{v} 𝒢]
-    (h𝒢 : IsSeparating 𝒢) : HasLimits C :=
+theorem has_limits_of_has_colimits_of_is_separating [HasColimits C] [WellPowered Cᵒᵖ] {𝒢 : Set C}
+    [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) : HasLimits C :=
   { HasLimitsOfShape := fun J hJ =>
-      has_limits_of_shape_iff_is_left_adjoint_const.2 ⟨is_left_adjoint_of_preserves_colimits_of_is_separatig h𝒢 _⟩ }
+      has_limits_of_shape_iff_is_left_adjoint_const.2
+        ⟨is_left_adjoint_of_preserves_colimits_of_is_separatig h𝒢 _⟩ }
 #align
   category_theory.limits.has_limits_of_has_colimits_of_is_separating CategoryTheory.Limits.has_limits_of_has_colimits_of_is_separating
 

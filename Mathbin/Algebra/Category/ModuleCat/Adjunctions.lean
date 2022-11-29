@@ -54,7 +54,9 @@ def adj : free R ⊣ forget (ModuleCat.{u} R) :=
     { homEquiv := fun X M => (Finsupp.lift M R X).toEquiv.symm,
       hom_equiv_naturality_left_symm' := fun _ _ M f g =>
         Finsupp.lhom_ext' fun x =>
-          LinearMap.ext_ring (Finsupp.sum_map_domain_index_add_monoid_hom fun y => (smulAddHom R M).flip (g y)).symm }
+          LinearMap.ext_ring
+            (Finsupp.sum_map_domain_index_add_monoid_hom fun y =>
+                (smulAddHom R M).flip (g y)).symm }
 #align Module.adj ModuleCat.adj
 
 instance : IsRightAdjoint (forget (ModuleCat.{u} R)) :=
@@ -92,30 +94,34 @@ theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
   intros
   ext (x x'⟨y, y'⟩)
   dsimp [μ]
-  simp_rw [Finsupp.map_domain_single, finsupp_tensor_finsupp'_single_tmul_single, mul_one, Finsupp.map_domain_single,
-    CategoryTheory.tensor_apply]
+  simp_rw [Finsupp.map_domain_single, finsupp_tensor_finsupp'_single_tmul_single, mul_one,
+    Finsupp.map_domain_single, CategoryTheory.tensor_apply]
 #align Module.free.μ_natural ModuleCat.free.μ_natural
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem left_unitality (X : Type u) :
-    (λ_ ((free R).obj X)).Hom = (ε R ⊗ 𝟙 ((free R).obj X)) ≫ (μ R (𝟙_ (Type u)) X).Hom ≫ map (free R).obj (λ_ X).Hom :=
+    (λ_ ((free R).obj X)).Hom =
+      (ε R ⊗ 𝟙 ((free R).obj X)) ≫ (μ R (𝟙_ (Type u)) X).Hom ≫ map (free R).obj (λ_ X).Hom :=
   by
   intros
   ext
   dsimp [ε, μ]
-  simp_rw [finsupp_tensor_finsupp'_single_tmul_single, ModuleCat.monoidalCategory.left_unitor_hom_apply,
-    Finsupp.smul_single', mul_one, Finsupp.map_domain_single, CategoryTheory.left_unitor_hom_apply]
+  simp_rw [finsupp_tensor_finsupp'_single_tmul_single,
+    ModuleCat.monoidalCategory.left_unitor_hom_apply, Finsupp.smul_single', mul_one,
+    Finsupp.map_domain_single, CategoryTheory.left_unitor_hom_apply]
 #align Module.free.left_unitality ModuleCat.free.left_unitality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem right_unitality (X : Type u) :
-    (ρ_ ((free R).obj X)).Hom = (𝟙 ((free R).obj X) ⊗ ε R) ≫ (μ R X (𝟙_ (Type u))).Hom ≫ map (free R).obj (ρ_ X).Hom :=
+    (ρ_ ((free R).obj X)).Hom =
+      (𝟙 ((free R).obj X) ⊗ ε R) ≫ (μ R X (𝟙_ (Type u))).Hom ≫ map (free R).obj (ρ_ X).Hom :=
   by
   intros
   ext
   dsimp [ε, μ]
-  simp_rw [finsupp_tensor_finsupp'_single_tmul_single, ModuleCat.monoidalCategory.right_unitor_hom_apply,
-    Finsupp.smul_single', mul_one, Finsupp.map_domain_single, CategoryTheory.right_unitor_hom_apply]
+  simp_rw [finsupp_tensor_finsupp'_single_tmul_single,
+    ModuleCat.monoidalCategory.right_unitor_hom_apply, Finsupp.smul_single', mul_one,
+    Finsupp.map_domain_single, CategoryTheory.right_unitor_hom_apply]
 #align Module.free.right_unitality ModuleCat.free.right_unitality
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -212,8 +218,9 @@ instance categoryFree : Category (FreeCat R C) where
   assoc' W X Y Z f g h := by
     dsimp
     -- This imitates the proof of associativity for `monoid_algebra`.
-    simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-      forall₃_true_iff, add_mul, mul_add, category.assoc, mul_assoc, zero_mul, mul_zero, sum_zero, sum_add]
+    simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true,
+      forall_true_iff, forall₃_true_iff, add_mul, mul_add, category.assoc, mul_assoc, zero_mul,
+      mul_zero, sum_zero, sum_add]
 #align category_theory.category_Free CategoryTheory.categoryFree
 
 namespace FreeCat
@@ -232,8 +239,7 @@ instance : Preadditive (FreeCat R C) where
   comp_add' X Y Z f g g' := by
     dsimp
     rw [← Finsupp.sum_add]
-    congr
-    ext (r h)
+    congr ; ext (r h)
     rw [Finsupp.sum_add_index] <;>
       · simp [mul_add]
         
@@ -246,8 +252,7 @@ instance : Linear R (FreeCat R C) where
   comp_smul' X Y Z f r g := by
     dsimp
     simp_rw [Finsupp.smul_sum]
-    congr
-    ext (h s)
+    congr ; ext (h s)
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_left_comm]
 
 theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :
@@ -335,7 +340,8 @@ def lift (F : C ⥤ D) : FreeCat R C ⥤ D where
 #align category_theory.Free.lift CategoryTheory.FreeCat.lift
 
 @[simp]
-theorem lift_map_single (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) (r : R) : (lift R F).map (single f r) = r • F.map f := by simp
+theorem lift_map_single (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) (r : R) :
+    (lift R F).map (single f r) = r • F.map f := by simp
 #align category_theory.Free.lift_map_single CategoryTheory.FreeCat.lift_map_single
 
 instance lift_additive (F : C ⥤ D) :
@@ -373,7 +379,8 @@ def ext {F G : FreeCat R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Line
         simp only [F.map_add, G.map_add, add_comp, comp_add, w₁, w₂]
         
       · intro f' r
-        rw [iso.app_hom, iso.app_hom, ← smul_single_one, F.map_smul, G.map_smul, smul_comp, comp_smul]
+        rw [iso.app_hom, iso.app_hom, ← smul_single_one, F.map_smul, G.map_smul, smul_comp,
+          comp_smul]
         change r • (embedding R C ⋙ F).map f' ≫ _ = r • _ ≫ (embedding R C ⋙ G).map f'
         rw [α.hom.naturality f']
         infer_instance
@@ -385,7 +392,8 @@ def ext {F G : FreeCat R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Line
 /-- `Free.lift` is unique amongst `R`-linear functors `Free R C ⥤ D`
 which compose with `embedding ℤ C` to give the original functor.
 -/
-def liftUnique (F : C ⥤ D) (L : FreeCat R C ⥤ D) [L.Additive] [L.Linear R] (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
+def liftUnique (F : C ⥤ D) (L : FreeCat R C ⥤ D) [L.Additive] [L.Linear R]
+    (α : embedding R C ⋙ L ≅ F) : L ≅ lift R F :=
   ext R (α.trans (embeddingLiftIso R F).symm)
 #align category_theory.Free.lift_unique CategoryTheory.FreeCat.liftUnique
 

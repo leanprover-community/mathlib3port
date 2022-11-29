@@ -20,7 +20,8 @@ variable {σ : Type _}
 
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
-theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) : c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (Zmod n)) φ = 0 :=
+theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) :
+    c (n : ℤ) ∣ φ ↔ map (Int.castRingHom (Zmod n)) φ = 0 :=
   C_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (Zmod n) n) _
 #align mv_polynomial.C_dvd_iff_zmod MvPolynomial.C_dvd_iff_zmod
 
@@ -77,11 +78,12 @@ variable [CommRing K]
 theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 := by
   nontriviality
   have : 0 < Fintype.card K - 1 := tsub_pos_of_lt Fintype.one_lt_card
-  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, zero_pow this, sub_zero,
-    Finset.prod_const_one]
+  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
+    zero_pow this, sub_zero, Finset.prod_const_one]
 #align mv_polynomial.eval_indicator_apply_eq_one MvPolynomial.eval_indicator_apply_eq_one
 
-theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} := by
+theorem degrees_indicator (c : σ → K) :
+    degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} := by
   rw [indicator]
   refine' le_trans (degrees_prod _ _) (Finset.sum_le_sum fun s hs => _)
   refine' le_trans (degrees_sub _ _) _
@@ -92,12 +94,13 @@ theorem degrees_indicator (c : σ → K) : degrees (indicator c) ≤ ∑ s : σ,
   exact degrees_X' _
 #align mv_polynomial.degrees_indicator MvPolynomial.degrees_indicator
 
-theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrictDegree σ K (Fintype.card K - 1) := by
+theorem indicator_mem_restrict_degree (c : σ → K) :
+    indicator c ∈ restrictDegree σ K (Fintype.card K - 1) := by
   rw [mem_restrict_degree_iff_sup, indicator]
   intro n
   refine' le_trans (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eq _)
-  simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum, AddMonoidHom.map_nsmul,
-    Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
+  simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum,
+    AddMonoidHom.map_nsmul, Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
   trans
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
@@ -116,7 +119,8 @@ variable [Field K]
 
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 := by
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by rwa [(· ≠ ·), Function.funext_iff, not_forall] at h
-  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self, Finset.prod_eq_zero_iff]
+  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
+    Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
   rwa [(· ≠ ·), sub_eq_zero]
@@ -153,7 +157,8 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
   · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
     
   · ext n
-    simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply, LinearMap.map_smul]
+    simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply,
+      LinearMap.map_smul]
     simp only [evalₗ_apply]
     trans
     refine' Finset.sum_eq_single n (fun b _ h => _) _
@@ -183,7 +188,8 @@ variable (σ : Type u) (K : Type u) [Fintype K]
 than the cardinality of K. -/
 def R [CommRing K] : Type u :=
   restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroup,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] K», Inhabited
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] K»,
+  Inhabited
 #align mv_polynomial.R MvPolynomial.R
 
 /-- Evaluation in the `mv_polynomial.R` subtype. -/
@@ -195,7 +201,8 @@ section CommRing
 
 variable [CommRing K]
 
-noncomputable instance decidableRestrictDegree (m : ℕ) : DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
+noncomputable instance decidableRestrictDegree (m : ℕ) :
+    DecidablePred (· ∈ { n : σ →₀ ℕ | ∀ i, n i ≤ m }) := by
   simp only [Set.mem_set_of_eq] <;> infer_instance
 #align mv_polynomial.decidable_restrict_degree MvPolynomial.decidableRestrictDegree
 
@@ -205,16 +212,20 @@ variable [Field K]
 
 theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
   calc
-    Module.rank K (R σ K) = Module.rank K (↥{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
-      LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
-    _ = (#{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 }) := by rw [Finsupp.dim_eq, dim_self, mul_one]
+    Module.rank K (R σ K) =
+        Module.rank K (↥{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
+      LinearEquiv.dim_eq
+        (Finsupp.supportedEquivFinsupp { s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
+    _ = (#{ s : σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 }) := by
+      rw [Finsupp.dim_eq, dim_self, mul_one]
     _ = (#{ s : σ → ℕ | ∀ n : σ, s n < Fintype.card K }) := by
       refine' Quotient.sound ⟨(Equiv.subtypeEquiv Finsupp.equivFunOnFinite) fun f => _⟩
       refine' forall_congr' fun n => le_tsub_iff_right _
       exact Fintype.card_pos_iff.2 ⟨0⟩
     _ = (#σ → { n // n < Fintype.card K }) :=
       (@Equiv.subtypePiEquivPi σ (fun _ => ℕ) fun s n => n < Fintype.card K).cardinal_eq
-    _ = (#σ → Fin (Fintype.card K)) := (Equiv.arrowCongr (Equiv.refl σ) Fin.equivSubtype.symm).cardinal_eq
+    _ = (#σ → Fin (Fintype.card K)) :=
+      (Equiv.arrowCongr (Equiv.refl σ) Fin.equivSubtype.symm).cardinal_eq
     _ = (#σ → K) := (Equiv.arrowCongr (Equiv.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     

@@ -41,8 +41,8 @@ variable {α : Type u} {β : Type v}
 
 /-- **The Schröder-Bernstein Theorem**:
 Given injections `α → β` and `β → α`, we can get a bijection `α → β`. -/
-theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f) (hg : Function.Injective g) :
-    ∃ h : α → β, Bijective h := by
+theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f)
+    (hg : Function.Injective g) : ∃ h : α → β, Bijective h := by
   cases' isEmpty_or_nonempty β with hβ hβ
   · have : IsEmpty α := Function.isEmpty f
     exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
@@ -102,16 +102,18 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
     show ∃ s ∈ sets, ∀ a ∈ sets, s ⊆ a → a = s from
       zorn_subset sets fun c hc hcc =>
         ⟨⋃₀c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
-          (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h => hc hpc x hxp y (h hyq) i hi, fun _ =>
-          subset_sUnion_of_mem⟩
+          (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h =>
+            hc hpc x hxp y (h hyq) i hi,
+          fun _ => subset_sUnion_of_mem⟩
   let ⟨i, e⟩ :=
     show ∃ i, ∀ y, ∃ x ∈ s, (x : ∀ i, β i) i = y from
       Classical.by_contradiction fun h =>
-        have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by simpa only [not_exists, not_forall] using h
+        have h : ∀ i, ∃ y, ∀ x ∈ s, (x : ∀ i, β i) i ≠ y := by
+          simpa only [not_exists, not_forall] using h
         let ⟨f, hf⟩ := Classical.axiom_of_choice h
         have : f ∈ s :=
           have : insert f s ∈ sets := fun x hx y hy => by
-            cases hx <;> cases hy
+            cases hx <;> cases hy;
             · simp [hx, hy]
               
             · subst x

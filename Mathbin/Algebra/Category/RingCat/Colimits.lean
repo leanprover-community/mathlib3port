@@ -89,12 +89,15 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
   | refl : ∀ x, relation x x
   | symm : ∀ (x y) (h : relation x y), relation y x
-  | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
+  |
+  trans :
+    ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
   |
   map :
     ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
-      relation (of j' (F.map f x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
+      relation (of j' (F.map f x))
+        (of j x)-- Then one relation per operation, describing the interaction with `of`
 
   | zero : ∀ j, relation (of j 0) zero
   | one : ∀ j, relation (of j 1) one
@@ -103,13 +106,15 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   |
   mul :
     ∀ (j) (x y : F.obj j),
-      relation (of j (x * y)) (mul (of j x) (of j y))-- Then one relation per argument of each operation
+      relation (of j (x * y))
+        (mul (of j x) (of j y))-- Then one relation per argument of each operation
 
   | neg_1 : ∀ (x x') (r : relation x x'), relation (neg x) (neg x')
   | add_1 : ∀ (x x' y) (r : relation x x'), relation (add x y) (add x' y)
   | add_2 : ∀ (x y y') (r : relation y y'), relation (add x y) (add x y')
   | mul_1 : ∀ (x x' y) (r : relation x x'), relation (mul x y) (mul x' y)
-  | mul_2 : ∀ (x y y') (r : relation y y'), relation (mul x y) (mul x y')-- And one relation per axiom
+  |
+  mul_2 : ∀ (x y y') (r : relation y y'), relation (mul x y) (mul x y')-- And one relation per axiom
 
   | zero_add : ∀ x, relation (add zero x) x
   | add_zero : ∀ x, relation (add x zero) x
@@ -313,12 +318,14 @@ theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : Colimit
 #align CommRing.colimits.quot_neg CommRingCat.Colimits.quot_neg
 
 @[simp]
-theorem quot_add (x y) : Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
+theorem quot_add (x y) :
+    Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_add CommRingCat.Colimits.quot_add
 
 @[simp]
-theorem quot_mul (x y) : Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
+theorem quot_mul (x y) :
+    Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_mul CommRingCat.Colimits.quot_mul
 
@@ -343,7 +350,8 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
 #align CommRing.colimits.cocone_morphism CommRingCat.Colimits.coconeMorphism
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
+    F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
@@ -354,7 +362,8 @@ theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by
   rw [← cocone_naturality F f]
   rfl
-#align CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
+#align
+  CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
 
 /-- The cocone over the proposed colimit commutative ring. -/
 def colimitCocone : Cocone F where
@@ -476,7 +485,8 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
     ext
     induction x
     induction x
-    · have w' := congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
+    · have w' :=
+        congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
       erw [w']
       rfl
       
@@ -496,7 +506,8 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
 instance has_colimits_CommRing :
     HasColimits
       CommRingCat where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
+    { HasColimit := fun F =>
+        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_is_colimit F } }
 #align CommRing.colimits.has_colimits_CommRing CommRingCat.Colimits.has_colimits_CommRing
 
 end CommRingCat.Colimits

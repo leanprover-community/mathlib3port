@@ -40,8 +40,7 @@ theorem is_Gδ_irrational : IsGδ { x | Irrational x } :=
 theorem dense_irrational : Dense { x : ℝ | Irrational x } := by
   refine' real.is_topological_basis_Ioo_rat.dense_iff.2 _
   simp only [mem_Union, mem_singleton_iff]
-  rintro _ ⟨a, b, hlt, rfl⟩ hne
-  rw [inter_comm]
+  rintro _ ⟨a, b, hlt, rfl⟩ hne; rw [inter_comm]
   exact exists_irrational_btwn (Rat.cast_lt.2 hlt)
 #align dense_irrational dense_irrational
 
@@ -69,8 +68,8 @@ instance : DenselyOrdered { x // Irrational x } :=
     let ⟨z, hz, hxz, hzy⟩ := exists_irrational_btwn hlt
     ⟨⟨z, hz⟩, hxz, hzy⟩⟩
 
-theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀ᶠ ε : ℝ in 𝓝 0, ∀ m : ℤ, ε ≤ dist x (m / n) :=
-  by
+theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) :
+    ∀ᶠ ε : ℝ in 𝓝 0, ∀ m : ℤ, ε ≤ dist x (m / n) := by
   have A : IsClosed (range (fun m => n⁻¹ * m : ℤ → ℝ)) :=
     ((is_closed_map_smul₀ (n⁻¹ : ℝ)).comp int.closed_embedding_coe_real.is_closed_map).closedRange
   have B : x ∉ range (fun m => n⁻¹ * m : ℤ → ℝ) := by

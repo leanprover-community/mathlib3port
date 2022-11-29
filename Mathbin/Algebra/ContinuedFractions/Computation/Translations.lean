@@ -57,8 +57,9 @@ stream of integer and fractional parts of a value.
 
 variable {n : ℕ}
 
-theorem stream_eq_none_of_fr_eq_zero {ifp_n : IntFractPair K} (stream_nth_eq : IntFractPair.stream v n = some ifp_n)
-    (nth_fr_eq_zero : ifp_n.fr = 0) : IntFractPair.stream v (n + 1) = none := by
+theorem stream_eq_none_of_fr_eq_zero {ifp_n : IntFractPair K}
+    (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_eq_zero : ifp_n.fr = 0) :
+    IntFractPair.stream v (n + 1) = none := by
   cases' ifp_n with _ fr
   change fr = 0 at nth_fr_eq_zero
   simp [int_fract_pair.stream, stream_nth_eq, nth_fr_eq_zero]
@@ -93,12 +94,15 @@ parts of a value in case of non-termination.
 theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
     IntFractPair.stream v (n + 1) = some ifp_succ_n ↔
       ∃ ifp_n : IntFractPair K,
-        IntFractPair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ IntFractPair.of ifp_n.fr⁻¹ = ifp_succ_n :=
+        IntFractPair.stream v n = some ifp_n ∧
+          ifp_n.fr ≠ 0 ∧ IntFractPair.of ifp_n.fr⁻¹ = ifp_succ_n :=
   by
   constructor
   · intro stream_succ_nth_eq
     have : int_fract_pair.stream v (n + 1) ≠ none := by simp [stream_succ_nth_eq]
-    have : ¬int_fract_pair.stream v n = none ∧ ¬∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
+    have :
+      ¬int_fract_pair.stream v n = none ∧
+        ¬∃ ifp, int_fract_pair.stream v n = some ifp ∧ ifp.fr = 0 :=
       haveI not_none_not_fract_zero := (not_congr succ_nth_stream_eq_none_iff).elimLeft this
       not_or_distrib.elim_left not_none_not_fract_zero
     cases' this with stream_nth_ne_none nth_fr_ne_zero
@@ -111,7 +115,8 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
     have ifp_n_fr_ne_zero : ifp_n.fr ≠ 0 := nth_fr_ne_zero ifp_n stream_nth_eq
     cases' ifp_n with _ ifp_n_fr
     suffices int_fract_pair.of ifp_n_fr⁻¹ = ifp_succ_n by simpa [stream_nth_eq, ifp_n_fr_ne_zero]
-    simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bind, if_false] at stream_succ_nth_eq
+    simp only [int_fract_pair.stream, stream_nth_eq, ifp_n_fr_ne_zero, Option.some_bind,
+      if_false] at stream_succ_nth_eq
     injection stream_succ_nth_eq
     
   · rintro ⟨⟨_⟩, ifp_n_props⟩
@@ -122,11 +127,13 @@ theorem succ_nth_stream_eq_some_iff {ifp_succ_n : IntFractPair K} :
   generalized_continued_fraction.int_fract_pair.succ_nth_stream_eq_some_iff GeneralizedContinuedFraction.IntFractPair.succ_nth_stream_eq_some_iff
 
 theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
-    (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) (succ_nth_fr_eq_zero : ifp_succ_n.fr = 0) :
+    (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n)
+    (succ_nth_fr_eq_zero : ifp_succ_n.fr = 0) :
     ∃ ifp_n : IntFractPair K, IntFractPair.stream v n = some ifp_n ∧ ifp_n.fr⁻¹ = ⌊ifp_n.fr⁻¹⌋ := by
   -- get the witness from `succ_nth_stream_eq_some_iff` and prove that it has the additional
   -- properties
-  rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with ⟨ifp_n, stream_nth_eq, nth_fr_ne_zero, _⟩
+  rcases succ_nth_stream_eq_some_iff.elim_left stream_succ_nth_eq with
+    ⟨ifp_n, stream_nth_eq, nth_fr_ne_zero, _⟩
   exists ifp_n
   cases' ifp_n with _ ifp_n_fr
   suffices ifp_n_fr⁻¹ = ⌊ifp_n_fr⁻¹⌋ by simpa [stream_nth_eq]
@@ -170,7 +177,8 @@ theorem of_h_eq_int_fract_pair_seq1_fst_b : (of v).h = (IntFractPair.seq1 v).fst
 
 /-- The head term of the gcf of `v` is `⌊v⌋`. -/
 @[simp]
-theorem of_h_eq_floor : (of v).h = ⌊v⌋ := by simp [of_h_eq_int_fract_pair_seq1_fst_b, int_fract_pair.of]
+theorem of_h_eq_floor : (of v).h = ⌊v⌋ := by
+  simp [of_h_eq_int_fract_pair_seq1_fst_b, int_fract_pair.of]
 #align generalized_continued_fraction.of_h_eq_floor GeneralizedContinuedFraction.of_h_eq_floor
 
 end Head
@@ -189,7 +197,8 @@ sequence implies the termination of another sequence.
 
 variable {n : ℕ}
 
-theorem IntFractPair.nth_seq1_eq_succ_nth_stream : (IntFractPair.seq1 v).snd.nth n = (IntFractPair.stream v) (n + 1) :=
+theorem IntFractPair.nth_seq1_eq_succ_nth_stream :
+    (IntFractPair.seq1 v).snd.nth n = (IntFractPair.stream v) (n + 1) :=
   rfl
 #align
   generalized_continued_fraction.int_fract_pair.nth_seq1_eq_succ_nth_stream GeneralizedContinuedFraction.IntFractPair.nth_seq1_eq_succ_nth_stream
@@ -207,7 +216,8 @@ theorem of_terminated_at_iff_int_fract_pair_seq1_terminated_at :
     (of v).TerminatedAt n ↔ (IntFractPair.seq1 v).snd.TerminatedAt n := by
   rw [terminated_at_iff_s_none, of]
   rcases int_fract_pair.seq1 v with ⟨head, ⟨st⟩⟩
-  cases st_n_eq : st n <;> simp [of, st_n_eq, Seq.map, Seq.nth, Stream.map, Seq.TerminatedAt, Stream.nth]
+  cases st_n_eq : st n <;>
+    simp [of, st_n_eq, Seq.map, Seq.nth, Stream.map, Seq.TerminatedAt, Stream.nth]
 #align
   generalized_continued_fraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at GeneralizedContinuedFraction.of_terminated_at_iff_int_fract_pair_seq1_terminated_at
 
@@ -252,12 +262,20 @@ Now let's show how the values of the sequences correspond to one another.
         («term∃_,_»
          "∃"
          (Lean.explicitBinders
-          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] [":" (Term.app `IntFractPair [`K])]))
+          (Lean.unbracketedExplicitBinders
+           [(Lean.binderIdent `ifp)]
+           [":" (Term.app `IntFractPair [`K])]))
          ","
          («term_∧_»
-          («term_=_» (Term.app `IntFractPair.stream [`v («term_+_» `n "+" (num "1"))]) "=" (Term.app `some [`ifp]))
+          («term_=_»
+           (Term.app `IntFractPair.stream [`v («term_+_» `n "+" (num "1"))])
+           "="
+           (Term.app `some [`ifp]))
           "∧"
-          («term_=_» (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")") "=" (Term.proj `gp_n "." `b))))))
+          («term_=_»
+           (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")
+           "="
+           (Term.proj `gp_n "." `b))))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -274,7 +292,8 @@ Now let's show how the values of the sequences correspond to one another.
                   [])
                  ","
                  (Std.Tactic.RCases.rcasesPatLo
-                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `stream_succ_nth_eq)])
+                  (Std.Tactic.RCases.rcasesPatMed
+                   [(Std.Tactic.RCases.rcasesPat.one `stream_succ_nth_eq)])
                   [])
                  ","
                  (Std.Tactic.RCases.rcasesPatLo
@@ -293,7 +312,9 @@ Now let's show how the values of the sequences correspond to one another.
                 (Term.app `some [`ifp]))
                "∧"
                («term_=_»
-                (Term.app `pair.mk [(num "1") (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")])
+                (Term.app
+                 `pair.mk
+                 [(num "1") (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")])
                 "="
                 `gp_n)))]
             [":="
@@ -326,7 +347,9 @@ Now let's show how the values of the sequences correspond to one another.
            []
            (Tactic.«tacticExists_,,» "exists" [`ifp])
            []
-           (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))])))
+           (Tactic.exact
+            "exact"
+            (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))])))
        [])
       []
       []))
@@ -347,7 +370,8 @@ Now let's show how the values of the sequences correspond to one another.
                  [])
                 ","
                 (Std.Tactic.RCases.rcasesPatLo
-                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `stream_succ_nth_eq)])
+                 (Std.Tactic.RCases.rcasesPatMed
+                  [(Std.Tactic.RCases.rcasesPat.one `stream_succ_nth_eq)])
                  [])
                 ","
                 (Std.Tactic.RCases.rcasesPatLo
@@ -366,7 +390,9 @@ Now let's show how the values of the sequences correspond to one another.
                (Term.app `some [`ifp]))
               "∧"
               («term_=_»
-               (Term.app `pair.mk [(num "1") (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")])
+               (Term.app
+                `pair.mk
+                [(num "1") (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")])
                "="
                `gp_n)))]
            [":="
@@ -399,7 +425,9 @@ Now let's show how the values of the sequences correspond to one another.
           []
           (Tactic.«tacticExists_,,» "exists" [`ifp])
           []
-          (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))])))
+          (Tactic.exact
+           "exact"
+           (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩"))
@@ -407,17 +435,21 @@ Now let's show how the values of the sequences correspond to one another.
       (Term.anonymousCtor "⟨" [`stream_succ_nth_eq "," `ifp_b_eq_gp_n_b] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ifp_b_eq_gp_n_b
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `stream_succ_nth_eq
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tacticExists_,,» "exists" [`ifp])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ifp
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.injection "injection" `gp_n_eq ["with" ["_" `ifp_b_eq_gp_n_b]])
@@ -456,8 +488,8 @@ theorem
 integer parts of the stream of integer and fractional parts.
 -/
 theorem nth_of_eq_some_of_succ_nth_int_fract_pair_stream {ifp_succ_n : IntFractPair K}
-    (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) : (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ :=
-  by
+    (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) :
+    (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ := by
   unfold of int_fract_pair.seq1
   rw [Seq.map_tail, Seq.nth_tail, Seq.map_nth]
   simp [Seq.nth, stream_succ_nth_eq]

@@ -80,8 +80,8 @@ theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasu
 #align pmf.to_outer_measure_map_apply Pmf.to_outer_measure_map_apply
 
 @[simp]
-theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f) (hs : MeasurableSet s) :
-    (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) := by
+theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f)
+    (hs : MeasurableSet s) : (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) := by
   rw [to_measure_apply_eq_to_outer_measure_apply _ s hs,
     to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurableSetPreimage hf hs)]
   exact to_outer_measure_map_apply f p s
@@ -134,14 +134,15 @@ instance : LawfulMonad Pmf where
 
 section OfFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- Given a finset `s` and a function `f : α → ℝ≥0∞` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
+def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1)
+    (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 #align pmf.of_finset Pmf.ofFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
 variable {f : α → ℝ≥0∞} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
@@ -154,7 +155,8 @@ theorem support_of_finset : (ofFinset f s h h').support = s ∩ Function.support
   Set.ext fun a => by simpa [mem_support_iff] using mt (h' a)
 #align pmf.support_of_finset Pmf.support_of_finset
 
-theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').support ↔ a ∈ s ∧ f a ≠ 0 := by simp
+theorem mem_support_of_finset_iff (a : α) : a ∈ (ofFinset f s h h').support ↔ a ∈ s ∧ f a ≠ 0 := by
+  simp
 #align pmf.mem_support_of_finset_iff Pmf.mem_support_of_finset_iff
 
 theorem of_finset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofFinset f s h h' a = 0 :=
@@ -166,14 +168,16 @@ section Measure
 variable (t : Set α)
 
 @[simp]
-theorem to_outer_measure_of_finset_apply : (ofFinset f s h h').toOuterMeasure t = ∑' x, t.indicator f x :=
+theorem to_outer_measure_of_finset_apply :
+    (ofFinset f s h h').toOuterMeasure t = ∑' x, t.indicator f x :=
   to_outer_measure_apply (ofFinset f s h h') t
 #align pmf.to_outer_measure_of_finset_apply Pmf.to_outer_measure_of_finset_apply
 
 @[simp]
 theorem to_measure_of_finset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
     (ofFinset f s h h').toMeasure t = ∑' x, t.indicator f x :=
-  (to_measure_apply_eq_to_outer_measure_apply _ t ht).trans (to_outer_measure_of_finset_apply h h' t)
+  (to_measure_apply_eq_to_outer_measure_apply _ t ht).trans
+    (to_outer_measure_of_finset_apply h h' t)
 #align pmf.to_measure_of_finset_apply Pmf.to_measure_of_finset_apply
 
 end Measure
@@ -208,7 +212,8 @@ section Measure
 variable (s : Set α)
 
 @[simp]
-theorem to_outer_measure_of_fintype_apply : (ofFintype f h).toOuterMeasure s = ∑' x, s.indicator f x :=
+theorem to_outer_measure_of_fintype_apply :
+    (ofFintype f h).toOuterMeasure s = ∑' x, s.indicator f x :=
   to_outer_measure_apply (ofFintype f h) s
 #align pmf.to_outer_measure_of_fintype_apply Pmf.to_outer_measure_of_fintype_apply
 
@@ -257,8 +262,8 @@ def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
 
 @[simp]
-theorem filter_apply (a : α) : (p.filter s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ := by
-  rw [Filter, normalize_apply]
+theorem filter_apply (a : α) : (p.filter s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ :=
+  by rw [Filter, normalize_apply]
 #align pmf.filter_apply Pmf.filter_apply
 
 theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filter s h) a = 0 := by

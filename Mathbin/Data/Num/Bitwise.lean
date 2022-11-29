@@ -333,7 +333,8 @@ open Snum
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A dependent induction principle for `nzsnum`, with base cases
       `0 : snum` and `(-1) : snum`. -/
-def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b::p)) : ∀ p : Nzsnum, C p
+def drec' {C : Snum → Sort _} (z : ∀ b, C (Snum.zero b)) (s : ∀ b p, C p → C (b::p)) :
+    ∀ p : Nzsnum, C p
   | msb b => by rw [← bit_one] <;> exact s b (Snum.zero (not b)) (z (not b))
   | bit b p => s b p (drec' p)
 #align nzsnum.drec' Nzsnum.drec'

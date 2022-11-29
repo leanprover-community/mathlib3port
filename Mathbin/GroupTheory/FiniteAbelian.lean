@@ -26,8 +26,8 @@ namespace Module
 
 variable (M : Type u)
 
-theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ M] (hM : Module.IsTorsion ℤ M) : Finite M :=
-  by
+theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ M]
+    (hM : Module.IsTorsion ℤ M) : Finite M := by
   rcases Module.equiv_direct_sum_of_is_torsion hM with ⟨ι, _, p, h, e, ⟨l⟩⟩
   haveI : ∀ i : ι, NeZero (p i ^ e i).natAbs := fun i =>
     ⟨Int.natAbs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).NeZero⟩
@@ -63,7 +63,8 @@ theorem equiv_free_prod_direct_sum_zmod [hG : AddGroup.Fg G] :
     f.to_add_equiv.trans
       ((AddEquiv.refl _).prodCongr <|
         Dfinsupp.mapRange.addEquiv fun i =>
-          ((Int.quotientSpanEquivZmod _).trans <| Zmod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
+          ((Int.quotientSpanEquivZmod _).trans <|
+              Zmod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
 #align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_direct_sum_zmod
 
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of

@@ -98,8 +98,7 @@ def Equiv (p q : Preform) : Prop :=
   ∀ v, Holds v p ↔ Holds v q
 #align omega.int.preform.equiv Omega.Int.Preform.Equiv
 
-theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by
-  intro h1 h2
+theorem sat_of_implies_of_sat {p q : Preform} : Implies p q → Sat p → Sat q := by intro h1 h2;
   apply Exists.imp h1 h2
 #align omega.int.preform.sat_of_implies_of_sat Omega.Int.Preform.sat_of_implies_of_sat
 
@@ -142,9 +141,7 @@ theorem univ_close_of_valid {p : Preform} : ∀ {m v}, p.valid → UnivClose p v
 
 theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid := by
   simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
-  rw [not_exists_not]
-  intro h
-  assumption
+  rw [not_exists_not]; intro h; assumption
 #align omega.int.valid_of_unsat_not Omega.Int.valid_of_unsat_not
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/

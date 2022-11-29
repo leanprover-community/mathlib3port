@@ -57,7 +57,8 @@ instance : SizeOf XgcdType :=
  reflects the matrix/vector interpretation as above. -/
 instance : Repr XgcdType :=
   ⟨fun u =>
-    "[[[" ++ repr (u.wp + 1) ++ ", " ++ repr u.x ++ "], [" ++ repr u.y ++ ", " ++ repr (u.zp + 1) ++ "]], [" ++
+    "[[[" ++ repr (u.wp + 1) ++ ", " ++ repr u.x ++ "], [" ++ repr u.y ++ ", " ++ repr (u.zp + 1) ++
+              "]], [" ++
             repr (u.ap + 1) ++
           ", " ++
         repr (u.bp + 1) ++
@@ -447,7 +448,8 @@ theorem gcd_props :
     w * z = succPNat (x * y) ∧
       a = a' * d ∧
         b = b' * d ∧
-          z * a' = succPNat (x * b') ∧ w * b' = succPNat (y * a') ∧ (z * a : ℕ) = x * b + d ∧ (w * b : ℕ) = y * a + d :=
+          z * a' = succPNat (x * b') ∧
+            w * b' = succPNat (y * a') ∧ (z * a : ℕ) = x * b + d ∧ (w * b : ℕ) = y * a + d :=
   by
   intros
   let u := xgcd_type.start a b
@@ -461,7 +463,8 @@ theorem gcd_props :
   exact hdet
   have hdet' : (w * z : ℕ) = x * y + 1 := by rw [← mul_coe, hdet, succ_pnat_coe]
   have huv : u.v = ⟨a, b⟩ := xgcd_type.start_v a b
-  let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ := u.reduce_v.trans (xgcd_type.start_v a b)
+  let hv : Prod.mk (w * d + x * ur.b : ℕ) (y * d + z * ur.b : ℕ) = ⟨a, b⟩ :=
+    u.reduce_v.trans (xgcd_type.start_v a b)
   rw [← hb, ← add_mul, ← add_mul, ← ha', ← hb'] at hv
   have ha'' : (a : ℕ) = a' * d := (congr_arg Prod.fst hv).symm
   have hb'' : (b : ℕ) = b' * d := (congr_arg Prod.snd hv).symm

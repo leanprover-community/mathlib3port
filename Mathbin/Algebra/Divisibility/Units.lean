@@ -29,8 +29,8 @@ theorem coe_dvd : ↑u ∣ a :=
 /-- In a monoid, an element `a` divides an element `b` iff `a` divides all
     associates of `b`. -/
 theorem dvd_mul_right : a ∣ b * u ↔ a ∣ b :=
-  Iff.intro (fun ⟨c, Eq⟩ => ⟨c * ↑u⁻¹, by rw [← mul_assoc, ← Eq, Units.mul_inv_cancel_right]⟩) fun ⟨c, Eq⟩ =>
-    Eq.symm ▸ (dvd_mul_right _ _).mul_right _
+  Iff.intro (fun ⟨c, Eq⟩ => ⟨c * ↑u⁻¹, by rw [← mul_assoc, ← Eq, Units.mul_inv_cancel_right]⟩)
+    fun ⟨c, Eq⟩ => Eq.symm ▸ (dvd_mul_right _ _).mul_right _
 #align units.dvd_mul_right Units.dvd_mul_right
 
 /-- In a monoid, an element `a` divides an element `b` iff all associates of `a` divide `b`. -/
@@ -135,7 +135,7 @@ theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x
   is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 #align is_unit_of_dvd_unit is_unit_of_dvd_unit
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∣ » 1) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∣ » 1) -/
 theorem is_unit_of_dvd_one : ∀ (a) (_ : a ∣ 1), IsUnit (a : α)
   | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 #align is_unit_of_dvd_one is_unit_of_dvd_one

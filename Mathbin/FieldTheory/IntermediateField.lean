@@ -113,7 +113,8 @@ theorem mem_to_subfield (s : IntermediateField K L) (x : L) : x ∈ s.toSubfield
 
 /-- Copy of an intermediate field with a new `carrier` equal to the old one. Useful to fix
 definitional equalities. -/
-protected def copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : IntermediateField K L where
+protected def copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) :
+    IntermediateField K L where
   toSubalgebra := S.toSubalgebra.copy s (hs : s = S.toSubalgebra.carrier)
   neg_mem' :=
     have hs' : (S.toSubalgebra.copy s hs).carrier = S.toSubalgebra.carrier := hs
@@ -124,7 +125,8 @@ protected def copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : Int
 #align intermediate_field.copy IntermediateField.copy
 
 @[simp]
-theorem coe_copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : (S.copy s hs : Set L) = s :=
+theorem coe_copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) :
+    (S.copy s hs : Set L) = s :=
   rfl
 #align intermediate_field.coe_copy IntermediateField.coe_copy
 
@@ -214,13 +216,15 @@ protected theorem multiset_sum_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) →
 
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∏ i in t, f i) ∈ S :=
+protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) :
+    (∏ i in t, f i) ∈ S :=
   prod_mem h
 #align intermediate_field.prod_mem IntermediateField.prod_mem
 
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) : (∑ i in t, f i) ∈ S :=
+protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c ∈ t, f c ∈ S) :
+    (∑ i in t, f i) ∈ S :=
   sum_mem h
 #align intermediate_field.sum_mem IntermediateField.sum_mem
 
@@ -272,7 +276,8 @@ theorem coe_nat_mem (n : ℕ) : (n : L) ∈ S := by simpa using coe_int_mem S n
 end IntermediateField
 
 /-- Turn a subalgebra closed under inverses into an intermediate field -/
-def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x ∈ S, x⁻¹ ∈ S) : IntermediateField K L :=
+def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x ∈ S, x⁻¹ ∈ S) :
+    IntermediateField K L :=
   { S with neg_mem' := fun x => S.neg_mem, inv_mem' := inv_mem }
 #align subalgebra.to_intermediate_field Subalgebra.toIntermediateField
 
@@ -331,7 +336,8 @@ instance toField : Field S :=
 #align intermediate_field.to_field IntermediateField.toField
 
 @[simp, norm_cast]
-theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by classical
+theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
+  classical
   induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
     
@@ -340,7 +346,8 @@ theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L
 #align intermediate_field.coe_sum IntermediateField.coe_sum
 
 @[simp, norm_cast]
-theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by classical
+theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
+  classical
   induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
     
@@ -359,7 +366,8 @@ instance module : Module K S :=
   S.toSubalgebra.Module
 #align intermediate_field.module IntermediateField.module
 
-instance is_scalar_tower {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] : IsScalarTower R K S :=
+instance is_scalar_tower {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K L] :
+    IsScalarTower R K S :=
   S.toSubalgebra.IsScalarTower
 #align intermediate_field.is_scalar_tower IntermediateField.is_scalar_tower
 
@@ -369,7 +377,8 @@ theorem coe_smul {R} [Semiring R] [HasSmul R K] [Module R L] [IsScalarTower R K 
   rfl
 #align intermediate_field.coe_smul IntermediateField.coe_smul
 
-instance algebra' {K'} [CommSemiring K'] [HasSmul K' K] [Algebra K' L] [IsScalarTower K' K L] : Algebra K' S :=
+instance algebra' {K'} [CommSemiring K'] [HasSmul K' K] [Algebra K' L] [IsScalarTower K' K L] :
+    Algebra K' S :=
   S.toSubalgebra.algebra'
 #align intermediate_field.algebra' IntermediateField.algebra'
 
@@ -385,8 +394,8 @@ instance is_scalar_tower_bot {R : Type _} [Semiring R] [Algebra L R] : IsScalarT
   IsScalarTower.subalgebra _ _ _ S.toSubalgebra
 #align intermediate_field.is_scalar_tower_bot IntermediateField.is_scalar_tower_bot
 
-instance is_scalar_tower_mid {R : Type _} [Semiring R] [Algebra L R] [Algebra K R] [IsScalarTower K L R] :
-    IsScalarTower K S R :=
+instance is_scalar_tower_mid {R : Type _} [Semiring R] [Algebra L R] [Algebra K R]
+    [IsScalarTower K L R] : IsScalarTower K S R :=
   IsScalarTower.subalgebra' _ _ _ S.toSubalgebra
 #align intermediate_field.is_scalar_tower_mid IntermediateField.is_scalar_tower_mid
 
@@ -410,8 +419,8 @@ theorem coe_map (f : L →ₐ[K] L') : (S.map f : Set L') = f '' S :=
   rfl
 #align intermediate_field.coe_map IntermediateField.coe_map
 
-theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂] [Field L₃]
-    [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
+theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂]
+    [Field L₃] [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
     (E.map f).map g = E.map (g.comp f) :=
   SetLike.coe_injective <| Set.image_image _ _ _
 #align intermediate_field.map_map IntermediateField.map_map
@@ -429,13 +438,15 @@ def intermediateFieldMap (e : L ≃ₐ[K] L') (E : IntermediateField K L) : E �
 theorem intermediate_field_map_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L) (a : E) :
     ↑(intermediateFieldMap e E a) = e a :=
   rfl
-#align intermediate_field.intermediate_field_map_apply_coe IntermediateField.intermediate_field_map_apply_coe
+#align
+  intermediate_field.intermediate_field_map_apply_coe IntermediateField.intermediate_field_map_apply_coe
 
 @[simp]
-theorem intermediate_field_map_symm_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L) (a : E.map e.toAlgHom) :
-    ↑((intermediateFieldMap e E).symm a) = e.symm a :=
+theorem intermediate_field_map_symm_apply_coe (e : L ≃ₐ[K] L') (E : IntermediateField K L)
+    (a : E.map e.toAlgHom) : ↑((intermediateFieldMap e E).symm a) = e.symm a :=
   rfl
-#align intermediate_field.intermediate_field_map_symm_apply_coe IntermediateField.intermediate_field_map_symm_apply_coe
+#align
+  intermediate_field.intermediate_field_map_symm_apply_coe IntermediateField.intermediate_field_map_symm_apply_coe
 
 end IntermediateField
 
@@ -489,8 +500,8 @@ theorem range_val : S.val.range = S.toSubalgebra :=
   S.toSubalgebra.range_val
 #align intermediate_field.range_val IntermediateField.range_val
 
-theorem aeval_coe {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] (x : S) (P : R[X]) :
-    aeval (x : L) P = aeval x P := by
+theorem aeval_coe {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L]
+    (x : S) (P : R[X]) : aeval (x : L) P = aeval x P := by
   refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
   · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
     
@@ -500,14 +511,14 @@ theorem aeval_coe {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScala
     
 #align intermediate_field.aeval_coe IntermediateField.aeval_coe
 
-theorem coe_is_integral_iff {R : Type _} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] {x : S} :
-    IsIntegral R (x : L) ↔ IsIntegral R x := by
+theorem coe_is_integral_iff {R : Type _} [CommRing R] [Algebra R K] [Algebra R L]
+    [IsScalarTower R K L] {x : S} : IsIntegral R (x : L) ↔ IsIntegral R x := by
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨P, hPmo, hProot⟩ := h
     refine' ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).Injective _ _⟩
     letI : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
-    rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, ←
-      eval₂_eq_eval_map]
+    rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ←
+      IsScalarTower.algebra_map_eq, ← eval₂_eq_eval_map]
     
   · obtain ⟨P, hPmo, hProot⟩ := h
     refine' ⟨P, hPmo, _⟩
@@ -522,7 +533,8 @@ def inclusion {E F : IntermediateField K L} (hEF : E ≤ F) : E →ₐ[K] F :=
   Subalgebra.inclusion hEF
 #align intermediate_field.inclusion IntermediateField.inclusion
 
-theorem inclusion_injective {E F : IntermediateField K L} (hEF : E ≤ F) : Function.Injective (inclusion hEF) :=
+theorem inclusion_injective {E F : IntermediateField K L} (hEF : E ≤ F) :
+    Function.Injective (inclusion hEF) :=
   Subalgebra.inclusion_injective hEF
 #align intermediate_field.inclusion_injective IntermediateField.inclusion_injective
 
@@ -538,13 +550,15 @@ theorem inclusion_inclusion {E F G : IntermediateField K L} (hEF : E ≤ F) (hFG
 #align intermediate_field.inclusion_inclusion IntermediateField.inclusion_inclusion
 
 @[simp]
-theorem coe_inclusion {E F : IntermediateField K L} (hEF : E ≤ F) (e : E) : (inclusion hEF e : L) = e :=
+theorem coe_inclusion {E F : IntermediateField K L} (hEF : E ≤ F) (e : E) :
+    (inclusion hEF e : L) = e :=
   rfl
 #align intermediate_field.coe_inclusion IntermediateField.coe_inclusion
 
 variable {S}
 
-theorem to_subalgebra_injective {S S' : IntermediateField K L} (h : S.toSubalgebra = S'.toSubalgebra) : S = S' := by
+theorem to_subalgebra_injective {S S' : IntermediateField K L}
+    (h : S.toSubalgebra = S'.toSubalgebra) : S = S' := by
   ext
   rw [← mem_to_subalgebra, ← mem_to_subalgebra, h]
 #align intermediate_field.to_subalgebra_injective IntermediateField.to_subalgebra_injective
@@ -560,14 +574,18 @@ theorem field_range_le : (algebraMap K L).fieldRange ≤ S.toSubfield := fun x h
 #align intermediate_field.field_range_le IntermediateField.field_range_le
 
 @[simp]
-theorem to_subalgebra_le_to_subalgebra {S S' : IntermediateField K L} : S.toSubalgebra ≤ S'.toSubalgebra ↔ S ≤ S' :=
+theorem to_subalgebra_le_to_subalgebra {S S' : IntermediateField K L} :
+    S.toSubalgebra ≤ S'.toSubalgebra ↔ S ≤ S' :=
   Iff.rfl
-#align intermediate_field.to_subalgebra_le_to_subalgebra IntermediateField.to_subalgebra_le_to_subalgebra
+#align
+  intermediate_field.to_subalgebra_le_to_subalgebra IntermediateField.to_subalgebra_le_to_subalgebra
 
 @[simp]
-theorem to_subalgebra_lt_to_subalgebra {S S' : IntermediateField K L} : S.toSubalgebra < S'.toSubalgebra ↔ S < S' :=
+theorem to_subalgebra_lt_to_subalgebra {S S' : IntermediateField K L} :
+    S.toSubalgebra < S'.toSubalgebra ↔ S < S' :=
   Iff.rfl
-#align intermediate_field.to_subalgebra_lt_to_subalgebra IntermediateField.to_subalgebra_lt_to_subalgebra
+#align
+  intermediate_field.to_subalgebra_lt_to_subalgebra IntermediateField.to_subalgebra_lt_to_subalgebra
 
 variable {S}
 
@@ -578,7 +596,8 @@ def lift {F : IntermediateField K L} (E : IntermediateField K F) : IntermediateF
   E.map (val F)
 #align intermediate_field.lift IntermediateField.lift
 
-instance hasLift {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=
+instance hasLift {F : IntermediateField K L} :
+    HasLiftT (IntermediateField K F) (IntermediateField K L) :=
   ⟨lift⟩
 #align intermediate_field.has_lift IntermediateField.hasLift
 
@@ -593,7 +612,8 @@ def restrictScalars (E : IntermediateField L' L) : IntermediateField K L :=
 #align intermediate_field.restrict_scalars IntermediateField.restrictScalars
 
 @[simp]
-theorem coe_restrict_scalars {E : IntermediateField L' L} : (restrictScalars K E : Set L) = (E : Set L) :=
+theorem coe_restrict_scalars {E : IntermediateField L' L} :
+    (restrictScalars K E : Set L) = (E : Set L) :=
   rfl
 #align intermediate_field.coe_restrict_scalars IntermediateField.coe_restrict_scalars
 
@@ -601,21 +621,25 @@ theorem coe_restrict_scalars {E : IntermediateField L' L} : (restrictScalars K E
 theorem restrict_scalars_to_subalgebra {E : IntermediateField L' L} :
     (E.restrictScalars K).toSubalgebra = E.toSubalgebra.restrictScalars K :=
   SetLike.coe_injective rfl
-#align intermediate_field.restrict_scalars_to_subalgebra IntermediateField.restrict_scalars_to_subalgebra
+#align
+  intermediate_field.restrict_scalars_to_subalgebra IntermediateField.restrict_scalars_to_subalgebra
 
 @[simp]
-theorem restrict_scalars_to_subfield {E : IntermediateField L' L} : (E.restrictScalars K).toSubfield = E.toSubfield :=
+theorem restrict_scalars_to_subfield {E : IntermediateField L' L} :
+    (E.restrictScalars K).toSubfield = E.toSubfield :=
   SetLike.coe_injective rfl
-#align intermediate_field.restrict_scalars_to_subfield IntermediateField.restrict_scalars_to_subfield
+#align
+  intermediate_field.restrict_scalars_to_subfield IntermediateField.restrict_scalars_to_subfield
 
 @[simp]
-theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} : x ∈ restrictScalars K E ↔ x ∈ E :=
+theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} :
+    x ∈ restrictScalars K E ↔ x ∈ E :=
   Iff.rfl
 #align intermediate_field.mem_restrict_scalars IntermediateField.mem_restrict_scalars
 
 theorem restrict_scalars_injective :
-    Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) := fun U V H =>
-  ext fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
+    Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) :=
+  fun U V H => ext fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
 #align intermediate_field.restrict_scalars_injective IntermediateField.restrict_scalars_injective
 
 end RestrictScalars
@@ -645,7 +669,8 @@ theorem dim_eq_dim_subalgebra : Module.rank K F.toSubalgebra = Module.rank K F :
 @[simp]
 theorem finrank_eq_finrank_subalgebra : finrank K F.toSubalgebra = finrank K F :=
   rfl
-#align intermediate_field.finrank_eq_finrank_subalgebra IntermediateField.finrank_eq_finrank_subalgebra
+#align
+  intermediate_field.finrank_eq_finrank_subalgebra IntermediateField.finrank_eq_finrank_subalgebra
 
 variable {F} {E}
 
@@ -655,16 +680,19 @@ theorem to_subalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E := by
   rfl
 #align intermediate_field.to_subalgebra_eq_iff IntermediateField.to_subalgebra_eq_iff
 
-theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K E ≤ finrank K F) : F = E :=
-  to_subalgebra_injective <| Subalgebra.toSubmodule.Injective <| eq_of_le_of_finrank_le h_le h_finrank
+theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E)
+    (h_finrank : finrank K E ≤ finrank K F) : F = E :=
+  to_subalgebra_injective <|
+    Subalgebra.toSubmodule.Injective <| eq_of_le_of_finrank_le h_le h_finrank
 #align intermediate_field.eq_of_le_of_finrank_le IntermediateField.eq_of_le_of_finrank_le
 
-theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=
+theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E)
+    (h_finrank : finrank K F = finrank K E) : F = E :=
   eq_of_le_of_finrank_le h_le h_finrank.ge
 #align intermediate_field.eq_of_le_of_finrank_eq IntermediateField.eq_of_le_of_finrank_eq
 
-theorem eq_of_le_of_finrank_le' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L ≤ finrank E L) :
-    F = E := by
+theorem eq_of_le_of_finrank_le' [FiniteDimensional K L] (h_le : F ≤ E)
+    (h_finrank : finrank F L ≤ finrank E L) : F = E := by
   apply eq_of_le_of_finrank_le h_le
   have h1 := finrank_mul_finrank K F L
   have h2 := finrank_mul_finrank K E L
@@ -672,8 +700,8 @@ theorem eq_of_le_of_finrank_le' [FiniteDimensional K L] (h_le : F ≤ E) (h_finr
   nlinarith
 #align intermediate_field.eq_of_le_of_finrank_le' IntermediateField.eq_of_le_of_finrank_le'
 
-theorem eq_of_le_of_finrank_eq' [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank F L = finrank E L) :
-    F = E :=
+theorem eq_of_le_of_finrank_eq' [FiniteDimensional K L] (h_le : F ≤ E)
+    (h_finrank : finrank F L = finrank E L) : F = E :=
   eq_of_le_of_finrank_le' h_le h_finrank.le
 #align intermediate_field.eq_of_le_of_finrank_eq' IntermediateField.eq_of_le_of_finrank_eq'
 
@@ -698,7 +726,8 @@ theorem minpoly_eq (x : S) : minpoly K x = minpoly K (x : L) := by
 end IntermediateField
 
 /-- If `L/K` is algebraic, the `K`-subalgebras of `L` are all fields.  -/
-def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) : Subalgebra K L ≃o IntermediateField K L where
+def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) :
+    Subalgebra K L ≃o IntermediateField K L where
   toFun S := S.toIntermediateField fun x hx => S.inv_mem_of_algebraic (alg (⟨x, hx⟩ : S))
   invFun S := S.toSubalgebra
   left_inv S := to_subalgebra_to_intermediate_field _ _
@@ -707,14 +736,15 @@ def subalgebraEquivIntermediateField (alg : Algebra.IsAlgebraic K L) : Subalgebr
 #align subalgebra_equiv_intermediate_field subalgebraEquivIntermediateField
 
 @[simp]
-theorem mem_subalgebra_equiv_intermediate_field (alg : Algebra.IsAlgebraic K L) {S : Subalgebra K L} {x : L} :
-    x ∈ subalgebraEquivIntermediateField alg S ↔ x ∈ S :=
+theorem mem_subalgebra_equiv_intermediate_field (alg : Algebra.IsAlgebraic K L) {S : Subalgebra K L}
+    {x : L} : x ∈ subalgebraEquivIntermediateField alg S ↔ x ∈ S :=
   Iff.rfl
 #align mem_subalgebra_equiv_intermediate_field mem_subalgebra_equiv_intermediate_field
 
 @[simp]
-theorem mem_subalgebra_equiv_intermediate_field_symm (alg : Algebra.IsAlgebraic K L) {S : IntermediateField K L}
-    {x : L} : x ∈ (subalgebraEquivIntermediateField alg).symm S ↔ x ∈ S :=
+theorem mem_subalgebra_equiv_intermediate_field_symm (alg : Algebra.IsAlgebraic K L)
+    {S : IntermediateField K L} {x : L} :
+    x ∈ (subalgebraEquivIntermediateField alg).symm S ↔ x ∈ S :=
   Iff.rfl
 #align mem_subalgebra_equiv_intermediate_field_symm mem_subalgebra_equiv_intermediate_field_symm
 

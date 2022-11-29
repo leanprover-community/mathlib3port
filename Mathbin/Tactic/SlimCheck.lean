@@ -154,7 +154,8 @@ unsafe def instance_tree.to_format : instance_tree → tactic format
 
 unsafe instance instance_tree.has_to_tactic_format : has_to_tactic_format instance_tree :=
   ⟨instance_tree.to_format⟩
-#align tactic.interactive.instance_tree.has_to_tactic_format tactic.interactive.instance_tree.has_to_tactic_format
+#align
+  tactic.interactive.instance_tree.has_to_tactic_format tactic.interactive.instance_tree.has_to_tactic_format
 
 /-- `slim_check` considers a proof goal and tries to generate examples
 that would contradict the statement.
@@ -214,7 +215,8 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
   let cfg :=
     { cfg with traceDiscarded := cfg.traceDiscarded || is_trace_enabled_for `slim_check.discarded,
       traceShrink := cfg.traceShrink || is_trace_enabled_for `slim_check.shrink.steps,
-      traceShrinkCandidates := cfg.traceShrinkCandidates || is_trace_enabled_for `slim_check.shrink.candidates,
+      traceShrinkCandidates :=
+        cfg.traceShrinkCandidates || is_trace_enabled_for `slim_check.shrink.candidates,
       traceSuccess := cfg.traceSuccess || is_trace_enabled_for `slim_check.success }
   let inst ←
     mk_app `` testable [tgt'] >>= mk_instance <|>
@@ -239,7 +241,7 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
       (← do
         dbg_trace "[testable decoration]
             {← tgt'}")
-  when_tracing `slim_check.instance <| do
+  (when_tracing `slim_check.instance) do
       let inst ← summarize_instance inst >>= pp
       ← do
           dbg_trace "

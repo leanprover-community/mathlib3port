@@ -52,38 +52,44 @@ theorem ord_connected_iff : OrdConnected s ↔ ∀ x ∈ s, ∀ y ∈ s, x ≤ y
     ⟨fun hs x hx y hy hxy => hs hx hy, fun H x hx y hy z hz => H x hx y hy (le_trans hz.1 hz.2) hz⟩
 #align set.ord_connected_iff Set.ord_connected_iff
 
-theorem ord_connected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α} (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → ioo x y ⊆ s) :
-    OrdConnected s := by
+theorem ord_connected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
+    (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → ioo x y ⊆ s) : OrdConnected s := by
   rw [ord_connected_iff]
   intro x hx y hy hxy
-  rcases eq_or_lt_of_le hxy with (rfl | hxy')
+  rcases eq_or_lt_of_le hxy with (rfl | hxy');
   · simpa
     
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
   exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
 #align set.ord_connected_of_Ioo Set.ord_connected_of_Ioo
 
-theorem OrdConnected.preimage_mono {f : β → α} (hs : OrdConnected s) (hf : Monotone f) : OrdConnected (f ⁻¹' s) :=
+theorem OrdConnected.preimage_mono {f : β → α} (hs : OrdConnected s) (hf : Monotone f) :
+    OrdConnected (f ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hx hy ⟨hf hz.1, hf hz.2⟩⟩
 #align set.ord_connected.preimage_mono Set.OrdConnected.preimage_mono
 
-theorem OrdConnected.preimage_anti {f : β → α} (hs : OrdConnected s) (hf : Antitone f) : OrdConnected (f ⁻¹' s) :=
+theorem OrdConnected.preimage_anti {f : β → α} (hs : OrdConnected s) (hf : Antitone f) :
+    OrdConnected (f ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hy hx ⟨hf hz.2, hf hz.1⟩⟩
 #align set.ord_connected.preimage_anti Set.OrdConnected.preimage_anti
 
-protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x ∈ s) (hy : y ∈ s) : icc x y ⊆ s :=
+protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x ∈ s) (hy : y ∈ s) :
+    icc x y ⊆ s :=
   hs.out hx hy
 #align set.Icc_subset Set.Icc_subset
 
-theorem OrdConnected.inter {s t : Set α} (hs : OrdConnected s) (ht : OrdConnected t) : OrdConnected (s ∩ t) :=
+theorem OrdConnected.inter {s t : Set α} (hs : OrdConnected s) (ht : OrdConnected t) :
+    OrdConnected (s ∩ t) :=
   ⟨fun x hx y hy => subset_inter (hs.out hx.1 hy.1) (ht.out hx.2 hy.2)⟩
 #align set.ord_connected.inter Set.OrdConnected.inter
 
-instance OrdConnected.inter' {s t : Set α} [OrdConnected s] [OrdConnected t] : OrdConnected (s ∩ t) :=
+instance OrdConnected.inter' {s t : Set α} [OrdConnected s] [OrdConnected t] :
+    OrdConnected (s ∩ t) :=
   OrdConnected.inter ‹_› ‹_›
 #align set.ord_connected.inter' Set.OrdConnected.inter'
 
-theorem OrdConnected.dual {s : Set α} (hs : OrdConnected s) : OrdConnected (OrderDual.ofDual ⁻¹' s) :=
+theorem OrdConnected.dual {s : Set α} (hs : OrdConnected s) :
+    OrdConnected (OrderDual.ofDual ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hy hx ⟨hz.2, hz.1⟩⟩
 #align set.ord_connected.dual Set.OrdConnected.dual
 
@@ -91,15 +97,18 @@ theorem ord_connected_dual {s : Set α} : OrdConnected (OrderDual.ofDual ⁻¹' 
   ⟨fun h => by simpa only [ord_connected_def] using h.dual, fun h => h.dual⟩
 #align set.ord_connected_dual Set.ord_connected_dual
 
-theorem ord_connected_sInter {S : Set (Set α)} (hS : ∀ s ∈ S, OrdConnected s) : OrdConnected (⋂₀ S) :=
+theorem ord_connected_sInter {S : Set (Set α)} (hS : ∀ s ∈ S, OrdConnected s) :
+    OrdConnected (⋂₀ S) :=
   ⟨fun x hx y hy => subset_sInter fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
 #align set.ord_connected_sInter Set.ord_connected_sInter
 
-theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdConnected (s i)) : OrdConnected (⋂ i, s i) :=
+theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdConnected (s i)) :
+    OrdConnected (⋂ i, s i) :=
   ord_connected_sInter <| forall_range_iff.2 hs
 #align set.ord_connected_Inter Set.ord_connected_Inter
 
-instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, OrdConnected (s i)] : OrdConnected (⋂ i, s i) :=
+instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, OrdConnected (s i)] :
+    OrdConnected (⋂ i, s i) :=
   ord_connected_Inter ‹_›
 #align set.ord_connected_Inter' Set.ord_connected_Inter'
 
@@ -109,13 +118,13 @@ theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ (i : ι) (
   ord_connected_Inter fun i => ord_connected_Inter <| hs i
 #align set.ord_connected_bInter Set.ord_connected_bInter
 
-theorem ord_connected_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s : Set ι} {t : ∀ i, Set (α i)}
-    (h : ∀ i ∈ s, OrdConnected (t i)) : OrdConnected (s.pi t) :=
+theorem ord_connected_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s : Set ι}
+    {t : ∀ i, Set (α i)} (h : ∀ i ∈ s, OrdConnected (t i)) : OrdConnected (s.pi t) :=
   ⟨fun x hx y hy z hz i hi => (h i hi).out (hx i hi) (hy i hi) ⟨hz.1 i, hz.2 i⟩⟩
 #align set.ord_connected_pi Set.ord_connected_pi
 
-instance ord_connected_pi' {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s : Set ι} {t : ∀ i, Set (α i)}
-    [h : ∀ i, OrdConnected (t i)] : OrdConnected (s.pi t) :=
+instance ord_connected_pi' {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s : Set ι}
+    {t : ∀ i, Set (α i)} [h : ∀ i, OrdConnected (t i)] : OrdConnected (s.pi t) :=
   ord_connected_pi fun i hi => h i
 #align set.ord_connected_pi' Set.ord_connected_pi'
 
@@ -160,7 +169,8 @@ theorem ord_connected_Ioo {a b : α} : OrdConnected (ioo a b) :=
 #align set.ord_connected_Ioo Set.ord_connected_Ioo
 
 @[instance]
-theorem ord_connected_singleton {α : Type _} [PartialOrder α] {a : α} : OrdConnected ({a} : Set α) := by
+theorem ord_connected_singleton {α : Type _} [PartialOrder α] {a : α} :
+    OrdConnected ({a} : Set α) := by
   rw [← Icc_self]
   exact ord_connected_Icc
 #align set.ord_connected_singleton Set.ord_connected_singleton
@@ -182,21 +192,21 @@ instance [DenselyOrdered α] {s : Set α} [hs : OrdConnected s] : DenselyOrdered
     ⟨⟨x, (hs.out a.2 b.2) (Ioo_subset_Icc_self H)⟩, H⟩⟩
 
 @[instance]
-theorem ord_connected_preimage {F : Type _} [OrderHomClass F α β] (f : F) {s : Set β} [hs : OrdConnected s] :
-    OrdConnected (f ⁻¹' s) :=
+theorem ord_connected_preimage {F : Type _} [OrderHomClass F α β] (f : F) {s : Set β}
+    [hs : OrdConnected s] : OrdConnected (f ⁻¹' s) :=
   ⟨fun x hx y hy z hz => hs.out hx hy ⟨OrderHomClass.mono _ hz.1, OrderHomClass.mono _ hz.2⟩⟩
 #align set.ord_connected_preimage Set.ord_connected_preimage
 
 @[instance]
-theorem ord_connected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set α} [hs : OrdConnected s] :
-    OrdConnected (e '' s) := by
+theorem ord_connected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set α}
+    [hs : OrdConnected s] : OrdConnected (e '' s) := by
   erw [(e : α ≃o β).image_eq_preimage]
   apply ord_connected_preimage
 #align set.ord_connected_image Set.ord_connected_image
 
 @[instance]
-theorem ord_connected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdConnected (range e) := by
-  simp_rw [← image_univ, ord_connected_image e]
+theorem ord_connected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdConnected (range e) :=
+  by simp_rw [← image_univ, ord_connected_image e]
 #align set.ord_connected_range Set.ord_connected_range
 
 @[simp]
@@ -226,15 +236,18 @@ theorem ord_connected_interval_oc {a b : α} : OrdConnected (Ι a b) :=
   ord_connected_Ioc
 #align set.ord_connected_interval_oc Set.ord_connected_interval_oc
 
-theorem OrdConnected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : [x, y] ⊆ s :=
+theorem OrdConnected.interval_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) :
+    [x, y] ⊆ s :=
   hs.out (min_rec' (· ∈ s) hx hy) (max_rec' (· ∈ s) hx hy)
 #align set.ord_connected.interval_subset Set.OrdConnected.interval_subset
 
-theorem OrdConnected.interval_oc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Ι x y ⊆ s :=
+theorem OrdConnected.interval_oc_subset (hs : OrdConnected s) ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) :
+    Ι x y ⊆ s :=
   Ioc_subset_Icc_self.trans <| hs.interval_subset hx hy
 #align set.ord_connected.interval_oc_subset Set.OrdConnected.interval_oc_subset
 
-theorem ord_connected_iff_interval_subset : OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), [x, y] ⊆ s :=
+theorem ord_connected_iff_interval_subset :
+    OrdConnected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), [x, y] ⊆ s :=
   ⟨fun h => h.interval_subset, fun H => ⟨fun x hx y hy => Icc_subset_interval.trans <| H hx hy⟩⟩
 #align set.ord_connected_iff_interval_subset Set.ord_connected_iff_interval_subset
 
@@ -247,11 +260,13 @@ theorem ord_connected_of_interval_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : 
       
 #align set.ord_connected_of_interval_subset_left Set.ord_connected_of_interval_subset_left
 
-theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s :=
+theorem ord_connected_iff_interval_subset_left (hx : x ∈ s) :
+    OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [x, y] ⊆ s :=
   ⟨fun hs => hs.interval_subset hx, ord_connected_of_interval_subset_left⟩
 #align set.ord_connected_iff_interval_subset_left Set.ord_connected_iff_interval_subset_left
 
-theorem ord_connected_iff_interval_subset_right (hx : x ∈ s) : OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
+theorem ord_connected_iff_interval_subset_right (hx : x ∈ s) :
+    OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
   simp_rw [ord_connected_iff_interval_subset_left hx, interval_swap]
 #align set.ord_connected_iff_interval_subset_right Set.ord_connected_iff_interval_subset_right
 

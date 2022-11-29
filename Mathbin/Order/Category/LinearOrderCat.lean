@@ -50,7 +50,8 @@ instance (α : LinearOrderCat) : LinearOrder α :=
 instance hasForgetToLattice :
     HasForget₂ LinearOrderCat
       LatticeCat where forget₂ :=
-    { obj := fun X => LatticeCat.of X, map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
+    { obj := fun X => LatticeCat.of X,
+      map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinearOrder.has_forget_to_Lattice LinearOrderCat.hasForgetToLattice
 
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
@@ -76,14 +77,16 @@ def dual : LinearOrderCat ⥤ LinearOrderCat where
 /-- The equivalence between `LinearOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LinearOrderCat ≌ LinearOrderCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align LinearOrder.dual_equiv LinearOrderCat.dualEquiv
 
 end LinearOrderCat
 
 theorem LinearOrder_dual_comp_forget_to_Lattice :
-    LinearOrderCat.dual ⋙ forget₂ LinearOrderCat LatticeCat = forget₂ LinearOrderCat LatticeCat ⋙ LatticeCat.dual :=
+    LinearOrderCat.dual ⋙ forget₂ LinearOrderCat LatticeCat =
+      forget₂ LinearOrderCat LatticeCat ⋙ LatticeCat.dual :=
   rfl
 #align LinearOrder_dual_comp_forget_to_Lattice LinearOrder_dual_comp_forget_to_Lattice
 

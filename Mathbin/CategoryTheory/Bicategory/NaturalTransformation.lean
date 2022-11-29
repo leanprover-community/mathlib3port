@@ -43,16 +43,20 @@ structure OplaxNatTrans (F G : OplaxFunctor B C) where
   app (a : B) : F.obj a ⟶ G.obj a
   naturality {a b : B} (f : a ⟶ b) : F.map f ≫ app b ⟶ app a ≫ G.map f
   naturality_naturality' :
-    ∀ {a b : B} {f g : a ⟶ b} (η : f ⟶ g), F.map₂ η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.map₂ η := by
+    ∀ {a b : B} {f g : a ⟶ b} (η : f ⟶ g),
+      F.map₂ η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.map₂ η := by
     obviously
   naturality_id' :
-    ∀ a : B, naturality (𝟙 a) ≫ app a ◁ G.map_id a = F.map_id a ▷ app a ≫ (λ_ (app a)).Hom ≫ (ρ_ (app a)).inv := by
+    ∀ a : B,
+      naturality (𝟙 a) ≫ app a ◁ G.map_id a =
+        F.map_id a ▷ app a ≫ (λ_ (app a)).Hom ≫ (ρ_ (app a)).inv := by
     obviously
   naturality_comp' :
     ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c),
       naturality (f ≫ g) ≫ app a ◁ G.map_comp f g =
         F.map_comp f g ▷ app c ≫
-          (α_ _ _ _).Hom ≫ F.map f ◁ naturality g ≫ (α_ _ _ _).inv ≫ naturality f ▷ G.map g ≫ (α_ _ _ _).Hom := by
+          (α_ _ _ _).Hom ≫
+            F.map f ◁ naturality g ≫ (α_ _ _ _).inv ≫ naturality f ▷ G.map g ≫ (α_ _ _ _).Hom := by
     obviously
 #align category_theory.oplax_nat_trans CategoryTheory.OplaxNatTrans
 
@@ -107,7 +111,8 @@ theorem whisker_left_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b �
     f ◁ θ.naturality (g ≫ h) ≫ f ◁ θ.app a ◁ H.map_comp g h =
       f ◁ G.map_comp g h ▷ θ.app c ≫
         f ◁ (α_ _ _ _).Hom ≫
-          f ◁ G.map g ◁ θ.naturality h ≫ f ◁ (α_ _ _ _).inv ≫ f ◁ θ.naturality g ▷ H.map h ≫ f ◁ (α_ _ _ _).Hom :=
+          f ◁ G.map g ◁ θ.naturality h ≫
+            f ◁ (α_ _ _ _).inv ≫ f ◁ θ.naturality g ▷ H.map h ≫ f ◁ (α_ _ _ _).Hom :=
   by simp_rw [← bicategory.whisker_left_comp, naturality_comp]
 #align
   category_theory.oplax_nat_trans.whisker_left_naturality_comp CategoryTheory.OplaxNatTrans.whisker_left_naturality_comp
@@ -120,7 +125,8 @@ theorem whisker_right_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c �
           (α_ _ _ _).Hom ≫
             F.map f ◁ η.naturality g ▷ h ≫
               (α_ _ _ _).inv ≫
-                (α_ _ _ _).inv ▷ h ≫ η.naturality f ▷ G.map g ▷ h ≫ (α_ _ _ _).Hom ▷ h ≫ (α_ _ _ _).Hom :=
+                (α_ _ _ _).inv ▷ h ≫
+                  η.naturality f ▷ G.map g ▷ h ≫ (α_ _ _ _).Hom ▷ h ≫ (α_ _ _ _).Hom :=
   by
   rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_comp]
   simp
@@ -152,7 +158,8 @@ end
 def vcomp (η : OplaxNatTrans F G) (θ : OplaxNatTrans G H) : OplaxNatTrans F H where
   app a := η.app a ≫ θ.app a
   naturality a b f :=
-    (α_ _ _ _).inv ≫ η.naturality f ▷ θ.app b ≫ (α_ _ _ _).Hom ≫ η.app a ◁ θ.naturality f ≫ (α_ _ _ _).inv
+    (α_ _ _ _).inv ≫
+      η.naturality f ▷ θ.app b ≫ (α_ _ _ _).Hom ≫ η.app a ◁ θ.naturality f ≫ (α_ _ _ _).inv
   naturality_comp' a b c f g := by
     calc
       _ =
@@ -162,7 +169,8 @@ def vcomp (η : OplaxNatTrans F G) (θ : OplaxNatTrans G H) : OplaxNatTrans F H 
                 F.map f ◁ η.naturality g ▷ θ.app c ≫
                   _ ≫
                     (F.map f ≫ η.app b) ◁ θ.naturality g ≫
-                      η.naturality f ▷ (θ.app b ≫ H.map g) ≫ _ ≫ η.app a ◁ θ.naturality f ▷ H.map g ≫ _ :=
+                      η.naturality f ▷ (θ.app b ≫ H.map g) ≫
+                        _ ≫ η.app a ◁ θ.naturality f ▷ H.map g ≫ _ :=
         _
       _ = _ := _
       
@@ -200,7 +208,9 @@ for each 1-morphism `f : a ⟶ b`.
 @[ext.1]
 structure Modification (η θ : F ⟶ G) where
   app (a : B) : η.app a ⟶ θ.app a
-  naturality' : ∀ {a b : B} (f : a ⟶ b), F.map f ◁ app b ≫ θ.naturality f = η.naturality f ≫ app a ▷ G.map f := by
+  naturality' :
+    ∀ {a b : B} (f : a ⟶ b),
+      F.map f ◁ app b ≫ θ.naturality f = η.naturality f ≫ app a ▷ G.map f := by
     obviously
 #align category_theory.oplax_nat_trans.modification CategoryTheory.OplaxNatTrans.Modification
 
@@ -247,8 +257,10 @@ end
 
 /-- Vertical composition of modifications. -/
 @[simps]
-def vcomp (Γ : Modification η θ) (Δ : Modification θ ι) : Modification η ι where app a := Γ.app a ≫ Δ.app a
-#align category_theory.oplax_nat_trans.modification.vcomp CategoryTheory.OplaxNatTrans.Modification.vcomp
+def vcomp (Γ : Modification η θ) (Δ : Modification θ ι) :
+    Modification η ι where app a := Γ.app a ≫ Δ.app a
+#align
+  category_theory.oplax_nat_trans.modification.vcomp CategoryTheory.OplaxNatTrans.Modification.vcomp
 
 end Modification
 
@@ -266,7 +278,8 @@ by giving object level isomorphisms, and checking naturality only in the forward
 @[simps]
 def ModificationIso.ofComponents (app : ∀ a, η.app a ≅ θ.app a)
     (naturality :
-      ∀ {a b} (f : a ⟶ b), F.map f ◁ (app b).Hom ≫ θ.naturality f = η.naturality f ≫ (app a).Hom ▷ G.map f) :
+      ∀ {a b} (f : a ⟶ b),
+        F.map f ◁ (app b).Hom ≫ θ.naturality f = η.naturality f ≫ (app a).Hom ▷ G.map f) :
     η ≅ θ where
   Hom := { app := fun a => (app a).Hom }
   inv :=

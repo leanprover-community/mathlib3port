@@ -67,7 +67,8 @@ def hatInv : hat K → hat K :=
   dense_inducing_coe.extend fun x : K => (coe x⁻¹ : hat K)
 #align uniform_space.completion.hat_inv UniformSpace.Completion.hatInv
 
-theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x := by
+theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) :
+    ContinuousAt hatInv x := by
   haveI : T3Space (hat K) := completion.t3_space K
   refine' dense_inducing_coe.continuous_at_extend _
   apply mem_of_superset (compl_singleton_mem_nhds h)
@@ -137,7 +138,8 @@ theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
     exact (_root_.continuous_mul.continuous_at.comp this : _)
   have clo : x ∈ closure (c '' {0}ᶜ) := by
     have := dense_inducing_coe.dense x
-    rw [← image_univ, show (univ : Set K) = {0} ∪ {0}ᶜ from (union_compl_self _).symm, image_union] at this
+    rw [← image_univ, show (univ : Set K) = {0} ∪ {0}ᶜ from (union_compl_self _).symm,
+      image_union] at this
     apply mem_closure_of_mem_closure_union this
     rw [image_singleton]
     exact compl_singleton_mem_nhds x_ne

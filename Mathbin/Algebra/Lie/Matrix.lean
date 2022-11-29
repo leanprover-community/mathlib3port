@@ -53,7 +53,8 @@ theorem lie_equiv_matrix'_apply (f : Module.EndCat R (n → R)) : lieEquivMatrix
 #align lie_equiv_matrix'_apply lie_equiv_matrix'_apply
 
 @[simp]
-theorem lie_equiv_matrix'_symm_apply (A : Matrix n n R) : (@lieEquivMatrix' R _ n _ _).symm A = A.toLin' :=
+theorem lie_equiv_matrix'_symm_apply (A : Matrix n n R) :
+    (@lieEquivMatrix' R _ n _ _).symm A = A.toLin' :=
   rfl
 #align lie_equiv_matrix'_symm_apply lie_equiv_matrix'_symm_apply
 
@@ -63,13 +64,17 @@ def Matrix.lieConj (P : Matrix n n R) (h : Invertible P) : Matrix n n R ≃ₗ�
 #align matrix.lie_conj Matrix.lieConj
 
 @[simp]
-theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) : P.lieConj h A = P ⬝ A ⬝ P⁻¹ := by
-  simp [LinearEquiv.conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
+theorem Matrix.lie_conj_apply (P A : Matrix n n R) (h : Invertible P) :
+    P.lieConj h A = P ⬝ A ⬝ P⁻¹ := by
+  simp [LinearEquiv.conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp,
+    LinearMap.to_matrix'_to_lin']
 #align matrix.lie_conj_apply Matrix.lie_conj_apply
 
 @[simp]
-theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
-  simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
+theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) :
+    (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
+  simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp,
+    LinearMap.to_matrix'_to_lin']
 #align matrix.lie_conj_symm_apply Matrix.lie_conj_symm_apply
 
 variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
@@ -79,17 +84,19 @@ types, `matrix.reindex`, is an equivalence of Lie algebras. -/
 def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
   { Matrix.reindexLinearEquiv R R e e with toFun := Matrix.reindex e e,
     map_lie' := fun M N => by
-      simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply, Matrix.submatrix_mul_equiv,
-        Matrix.mul_eq_mul, Matrix.submatrix_sub, Pi.sub_apply] }
+      simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply,
+        Matrix.submatrix_mul_equiv, Matrix.mul_eq_mul, Matrix.submatrix_sub, Pi.sub_apply] }
 #align matrix.reindex_lie_equiv Matrix.reindexLieEquiv
 
 @[simp]
-theorem Matrix.reindex_lie_equiv_apply (M : Matrix n n R) : Matrix.reindexLieEquiv e M = Matrix.reindex e e M :=
+theorem Matrix.reindex_lie_equiv_apply (M : Matrix n n R) :
+    Matrix.reindexLieEquiv e M = Matrix.reindex e e M :=
   rfl
 #align matrix.reindex_lie_equiv_apply Matrix.reindex_lie_equiv_apply
 
 @[simp]
-theorem Matrix.reindex_lie_equiv_symm : (Matrix.reindexLieEquiv e : _ ≃ₗ⁅R⁆ _).symm = Matrix.reindexLieEquiv e.symm :=
+theorem Matrix.reindex_lie_equiv_symm :
+    (Matrix.reindexLieEquiv e : _ ≃ₗ⁅R⁆ _).symm = Matrix.reindexLieEquiv e.symm :=
   rfl
 #align matrix.reindex_lie_equiv_symm Matrix.reindex_lie_equiv_symm
 

@@ -69,7 +69,8 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D where
         dsimp
         rw [functor.map_comp] }
   map A B f :=
-    { app := fun X => { Hom := f.Hom.app X, one_hom' := congr_app f.OneHom X, mul_hom' := congr_app f.MulHom X } }
+    { app := fun X =>
+        { Hom := f.Hom.app X, one_hom' := congr_app f.OneHom X, mul_hom' := congr_app f.MulHom X } }
 #align
   category_theory.monoidal.Mon_functor_category_equivalence.functor CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.functor
 
@@ -79,7 +80,8 @@ to a monoid object in the functor category
 @[simps]
 def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D) where
   obj F :=
-    { x := F ⋙ Mon_.forget D, one := { app := fun X => (F.obj X).one }, mul := { app := fun X => (F.obj X).mul },
+    { x := F ⋙ Mon_.forget D, one := { app := fun X => (F.obj X).one },
+      mul := { app := fun X => (F.obj X).mul },
       one_mul' := by
         ext X
         exact (F.obj X).one_mul,
@@ -90,7 +92,9 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D) where
         ext X
         exact (F.obj X).mul_assoc }
   map F G α :=
-    { Hom := { app := fun X => (α.app X).Hom, naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) },
+    { Hom :=
+        { app := fun X => (α.app X).Hom,
+          naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) },
       one_hom' := by
         ext x
         dsimp
@@ -130,8 +134,8 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
               simp only [tensor_id, category.id_comp, category.comp_id] } })
     fun A B f => by
     ext X
-    simp only [functor.id_map, functor.comp_map, functor_map_app_hom, Mon_.comp_hom', category.id_comp,
-      category.comp_id, inverse_map_hom_app, nat_trans.comp_app]
+    simp only [functor.id_map, functor.comp_map, functor_map_app_hom, Mon_.comp_hom',
+      category.id_comp, category.comp_id, inverse_map_hom_app, nat_trans.comp_app]
 #align
   category_theory.monoidal.Mon_functor_category_equivalence.unit_iso CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.unitIso
 
@@ -140,7 +144,9 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
 @[simps]
 def counitIso : inverse ⋙ Functor ≅ 𝟭 (C ⥤ Mon_ D) :=
   NatIso.ofComponents
-    (fun A => NatIso.ofComponents (fun X => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)) (by tidy)
+    (fun A =>
+      NatIso.ofComponents (fun X => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy))
+    (by tidy)
 #align
   category_theory.monoidal.Mon_functor_category_equivalence.counit_iso CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.counitIso
 
@@ -158,7 +164,8 @@ def monFunctorCategoryEquivalence : Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D where
   inverse := inverse
   unitIso := unitIso
   counitIso := counitIso
-#align category_theory.monoidal.Mon_functor_category_equivalence CategoryTheory.Monoidal.monFunctorCategoryEquivalence
+#align
+  category_theory.monoidal.Mon_functor_category_equivalence CategoryTheory.Monoidal.monFunctorCategoryEquivalence
 
 variable [BraidedCategory.{v₂} D]
 
@@ -174,7 +181,8 @@ def functor : CommMon_ (C ⥤ D) ⥤ C ⥤ CommMon_ D where
   obj A :=
     { (monFunctorCategoryEquivalence C D).Functor.obj A.toMon_ with
       obj := fun X =>
-        { ((monFunctorCategoryEquivalence C D).Functor.obj A.toMon_).obj X with mul_comm' := congr_app A.mul_comm X } }
+        { ((monFunctorCategoryEquivalence C D).Functor.obj A.toMon_).obj X with
+          mul_comm' := congr_app A.mul_comm X } }
   map A B f := { app := fun X => ((monFunctorCategoryEquivalence C D).Functor.map f).app X }
 #align
   category_theory.monoidal.CommMon_functor_category_equivalence.functor CategoryTheory.Monoidal.CommMonFunctorCategoryEquivalence.functor
@@ -231,7 +239,9 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
 @[simps]
 def counitIso : inverse ⋙ Functor ≅ 𝟭 (C ⥤ CommMon_ D) :=
   NatIso.ofComponents
-    (fun A => NatIso.ofComponents (fun X => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)) (by tidy)
+    (fun A =>
+      NatIso.ofComponents (fun X => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy))
+    (by tidy)
 #align
   category_theory.monoidal.CommMon_functor_category_equivalence.counit_iso CategoryTheory.Monoidal.CommMonFunctorCategoryEquivalence.counitIso
 

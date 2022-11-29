@@ -62,8 +62,8 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) 
 #align quadratic_eq_zero_iff_discrim_eq_sq quadratic_eq_zero_iff_discrim_eq_sq
 
 /-- A quadratic has no root if its discriminant has no square root. -/
-theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (h : ∀ s : R, discrim a b c ≠ s * s)
-    (x : R) : a * x * x + b * x + c ≠ 0 := by
+theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0)
+    (h : ∀ s : R, discrim a b c ≠ s * s) (x : R) : a * x * x + b * x + c ≠ 0 := by
   intro h'
   rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, sq] at h'
   exact h _ h'
@@ -90,7 +90,8 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
 #align quadratic_eq_zero_iff quadratic_eq_zero_iff
 
 /-- A quadratic has roots if its discriminant has square roots -/
-theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * s) : ∃ x, a * x * x + b * x + c = 0 := by
+theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * s) :
+    ∃ x, a * x * x + b * x + c = 0 := by
   rcases h with ⟨s, hs⟩
   use (-b + s) / (2 * a)
   rw [quadratic_eq_zero_iff ha hs]
@@ -117,7 +118,8 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
   -- if a < 0
   · have : tendsto (fun x => (a * x + b) * x + c) at_top at_bot :=
       tendsto_at_bot_add_const_right _ c
-        ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top tendsto_id)
+        ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top
+          tendsto_id)
     rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
     exact False.elim ((h x).not_lt <| by rwa [← add_mul])
     
@@ -150,7 +152,8 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
 /-- If a polynomial of degree 2 is always positive, then its discriminant is negative,
 at least when the coefficient of the quadratic term is nonzero.
 -/
-theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < a * x * x + b * x + c) : discrim a b c < 0 := by
+theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < a * x * x + b * x + c) : discrim a b c < 0 :=
+  by
   have : ∀ x : K, 0 ≤ a * x * x + b * x + c := fun x => le_of_lt (h x)
   refine' lt_of_le_of_ne (discrim_le_zero this) _
   intro h'

@@ -52,7 +52,8 @@ theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
 /-- The finrank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem finrank_eq_card_choose_basis_index :
     finrank R M =
-      @card (ChooseBasisIndex R M) (@ChooseBasisIndex.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
+      @card (ChooseBasisIndex R M)
+        (@ChooseBasisIndex.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
   by
   letI := nontrivial_of_invariant_basis_number R
   simp [finrank, rank_eq_card_choose_basis_index]
@@ -74,8 +75,8 @@ theorem finrank_direct_sum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (⨁ i, M i) = ∑ i, finrank R (M i) := by
   letI := nontrivial_of_invariant_basis_number R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_direct_sum, ← mk_sigma, mk_to_nat_eq_card,
-    card_sigma]
+  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_direct_sum, ← mk_sigma,
+    mk_to_nat_eq_card, card_sigma]
 #align module.free.finrank_direct_sum Module.Free.finrank_direct_sum
 
 /-- The finrank of `M × N` is `(finrank R M) + (finrank R N)`. -/
@@ -90,14 +91,14 @@ theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) := by
   letI := nontrivial_of_invariant_basis_number R
-  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_finite, ← mk_sigma, mk_to_nat_eq_card,
-    card_sigma]
+  simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_finite, ← mk_sigma,
+    mk_to_nat_eq_card, card_sigma]
 #align module.free.finrank_pi_fintype Module.Free.finrank_pi_fintype
 
 /-- If `m` and `n` are `fintype`, the finrank of `m × n` matrices is
   `(fintype.card m) * (fintype.card n)`. -/
-theorem finrank_matrix (m n : Type v) [Fintype m] [Fintype n] : finrank R (Matrix m n R) = card m * card n := by
-  simp [finrank]
+theorem finrank_matrix (m n : Type v) [Fintype m] [Fintype n] :
+    finrank R (Matrix m n R) = card m * card n := by simp [finrank]
 #align module.free.finrank_matrix Module.Free.finrank_matrix
 
 end Ring
@@ -112,9 +113,9 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 /-- The finrank of `M ⊗[R] N` is `(finrank R M) * (finrank R N)`. -/
 @[simp]
-theorem finrank_tensor_product (M : Type v) (N : Type w) [AddCommGroup M] [Module R M] [Module.Free R M]
-    [AddCommGroup N] [Module R N] [Module.Free R N] : finrank R (M ⊗[R] N) = finrank R M * finrank R N := by
-  simp [finrank]
+theorem finrank_tensor_product (M : Type v) (N : Type w) [AddCommGroup M] [Module R M]
+    [Module.Free R M] [AddCommGroup N] [Module R N] [Module.Free R N] :
+    finrank R (M ⊗[R] N) = finrank R M * finrank R N := by simp [finrank]
 #align module.free.finrank_tensor_product Module.Free.finrank_tensor_product
 
 end CommRing

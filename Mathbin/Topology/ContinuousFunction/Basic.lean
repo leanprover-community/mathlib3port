@@ -38,8 +38,8 @@ section
 /-- `continuous_map_class F α β` states that `F` is a type of continuous maps.
 
 You should extend this class when you extend `continuous_map`. -/
-class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
-  FunLike F α fun _ => β where
+class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
+  [TopologicalSpace β] extends FunLike F α fun _ => β where
   map_continuous (f : F) : Continuous f
 #align continuous_map_class ContinuousMapClass
 
@@ -73,7 +73,8 @@ end ContinuousMapClass
 
 namespace ContinuousMap
 
-variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
+variable {α β γ δ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
+  [TopologicalSpace δ]
 
 instance : ContinuousMapClass C(α, β) α β where
   coe := ContinuousMap.toFun
@@ -146,7 +147,8 @@ protected theorem congr_arg (f : C(α, β)) {x y : α} (h : x = y) : f x = f y :
   h ▸ rfl
 #align continuous_map.congr_arg ContinuousMap.congr_arg
 
-theorem coe_injective : @Function.Injective C(α, β) (α → β) coeFn := fun f g h => by cases f <;> cases g <;> congr
+theorem coe_injective : @Function.Injective C(α, β) (α → β) coeFn := fun f g h => by
+  cases f <;> cases g <;> congr
 #align continuous_map.coe_injective ContinuousMap.coe_injective
 
 @[simp]
@@ -162,7 +164,8 @@ section
 
 variable (α β)
 
-/-- The continuous functions from `α` to `β` are the same as the plain functions when `α` is discrete.
+/--
+The continuous functions from `α` to `β` are the same as the plain functions when `α` is discrete.
 -/
 @[simps]
 def equivFnOfDiscrete [DiscreteTopology α] : C(α, β) ≃ (α → β) :=
@@ -228,7 +231,8 @@ theorem comp_apply (f : C(β, γ)) (g : C(α, β)) (a : α) : comp f g a = f (g 
 #align continuous_map.comp_apply ContinuousMap.comp_apply
 
 @[simp]
-theorem comp_assoc (f : C(γ, δ)) (g : C(β, γ)) (h : C(α, β)) : (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : C(γ, δ)) (g : C(β, γ)) (h : C(α, β)) :
+    (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align continuous_map.comp_assoc ContinuousMap.comp_assoc
 
@@ -252,11 +256,13 @@ theorem comp_const (f : C(β, γ)) (b : β) : f.comp (const α b) = const α (f 
   ext fun _ => rfl
 #align continuous_map.comp_const ContinuousMap.comp_const
 
-theorem cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : Surjective g) : f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
+theorem cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : Surjective g) :
+    f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
   ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_map.cancel_right ContinuousMap.cancel_right
 
-theorem cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
+theorem cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : Injective f) :
+    f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
   ⟨fun h => ext fun a => hf <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_map.cancel_left ContinuousMap.cancel_left
 
@@ -266,7 +272,8 @@ instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
 
 section Prod
 
-variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [TopologicalSpace α₂] [TopologicalSpace β₁] [TopologicalSpace β₂]
+variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [TopologicalSpace α₂] [TopologicalSpace β₁]
+  [TopologicalSpace β₂]
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `x ↦ (f x, g x)`. -/
 def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂) where
@@ -320,7 +327,8 @@ theorem coe_restrict (f : C(α, β)) : ⇑(f.restrict s) = f ∘ coe :=
 /-- The restriction of a continuous map onto the preimage of a set. -/
 @[simps]
 def restrictPreimage (f : C(α, β)) (s : Set β) : C(f ⁻¹' s, s) :=
-  ⟨s.restrictPreimage f, continuous_iff_continuous_at.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
+  ⟨s.restrictPreimage f,
+    continuous_iff_continuous_at.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
 #align continuous_map.restrict_preimage ContinuousMap.restrictPreimage
 
 end Restrict
@@ -328,7 +336,8 @@ end Restrict
 section Gluing
 
 variable {ι : Type _} (S : ι → Set α) (φ : ∀ i : ι, C(S i, β))
-  (hφ : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩) (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
+  (hφ : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩)
+  (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
 
 include hφ hS
 
@@ -364,7 +373,9 @@ theorem lift_cover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = 
 omit hφ hS
 
 variable (A : Set (Set α)) (F : ∀ (s : Set α) (hi : s ∈ A), C(s, β))
-  (hF : ∀ (s) (hs : s ∈ A) (t) (ht : t ∈ A) (x : α) (hxi : x ∈ s) (hxj : x ∈ t), F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
+  (hF :
+    ∀ (s) (hs : s ∈ A) (t) (ht : t ∈ A) (x : α) (hxi : x ∈ s) (hxj : x ∈ t),
+      F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
   (hA : ∀ x : α, ∃ i ∈ A, i ∈ nhds x)
 
 include hF hA
@@ -390,7 +401,8 @@ theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : liftCover' A F hF 
 #align continuous_map.lift_cover_coe' ContinuousMap.lift_cover_coe'
 
 @[simp]
-theorem lift_cover_restrict' {s : Set α} {hs : s ∈ A} : (liftCover' A F hF hA).restrict s = F s hs :=
+theorem lift_cover_restrict' {s : Set α} {hs : s ∈ A} :
+    (liftCover' A F hF hA).restrict s = F s hs :=
   ext <| lift_cover_coe'
 #align continuous_map.lift_cover_restrict' ContinuousMap.lift_cover_restrict'
 
@@ -430,14 +442,14 @@ theorem coe_trans : (f.trans g : C(α, γ)) = (g : C(β, γ)).comp f :=
 
 /-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
 @[simp]
-theorem symm_comp_to_continuous_map : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α := by
-  rw [← coeTrans, self_trans_symm, coe_refl]
+theorem symm_comp_to_continuous_map : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α :=
+  by rw [← coeTrans, self_trans_symm, coe_refl]
 #align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_to_continuous_map
 
 /-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
 @[simp]
-theorem to_continuous_map_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β := by
-  rw [← coeTrans, symm_trans_self, coe_refl]
+theorem to_continuous_map_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β :=
+  by rw [← coeTrans, symm_trans_self, coe_refl]
 #align homeomorph.to_continuous_map_comp_symm Homeomorph.to_continuous_map_comp_symm
 
 end Homeomorph

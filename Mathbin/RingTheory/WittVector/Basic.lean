@@ -91,67 +91,69 @@ unsafe def map_fun_tac : tactic Unit :=
 
 include hp
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 -- We do not tag these lemmas as `@[simp]` because they will be bundled in `map` later on.
 theorem zero : mapFun f (0 : 𝕎 R) = 0 := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.zero WittVector.mapFun.zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem one : mapFun f (1 : 𝕎 R) = 1 := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.one WittVector.mapFun.one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem add : mapFun f (x + y) = mapFun f x + mapFun f y := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.add WittVector.mapFun.add
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem sub : mapFun f (x - y) = mapFun f x - mapFun f y := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.sub WittVector.mapFun.sub
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem mul : mapFun f (x * y) = mapFun f x * mapFun f y := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.mul WittVector.mapFun.mul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem neg : mapFun f (-x) = -mapFun f x := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.neg WittVector.mapFun.neg
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem nsmul (n : ℕ) : mapFun f (n • x) = n • mapFun f x := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.nsmul WittVector.mapFun.nsmul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem zsmul (z : ℤ) : mapFun f (z • x) = z • mapFun f x := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.zsmul WittVector.mapFun.zsmul
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic witt_vector.map_fun.map_fun_tac -/
 theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
   run_tac
     map_fun_tac
 #align witt_vector.map_fun.pow WittVector.mapFun.pow
 
 theorem nat_cast (n : ℕ) : mapFun f (n : 𝕎 R) = n :=
-  show mapFun f n.unaryCast = coe n by induction n <;> simp [*, Nat.unaryCast, add, one, zero] <;> rfl
+  show mapFun f n.unaryCast = coe n by
+    induction n <;> simp [*, Nat.unaryCast, add, one, zero] <;> rfl
 #align witt_vector.map_fun.nat_cast WittVector.mapFun.nat_cast
 
 theorem int_cast (n : ℤ) : mapFun f (n : 𝕎 R) = n :=
-  show mapFun f n.castDef = coe n by cases n <;> simp [*, Int.castDef, add, one, neg, zero, nat_cast] <;> rfl
+  show mapFun f n.castDef = coe n by
+    cases n <;> simp [*, Int.castDef, add, one, neg, zero, nat_cast] <;> rfl
 #align witt_vector.map_fun.int_cast WittVector.mapFun.int_cast
 
 end MapFun
@@ -172,7 +174,8 @@ unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tacti
   let q(Fin $(k) → _ → _) ← infer_type fn
   sorry
   sorry
-  to_expr `(congr_fun (congr_arg (@peval R _ $(k)) (witt_structure_int_prop p $(φ) n)) $(fn)) >>= note `this none
+  to_expr `(congr_fun (congr_arg (@peval R _ $(k)) (witt_structure_int_prop p $(φ) n)) $(fn)) >>=
+      note `this none
   sorry
 #align tactic.interactive.ghost_fun_tac tactic.interactive.ghost_fun_tac
 
@@ -198,7 +201,8 @@ variable (x y : 𝕎 R)
 omit hp
 
 @[local simp]
-theorem matrix_vec_empty_coeff {R} (i j) : @coeff p R (Matrix.vecEmpty i) j = (Matrix.vecEmpty i : ℕ → R) j := by
+theorem matrix_vec_empty_coeff {R} (i j) :
+    @coeff p R (Matrix.vecEmpty i) j = (Matrix.vecEmpty i : ℕ → R) j := by
   rcases i with ⟨_ | _ | _ | _ | i_val, ⟨⟩⟩
 #align witt_vector.matrix_vec_empty_coeff WittVector.matrix_vec_empty_coeff
 
@@ -216,7 +220,8 @@ private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
 
 private theorem ghost_fun_nat_cast (i : ℕ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.unaryCast = _ by
-    induction i <;> simp [*, Nat.unaryCast, ghost_fun_zero, ghost_fun_one, ghost_fun_add, -Pi.coe_nat]
+    induction i <;>
+      simp [*, Nat.unaryCast, ghost_fun_zero, ghost_fun_one, ghost_fun_add, -Pi.coe_nat]
 #align witt_vector.ghost_fun_nat_cast witt_vector.ghost_fun_nat_cast
 
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
@@ -235,13 +240,16 @@ private theorem ghost_fun_int_cast (i : ℤ) : ghostFun (i : 𝕎 R) = i :=
     cases i <;> simp [*, Int.castDef, ghost_fun_nat_cast, ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
 #align witt_vector.ghost_fun_int_cast witt_vector.ghost_fun_int_cast
 
-private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by ghost_fun_tac m • X 0, ![x.coeff]
+private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
+  ghost_fun_tac m • X 0, ![x.coeff]
 #align witt_vector.ghost_fun_nsmul witt_vector.ghost_fun_nsmul
 
-private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by ghost_fun_tac m • X 0, ![x.coeff]
+private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by
+  ghost_fun_tac m • X 0, ![x.coeff]
 #align witt_vector.ghost_fun_zsmul witt_vector.ghost_fun_zsmul
 
-private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by ghost_fun_tac X 0 ^ m, ![x.coeff]
+private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by
+  ghost_fun_tac X 0 ^ m, ![x.coeff]
 #align witt_vector.ghost_fun_pow witt_vector.ghost_fun_pow
 
 end GhostFun
@@ -272,25 +280,25 @@ include hp
 @[local instance]
 private def comm_ring_aux₁ : CommRing (𝕎 (MvPolynomial R ℚ)) :=
   letI : CommRing (MvPolynomial R ℚ) := MvPolynomial.commRing
-  (ghost_equiv' p (MvPolynomial R ℚ)).Injective.CommRing ghost_fun ghost_fun_zero ghost_fun_one ghost_fun_add
-    ghost_fun_mul ghost_fun_neg ghost_fun_sub ghost_fun_nsmul ghost_fun_zsmul ghost_fun_pow ghost_fun_nat_cast
-    ghost_fun_int_cast
+  (ghost_equiv' p (MvPolynomial R ℚ)).Injective.CommRing ghost_fun ghost_fun_zero ghost_fun_one
+    ghost_fun_add ghost_fun_mul ghost_fun_neg ghost_fun_sub ghost_fun_nsmul ghost_fun_zsmul
+    ghost_fun_pow ghost_fun_nat_cast ghost_fun_int_cast
 #align witt_vector.comm_ring_aux₁ witt_vector.comm_ring_aux₁
 
 @[local instance]
 private def comm_ring_aux₂ : CommRing (𝕎 (MvPolynomial R ℤ)) :=
-  (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (mapFun.zero _) (mapFun.one _)
-    (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _)
-    (mapFun.nat_cast _) (mapFun.int_cast _)
+  (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _
+    (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
+    (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
 #align witt_vector.comm_ring_aux₂ witt_vector.comm_ring_aux₂
 
 attribute [reducible] comm_ring_aux₂
 
 /-- The commutative ring structure on `𝕎 R`. -/
 instance : CommRing (𝕎 R) :=
-  (mapFun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _) (mapFun.zero _)
-    (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _)
-    (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
+  (mapFun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _)
+    (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
+    (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
 
 variable {p R}
 

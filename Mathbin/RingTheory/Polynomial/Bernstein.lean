@@ -65,17 +65,19 @@ section
 variable {R} {S : Type _} [CommRing S]
 
 @[simp]
-theorem map (f : R →+* S) (n ν : ℕ) : (bernsteinPolynomial R n ν).map f = bernsteinPolynomial S n ν := by
-  simp [bernsteinPolynomial]
+theorem map (f : R →+* S) (n ν : ℕ) :
+    (bernsteinPolynomial R n ν).map f = bernsteinPolynomial S n ν := by simp [bernsteinPolynomial]
 #align bernstein_polynomial.map bernsteinPolynomial.map
 
 end
 
-theorem flip (n ν : ℕ) (h : ν ≤ n) : (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
+theorem flip (n ν : ℕ) (h : ν ≤ n) :
+    (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
   simp [bernsteinPolynomial, h, tsub_tsub_assoc, mul_right_comm]
 #align bernstein_polynomial.flip bernsteinPolynomial.flip
 
-theorem flip' (n ν : ℕ) (h : ν ≤ n) : bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
+theorem flip' (n ν : ℕ) (h : ν ≤ n) :
+    bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
   simp [← flip _ _ _ h, Polynomial.comp_assoc]
 #align bernstein_polynomial.flip' bernsteinPolynomial.flip'
 
@@ -112,11 +114,13 @@ theorem derivative_succ_aux (n ν : ℕ) :
     ↑((n + 1).choose (ν + 1)) * ((↑ν + 1) * X ^ ν) * (1 - X) ^ (n - ν) -
         ↑((n + 1).choose (ν + 1)) * X ^ (ν + 1) * (↑(n - ν) * (1 - X) ^ (n - ν - 1)) =
       (↑n + 1) *
-        (↑(n.choose ν) * X ^ ν * (1 - X) ^ (n - ν) - ↑(n.choose (ν + 1)) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
+        (↑(n.choose ν) * X ^ ν * (1 - X) ^ (n - ν) -
+          ↑(n.choose (ν + 1)) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
     by
-    simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub, Polynomial.derivative_mul,
-      Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add, algebraMap.coe_one, Polynomial.derivative_X, mul_one,
-      zero_add, Polynomial.derivative_sub, Polynomial.derivative_one, zero_sub, mul_neg]
+    simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub,
+      Polynomial.derivative_mul, Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add,
+      algebraMap.coe_one, Polynomial.derivative_X, mul_one, zero_add, Polynomial.derivative_sub,
+      Polynomial.derivative_one, zero_sub, mul_neg]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
   refine' congr (congr_arg Sub.sub _) _
@@ -152,7 +156,8 @@ theorem derivative_succ (n ν : ℕ) :
     
 #align bernstein_polynomial.derivative_succ bernsteinPolynomial.derivative_succ
 
-theorem derivative_zero (n : ℕ) : (bernsteinPolynomial R n 0).derivative = -n * bernsteinPolynomial R (n - 1) 0 := by
+theorem derivative_zero (n : ℕ) :
+    (bernsteinPolynomial R n 0).derivative = -n * bernsteinPolynomial R (n - 1) 0 := by
   simp [bernsteinPolynomial, Polynomial.derivative_pow]
 #align bernstein_polynomial.derivative_zero bernsteinPolynomial.derivative_zero
 
@@ -165,9 +170,10 @@ theorem iterate_derivative_at_0_eq_zero_of_lt (n : ℕ) {ν k : ℕ} :
     induction' k with k ih generalizing n ν
     · simp [eval_at_0]
       
-    · simp only [derivative_succ, Int.coe_nat_eq_zero, mul_eq_zero, Function.comp_apply, Function.iterate_succ,
-        Polynomial.iterate_derivative_sub, Polynomial.iterate_derivative_nat_cast_mul, Polynomial.eval_mul,
-        Polynomial.eval_nat_cast, Polynomial.eval_sub]
+    · simp only [derivative_succ, Int.coe_nat_eq_zero, mul_eq_zero, Function.comp_apply,
+        Function.iterate_succ, Polynomial.iterate_derivative_sub,
+        Polynomial.iterate_derivative_nat_cast_mul, Polynomial.eval_mul, Polynomial.eval_nat_cast,
+        Polynomial.eval_sub]
       intro h
       apply mul_eq_zero_of_right
       rw [ih _ _ (Nat.le_of_succ_le h), sub_zero]
@@ -189,15 +195,18 @@ open Polynomial
 
 @[simp]
 theorem iterate_derivative_at_0 (n ν : ℕ) :
-    ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 = (pochhammer R ν).eval (n - (ν - 1) : ℕ) := by
+    ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 =
+      (pochhammer R ν).eval (n - (ν - 1) : ℕ) :=
+  by
   by_cases h : ν ≤ n
   · induction' ν with ν ih generalizing n h
     · simp [eval_at_0]
       
     · have h' : ν ≤ n - 1 := le_tsub_of_add_le_right h
-      simp only [derivative_succ, ih (n - 1) h', iterate_derivative_succ_at_0_eq_zero, Nat.succ_sub_succ_eq_sub,
-        tsub_zero, sub_zero, iterate_derivative_sub, iterate_derivative_nat_cast_mul, eval_one, eval_mul, eval_add,
-        eval_sub, eval_X, eval_comp, eval_nat_cast, Function.comp_apply, Function.iterate_succ, pochhammer_succ_left]
+      simp only [derivative_succ, ih (n - 1) h', iterate_derivative_succ_at_0_eq_zero,
+        Nat.succ_sub_succ_eq_sub, tsub_zero, sub_zero, iterate_derivative_sub,
+        iterate_derivative_nat_cast_mul, eval_one, eval_mul, eval_add, eval_sub, eval_X, eval_comp,
+        eval_nat_cast, Function.comp_apply, Function.iterate_succ, pochhammer_succ_left]
       obtain rfl | h'' := ν.eq_zero_or_pos
       · simp
         
@@ -217,7 +226,8 @@ theorem iterate_derivative_at_0 (n ν : ℕ) :
 
 theorem iterate_derivative_at_0_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n) :
     ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 ≠ 0 := by
-  simp only [Int.coe_nat_eq_zero, bernsteinPolynomial.iterate_derivative_at_0, Ne.def, Nat.cast_eq_zero]
+  simp only [Int.coe_nat_eq_zero, bernsteinPolynomial.iterate_derivative_at_0, Ne.def,
+    Nat.cast_eq_zero]
   simp only [← pochhammer_eval_cast]
   norm_cast
   apply ne_of_gt
@@ -227,7 +237,8 @@ theorem iterate_derivative_at_0_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n)
   · rw [← Nat.succ_pred_eq_of_pos h'] at h
     exact pochhammer_pos _ _ (tsub_pos_of_lt (Nat.lt_of_succ_le h))
     
-#align bernstein_polynomial.iterate_derivative_at_0_ne_zero bernsteinPolynomial.iterate_derivative_at_0_ne_zero
+#align
+  bernstein_polynomial.iterate_derivative_at_0_ne_zero bernsteinPolynomial.iterate_derivative_at_0_ne_zero
 
 /-!
 Rather than redoing the work of evaluating the derivatives at 1,
@@ -261,10 +272,11 @@ theorem iterate_derivative_at_1 (n ν : ℕ) (h : ν ≤ n) :
 
 theorem iterate_derivative_at_1_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n) :
     ((Polynomial.derivative^[n - ν]) (bernsteinPolynomial R n ν)).eval 1 ≠ 0 := by
-  rw [bernsteinPolynomial.iterate_derivative_at_1 _ _ _ h, Ne.def, neg_one_pow_mul_eq_zero_iff, ← Nat.cast_succ, ←
-    pochhammer_eval_cast, ← Nat.cast_zero, Nat.cast_inj]
+  rw [bernsteinPolynomial.iterate_derivative_at_1 _ _ _ h, Ne.def, neg_one_pow_mul_eq_zero_iff, ←
+    Nat.cast_succ, ← pochhammer_eval_cast, ← Nat.cast_zero, Nat.cast_inj]
   exact (pochhammer_pos _ _ (Nat.succ_pos ν)).ne'
-#align bernstein_polynomial.iterate_derivative_at_1_ne_zero bernsteinPolynomial.iterate_derivative_at_1_ne_zero
+#align
+  bernstein_polynomial.iterate_derivative_at_1_ne_zero bernsteinPolynomial.iterate_derivative_at_1_ne_zero
 
 open Submodule
 
@@ -319,7 +331,8 @@ are linearly independent.
 The inductive step relies on the observation that the `(n-k)`-th derivative, evaluated at 1,
 annihilates `bernstein_polynomial n ν` for `ν < k`, but has a nonzero value at `ν = k`.
 -/
-theorem linear_independent (n : ℕ) : LinearIndependent ℚ fun ν : Fin (n + 1) => bernsteinPolynomial ℚ n ν :=
+theorem linear_independent (n : ℕ) :
+    LinearIndependent ℚ fun ν : Fin (n + 1) => bernsteinPolynomial ℚ n ν :=
   linear_independent_aux n (n + 1) le_rfl
 #align bernstein_polynomial.linear_independent bernsteinPolynomial.linear_independent
 
@@ -336,7 +349,8 @@ open Polynomial
 
 open MvPolynomial
 
-theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν) = n • X := by
+theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν) = n • X :=
+  by
   -- We calculate the `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
   -- either directly or by using the binomial theorem.
   -- We'll work in `mv_polynomial bool R`.
@@ -357,7 +371,8 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     have w :
       ∀ k : ℕ,
         k • bernsteinPolynomial R n k =
-          ↑k * Polynomial.x ^ (k - 1) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) * Polynomial.x :=
+          ↑k * Polynomial.x ^ (k - 1) * (1 - Polynomial.x) ^ (n - k) * ↑(n.choose k) *
+            Polynomial.x :=
       by
       rintro (_ | k)
       · simp
@@ -370,18 +385,22 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     rw [add_pow, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum, Finset.sum_mul]
     -- Step inside the sum:
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
-    simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true, Bool.cond_false,
-      add_zero, mul_one, mul_zero, smul_zero, MvPolynomial.aeval_X, MvPolynomial.pderiv_mul, Derivation.leibniz_pow,
-      Derivation.map_coe_nat, map_nat_cast, map_pow, map_mul]
+    simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
+      Bool.cond_false, add_zero, mul_one, mul_zero, smul_zero, MvPolynomial.aeval_X,
+      MvPolynomial.pderiv_mul, Derivation.leibniz_pow, Derivation.map_coe_nat, map_nat_cast,
+      map_pow, map_mul]
     
   · rw [(pderiv tt).leibniz_pow, (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y]
-    simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_nat_cast, map_pow, map_add, map_mul, e, Bool.cond_true,
-      Bool.cond_false, MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow, add_zero, mul_one]
+    simp only [Algebra.id.smul_eq_mul, nsmul_eq_mul, map_nat_cast, map_pow, map_add, map_mul, e,
+      Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow,
+      add_zero, mul_one]
     
 #align bernstein_polynomial.sum_smul bernsteinPolynomial.sum_smul
 
 theorem sum_mul_smul (n : ℕ) :
-    (∑ ν in Finset.range (n + 1), (ν * (ν - 1)) • bernsteinPolynomial R n ν) = (n * (n - 1)) • X ^ 2 := by
+    (∑ ν in Finset.range (n + 1), (ν * (ν - 1)) • bernsteinPolynomial R n ν) =
+      (n * (n - 1)) • X ^ 2 :=
+  by
   -- We calculate the second `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
   -- either directly or by using the binomial theorem.
   -- We'll work in `mv_polynomial bool R`.
@@ -402,7 +421,8 @@ theorem sum_mul_smul (n : ℕ) :
     have w :
       ∀ k : ℕ,
         (k * (k - 1)) • bernsteinPolynomial R n k =
-          ↑(n.choose k) * ((1 - Polynomial.x) ^ (n - k) * (↑k * (↑(k - 1) * Polynomial.x ^ (k - 1 - 1)))) *
+          ↑(n.choose k) *
+              ((1 - Polynomial.x) ^ (n - k) * (↑k * (↑(k - 1) * Polynomial.x ^ (k - 1 - 1)))) *
             Polynomial.x ^ 2 :=
       by
       rintro (_ | _ | k)
@@ -415,18 +435,20 @@ theorem sum_mul_smul (n : ℕ) :
         push_cast
         ring
         
-    rw [add_pow, (pderiv tt).map_sum, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum, Finset.sum_mul]
+    rw [add_pow, (pderiv tt).map_sum, (pderiv tt).map_sum, (MvPolynomial.aeval e).map_sum,
+      Finset.sum_mul]
     -- Step inside the sum:
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
-    simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true, Bool.cond_false,
-      add_zero, zero_add, mul_zero, smul_zero, mul_one, MvPolynomial.aeval_X, MvPolynomial.pderiv_X_self,
-      MvPolynomial.pderiv_X_of_ne, Derivation.leibniz_pow, Derivation.leibniz, Derivation.map_coe_nat, map_nat_cast,
-      map_pow, map_mul, map_add]
+    simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
+      Bool.cond_false, add_zero, zero_add, mul_zero, smul_zero, mul_one, MvPolynomial.aeval_X,
+      MvPolynomial.pderiv_X_self, MvPolynomial.pderiv_X_of_ne, Derivation.leibniz_pow,
+      Derivation.leibniz, Derivation.map_coe_nat, map_nat_cast, map_pow, map_mul, map_add]
     
   -- On the right hand side, we'll just simplify.
-  · simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat, (pderiv tt).map_add, pderiv_tt_x,
-      pderiv_tt_y, Algebra.id.smul_eq_mul, add_zero, mul_one, Derivation.map_smul_of_tower, map_nsmul, map_pow, map_add,
-      e, Bool.cond_true, Bool.cond_false, MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow, smul_smul, smul_one_mul]
+  · simp only [pderiv_one, pderiv_mul, (pderiv _).leibniz_pow, (pderiv _).map_coe_nat,
+      (pderiv tt).map_add, pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, add_zero, mul_one,
+      Derivation.map_smul_of_tower, map_nsmul, map_pow, map_add, e, Bool.cond_true, Bool.cond_false,
+      MvPolynomial.aeval_X, add_sub_cancel'_right, one_pow, smul_smul, smul_one_mul]
     
 #align bernstein_polynomial.sum_mul_smul bernsteinPolynomial.sum_mul_smul
 
@@ -439,7 +461,8 @@ theorem variance (n : ℕ) :
   by
   have p :
     ((((Finset.range (n + 1)).Sum fun ν => (ν * (ν - 1)) • bernsteinPolynomial R n ν) +
-          (1 - (2 * n) • Polynomial.x) * (Finset.range (n + 1)).Sum fun ν => ν • bernsteinPolynomial R n ν) +
+          (1 - (2 * n) • Polynomial.x) *
+            (Finset.range (n + 1)).Sum fun ν => ν • bernsteinPolynomial R n ν) +
         n ^ 2 • X ^ 2 * (Finset.range (n + 1)).Sum fun ν => bernsteinPolynomial R n ν) =
       _ :=
     rfl

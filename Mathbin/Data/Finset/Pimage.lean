@@ -28,15 +28,18 @@ def toFinset (o : Part α) [Decidable o.Dom] : Finset α :=
 #align part.to_finset Part.toFinset
 
 @[simp]
-theorem mem_to_finset {o : Part α} [Decidable o.Dom] {x : α} : x ∈ o.toFinset ↔ x ∈ o := by simp [to_finset]
+theorem mem_to_finset {o : Part α} [Decidable o.Dom] {x : α} : x ∈ o.toFinset ↔ x ∈ o := by
+  simp [to_finset]
 #align part.mem_to_finset Part.mem_to_finset
 
 @[simp]
-theorem to_finset_none [Decidable (none : Part α).Dom] : none.toFinset = (∅ : Finset α) := by simp [to_finset]
+theorem to_finset_none [Decidable (none : Part α).Dom] : none.toFinset = (∅ : Finset α) := by
+  simp [to_finset]
 #align part.to_finset_none Part.to_finset_none
 
 @[simp]
-theorem to_finset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {a} := by simp [to_finset]
+theorem to_finset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {a} := by
+  simp [to_finset]
 #align part.to_finset_some Part.to_finset_some
 
 @[simp]
@@ -48,7 +51,8 @@ end Part
 
 namespace Finset
 
-variable [DecidableEq β] {f g : α →. β} [∀ x, Decidable (f x).Dom] [∀ x, Decidable (g x).Dom] {s t : Finset α} {b : β}
+variable [DecidableEq β] {f g : α →. β} [∀ x, Decidable (f x).Dom] [∀ x, Decidable (g x).Dom]
+  {s t : Finset α} {b : β}
 
 /-- Image of `s : finset α` under a partially defined function `f : α →. β`. -/
 def pimage (f : α →. β) [∀ x, Decidable (f x).Dom] (s : Finset α) : Finset β :=
@@ -79,7 +83,9 @@ theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f
 
 /-- Rewrite `s.pimage f` in terms of `finset.filter`, `finset.attach`, and `finset.image`. -/
 theorem pimage_eq_image_filter :
-    s.pimage f = (filter (fun x => (f x).Dom) s).attach.image fun x => (f x).get (mem_filter.1 x.coe_prop).2 := by
+    s.pimage f =
+      (filter (fun x => (f x).Dom) s).attach.image fun x => (f x).get (mem_filter.1 x.coe_prop).2 :=
+  by
   ext x
   simp [Part.mem_eq, And.exists, -exists_prop]
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter

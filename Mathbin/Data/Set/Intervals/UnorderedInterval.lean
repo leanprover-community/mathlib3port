@@ -52,11 +52,13 @@ theorem dual_interval (a b : α) : [toDual a, toDual b] = of_dual ⁻¹' [a, b] 
 #align set.dual_interval Set.dual_interval
 
 @[simp]
-theorem interval_of_le (h : a ≤ b) : [a, b] = icc a b := by rw [interval, min_eq_left h, max_eq_right h]
+theorem interval_of_le (h : a ≤ b) : [a, b] = icc a b := by
+  rw [interval, min_eq_left h, max_eq_right h]
 #align set.interval_of_le Set.interval_of_le
 
 @[simp]
-theorem interval_of_ge (h : b ≤ a) : [a, b] = icc b a := by rw [interval, min_eq_right h, max_eq_left h]
+theorem interval_of_ge (h : b ≤ a) : [a, b] = icc b a := by
+  rw [interval, min_eq_right h, max_eq_left h]
 #align set.interval_of_ge Set.interval_of_ge
 
 theorem interval_swap (a b : α) : [a, b] = [b, a] := by rw [interval, interval, min_comm, max_comm]
@@ -139,10 +141,12 @@ theorem interval_subset_Icc (ha : a₁ ∈ icc a₂ b₂) (hb : b₁ ∈ icc a�
 #align set.interval_subset_Icc Set.interval_subset_Icc
 
 theorem interval_subset_interval_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a₂, b₂] ∧ b₁ ∈ [a₂, b₂] :=
-  Iff.intro (fun h => ⟨h left_mem_interval, h right_mem_interval⟩) fun h => interval_subset_interval h.1 h.2
+  Iff.intro (fun h => ⟨h left_mem_interval, h right_mem_interval⟩) fun h =>
+    interval_subset_interval h.1 h.2
 #align set.interval_subset_interval_iff_mem Set.interval_subset_interval_iff_mem
 
-theorem interval_subset_interval_iff_le : [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ := by
+theorem interval_subset_interval_iff_le :
+    [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ := by
   rw [interval, interval, Icc_subset_Icc_iff]
   exact min_le_max
 #align set.interval_subset_interval_iff_le Set.interval_subset_interval_iff_le
@@ -161,12 +165,10 @@ theorem interval_subset_interval_union_interval : [a, c] ⊆ [a, b] ∪ [b, c] :
 #align set.interval_subset_interval_union_interval Set.interval_subset_interval_union_interval
 
 theorem eq_of_mem_interval_of_mem_interval : a ∈ [b, c] → b ∈ [a, c] → a = b := by
-  simp_rw [mem_interval] <;>
-    rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;>
-      apply le_antisymm <;>
-        first
-          |assumption|· exact le_trans ‹_› ‹_›
-            
+  simp_rw [mem_interval] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>
+    first
+      |assumption|· exact le_trans ‹_› ‹_›
+        
 #align set.eq_of_mem_interval_of_mem_interval Set.eq_of_mem_interval_of_mem_interval
 
 theorem eq_of_mem_interval_of_mem_interval' : b ∈ [a, c] → c ∈ [a, b] → b = c := by
@@ -182,7 +184,8 @@ theorem interval_injective_left (a : α) : Injective (interval a) := by
   simpa only [interval_swap] using interval_injective_right a
 #align set.interval_injective_left Set.interval_injective_left
 
-theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) : BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ [a, b] := by
+theorem bdd_below_bdd_above_iff_subset_interval (s : Set α) :
+    BddBelow s ∧ BddAbove s ↔ ∃ a b, s ⊆ [a, b] := by
   rw [bdd_below_bdd_above_iff_subset_Icc]
   constructor
   · rintro ⟨a, b, h⟩
@@ -209,7 +212,8 @@ theorem interval_oc_of_le (h : a ≤ b) : Ι a b = ioc a b := by simp [interval_
 theorem interval_oc_of_lt (h : b < a) : Ι a b = ioc b a := by simp [interval_oc, le_of_lt h]
 #align set.interval_oc_of_lt Set.interval_oc_of_lt
 
-theorem interval_oc_eq_union : Ι a b = ioc a b ∪ ioc b a := by cases le_total a b <;> simp [interval_oc, *]
+theorem interval_oc_eq_union : Ι a b = ioc a b ∪ ioc b a := by
+  cases le_total a b <;> simp [interval_oc, *]
 #align set.interval_oc_eq_union Set.interval_oc_eq_union
 
 theorem mem_interval_oc : a ∈ Ι b c ↔ b < a ∧ a ≤ c ∨ c < a ∧ a ≤ b := by
@@ -229,17 +233,19 @@ theorem left_mem_interval_oc : a ∈ Ι a b ↔ b < a := by simp [mem_interval_o
 theorem right_mem_interval_oc : b ∈ Ι a b ↔ a < b := by simp [mem_interval_oc]
 #align set.right_mem_interval_oc Set.right_mem_interval_oc
 
-theorem forall_interval_oc_iff {P : α → Prop} : (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ ioc a b, P x) ∧ ∀ x ∈ ioc b a, P x := by
+theorem forall_interval_oc_iff {P : α → Prop} :
+    (∀ x ∈ Ι a b, P x) ↔ (∀ x ∈ ioc a b, P x) ∧ ∀ x ∈ ioc b a, P x := by
   simp only [interval_oc_eq_union, mem_union, or_imp, forall_and]
 #align set.forall_interval_oc_iff Set.forall_interval_oc_iff
 
-theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α} (h : [a, b] ⊆ [c, d]) :
-    Ι a b ⊆ Ι c d :=
+theorem interval_oc_subset_interval_oc_of_interval_subset_interval {a b c d : α}
+    (h : [a, b] ⊆ [c, d]) : Ι a b ⊆ Ι c d :=
   Ioc_subset_Ioc (interval_subset_interval_iff_le.1 h).1 (interval_subset_interval_iff_le.1 h).2
 #align
   set.interval_oc_subset_interval_oc_of_interval_subset_interval Set.interval_oc_subset_interval_oc_of_interval_subset_interval
 
-theorem interval_oc_swap (a b : α) : Ι a b = Ι b a := by simp only [interval_oc, min_comm a b, max_comm a b]
+theorem interval_oc_swap (a b : α) : Ι a b = Ι b a := by
+  simp only [interval_oc, min_comm a b, max_comm a b]
 #align set.interval_oc_swap Set.interval_oc_swap
 
 theorem Ioc_subset_interval_oc : ioc a b ⊆ Ι a b :=
@@ -251,28 +257,29 @@ theorem Ioc_subset_interval_oc' : ioc a b ⊆ Ι b a :=
 #align set.Ioc_subset_interval_oc' Set.Ioc_subset_interval_oc'
 
 theorem eq_of_mem_interval_oc_of_mem_interval_oc : a ∈ Ι b c → b ∈ Ι a c → a = b := by
-  simp_rw [mem_interval_oc] <;>
-    rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;>
-      apply le_antisymm <;> first |assumption|exact le_of_lt ‹_›|exact le_trans ‹_› (le_of_lt ‹_›)
+  simp_rw [mem_interval_oc] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;> apply le_antisymm <;>
+    first |assumption|exact le_of_lt ‹_›|exact le_trans ‹_› (le_of_lt ‹_›)
 #align set.eq_of_mem_interval_oc_of_mem_interval_oc Set.eq_of_mem_interval_oc_of_mem_interval_oc
 
 theorem eq_of_mem_interval_oc_of_mem_interval_oc' : b ∈ Ι a c → c ∈ Ι a b → b = c := by
   simpa only [interval_oc_swap a] using eq_of_mem_interval_oc_of_mem_interval_oc
 #align set.eq_of_mem_interval_oc_of_mem_interval_oc' Set.eq_of_mem_interval_oc_of_mem_interval_oc'
 
-theorem eq_of_not_mem_interval_oc_of_not_mem_interval_oc (ha : a ≤ c) (hb : b ≤ c) : a ∉ Ι b c → b ∉ Ι a c → a = b := by
-  simp_rw [not_mem_interval_oc] <;>
-    rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;>
-      apply le_antisymm <;> first |assumption|exact le_of_lt ‹_›|cases not_le_of_lt ‹_› ‹_›
-#align set.eq_of_not_mem_interval_oc_of_not_mem_interval_oc Set.eq_of_not_mem_interval_oc_of_not_mem_interval_oc
+theorem eq_of_not_mem_interval_oc_of_not_mem_interval_oc (ha : a ≤ c) (hb : b ≤ c) :
+    a ∉ Ι b c → b ∉ Ι a c → a = b := by
+  simp_rw [not_mem_interval_oc] <;> rintro (⟨_, _⟩ | ⟨_, _⟩) (⟨_, _⟩ | ⟨_, _⟩) <;>
+      apply le_antisymm <;>
+    first |assumption|exact le_of_lt ‹_›|cases not_le_of_lt ‹_› ‹_›
+#align
+  set.eq_of_not_mem_interval_oc_of_not_mem_interval_oc Set.eq_of_not_mem_interval_oc_of_not_mem_interval_oc
 
 theorem interval_oc_injective_right (a : α) : Injective fun b => Ι b a := by
   rintro b c h
   rw [ext_iff] at h
   obtain ha | ha := le_or_lt b a
   · have hb := (h b).Not
-    simp only [ha, left_mem_interval_oc, not_lt, true_iff_iff, not_mem_interval_oc, ← not_le, and_true_iff, not_true,
-      false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
+    simp only [ha, left_mem_interval_oc, not_lt, true_iff_iff, not_mem_interval_oc, ← not_le,
+      and_true_iff, not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
     refine' hb.eq_of_not_lt fun hc => _
     simpa [ha, and_iff_right hc, ← @not_le _ _ _ a, -not_le] using h c
     

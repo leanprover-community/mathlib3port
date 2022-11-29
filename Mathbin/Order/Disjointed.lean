@@ -77,7 +77,8 @@ theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed 
   · exact (Nat.not_lt_zero _ h).elim
     
   exact
-    disjoint_sdiff_self_right.mono_left ((disjointed_le f m).trans (le_partial_sups_of_le f (Nat.lt_add_one_iff.1 h)))
+    disjoint_sdiff_self_right.mono_left
+      ((disjointed_le f m).trans (le_partial_sups_of_le f (Nat.lt_add_one_iff.1 h)))
 #align disjoint_disjointed disjoint_disjointed
 
 /-- An induction principle for `disjointed`. To define/prove something on `disjointed f n`, it's
@@ -98,14 +99,14 @@ def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p
 #align disjointed_rec disjointedRec
 
 @[simp]
-theorem disjointed_rec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i)) (h₀ : p (f 0)) :
-    disjointedRec hdiff h₀ = h₀ :=
+theorem disjointed_rec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i))
+    (h₀ : p (f 0)) : disjointedRec hdiff h₀ = h₀ :=
   rfl
 #align disjointed_rec_zero disjointed_rec_zero
 
 -- TODO: Find a useful statement of `disjointed_rec_succ`.
-theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) : disjointed f (n + 1) = f (n + 1) \ f n := by
-  rw [disjointed_succ, hf.partial_sups_eq]
+theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
+    disjointed f (n + 1) = f (n + 1) \ f n := by rw [disjointed_succ, hf.partial_sups_eq]
 #align monotone.disjointed_eq Monotone.disjointed_eq
 
 @[simp]
@@ -120,8 +121,8 @@ theorem partial_sups_disjointed (f : ℕ → α) : partialSups (disjointed f) = 
 
 /-- `disjointed f` is the unique sequence that is pairwise disjoint and has the same partial sups
 as `f`. -/
-theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d)) (hsups : partialSups d = partialSups f) :
-    d = disjointed f := by
+theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d))
+    (hsups : partialSups d = partialSups f) : d = disjointed f := by
   ext n
   cases n
   · rw [← partial_sups_zero d, hsups, partial_sups_zero, disjointed_zero]
@@ -137,7 +138,8 @@ theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d)) 
   induction' m with m ih
   · exact hdisj (Nat.succ_ne_zero _).symm
     
-  rw [partial_sups_succ, disjoint_iff, inf_sup_right, sup_eq_bot_iff, ← disjoint_iff, ← disjoint_iff]
+  rw [partial_sups_succ, disjoint_iff, inf_sup_right, sup_eq_bot_iff, ← disjoint_iff, ←
+    disjoint_iff]
   exact ⟨ih (Nat.le_of_succ_le hm), hdisj (Nat.lt_succ_of_le hm).Ne⟩
 #align disjointed_unique disjointed_unique
 
@@ -180,8 +182,8 @@ theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f 
   disjointed_eq_inf_compl f n
 #align disjointed_eq_inter_compl disjointed_eq_inter_compl
 
-theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n) [∀ x n, Decidable (x ∈ s n)] (n : ℕ) :
-    (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n := by
+theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n)
+    [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n := by
   ext x
   simp [Nat.find_eq_iff, disjointed_eq_inter_compl]
 #align preimage_find_eq_disjointed preimage_find_eq_disjointed

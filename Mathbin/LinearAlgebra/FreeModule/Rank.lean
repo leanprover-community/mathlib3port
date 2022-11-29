@@ -50,9 +50,10 @@ theorem rank_finsupp' {ι : Type u} : Module.rank R (ι →₀ R) = (#ι) := by 
 
 /-- The rank of `M × N` is `(module.rank R M).lift + (module.rank R N).lift`. -/
 @[simp]
-theorem rank_prod : Module.rank R (M × N) = lift.{w, v} (Module.rank R M) + lift.{v, w} (Module.rank R N) := by
-  simpa [rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N, lift_umax, lift_umax'] using
-    ((choose_basis R M).Prod (choose_basis R N)).mk_eq_dim.symm
+theorem rank_prod :
+    Module.rank R (M × N) = lift.{w, v} (Module.rank R M) + lift.{v, w} (Module.rank R N) := by
+  simpa [rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N, lift_umax,
+    lift_umax'] using ((choose_basis R M).Prod (choose_basis R N)).mk_eq_dim.symm
 #align module.free.rank_prod Module.Free.rank_prod
 
 /-- If `M` and `N` lie in the same universe, the rank of `M × N` is
@@ -63,8 +64,9 @@ theorem rank_prod' (N : Type v) [AddCommGroup N] [Module R N] [Module.Free R N] 
 
 /-- The rank of the direct sum is the sum of the ranks. -/
 @[simp]
-theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroup (M i)] [∀ i : ι, Module R (M i)]
-    [∀ i : ι, Module.Free R (M i)] : Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
+theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroup (M i)]
+    [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
+    Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
   let B i := choose_basis R (M i)
   let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
   simp [← b.mk_eq_dim'', fun i => (B i).mk_eq_dim'']
@@ -72,8 +74,9 @@ theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGr
 
 /-- The rank of a finite product is the sum of the ranks. -/
 @[simp]
-theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι, AddCommGroup (M i)] [∀ i : ι, Module R (M i)]
-    [∀ i : ι, Module.Free R (M i)] : Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
+theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι, AddCommGroup (M i)]
+    [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
+    Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
   cases nonempty_fintype ι
   rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
 #align module.free.rank_pi_finite Module.Free.rank_pi_finite
@@ -92,14 +95,15 @@ theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
 /-- If `m` and `n` are `fintype` that lie in the same universe, the rank of `m × n` matrices is
   `(# n * # m).lift`. -/
 @[simp]
-theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = ((#m) * (#n)).lift := by
-  rw [rank_matrix, lift_mul, lift_umax]
+theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] :
+    Module.rank R (Matrix m n R) = ((#m) * (#n)).lift := by rw [rank_matrix, lift_mul, lift_umax]
 #align module.free.rank_matrix' Module.Free.rank_matrix'
 
 /-- If `m` and `n` are `fintype` that lie in the same universe as `R`, the rank of `m × n` matrices
   is `# m * # n`. -/
 @[simp]
-theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] : Module.rank R (Matrix m n R) = (#m) * (#n) := by simp
+theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] :
+    Module.rank R (Matrix m n R) = (#m) * (#n) := by simp
 #align module.free.rank_matrix'' Module.Free.rank_matrix''
 
 end Ring

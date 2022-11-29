@@ -51,9 +51,9 @@ section KroneckerMap
 
 /- warning: matrix.kronecker_map -> Matrix.kroneckerMap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_2}} {β : Type.{u_4}} {γ : Type.{u_6}} {l : Type.{u_8}} {m : Type.{u_9}} {n : Type.{u_10}} {p : Type.{u_11}}, (α -> β -> γ) -> (Matrix.{u_8 u_9 u_2} l m α) -> (Matrix.{u_10 u_11 u_4} n p β) -> (Matrix.{(max u_8 u_10) (max u_9 u_11) u_6} (Prod.{u_8 u_10} l n) (Prod.{u_9 u_11} m p) γ)
+  forall {α : Type.{u_2}} {β : Type.{u_4}} {γ : Type.{u_6}} {l : Type.{u_8}} {m : Type.{u_9}} {n : Type.{u_10}} {p : Type.{u_11}}, (α -> β -> γ) -> (Matrix.{u_8, u_9, u_2} l m α) -> (Matrix.{u_10, u_11, u_4} n p β) -> (Matrix.{max u_8 u_10, max u_9 u_11, u_6} (Prod.{u_8, u_10} l n) (Prod.{u_9, u_11} m p) γ)
 but is expected to have type
-  forall {α : Type.{u_2}} {β : Type.{u_4}} {γ : Type.{u_6}} {l : Type.{u_8}} {m : Type.{u_9}} {n : Type.{u_10}} {p : Type.{u_11}}, (α -> β -> γ) -> (Matrix.{u_8 u_9 u_2} l m α) -> (Matrix.{u_10 u_11 u_4} n p β) -> (Matrix.{(max u_8 u_10) (max u_9 u_11) u_6} (Prod.{u_8 u_10} l n) (Prod.{u_9 u_11} m p) γ)
+  forall {α : Type.{u_2}} {β : Type.{u_4}} {γ : Type.{u_6}} {l : Type.{u_8}} {m : Type.{u_9}} {n : Type.{u_10}} {p : Type.{u_11}}, (α -> β -> γ) -> (Matrix.{u_8, u_9, u_2} l m α) -> (Matrix.{u_10, u_11, u_4} n p β) -> (Matrix.{max u_8 u_10, max u_9 u_11, u_6} (Prod.{u_8, u_10} l n) (Prod.{u_9, u_11} m p) γ)
 Case conversion may be inaccurate. Consider using '#align matrix.kronecker_map Matrix.kroneckerMapₓ'. -/
 /-- Produce a matrix with `f` applied to every pair of elements from `A` and `B`. -/
 @[simp]
@@ -71,8 +71,8 @@ theorem kronecker_map_map_left (f : α' → β → γ) (g : α → α') (A : Mat
   ext fun i j => rfl
 #align matrix.kronecker_map_map_left Matrix.kronecker_map_map_left
 
-theorem kronecker_map_map_right (f : α → β' → γ) (g : β → β') (A : Matrix l m α) (B : Matrix n p β) :
-    kroneckerMap f A (B.map g) = kroneckerMap (fun a b => f a (g b)) A B :=
+theorem kronecker_map_map_right (f : α → β' → γ) (g : β → β') (A : Matrix l m α)
+    (B : Matrix n p β) : kroneckerMap f A (B.map g) = kroneckerMap (fun a b => f a (g b)) A B :=
   ext fun i j => rfl
 #align matrix.kronecker_map_map_right Matrix.kronecker_map_map_right
 
@@ -82,25 +82,25 @@ theorem kronecker_map_map (f : α → β → γ) (g : γ → γ') (A : Matrix l 
 #align matrix.kronecker_map_map Matrix.kronecker_map_map
 
 @[simp]
-theorem kronecker_map_zero_left [Zero α] [Zero γ] (f : α → β → γ) (hf : ∀ b, f 0 b = 0) (B : Matrix n p β) :
-    kroneckerMap f (0 : Matrix l m α) B = 0 :=
+theorem kronecker_map_zero_left [Zero α] [Zero γ] (f : α → β → γ) (hf : ∀ b, f 0 b = 0)
+    (B : Matrix n p β) : kroneckerMap f (0 : Matrix l m α) B = 0 :=
   ext fun i j => hf _
 #align matrix.kronecker_map_zero_left Matrix.kronecker_map_zero_left
 
 @[simp]
-theorem kronecker_map_zero_right [Zero β] [Zero γ] (f : α → β → γ) (hf : ∀ a, f a 0 = 0) (A : Matrix l m α) :
-    kroneckerMap f A (0 : Matrix n p β) = 0 :=
+theorem kronecker_map_zero_right [Zero β] [Zero γ] (f : α → β → γ) (hf : ∀ a, f a 0 = 0)
+    (A : Matrix l m α) : kroneckerMap f A (0 : Matrix n p β) = 0 :=
   ext fun i j => hf _
 #align matrix.kronecker_map_zero_right Matrix.kronecker_map_zero_right
 
-theorem kronecker_map_add_left [Add α] [Add γ] (f : α → β → γ) (hf : ∀ a₁ a₂ b, f (a₁ + a₂) b = f a₁ b + f a₂ b)
-    (A₁ A₂ : Matrix l m α) (B : Matrix n p β) :
+theorem kronecker_map_add_left [Add α] [Add γ] (f : α → β → γ)
+    (hf : ∀ a₁ a₂ b, f (a₁ + a₂) b = f a₁ b + f a₂ b) (A₁ A₂ : Matrix l m α) (B : Matrix n p β) :
     kroneckerMap f (A₁ + A₂) B = kroneckerMap f A₁ B + kroneckerMap f A₂ B :=
   ext fun i j => hf _ _ _
 #align matrix.kronecker_map_add_left Matrix.kronecker_map_add_left
 
-theorem kronecker_map_add_right [Add β] [Add γ] (f : α → β → γ) (hf : ∀ a b₁ b₂, f a (b₁ + b₂) = f a b₁ + f a b₂)
-    (A : Matrix l m α) (B₁ B₂ : Matrix n p β) :
+theorem kronecker_map_add_right [Add β] [Add γ] (f : α → β → γ)
+    (hf : ∀ a b₁ b₂, f a (b₁ + b₂) = f a b₁ + f a b₂) (A : Matrix l m α) (B₁ B₂ : Matrix n p β) :
     kroneckerMap f A (B₁ + B₂) = kroneckerMap f A B₁ + kroneckerMap f A B₂ :=
   ext fun i j => hf _ _ _
 #align matrix.kronecker_map_add_right Matrix.kronecker_map_add_right
@@ -117,22 +117,22 @@ theorem kronecker_map_smul_right [HasSmul R β] [HasSmul R γ] (f : α → β �
   ext fun i j => hf _ _
 #align matrix.kronecker_map_smul_right Matrix.kronecker_map_smul_right
 
-theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [DecidableEq m] [DecidableEq n] (f : α → β → γ)
-    (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
+theorem kronecker_map_diagonal_diagonal [Zero α] [Zero β] [Zero γ] [DecidableEq m] [DecidableEq n]
+    (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (a : m → α) (b : n → β) :
     kroneckerMap f (diagonal a) (diagonal b) = diagonal fun mn => f (a mn.1) (b mn.2) := by
   ext (⟨i₁, i₂⟩⟨j₁, j₂⟩)
   simp [diagonal, apply_ite f, ite_and, ite_apply, apply_ite (f (a i₁)), hf₁, hf₂]
 #align matrix.kronecker_map_diagonal_diagonal Matrix.kronecker_map_diagonal_diagonal
 
 @[simp]
-theorem kronecker_map_one_one [Zero α] [Zero β] [Zero γ] [One α] [One β] [One γ] [DecidableEq m] [DecidableEq n]
-    (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0) (hf₃ : f 1 1 = 1) :
-    kroneckerMap f (1 : Matrix m m α) (1 : Matrix n n β) = 1 :=
+theorem kronecker_map_one_one [Zero α] [Zero β] [Zero γ] [One α] [One β] [One γ] [DecidableEq m]
+    [DecidableEq n] (f : α → β → γ) (hf₁ : ∀ b, f 0 b = 0) (hf₂ : ∀ a, f a 0 = 0)
+    (hf₃ : f 1 1 = 1) : kroneckerMap f (1 : Matrix m m α) (1 : Matrix n n β) = 1 :=
   (kronecker_map_diagonal_diagonal _ hf₁ hf₂ _ _).trans <| by simp only [hf₃, diagonal_one]
 #align matrix.kronecker_map_one_one Matrix.kronecker_map_one_one
 
-theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (en : n ≃ n') (ep : p ≃ p') (M : Matrix l m α)
-    (N : Matrix n p β) :
+theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (en : n ≃ n')
+    (ep : p ≃ p') (M : Matrix l m α) (N : Matrix n p β) :
     kroneckerMap f (reindex el em M) (reindex en ep N) =
       reindex (el.prodCongr en) (em.prodCongr ep) (kroneckerMap f M N) :=
   by
@@ -140,20 +140,22 @@ theorem kronecker_map_reindex (f : α → β → γ) (el : l ≃ l') (em : m ≃
   rfl
 #align matrix.kronecker_map_reindex Matrix.kronecker_map_reindex
 
-theorem kronecker_map_reindex_left (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (M : Matrix l m α) (N : Matrix n n' β) :
+theorem kronecker_map_reindex_left (f : α → β → γ) (el : l ≃ l') (em : m ≃ m') (M : Matrix l m α)
+    (N : Matrix n n' β) :
     kroneckerMap f (Matrix.reindex el em M) N =
       reindex (el.prodCongr (Equiv.refl _)) (em.prodCongr (Equiv.refl _)) (kroneckerMap f M N) :=
   kronecker_map_reindex _ _ _ (Equiv.refl _) (Equiv.refl _) _ _
 #align matrix.kronecker_map_reindex_left Matrix.kronecker_map_reindex_left
 
-theorem kronecker_map_reindex_right (f : α → β → γ) (em : m ≃ m') (en : n ≃ n') (M : Matrix l l' α) (N : Matrix m n β) :
+theorem kronecker_map_reindex_right (f : α → β → γ) (em : m ≃ m') (en : n ≃ n') (M : Matrix l l' α)
+    (N : Matrix m n β) :
     kroneckerMap f M (reindex em en N) =
       reindex ((Equiv.refl _).prodCongr em) ((Equiv.refl _).prodCongr en) (kroneckerMap f M N) :=
   kronecker_map_reindex _ (Equiv.refl _) (Equiv.refl _) _ _ _ _
 #align matrix.kronecker_map_reindex_right Matrix.kronecker_map_reindex_right
 
-theorem kronecker_map_assoc {δ ξ ω ω' : Type _} (f : α → β → γ) (g : γ → δ → ω) (f' : α → ξ → ω') (g' : β → δ → ξ)
-    (A : Matrix l m α) (B : Matrix n p β) (D : Matrix q r δ) (φ : ω ≃ ω')
+theorem kronecker_map_assoc {δ ξ ω ω' : Type _} (f : α → β → γ) (g : γ → δ → ω) (f' : α → ξ → ω')
+    (g' : β → δ → ξ) (A : Matrix l m α) (B : Matrix n p β) (D : Matrix q r δ) (φ : ω ≃ ω')
     (hφ : ∀ a b d, φ (g (f a b) d) = f' a (g' b d)) :
     (reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r)).trans (Equiv.mapMatrix φ)
         (kroneckerMap g (kroneckerMap f A B) D) =
@@ -161,34 +163,40 @@ theorem kronecker_map_assoc {δ ξ ω ω' : Type _} (f : α → β → γ) (g : 
   ext fun i j => hφ _ _ _
 #align matrix.kronecker_map_assoc Matrix.kronecker_map_assoc
 
-theorem kronecker_map_assoc₁ {δ ξ ω : Type _} (f : α → β → γ) (g : γ → δ → ω) (f' : α → ξ → ω) (g' : β → δ → ξ)
-    (A : Matrix l m α) (B : Matrix n p β) (D : Matrix q r δ) (h : ∀ a b d, g (f a b) d = f' a (g' b d)) :
-    reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r) (kroneckerMap g (kroneckerMap f A B) D) =
+theorem kronecker_map_assoc₁ {δ ξ ω : Type _} (f : α → β → γ) (g : γ → δ → ω) (f' : α → ξ → ω)
+    (g' : β → δ → ξ) (A : Matrix l m α) (B : Matrix n p β) (D : Matrix q r δ)
+    (h : ∀ a b d, g (f a b) d = f' a (g' b d)) :
+    reindex (Equiv.prodAssoc l n q) (Equiv.prodAssoc m p r)
+        (kroneckerMap g (kroneckerMap f A B) D) =
       kroneckerMap f' A (kroneckerMap g' B D) :=
   ext fun i j => h _ _ _
 #align matrix.kronecker_map_assoc₁ Matrix.kronecker_map_assoc₁
 
 /-- When `f` is bilinear then `matrix.kronecker_map f` is also bilinear. -/
 @[simps]
-def kroneckerMapBilinear [CommSemiring R] [AddCommMonoid α] [AddCommMonoid β] [AddCommMonoid γ] [Module R α]
-    [Module R β] [Module R γ] (f : α →ₗ[R] β →ₗ[R] γ) :
+def kroneckerMapBilinear [CommSemiring R] [AddCommMonoid α] [AddCommMonoid β] [AddCommMonoid γ]
+    [Module R α] [Module R β] [Module R γ] (f : α →ₗ[R] β →ₗ[R] γ) :
     Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) γ :=
   LinearMap.mk₂ R (kroneckerMap fun r s => f r s) (kronecker_map_add_left _ <| f.map_add₂)
-    (fun r => kronecker_map_smul_left _ _ <| f.map_smul₂ _) ((kronecker_map_add_right _) fun a => (f a).map_add)
-    fun r => (kronecker_map_smul_right _ _) fun a => (f a).map_smul r
+    (fun r => kronecker_map_smul_left _ _ <| f.map_smul₂ _)
+    ((kronecker_map_add_right _) fun a => (f a).map_add) fun r =>
+    (kronecker_map_smul_right _ _) fun a => (f a).map_smul r
 #align matrix.kronecker_map_bilinear Matrix.kroneckerMapBilinear
 
 /-- `matrix.kronecker_map_bilinear` commutes with `⬝` if `f` commutes with `*`.
 
 This is primarily used with `R = ℕ` to prove `matrix.mul_kronecker_mul`. -/
-theorem kronecker_map_bilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m'] [NonUnitalNonAssocSemiring α]
-    [NonUnitalNonAssocSemiring β] [NonUnitalNonAssocSemiring γ] [Module R α] [Module R β] [Module R γ]
-    (f : α →ₗ[R] β →ₗ[R] γ) (h_comm : ∀ a b a' b', f (a * b) (a' * b') = f a a' * f b b') (A : Matrix l m α)
+theorem kronecker_map_bilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m']
+    [NonUnitalNonAssocSemiring α] [NonUnitalNonAssocSemiring β] [NonUnitalNonAssocSemiring γ]
+    [Module R α] [Module R β] [Module R γ] (f : α →ₗ[R] β →ₗ[R] γ)
+    (h_comm : ∀ a b a' b', f (a * b) (a' * b') = f a a' * f b b') (A : Matrix l m α)
     (B : Matrix m n α) (A' : Matrix l' m' β) (B' : Matrix m' n' β) :
-    kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') = kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' := by
+    kroneckerMapBilinear f (A ⬝ B) (A' ⬝ B') =
+      kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' :=
+  by
   ext (⟨i, i'⟩⟨j, j'⟩)
-  simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ, Finset.sum_product,
-    kronecker_map]
+  simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ,
+    Finset.sum_product, kronecker_map]
   simp_rw [f.map_sum, LinearMap.sum_apply, LinearMap.map_sum, h_comm]
 #align matrix.kronecker_map_bilinear_mul_mul Matrix.kronecker_map_bilinear_mul_mul
 
@@ -239,26 +247,28 @@ theorem kronecker_zero [MulZeroClass α] (A : Matrix l m α) : A ⊗ₖ (0 : Mat
   kronecker_map_zero_right _ mul_zero A
 #align matrix.kronecker_zero Matrix.kronecker_zero
 
-theorem add_kronecker [Distrib α] (A₁ A₂ : Matrix l m α) (B : Matrix n p α) : (A₁ + A₂) ⊗ₖ B = A₁ ⊗ₖ B + A₂ ⊗ₖ B :=
+theorem add_kronecker [Distrib α] (A₁ A₂ : Matrix l m α) (B : Matrix n p α) :
+    (A₁ + A₂) ⊗ₖ B = A₁ ⊗ₖ B + A₂ ⊗ₖ B :=
   kronecker_map_add_left _ add_mul _ _ _
 #align matrix.add_kronecker Matrix.add_kronecker
 
-theorem kronecker_add [Distrib α] (A : Matrix l m α) (B₁ B₂ : Matrix n p α) : A ⊗ₖ (B₁ + B₂) = A ⊗ₖ B₁ + A ⊗ₖ B₂ :=
+theorem kronecker_add [Distrib α] (A : Matrix l m α) (B₁ B₂ : Matrix n p α) :
+    A ⊗ₖ (B₁ + B₂) = A ⊗ₖ B₁ + A ⊗ₖ B₂ :=
   kronecker_map_add_right _ mul_add _ _ _
 #align matrix.kronecker_add Matrix.kronecker_add
 
-theorem smul_kronecker [Monoid R] [Monoid α] [MulAction R α] [IsScalarTower R α α] (r : R) (A : Matrix l m α)
-    (B : Matrix n p α) : (r • A) ⊗ₖ B = r • A ⊗ₖ B :=
+theorem smul_kronecker [Monoid R] [Monoid α] [MulAction R α] [IsScalarTower R α α] (r : R)
+    (A : Matrix l m α) (B : Matrix n p α) : (r • A) ⊗ₖ B = r • A ⊗ₖ B :=
   kronecker_map_smul_left _ _ (fun _ _ => smul_mul_assoc _ _ _) _ _
 #align matrix.smul_kronecker Matrix.smul_kronecker
 
-theorem kronecker_smul [Monoid R] [Monoid α] [MulAction R α] [SmulCommClass R α α] (r : R) (A : Matrix l m α)
-    (B : Matrix n p α) : A ⊗ₖ (r • B) = r • A ⊗ₖ B :=
+theorem kronecker_smul [Monoid R] [Monoid α] [MulAction R α] [SmulCommClass R α α] (r : R)
+    (A : Matrix l m α) (B : Matrix n p α) : A ⊗ₖ (r • B) = r • A ⊗ₖ B :=
   kronecker_map_smul_right _ _ (fun _ _ => mul_smul_comm _ _ _) _ _
 #align matrix.kronecker_smul Matrix.kronecker_smul
 
-theorem diagonal_kronecker_diagonal [MulZeroClass α] [DecidableEq m] [DecidableEq n] (a : m → α) (b : n → α) :
-    diagonal a ⊗ₖ diagonal b = diagonal fun mn => a mn.1 * b mn.2 :=
+theorem diagonal_kronecker_diagonal [MulZeroClass α] [DecidableEq m] [DecidableEq n] (a : m → α)
+    (b : n → α) : diagonal a ⊗ₖ diagonal b = diagonal fun mn => a mn.1 * b mn.2 :=
   kronecker_map_diagonal_diagonal _ zero_mul mul_zero _ _
 #align matrix.diagonal_kronecker_diagonal Matrix.diagonal_kronecker_diagonal
 
@@ -268,8 +278,9 @@ theorem one_kronecker_one [MulZeroOneClass α] [DecidableEq m] [DecidableEq n] :
   kronecker_map_one_one _ zero_mul mul_zero (one_mul _)
 #align matrix.one_kronecker_one Matrix.one_kronecker_one
 
-theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiring α] (A : Matrix l m α) (B : Matrix m n α)
-    (A' : Matrix l' m' α) (B' : Matrix m' n' α) : (A ⬝ B) ⊗ₖ (A' ⬝ B') = A ⊗ₖ A' ⬝ B ⊗ₖ B' :=
+theorem mul_kronecker_mul [Fintype m] [Fintype m'] [CommSemiring α] (A : Matrix l m α)
+    (B : Matrix m n α) (A' : Matrix l' m' α) (B' : Matrix m' n' α) :
+    (A ⬝ B) ⊗ₖ (A' ⬝ B') = A ⊗ₖ A' ⬝ B ⊗ₖ B' :=
   kronecker_map_bilinear_mul_mul (Algebra.lmul ℕ α).toLinearMap mul_mul_mul_comm A B A' B'
 #align matrix.mul_kronecker_mul Matrix.mul_kronecker_mul
 
@@ -309,7 +320,8 @@ def kroneckerTmul : Matrix l m α → Matrix n p β → Matrix (l × n) (m × p)
 scoped[Kronecker] infixl:100 " ⊗ₖₜ " => Matrix.kroneckerMap (· ⊗ₜ ·)
 
 -- mathport name: matrix.kronecker_map.tmul'
-scoped[Kronecker] notation:100 x " ⊗ₖₜ[" R "] " y:100 => Matrix.kroneckerMap (TensorProduct.tmul R) x y
+scoped[Kronecker]
+  notation:100 x " ⊗ₖₜ[" R "] " y:100 => Matrix.kroneckerMap (TensorProduct.tmul R) x y
 
 @[simp]
 theorem kronecker_tmul_apply (A : Matrix l m α) (B : Matrix n p β) (i₁ i₂ j₁ j₂) :
@@ -318,7 +330,8 @@ theorem kronecker_tmul_apply (A : Matrix l m α) (B : Matrix n p β) (i₁ i₂ 
 #align matrix.kronecker_tmul_apply Matrix.kronecker_tmul_apply
 
 /-- `matrix.kronecker` as a bilinear map. -/
-def kroneckerTmulBilinear : Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) (α ⊗[R] β) :=
+def kroneckerTmulBilinear :
+    Matrix l m α →ₗ[R] Matrix n p β →ₗ[R] Matrix (l × n) (m × p) (α ⊗[R] β) :=
   kroneckerMapBilinear (TensorProduct.mk R α β)
 #align matrix.kronecker_tmul_bilinear Matrix.kroneckerTmulBilinear
 
@@ -336,19 +349,23 @@ theorem kronecker_tmul_zero (A : Matrix l m α) : A ⊗ₖₜ[R] (0 : Matrix n p
   kronecker_map_zero_right _ (tmul_zero β) A
 #align matrix.kronecker_tmul_zero Matrix.kronecker_tmul_zero
 
-theorem add_kronecker_tmul (A₁ A₂ : Matrix l m α) (B : Matrix n p α) : (A₁ + A₂) ⊗ₖₜ[R] B = A₁ ⊗ₖₜ B + A₂ ⊗ₖₜ B :=
+theorem add_kronecker_tmul (A₁ A₂ : Matrix l m α) (B : Matrix n p α) :
+    (A₁ + A₂) ⊗ₖₜ[R] B = A₁ ⊗ₖₜ B + A₂ ⊗ₖₜ B :=
   kronecker_map_add_left _ add_tmul _ _ _
 #align matrix.add_kronecker_tmul Matrix.add_kronecker_tmul
 
-theorem kronecker_tmul_add (A : Matrix l m α) (B₁ B₂ : Matrix n p α) : A ⊗ₖₜ[R] (B₁ + B₂) = A ⊗ₖₜ B₁ + A ⊗ₖₜ B₂ :=
+theorem kronecker_tmul_add (A : Matrix l m α) (B₁ B₂ : Matrix n p α) :
+    A ⊗ₖₜ[R] (B₁ + B₂) = A ⊗ₖₜ B₁ + A ⊗ₖₜ B₂ :=
   kronecker_map_add_right _ tmul_add _ _ _
 #align matrix.kronecker_tmul_add Matrix.kronecker_tmul_add
 
-theorem smul_kronecker_tmul (r : R) (A : Matrix l m α) (B : Matrix n p α) : (r • A) ⊗ₖₜ[R] B = r • A ⊗ₖₜ B :=
+theorem smul_kronecker_tmul (r : R) (A : Matrix l m α) (B : Matrix n p α) :
+    (r • A) ⊗ₖₜ[R] B = r • A ⊗ₖₜ B :=
   kronecker_map_smul_left _ _ (fun _ _ => smul_tmul' _ _ _) _ _
 #align matrix.smul_kronecker_tmul Matrix.smul_kronecker_tmul
 
-theorem kronecker_tmul_smul (r : R) (A : Matrix l m α) (B : Matrix n p α) : A ⊗ₖₜ[R] (r • B) = r • A ⊗ₖₜ B :=
+theorem kronecker_tmul_smul (r : R) (A : Matrix l m α) (B : Matrix n p α) :
+    A ⊗ₖₜ[R] (r • B) = r • A ⊗ₖₜ B :=
   kronecker_map_smul_right _ _ (fun _ _ => tmul_smul _ _ _) _ _
 #align matrix.kronecker_tmul_smul Matrix.kronecker_tmul_smul
 
@@ -376,12 +393,13 @@ open Kronecker
 open Algebra.TensorProduct
 
 @[simp]
-theorem one_kronecker_tmul_one [DecidableEq m] [DecidableEq n] : (1 : Matrix m m α) ⊗ₖₜ[R] (1 : Matrix n n α) = 1 :=
+theorem one_kronecker_tmul_one [DecidableEq m] [DecidableEq n] :
+    (1 : Matrix m m α) ⊗ₖₜ[R] (1 : Matrix n n α) = 1 :=
   kronecker_map_one_one _ (zero_tmul _) (tmul_zero _) rfl
 #align matrix.one_kronecker_tmul_one Matrix.one_kronecker_tmul_one
 
-theorem mul_kronecker_tmul_mul [Fintype m] [Fintype m'] (A : Matrix l m α) (B : Matrix m n α) (A' : Matrix l' m' β)
-    (B' : Matrix m' n' β) : (A ⬝ B) ⊗ₖₜ[R] (A' ⬝ B') = A ⊗ₖₜ A' ⬝ B ⊗ₖₜ B' :=
+theorem mul_kronecker_tmul_mul [Fintype m] [Fintype m'] (A : Matrix l m α) (B : Matrix m n α)
+    (A' : Matrix l' m' β) (B' : Matrix m' n' β) : (A ⬝ B) ⊗ₖₜ[R] (A' ⬝ B') = A ⊗ₖₜ A' ⬝ B ⊗ₖₜ B' :=
   kronecker_map_bilinear_mul_mul (TensorProduct.mk R α β) tmul_mul_tmul A B A' B'
 #align matrix.mul_kronecker_tmul_mul Matrix.mul_kronecker_tmul_mul
 

@@ -17,11 +17,13 @@ variable {α M₀ G₀ M₀' G₀' F F' : Type _}
 namespace SemiconjBy
 
 @[simp]
-theorem zero_right [MulZeroClass G₀] (a : G₀) : SemiconjBy a 0 0 := by simp only [SemiconjBy, mul_zero, zero_mul]
+theorem zero_right [MulZeroClass G₀] (a : G₀) : SemiconjBy a 0 0 := by
+  simp only [SemiconjBy, mul_zero, zero_mul]
 #align semiconj_by.zero_right SemiconjBy.zero_right
 
 @[simp]
-theorem zero_left [MulZeroClass G₀] (x y : G₀) : SemiconjBy 0 x y := by simp only [SemiconjBy, mul_zero, zero_mul]
+theorem zero_left [MulZeroClass G₀] (x y : G₀) : SemiconjBy 0 x y := by
+  simp only [SemiconjBy, mul_zero, zero_mul]
 #align semiconj_by.zero_left SemiconjBy.zero_left
 
 variable [GroupWithZero G₀] {a x y x' y' : G₀}
@@ -56,7 +58,8 @@ theorem inv_right_iff₀ : SemiconjBy a x⁻¹ y⁻¹ ↔ SemiconjBy a x y :=
   ⟨fun h => inv_inv x ▸ inv_inv y ▸ h.inv_right₀, inv_right₀⟩
 #align semiconj_by.inv_right_iff₀ SemiconjBy.inv_right_iff₀
 
-theorem div_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') : SemiconjBy a (x / x') (y / y') := by
+theorem div_right (h : SemiconjBy a x y) (h' : SemiconjBy a x' y') :
+    SemiconjBy a (x / x') (y / y') := by
   rw [div_eq_mul_inv, div_eq_mul_inv]
   exact h.mul_right h'.inv_right₀
 #align semiconj_by.div_right SemiconjBy.div_right

@@ -32,9 +32,9 @@ namespace doset
 open Pointwise
 
 /-- The double_coset as an element of `set α` corresponding to `s a t` -/
-def _root_.doset (a : α) (s t : Set α) : Set α :=
+def doset (a : α) (s t : Set α) : Set α :=
   s * {a} * t
-#align doset._root_.doset doset._root_.doset
+#align doset doset
 
 theorem mem_doset {s t : Set α} {a b : α} : b ∈ doset a s t ↔ ∃ x ∈ s, ∃ y ∈ t, b = x * a * y :=
   ⟨fun ⟨_, y, ⟨x, _, hx, rfl, rfl⟩, hy, h⟩ => ⟨x, hx, y, hy, h.symm⟩, fun ⟨x, hx, y, hy, h⟩ =>
@@ -45,14 +45,16 @@ theorem mem_doset_self (H K : Subgroup G) (a : G) : a ∈ doset a H K :=
   mem_doset.mpr ⟨1, H.one_mem, 1, K.one_mem, (one_mul a).symm.trans (mul_one (1 * a)).symm⟩
 #align doset.mem_doset_self doset.mem_doset_self
 
-theorem doset_eq_of_mem {H K : Subgroup G} {a b : G} (hb : b ∈ doset a H K) : doset b H K = doset a H K := by
+theorem doset_eq_of_mem {H K : Subgroup G} {a b : G} (hb : b ∈ doset a H K) :
+    doset b H K = doset a H K := by
   obtain ⟨_, k, ⟨h, a, hh, rfl : _ = _, rfl⟩, hk, rfl⟩ := hb
-  rw [doset, doset, ← Set.singleton_mul_singleton, ← Set.singleton_mul_singleton, mul_assoc, mul_assoc,
-    Subgroup.singleton_mul_subgroup hk, ← mul_assoc, ← mul_assoc, Subgroup.subgroup_mul_singleton hh]
+  rw [doset, doset, ← Set.singleton_mul_singleton, ← Set.singleton_mul_singleton, mul_assoc,
+    mul_assoc, Subgroup.singleton_mul_subgroup hk, ← mul_assoc, ← mul_assoc,
+    Subgroup.subgroup_mul_singleton hh]
 #align doset.doset_eq_of_mem doset.doset_eq_of_mem
 
-theorem mem_doset_of_not_disjoint {H K : Subgroup G} {a b : G} (h : ¬Disjoint (doset a H K) (doset b H K)) :
-    b ∈ doset a H K := by
+theorem mem_doset_of_not_disjoint {H K : Subgroup G} {a b : G}
+    (h : ¬Disjoint (doset a H K) (doset b H K)) : b ∈ doset a H K := by
   rw [Set.not_disjoint_iff] at h
   simp only [mem_doset] at *
   obtain ⟨x, ⟨l, hl, r, hr, hrx⟩, y, hy, ⟨r', hr', rfl⟩⟩ := h
@@ -60,8 +62,8 @@ theorem mem_doset_of_not_disjoint {H K : Subgroup G} {a b : G} (h : ¬Disjoint (
   rwa [mul_assoc, mul_assoc, eq_inv_mul_iff_mul_eq, ← mul_assoc, ← mul_assoc, eq_mul_inv_iff_mul_eq]
 #align doset.mem_doset_of_not_disjoint doset.mem_doset_of_not_disjoint
 
-theorem eq_of_not_disjoint {H K : Subgroup G} {a b : G} (h : ¬Disjoint (doset a H K) (doset b H K)) :
-    doset a H K = doset b H K := by
+theorem eq_of_not_disjoint {H K : Subgroup G} {a b : G}
+    (h : ¬Disjoint (doset a H K) (doset b H K)) : doset a H K = doset b H K := by
   rw [Disjoint.comm] at h
   have ha : a ∈ doset b H K := mem_doset_of_not_disjoint h
   apply doset_eq_of_mem ha
@@ -77,11 +79,15 @@ def Quotient (H K : Set G) : Type _ :=
   Quotient (setoid H K)
 #align doset.quotient doset.Quotient
 
-theorem rel_iff {H K : Subgroup G} {x y : G} : (setoid ↑H ↑K).Rel x y ↔ ∃ a ∈ H, ∃ b ∈ K, y = a * x * b :=
-  Iff.trans ⟨fun hxy => (congr_arg _ hxy).mpr (mem_doset_self H K y), fun hxy => (doset_eq_of_mem hxy).symm⟩ mem_doset
+theorem rel_iff {H K : Subgroup G} {x y : G} :
+    (setoid ↑H ↑K).Rel x y ↔ ∃ a ∈ H, ∃ b ∈ K, y = a * x * b :=
+  Iff.trans
+    ⟨fun hxy => (congr_arg _ hxy).mpr (mem_doset_self H K y), fun hxy => (doset_eq_of_mem hxy).symm⟩
+    mem_doset
 #align doset.rel_iff doset.rel_iff
 
-theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid ↑(⊥ : Subgroup G) ↑H).Rel = (QuotientGroup.leftRel H).Rel := by
+theorem bot_rel_eq_left_rel (H : Subgroup G) :
+    (setoid ↑(⊥ : Subgroup G) ↑H).Rel = (QuotientGroup.leftRel H).Rel := by
   ext (a b)
   rw [rel_iff, Setoid.Rel, QuotientGroup.left_rel_apply]
   constructor
@@ -121,7 +127,8 @@ abbrev mk (H K : Subgroup G) (a : G) : Quotient ↑H ↑K :=
 instance (H K : Subgroup G) : Inhabited (Quotient ↑H ↑K) :=
   ⟨mk H K (1 : G)⟩
 
-theorem eq (H K : Subgroup G) (a b : G) : mk H K a = mk H K b ↔ ∃ h ∈ H, ∃ k ∈ K, b = h * a * k := by
+theorem eq (H K : Subgroup G) (a b : G) : mk H K a = mk H K b ↔ ∃ h ∈ H, ∃ k ∈ K, b = h * a * k :=
+  by
   rw [Quotient.eq']
   apply rel_iff
 #align doset.eq doset.eq
@@ -139,7 +146,8 @@ theorem mk_out'_eq_mul (H K : Subgroup G) (g : G) :
   rw [← mul_assoc, ← T]
 #align doset.mk_out'_eq_mul doset.mk_out'_eq_mul
 
-theorem mk_eq_of_doset_eq {H K : Subgroup G} {a b : G} (h : doset a H K = doset b H K) : mk H K a = mk H K b := by
+theorem mk_eq_of_doset_eq {H K : Subgroup G} {a b : G} (h : doset a H K = doset b H K) :
+    mk H K a = mk H K b := by
   rw [Eq]
   exact mem_doset.mp (h.symm ▸ mem_doset_self H K b)
 #align doset.mk_eq_of_doset_eq doset.mk_eq_of_doset_eq
@@ -153,17 +161,19 @@ theorem disjoint_out' {H K : Subgroup G} {a b : Quotient H.1 K} :
 
 theorem union_quot_to_doset (H K : Subgroup G) : (⋃ q, quotToDoset H K q) = Set.univ := by
   ext x
-  simp only [Set.mem_Union, quot_to_doset, mem_doset, SetLike.mem_coe, exists_prop, Set.mem_univ, iff_true_iff]
+  simp only [Set.mem_Union, quot_to_doset, mem_doset, SetLike.mem_coe, exists_prop, Set.mem_univ,
+    iff_true_iff]
   use mk H K x
   obtain ⟨h, k, h3, h4, h5⟩ := mk_out'_eq_mul H K x
   refine' ⟨h⁻¹, H.inv_mem h3, k⁻¹, K.inv_mem h4, _⟩
   simp only [h5, Subgroup.coe_mk, ← mul_assoc, one_mul, mul_left_inv, mul_inv_cancel_right]
 #align doset.union_quot_to_doset doset.union_quot_to_doset
 
-theorem doset_union_right_coset (H K : Subgroup G) (a : G) : (⋃ k : K, rightCoset (↑H) (a * k)) = doset a H K := by
+theorem doset_union_right_coset (H K : Subgroup G) (a : G) :
+    (⋃ k : K, rightCoset (↑H) (a * k)) = doset a H K := by
   ext x
-  simp only [mem_right_coset_iff, exists_prop, mul_inv_rev, Set.mem_Union, mem_doset, Subgroup.mem_carrier,
-    SetLike.mem_coe]
+  simp only [mem_right_coset_iff, exists_prop, mul_inv_rev, Set.mem_Union, mem_doset,
+    Subgroup.mem_carrier, SetLike.mem_coe]
   constructor
   · rintro ⟨y, h_h⟩
     refine' ⟨x * (y⁻¹ * a⁻¹), h_h, y, y.2, _⟩
@@ -175,7 +185,8 @@ theorem doset_union_right_coset (H K : Subgroup G) (a : G) : (⋃ k : K, rightCo
     
 #align doset.doset_union_right_coset doset.doset_union_right_coset
 
-theorem doset_union_left_coset (H K : Subgroup G) (a : G) : (⋃ h : H, leftCoset (h * a : G) K) = doset a H K := by
+theorem doset_union_left_coset (H K : Subgroup G) (a : G) :
+    (⋃ h : H, leftCoset (h * a : G) K) = doset a H K := by
   ext x
   simp only [mem_left_coset_iff, mul_inv_rev, Set.mem_Union, mem_doset]
   constructor

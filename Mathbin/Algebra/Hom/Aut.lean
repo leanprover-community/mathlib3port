@@ -44,10 +44,14 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance : Group (MulAut M) := by
   refine_struct
-      { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm, div := _,
-        npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩,
-        zpow := @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
-    intros <;> ext <;> try rfl <;> apply Equiv.left_inv
+            { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm,
+              div := _, npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩,
+              zpow :=
+                @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
+          intros <;>
+        ext <;>
+      try rfl <;>
+    apply Equiv.left_inv
 
 instance : Inhabited (MulAut M) :=
   ⟨1⟩
@@ -95,7 +99,8 @@ theorem inv_apply_self (e : MulAut M) (m : M) : e⁻¹ (e m) = m :=
 #align mul_aut.inv_apply_self MulAut.inv_apply_self
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def toPerm : MulAut M →* Equiv.Perm M := by refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : MulAut M →* Equiv.Perm M := by
+  refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
 #align mul_aut.to_perm MulAut.toPerm
 
 /-- The tautological action by `mul_aut M` on `M`.
@@ -125,8 +130,9 @@ See also the type `conj_act G` for any group `G`, which has a `mul_action (conj_
 where `conj G` acts on `G` by conjugation. -/
 def conj [Group G] : G →* MulAut G where
   toFun g :=
-    { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g, left_inv := fun _ => by simp [mul_assoc],
-      right_inv := fun _ => by simp [mul_assoc], map_mul' := by simp [mul_assoc] }
+    { toFun := fun h => g * h * g⁻¹, invFun := fun h => g⁻¹ * h * g,
+      left_inv := fun _ => by simp [mul_assoc], right_inv := fun _ => by simp [mul_assoc],
+      map_mul' := by simp [mul_assoc] }
   map_mul' _ _ := by ext <;> simp [mul_assoc]
   map_one' := by ext <;> simp [mul_assoc]
 #align mul_aut.conj MulAut.conj
@@ -158,10 +164,14 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance group : Group (AddAut A) := by
   refine_struct
-      { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm, div := _,
-        npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
-        zpow := @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
-    intros <;> ext <;> try rfl <;> apply Equiv.left_inv
+            { mul := fun g h => AddEquiv.trans h g, one := AddEquiv.refl A, inv := AddEquiv.symm,
+              div := _, npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩,
+              zpow :=
+                @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
+          intros <;>
+        ext <;>
+      try rfl <;>
+    apply Equiv.left_inv
 #align add_aut.group AddAut.group
 
 instance : Inhabited (AddAut A) :=
@@ -210,7 +220,8 @@ theorem inv_apply_self (e : AddAut A) (a : A) : e (e⁻¹ a) = a :=
 #align add_aut.inv_apply_self AddAut.inv_apply_self
 
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
-def toPerm : AddAut A →* Equiv.Perm A := by refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
+def toPerm : AddAut A →* Equiv.Perm A := by
+  refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
 #align add_aut.to_perm AddAut.toPerm
 
 /-- The tautological action by `add_aut A` on `A`.

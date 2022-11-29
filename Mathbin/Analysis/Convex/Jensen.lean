@@ -37,32 +37,37 @@ variable {𝕜 E F β ι : Type _}
 
 section Jensen
 
-variable [LinearOrderedField 𝕜] [AddCommGroup E] [OrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β]
-  {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
+variable [LinearOrderedField 𝕜] [AddCommGroup E] [OrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
+  [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
 /-- Convex **Jensen's inequality**, `finset.center_mass` version. -/
-theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
-    (hmem : ∀ i ∈ t, p i ∈ s) : f (t.centerMass w p) ≤ t.centerMass w (f ∘ p) := by
-  have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi => ⟨hmem i hi, le_rfl⟩
+theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
+    (h₁ : 0 < ∑ i in t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
+    f (t.centerMass w p) ≤ t.centerMass w (f ∘ p) := by
+  have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi =>
+    ⟨hmem i hi, le_rfl⟩
   convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
     simp only [center_mass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
 #align convex_on.map_center_mass_le ConvexOn.map_center_mass_le
 
 /-- Concave **Jensen's inequality**, `finset.center_mass` version. -/
-theorem ConcaveOn.le_map_center_mass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
-    (hmem : ∀ i ∈ t, p i ∈ s) : t.centerMass w (f ∘ p) ≤ f (t.centerMass w p) :=
+theorem ConcaveOn.le_map_center_mass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
+    (h₁ : 0 < ∑ i in t, w i) (hmem : ∀ i ∈ t, p i ∈ s) :
+    t.centerMass w (f ∘ p) ≤ f (t.centerMass w p) :=
   @ConvexOn.map_center_mass_le 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
 #align concave_on.le_map_center_mass ConcaveOn.le_map_center_mass
 
 /-- Convex **Jensen's inequality**, `finset.sum` version. -/
 theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
     (hmem : ∀ i ∈ t, p i ∈ s) : f (∑ i in t, w i • p i) ≤ ∑ i in t, w i • f (p i) := by
-  simpa only [center_mass, h₁, inv_one, one_smul] using hf.map_center_mass_le h₀ (h₁.symm ▸ zero_lt_one) hmem
+  simpa only [center_mass, h₁, inv_one, one_smul] using
+    hf.map_center_mass_le h₀ (h₁.symm ▸ zero_lt_one) hmem
 #align convex_on.map_sum_le ConvexOn.map_sum_le
 
 /-- Concave **Jensen's inequality**, `finset.sum` version. -/
-theorem ConcaveOn.le_map_sum (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
-    (hmem : ∀ i ∈ t, p i ∈ s) : (∑ i in t, w i • f (p i)) ≤ f (∑ i in t, w i • p i) :=
+theorem ConcaveOn.le_map_sum (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i)
+    (h₁ : (∑ i in t, w i) = 1) (hmem : ∀ i ∈ t, p i ∈ s) :
+    (∑ i in t, w i • f (p i)) ≤ f (∑ i in t, w i • p i) :=
   @ConvexOn.map_sum_le 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
 #align concave_on.le_map_sum ConcaveOn.le_map_sum
 
@@ -73,11 +78,13 @@ end Jensen
 
 section MaximumPrinciple
 
-variable [LinearOrderedField 𝕜] [AddCommGroup E] [LinearOrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
-  [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E} {x : E}
+variable [LinearOrderedField 𝕜] [AddCommGroup E] [LinearOrderedAddCommGroup β] [Module 𝕜 E]
+  [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
+  {x : E}
 
 theorem le_sup_of_mem_convex_hull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
-    (hx : x ∈ convexHull 𝕜 (s : Set E)) : f x ≤ s.sup' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f := by
+    (hx : x ∈ convexHull 𝕜 (s : Set E)) :
+    f x ≤ s.sup' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f := by
   obtain ⟨w, hw₀, hw₁, rfl⟩ := mem_convex_hull.1 hx
   exact
     (hf.map_center_mass_le hw₀ (by positivity) <| subset_convex_hull _ _).trans
@@ -85,14 +92,16 @@ theorem le_sup_of_mem_convex_hull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull
 #align le_sup_of_mem_convex_hull le_sup_of_mem_convex_hull
 
 theorem inf_le_of_mem_convex_hull {s : Finset E} (hf : ConcaveOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
-    (hx : x ∈ convexHull 𝕜 (s : Set E)) : s.inf' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x :=
+    (hx : x ∈ convexHull 𝕜 (s : Set E)) :
+    s.inf' (coe_nonempty.1 <| convex_hull_nonempty_iff.1 ⟨x, hx⟩) f ≤ f x :=
   le_sup_of_mem_convex_hull hf.dual hx
 #align inf_le_of_mem_convex_hull inf_le_of_mem_convex_hull
 
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of
 `s` is less than the value it takes on one of those points. -/
-theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i) (hw₁ : 0 < ∑ i in t, w i)
-    (hp : ∀ i ∈ t, p i ∈ s) : ∃ i ∈ t, f (t.centerMass w p) ≤ f (p i) := by
+theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i)
+    (hw₁ : 0 < ∑ i in t, w i) (hp : ∀ i ∈ t, p i ∈ s) : ∃ i ∈ t, f (t.centerMass w p) ≤ f (p i) :=
+  by
   set y := t.center_mass w p
   rsuffices ⟨i, hi, hfi⟩ : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
   · rw [mem_filter] at hi
@@ -100,34 +109,35 @@ theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i
     
   have hw' : (0 : 𝕜) < ∑ i in filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
   refine' exists_le_of_sum_le (nonempty_of_sum_ne_zero hw'.ne') _
-  rw [← sum_smul, ← smul_le_smul_iff_of_pos (inv_pos.2 hw'), inv_smul_smul₀ hw'.ne', ← Finset.centerMass,
-    Finset.center_mass_filter_ne_zero]
+  rw [← sum_smul, ← smul_le_smul_iff_of_pos (inv_pos.2 hw'), inv_smul_smul₀ hw'.ne', ←
+    Finset.centerMass, Finset.center_mass_filter_ne_zero]
   exact h.map_center_mass_le hw₀ hw₁ hp
   infer_instance
 #align convex_on.exists_ge_of_center_mass ConvexOn.exists_ge_of_center_mass
 
 /-- If a function `f` is concave on `s`, then the value it takes at some center of mass of points of
 `s` is greater than the value it takes on one of those points. -/
-theorem ConcaveOn.exists_le_of_center_mass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i) (hw₁ : 0 < ∑ i in t, w i)
-    (hp : ∀ i ∈ t, p i ∈ s) : ∃ i ∈ t, f (p i) ≤ f (t.centerMass w p) :=
+theorem ConcaveOn.exists_le_of_center_mass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀ i ∈ t, 0 ≤ w i)
+    (hw₁ : 0 < ∑ i in t, w i) (hp : ∀ i ∈ t, p i ∈ s) : ∃ i ∈ t, f (p i) ≤ f (t.centerMass w p) :=
   @ConvexOn.exists_ge_of_center_mass 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ h hw₀ hw₁ hp
 #align concave_on.exists_le_of_center_mass ConcaveOn.exists_le_of_center_mass
 
 /-- Maximum principle for convex functions. If a function `f` is convex on the convex hull of `s`,
 then the eventual maximum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
-theorem ConvexOn.exists_ge_of_mem_convex_hull (hf : ConvexOn 𝕜 (convexHull 𝕜 s) f) {x} (hx : x ∈ convexHull 𝕜 s) :
-    ∃ y ∈ s, f x ≤ f y := by
+theorem ConvexOn.exists_ge_of_mem_convex_hull (hf : ConvexOn 𝕜 (convexHull 𝕜 s) f) {x}
+    (hx : x ∈ convexHull 𝕜 s) : ∃ y ∈ s, f x ≤ f y := by
   rw [_root_.convex_hull_eq] at hx
   obtain ⟨α, t, w, p, hw₀, hw₁, hp, rfl⟩ := hx
-  rcases hf.exists_ge_of_center_mass hw₀ (hw₁.symm ▸ zero_lt_one) fun i hi => subset_convex_hull 𝕜 s (hp i hi) with
+  rcases hf.exists_ge_of_center_mass hw₀ (hw₁.symm ▸ zero_lt_one) fun i hi =>
+      subset_convex_hull 𝕜 s (hp i hi) with
     ⟨i, hit, Hi⟩
   exact ⟨p i, hp i hit, Hi⟩
 #align convex_on.exists_ge_of_mem_convex_hull ConvexOn.exists_ge_of_mem_convex_hull
 
 /-- Minimum principle for concave functions. If a function `f` is concave on the convex hull of `s`,
 then the eventual minimum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
-theorem ConcaveOn.exists_le_of_mem_convex_hull (hf : ConcaveOn 𝕜 (convexHull 𝕜 s) f) {x} (hx : x ∈ convexHull 𝕜 s) :
-    ∃ y ∈ s, f y ≤ f x :=
+theorem ConcaveOn.exists_le_of_mem_convex_hull (hf : ConcaveOn 𝕜 (convexHull 𝕜 s) f) {x}
+    (hx : x ∈ convexHull 𝕜 s) : ∃ y ∈ s, f y ≤ f x :=
   @ConvexOn.exists_ge_of_mem_convex_hull 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ hf _ hx
 #align concave_on.exists_le_of_mem_convex_hull ConcaveOn.exists_le_of_mem_convex_hull
 

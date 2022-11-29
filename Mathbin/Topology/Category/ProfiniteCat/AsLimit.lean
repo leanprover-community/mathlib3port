@@ -64,7 +64,8 @@ instance is_iso_as_limit_cone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.
         apply_fun fun f : (limit_cone X.diagram).x => f.val S  at h
         exact h
         
-      · obtain ⟨b, hb⟩ := DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (hom_of_le h)
+      · obtain ⟨b, hb⟩ :=
+          DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (hom_of_le h)
         refine' ⟨b, _⟩
         ext S : 3
         apply hb

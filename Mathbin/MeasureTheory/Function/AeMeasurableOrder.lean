@@ -28,29 +28,34 @@ open Classical Ennreal Nnreal
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
 measurable. It is even enough to have this for `p` and `q` in a countable dense set. -/
-theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
-    {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β] [TopologicalSpace β] [OrderTopology β]
-    [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β] (s : Set β) (s_count : s.Countable)
-    (s_dense : Dense s) (f : α → β)
+theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
+    {m : MeasurableSpace α} (μ : Measure α) {β : Type _} [CompleteLinearOrder β] [DenselyOrdered β]
+    [TopologicalSpace β] [OrderTopology β] [SecondCountableTopology β] [MeasurableSpace β]
+    [BorelSpace β] (s : Set β) (s_count : s.Countable) (s_dense : Dense s) (f : α → β)
     (h :
       ∀ p ∈ s,
         ∀ q ∈ s,
           p < q →
-            ∃ u v, MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
+            ∃ u v,
+              MeasurableSet u ∧
+                MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
   haveI : Encodable s := s_count.to_encodable
   have h' :
     ∀ p q,
       ∃ u v,
         MeasurableSet u ∧
-          MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
+          MeasurableSet v ∧
+            { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
     by
     intro p q
     by_cases H : p ∈ s ∧ q ∈ s ∧ p < q
     · rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
       exact ⟨u, v, hu, hv, h'u, h'v, fun ps qs pq => hμ⟩
       
-    · refine' ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _, fun ps qs pq => _⟩
+    · refine'
+        ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _,
+          fun ps qs pq => _⟩
       simp only [not_and] at H
       exact (H ps qs pq).elim
       
@@ -120,15 +125,18 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
 `p < q`, then `f` is almost-everywhere measurable. -/
-theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
-    (f : α → ℝ≥0∞)
+theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α}
+    (μ : Measure α) (f : α → ℝ≥0∞)
     (h :
       ∀ (p : ℝ≥0) (q : ℝ≥0),
         p < q →
           ∃ u v,
-            MeasurableSet u ∧ MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
+            MeasurableSet u ∧
+              MeasurableSet v ∧
+                { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
     AeMeasurable f μ := by
-  obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ : ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
+  obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ :
+    ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
     Ennreal.exists_countable_dense_no_zero_top
   have I : ∀ x ∈ s, x ≠ ∞ := fun x xs hx => s_top (hx ▸ xs)
   apply MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets μ s s_count s_dense _
@@ -136,5 +144,6 @@ theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : Me
   lift p to ℝ≥0 using I p hp
   lift q to ℝ≥0 using I q hq
   exact h p q (Ennreal.coe_lt_coe.1 hpq)
-#align ennreal.ae_measurable_of_exist_almost_disjoint_supersets Ennreal.aeMeasurableOfExistAlmostDisjointSupersets
+#align
+  ennreal.ae_measurable_of_exist_almost_disjoint_supersets Ennreal.aeMeasurableOfExistAlmostDisjointSupersets
 

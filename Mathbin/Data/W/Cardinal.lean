@@ -41,7 +41,8 @@ theorem cardinal_mk_eq_sum : (#WType β) = Sum fun a : α => (#WType β) ^ (#β 
 #align W_type.cardinal_mk_eq_sum WType.cardinal_mk_eq_sum
 
 /-- `#(W_type β)` is the least cardinal `κ` such that `sum (λ a : α, κ ^ #(β a)) ≤ κ` -/
-theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ (#β a)) ≤ κ) : (#WType β) ≤ κ := by
+theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ (#β a)) ≤ κ) :
+    (#WType β) ≤ κ := by
   induction' κ using Cardinal.induction_on with γ
   simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ
   cases hκ
@@ -63,16 +64,18 @@ theorem cardinal_mk_le_max_aleph_0_of_finite [∀ a, Finite (β a)] : (#WType β
         (Cardinal.sum fun a => m ^ (#β a)) ≤ (#α) * ⨆ a, m ^ (#β a) := Cardinal.sum_le_supr _
         _ ≤ m * ⨆ a, m ^ (#β a) := mul_le_mul' (le_max_left _ _) le_rfl
         _ = m :=
-          mul_eq_left.{u} (le_max_right _ _) (csupr_le' fun i => pow_le (le_max_right _ _) (lt_aleph_0_of_finite _)) <|
+          mul_eq_left.{u} (le_max_right _ _)
+              (csupr_le' fun i => pow_le (le_max_right _ _) (lt_aleph_0_of_finite _)) <|
             pos_iff_ne_zero.1 <|
               Order.succ_le_iff.1
                 (by
                   rw [succ_zero]
-                  obtain ⟨a⟩ : Nonempty α
-                  exact hn
+                  obtain ⟨a⟩ : Nonempty α; exact hn
                   refine' le_trans _ (le_csupr (bdd_above_range.{u, u} _) a)
                   rw [← power_zero]
-                  exact power_le_power_left (pos_iff_ne_zero.1 (aleph_0_pos.trans_le (le_max_right _ _))) (zero_le _))
+                  exact
+                    power_le_power_left
+                      (pos_iff_ne_zero.1 (aleph_0_pos.trans_le (le_max_right _ _))) (zero_le _))
         
 #align W_type.cardinal_mk_le_max_aleph_0_of_finite WType.cardinal_mk_le_max_aleph_0_of_finite
 

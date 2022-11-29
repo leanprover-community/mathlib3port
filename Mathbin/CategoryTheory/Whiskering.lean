@@ -35,7 +35,8 @@ universe u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
 section
 
-variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃} [Category.{v₃} E]
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] {E : Type u₃}
+  [Category.{v₃} E]
 
 /-- If `α : G ⟶ H` then
 `whisker_left F α : (F ⋙ G) ⟶ (F ⋙ H)` has components `α.app (F.obj X)`.
@@ -52,7 +53,8 @@ def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙
 @[simps]
 def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H ⋙ F where
   app X := F.map (α.app X)
-  naturality' X Y f := by rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
+  naturality' X Y f := by
+    rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
 #align category_theory.whisker_right CategoryTheory.whiskerRight
 
 variable (C D E)
@@ -68,13 +70,8 @@ def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
   map F G τ :=
     { app := fun H =>
         { app := fun c => H.map (τ.app c),
-          naturality' := fun X Y f => by
-            dsimp
-            rw [← H.map_comp, ← H.map_comp, ← τ.naturality] },
-      naturality' := fun X Y f => by
-        ext
-        dsimp
-        rw [f.naturality] }
+          naturality' := fun X Y f => by dsimp; rw [← H.map_comp, ← H.map_comp, ← τ.naturality] },
+      naturality' := fun X Y f => by ext; dsimp; rw [f.naturality] }
 #align category_theory.whiskering_left CategoryTheory.whiskeringLeft
 
 /-- Right-composition gives a functor `(D ⥤ E) ⥤ ((C ⥤ D) ⥤ (C ⥤ E))`.
@@ -88,13 +85,8 @@ def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
   map G H τ :=
     { app := fun F =>
         { app := fun c => τ.app (F.obj c),
-          naturality' := fun X Y f => by
-            dsimp
-            rw [τ.naturality] },
-      naturality' := fun X Y f => by
-        ext
-        dsimp
-        rw [← nat_trans.naturality] }
+          naturality' := fun X Y f => by dsimp; rw [τ.naturality] },
+      naturality' := fun X Y f => by ext; dsimp; rw [← nat_trans.naturality] }
 #align category_theory.whiskering_right CategoryTheory.whiskeringRight
 
 variable {C} {D} {E}
@@ -103,11 +95,13 @@ instance faithful_whiskering_right_obj {F : D ⥤ E} [Faithful F] :
     Faithful
       ((whiskeringRight C D E).obj
         F) where map_injective' G H α β hαβ :=
-    NatTrans.ext _ _ <| funext fun X => Functor.map_injective _ <| congr_fun (congr_arg NatTrans.app hαβ) X
+    NatTrans.ext _ _ <|
+      funext fun X => Functor.map_injective _ <| congr_fun (congr_arg NatTrans.app hαβ) X
 #align category_theory.faithful_whiskering_right_obj CategoryTheory.faithful_whiskering_right_obj
 
 @[simp]
-theorem whisker_left_id (F : C ⥤ D) {G : D ⥤ E} : whiskerLeft F (NatTrans.id G) = NatTrans.id (F.comp G) :=
+theorem whisker_left_id (F : C ⥤ D) {G : D ⥤ E} :
+    whiskerLeft F (NatTrans.id G) = NatTrans.id (F.comp G) :=
   rfl
 #align category_theory.whisker_left_id CategoryTheory.whisker_left_id
 
@@ -117,7 +111,8 @@ theorem whisker_left_id' (F : C ⥤ D) {G : D ⥤ E} : whiskerLeft F (𝟙 G) = 
 #align category_theory.whisker_left_id' CategoryTheory.whisker_left_id'
 
 @[simp]
-theorem whisker_right_id {G : C ⥤ D} (F : D ⥤ E) : whiskerRight (NatTrans.id G) F = NatTrans.id (G.comp F) :=
+theorem whisker_right_id {G : C ⥤ D} (F : D ⥤ E) :
+    whiskerRight (NatTrans.id G) F = NatTrans.id (G.comp F) :=
   ((whiskeringRight C D E).obj F).map_id _
 #align category_theory.whisker_right_id CategoryTheory.whisker_right_id
 
@@ -146,12 +141,14 @@ def isoWhiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : F ⋙ G ≅ F 
 #align category_theory.iso_whisker_left CategoryTheory.isoWhiskerLeft
 
 @[simp]
-theorem iso_whisker_left_hom (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : (isoWhiskerLeft F α).Hom = whiskerLeft F α.Hom :=
+theorem iso_whisker_left_hom (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) :
+    (isoWhiskerLeft F α).Hom = whiskerLeft F α.Hom :=
   rfl
 #align category_theory.iso_whisker_left_hom CategoryTheory.iso_whisker_left_hom
 
 @[simp]
-theorem iso_whisker_left_inv (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : (isoWhiskerLeft F α).inv = whiskerLeft F α.inv :=
+theorem iso_whisker_left_inv (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) :
+    (isoWhiskerLeft F α).inv = whiskerLeft F α.inv :=
   rfl
 #align category_theory.iso_whisker_left_inv CategoryTheory.iso_whisker_left_inv
 
@@ -174,11 +171,13 @@ theorem iso_whisker_right_inv {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) :
   rfl
 #align category_theory.iso_whisker_right_inv CategoryTheory.iso_whisker_right_inv
 
-instance is_iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) [IsIso α] : IsIso (whiskerLeft F α) :=
+instance is_iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) [IsIso α] :
+    IsIso (whiskerLeft F α) :=
   IsIso.of_iso (isoWhiskerLeft F (asIso α))
 #align category_theory.is_iso_whisker_left CategoryTheory.is_iso_whisker_left
 
-instance is_iso_whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [IsIso α] : IsIso (whiskerRight α F) :=
+instance is_iso_whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [IsIso α] :
+    IsIso (whiskerRight α F) :=
   IsIso.of_iso (isoWhiskerRight (asIso α) F)
 #align category_theory.is_iso_whisker_right CategoryTheory.is_iso_whisker_right
 
@@ -250,7 +249,9 @@ theorem assoc (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H = F �
 #align category_theory.functor.assoc CategoryTheory.Functor.assoc
 
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
-    (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom = whiskerRight (rightUnitor F).Hom G := by
+    (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom =
+      whiskerRight (rightUnitor F).Hom G :=
+  by
   ext
   dsimp
   simp
@@ -262,7 +263,8 @@ variable {E : Type u₅} [Category.{v₅} E]
 variable (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) (K : D ⥤ E)
 
 theorem pentagon :
-    whiskerRight (associator F G H).Hom K ≫ (associator F (G ⋙ H) K).Hom ≫ whiskerLeft F (associator G H K).Hom =
+    whiskerRight (associator F G H).Hom K ≫
+        (associator F (G ⋙ H) K).Hom ≫ whiskerLeft F (associator G H K).Hom =
       (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
   by
   ext

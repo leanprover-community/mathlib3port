@@ -41,8 +41,8 @@ One the other hand, not picking one means that the weak-* topology
 (which depends on a choice of predual) must be defined using the choice,
 and we may be unhappy with the resulting opaqueness of the definition.
 -/
-class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M] [NormedAlgebra ℂ M]
-  [StarModule ℂ M] where
+class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M]
+  [NormedAlgebra ℂ M] [StarModule ℂ M] where
   exists_predual :
     ∃ (X : Type u)(_ : NormedAddCommGroup X)(_ : NormedSpace ℂ X)(_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)

@@ -30,20 +30,21 @@ theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal s t a ↔ x.1 ∈ s ∧ x.2
 #align set.mem_mul_antidiagonal Set.mem_mul_antidiagonal
 
 @[to_additive]
-theorem mul_antidiagonal_mono_left (h : s₁ ⊆ s₂) : mulAntidiagonal s₁ t a ⊆ mulAntidiagonal s₂ t a := fun x hx =>
-  ⟨h hx.1, hx.2.1, hx.2.2⟩
+theorem mul_antidiagonal_mono_left (h : s₁ ⊆ s₂) :
+    mulAntidiagonal s₁ t a ⊆ mulAntidiagonal s₂ t a := fun x hx => ⟨h hx.1, hx.2.1, hx.2.2⟩
 #align set.mul_antidiagonal_mono_left Set.mul_antidiagonal_mono_left
 
 @[to_additive]
-theorem mul_antidiagonal_mono_right (h : t₁ ⊆ t₂) : mulAntidiagonal s t₁ a ⊆ mulAntidiagonal s t₂ a := fun x hx =>
-  ⟨hx.1, h hx.2.1, hx.2.2⟩
+theorem mul_antidiagonal_mono_right (h : t₁ ⊆ t₂) :
+    mulAntidiagonal s t₁ a ⊆ mulAntidiagonal s t₂ a := fun x hx => ⟨hx.1, h hx.2.1, hx.2.2⟩
 #align set.mul_antidiagonal_mono_right Set.mul_antidiagonal_mono_right
 
 end Mul
 
 @[simp, to_additive]
 theorem swap_mem_mul_antidiagonal [CommSemigroup α] {s t : Set α} {a : α} {x : α × α} :
-    x.swap ∈ Set.mulAntidiagonal s t a ↔ x ∈ Set.mulAntidiagonal t s a := by simp [mul_comm, and_left_comm]
+    x.swap ∈ Set.mulAntidiagonal s t a ↔ x ∈ Set.mulAntidiagonal t s a := by
+  simp [mul_comm, and_left_comm]
 #align set.swap_mem_mul_antidiagonal Set.swap_mem_mul_antidiagonal
 
 namespace MulAntidiagonal
@@ -83,12 +84,14 @@ section OrderedCancelCommMonoid
 variable [OrderedCancelCommMonoid α] (s t : Set α) (a : α) {x y : mulAntidiagonal s t a}
 
 @[to_additive]
-theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × α).1) (h₂ : (x : α × α).2 ≤ (y : α × α).2) :
-    x = y :=
+theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × α).1)
+    (h₂ : (x : α × α).2 ≤ (y : α × α).2) : x = y :=
   eq_of_fst_eq_fst <|
     h₁.eq_of_not_lt fun hlt =>
-      (mul_lt_mul_of_lt_of_le hlt h₂).Ne <| (mem_mul_antidiagonal.1 x.2).2.2.trans (mem_mul_antidiagonal.1 y.2).2.2.symm
-#align set.mul_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.mulAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
+      (mul_lt_mul_of_lt_of_le hlt h₂).Ne <|
+        (mem_mul_antidiagonal.1 x.2).2.2.trans (mem_mul_antidiagonal.1 y.2).2.2.symm
+#align
+  set.mul_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.mulAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
 
 variable {s t}
 
@@ -99,7 +102,8 @@ theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (mulAntidiagonal s 
     hs (Prod.fst ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).1
   have h2 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.snd ⁻¹'o (· ≤ ·)) := fun f hf =>
     ht (Prod.snd ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).2.1
-  obtain ⟨g, hg⟩ := h1.exists_monotone_subseq (fun n => h.nat_embedding _ n) fun n => (h.nat_embedding _ n).2
+  obtain ⟨g, hg⟩ :=
+    h1.exists_monotone_subseq (fun n => h.nat_embedding _ n) fun n => (h.nat_embedding _ n).2
   obtain ⟨m, n, mn, h2'⟩ := h2 (fun x => (h.nat_embedding _) (g x)) fun n => (h.nat_embedding _ _).2
   refine' mn.ne (g.injective <| (h.nat_embedding _).Injective _)
   exact eq_of_fst_le_fst_of_snd_le_snd _ _ _ (hg _ _ mn.le) h2'
@@ -108,8 +112,8 @@ theorem finite_of_is_pwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (mulAntidiagonal s 
 end OrderedCancelCommMonoid
 
 @[to_additive]
-theorem finite_of_is_wf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf) (a) :
-    (mulAntidiagonal s t a).Finite :=
+theorem finite_of_is_wf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf)
+    (a) : (mulAntidiagonal s t a).Finite :=
   finite_of_is_pwo hs.IsPwo ht.IsPwo a
 #align set.mul_antidiagonal.finite_of_is_wf Set.mulAntidiagonal.finite_of_is_wf
 

@@ -62,8 +62,8 @@ variable {α} [TopologicalRing α]
 
 @[norm_cast]
 theorem coe_mul (a b : α) : ((a * b : α) : Completion α) = a * b :=
-  ((dense_inducing_coe.Prod dense_inducing_coe).extend_eq ((continuous_coe α).comp (@continuous_mul α _ _ _))
-      (a, b)).symm
+  ((dense_inducing_coe.Prod dense_inducing_coe).extend_eq
+      ((continuous_coe α).comp (@continuous_mul α _ _ _)) (a, b)).symm
 #align uniform_space.completion.coe_mul UniformSpace.Completion.coe_mul
 
 variable [UniformAddGroup α]
@@ -77,18 +77,20 @@ theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.
   rfl
 #align uniform_space.completion.continuous_mul UniformSpace.Completion.continuous_mul
 
-theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → Completion α} (hf : Continuous f)
-    (hg : Continuous g) : Continuous fun b => f b * g b :=
+theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → Completion α}
+    (hf : Continuous f) (hg : Continuous g) : Continuous fun b => f b * g b :=
   continuous_mul.comp (hf.prod_mk hg : _)
 #align uniform_space.completion.continuous.mul UniformSpace.Completion.Continuous.mul
 
 instance : Ring (Completion α) :=
   { AddMonoidWithOne.unary, Completion.addCommGroup, Completion.hasMul α, Completion.hasOne α with
     one_mul := fun a =>
-      Completion.inductionOn a (isClosedEq (Continuous.mul continuous_const continuous_id) continuous_id) fun a => by
+      Completion.inductionOn a
+        (isClosedEq (Continuous.mul continuous_const continuous_id) continuous_id) fun a => by
         rw [← coe_one, ← coe_mul, one_mul],
     mul_one := fun a =>
-      Completion.inductionOn a (isClosedEq (Continuous.mul continuous_id continuous_const) continuous_id) fun a => by
+      Completion.inductionOn a
+        (isClosedEq (Continuous.mul continuous_id continuous_const) continuous_id) fun a => by
         rw [← coe_one, ← coe_mul, mul_one],
     mul_assoc := fun a b c =>
       Completion.inductionOn₃ a b c
@@ -96,13 +98,15 @@ instance : Ring (Completion α) :=
           (Continuous.mul (Continuous.mul continuous_fst (continuous_fst.comp continuous_snd))
             (continuous_snd.comp continuous_snd))
           (Continuous.mul continuous_fst
-            (Continuous.mul (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
+            (Continuous.mul (continuous_fst.comp continuous_snd)
+              (continuous_snd.comp continuous_snd))))
         fun a b c => by rw [← coe_mul, ← coe_mul, ← coe_mul, ← coe_mul, mul_assoc],
     left_distrib := fun a b c =>
       Completion.inductionOn₃ a b c
         (isClosedEq
           (Continuous.mul continuous_fst
-            (Continuous.add (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd)))
+            (Continuous.add (continuous_fst.comp continuous_snd)
+              (continuous_snd.comp continuous_snd)))
           (Continuous.add (Continuous.mul continuous_fst (continuous_fst.comp continuous_snd))
             (Continuous.mul continuous_fst (continuous_snd.comp continuous_snd))))
         fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, mul_add],
@@ -112,7 +116,8 @@ instance : Ring (Completion α) :=
           (Continuous.mul (Continuous.add continuous_fst (continuous_fst.comp continuous_snd))
             (continuous_snd.comp continuous_snd))
           (Continuous.add (Continuous.mul continuous_fst (continuous_snd.comp continuous_snd))
-            (Continuous.mul (continuous_fst.comp continuous_snd) (continuous_snd.comp continuous_snd))))
+            (Continuous.mul (continuous_fst.comp continuous_snd)
+              (continuous_snd.comp continuous_snd))))
         fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mul] }
 
 /-- The map from a uniform ring to its completion, as a ring homomorphism. -/
@@ -122,28 +127,33 @@ def coeRingHom : α →+* Completion α :=
 
 theorem continuous_coe_ring_hom : Continuous (coeRingHom : α → Completion α) :=
   continuous_coe α
-#align uniform_space.completion.continuous_coe_ring_hom UniformSpace.Completion.continuous_coe_ring_hom
+#align
+  uniform_space.completion.continuous_coe_ring_hom UniformSpace.Completion.continuous_coe_ring_hom
 
-variable {β : Type u} [UniformSpace β] [Ring β] [UniformAddGroup β] [TopologicalRing β] (f : α →+* β)
-  (hf : Continuous f)
+variable {β : Type u} [UniformSpace β] [Ring β] [UniformAddGroup β] [TopologicalRing β]
+  (f : α →+* β) (hf : Continuous f)
 
 /-- The completion extension as a ring morphism. -/
 def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β :=
   have hf' : Continuous (f : α →+ β) := hf
   -- helping the elaborator
   have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf'
-  { toFun := Completion.extension f, map_zero' := by rw [← completion.coe_zero, extension_coe hf, f.map_zero],
+  { toFun := Completion.extension f, map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero],
     map_add' := fun a b =>
       Completion.inductionOn₂ a b
         (isClosedEq (continuous_extension.comp continuous_add)
-          ((continuous_extension.comp continuous_fst).add (continuous_extension.comp continuous_snd)))
-        fun a b => by rw [← coe_add, extension_coe hf, extension_coe hf, extension_coe hf, f.map_add],
+          ((continuous_extension.comp continuous_fst).add
+            (continuous_extension.comp continuous_snd)))
+        fun a b => by
+        rw [← coe_add, extension_coe hf, extension_coe hf, extension_coe hf, f.map_add],
     map_one' := by rw [← coe_one, extension_coe hf, f.map_one],
     map_mul' := fun a b =>
       Completion.inductionOn₂ a b
         (isClosedEq (continuous_extension.comp continuous_mul)
-          ((continuous_extension.comp continuous_fst).mul (continuous_extension.comp continuous_snd)))
-        fun a b => by rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
+          ((continuous_extension.comp continuous_fst).mul
+            (continuous_extension.comp continuous_snd)))
+        fun a b => by
+        rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 #align uniform_space.completion.extension_hom UniformSpace.Completion.extensionHom
 
 instance top_ring_compl : TopologicalRing (Completion α) where
@@ -158,11 +168,12 @@ def mapRingHom (hf : Continuous f) : Completion α →+* Completion β :=
 
 section Algebra
 
-variable (A : Type _) [Ring A] [UniformSpace A] [UniformAddGroup A] [TopologicalRing A] (R : Type _) [CommSemiring R]
-  [Algebra R A] [HasUniformContinuousConstSmul R A]
+variable (A : Type _) [Ring A] [UniformSpace A] [UniformAddGroup A] [TopologicalRing A] (R : Type _)
+  [CommSemiring R] [Algebra R A] [HasUniformContinuousConstSmul R A]
 
 @[simp]
-theorem map_smul_eq_mul_coe (r : R) : Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) := by
+theorem map_smul_eq_mul_coe (r : R) :
+    Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) := by
   ext x
   refine' completion.induction_on x _ fun a => _
   · exact isClosedEq completion.continuous_map (continuous_mul_left _)
@@ -174,11 +185,13 @@ theorem map_smul_eq_mul_coe (r : R) : Completion.map ((· • ·) r) = (· * ·)
 instance : Algebra R (Completion A) :=
   { (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp (algebraMap R A) with
     commutes' := fun r x =>
-      (Completion.inductionOn x (isClosedEq (continuous_mul_left _) (continuous_mul_right _))) fun a => by
+      (Completion.inductionOn x (isClosedEq (continuous_mul_left _) (continuous_mul_right _)))
+        fun a => by
         simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a),
     smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
 
-theorem algebra_map_def (r : R) : algebraMap R (Completion A) r = (algebraMap R A r : Completion A) :=
+theorem algebra_map_def (r : R) :
+    algebraMap R (Completion A) r = (algebraMap R A r : Completion A) :=
   rfl
 #align uniform_space.completion.algebra_map_def UniformSpace.Completion.algebra_map_def
 
@@ -191,7 +204,8 @@ variable (R : Type _) [CommRing R] [UniformSpace R] [UniformAddGroup R] [Topolog
 instance : CommRing (Completion R) :=
   { Completion.ring with
     mul_comm := fun a b =>
-      Completion.inductionOn₂ a b (isClosedEq (continuous_fst.mul continuous_snd) (continuous_snd.mul continuous_fst))
+      Completion.inductionOn₂ a b
+        (isClosedEq (continuous_fst.mul continuous_snd) (continuous_snd.mul continuous_fst))
         fun a b => by rw [← coe_mul, ← coe_mul, mul_comm] }
 
 /-- A shortcut instance for the common case -/
@@ -208,18 +222,20 @@ variable {α : Type _}
 
 theorem ring_sep_rel (α) [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
-  Setoid.ext fun x y => (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
+  Setoid.ext fun x y =>
+    (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
 #align uniform_space.ring_sep_rel UniformSpace.ring_sep_rel
 
-theorem ring_sep_quot (α : Type u) [r : CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-    Quotient (separationSetoid α) = (α ⧸ (⊥ : Ideal α).closure) := by rw [@ring_sep_rel α r] <;> rfl
+theorem ring_sep_quot (α : Type u) [r : CommRing α] [UniformSpace α] [UniformAddGroup α]
+    [TopologicalRing α] : Quotient (separationSetoid α) = (α ⧸ (⊥ : Ideal α).closure) := by
+  rw [@ring_sep_rel α r] <;> rfl
 #align uniform_space.ring_sep_quot UniformSpace.ring_sep_quot
 
 /-- Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
 corresponding to the closure of zero. -/
-def sepQuotEquivRingQuot (α) [r : CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
-    Quotient (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
+def sepQuotEquivRingQuot (α) [r : CommRing α] [UniformSpace α] [UniformAddGroup α]
+    [TopologicalRing α] : Quotient (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
   Quotient.congrRight fun x y =>
     (add_group_separation_rel x y).trans <| Iff.trans (by rfl) (Submodule.quotient_rel_r_def _).symm
 #align uniform_space.sep_quot_equiv_ring_quot UniformSpace.sepQuotEquivRingQuot

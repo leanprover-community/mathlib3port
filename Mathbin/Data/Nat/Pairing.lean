@@ -44,8 +44,7 @@ def unpair (n : ℕ) : ℕ × ℕ :=
 
 @[simp]
 theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
-  dsimp only [unpair]
-  set s := sqrt n
+  dsimp only [unpair]; set s := sqrt n
   have sm : s * s + (n - s * s) = n := add_tsub_cancel_of_le (sqrt_le _)
   split_ifs
   · simp [mkpair, h, sm]
@@ -56,13 +55,13 @@ theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
     
 #align nat.mkpair_unpair Nat.mkpair_unpair
 
-theorem mkpair_unpair' {n a b} (H : unpair n = (a, b)) : mkpair a b = n := by simpa [H] using mkpair_unpair n
+theorem mkpair_unpair' {n a b} (H : unpair n = (a, b)) : mkpair a b = n := by
+  simpa [H] using mkpair_unpair n
 #align nat.mkpair_unpair' Nat.mkpair_unpair'
 
 @[simp]
 theorem unpair_mkpair (a b : ℕ) : unpair (mkpair a b) = (a, b) := by
-  dsimp only [mkpair]
-  split_ifs
+  dsimp only [mkpair]; split_ifs
   · show unpair (b * b + a) = (a, b)
     have be : sqrt (b * b + a) = b := sqrt_add_eq _ (le_trans (le_of_lt h) (Nat.le_add_left _ _))
     simp [unpair, be, add_tsub_cancel_right, h]
@@ -122,7 +121,8 @@ theorem right_le_mkpair (a b : ℕ) : b ≤ mkpair a b := by
   exact le_trans (le_mul_self _) (Nat.le_add_right _ _)
 #align nat.right_le_mkpair Nat.right_le_mkpair
 
-theorem unpair_right_le (n : ℕ) : (unpair n).2 ≤ n := by simpa using right_le_mkpair n.unpair.1 n.unpair.2
+theorem unpair_right_le (n : ℕ) : (unpair n).2 ≤ n := by
+  simpa using right_le_mkpair n.unpair.1 n.unpair.2
 #align nat.unpair_right_le Nat.unpair_right_le
 
 theorem mkpair_lt_mkpair_left {a₁ a₂} (b) (h : a₁ < a₂) : mkpair a₁ b < mkpair a₂ b := by
@@ -217,12 +217,14 @@ theorem Union_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
 #align set.Union_unpair_prod Set.Union_unpair_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem Union_unpair {α} (f : ℕ → ℕ → Set α) : (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
+theorem Union_unpair {α} (f : ℕ → ℕ → Set α) :
+    (⋃ n : ℕ, f n.unpair.1 n.unpair.2) = ⋃ (i : ℕ) (j : ℕ), f i j :=
   supr_unpair f
 #align set.Union_unpair Set.Union_unpair
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem Inter_unpair {α} (f : ℕ → ℕ → Set α) : (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
+theorem Inter_unpair {α} (f : ℕ → ℕ → Set α) :
+    (⋂ n : ℕ, f n.unpair.1 n.unpair.2) = ⋂ (i : ℕ) (j : ℕ), f i j :=
   infi_unpair f
 #align set.Inter_unpair Set.Inter_unpair
 

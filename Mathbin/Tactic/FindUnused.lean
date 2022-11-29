@@ -45,7 +45,8 @@ unsafe def main_declaration_attr : user_attribute where
 /-- `update_unsed_decls_list n m` removes from the map of unneeded declarations those
 referenced by declaration named `n` which is considerred to be a
 main declaration -/
-private unsafe def update_unsed_decls_list : Name → name_map declaration → tactic (name_map declaration)
+private unsafe def update_unsed_decls_list :
+    Name → name_map declaration → tactic (name_map declaration)
   | n, m => do
     let d ← get_decl n
     if m n then do
@@ -108,8 +109,8 @@ unsafe def unused_decls_cmd (_ : parse <| tk "#list_unused_decls") : lean.parser
 #align tactic.unused_decls_cmd tactic.unused_decls_cmd
 
 add_tactic_doc
-  { Name := "#list_unused_decls", category := DocCategory.cmd, declNames := [`tactic.unused_decls_cmd],
-    tags := ["debugging"] }
+  { Name := "#list_unused_decls", category := DocCategory.cmd,
+    declNames := [`tactic.unused_decls_cmd], tags := ["debugging"] }
 
 end Tactic
 

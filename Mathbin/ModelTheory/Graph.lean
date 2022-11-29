@@ -47,9 +47,9 @@ def adj : Language.graph.Relations 2 :=
 #align first_order.language.adj FirstOrder.Language.adj
 
 /-- Any simple graph can be thought of as a structure in the language of graphs. -/
-def _root_.simple_graph.Structure (G : SimpleGraph V) : Language.graph.StructureCat V :=
+def SimpleGraph.structure (G : SimpleGraph V) : Language.graph.StructureCat V :=
   StructureCat.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => G.Adj
-#align first_order.language._root_.simple_graph.Structure first_order.language._root_.simple_graph.Structure
+#align simple_graph.Structure SimpleGraph.structure
 
 namespace Graph
 
@@ -70,11 +70,14 @@ protected def TheoryCat.simpleGraph : Language.graph.TheoryCat :=
 @[simp]
 theorem TheoryCat.simple_graph_model_iff [Language.graph.StructureCat V] :
     V ⊨ Theory.simple_graph ↔
-      (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧ Symmetric fun x y : V => RelMap adj ![x, y] :=
+      (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧
+        Symmetric fun x y : V => RelMap adj ![x, y] :=
   by simp [Theory.simple_graph]
-#align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
+#align
+  first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.TheoryCat.simple_graph_model_iff
 
-instance simple_graph_model (G : SimpleGraph V) : @TheoryCat.Model _ V G.StructureCat TheoryCat.simpleGraph := by
+instance simple_graph_model (G : SimpleGraph V) :
+    @TheoryCat.Model _ V G.StructureCat TheoryCat.simpleGraph := by
   simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
   exact ⟨G.loopless, G.symm⟩
 #align first_order.language.simple_graph_model FirstOrder.Language.simple_graph_model
@@ -84,29 +87,31 @@ variable (V)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
-def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] : SimpleGraph V where
+def simpleGraphOfStructure [Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] :
+    SimpleGraph V where
   Adj x y := RelMap adj ![x, y]
   symm :=
     Relations.realize_symmetric.1
-      (TheoryCat.realize_sentence_of_mem TheoryCat.simpleGraph (Set.mem_insert_of_mem _ (Set.mem_singleton _)))
+      (TheoryCat.realize_sentence_of_mem TheoryCat.simpleGraph
+        (Set.mem_insert_of_mem _ (Set.mem_singleton _)))
   loopless :=
-    Relations.realize_irreflexive.1 (TheoryCat.realize_sentence_of_mem TheoryCat.simpleGraph (Set.mem_insert _ _))
+    Relations.realize_irreflexive.1
+      (TheoryCat.realize_sentence_of_mem TheoryCat.simpleGraph (Set.mem_insert _ _))
 #align first_order.language.simple_graph_of_structure FirstOrder.Language.simpleGraphOfStructure
 
 variable {V}
 
 @[simp]
-theorem _root_.simple_graph.simple_graph_of_structure (G : SimpleGraph V) :
+theorem SimpleGraph.simple_graph_of_structure (G : SimpleGraph V) :
     @simpleGraphOfStructure V G.StructureCat _ = G := by
   ext
   rfl
-#align
-  first_order.language._root_.simple_graph.simple_graph_of_structure first_order.language._root_.simple_graph.simple_graph_of_structure
+#align simple_graph.simple_graph_of_structure SimpleGraph.simple_graph_of_structure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V] [V ⊨ Theory.simple_graph] :
-    (simpleGraphOfStructure V).StructureCat = S := by
+theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V]
+    [V ⊨ Theory.simple_graph] : (simpleGraphOfStructure V).StructureCat = S := by
   ext (n f xs)
   · exact (is_relational.empty_functions n).elim f
     
@@ -129,11 +134,13 @@ theorem Structure_simple_graph_of_structure [S : Language.graph.StructureCat V] 
         
       
     
-#align first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
+#align
+  first_order.language.Structure_simple_graph_of_structure FirstOrder.Language.Structure_simple_graph_of_structure
 
 theorem TheoryCat.simple_graph_is_satisfiable : TheoryCat.IsSatisfiable TheoryCat.simpleGraph :=
   ⟨@TheoryCat.ModelCat.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩
-#align first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simple_graph_is_satisfiable
+#align
+  first_order.language.Theory.simple_graph_is_satisfiable FirstOrder.Language.TheoryCat.simple_graph_is_satisfiable
 
 end Language
 

@@ -42,7 +42,8 @@ theorem left_mul_both_sides {α} [h : Mul α] {x y : α} (z : α) (h1 : x = y) :
   congr_arg (Mul.mul z) h1
 #align linear_combo.left_mul_both_sides LinearCombo.left_mul_both_sides
 
-theorem sum_two_equations {α} [h : Add α] {x1 y1 x2 y2 : α} (h1 : x1 = y1) (h2 : x2 = y2) : x1 + x2 = y1 + y2 :=
+theorem sum_two_equations {α} [h : Add α] {x1 y1 x2 y2 : α} (h1 : x1 = y1) (h2 : x2 = y2) :
+    x1 + x2 = y1 + y2 :=
   congr (congr_arg Add.add h1) h2
 #align linear_combo.sum_two_equations LinearCombo.sum_two_equations
 
@@ -135,7 +136,8 @@ unsafe def sum_equalities (h_equality1 h_equality2 : expr) : tactic expr :=
   equality to the result of multiplying `coeff_for_eq2` by the second equality
   holds
 -/
-unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_for_eq2 : pexpr) : tactic expr :=
+unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_for_eq2 : pexpr) :
+    tactic expr :=
   mul_equality_expr h_equality2 coeff_for_eq2 >>= sum_equalities h_equality1
 #align linear_combo.sum_two_hyps_one_mul_helper linear_combo.sum_two_hyps_one_mul_helper
 
@@ -155,7 +157,8 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
 * Output: an `expr`, which proves that the weighted sum of the given
     equalities added to the base equation holds
 -/
-unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) → List expr → List pexpr → tactic expr
+unsafe def make_sum_of_hyps_helper (expected_tp : expr) :
+    Option (tactic expr) → List expr → List pexpr → tactic expr
   | none, [], [] => to_expr ``((rfl : (0 : $(expected_tp)) = 0))
   | some tactic_hcombo, [], [] => do
     tactic_hcombo
@@ -199,7 +202,8 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
 * Output: an `expr`, which proves that the weighted sum of the equalities
     holds
 -/
-unsafe def make_sum_of_hyps (expected_tp : expr) (h_eqs_names : List expr) (coeffs : List pexpr) : tactic expr :=
+unsafe def make_sum_of_hyps (expected_tp : expr) (h_eqs_names : List expr) (coeffs : List pexpr) :
+    tactic expr :=
   make_sum_of_hyps_helper expected_tp none h_eqs_names coeffs
 #align linear_combo.make_sum_of_hyps linear_combo.make_sum_of_hyps
 
@@ -323,7 +327,10 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/ unsafe
-  def mk_mul : List pexpr → pexpr | [ ] => ` `( 1 ) | [ e ] => e | e :: es => ` `( $ ( e ) * $ ( mk_mul es ) )
+  def
+    mk_mul
+    : List pexpr → pexpr
+    | [ ] => ` `( 1 ) | [ e ] => e | e :: es => ` `( $ ( e ) * $ ( mk_mul es ) )
 #align linear_combo.mk_mul linear_combo.mk_mul
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -347,7 +354,10 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
           head . get_frozen_name , args
           with
           | ` ` Add.add , [ e1 , e2 ] => as_linear_combo neg ms e1 ++ as_linear_combo neg ms e2
-            | ` ` Sub.sub , [ e1 , e2 ] => as_linear_combo neg ms e1 ++ as_linear_combo ( not neg ) ms e2
+            |
+              ` ` Sub.sub , [ e1 , e2 ]
+              =>
+              as_linear_combo neg ms e1 ++ as_linear_combo ( not neg ) ms e2
             | ` ` Mul.mul , [ e1 , e2 ] => as_linear_combo neg ( e1 :: ms ) e2
             | ` ` Div.div , [ e1 , e2 ] => as_linear_combo neg ( ` `( $ ( e2 ) ⁻¹ ) :: ms ) e1
             | ` ` Neg.neg , [ e1 ] => as_linear_combo ( not neg ) ms e1
@@ -423,16 +433,16 @@ example (a b : ℚ) (h : ∀ p q : ℚ, p = q) : 3*a + qc = 3*b + 2*qc :=
 by linear_combination 3 * h a b + hqc
 ```
 -/
-unsafe def _root_.tactic.interactive.linear_combination (input : parse (as_linear_combo false [] <$> texpr)?)
-    (_ : parse (tk "with")?) (config : linear_combination_config := {  }) : tactic Unit :=
+unsafe def _root_.tactic.interactive.linear_combination
+    (input : parse (as_linear_combo false [] <$> texpr)?) (_ : parse (tk "with")?)
+    (config : linear_combination_config := {  }) : tactic Unit :=
   let (h_eqs_names, coeffs) := List.unzip (input.getOrElse [])
   linear_combination h_eqs_names coeffs config
-#align
-  linear_combo._root_.tactic.interactive.linear_combination linear_combo._root_.tactic.interactive.linear_combination
+#align tactic.interactive.linear_combination tactic.interactive.linear_combination
 
 add_tactic_doc
-  { Name := "linear_combination", category := DocCategory.tactic, declNames := [`tactic.interactive.linear_combination],
-    tags := ["arithmetic"] }
+  { Name := "linear_combination", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.linear_combination], tags := ["arithmetic"] }
 
 end InteractiveMode
 

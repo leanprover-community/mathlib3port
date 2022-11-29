@@ -33,8 +33,9 @@ a nonempty finite family of elements of `M` such that `∀ i ∈ s, p (g i)`. Th
 `f (∏ x in s, g x) ≤ ∏ x in s, f (g x)`. -/
 @[to_additive le_sum_nonempty_of_subadditive_on_pred]
 theorem le_prod_nonempty_of_submultiplicative_on_pred (f : M → N) (p : M → Prop)
-    (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y)) (g : ι → M)
-    (s : Finset ι) (hs_nonempty : s.Nonempty) (hs : ∀ i ∈ s, p (g i)) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
+    (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y))
+    (g : ι → M) (s : Finset ι) (hs_nonempty : s.Nonempty) (hs : ∀ i ∈ s, p (g i)) :
+    f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
   refine' le_trans (Multiset.le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul _ _ _) _
   · simp [hs_nonempty.ne_empty]
     
@@ -42,7 +43,8 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred (f : M → N) (p : M → P
     
   rw [Multiset.map_map]
   rfl
-#align finset.le_prod_nonempty_of_submultiplicative_on_pred Finset.le_prod_nonempty_of_submultiplicative_on_pred
+#align
+  finset.le_prod_nonempty_of_submultiplicative_on_pred Finset.le_prod_nonempty_of_submultiplicative_on_pred
 
 /-- Let `{x | p x}` be an additive subsemigroup of an additive commutative monoid `M`. Let
 `f : M → N` be a map subadditive on `{x | p x}`, i.e., `p x → p y → f (x + y) ≤ f x + f y`. Let
@@ -53,10 +55,10 @@ add_decl_doc le_sum_nonempty_of_subadditive_on_pred
 /-- If `f : M → N` is a submultiplicative function, `f (x * y) ≤ f x * f y` and `g i`, `i ∈ s`, is a
 nonempty finite family of elements of `M`, then `f (∏ i in s, g i) ≤ ∏ i in s, f (g i)`. -/
 @[to_additive le_sum_nonempty_of_subadditive]
-theorem le_prod_nonempty_of_submultiplicative (f : M → N) (h_mul : ∀ x y, f (x * y) ≤ f x * f y) {s : Finset ι}
-    (hs : s.Nonempty) (g : ι → M) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) :=
-  le_prod_nonempty_of_submultiplicative_on_pred f (fun i => True) (fun x y _ _ => h_mul x y) (fun _ _ _ _ => trivial) g
-    s hs fun _ _ => trivial
+theorem le_prod_nonempty_of_submultiplicative (f : M → N) (h_mul : ∀ x y, f (x * y) ≤ f x * f y)
+    {s : Finset ι} (hs : s.Nonempty) (g : ι → M) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) :=
+  le_prod_nonempty_of_submultiplicative_on_pred f (fun i => True) (fun x y _ _ => h_mul x y)
+    (fun _ _ _ _ => trivial) g s hs fun _ _ => trivial
 #align finset.le_prod_nonempty_of_submultiplicative Finset.le_prod_nonempty_of_submultiplicative
 
 /-- If `f : M → N` is a subadditive function, `f (x + y) ≤ f x + f y` and `g i`, `i ∈ s`, is a
@@ -69,8 +71,8 @@ such that `f 1 = 1` and `f` is submultiplicative on `{x | p x}`, i.e.,
 that `∀ i ∈ s, p (g i)`. Then `f (∏ i in s, g i) ≤ ∏ i in s, f (g i)`. -/
 @[to_additive le_sum_of_subadditive_on_pred]
 theorem le_prod_of_submultiplicative_on_pred (f : M → N) (p : M → Prop) (h_one : f 1 = 1)
-    (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y)) (g : ι → M)
-    {s : Finset ι} (hs : ∀ i ∈ s, p (g i)) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
+    (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y))
+    (g : ι → M) {s : Finset ι} (hs : ∀ i ∈ s, p (g i)) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
   rcases eq_empty_or_nonempty s with (rfl | hs_nonempty)
   · simp [h_one]
     
@@ -87,8 +89,9 @@ add_decl_doc le_sum_of_subadditive_on_pred
 /-- If `f : M → N` is a submultiplicative function, `f (x * y) ≤ f x * f y`, `f 1 = 1`, and `g i`,
 `i ∈ s`, is a finite family of elements of `M`, then `f (∏ i in s, g i) ≤ ∏ i in s, f (g i)`. -/
 @[to_additive le_sum_of_subadditive]
-theorem le_prod_of_submultiplicative (f : M → N) (h_one : f 1 = 1) (h_mul : ∀ x y, f (x * y) ≤ f x * f y) (s : Finset ι)
-    (g : ι → M) : f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
+theorem le_prod_of_submultiplicative (f : M → N) (h_one : f 1 = 1)
+    (h_mul : ∀ x y, f (x * y) ≤ f x * f y) (s : Finset ι) (g : ι → M) :
+    f (∏ i in s, g i) ≤ ∏ i in s, f (g i) := by
   refine' le_trans (Multiset.le_prod_of_submultiplicative f h_one h_mul _) _
   rw [Multiset.map_map]
   rfl
@@ -192,7 +195,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
               («term_≤_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
                 `s
                 ", "
@@ -201,7 +205,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                («term_*_»
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                  " in "
                  («term_\_» `t "\\" `s)
                  ", "
@@ -209,7 +214,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 "*"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                  " in "
                  `s
                  ", "
@@ -244,7 +250,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                  " in "
                  («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
                  ", "
@@ -257,7 +264,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                  " in "
                  `t
                  ", "
@@ -270,7 +278,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                   [(Tactic.rwSeq
                     "rw"
                     []
-                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))] "]")
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))]
+                     "]")
                     [])]))))]))])))
        [])
       []
@@ -291,7 +302,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
              («term_≤_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                " in "
                `s
                ", "
@@ -300,7 +312,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
               («term_*_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
                 («term_\_» `t "\\" `s)
                 ", "
@@ -308,7 +321,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                "*"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
                 `s
                 ", "
@@ -343,7 +357,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
                 («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
                 ", "
@@ -356,7 +371,8 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
                 `t
                 ", "
@@ -369,7 +385,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                  [(Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))] "]")
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))]
+                    "]")
                    [])]))))]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -423,7 +442,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                  []
                  []
                  ["only"]
-                 [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
+                 [(Tactic.simpArgs
+                   "["
+                   [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)]
+                   "]")]
                  []))]))))))
         [(calcStep
           («term_=_»
@@ -457,7 +479,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
              [(Tactic.rwSeq
                "rw"
                []
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))] "]")
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))]
+                "]")
                [])]))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
@@ -507,7 +532,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 []
                 []
                 ["only"]
-                [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
+                [(Tactic.simpArgs
+                  "["
+                  [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)]
+                  "]")]
                 []))]))))))
        [(calcStep
          («term_=_»
@@ -555,17 +583,23 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
            [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))] "]") [])
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `sdiff_union_of_subset [`h]))] "]")
+       [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `sdiff_union_of_subset [`h])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `sdiff_union_of_subset
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -594,14 +628,17 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
@@ -615,12 +652,17 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `sdiff_disjoint
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `prod_union
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `prod_union [`sdiff_disjoint]) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `prod_union [`sdiff_disjoint])
+     ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_»
@@ -647,21 +689,25 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
       («term_\_» `t "\\" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `t
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -691,7 +737,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
               []
               []
               ["only"]
-              [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
+              [(Tactic.simpArgs
+                "["
+                [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)]
+                "]")]
               []))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<|_»
@@ -709,7 +758,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
              []
              []
              ["only"]
-             [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
+             [(Tactic.simpArgs
+               "["
+               [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)]
+               "]")]
              []))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
@@ -724,7 +776,10 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
             []
             []
             ["only"]
-            [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
+            [(Tactic.simpArgs
+              "["
+              [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)]
+              "]")]
             []))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -736,18 +791,23 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
         []
         []
         ["only"]
-        [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
+        [(Tactic.simpArgs
+          "["
+          [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)]
+          "]")]
         []))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `and_imp
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_sdiff
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
@@ -815,14 +875,17 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -838,16 +901,19 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_\_» `t "\\" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `t
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (some 70, term)
@@ -878,14 +944,17 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -898,7 +967,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
       (Term.app `f [`i]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -928,26 +997,30 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 #align finset.prod_le_prod_of_subset_of_one_le' Finset.prod_le_prod_of_subset_of_one_le'
 
 @[to_additive sum_mono_set_of_nonneg]
-theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏ x in s, f x := fun s t hst =>
-  (prod_le_prod_of_subset_of_one_le' hst) fun x _ _ => hf x
+theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏ x in s, f x :=
+  fun s t hst => (prod_le_prod_of_subset_of_one_le' hst) fun x _ _ => hf x
 #align finset.prod_mono_set_of_one_le' Finset.prod_mono_set_of_one_le'
 
 @[to_additive sum_le_univ_sum_of_nonneg]
-theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 ≤ f x) : (∏ x in s, f x) ≤ ∏ x, f x :=
+theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 ≤ f x) :
+    (∏ x in s, f x) ≤ ∏ x, f x :=
   prod_le_prod_of_subset_of_one_le' (subset_univ s) fun a _ _ => w a
 #align finset.prod_le_univ_prod_of_one_le' Finset.prod_le_univ_prod_of_one_le'
 
 @[to_additive sum_eq_zero_iff_of_nonneg]
-theorem prod_eq_one_iff_of_one_le' : (∀ i ∈ s, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) := by classical
+theorem prod_eq_one_iff_of_one_le' :
+    (∀ i ∈ s, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) := by classical
   apply Finset.induction_on s
   exact fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩
   intro a s ha ih H
   have : ∀ i ∈ s, 1 ≤ f i := fun _ => H _ ∘ mem_insert_of_mem
-  rw [prod_insert ha, mul_eq_one_iff' (H _ <| mem_insert_self _ _) (one_le_prod' this), forall_mem_insert, ih this]
+  rw [prod_insert ha, mul_eq_one_iff' (H _ <| mem_insert_self _ _) (one_le_prod' this),
+    forall_mem_insert, ih this]
 #align finset.prod_eq_one_iff_of_one_le' Finset.prod_eq_one_iff_of_one_le'
 
 @[to_additive sum_eq_zero_iff_of_nonneg]
-theorem prod_eq_one_iff_of_le_one' : (∀ i ∈ s, f i ≤ 1) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) :=
+theorem prod_eq_one_iff_of_le_one' :
+    (∀ i ∈ s, f i ≤ 1) → ((∏ i in s, f i) = 1 ↔ ∀ i ∈ s, f i = 1) :=
   @prod_eq_one_iff_of_one_le' _ Nᵒᵈ _ _ _
 #align finset.prod_eq_one_iff_of_le_one' Finset.prod_eq_one_iff_of_le_one'
 
@@ -955,12 +1028,14 @@ theorem prod_eq_one_iff_of_le_one' : (∀ i ∈ s, f i ≤ 1) → ((∏ i in s, 
 theorem single_le_prod' (hf : ∀ i ∈ s, 1 ≤ f i) {a} (h : a ∈ s) : f a ≤ ∏ x in s, f x :=
   calc
     f a = ∏ i in {a}, f i := prod_singleton.symm
-    _ ≤ ∏ i in s, f i := (prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h)) fun i hi _ => hf i hi
+    _ ≤ ∏ i in s, f i :=
+      (prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h)) fun i hi _ => hf i hi
     
 #align finset.single_le_prod' Finset.single_le_prod'
 
 @[to_additive sum_le_card_nsmul]
-theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, f x ≤ n) : s.Prod f ≤ n ^ s.card := by
+theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, f x ≤ n) :
+    s.Prod f ≤ n ^ s.card := by
   refine' (Multiset.prod_le_pow_card (s.val.map f) n _).trans _
   · simpa using h
     
@@ -969,7 +1044,8 @@ theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s
 #align finset.prod_le_pow_card Finset.prod_le_pow_card
 
 @[to_additive card_nsmul_le_sum]
-theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, n ≤ f x) : n ^ s.card ≤ s.Prod f :=
+theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, n ≤ f x) :
+    n ^ s.card ≤ s.Prod f :=
   @Finset.prod_le_pow_card _ Nᵒᵈ _ _ _ _ h
 #align finset.pow_card_le_prod Finset.pow_card_le_prod
 
@@ -980,25 +1056,29 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
 
 variable {ι' : Type _} [DecidableEq ι']
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ x in s, f x :=
   calc
-    (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ y in t ∪ s.image g, ∏ x in s.filter fun x => g x = y, f x :=
+    (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤
+        ∏ y in t ∪ s.image g, ∏ x in s.filter fun x => g x = y, f x :=
       (prod_le_prod_of_subset_of_one_le' (subset_union_left _ _)) fun y hyts => h y
-    _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
+    _ = ∏ x in s, f x :=
+      prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
-#align finset.prod_fiberwise_le_prod_of_one_le_prod_fiber' Finset.prod_fiberwise_le_prod_of_one_le_prod_fiber'
+#align
+  finset.prod_fiberwise_le_prod_of_one_le_prod_fiber' Finset.prod_fiberwise_le_prod_of_one_le_prod_fiber'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ (y) (_ : y ∉ t), (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
     (∏ x in s, f x) ≤ ∏ y in t, ∏ x in s.filter fun x => g x = y, f x :=
   @prod_fiberwise_le_prod_of_one_le_prod_fiber' _ Nᵒᵈ _ _ _ _ _ _ _ h
-#align finset.prod_le_prod_fiberwise_of_prod_fiber_le_one' Finset.prod_le_prod_fiberwise_of_prod_fiber_le_one'
+#align
+  finset.prod_le_prod_fiberwise_of_prod_fiber_le_one' Finset.prod_le_prod_fiberwise_of_prod_fiber_le_one'
 
 end OrderedCommMonoid
 
@@ -1008,11 +1088,13 @@ theorem abs_sum_le_sum_abs {G : Type _} [LinearOrderedAddCommGroup G] (f : ι �
 #align finset.abs_sum_le_sum_abs Finset.abs_sum_le_sum_abs
 
 theorem abs_sum_of_nonneg {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι}
-    (hf : ∀ i ∈ s, 0 ≤ f i) : |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by rw [abs_of_nonneg (Finset.sum_nonneg hf)]
+    (hf : ∀ i ∈ s, 0 ≤ f i) : |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by
+  rw [abs_of_nonneg (Finset.sum_nonneg hf)]
 #align finset.abs_sum_of_nonneg Finset.abs_sum_of_nonneg
 
-theorem abs_sum_of_nonneg' {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι} (hf : ∀ i, 0 ≤ f i) :
-    |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by rw [abs_of_nonneg (Finset.sum_nonneg' hf)]
+theorem abs_sum_of_nonneg' {G : Type _} [LinearOrderedAddCommGroup G] {f : ι → G} {s : Finset ι}
+    (hf : ∀ i, 0 ≤ f i) : |∑ i : ι in s, f i| = ∑ i : ι in s, f i := by
+  rw [abs_of_nonneg (Finset.sum_nonneg' hf)]
 #align finset.abs_sum_of_nonneg' Finset.abs_sum_of_nonneg'
 
 theorem abs_prod {R : Type _} [LinearOrderedCommRing R] {f : ι → R} {s : Finset ι} :
@@ -1024,8 +1106,9 @@ section Pigeonhole
 
 variable [DecidableEq β]
 
-theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : Finset β} (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ)
-    (hn : ∀ a ∈ t, (s.filter fun x => f x = a).card ≤ n) : s.card ≤ n * t.card :=
+theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : Finset β}
+    (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ) (hn : ∀ a ∈ t, (s.filter fun x => f x = a).card ≤ n) :
+    s.card ≤ n * t.card :=
   calc
     s.card = ∑ a in t, (s.filter fun x => f x = a).card := card_eq_sum_card_fiberwise Hf
     _ ≤ ∑ _ in t, n := sum_le_sum hn
@@ -1038,8 +1121,9 @@ theorem card_le_mul_card_image {f : α → β} (s : Finset α) (n : ℕ)
   card_le_mul_card_image_of_maps_to (fun x => mem_image_of_mem _) n hn
 #align finset.card_le_mul_card_image Finset.card_le_mul_card_image
 
-theorem mul_card_image_le_card_of_maps_to {f : α → β} {s : Finset α} {t : Finset β} (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ)
-    (hn : ∀ a ∈ t, n ≤ (s.filter fun x => f x = a).card) : n * t.card ≤ s.card :=
+theorem mul_card_image_le_card_of_maps_to {f : α → β} {s : Finset α} {t : Finset β}
+    (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ) (hn : ∀ a ∈ t, n ≤ (s.filter fun x => f x = a).card) :
+    n * t.card ≤ s.card :=
   calc
     n * t.card = ∑ _ in t, n := by simp [mul_comm]
     _ ≤ ∑ a in t, (s.filter fun x => f x = a).card := sum_le_sum hn
@@ -1060,7 +1144,8 @@ variable [DecidableEq α] {s : Finset α} {B : Finset (Finset α)} {n : ℕ}
 
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
-theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card ≤ n) : (∑ t in B, (s ∩ t).card) ≤ s.card * n := by
+theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card ≤ n) :
+    (∑ t in B, (s ∩ t).card) ≤ s.card * n := by
   refine' le_trans _ (s.sum_le_card_nsmul _ _ h)
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
@@ -1068,7 +1153,8 @@ theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card ≤
 
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
-theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card ≤ n) : (∑ s in B, s.card) ≤ Fintype.card α * n :=
+theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card ≤ n) :
+    (∑ s in B, s.card) ≤ Fintype.card α * n :=
   calc
     (∑ s in B, s.card) = ∑ s in B, (univ ∩ s).card := by simp_rw [univ_inter]
     _ ≤ Fintype.card α * n := sum_card_inter_le fun a _ => h a
@@ -1077,7 +1163,8 @@ theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card �
 
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
-theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter <| (· ∈ ·) a).card) : s.card * n ≤ ∑ t in B, (s ∩ t).card := by
+theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter <| (· ∈ ·) a).card) :
+    s.card * n ≤ ∑ t in B, (s ∩ t).card := by
   apply (s.card_nsmul_le_sum _ _ h).trans
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
@@ -1085,7 +1172,8 @@ theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter <| (· ∈ ·) a).ca
 
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
-theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter <| (· ∈ ·) a).card) : Fintype.card α * n ≤ ∑ s in B, s.card :=
+theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter <| (· ∈ ·) a).card) :
+    Fintype.card α * n ≤ ∑ s in B, s.card :=
   calc
     Fintype.card α * n ≤ ∑ s in B, (univ ∩ s).card := le_sum_card_inter fun a _ => h a
     _ = ∑ s in B, s.card := by simp_rw [univ_inter]
@@ -1094,13 +1182,15 @@ theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter <| (· ∈ ·) a).c
 
 /-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
 many they are. -/
-theorem sum_card_inter (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card = n) : (∑ t in B, (s ∩ t).card) = s.card * n :=
+theorem sum_card_inter (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card = n) :
+    (∑ t in B, (s ∩ t).card) = s.card * n :=
   (sum_card_inter_le fun a ha => (h a ha).le).antisymm (le_sum_card_inter fun a ha => (h a ha).ge)
 #align finset.sum_card_inter Finset.sum_card_inter
 
 /-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
 many they are. -/
-theorem sum_card [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card = n) : (∑ s in B, s.card) = Fintype.card α * n := by
+theorem sum_card [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card = n) :
+    (∑ s in B, s.card) = Fintype.card α * n := by
   simp_rw [Fintype.card, ← sum_card_inter fun a _ => h a, univ_inter]
 #align finset.sum_card Finset.sum_card
 
@@ -1110,7 +1200,8 @@ theorem card_le_card_bUnion {s : Finset ι} {f : ι → Finset α} (hs : (s : Se
   exact sum_le_sum fun i hi => (hf i hi).card_pos
 #align finset.card_le_card_bUnion Finset.card_le_card_bUnion
 
-theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f) :
+theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α}
+    (hs : (s : Set ι).PairwiseDisjoint f) :
     s.card ≤ (s.bUnion f).card + (s.filter fun i => f i = ∅).card := by
   rw [← Finset.filter_card_add_filter_neg_card_eq_card fun i => f i = ∅, add_comm]
   exact
@@ -1124,7 +1215,8 @@ theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α
 theorem card_le_card_bUnion_add_one {s : Finset ι} {f : ι → Finset α} (hf : Injective f)
     (hs : (s : Set ι).PairwiseDisjoint f) : s.card ≤ (s.bUnion f).card + 1 :=
   (card_le_card_bUnion_add_card_fiber hs).trans <|
-    add_le_add_left (card_le_one.2 fun i hi j hj => hf <| (mem_filter.1 hi).2.trans (mem_filter.1 hj).2.symm) _
+    add_le_add_left
+      (card_le_one.2 fun i hi j hj => hf <| (mem_filter.1 hi).2.trans (mem_filter.1 hj).2.symm) _
 #align finset.card_le_card_bUnion_add_one Finset.card_le_card_bUnion_add_one
 
 end DoubleCounting
@@ -1144,7 +1236,8 @@ theorem prod_le_prod_of_subset' (h : s ⊆ t) : (∏ x in s, f x) ≤ ∏ x in t
 #align finset.prod_le_prod_of_subset' Finset.prod_le_prod_of_subset'
 
 @[to_additive sum_mono_set]
-theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun s₁ s₂ hs => prod_le_prod_of_subset' hs
+theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun s₁ s₂ hs =>
+  prod_le_prod_of_subset' hs
 #align finset.prod_mono_set' Finset.prod_mono_set'
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1210,7 +1303,8 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
               («term_=_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 `s
                 ", "
@@ -1219,21 +1313,27 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                («term_*_»
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  (Term.app
                   `s.filter
-                  [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
                  ", "
                  (Term.app `f [`x]))
                 "*"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  (Term.app
                   `s.filter
-                  [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
                  ", "
                  (Term.app `f [`x]))))
               ":="
@@ -1259,14 +1359,19 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                      (Term.proj `disjoint_filter "." (fieldIdx "2"))
                      [(Term.fun
                        "fun"
-                       (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
+                       (Term.basicFun
+                        [(Term.hole "_") (Term.hole "_") `h `n_h]
+                        []
+                        "=>"
+                        (Term.app `n_h [`h])))])))]))))
              [(calcStep
                («term_≤_»
                 (Term.hole "_")
                 "≤"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  `t
                  ", "
@@ -1287,12 +1392,18 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                         []
                         []
                         ["only"]
-                        ["[" [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)] "]"]
+                        ["["
+                         [(Tactic.simpLemma [] [] `mem_filter)
+                          ","
+                          (Tactic.simpLemma [] [] `and_imp)]
+                         "]"]
                         [])
                        "<;>"
                        (Tactic.exact
                         "exact"
-                        (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+                        (Term.fun
+                         "fun"
+                         (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
                  («term_<|_»
                   `prod_le_prod_of_subset'
                   "<|"
@@ -1336,7 +1447,8 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
              («term_=_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                " in "
                `s
                ", "
@@ -1345,21 +1457,27 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
               («term_*_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 (Term.app
                  `s.filter
-                 [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
                 ", "
                 (Term.app `f [`x]))
                "*"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 (Term.app
                  `s.filter
-                 [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
                 ", "
                 (Term.app `f [`x]))))
              ":="
@@ -1385,14 +1503,19 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                     (Term.proj `disjoint_filter "." (fieldIdx "2"))
                     [(Term.fun
                       "fun"
-                      (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
+                      (Term.basicFun
+                       [(Term.hole "_") (Term.hole "_") `h `n_h]
+                       []
+                       "=>"
+                       (Term.app `n_h [`h])))])))]))))
             [(calcStep
               («term_≤_»
                (Term.hole "_")
                "≤"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 `t
                 ", "
@@ -1413,12 +1536,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                        []
                        []
                        ["only"]
-                       ["[" [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)] "]"]
+                       ["["
+                        [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)]
+                        "]"]
                        [])
                       "<;>"
                       (Tactic.exact
                        "exact"
-                       (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+                       (Term.fun
+                        "fun"
+                        (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
                 («term_<|_»
                  `prod_le_prod_of_subset'
                  "<|"
@@ -1467,7 +1594,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
             " in "
             (Term.app
              `s.filter
-             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+             [(Term.fun
+               "fun"
+               (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
             ", "
             (Term.app `f [`x]))
            "*"
@@ -1477,7 +1606,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
             " in "
             (Term.app
              `s.filter
-             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+             [(Term.fun
+               "fun"
+               (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
             ", "
             (Term.app `f [`x]))))
          ":="
@@ -1503,7 +1634,11 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                 (Term.proj `disjoint_filter "." (fieldIdx "2"))
                 [(Term.fun
                   "fun"
-                  (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
+                  (Term.basicFun
+                   [(Term.hole "_") (Term.hole "_") `h `n_h]
+                   []
+                   "=>"
+                   (Term.app `n_h [`h])))])))]))))
         [(calcStep
           («term_≤_»
            (Term.hole "_")
@@ -1531,12 +1666,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                    []
                    []
                    ["only"]
-                   ["[" [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)] "]"]
+                   ["["
+                    [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)]
+                    "]"]
                    [])
                   "<;>"
                   (Tactic.exact
                    "exact"
-                   (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
             («term_<|_»
              `prod_le_prod_of_subset'
              "<|"
@@ -1581,7 +1720,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            " in "
            (Term.app
             `s.filter
-            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
            ", "
            (Term.app `f [`x]))
           "*"
@@ -1591,7 +1732,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            " in "
            (Term.app
             `s.filter
-            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
            ", "
            (Term.app `f [`x]))))
         ":="
@@ -1617,7 +1760,11 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                (Term.proj `disjoint_filter "." (fieldIdx "2"))
                [(Term.fun
                  "fun"
-                 (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
+                 (Term.basicFun
+                  [(Term.hole "_") (Term.hole "_") `h `n_h]
+                  []
+                  "=>"
+                  (Term.app `n_h [`h])))])))]))))
        [(calcStep
          («term_≤_»
           (Term.hole "_")
@@ -1645,12 +1792,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                   []
                   []
                   ["only"]
-                  ["[" [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)] "]"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)]
+                   "]"]
                   [])
                  "<;>"
                  (Tactic.exact
                   "exact"
-                  (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
            («term_<|_»
             `prod_le_prod_of_subset'
             "<|"
@@ -1691,12 +1842,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                []
                []
                ["only"]
-               ["[" [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)] "]"]
+               ["["
+                [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)]
+                "]"]
                [])
               "<;>"
               (Tactic.exact
                "exact"
-               (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+               (Term.fun
+                "fun"
+                (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
         («term_<|_»
          `prod_le_prod_of_subset'
          "<|"
@@ -1793,17 +1948,20 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `and_imp
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_filter
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `subset_iff
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
@@ -1858,7 +2016,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
             "<;>"
             (Tactic.exact
              "exact"
-             (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+             (Term.fun
+              "fun"
+              (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -1875,7 +2035,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            "<;>"
            (Tactic.exact
             "exact"
-            (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))])))
+            (Term.fun
+             "fun"
+             (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -1887,28 +2049,35 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
         ["[" [(Tactic.simpLemma [] [] `mem_filter) "," (Tactic.simpLemma [] [] `and_imp)] "]"]
         [])
        "<;>"
-       (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))
+       (Tactic.exact
+        "exact"
+        (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact "exact" (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq)))
+      (Tactic.exact
+       "exact"
+       (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `le_of_eq
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Tactic.simp
        "simp"
@@ -1921,12 +2090,14 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `and_imp
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_filter
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -1954,11 +2125,14 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            "<;>"
            (Tactic.exact
             "exact"
-            (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
+            (Term.fun
+             "fun"
+             (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `mul_le_of_le_one_of_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_≤_»
@@ -1985,14 +2159,17 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
@@ -2021,7 +2198,11 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
              (Term.proj `disjoint_filter "." (fieldIdx "2"))
              [(Term.fun
                "fun"
-               (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))])))
+               (Term.basicFun
+                [(Term.hole "_") (Term.hole "_") `h `n_h]
+                []
+                "=>"
+                (Term.app `n_h [`h])))])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -2040,65 +2221,84 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
         "exact"
         (Term.app
          (Term.proj `disjoint_filter "." (fieldIdx "2"))
-         [(Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [(Term.hole "_") (Term.hole "_") `h `n_h]
+            []
+            "=>"
+            (Term.app `n_h [`h])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
        "exact"
        (Term.app
         (Term.proj `disjoint_filter "." (fieldIdx "2"))
-        [(Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))]))
+        [(Term.fun
+          "fun"
+          (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj `disjoint_filter "." (fieldIdx "2"))
-       [(Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])
+       [(Term.fun
+         "fun"
+         (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))
+      (Term.fun
+       "fun"
+       (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `n_h [`h])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `n_h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n_h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `disjoint_filter "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `disjoint_filter
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Tactic.rwSeq
        "rw"
@@ -2112,10 +2312,12 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `filter_union_filter_neg_eq
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `prod_union
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
@@ -2136,7 +2338,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
          " in "
          (Term.app
           `s.filter
-          [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+          [(Term.fun
+            "fun"
+            (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
          ", "
          (Term.app `f [`x]))
         "*"
@@ -2146,7 +2350,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
          " in "
          (Term.app
           `s.filter
-          [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+          [(Term.fun
+            "fun"
+            (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
          ", "
          (Term.app `f [`x]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2157,7 +2363,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
         " in "
         (Term.app
          `s.filter
-         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
         ", "
         (Term.app `f [`x]))
        "*"
@@ -2167,7 +2375,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
         " in "
         (Term.app
          `s.filter
-         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
         ", "
         (Term.app `f [`x])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2175,7 +2385,11 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
        " in "
-       (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+       (Term.app
+        `s.filter
+        [(Term.fun
+          "fun"
+          (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
        ", "
        (Term.app `f [`x]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2184,13 +2398,17 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+      (Term.app
+       `s.filter
+       [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2199,17 +2417,20 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       («term_≠_» (Term.app `f [`x]) "≠" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app `f [`x])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -2217,11 +2438,13 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.filter
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
@@ -2229,7 +2452,11 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
        " in "
-       (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+       (Term.app
+        `s.filter
+        [(Term.fun
+          "fun"
+          (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
        ", "
        (Term.app `f [`x]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2238,13 +2465,17 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+      (Term.app
+       `s.filter
+       [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2253,17 +2484,20 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       («term_=_» (Term.app `f [`x]) "=" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app `f [`x])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -2271,11 +2505,13 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.filter
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 0, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
@@ -2284,7 +2520,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       "∏"
       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
       " in "
-      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
+      (Term.app
+       `s.filter
+       [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
       ", "
       (Term.app `f [`x]))
      ")")
@@ -2303,14 +2541,17 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -2323,7 +2564,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       (Term.app `f [`x]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -2345,9 +2586,14 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
         skip
           <;>
           calc
-            ∏ x in s , f x = ∏ x in s.filter fun x => f x = 1 , f x * ∏ x in s.filter fun x => f x ≠ 1 , f x
+            ∏ x in s , f x
+                =
+                ∏ x in s.filter fun x => f x = 1 , f x * ∏ x in s.filter fun x => f x ≠ 1 , f x
               :=
-              by rw [ ← prod_union , filter_union_filter_neg_eq ] <;> exact disjoint_filter . 2 fun _ _ h n_h => n_h h
+              by
+                rw [ ← prod_union , filter_union_filter_neg_eq ]
+                  <;>
+                  exact disjoint_filter . 2 fun _ _ h n_h => n_h h
             _ ≤ ∏ x in t , f x
               :=
               mul_le_of_le_one_of_le
@@ -2362,15 +2608,16 @@ section OrderedCancelCommMonoid
 variable [OrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
 @[to_additive sum_lt_sum]
-theorem prod_lt_prod' (Hle : ∀ i ∈ s, f i ≤ g i) (Hlt : ∃ i ∈ s, f i < g i) : (∏ i in s, f i) < ∏ i in s, g i := by
-  classical
+theorem prod_lt_prod' (Hle : ∀ i ∈ s, f i ≤ g i) (Hlt : ∃ i ∈ s, f i < g i) :
+    (∏ i in s, f i) < ∏ i in s, g i := by classical
   rcases Hlt with ⟨i, hi, hlt⟩
   rw [← insert_erase hi, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _)]
   exact mul_lt_mul_of_lt_of_le hlt (prod_le_prod'' fun j hj => Hle j <| mem_of_mem_erase hj)
 #align finset.prod_lt_prod' Finset.prod_lt_prod'
 
 @[to_additive sum_lt_sum_of_nonempty]
-theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g i) : (∏ i in s, f i) < ∏ i in s, g i := by
+theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g i) :
+    (∏ i in s, f i) < ∏ i in s, g i := by
   apply prod_lt_prod'
   · intro i hi
     apply le_of_lt (Hlt i hi)
@@ -2447,7 +2694,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
               («term_<_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                 " in "
                 `s
                 ", "
@@ -2455,7 +2703,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                "<"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                 " in "
                 (Term.app `insert [`i `s])
                 ", "
@@ -2477,7 +2726,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                     `lt_mul_of_one_lt_left'
                     [(BigOperators.Algebra.BigOperators.Basic.finset.prod
                       "∏"
-                      (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                      (Std.ExtendedBinder.extBinders
+                       (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                       " in "
                       `s
                       ", "
@@ -2489,7 +2739,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                 "≤"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                  " in "
                  `t
                  ", "
@@ -2528,11 +2779,15 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                        []
                        []
                        ["only"]
-                       ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
+                       ["["
+                        [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                        "]"]
                        [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
                       [])
                      (group
-                      (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
+                      (Tactic.exact
+                       "exact"
+                       (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
                       [])])]))))]))])))
        [])
       []
@@ -2553,7 +2808,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
              («term_<_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                " in "
                `s
                ", "
@@ -2561,7 +2817,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
               "<"
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+               (Std.ExtendedBinder.extBinders
+                (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                " in "
                (Term.app `insert [`i `s])
                ", "
@@ -2571,7 +2828,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
               "by"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]") [])
+                [(Tactic.rwSeq
+                  "rw"
+                  []
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]")
+                  [])
                  []
                  (Tactic.exact
                   "exact"
@@ -2579,7 +2840,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                    `lt_mul_of_one_lt_left'
                    [(BigOperators.Algebra.BigOperators.Basic.finset.prod
                      "∏"
-                     (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                     (Std.ExtendedBinder.extBinders
+                      (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                      " in "
                      `s
                      ", "
@@ -2591,7 +2853,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                "≤"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                 " in "
                 `t
                 ", "
@@ -2630,11 +2893,15 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                       []
                       []
                       ["only"]
-                      ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
+                      ["["
+                       [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                       "]"]
                       [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
                      [])
                     (group
-                     (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
+                     (Tactic.exact
+                      "exact"
+                      (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
                      [])])]))))]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2665,7 +2932,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]") [])
+            [(Tactic.rwSeq
+              "rw"
+              []
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]")
+              [])
              []
              (Tactic.exact
               "exact"
@@ -2673,7 +2944,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                `lt_mul_of_one_lt_left'
                [(BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                 (Std.ExtendedBinder.extBinders
+                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                  " in "
                  `s
                  ", "
@@ -2724,10 +2996,14 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                   []
                   []
                   ["only"]
-                  ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                   "]"]
                   [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
                  [])
-                (group (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))])) [])])]))))]))
+                (group
+                 (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
+                 [])])]))))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
@@ -2753,7 +3029,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]") [])
+           [(Tactic.rwSeq
+             "rw"
+             []
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]")
+             [])
             []
             (Tactic.exact
              "exact"
@@ -2761,7 +3041,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
               `lt_mul_of_one_lt_left'
               [(BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+                (Std.ExtendedBinder.extBinders
+                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                 " in "
                 `s
                 ", "
@@ -2812,10 +3093,14 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                  []
                  []
                  ["only"]
-                 ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
+                 ["["
+                  [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)]
+                  "]"]
                  [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
                 [])
-               (group (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))])) [])])]))))])
+               (group
+                (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
+                [])])]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
@@ -2853,7 +3138,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
               ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
               [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
              [])
-            (group (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))])) [])])])))
+            (group
+             (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
+             [])])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («tactic___;_»
@@ -2868,7 +3155,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
           ["[" [(Tactic.simpLemma [] [] `mem_insert) "," (Tactic.simpLemma [] [] `not_or)] "]"]
           [(Tactic.location "at" (Tactic.locationHyp [`h'x] []))])
          [])
-        (group (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))])) [])])
+        (group
+         (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
+         [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact "exact" (Term.app `hle [`x `hx (Term.proj `h'x "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2880,20 +3169,24 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h'x
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hle
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -2907,29 +3200,35 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h'x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `not_or
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `mem_insert
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
       (Tactic.intro "intro" [`x `hx `h'x])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h'x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2968,24 +3267,28 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `ht
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `Finset.insert_subset
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.apply "apply" `prod_le_prod_of_subset_of_one_le')
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `prod_le_prod_of_subset_of_one_le'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3013,14 +3316,17 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
@@ -3031,7 +3337,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]") [])
+         [(Tactic.rwSeq
+           "rw"
+           []
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]")
+           [])
           []
           (Tactic.exact
            "exact"
@@ -3039,7 +3349,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
             `lt_mul_of_one_lt_left'
             [(BigOperators.Algebra.BigOperators.Basic.finset.prod
               "∏"
-              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
+              (Std.ExtendedBinder.extBinders
+               (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
               " in "
               `s
               ", "
@@ -3074,7 +3385,8 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hlt
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'BigOperators.Algebra.BigOperators.Basic.finset.prod', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'BigOperators.Algebra.BigOperators.Basic.finset.prod', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -3091,14 +3403,17 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -3112,21 +3427,28 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `lt_mul_of_one_lt_left'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]") [])
+      (Tactic.rwSeq
+       "rw"
+       []
+       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] (Term.app `prod_insert [`hs]))] "]")
+       [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `prod_insert [`hs])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hs
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `prod_insert
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
@@ -3161,10 +3483,12 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `insert [`i `s])
@@ -3172,15 +3496,18 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `insert
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
@@ -3197,14 +3524,17 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -3217,7 +3547,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
       (Term.app `f [`j]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -3233,7 +3563,12 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 @[ to_additive sum_lt_sum_of_subset ]
   theorem
     prod_lt_prod_of_subset'
-    ( h : s ⊆ t ) { i : ι } ( ht : i ∈ t ) ( hs : i ∉ s ) ( hlt : 1 < f i ) ( hle : ∀ j ∈ t , j ∉ s → 1 ≤ f j )
+    ( h : s ⊆ t )
+        { i : ι }
+        ( ht : i ∈ t )
+        ( hs : i ∉ s )
+        ( hlt : 1 < f i )
+        ( hle : ∀ j ∈ t , j ∉ s → 1 ≤ f j )
       : ∏ j in s , f j < ∏ j in t , f j
     :=
       by
@@ -3257,8 +3592,8 @@ theorem single_lt_prod' {i j : ι} (hij : j ≠ i) (hi : i ∈ s) (hj : j ∈ s)
   calc
     f i = ∏ k in {i}, f k := prod_singleton.symm
     _ < ∏ k in s, f k :=
-      (prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt) fun k hks hki =>
-        hle k hks (mt mem_singleton.2 hki)
+      (prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt)
+        fun k hks hki => hle k hks (mt mem_singleton.2 hki)
     
 #align finset.single_lt_prod' Finset.single_lt_prod'
 
@@ -3286,11 +3621,13 @@ theorem prod_lt_one' (h : ∀ i ∈ s, f i ≤ 1) (hs : ∃ i ∈ s, f i < 1) : 
 theorem prod_eq_prod_iff_of_le {f g : ι → M} (h : ∀ i ∈ s, f i ≤ g i) :
     ((∏ i in s, f i) = ∏ i in s, g i) ↔ ∀ i ∈ s, f i = g i := by classical
   revert h
-  refine' Finset.induction_on s (fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩) fun a s ha ih H => _
+  refine'
+    Finset.induction_on s (fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩) fun a s ha ih H => _
   specialize ih fun i => H i ∘ Finset.mem_insert_of_mem
   rw [Finset.prod_insert ha, Finset.prod_insert ha, Finset.forall_mem_insert, ← ih]
   exact
-    mul_eq_mul_iff_eq_and_eq (H a (s.mem_insert_self a)) (Finset.prod_le_prod'' fun i => H i ∘ Finset.mem_insert_of_mem)
+    mul_eq_mul_iff_eq_and_eq (H a (s.mem_insert_self a))
+      (Finset.prod_le_prod'' fun i => H i ∘ Finset.mem_insert_of_mem)
 #align finset.prod_eq_prod_iff_of_le Finset.prod_eq_prod_iff_of_le
 
 end OrderedCancelCommMonoid
@@ -3306,14 +3643,15 @@ theorem exists_lt_of_prod_lt' (Hlt : (∏ i in s, f i) < ∏ i in s, g i) : ∃ 
 #align finset.exists_lt_of_prod_lt' Finset.exists_lt_of_prod_lt'
 
 @[to_additive exists_le_of_sum_le]
-theorem exists_le_of_prod_le' (hs : s.Nonempty) (Hle : (∏ i in s, f i) ≤ ∏ i in s, g i) : ∃ i ∈ s, f i ≤ g i := by
+theorem exists_le_of_prod_le' (hs : s.Nonempty) (Hle : (∏ i in s, f i) ≤ ∏ i in s, g i) :
+    ∃ i ∈ s, f i ≤ g i := by
   contrapose! Hle with Hlt
   exact prod_lt_prod_of_nonempty' hs Hlt
 #align finset.exists_le_of_prod_le' Finset.exists_le_of_prod_le'
 
 @[to_additive exists_pos_of_sum_zero_of_exists_nonzero]
-theorem exists_one_lt_of_prod_one_of_exists_ne_one' (f : ι → M) (h₁ : (∏ i in s, f i) = 1) (h₂ : ∃ i ∈ s, f i ≠ 1) :
-    ∃ i ∈ s, 1 < f i := by
+theorem exists_one_lt_of_prod_one_of_exists_ne_one' (f : ι → M) (h₁ : (∏ i in s, f i) = 1)
+    (h₂ : ∃ i ∈ s, f i ≠ 1) : ∃ i ∈ s, 1 < f i := by
   contrapose! h₁
   obtain ⟨i, m, i_ne⟩ : ∃ i ∈ s, f i ≠ 1 := h₂
   apply ne_of_lt
@@ -3321,7 +3659,8 @@ theorem exists_one_lt_of_prod_one_of_exists_ne_one' (f : ι → M) (h₁ : (∏ 
     (∏ j in s, f j) < ∏ j in s, 1 := prod_lt_prod' h₁ ⟨i, m, (h₁ i m).lt_of_ne i_ne⟩
     _ = 1 := prod_const_one
     
-#align finset.exists_one_lt_of_prod_one_of_exists_ne_one' Finset.exists_one_lt_of_prod_one_of_exists_ne_one'
+#align
+  finset.exists_one_lt_of_prod_one_of_exists_ne_one' Finset.exists_one_lt_of_prod_one_of_exists_ne_one'
 
 end LinearOrderedCancelCommMonoid
 
@@ -3339,7 +3678,8 @@ theorem prod_nonneg (h0 : ∀ i ∈ s, 0 ≤ f i) : 0 ≤ ∏ i in s, f i :=
 /-- If all `f i`, `i ∈ s`, are nonnegative and each `f i` is less than or equal to `g i`, then the
 product of `f i` is less than or equal to the product of `g i`. See also `finset.prod_le_prod''` for
 the case of an ordered commutative multiplicative monoid. -/
-theorem prod_le_prod (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by
+theorem prod_le_prod (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ g i) :
+    (∏ i in s, f i) ≤ ∏ i in s, g i := by
   induction' s using Finset.induction with a s has ih h
   · simp
     
@@ -3365,15 +3705,15 @@ theorem prod_le_one (h0 : ∀ i ∈ s, 0 ≤ f i) (h1 : ∀ i ∈ s, f i ≤ 1) 
 
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `ordered_comm_semiring`. -/
-theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i + h i ≤ f i) (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j)
-    (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) (hg : ∀ i ∈ s, 0 ≤ g i) (hh : ∀ i ∈ s, 0 ≤ h i) :
-    ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by
+theorem prod_add_prod_le {i : ι} {f g h : ι → R} (hi : i ∈ s) (h2i : g i + h i ≤ f i)
+    (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j) (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) (hg : ∀ i ∈ s, 0 ≤ g i)
+    (hh : ∀ i ∈ s, 0 ≤ h i) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by
   simp_rw [prod_eq_mul_prod_diff_singleton hi]
   refine' le_trans _ (mul_le_mul_of_nonneg_right h2i _)
   · rw [right_distrib]
-    apply add_le_add <;>
-      apply mul_le_mul_of_nonneg_left <;>
-        try apply_assumption <;> assumption <;> apply prod_le_prod <;> simp (config := { contextual := true }) [*]
+    apply add_le_add <;> apply mul_le_mul_of_nonneg_left <;> try apply_assumption <;> assumption <;>
+        apply prod_le_prod <;>
+      simp (config := { contextual := true }) [*]
     
   · apply prod_nonneg
     simp only [and_imp, mem_sdiff, mem_singleton]
@@ -3416,14 +3756,16 @@ theorem prod_le_prod' (h : ∀ i ∈ s, f i ≤ g i) : (∏ i in s, f i) ≤ ∏
   sum of the products of `g` and `h`. This is the version for `canonically_ordered_comm_semiring`.
 -/
 theorem prod_add_prod_le' (hi : i ∈ s) (h2i : g i + h i ≤ f i) (hgf : ∀ j ∈ s, j ≠ i → g j ≤ f j)
-    (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by classical
+    (hhf : ∀ j ∈ s, j ≠ i → h j ≤ f j) : ((∏ i in s, g i) + ∏ i in s, h i) ≤ ∏ i in s, f i := by
+  classical
   simp_rw [prod_eq_mul_prod_diff_singleton hi]
   refine' le_trans _ (mul_le_mul_right' h2i _)
   rw [right_distrib]
-  apply add_le_add <;>
-    apply mul_le_mul_left' <;>
-      apply prod_le_prod' <;>
-        simp only [and_imp, mem_sdiff, mem_singleton] <;> intros <;> apply_assumption <;> assumption
+  apply add_le_add <;> apply mul_le_mul_left' <;> apply prod_le_prod' <;>
+          simp only [and_imp, mem_sdiff, mem_singleton] <;>
+        intros <;>
+      apply_assumption <;>
+    assumption
 #align finset.prod_add_prod_le' Finset.prod_add_prod_le'
 
 end CanonicallyOrderedCommSemiring
@@ -3442,7 +3784,8 @@ theorem prod_mono' [OrderedCommMonoid M] : Monotone fun f : ι → M => ∏ i, f
 attribute [mono] sum_mono
 
 @[to_additive sum_strict_mono]
-theorem prod_strict_mono' [OrderedCancelCommMonoid M] : StrictMono fun f : ι → M => ∏ x, f x := fun f g hfg =>
+theorem prod_strict_mono' [OrderedCancelCommMonoid M] : StrictMono fun f : ι → M => ∏ x, f x :=
+  fun f g hfg =>
   let ⟨hle, i, hlt⟩ := Pi.lt_def.mp hfg
   Finset.prod_lt_prod' (fun i _ => hle i) ⟨i, Finset.mem_univ i, hlt⟩
 #align fintype.prod_strict_mono' Fintype.prod_strict_mono'
@@ -3454,17 +3797,17 @@ namespace WithTop
 open Finset
 
 /-- A product of finite numbers is still finite -/
-theorem prod_lt_top [CanonicallyOrderedCommSemiring R] [Nontrivial R] [DecidableEq R] {s : Finset ι} {f : ι → WithTop R}
-    (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
-  (prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1)) fun a ha =>
-    lt_top_iff_ne_top.2 (h a ha)
+theorem prod_lt_top [CanonicallyOrderedCommSemiring R] [Nontrivial R] [DecidableEq R] {s : Finset ι}
+    {f : ι → WithTop R} (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
+  (prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1))
+    fun a ha => lt_top_iff_ne_top.2 (h a ha)
 #align with_top.prod_lt_top WithTop.prod_lt_top
 
 /-- A sum of finite numbers is still finite -/
-theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} (h : ∀ i ∈ s, f i ≠ ⊤) :
-    (∑ i in s, f i) < ⊤ :=
-  (sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top) fun i hi =>
-    lt_top_iff_ne_top.2 (h i hi)
+theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M}
+    (h : ∀ i ∈ s, f i ≠ ⊤) : (∑ i in s, f i) < ⊤ :=
+  (sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top)
+    fun i hi => lt_top_iff_ne_top.2 (h i hi)
 #align with_top.sum_lt_top WithTop.sum_lt_top
 
 /-- A sum of numbers is infinite iff one of them is infinite -/
@@ -3481,7 +3824,8 @@ theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → With
 
 /-- A sum of finite numbers is still finite -/
 theorem sum_lt_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
-    (∑ i in s, f i) < ⊤ ↔ ∀ i ∈ s, f i < ⊤ := by simp only [lt_top_iff_ne_top, Ne.def, sum_eq_top_iff, not_exists]
+    (∑ i in s, f i) < ⊤ ↔ ∀ i ∈ s, f i < ⊤ := by
+  simp only [lt_top_iff_ne_top, Ne.def, sum_eq_top_iff, not_exists]
 #align with_top.sum_lt_top_iff WithTop.sum_lt_top_iff
 
 end WithTop
@@ -3490,8 +3834,8 @@ section AbsoluteValue
 
 variable {S : Type _}
 
-theorem AbsoluteValue.sum_le [Semiring R] [OrderedSemiring S] (abv : AbsoluteValue R S) (s : Finset ι) (f : ι → R) :
-    abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) := by
+theorem AbsoluteValue.sum_le [Semiring R] [OrderedSemiring S] (abv : AbsoluteValue R S)
+    (s : Finset ι) (f : ι → R) : abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) := by
   letI := Classical.decEq ι
   refine' Finset.induction_on s _ fun i s hi ih => _
   · simp
@@ -3501,18 +3845,20 @@ theorem AbsoluteValue.sum_le [Semiring R] [OrderedSemiring S] (abv : AbsoluteVal
     
 #align absolute_value.sum_le AbsoluteValue.sum_le
 
-theorem IsAbsoluteValue.abv_sum [Semiring R] [OrderedSemiring S] (abv : R → S) [IsAbsoluteValue abv] (f : ι → R)
-    (s : Finset ι) : abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) :=
+theorem IsAbsoluteValue.abv_sum [Semiring R] [OrderedSemiring S] (abv : R → S) [IsAbsoluteValue abv]
+    (f : ι → R) (s : Finset ι) : abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) :=
   (IsAbsoluteValue.toAbsoluteValue abv).sum_le _ _
 #align is_absolute_value.abv_sum IsAbsoluteValue.abv_sum
 
-theorem AbsoluteValue.map_prod [CommSemiring R] [Nontrivial R] [LinearOrderedCommRing S] (abv : AbsoluteValue R S)
-    (f : ι → R) (s : Finset ι) : abv (∏ i in s, f i) = ∏ i in s, abv (f i) :=
+theorem AbsoluteValue.map_prod [CommSemiring R] [Nontrivial R] [LinearOrderedCommRing S]
+    (abv : AbsoluteValue R S) (f : ι → R) (s : Finset ι) :
+    abv (∏ i in s, f i) = ∏ i in s, abv (f i) :=
   abv.toMonoidHom.map_prod f s
 #align absolute_value.map_prod AbsoluteValue.map_prod
 
-theorem IsAbsoluteValue.map_prod [CommSemiring R] [Nontrivial R] [LinearOrderedCommRing S] (abv : R → S)
-    [IsAbsoluteValue abv] (f : ι → R) (s : Finset ι) : abv (∏ i in s, f i) = ∏ i in s, abv (f i) :=
+theorem IsAbsoluteValue.map_prod [CommSemiring R] [Nontrivial R] [LinearOrderedCommRing S]
+    (abv : R → S) [IsAbsoluteValue abv] (f : ι → R) (s : Finset ι) :
+    abv (∏ i in s, f i) = ∏ i in s, abv (f i) :=
   (IsAbsoluteValue.toAbsoluteValue abv).map_prod _ _
 #align is_absolute_value.map_prod IsAbsoluteValue.map_prod
 

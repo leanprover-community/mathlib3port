@@ -68,7 +68,8 @@ instance (V : FdRep k G) : FiniteDimensional k V := by
 
 /-- All hom spaces are finite dimensional. -/
 instance (V W : FdRep k G) : FiniteDimensional k (V ⟶ W) :=
-  FiniteDimensional.ofInjective ((forget₂ (FdRep k G) (FgModule k)).mapLinearMap k) (Functor.map_injective _)
+  FiniteDimensional.ofInjective ((forget₂ (FdRep k G) (FgModule k)).mapLinearMap k)
+    (Functor.map_injective _)
 
 /-- The monoid homomorphism corresponding to the action of `G` onto `V : fdRep k G`. -/
 def ρ (V : FdRep k G) : G →* V →ₗ[k] V :=
@@ -80,7 +81,8 @@ def isoToLinearEquiv {V W : FdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
   FgModule.isoToLinearEquiv ((ActionCat.forget (FgModule k) (MonCat.of G)).mapIso i)
 #align fdRep.iso_to_linear_equiv FdRep.isoToLinearEquiv
 
-theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) : W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) := by
+theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) :
+    W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) := by
   rw [FdRep.isoToLinearEquiv, ← FgModule.Iso.conj_eq_conj, iso.conj_apply]
   rw [iso.eq_inv_comp ((ActionCat.forget (FgModule k) (MonCat.of G)).mapIso i)]
   exact (i.hom.comm g).symm
@@ -88,12 +90,14 @@ theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) : W.ρ g = (FdRep.is
 
 /-- Lift an unbundled representation to `fdRep`. -/
 @[simps ρ]
-def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V] (ρ : Representation k G V) : FdRep k G :=
+def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
+    (ρ : Representation k G V) : FdRep k G :=
   ⟨FgModule.of k V, ρ⟩
 #align fdRep.of FdRep.of
 
 instance :
-    HasForget₂ (FdRep k G) (RepCat k G) where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
+    HasForget₂ (FdRep k G)
+      (RepCat k G) where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
 
 theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (RepCat k G)).obj V).ρ = V.ρ := by
   ext (g v)
@@ -123,7 +127,8 @@ theorem finrank_hom_simple_simple [IsAlgClosed k] (V W : FdRep k G) [Simple V] [
 
 /-- The forgetful functor to `Rep k G` preserves hom-sets and their vector space structure -/
 def forget₂HomLinearEquiv (X Y : FdRep k G) :
-    ((forget₂ (FdRep k G) (RepCat k G)).obj X ⟶ (forget₂ (FdRep k G) (RepCat k G)).obj Y) ≃ₗ[k] X ⟶ Y where
+    ((forget₂ (FdRep k G) (RepCat k G)).obj X ⟶ (forget₂ (FdRep k G) (RepCat k G)).obj Y) ≃ₗ[k]
+      X ⟶ Y where
   toFun f := ⟨f.hom, f.comm⟩
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -168,7 +173,8 @@ variable (ρV : Representation k G V) (W : FdRep k G)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
-noncomputable def dualTensorIsoLinHomAux : (FdRep.of ρV.dual ⊗ W).V ≅ (FdRep.of (linHom ρV W.ρ)).V :=
+noncomputable def dualTensorIsoLinHomAux :
+    (FdRep.of ρV.dual ⊗ W).V ≅ (FdRep.of (linHom ρV W.ρ)).V :=
   (dualTensorHomEquiv k V W).toFgModuleIso
 #align fdRep.dual_tensor_iso_lin_hom_aux FdRep.dualTensorIsoLinHomAux
 
@@ -181,7 +187,8 @@ noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (li
 #align fdRep.dual_tensor_iso_lin_hom FdRep.dualTensorIsoLinHom
 
 @[simp]
-theorem dual_tensor_iso_lin_hom_hom_hom : (dualTensorIsoLinHom ρV W).hom.hom = dualTensorHom k V W :=
+theorem dual_tensor_iso_lin_hom_hom_hom :
+    (dualTensorIsoLinHom ρV W).hom.hom = dualTensorHom k V W :=
   rfl
 #align fdRep.dual_tensor_iso_lin_hom_hom_hom FdRep.dual_tensor_iso_lin_hom_hom_hom
 

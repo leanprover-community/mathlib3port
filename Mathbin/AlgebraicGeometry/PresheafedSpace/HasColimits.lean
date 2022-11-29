@@ -76,10 +76,12 @@ theorem map_id_c_app (F : J ⥤ PresheafedSpaceCat.{v} C) (j) (U) :
   dsimp
   simp [PresheafedSpace.congr_app (F.map_id j)]
   rfl
-#align algebraic_geometry.PresheafedSpace.map_id_c_app AlgebraicGeometry.PresheafedSpaceCat.map_id_c_app
+#align
+  algebraic_geometry.PresheafedSpace.map_id_c_app AlgebraicGeometry.PresheafedSpaceCat.map_id_c_app
 
 @[simp]
-theorem map_comp_c_app (F : J ⥤ PresheafedSpaceCat.{v} C) {j₁ j₂ j₃} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃) (U) :
+theorem map_comp_c_app (F : J ⥤ PresheafedSpaceCat.{v} C) {j₁ j₂ j₃} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃)
+    (U) :
     (F.map (f ≫ g)).c.app (op U) =
       (F.map g).c.app (op U) ≫
         (pushforwardMap (F.map g).base (F.map f).c).app (op U) ≫
@@ -94,11 +96,9 @@ theorem map_comp_c_app (F : J ⥤ PresheafedSpaceCat.{v} C) {j₁ j₂ j₃} (f 
   cases U
   dsimp
   simp only [PresheafedSpace.congr_app (F.map_comp f g)]
-  dsimp
-  simp
-  dsimp
-  simp
-#align algebraic_geometry.PresheafedSpace.map_comp_c_app AlgebraicGeometry.PresheafedSpaceCat.map_comp_c_app
+  dsimp; simp; dsimp; simp
+#align
+  algebraic_geometry.PresheafedSpace.map_comp_c_app AlgebraicGeometry.PresheafedSpaceCat.map_comp_c_app
 
 -- See note [dsimp, simp]
 /-- Given a diagram of `PresheafedSpace C`s, its colimit is computed by pushing the sheaves onto
@@ -106,8 +106,8 @@ the colimit of the underlying spaces, and taking componentwise limit.
 This is the componentwise diagram for an open set `U` of the colimit of the underlying spaces.
 -/
 @[simps]
-def componentwiseDiagram (F : J ⥤ PresheafedSpaceCat.{v} C) [HasColimit F] (U : Opens (Limits.colimit F).carrier) :
-    Jᵒᵖ ⥤ C where
+def componentwiseDiagram (F : J ⥤ PresheafedSpaceCat.{v} C) [HasColimit F]
+    (U : Opens (Limits.colimit F).carrier) : Jᵒᵖ ⥤ C where
   obj j := (F.obj (unop j)).Presheaf.obj (op ((Opens.map (colimit.ι F (unop j)).base).obj U))
   map j k f :=
     (F.map f.unop).c.app _ ≫
@@ -150,16 +150,13 @@ def pushforwardDiagramToColimit (F : J ⥤ PresheafedSpaceCat.{v} C) :
     ext U
     induction U using Opposite.rec
     cases U
-    dsimp
-    simp
-    dsimp
-    simp
+    dsimp; simp; dsimp; simp
   map_comp' j₁ j₂ j₃ f g := by
     apply (op_equiv _ _).Injective
     ext U
     dsimp
-    simp only [map_comp_c_app, id.def, eq_to_hom_op, pushforward_map_app, eq_to_hom_map, assoc, id_comp,
-      pushforward.comp_inv_app, pushforward_eq_hom_app]
+    simp only [map_comp_c_app, id.def, eq_to_hom_op, pushforward_map_app, eq_to_hom_map, assoc,
+      id_comp, pushforward.comp_inv_app, pushforward_eq_hom_app]
     dsimp
     simp only [eq_to_hom_trans, id_comp]
     congr 1
@@ -197,13 +194,15 @@ def colimit (F : J ⥤ PresheafedSpaceCat.{v} C) : PresheafedSpaceCat C where
 theorem colimit_carrier (F : J ⥤ PresheafedSpaceCat.{v} C) :
     (colimit F).carrier = Limits.colimit (F ⋙ PresheafedSpaceCat.forget C) :=
   rfl
-#align algebraic_geometry.PresheafedSpace.colimit_carrier AlgebraicGeometry.PresheafedSpaceCat.colimit_carrier
+#align
+  algebraic_geometry.PresheafedSpace.colimit_carrier AlgebraicGeometry.PresheafedSpaceCat.colimit_carrier
 
 @[simp]
 theorem colimit_presheaf (F : J ⥤ PresheafedSpaceCat.{v} C) :
     (colimit F).Presheaf = limit (pushforwardDiagramToColimit F).leftOp :=
   rfl
-#align algebraic_geometry.PresheafedSpace.colimit_presheaf AlgebraicGeometry.PresheafedSpaceCat.colimit_presheaf
+#align
+  algebraic_geometry.PresheafedSpace.colimit_presheaf AlgebraicGeometry.PresheafedSpaceCat.colimit_presheaf
 
 /-- Auxiliary definition for `PresheafedSpace.has_colimits`.
 -/
@@ -211,7 +210,8 @@ theorem colimit_presheaf (F : J ⥤ PresheafedSpaceCat.{v} C) :
 def colimitCocone (F : J ⥤ PresheafedSpaceCat.{v} C) : Cocone F where
   x := colimit F
   ι :=
-    { app := fun j => { base := colimit.ι (F ⋙ PresheafedSpaceCat.forget C) j, c := limit.π _ (op j) },
+    { app := fun j =>
+        { base := colimit.ι (F ⋙ PresheafedSpaceCat.forget C) j, c := limit.π _ (op j) },
       naturality' := fun j j' f => by
         fapply PresheafedSpace.ext
         · ext x
@@ -221,7 +221,8 @@ def colimitCocone (F : J ⥤ PresheafedSpaceCat.{v} C) : Cocone F where
           induction U using Opposite.rec
           cases U
           dsimp
-          simp only [PresheafedSpace.id_c_app, eq_to_hom_op, eq_to_hom_map, assoc, pushforward.comp_inv_app]
+          simp only [PresheafedSpace.id_c_app, eq_to_hom_op, eq_to_hom_map, assoc,
+            pushforward.comp_inv_app]
           rw [← congr_arg nat_trans.app (limit.w (pushforward_diagram_to_colimit F).leftOp f.op)]
           dsimp
           simp only [eq_to_hom_op, eq_to_hom_map, assoc, id_comp, pushforward.comp_inv_app]
@@ -230,7 +231,8 @@ def colimitCocone (F : J ⥤ PresheafedSpaceCat.{v} C) : Cocone F where
           simp only [id_comp]
           simpa
            }
-#align algebraic_geometry.PresheafedSpace.colimit_cocone AlgebraicGeometry.PresheafedSpaceCat.colimitCocone
+#align
+  algebraic_geometry.PresheafedSpace.colimit_cocone AlgebraicGeometry.PresheafedSpaceCat.colimitCocone
 
 variable [HasLimitsOfShape Jᵒᵖ C]
 
@@ -245,7 +247,8 @@ def descCApp (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F) (U : (Opens ↥
         U :=
   by
   refine'
-    limit.lift _ { x := s.X.presheaf.obj U, π := { app := fun j => _, naturality' := fun j j' f => _ } } ≫
+    limit.lift _
+        { x := s.X.presheaf.obj U, π := { app := fun j => _, naturality' := fun j j' f => _ } } ≫
       (limit_obj_iso_limit_comp_evaluation _ _).inv
   -- We still need to construct the `app` and `naturality'` fields omitted above.
   · refine' (s.ι.app (unop j)).c.app U ≫ (F.obj (unop j)).Presheaf.map (eq_to_hom _)
@@ -256,7 +259,8 @@ def descCApp (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F) (U : (Opens ↥
   · rw [PresheafedSpace.congr_app (s.w f.unop).symm U]
     dsimp
     have w :=
-      functor.congr_obj (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
+      functor.congr_obj
+        (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
         (unop U)
     simp only [opens.map_comp_obj_unop] at w
     replace w := congr_arg op w
@@ -270,23 +274,28 @@ def descCApp (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F) (U : (Opens ↥
 #align
   algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_app AlgebraicGeometry.PresheafedSpaceCat.ColimitCoconeIsColimit.descCApp
 
-theorem desc_c_naturality (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F) {U V : (Opens ↥s.x.carrier)ᵒᵖ} (i : U ⟶ V) :
+theorem desc_c_naturality (F : J ⥤ PresheafedSpaceCat.{v} C) (s : Cocone F)
+    {U V : (Opens ↥s.x.carrier)ᵒᵖ} (i : U ⟶ V) :
     s.x.Presheaf.map i ≫ descCApp F s V =
-      descCApp F s U ≫ (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimitCocone F).x.Presheaf).map i :=
+      descCApp F s U ≫
+        (colimit.desc (F ⋙ forget C) ((forget C).mapCocone s) _* (colimitCocone F).x.Presheaf).map
+          i :=
   by
   dsimp [desc_c_app]
   ext
-  simp only [limit.lift_π, nat_trans.naturality, limit.lift_π_assoc, eq_to_hom_map, assoc, pushforward_obj_map,
-    nat_trans.naturality_assoc, op_map, limit_obj_iso_limit_comp_evaluation_inv_π_app_assoc,
+  simp only [limit.lift_π, nat_trans.naturality, limit.lift_π_assoc, eq_to_hom_map, assoc,
+    pushforward_obj_map, nat_trans.naturality_assoc, op_map,
+    limit_obj_iso_limit_comp_evaluation_inv_π_app_assoc,
     limit_obj_iso_limit_comp_evaluation_inv_π_app]
   dsimp
   have w :=
-    functor.congr_hom (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j))) i.unop
+    functor.congr_hom
+      (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
+      i.unop
   simp only [opens.map_comp_map] at w
   replace w := congr_arg Quiver.Hom.op w
   rw [w]
-  dsimp
-  simp
+  dsimp; simp
 #align
   algebraic_geometry.PresheafedSpace.colimit_cocone_is_colimit.desc_c_naturality AlgebraicGeometry.PresheafedSpaceCat.ColimitCoconeIsColimit.desc_c_naturality
 
@@ -321,7 +330,10 @@ def colimitCoconeIsColimit (F : J ⥤ PresheafedSpaceCat.{v} C) : IsColimit (col
   fac' s := desc_fac F s
   uniq' s m w := by
     -- We need to use the identity on the continuous maps twice, so we prepare that first:
-    have t : m.base = colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) := by
+    have t :
+      m.base =
+        colimit.desc (F ⋙ PresheafedSpace.forget C) ((PresheafedSpace.forget C).mapCocone s) :=
+      by
       apply CategoryTheory.Limits.colimit.hom_ext
       intro j
       apply ContinuousMap.ext
@@ -336,7 +348,8 @@ def colimitCoconeIsColimit (F : J ⥤ PresheafedSpaceCat.{v} C) : IsColimit (col
       
     · ext (U j)
       dsimp [desc, desc_c_app]
-      simp only [limit.lift_π, eq_to_hom_op, eq_to_hom_map, assoc, limit_obj_iso_limit_comp_evaluation_inv_π_app]
+      simp only [limit.lift_π, eq_to_hom_op, eq_to_hom_map, assoc,
+        limit_obj_iso_limit_comp_evaluation_inv_π_app]
       rw [PresheafedSpace.congr_app (w (unop j)).symm U]
       dsimp
       have w := congr_arg op (functor.congr_obj (congr_arg opens.map t) (unop U))
@@ -349,7 +362,8 @@ def colimitCoconeIsColimit (F : J ⥤ PresheafedSpaceCat.{v} C) : IsColimit (col
 instance :
     HasColimitsOfShape J
       (PresheafedSpaceCat.{v}
-        C) where HasColimit F := HasColimit.mk { Cocone := colimitCocone F, IsColimit := colimitCoconeIsColimit F }
+        C) where HasColimit F :=
+    HasColimit.mk { Cocone := colimitCocone F, IsColimit := colimitCoconeIsColimit F }
 
 instance :
     PreservesColimitsOfShape J
@@ -372,7 +386,8 @@ instance [HasLimits C] :
     HasColimits
       (PresheafedSpaceCat.{v}
         C) where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+    { HasColimit := fun F =>
+        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 
 /-- The underlying topological space of a colimit of presheaved spaces is
 the colimit of the underlying topological spaces.
@@ -401,7 +416,10 @@ via taking componentwise limits.
 def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpaceCat.{v} C) [HasColimit F]
     (U : Opens (Limits.colimit F).carrier) :
     (Limits.colimit F).Presheaf.obj (op U) ≅ limit (componentwiseDiagram F U) := by
-  refine' ((sheaf_iso_of_iso (colimit.iso_colimit_cocone ⟨_, colimit_cocone_is_colimit F⟩).symm).app (op U)).trans _
+  refine'
+    ((sheaf_iso_of_iso (colimit.iso_colimit_cocone ⟨_, colimit_cocone_is_colimit F⟩).symm).app
+          (op U)).trans
+      _
   refine' (limit_obj_iso_limit_comp_evaluation _ _).trans (limits.lim.map_iso _)
   fapply nat_iso.of_components
   · intro X
@@ -418,7 +436,8 @@ def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpaceCat.{v} C)
     rw [TopCat.Presheaf.Pushforward.comp_inv_app]
     erw [category.id_comp]
     rw [category.assoc]
-    erw [← (F.obj (unop Y)).Presheaf.map_comp, (F.map f.unop).c.naturality_assoc, ← (F.obj (unop Y)).Presheaf.map_comp]
+    erw [← (F.obj (unop Y)).Presheaf.map_comp, (F.map f.unop).c.naturality_assoc, ←
+      (F.obj (unop Y)).Presheaf.map_comp]
     congr
     
 #align
@@ -427,7 +446,9 @@ def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpaceCat.{v} C)
 @[simp]
 theorem colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app (F : J ⥤ PresheafedSpaceCat.{v} C)
     (U : Opens (Limits.colimit F).carrier) (j : J) :
-    (colimitPresheafObjIsoComponentwiseLimit F U).inv ≫ (colimit.ι F j).c.app (op U) = limit.π _ (op j) := by
+    (colimitPresheafObjIsoComponentwiseLimit F U).inv ≫ (colimit.ι F j).c.app (op U) =
+      limit.π _ (op j) :=
+  by
   delta colimit_presheaf_obj_iso_componentwise_limit
   rw [iso.trans_inv, iso.trans_inv, iso.app_inv, sheaf_iso_of_iso_inv, pushforward_to_of_iso_app,
     congr_app (iso.symm_inv _)]
@@ -447,8 +468,9 @@ theorem colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app (F : J ⥤ Presh
 @[simp]
 theorem colimit_presheaf_obj_iso_componentwise_limit_hom_π (F : J ⥤ PresheafedSpaceCat.{v} C)
     (U : Opens (Limits.colimit F).carrier) (j : J) :
-    (colimitPresheafObjIsoComponentwiseLimit F U).Hom ≫ limit.π _ (op j) = (colimit.ι F j).c.app (op U) := by
-  rw [← iso.eq_inv_comp, colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app]
+    (colimitPresheafObjIsoComponentwiseLimit F U).Hom ≫ limit.π _ (op j) =
+      (colimit.ι F j).c.app (op U) :=
+  by rw [← iso.eq_inv_comp, colimit_presheaf_obj_iso_componentwise_limit_inv_ι_app]
 #align
   algebraic_geometry.PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π AlgebraicGeometry.PresheafedSpaceCat.colimit_presheaf_obj_iso_componentwise_limit_hom_π
 

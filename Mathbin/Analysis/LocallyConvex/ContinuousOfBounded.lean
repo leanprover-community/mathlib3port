@@ -100,7 +100,8 @@ variable [IsROrC 𝕜'] [Module 𝕜' F] [HasContinuousSmul 𝕜' F]
 variable {σ : 𝕜 →+* 𝕜'}
 
 theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
-    (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : ContinuousAt f 0 := by
+    (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : ContinuousAt f 0 :=
+  by
   -- Assume that f is not continuous at 0
   by_contra
   -- We use a decreasing balanced basis for 0 : E and a balanced basis for 0 : F
@@ -120,14 +121,15 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
       rw [← hy]
       refine' (bE1 (n + 1)).2.smul_mem _ hx
       have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
-      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, Nat.cast_add, Nat.cast_one,
-        inv_le h' zero_lt_one]
+      rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat,
+        Nat.cast_add, Nat.cast_one, inv_le h' zero_lt_one]
       norm_cast
       simp
       
     intro n hn
     -- The converse direction follows from continuity of the scalar multiplication
-    have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 := (continuous_const_smul (n : 𝕜)).ContinuousAt
+    have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
+      (continuous_const_smul (n : 𝕜)).ContinuousAt
     simp only [ContinuousAt, map_zero, smul_zero] at hcont
     rw [bE.1.tendsto_left_iff] at hcont
     rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
@@ -172,12 +174,14 @@ theorem LinearMap.continuous_at_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h'
     rwa [← h']
   exact hu' n hn' h''
-#align linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuous_at_zero_of_locally_bounded
+#align
+  linear_map.continuous_at_zero_of_locally_bounded LinearMap.continuous_at_zero_of_locally_bounded
 
 /-- If `E` is first countable, then every locally bounded linear map `E →ₛₗ[σ] F` is continuous. -/
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : Continuous f :=
-  (uniform_continuous_of_continuous_at_zero f <| f.continuous_at_zero_of_locally_bounded hf).Continuous
+  (uniform_continuous_of_continuous_at_zero f <|
+      f.continuous_at_zero_of_locally_bounded hf).Continuous
 #align linear_map.continuous_of_locally_bounded LinearMap.continuous_of_locally_bounded
 
 end IsROrC

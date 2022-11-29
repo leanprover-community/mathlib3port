@@ -76,7 +76,8 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
     rintro rfl
     rwa [shadow_singleton_empty] at hs
-  obtain ⟨a, ha, rfl⟩ := exists_eq_insert_iff.2 ⟨ht.2, by rw [(sized_shadow_iff this).1 h𝒜.shadow ht.1, h𝒜.shadow hs]⟩
+  obtain ⟨a, ha, rfl⟩ :=
+    exists_eq_insert_iff.2 ⟨ht.2, by rw [(sized_shadow_iff this).1 h𝒜.shadow ht.1, h𝒜.shadow hs]⟩
   exact mem_image_of_mem _ (mem_compl.2 ha)
 #align finset.card_mul_le_card_shadow_mul Finset.card_mul_le_card_shadow_mul
 
@@ -108,7 +109,8 @@ theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 
     
   · exact Nat.choose_pos (r.pred_le.trans hr')
     
-#align finset.card_div_choose_le_card_shadow_div_choose Finset.card_div_choose_le_card_shadow_div_choose
+#align
+  finset.card_div_choose_le_card_shadow_div_choose Finset.card_div_choose_le_card_shadow_div_choose
 
 end LocalLym
 
@@ -170,20 +172,21 @@ variable {𝒜 k}
 
 /-- The shadow of `falling m 𝒜` is disjoint from the `n`-sized elements of `𝒜`, thanks to the
 antichain property. -/
-theorem _root_.is_antichain.disjoint_slice_shadow_falling {m n : ℕ} (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
-    Disjoint (𝒜 # m) ((∂ ) (falling n 𝒜)) :=
+theorem IsAntichain.disjoint_slice_shadow_falling {m n : ℕ}
+    (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) : Disjoint (𝒜 # m) ((∂ ) (falling n 𝒜)) :=
   disjoint_right.2 fun s h₁ h₂ => by
     simp_rw [mem_shadow_iff, exists_prop, mem_falling] at h₁
     obtain ⟨s, ⟨⟨t, ht, hst⟩, hs⟩, a, ha, rfl⟩ := h₁
     refine' h𝒜 (slice_subset h₂) ht _ ((erase_subset _ _).trans hst)
     rintro rfl
     exact not_mem_erase _ _ (hst ha)
-#align finset._root_.is_antichain.disjoint_slice_shadow_falling finset._root_.is_antichain.disjoint_slice_shadow_falling
+#align is_antichain.disjoint_slice_shadow_falling IsAntichain.disjoint_slice_shadow_falling
 
 /-- A bound on any top part of the sum in LYM in terms of the size of `falling k 𝒜`. -/
 theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
-    (∑ r in range (k + 1), ((𝒜 # (Fintype.card α - r)).card : 𝕜) / (Fintype.card α).choose (Fintype.card α - r)) ≤
+    (∑ r in range (k + 1),
+        ((𝒜 # (Fintype.card α - r)).card : 𝕜) / (Fintype.card α).choose (Fintype.card α - r)) ≤
       (falling (Fintype.card α - k) 𝒜).card / (Fintype.card α).choose (Fintype.card α - k) :=
   by
   induction' k with k ih
@@ -191,13 +194,14 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
     exact card_le_of_subset (slice_subset_falling _ _)
     
   rw [succ_eq_add_one] at *
-  rw [sum_range_succ, ← slice_union_shadow_falling_succ, card_disjoint_union h𝒜.disjoint_slice_shadow_falling, cast_add,
-    _root_.add_div, add_comm]
+  rw [sum_range_succ, ← slice_union_shadow_falling_succ,
+    card_disjoint_union h𝒜.disjoint_slice_shadow_falling, cast_add, _root_.add_div, add_comm]
   rw [← tsub_tsub, tsub_add_cancel_of_le (le_tsub_of_add_le_left hk)]
   exact
     add_le_add_left
       ((ih <| le_of_succ_le hk).trans <|
-        card_div_choose_le_card_shadow_div_choose (tsub_pos_iff_lt.2 <| Nat.succ_le_iff.1 hk).ne' <| sized_falling _ _)
+        card_div_choose_le_card_shadow_div_choose (tsub_pos_iff_lt.2 <| Nat.succ_le_iff.1 hk).ne' <|
+          sized_falling _ _)
       _
 #align finset.le_card_falling_div_choose Finset.le_card_falling_div_choose
 
@@ -207,12 +211,15 @@ variable {𝒜 : Finset (Finset α)} {s : Finset α} {k : ℕ}
 
 /-- The **Lubell-Yamamoto-Meshalkin inequality**. If `𝒜` is an antichain, then the sum of the
 proportion of elements it takes from each layer is less than `1`. -/
-theorem sum_card_slice_div_choose_le_one [Fintype α] (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
-    (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by classical
+theorem sum_card_slice_div_choose_le_one [Fintype α]
+    (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
+    (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
+  classical
   rw [← sum_flip]
   refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
   rw [div_le_iff] <;> norm_cast
-  · simpa only [Nat.sub_self, one_mul, Nat.choose_zero_right, falling] using (sized_falling 0 𝒜).card_le
+  · simpa only [Nat.sub_self, one_mul, Nat.choose_zero_right, falling] using
+      (sized_falling 0 𝒜).card_le
     
   · rw [tsub_self, choose_zero_right]
     exact zero_lt_one
@@ -226,10 +233,14 @@ end Lym
 
 /-- **Sperner's theorem**. The size of an antichain in `finset α` is bounded by the size of the
 maximal layer in `finset α`. This precisely means that `finset α` is a Sperner order. -/
-theorem _root_.is_antichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
-    (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) : 𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by
-  classical
-  suffices (∑ r in Iic (Fintype.card α), ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤ 1 by
+theorem IsAntichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
+    (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
+    𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by classical
+  suffices
+    (∑ r in Iic (Fintype.card α),
+        ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤
+      1
+    by
     rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this
     norm_cast
     exact choose_pos (Nat.div_le_self _ _)
@@ -243,7 +254,7 @@ theorem _root_.is_antichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     
   · exact choose_le_middle _ _
     
-#align finset._root_.is_antichain.sperner finset._root_.is_antichain.sperner
+#align is_antichain.sperner IsAntichain.sperner
 
 end Finset
 

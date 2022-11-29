@@ -36,17 +36,18 @@ instance [HasLimits C] (X : TopCat) : CreatesLimits (Sheaf.forget C X) :=
 instance [HasLimits C] (X : TopCat) : HasLimitsOfSize.{v} (Sheaf.{v} C X) :=
   has_limits_of_has_limits_creates_limits (Sheaf.forget C X)
 
-theorem is_sheaf_of_is_limit [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X) (H : ∀ j, (F.obj j).IsSheaf)
-    {c : Cone F} (hc : IsLimit c) : c.x.IsSheaf := by
+theorem is_sheaf_of_is_limit [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X)
+    (H : ∀ j, (F.obj j).IsSheaf) {c : Cone F} (hc : IsLimit c) : c.x.IsSheaf := by
   let F' : J ⥤ sheaf C X := { obj := fun j => ⟨F.obj j, H j⟩, map := fun X Y f => ⟨F.map f⟩ }
   let e : F' ⋙ sheaf.forget C X ≅ F := nat_iso.of_components (fun _ => iso.refl _) (by tidy)
   exact
-    presheaf.is_sheaf_of_iso ((is_limit_of_preserves (sheaf.forget C X) (limit.is_limit F')).conePointsIsoOfNatIso hc e)
+    presheaf.is_sheaf_of_iso
+      ((is_limit_of_preserves (sheaf.forget C X) (limit.is_limit F')).conePointsIsoOfNatIso hc e)
       (limit F').2
 #align Top.is_sheaf_of_is_limit TopCat.is_sheaf_of_is_limit
 
-theorem limit_is_sheaf [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X) (H : ∀ j, (F.obj j).IsSheaf) :
-    (limit F).IsSheaf :=
+theorem limit_is_sheaf [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X)
+    (H : ∀ j, (F.obj j).IsSheaf) : (limit F).IsSheaf :=
   is_sheaf_of_is_limit F H (limit.isLimit F)
 #align Top.limit_is_sheaf TopCat.limit_is_sheaf
 

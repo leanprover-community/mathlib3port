@@ -102,7 +102,8 @@ def psub' (m n : ℕ) : Option ℕ :=
 #align nat.psub' Nat.psub'
 
 theorem psub'_eq_psub (m n) : psub' m n = psub m n := by
-  rw [psub'] <;> split_ifs <;> [exact (psub_eq_sub h).symm, exact (psub_eq_none.2 (not_le.1 h)).symm]
+  rw [psub'] <;> split_ifs <;> [exact (psub_eq_sub h).symm,
+    exact (psub_eq_none.2 (not_le.1 h)).symm]
 #align nat.psub'_eq_psub Nat.psub'_eq_psub
 
 end Nat

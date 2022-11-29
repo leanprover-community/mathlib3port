@@ -36,14 +36,16 @@ variable {C : Type u} [Category.{v} C]
 
 variable {D : Type u'} [Category.{v'} D]
 
-/-- Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a binary fan on `c₁.X` and
+/--
+Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a binary fan on `c₁.X` and
 `f 0`, we can build a fan for all `n+1`.
 
 In `extend_fan_is_limit` we show that if the two given fans are limits, then this fan is also a
 limit.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i.succ) (c₂ : BinaryFan (f 0) c₁.x) : Fan f :=
+def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i.succ)
+    (c₂ : BinaryFan (f 0) c₁.x) : Fan f :=
   Fan.mk c₂.x
     (by
       refine' Fin.cases _ _
@@ -57,8 +59,9 @@ def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i
 /-- Show that if the two given fans in `extend_fan` are limits, then the constructed fan is also a
 limit.
 -/
-def extendFanIsLimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Fan fun i : Fin n => f i.succ} {c₂ : BinaryFan (f 0) c₁.x}
-    (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) : IsLimit (extendFan c₁ c₂) where
+def extendFanIsLimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Fan fun i : Fin n => f i.succ}
+    {c₂ : BinaryFan (f 0) c₁.x} (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) :
+    IsLimit (extendFan c₁ c₂) where
   lift s := by
     apply (binary_fan.is_limit.lift' t₂ (s.π.app ⟨0⟩) _).1
     apply t₁.lift ⟨_, discrete.nat_trans fun ⟨i⟩ => s.π.app ⟨i.succ⟩⟩
@@ -129,9 +132,9 @@ variable [HasFiniteProducts.{v} C]
 
 /- warning: category_theory.preserves_fin_of_preserves_binary_and_terminal -> CategoryTheory.preservesFinOfPreservesBinaryAndTerminal is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v' u'} D] (F : CategoryTheory.Functor.{v v' u u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteProducts.{v u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesLimit.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v 0 u} C _inst_2 (Fin n) f) F
+  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v, u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor.{v, v', u, u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteProducts.{v, u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesLimit.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v, 0, u} C _inst_2 (Fin n) f) F
 but is expected to have type
-  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v' u'} D] (F : CategoryTheory.Functor.{v v' u u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteProducts.{v u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesLimit.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v 0 u} C _inst_2 (Fin n) f) F
+  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v, u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor.{v, v', u, u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesLimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteProducts.{v, u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesLimit.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v, 0, u} C _inst_2 (Fin n) f) F
 Case conversion may be inaccurate. Consider using '#align category_theory.preserves_fin_of_preserves_binary_and_terminal CategoryTheory.preservesFinOfPreservesBinaryAndTerminalₓ'. -/
 /-- If `F` preserves the terminal object and binary products, then it preserves products indexed by
 `fin n` for any `n`.
@@ -145,7 +148,9 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
   | n + 1 => by
     haveI := preserves_fin_of_preserves_binary_and_terminal n
     intro f
-    refine' preserves_limit_of_preserves_limit_cone (extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)) _
+    refine'
+      preserves_limit_of_preserves_limit_cone
+        (extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)) _
     apply (is_limit_map_cone_fan_mk_equiv _ _ _).symm _
     let this :=
       extend_fan_is_limit (fun i => F.obj (f i)) (is_limit_of_has_product_of_preserves_limit F _)
@@ -196,8 +201,8 @@ In `extend_cofan_is_colimit` we show that if the two given cofans are colimits,
 then this cofan is also a colimit.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n => f i.succ) (c₂ : BinaryCofan (f 0) c₁.x) :
-    Cofan f :=
+def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n => f i.succ)
+    (c₂ : BinaryCofan (f 0) c₁.x) : Cofan f :=
   Cofan.mk c₂.x
     (by
       refine' Fin.cases _ _
@@ -212,7 +217,8 @@ def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n =>
 then the constructed cofan is also a colimit.
 -/
 def extendCofanIsColimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Cofan fun i : Fin n => f i.succ}
-    {c₂ : BinaryCofan (f 0) c₁.x} (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) : IsColimit (extendCofan c₁ c₂) where
+    {c₂ : BinaryCofan (f 0) c₁.x} (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) :
+    IsColimit (extendCofan c₁ c₂) where
   desc s := by
     apply (binary_cofan.is_colimit.desc' t₂ (s.ι.app ⟨0⟩) _).1
     apply t₁.desc ⟨_, discrete.nat_trans fun i => s.ι.app ⟨i.as.succ⟩⟩
@@ -245,7 +251,8 @@ section
 
 variable [HasBinaryCoproducts C] [HasInitial C]
 
-/-- If `C` has an initial object and binary coproducts, then it has a coproduct for objects indexed by
+/--
+If `C` has an initial object and binary coproducts, then it has a coproduct for objects indexed by
 `fin n`.
 This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
 than this.
@@ -257,7 +264,8 @@ private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Fin n → C), HasCoproduc
     infer_instance
   | n + 1 => fun f => by
     haveI := has_coproduct_fin n
-    apply has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩
+    apply
+      has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩
 #align category_theory.has_coproduct_fin category_theory.has_coproduct_fin
 
 /-- If `C` has an initial object and binary coproducts, then it has finite coproducts. -/
@@ -283,9 +291,9 @@ variable [HasFiniteCoproducts.{v} C]
 
 /- warning: category_theory.preserves_fin_of_preserves_binary_and_initial -> CategoryTheory.preservesFinOfPreservesBinaryAndInitial is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v' u'} D] (F : CategoryTheory.Functor.{v v' u u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteCoproducts.{v u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesColimit.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v 0 u} C _inst_2 (Fin n) f) F
+  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v, u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor.{v, v', u, u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteCoproducts.{v, u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesColimit.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v, 0, u} C _inst_2 (Fin n) f) F
 but is expected to have type
-  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v' u'} D] (F : CategoryTheory.Functor.{v v' u u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteCoproducts.{v u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesColimit.{0 0 v v' u u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v 0 u} C _inst_2 (Fin n) f) F
+  forall {C : Type.{u}} [_inst_2 : CategoryTheory.Category.{v, u} C] {D : Type.{u'}} [_inst_3 : CategoryTheory.Category.{v', u'} D] (F : CategoryTheory.Functor.{v, v', u, u'} C _inst_2 D _inst_3) [_inst_4 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} CategoryTheory.Limits.WalkingPair) (CategoryTheory.discreteCategory.{0} CategoryTheory.Limits.WalkingPair) F] [_inst_5 : CategoryTheory.Limits.PreservesColimitsOfShape.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} PEmpty.{1}) (CategoryTheory.discreteCategory.{0} PEmpty.{1}) F] [_inst_6 : CategoryTheory.Limits.HasFiniteCoproducts.{v, u} C _inst_2] (n : Nat) (f : (Fin n) -> C), CategoryTheory.Limits.PreservesColimit.{0, 0, v, v', u, u'} C _inst_2 D _inst_3 (CategoryTheory.Discrete.{0} (Fin n)) (CategoryTheory.discreteCategory.{0} (Fin n)) (CategoryTheory.Discrete.functor.{v, 0, u} C _inst_2 (Fin n) f) F
 Case conversion may be inaccurate. Consider using '#align category_theory.preserves_fin_of_preserves_binary_and_initial CategoryTheory.preservesFinOfPreservesBinaryAndInitialₓ'. -/
 /-- If `F` preserves the initial object and binary coproducts, then it preserves products indexed by
 `fin n` for any `n`.
@@ -304,7 +312,8 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
         (extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)) _
     apply (is_colimit_map_cocone_cofan_mk_equiv _ _ _).symm _
     let this :=
-      extend_cofan_is_colimit (fun i => F.obj (f i)) (is_colimit_of_has_coproduct_of_preserves_colimit F _)
+      extend_cofan_is_colimit (fun i => F.obj (f i))
+        (is_colimit_of_has_coproduct_of_preserves_colimit F _)
         (is_colimit_of_has_binary_coproduct_of_preserves_colimit F _ _)
     refine' is_colimit.of_iso_colimit this _
     apply cocones.ext _ _

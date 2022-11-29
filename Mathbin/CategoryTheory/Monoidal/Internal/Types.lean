@@ -36,7 +36,8 @@ instance monMonoid (A : Mon_ (Type u)) : Monoid A.x where
 def functor : Mon_ (Type u) ⥤ MonCat.{u} where
   obj A := ⟨A.x⟩
   map A B f :=
-    { toFun := f.Hom, map_one' := congr_fun f.OneHom PUnit.unit, map_mul' := fun x y => congr_fun f.MulHom (x, y) }
+    { toFun := f.Hom, map_one' := congr_fun f.OneHom PUnit.unit,
+      map_mul' := fun x y => congr_fun f.MulHom (x, y) }
 #align Mon_Type_equivalence_Mon.functor MonTypeEquivalenceMon.functor
 
 /-- Converting a bundled monoid to a monoid object in `Type`.
@@ -68,7 +69,8 @@ is equivalent to the category of "native" bundled monoids.
 def monTypeEquivalenceMon : Mon_ (Type u) ≌ MonCat.{u} where
   Functor := Functor
   inverse := inverse
-  unitIso := NatIso.ofComponents (fun A => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+  unitIso :=
+    NatIso.ofComponents (fun A => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun A =>
@@ -80,7 +82,8 @@ def monTypeEquivalenceMon : Mon_ (Type u) ≌ MonCat.{u} where
 /-- The equivalence `Mon_ (Type u) ≌ Mon.{u}`
 is naturally compatible with the forgetful functors to `Type u`.
 -/
-def monTypeEquivalenceMonForget : MonTypeEquivalenceMon.functor ⋙ forget MonCat ≅ Mon_.forget (Type u) :=
+def monTypeEquivalenceMonForget :
+    MonTypeEquivalenceMon.functor ⋙ forget MonCat ≅ Mon_.forget (Type u) :=
   NatIso.ofComponents (fun A => Iso.refl _) (by tidy)
 #align Mon_Type_equivalence_Mon_forget monTypeEquivalenceMonForget
 
@@ -91,8 +94,10 @@ instance monTypeInhabited : Inhabited (Mon_ (Type u)) :=
 namespace commMonTypeEquivalenceCommMon
 
 instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.x :=
-  { MonTypeEquivalenceMon.monMonoid A.toMon_ with mul_comm := fun x y => by convert congr_fun A.mul_comm (y, x) }
-#align CommMon_Type_equivalence_CommMon.CommMon_comm_monoid CommMonTypeEquivalenceCommMon.commMonCommMonoid
+  { MonTypeEquivalenceMon.monMonoid A.toMon_ with
+    mul_comm := fun x y => by convert congr_fun A.mul_comm (y, x) }
+#align
+  CommMon_Type_equivalence_CommMon.CommMon_comm_monoid CommMonTypeEquivalenceCommMon.commMonCommMonoid
 
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/
@@ -122,7 +127,8 @@ is equivalent to the category of "native" bundled commutative monoids.
 def commMonTypeEquivalenceCommMon : CommMon_ (Type u) ≌ CommMonCat.{u} where
   Functor := Functor
   inverse := inverse
-  unitIso := NatIso.ofComponents (fun A => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
+  unitIso :=
+    NatIso.ofComponents (fun A => { Hom := { Hom := 𝟙 _ }, inv := { Hom := 𝟙 _ } }) (by tidy)
   counitIso :=
     NatIso.ofComponents
       (fun A =>

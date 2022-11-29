@@ -69,7 +69,8 @@ theorem IsChain.mono : s ⊆ t → IsChain r t → IsChain r s :=
   Set.Pairwise.mono
 #align is_chain.mono IsChain.mono
 
-theorem IsChain.mono_rel {r' : α → α → Prop} (h : IsChain r s) (h_imp : ∀ x y, r x y → r' x y) : IsChain r' s :=
+theorem IsChain.mono_rel {r' : α → α → Prop} (h : IsChain r s) (h_imp : ∀ x y, r x y → r' x y) :
+    IsChain r' s :=
   h.mono' fun x y => Or.imp (h_imp x y) (h_imp y x)
 #align is_chain.mono_rel IsChain.mono_rel
 
@@ -78,11 +79,12 @@ theorem IsChain.symm (h : IsChain r s) : IsChain (flip r) s :=
   h.mono' fun _ _ => Or.symm
 #align is_chain.symm IsChain.symm
 
-theorem is_chain_of_trichotomous [IsTrichotomous α r] (s : Set α) : IsChain r s := fun a _ b _ hab =>
-  (trichotomous_of r a b).imp_right fun h => h.resolve_left hab
+theorem is_chain_of_trichotomous [IsTrichotomous α r] (s : Set α) : IsChain r s :=
+  fun a _ b _ hab => (trichotomous_of r a b).imp_right fun h => h.resolve_left hab
 #align is_chain_of_trichotomous is_chain_of_trichotomous
 
-theorem IsChain.insert (hs : IsChain r s) (ha : ∀ b ∈ s, a ≠ b → a ≺ b ∨ b ≺ a) : IsChain r (insert a s) :=
+theorem IsChain.insert (hs : IsChain r s) (ha : ∀ b ∈ s, a ≠ b → a ≺ b ∨ b ≺ a) :
+    IsChain r (insert a s) :=
   hs.insert_of_symmetric (fun _ _ => Or.symm) ha
 #align is_chain.insert IsChain.insert
 
@@ -92,8 +94,9 @@ theorem is_chain_univ_iff : IsChain r (univ : Set α) ↔ IsTrichotomous α r :=
   exact h trivial trivial
 #align is_chain_univ_iff is_chain_univ_iff
 
-theorem IsChain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β) (h : ∀ x y, r x y → s (f x) (f y)) {c : Set α}
-    (hrc : IsChain r c) : IsChain s (f '' c) := fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
+theorem IsChain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β)
+    (h : ∀ x y, r x y → s (f x) (f y)) {c : Set α} (hrc : IsChain r c) : IsChain s (f '' c) :=
+  fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
   ha₂ ▸ hb₂ ▸ fun hxy => (hrc ha₁ hb₁ <| ne_of_apply_ne f hxy).imp (h _ _) (h _ _)
 #align is_chain.image IsChain.image
 
@@ -111,14 +114,16 @@ theorem IsChain.directed_on (H : IsChain r s) : DirectedOn r s := fun x hx y hy 
 
 protected theorem IsChain.directed {f : β → α} {c : Set β} (h : IsChain (f ⁻¹'o r) c) :
     Directed r fun x : { a : β // a ∈ c } => f x := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
-  (by_cases fun hab : a = b => by simp only [hab, exists_prop, and_self_iff, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
+  (by_cases fun hab : a = b => by
+      simp only [hab, exists_prop, and_self_iff, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
     fun hab => ((h ha hb hab).elim fun h => ⟨⟨b, hb⟩, h, refl _⟩) fun h => ⟨⟨a, ha⟩, refl _, h⟩
 #align is_chain.directed IsChain.directed
 
-theorem IsChain.exists3 (hchain : IsChain r s) [IsTrans α r] {a b c} (mem1 : a ∈ s) (mem2 : b ∈ s) (mem3 : c ∈ s) :
-    ∃ (z : _)(mem4 : z ∈ s), r a z ∧ r b z ∧ r c z := by
+theorem IsChain.exists3 (hchain : IsChain r s) [IsTrans α r] {a b c} (mem1 : a ∈ s) (mem2 : b ∈ s)
+    (mem3 : c ∈ s) : ∃ (z : _)(mem4 : z ∈ s), r a z ∧ r b z ∧ r c z := by
   rcases directed_on_iff_directed.mpr (IsChain.directed hchain) a mem1 b mem2 with ⟨z, mem4, H1, H2⟩
-  rcases directed_on_iff_directed.mpr (IsChain.directed hchain) z mem4 c mem3 with ⟨z', mem5, H3, H4⟩
+  rcases directed_on_iff_directed.mpr (IsChain.directed hchain) z mem4 c mem3 with
+    ⟨z', mem5, H3, H4⟩
   exact ⟨z', mem5, trans H1 H3, trans H2 H3, H4⟩
 #align is_chain.exists3 IsChain.exists3
 
@@ -128,7 +133,8 @@ theorem IsMaxChain.is_chain (h : IsMaxChain r s) : IsChain r s :=
   h.1
 #align is_max_chain.is_chain IsMaxChain.is_chain
 
-theorem IsMaxChain.not_super_chain (h : IsMaxChain r s) : ¬SuperChain r s t := fun ht => ht.2.Ne <| h.2 ht.1 ht.2.1
+theorem IsMaxChain.not_super_chain (h : IsMaxChain r s) : ¬SuperChain r s t := fun ht =>
+  ht.2.Ne <| h.2 ht.1 ht.2.1
 #align is_max_chain.not_super_chain IsMaxChain.not_super_chain
 
 theorem IsMaxChain.bot_mem [LE α] [OrderBot α] (h : IsMaxChain (· ≤ ·) s) : ⊥ ∈ s :=
@@ -147,9 +153,11 @@ def succChain (r : α → α → Prop) (s : Set α) : Set α :=
   if h : ∃ t, IsChain r s ∧ SuperChain r s t then choose h else s
 #align succ_chain succChain
 
-theorem succ_chain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) : SuperChain r s (succChain r s) := by
+theorem succ_chain_spec (h : ∃ t, IsChain r s ∧ SuperChain r s t) :
+    SuperChain r s (succChain r s) := by
   let ⟨t, hc'⟩ := h
-  have : IsChain r s ∧ SuperChain r s (choose h) := @choose_spec _ (fun t => IsChain r s ∧ SuperChain r s t) _
+  have : IsChain r s ∧ SuperChain r s (choose h) :=
+    @choose_spec _ (fun t => IsChain r s ∧ SuperChain r s t) _
   simp [succChain, dif_pos, h, this.right]
 #align succ_chain_spec succ_chain_spec
 
@@ -160,8 +168,8 @@ theorem IsChain.succ (hs : IsChain r s) : IsChain r (succChain r s) :=
     exact hs
 #align is_chain.succ IsChain.succ
 
-theorem IsChain.super_chain_succ_chain (hs₁ : IsChain r s) (hs₂ : ¬IsMaxChain r s) : SuperChain r s (succChain r s) :=
-  by
+theorem IsChain.super_chain_succ_chain (hs₁ : IsChain r s) (hs₂ : ¬IsMaxChain r s) :
+    SuperChain r s (succChain r s) := by
   simp [IsMaxChain, not_and_or, not_forall_not] at hs₂
   obtain ⟨t, ht, hst⟩ := hs₂.neg_resolve_left hs₁
   exact succ_chain_spec ⟨t, hs₁, ht, ssubset_iff_subset_ne.2 hst⟩
@@ -194,7 +202,8 @@ theorem chain_closure_max_chain : ChainClosure r (maxChain r) :=
 #align chain_closure_max_chain chain_closure_max_chain
 
 private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
-    (h : ∀ ⦃c₃⦄, ChainClosure r c₃ → c₃ ⊆ c₂ → c₂ = c₃ ∨ succChain r c₃ ⊆ c₂) : succChain r c₂ ⊆ c₁ ∨ c₁ ⊆ c₂ := by
+    (h : ∀ ⦃c₃⦄, ChainClosure r c₃ → c₃ ⊆ c₂ → c₂ = c₃ ∨ succChain r c₃ ⊆ c₂) :
+    succChain r c₂ ⊆ c₁ ∨ c₁ ⊆ c₂ := by
   induction hc₁
   case succ c₃ hc₃ ih =>
   cases' ih with ih ih
@@ -207,8 +216,8 @@ private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc�
   exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
 #align chain_closure_succ_total_aux chain_closure_succ_total_aux
 
-private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) (h : c₁ ⊆ c₂) :
-    c₂ = c₁ ∨ succChain r c₁ ⊆ c₂ := by
+private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
+    (h : c₁ ⊆ c₂) : c₂ = c₁ ∨ succChain r c₁ ⊆ c₂ := by
   induction hc₂ generalizing c₁ hc₁ h
   case succ c₂ hc₂ ih =>
   refine' ((chain_closure_succ_total_aux hc₁ hc₂) fun c₁ => ih).imp h.antisymm' fun h₁ => _
@@ -232,21 +241,23 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
     
 #align chain_closure_succ_total chain_closure_succ_total
 
-theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) : c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
+theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) :
+    c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=
   ((chain_closure_succ_total_aux hc₂ hc₁) fun c₃ hc₃ => chain_closure_succ_total hc₃ hc₁).imp_left
     subset_succ_chain.trans
 #align chain_closure.total ChainClosure.total
 
-theorem ChainClosure.succ_fixpoint (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) (hc : succChain r c₂ = c₂) :
-    c₁ ⊆ c₂ := by
+theorem ChainClosure.succ_fixpoint (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
+    (hc : succChain r c₂ = c₂) : c₁ ⊆ c₂ := by
   induction hc₁
   case succ s₁ hc₁ h => exact (chain_closure_succ_total hc₁ hc₂ h).elim (fun h => h ▸ hc.subset) id
   case union s hs ih => exact sUnion_subset ih
 #align chain_closure.succ_fixpoint ChainClosure.succ_fixpoint
 
-theorem ChainClosure.succ_fixpoint_iff (hc : ChainClosure r c) : succChain r c = c ↔ c = maxChain r :=
-  ⟨fun h => (subset_sUnion_of_mem hc).antisymm <| chain_closure_max_chain.succ_fixpoint hc h, fun h =>
-    subset_succ_chain.antisymm' <| (subset_sUnion_of_mem hc.succ).trans h.symm.Subset⟩
+theorem ChainClosure.succ_fixpoint_iff (hc : ChainClosure r c) :
+    succChain r c = c ↔ c = maxChain r :=
+  ⟨fun h => (subset_sUnion_of_mem hc).antisymm <| chain_closure_max_chain.succ_fixpoint hc h,
+    fun h => subset_succ_chain.antisymm' <| (subset_sUnion_of_mem hc.succ).trans h.symm.Subset⟩
 #align chain_closure.succ_fixpoint_iff ChainClosure.succ_fixpoint_iff
 
 theorem ChainClosure.is_chain (hc : ChainClosure r c) : IsChain r c := by
@@ -255,7 +266,8 @@ theorem ChainClosure.is_chain (hc : ChainClosure r c) : IsChain r c := by
   case union s hs h =>
   change ∀ c ∈ s, IsChain r c at h
   exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
-    ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht => h t₁ ht₁ hc₁ (ht hc₂) hneq
+    ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht =>
+      h t₁ ht₁ hc₁ (ht hc₂) hneq
 #align chain_closure.is_chain ChainClosure.is_chain
 
 /-- **Hausdorff's maximality principle**
@@ -358,9 +370,11 @@ theorem chain_lt (s : Flag α) : IsChain (· < ·) (s : Set α) := fun a ha b hb
   (s.le_or_le ha hb).imp h.lt_of_le h.lt_of_le'
 #align flag.chain_lt Flag.chain_lt
 
-instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) : LinearOrder s :=
-  { Subtype.partialOrder _ with le_total := fun a b => s.le_or_le a.2 b.2, DecidableEq := Subtype.decidableEq,
-    decidableLe := Subtype.decidableLe, decidableLt := Subtype.decidableLt }
+instance [DecidableEq α] [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] (s : Flag α) :
+    LinearOrder s :=
+  { Subtype.partialOrder _ with le_total := fun a b => s.le_or_le a.2 b.2,
+    DecidableEq := Subtype.decidableEq, decidableLe := Subtype.decidableLe,
+    decidableLt := Subtype.decidableLt }
 
 end PartialOrder
 

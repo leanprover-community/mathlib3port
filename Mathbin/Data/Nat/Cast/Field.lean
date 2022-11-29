@@ -24,7 +24,8 @@ namespace Nat
 variable {α : Type _}
 
 @[simp]
-theorem cast_div [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) : ((m / n : ℕ) : α) = m / n := by
+theorem cast_div [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
+    ((m / n : ℕ) : α) = m / n := by
   rcases n_dvd with ⟨k, rfl⟩
   have : n ≠ 0 := by
     rintro rfl
@@ -34,10 +35,10 @@ theorem cast_div [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) 
 
 theorem cast_div_div_div_cancel_right [Field α] [CharZero α] {m n d : ℕ} (hn : d ∣ n) (hm : d ∣ m) :
     (↑(m / d) : α) / (↑(n / d) : α) = (m : α) / n := by
-  rcases eq_or_ne d 0 with (rfl | hd)
+  rcases eq_or_ne d 0 with (rfl | hd);
   · simp [zero_dvd_iff.mp hm]
     
-  replace hd : (d : α) ≠ 0
+  replace hd : (d : α) ≠ 0;
   · norm_cast
     assumption
     

@@ -65,7 +65,7 @@ end IsUnit
 @[simp]
 theorem is_unit_zero_iff : IsUnit (0 : M₀) ↔ (0 : M₀) = 1 :=
   ⟨fun ⟨⟨_, a, (a0 : 0 * a = 1), _⟩, rfl⟩ => by rwa [zero_mul] at a0, fun h =>
-    @is_unit_of_subsingleton _ _ (subsingleton_of_zero_eq_one h) 0⟩
+    @isUnit_of_subsingleton _ _ (subsingleton_of_zero_eq_one h) 0⟩
 #align is_unit_zero_iff is_unit_zero_iff
 
 @[simp]
@@ -89,7 +89,7 @@ noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.U
 /-- By definition, if `x` is invertible then `inverse x = x⁻¹`. -/
 @[simp]
 theorem inverse_unit (u : M₀ˣ) : inverse (u : M₀) = (u⁻¹ : M₀ˣ) := by
-  simp only [Units.is_unit, inverse, dif_pos]
+  simp only [Units.isUnit, inverse, dif_pos]
   exact Units.inv_unique rfl
 #align ring.inverse_unit Ring.inverse_unit
 
@@ -126,11 +126,13 @@ theorem inverse_mul_cancel_left (x y : M₀) (h : IsUnit x) : inverse x * (x * y
 #align ring.inverse_mul_cancel_left Ring.inverse_mul_cancel_left
 
 theorem inverse_mul_eq_iff_eq_mul (x y z : M₀) (h : IsUnit x) : inverse x * y = z ↔ y = x * z :=
-  ⟨fun h1 => by rw [← h1, mul_inverse_cancel_left _ _ h], fun h1 => by rw [h1, inverse_mul_cancel_left _ _ h]⟩
+  ⟨fun h1 => by rw [← h1, mul_inverse_cancel_left _ _ h], fun h1 => by
+    rw [h1, inverse_mul_cancel_left _ _ h]⟩
 #align ring.inverse_mul_eq_iff_eq_mul Ring.inverse_mul_eq_iff_eq_mul
 
 theorem eq_mul_inverse_iff_mul_eq (x y z : M₀) (h : IsUnit z) : x = y * inverse z ↔ x * z = y :=
-  ⟨fun h1 => by rw [h1, inverse_mul_cancel_right _ _ h], fun h1 => by rw [← h1, mul_inverse_cancel_right _ _ h]⟩
+  ⟨fun h1 => by rw [h1, inverse_mul_cancel_right _ _ h], fun h1 => by
+    rw [← h1, mul_inverse_cancel_right _ _ h]⟩
 #align ring.eq_mul_inverse_iff_mul_eq Ring.eq_mul_inverse_iff_mul_eq
 
 variable (M₀)
@@ -214,12 +216,14 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
 
 /-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
 theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
-  ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_coe g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
+  ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_coe g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ =>
+    ⟨Units.mk0 g hg, pg⟩⟩
 #align units.exists0 Units.exists0
 
 /-- An alternative version of `units.exists0`. This one is useful if Lean cannot
 figure out `p` when using `units.exists0` from right to left. -/
-theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
+theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} :
+    (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
   Iff.trans (by simp_rw [coe_mk0]) exists0.symm
 #align units.exists0' Units.exists0'
 
@@ -227,7 +231,7 @@ theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g �
 theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 := by simp [exists0]
 #align units.exists_iff_ne_zero Units.exists_iff_ne_zero
 
-theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
+theorem GroupWithZero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
   by_cases h : a = 0
   · left
     exact h
@@ -235,7 +239,7 @@ theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G�
   · right
     simpa only [eq_comm] using units.exists_iff_ne_zero.mpr h
     
-#align units._root_.group_with_zero.eq_zero_or_unit units._root_.group_with_zero.eq_zero_or_unit
+#align group_with_zero.eq_zero_or_unit GroupWithZero.eq_zero_or_unit
 
 end Units
 
@@ -266,7 +270,8 @@ instance (priority := 10) GroupWithZero.no_zero_divisors : NoZeroDivisors G₀ :
 -- see Note [lower instance priority]
 instance (priority := 10) GroupWithZero.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
   { (‹_› : GroupWithZero G₀) with
-    mul_left_cancel_of_ne_zero := fun x y z hx h => by rw [← inv_mul_cancel_left₀ hx y, h, inv_mul_cancel_left₀ hx z],
+    mul_left_cancel_of_ne_zero := fun x y z hx h => by
+      rw [← inv_mul_cancel_left₀ hx y, h, inv_mul_cancel_left₀ hx z],
     mul_right_cancel_of_ne_zero := fun x y z hy h => by
       rw [← mul_inv_cancel_right₀ hy x, h, mul_inv_cancel_right₀ hy z] }
 #align group_with_zero.cancel_monoid_with_zero GroupWithZero.cancelMonoidWithZero
@@ -275,7 +280,9 @@ instance (priority := 10) GroupWithZero.cancelMonoidWithZero : CancelMonoidWithZ
 -- `no_zero_divisors` instance, which depends on `mk0`.
 @[simp]
 theorem Units.mk0_mul (x y : G₀) (hxy) :
-    Units.mk0 (x * y) hxy = Units.mk0 x (mul_ne_zero_iff.mp hxy).1 * Units.mk0 y (mul_ne_zero_iff.mp hxy).2 := by
+    Units.mk0 (x * y) hxy =
+      Units.mk0 x (mul_ne_zero_iff.mp hxy).1 * Units.mk0 y (mul_ne_zero_iff.mp hxy).2 :=
+  by
   ext
   rfl
 #align units.mk0_mul Units.mk0_mul
@@ -314,7 +321,8 @@ section CommGroupWithZero
 variable [CommGroupWithZero G₀] {a b c d : G₀}
 
 -- see Note [lower instance priority]
-instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCommMonoidWithZero G₀ :=
+instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero :
+    CancelCommMonoidWithZero G₀ :=
   { GroupWithZero.cancelMonoidWithZero, CommGroupWithZero.toCommMonoidWithZero G₀ with }
 #align comm_group_with_zero.cancel_comm_monoid_with_zero CommGroupWithZero.cancelCommMonoidWithZero
 
@@ -333,9 +341,10 @@ variable {M : Type _} [Nontrivial M]
 
 /-- Constructs a `group_with_zero` structure on a `monoid_with_zero`
   consisting only of units and 0. -/
-noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZero M] (h : ∀ a : M, IsUnit a ∨ a = 0) :
-    GroupWithZero M :=
-  { hM with inv := fun a => if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹, inv_zero := dif_pos rfl,
+noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZero M]
+    (h : ∀ a : M, IsUnit a ∨ a = 0) : GroupWithZero M :=
+  { hM with inv := fun a => if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹,
+    inv_zero := dif_pos rfl,
     mul_inv_cancel := fun a h0 => by
       change (a * if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹) = 1
       rw [dif_neg h0, Units.mul_inv_eq_iff_eq_mul, one_mul, IsUnit.unit_spec],
@@ -344,8 +353,8 @@ noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZero M] (h : ∀
 
 /-- Constructs a `comm_group_with_zero` structure on a `comm_monoid_with_zero`
   consisting only of units and 0. -/
-noncomputable def commGroupWithZeroOfIsUnitOrEqZero [hM : CommMonoidWithZero M] (h : ∀ a : M, IsUnit a ∨ a = 0) :
-    CommGroupWithZero M :=
+noncomputable def commGroupWithZeroOfIsUnitOrEqZero [hM : CommMonoidWithZero M]
+    (h : ∀ a : M, IsUnit a ∨ a = 0) : CommGroupWithZero M :=
   { groupWithZeroOfIsUnitOrEqZero h, hM with }
 #align comm_group_with_zero_of_is_unit_or_eq_zero commGroupWithZeroOfIsUnitOrEqZero
 

@@ -19,10 +19,10 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
-    [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la lb : β} (hab : a ≠ b)
-    (hf : ContinuousOn f (ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la)) (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) :
-    ContinuousOn (extendFrom (ioo a b) f) (icc a b) := by
+theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
+    [OrderTopology α] [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la lb : β}
+    (hab : a ≠ b) (hf : ContinuousOn f (ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la))
+    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : ContinuousOn (extendFrom (ioo a b) f) (icc a b) := by
   apply continuous_on_extend_from
   · rw [closure_Ioo hab]
     
@@ -37,9 +37,9 @@ theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
     
 #align continuous_on_Icc_extend_from_Ioo continuous_on_Icc_extend_from_Ioo
 
-theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
-    [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {la : β} (hab : a < b) (ha : Tendsto f (𝓝[>] a) (𝓝 la)) :
-    extendFrom (ioo a b) f a = la := by
+theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
+    [OrderTopology α] [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {la : β} (hab : a < b)
+    (ha : Tendsto f (𝓝[>] a) (𝓝 la)) : extendFrom (ioo a b) f a = la := by
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
     simp only [le_of_lt hab, left_mem_Icc, right_mem_Icc]
@@ -48,9 +48,9 @@ theorem eq_lim_at_left_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [D
     
 #align eq_lim_at_left_extend_from_Ioo eq_lim_at_left_extend_from_Ioo
 
-theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
-    [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {lb : β} (hab : a < b) (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) :
-    extendFrom (ioo a b) f b = lb := by
+theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
+    [OrderTopology α] [TopologicalSpace β] [T2Space β] {f : α → β} {a b : α} {lb : β} (hab : a < b)
+    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : extendFrom (ioo a b) f b = lb := by
   apply extend_from_eq
   · rw [closure_Ioo hab.ne]
     simp only [le_of_lt hab, left_mem_Icc, right_mem_Icc]
@@ -59,9 +59,10 @@ theorem eq_lim_at_right_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [
     
 #align eq_lim_at_right_extend_from_Ioo eq_lim_at_right_extend_from_Ioo
 
-theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
-    [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la : β} (hab : a < b) (hf : ContinuousOn f (ioo a b))
-    (ha : Tendsto f (𝓝[>] a) (𝓝 la)) : ContinuousOn (extendFrom (ioo a b) f) (ico a b) := by
+theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
+    [OrderTopology α] [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la : β}
+    (hab : a < b) (hf : ContinuousOn f (ioo a b)) (ha : Tendsto f (𝓝[>] a) (𝓝 la)) :
+    ContinuousOn (extendFrom (ioo a b) f) (ico a b) := by
   apply continuous_on_extend_from
   · rw [closure_Ioo hab.ne]
     exact Ico_subset_Icc_self
@@ -76,9 +77,10 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
     
 #align continuous_on_Ico_extend_from_Ioo continuous_on_Ico_extend_from_Ioo
 
-theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α] [OrderTopology α]
-    [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {lb : β} (hab : a < b) (hf : ContinuousOn f (ioo a b))
-    (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : ContinuousOn (extendFrom (ioo a b) f) (ioc a b) := by
+theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α] [DenselyOrdered α]
+    [OrderTopology α] [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {lb : β}
+    (hab : a < b) (hf : ContinuousOn f (ioo a b)) (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) :
+    ContinuousOn (extendFrom (ioo a b) f) (ioc a b) := by
   have := @continuous_on_Ico_extend_from_Ioo αᵒᵈ _ _ _ _ _ _ _ f _ _ _ hab
   erw [dual_Ico, dual_Ioi, dual_Ioo] at this
   exact this hf hb

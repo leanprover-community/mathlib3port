@@ -48,7 +48,8 @@ variable [LinearOrderedAddCommGroup α] [Archimedean α]
 
 /-- An archimedean decidable linearly ordered `add_comm_group` has a version of the floor: for
 `a > 0`, any `g` in the group lies between some two consecutive multiples of `a`. -/
-theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) : ∃! k : ℤ, k • a ≤ g ∧ g < (k + 1) • a := by
+theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) :
+    ∃! k : ℤ, k • a ≤ g ∧ g < (k + 1) • a := by
   let s : Set ℤ := { n : ℤ | n • a ≤ g }
   obtain ⟨k, hk : -g ≤ k • a⟩ := Archimedean.arch (-g) ha
   have h_ne : s.nonempty := ⟨-k, by simpa using neg_le_neg hk⟩
@@ -67,20 +68,25 @@ theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) : ∃! k 
   exact lt_of_le_of_lt hm hn.2
 #align exists_unique_zsmul_near_of_pos exists_unique_zsmul_near_of_pos
 
-theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃! k : ℤ, 0 ≤ g - k • a ∧ g - k • a < a := by
-  simpa only [sub_nonneg, add_zsmul, one_zsmul, sub_lt_iff_lt_add'] using exists_unique_zsmul_near_of_pos ha g
+theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) :
+    ∃! k : ℤ, 0 ≤ g - k • a ∧ g - k • a < a := by
+  simpa only [sub_nonneg, add_zsmul, one_zsmul, sub_lt_iff_lt_add'] using
+    exists_unique_zsmul_near_of_pos ha g
 #align exists_unique_zsmul_near_of_pos' exists_unique_zsmul_near_of_pos'
 
-theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.ico c (c + a) :=
+theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
+    ∃! m : ℤ, b + m • a ∈ Set.ico c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
-    simpa only [Equiv.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_add, add_comm c,
-      sub_lt_iff_lt_add', add_assoc] using exists_unique_zsmul_near_of_pos' ha (b - c)
+    simpa only [Equiv.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_add,
+      add_comm c, sub_lt_iff_lt_add', add_assoc] using exists_unique_zsmul_near_of_pos' ha (b - c)
 #align exists_unique_add_zsmul_mem_Ico exists_unique_add_zsmul_mem_Ico
 
-theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.ioc c (c + a) :=
+theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
+    ∃! m : ℤ, b + m • a ∈ Set.ioc c (c + a) :=
   (Equiv.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 <| by
-    simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assoc, and_comm, mem_Ioc, Equiv.coe_add_right,
-      one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
+    simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assoc, and_comm, mem_Ioc,
+      Equiv.coe_add_right, one_zsmul, add_le_add_iff_right] using
+      exists_unique_zsmul_near_of_pos ha (c - b)
 #align exists_unique_add_zsmul_mem_Ioc exists_unique_add_zsmul_mem_Ioc
 
 end LinearOrderedAddCommGroup
@@ -95,8 +101,8 @@ theorem exists_nat_ge [StrictOrderedSemiring α] [Archimedean α] (x : α) : ∃
   exact (exists_nat_gt x).imp fun n => le_of_lt
 #align exists_nat_ge exists_nat_ge
 
-theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Archimedean α] (x : α) {y : α} (hy : 0 < y) :
-    ∃ n : ℕ, x < (y + 1) ^ n :=
+theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Archimedean α] (x : α) {y : α}
+    (hy : 0 < y) : ∃ n : ℕ, x < (y + 1) ^ n :=
   have : 0 ≤ 1 + y := add_nonneg zero_le_one hy.le
   let ⟨n, h⟩ := Archimedean.arch x hy
   ⟨n,
@@ -105,7 +111,8 @@ theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Archimedean α]
       _ = n * y := nsmul_eq_mul _ _
       _ < 1 + n * y := lt_one_add _
       _ ≤ (1 + y) ^ n :=
-        one_add_mul_le_pow' (mul_nonneg hy.le hy.le) (mul_nonneg this this) (add_nonneg zero_le_two hy.le) _
+        one_add_mul_le_pow' (mul_nonneg hy.le hy.le) (mul_nonneg this this)
+          (add_nonneg zero_le_two hy.le) _
       _ = (y + 1) ^ n := by rw [add_comm]
       ⟩
 #align add_one_pow_unbounded_of_pos add_one_pow_unbounded_of_pos
@@ -170,7 +177,8 @@ variable [LinearOrderedRing α] [Archimedean α]
         ":"
         («term∃_,_»
          "∃"
-         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
          ","
          («term_∧_»
           («term_≤_» («term_^_» `y "^" `n) "≤" `x)
@@ -191,7 +199,8 @@ variable [LinearOrderedRing α] [Archimedean α]
                 ":"
                 («term∃_,_»
                  "∃"
-                 (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
+                 (Lean.explicitBinders
+                  (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
                  ","
                  («term_<_» `x "<" («term_^_» `y "^" `n))))]
               ":="
@@ -238,7 +247,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                            (Tactic.rwSeq
                             "rw"
                             []
-                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                            (Tactic.rwRuleSeq
+                             "["
+                             [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                             "]")
                             [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                            "<;>"
                            (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -248,7 +260,9 @@ variable [LinearOrderedRing α] [Archimedean α]
                  (Term.haveDecl
                   (Term.haveIdDecl
                    [`hnsp []]
-                   [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+                   [(Term.typeSpec
+                     ":"
+                     («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
                    ":="
                    (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
                  []
@@ -271,7 +285,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                      "by"
                      (Tactic.tacticSeq
                       (Tactic.tacticSeq1Indented
-                       [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                       [(Std.Tactic.tacticRwa__
+                         "rwa"
+                         (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                         [])])))]
                    "⟩"))))))))])))
        [])
       []
@@ -292,7 +309,8 @@ variable [LinearOrderedRing α] [Archimedean α]
                ":"
                («term∃_,_»
                 "∃"
-                (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
+                (Lean.explicitBinders
+                 (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
                 ","
                 («term_<_» `x "<" («term_^_» `y "^" `n))))]
              ":="
@@ -339,7 +357,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                           (Tactic.rwSeq
                            "rw"
                            []
-                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                           (Tactic.rwRuleSeq
+                            "["
+                            [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                            "]")
                            [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                           "<;>"
                           (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -349,7 +370,9 @@ variable [LinearOrderedRing α] [Archimedean α]
                 (Term.haveDecl
                  (Term.haveIdDecl
                   [`hnsp []]
-                  [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+                  [(Term.typeSpec
+                    ":"
+                    («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
                   ":="
                   (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
                 []
@@ -372,7 +395,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                     "by"
                     (Tactic.tacticSeq
                      (Tactic.tacticSeq1Indented
-                      [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                      [(Std.Tactic.tacticRwa__
+                        "rwa"
+                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                        [])])))]
                   "⟩"))))))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -417,7 +443,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                       (Tactic.rwSeq
                        "rw"
                        []
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                        "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                       "<;>"
                       (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -427,7 +456,9 @@ variable [LinearOrderedRing α] [Archimedean α]
             (Term.haveDecl
              (Term.haveIdDecl
               [`hnsp []]
-              [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+              [(Term.typeSpec
+                ":"
+                («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
               ":="
               (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
             []
@@ -450,7 +481,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                 "by"
                 (Tactic.tacticSeq
                  (Tactic.tacticSeq1Indented
-                  [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                  [(Std.Tactic.tacticRwa__
+                    "rwa"
+                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                    [])])))]
               "⟩"))))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
@@ -491,7 +525,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                      (Tactic.rwSeq
                       "rw"
                       []
-                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                       "]")
                       [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                      "<;>"
                      (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -501,7 +538,9 @@ variable [LinearOrderedRing α] [Archimedean α]
            (Term.haveDecl
             (Term.haveIdDecl
              [`hnsp []]
-             [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+             [(Term.typeSpec
+               ":"
+               («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
              ":="
              (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
            []
@@ -524,7 +563,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                 [(Std.Tactic.tacticRwa__
+                   "rwa"
+                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                   [])])))]
              "⟩")))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
@@ -563,7 +605,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                     (Tactic.rwSeq
                      "rw"
                      []
-                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                     (Tactic.rwRuleSeq
+                      "["
+                      [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                      "]")
                      [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                     "<;>"
                     (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -573,7 +618,9 @@ variable [LinearOrderedRing α] [Archimedean α]
           (Term.haveDecl
            (Term.haveIdDecl
             [`hnsp []]
-            [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+            [(Term.typeSpec
+              ":"
+              («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
             ":="
             (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
           []
@@ -596,7 +643,10 @@ variable [LinearOrderedRing α] [Archimedean α]
               "by"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                [(Std.Tactic.tacticRwa__
+                  "rwa"
+                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                  [])])))]
             "⟩"))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -631,7 +681,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                    (Tactic.rwSeq
                     "rw"
                     []
-                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                     "]")
                     [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                    "<;>"
                    (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -641,7 +694,9 @@ variable [LinearOrderedRing α] [Archimedean α]
          (Term.haveDecl
           (Term.haveIdDecl
            [`hnsp []]
-           [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+           [(Term.typeSpec
+             ":"
+             («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
            ":="
            (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
          []
@@ -664,7 +719,10 @@ variable [LinearOrderedRing α] [Archimedean α]
              "by"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
-               [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+               [(Std.Tactic.tacticRwa__
+                 "rwa"
+                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                 [])])))]
            "⟩")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -690,7 +748,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                   (Tactic.rwSeq
                    "rw"
                    []
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                    "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                   "<;>"
                   (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])))
@@ -700,7 +761,9 @@ variable [LinearOrderedRing α] [Archimedean α]
         (Term.haveDecl
          (Term.haveIdDecl
           [`hnsp []]
-          [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+          [(Term.typeSpec
+            ":"
+            («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
           ":="
           (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
         []
@@ -723,7 +786,10 @@ variable [LinearOrderedRing α] [Archimedean α]
             "by"
             (Tactic.tacticSeq
              (Tactic.tacticSeq1Indented
-              [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+              [(Std.Tactic.tacticRwa__
+                "rwa"
+                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+                [])])))]
           "⟩"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -731,7 +797,9 @@ variable [LinearOrderedRing α] [Archimedean α]
        (Term.haveDecl
         (Term.haveIdDecl
          [`hnsp []]
-         [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
+         [(Term.typeSpec
+           ":"
+           («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
          ":="
          (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
        []
@@ -754,7 +822,10 @@ variable [LinearOrderedRing α] [Archimedean α]
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+             [(Std.Tactic.tacticRwa__
+               "rwa"
+               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+               [])])))]
          "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -776,7 +847,10 @@ variable [LinearOrderedRing α] [Archimedean α]
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+            [(Std.Tactic.tacticRwa__
+              "rwa"
+              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+              [])])))]
         "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -789,20 +863,27 @@ variable [LinearOrderedRing α] [Archimedean α]
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+           [(Std.Tactic.tacticRwa__
+             "rwa"
+             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+             [])])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))
+         [(Std.Tactic.tacticRwa__
+           "rwa"
+           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]")
+           [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hnsp
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -815,20 +896,25 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hltn
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.find_min
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Nat.find_min [`h `hltn]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_of_not_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Nat.pred [`n])
@@ -836,12 +922,15 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.pred
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -852,31 +941,38 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hnp
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ne_of_gt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `ne_of_gt [`hnp]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.pred_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<_» (Term.app `Nat.pred [`n]) "<" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.app `Nat.pred [`n])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.pred
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -886,31 +982,37 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hnp
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.succ_pred_eq_of_pos
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
-[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
       (Term.app `Nat.pred [`n])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.pred
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1022, (some 1023, term) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
@@ -932,7 +1034,10 @@ variable [LinearOrderedRing α] [Archimedean α]
                (Tactic.rwSeq
                 "rw"
                 []
-                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)] "]")
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `hn0) "," (Tactic.rwRule [] `pow_zero)]
+                 "]")
                 [(Tactic.location "at" (Tactic.locationHyp [`hn] []))])
                "<;>"
                (Tactic.exact "exact" (Term.app `not_le_of_gt [`hn `hx])))])))))])
@@ -988,17 +1093,20 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hn
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `not_le_of_gt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Tactic.rwSeq
        "rw"
@@ -1008,13 +1116,16 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hn
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `pow_zero
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hn0
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -1023,20 +1134,23 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hn0
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `pos_iff_ne_zero
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<_» (num "0") "<" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -1048,10 +1162,12 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.find_spec
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_<_» `x "<" («term_^_» `y "^" `n))
@@ -1059,7 +1175,8 @@ variable [LinearOrderedRing α] [Archimedean α]
       («term_^_» `y "^" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (some 80, term)
@@ -1075,13 +1192,15 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `h
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.find
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -1114,7 +1233,8 @@ variable [LinearOrderedRing α] [Archimedean α]
                     hnp
                       : 0 < n
                       :=
-                      pos_iff_ne_zero . 2 fun hn0 => by rw [ hn0 , pow_zero ] at hn <;> exact not_le_of_gt hn hx
+                      pos_iff_ne_zero . 2
+                        fun hn0 => by rw [ hn0 , pow_zero ] at hn <;> exact not_le_of_gt hn hx
                     have
                       hnsp : Nat.pred n + 1 = n := Nat.succ_pred_eq_of_pos hnp
                       have
@@ -1149,9 +1269,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
         ":"
         («term∃_,_»
          "∃"
-         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℤ "ℤ")]))
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℤ "ℤ")]))
          ","
-         («term_∈_» `x "∈" (Term.app `ico [(«term_^_» `y "^" `n) («term_^_» `y "^" («term_+_» `n "+" (num "1")))])))))
+         («term_∈_»
+          `x
+          "∈"
+          (Term.app
+           `ico
+           [(«term_^_» `y "^" `n) («term_^_» `y "^" («term_+_» `n "+" (num "1")))])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -1182,7 +1308,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                    ":"
                    («term∃_,_»
                     "∃"
-                    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+                    (Lean.explicitBinders
+                     (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
                     ","
                     («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
                  ":="
@@ -1213,7 +1340,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                            (Term.proj
                             (Term.app
                              `inv_lt
-                             [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                             [`hx
+                              (Term.app
+                               `lt_trans
+                               [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                             "."
                             (fieldIdx "1"))
                            [`hN]))])))])]
@@ -1238,14 +1368,18 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                      ":"
                      («term∃_,_»
                       "∃"
-                      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                      (Lean.explicitBinders
+                       (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
                       ","
                       (Term.forall
                        "∀"
                        [`m]
                        []
                        ","
-                       (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
+                       (Term.arrow
+                        («term_≤_» («term_^_» `y "^" `m) "≤" `x)
+                        "→"
+                        («term_≤_» `m "≤" `b)))))]
                    ":="
                    (Term.anonymousCtor
                     "⟨"
@@ -1279,9 +1413,13 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                                     "rwa"
                                     (Tactic.rwRuleSeq
                                      "["
-                                     [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                                     [(Tactic.rwRule
+                                       [(patternIgnore (token.«← » "←"))]
+                                       `zpow_coe_nat)]
                                      "]")
-                                    [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
+                                    [(Tactic.location
+                                      "at"
+                                      (Tactic.locationHyp [`hM] []))])])))])])))])))]
                     "⟩")))
                  []
                  (Term.let
@@ -1310,7 +1448,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                         "=>"
                         (Term.app
                          `not_le_of_gt
-                         [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                         [(Term.app `Int.lt_succ [(Term.hole "_")])
+                          (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
                    "⟩"))))))))])))
        [])
       []
@@ -1346,7 +1485,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                   ":"
                   («term∃_,_»
                    "∃"
-                   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+                   (Lean.explicitBinders
+                    (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
                    ","
                    («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
                 ":="
@@ -1377,7 +1517,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                           (Term.proj
                            (Term.app
                             `inv_lt
-                            [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                            [`hx
+                             (Term.app
+                              `lt_trans
+                              [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                            "."
                            (fieldIdx "1"))
                           [`hN]))])))])]
@@ -1402,14 +1545,18 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                     ":"
                     («term∃_,_»
                      "∃"
-                     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                     (Lean.explicitBinders
+                      (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
                      ","
                      (Term.forall
                       "∀"
                       [`m]
                       []
                       ","
-                      (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
+                      (Term.arrow
+                       («term_≤_» («term_^_» `y "^" `m) "≤" `x)
+                       "→"
+                       («term_≤_» `m "≤" `b)))))]
                   ":="
                   (Term.anonymousCtor
                    "⟨"
@@ -1443,9 +1590,13 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                                    "rwa"
                                    (Tactic.rwRuleSeq
                                     "["
-                                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                                    [(Tactic.rwRule
+                                      [(patternIgnore (token.«← » "←"))]
+                                      `zpow_coe_nat)]
                                     "]")
-                                   [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
+                                   [(Tactic.location
+                                     "at"
+                                     (Tactic.locationHyp [`hM] []))])])))])])))])))]
                    "⟩")))
                 []
                 (Term.let
@@ -1474,7 +1625,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                        "=>"
                        (Term.app
                         `not_le_of_gt
-                        [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                        [(Term.app `Int.lt_succ [(Term.hole "_")])
+                         (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
                   "⟩"))))))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1502,7 +1654,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               ":"
               («term∃_,_»
                "∃"
-               (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+               (Lean.explicitBinders
+                (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
                ","
                («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
             ":="
@@ -1533,7 +1686,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                       (Term.proj
                        (Term.app
                         `inv_lt
-                        [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                        [`hx
+                         (Term.app
+                          `lt_trans
+                          [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                        "."
                        (fieldIdx "1"))
                       [`hN]))])))])]
@@ -1558,14 +1714,18 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                 ":"
                 («term∃_,_»
                  "∃"
-                 (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                 (Lean.explicitBinders
+                  (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
                  ","
                  (Term.forall
                   "∀"
                   [`m]
                   []
                   ","
-                  (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
+                  (Term.arrow
+                   («term_≤_» («term_^_» `y "^" `m) "≤" `x)
+                   "→"
+                   («term_≤_» `m "≤" `b)))))]
               ":="
               (Term.anonymousCtor
                "⟨"
@@ -1601,7 +1761,9 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                                 "["
                                 [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
                                 "]")
-                               [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
+                               [(Tactic.location
+                                 "at"
+                                 (Tactic.locationHyp [`hM] []))])])))])])))])))]
                "⟩")))
             []
             (Term.let
@@ -1630,7 +1792,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                    "=>"
                    (Term.app
                     `not_le_of_gt
-                    [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                    [(Term.app `Int.lt_succ [(Term.hole "_")])
+                     (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
               "⟩"))))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
@@ -1654,7 +1817,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              ":"
              («term∃_,_»
               "∃"
-              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+              (Lean.explicitBinders
+               (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
               ","
               («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
            ":="
@@ -1685,7 +1849,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                      (Term.proj
                       (Term.app
                        `inv_lt
-                       [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                       [`hx
+                        (Term.app
+                         `lt_trans
+                         [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                       "."
                       (fieldIdx "1"))
                      [`hN]))])))])]
@@ -1710,7 +1877,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                ":"
                («term∃_,_»
                 "∃"
-                (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                (Lean.explicitBinders
+                 (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
                 ","
                 (Term.forall
                  "∀"
@@ -1782,7 +1950,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                   "=>"
                   (Term.app
                    `not_le_of_gt
-                   [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                   [(Term.app `Int.lt_succ [(Term.hole "_")])
+                    (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
              "⟩")))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
@@ -1804,7 +1973,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             ":"
             («term∃_,_»
              "∃"
-             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
              ","
              («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
           ":="
@@ -1835,7 +2005,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                     (Term.proj
                      (Term.app
                       `inv_lt
-                      [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                      [`hx
+                       (Term.app
+                        `lt_trans
+                        [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                      "."
                      (fieldIdx "1"))
                     [`hN]))])))])]
@@ -1860,7 +2033,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               ":"
               («term∃_,_»
                "∃"
-               (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+               (Lean.explicitBinders
+                (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
                ","
                (Term.forall
                 "∀"
@@ -1932,7 +2106,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                  "=>"
                  (Term.app
                   `not_le_of_gt
-                  [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                  [(Term.app `Int.lt_succ [(Term.hole "_")])
+                   (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
             "⟩"))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -1944,7 +2119,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            ":"
            («term∃_,_»
             "∃"
-            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+            (Lean.explicitBinders
+             (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
             ","
             («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
          ":="
@@ -1975,7 +2151,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                    (Term.proj
                     (Term.app
                      `inv_lt
-                     [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                     [`hx
+                      (Term.app
+                       `lt_trans
+                       [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                     "."
                     (fieldIdx "1"))
                    [`hN]))])))])]
@@ -2000,7 +2179,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              ":"
              («term∃_,_»
               "∃"
-              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+              (Lean.explicitBinders
+               (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
               ","
               (Term.forall
                "∀"
@@ -2072,7 +2252,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                 "=>"
                 (Term.app
                  `not_le_of_gt
-                 [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                 [(Term.app `Int.lt_succ [(Term.hole "_")])
+                  (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
            "⟩")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
@@ -2094,7 +2275,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             ":"
             («term∃_,_»
              "∃"
-             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
              ","
              (Term.forall
               "∀"
@@ -2133,7 +2315,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                         (Tactic.tacticSeq1Indented
                          [(Std.Tactic.tacticRwa__
                            "rwa"
-                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+                           (Tactic.rwRuleSeq
+                            "["
+                            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                            "]")
                            [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
            "⟩")))
         []
@@ -2163,7 +2348,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                "=>"
                (Term.app
                 `not_le_of_gt
-                [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+                [(Term.app `Int.lt_succ [(Term.hole "_")])
+                 (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
           "⟩"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -2175,7 +2361,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            ":"
            («term∃_,_»
             "∃"
-            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+            (Lean.explicitBinders
+             (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
             ","
             (Term.forall
              "∀"
@@ -2214,7 +2401,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                        (Tactic.tacticSeq1Indented
                         [(Std.Tactic.tacticRwa__
                           "rwa"
-                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+                          (Tactic.rwRuleSeq
+                           "["
+                           [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                           "]")
                           [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
           "⟩")))
        []
@@ -2244,7 +2434,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               "=>"
               (Term.app
                `not_le_of_gt
-               [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+               [(Term.app `Int.lt_succ [(Term.hole "_")])
+                (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
          "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
@@ -2273,7 +2464,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              "=>"
              (Term.app
               `not_le_of_gt
-              [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+              [(Term.app `Int.lt_succ [(Term.hole "_")])
+               (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
         "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -2292,7 +2484,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             "=>"
             (Term.app
              `not_le_of_gt
-             [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
+             [(Term.app `Int.lt_succ [(Term.hole "_")])
+              (Term.app `hn₂ [(Term.hole "_") `hge])])))])]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -2315,9 +2508,13 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
         [`hge]
         []
         "=>"
-        (Term.app `not_le_of_gt [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))
+        (Term.app
+         `not_le_of_gt
+         [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `not_le_of_gt [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])
+      (Term.app
+       `not_le_of_gt
+       [(Term.app `Int.lt_succ [(Term.hole "_")]) (Term.app `hn₂ [(Term.hole "_") `hge])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2326,17 +2523,24 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hge
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `hn₂
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hn₂ [(Term.hole "_") `hge]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `hn₂ [(Term.hole "_") `hge])
+     ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -2345,34 +2549,46 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Int.lt_succ
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Int.lt_succ [(Term.hole "_")]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Int.lt_succ [(Term.hole "_")])
+     ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `not_le_of_gt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hge
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `lt_of_not_ge
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hn₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Int.exists_greatest_of_bdd [`hb `he])
@@ -2380,28 +2596,35 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `he
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hb
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Int.exists_greatest_of_bdd
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`n "," `hn₁ "," `hn₂] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hn₂
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hn₁
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -2434,7 +2657,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                     (Tactic.tacticSeq1Indented
                      [(Std.Tactic.tacticRwa__
                        "rwa"
-                       (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                        "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2464,7 +2690,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                   (Tactic.tacticSeq1Indented
                    [(Std.Tactic.tacticRwa__
                      "rwa"
-                     (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+                     (Tactic.rwRuleSeq
+                      "["
+                      [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                      "]")
                      [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -2487,7 +2716,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                 (Tactic.tacticSeq1Indented
                  [(Std.Tactic.tacticRwa__
                    "rwa"
-                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                    "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
@@ -2510,7 +2742,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               (Tactic.tacticSeq1Indented
                [(Std.Tactic.tacticRwa__
                  "rwa"
-                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+                 (Tactic.rwRuleSeq
+                  "["
+                  [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                  "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -2525,7 +2760,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             (Tactic.tacticSeq1Indented
              [(Std.Tactic.tacticRwa__
                "rwa"
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+                "]")
                [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
@@ -2539,7 +2777,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           (Tactic.tacticSeq1Indented
            [(Std.Tactic.tacticRwa__
              "rwa"
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+              "]")
              [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.ellipsis'
@@ -2550,7 +2791,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
         (Tactic.tacticSeq1Indented
          [(Std.Tactic.tacticRwa__
            "rwa"
-           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+           (Tactic.rwRuleSeq
+            "["
+            [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+            "]")
            [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2561,12 +2805,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hM
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `zpow_coe_nat
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.byTactic
@@ -2575,18 +2822,24 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
        (Tactic.tacticSeq1Indented
         [(Std.Tactic.tacticRwa__
           "rwa"
-          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+          (Tactic.rwRuleSeq
+           "["
+           [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+           "]")
           [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hm
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `lt_of_le_of_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app
@@ -2600,7 +2853,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           (Tactic.tacticSeq1Indented
            [(Std.Tactic.tacticRwa__
              "rwa"
-             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
+             (Tactic.rwRuleSeq
+              "["
+              [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)]
+              "]")
              [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))
         ")")])
      ")")
@@ -2615,67 +2871,90 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hlt
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hy.le
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `zpow_le_of_le
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app `zpow_le_of_le [`hy.le (Term.proj `hlt "." `le)])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `not_lt_of_ge
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hlt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_of_not_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hm
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `m
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `M
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term∃_,_»
        "∃"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+       (Lean.explicitBinders
+        (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
        ","
-       (Term.forall "∀" [`m] [] "," (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b))))
+       (Term.forall
+        "∀"
+        [`m]
+        []
+        ","
+        (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.forall "∀" [`m] [] "," (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))
+      (Term.forall
+       "∀"
+       [`m]
+       []
+       ","
+       (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_≤_» `m "≤" `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `m
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
@@ -2684,12 +2963,14 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
       («term_≤_» («term_^_» `y "^" `m) "≤" `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_^_» `y "^" `m)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `m
-[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (some 80, term)
@@ -2700,7 +2981,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termℤ "ℤ")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
@@ -2710,25 +2992,31 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hy
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `pow_unbounded_of_one_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`M "," `hM] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hM
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `M
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -2746,7 +3034,9 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                []
                (Tactic.rwRuleSeq
                 "["
-                [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
+                [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
+                 ","
+                 (Tactic.rwRule [] `zpow_coe_nat)]
                 "]")
                [])
               []
@@ -2756,7 +3046,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                 (Term.proj
                  (Term.app
                   `inv_lt
-                  [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                  [`hx
+                   (Term.app
+                    `lt_trans
+                    [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                  "."
                  (fieldIdx "1"))
                 [`hN]))])))])]
@@ -2773,7 +3066,9 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              []
              (Tactic.rwRuleSeq
               "["
-              [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
+              [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
+               ","
+               (Tactic.rwRule [] `zpow_coe_nat)]
               "]")
              [])
             []
@@ -2783,7 +3078,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               (Term.proj
                (Term.app
                 `inv_lt
-                [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+                [`hx
+                 (Term.app
+                  `lt_trans
+                  [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
                "."
                (fieldIdx "1"))
               [`hN]))])))])
@@ -2799,7 +3097,9 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            []
            (Tactic.rwRuleSeq
             "["
-            [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
+            [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
+             ","
+             (Tactic.rwRule [] `zpow_coe_nat)]
             "]")
            [])
           []
@@ -2809,7 +3109,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             (Term.proj
              (Term.app
               `inv_lt
-              [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+              [`hx
+               (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
              "."
              (fieldIdx "1"))
             [`hN]))])))
@@ -2819,14 +3120,18 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
        "exact"
        (Term.app
         (Term.proj
-         (Term.app `inv_lt [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+         (Term.app
+          `inv_lt
+          [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
          "."
          (fieldIdx "1"))
         [`hN]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        (Term.proj
-        (Term.app `inv_lt [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+        (Term.app
+         `inv_lt
+         [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
         "."
         (fieldIdx "1"))
        [`hN])
@@ -2834,14 +3139,19 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hN
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj
-       (Term.app `inv_lt [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+       (Term.app
+        `inv_lt
+        [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
        "."
        (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Term.app `inv_lt [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
+      (Term.app
+       `inv_lt
+       [`hx (Term.app `lt_trans [(Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) `hN])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2850,7 +3160,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hN
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -2859,34 +3170,43 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `inv_pos "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `inv_pos
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `lt_trans
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Term.app `lt_trans [(Term.paren "(" (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) ")") `hN])
+     (Term.app
+      `lt_trans
+      [(Term.paren "(" (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) ")") `hN])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `hx
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `inv_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
@@ -2895,10 +3215,13 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
       [`hx
        (Term.paren
         "("
-        (Term.app `lt_trans [(Term.paren "(" (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) ")") `hN])
+        (Term.app
+         `lt_trans
+         [(Term.paren "(" (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) ")") `hN])
         ")")])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2907,12 +3230,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
        []
        (Tactic.rwRuleSeq
         "["
-        [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
+        [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
+         ","
+         (Tactic.rwRule [] `zpow_coe_nat)]
         "]")
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `zpow_coe_nat
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `zpow_neg [`y (coeNotation "↑" `N)])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.namedArgument'
@@ -2921,19 +3247,24 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
       (coeNotation "↑" `N)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `N
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 1024, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 1024,
+     term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       `y
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `zpow_neg
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0,
+     tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.byTactic
@@ -2945,7 +3276,9 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           []
           (Tactic.rwRuleSeq
            "["
-           [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
+           [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
+            ","
+            (Tactic.rwRule [] `zpow_coe_nat)]
            "]")
           [])
          []
@@ -2960,7 +3293,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               [`hx
                (Term.paren
                 "("
-                (Term.app `lt_trans [(Term.paren "(" (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) ")") `hN])
+                (Term.app
+                 `lt_trans
+                 [(Term.paren "(" (Term.app (Term.proj `inv_pos "." (fieldIdx "2")) [`hx]) ")")
+                  `hN])
                 ")")])
              ")")
             "."
@@ -2969,31 +3305,37 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `le_of_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term-_» "-" `N)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `N
-[PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 75, (some 75, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term∃_,_»
        "∃"
-       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+       (Lean.explicitBinders
+        (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
        ","
        («term_≤_» («term_^_» `y "^" `m) "≤" `x))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       («term_≤_» («term_^_» `y "^" `m) "≤" `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       («term_^_» `y "^" `m)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `m
-[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (some 80, term)
@@ -3002,7 +3344,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termℤ "ℤ")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
@@ -3012,30 +3355,37 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hy
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       («term_⁻¹_1» `x "⁻¹")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none,
+     [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `pow_unbounded_of_one_lt
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none,
+     [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor "⟨" [`N "," `hN] "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hN
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `N
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none,
+     [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 2 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
@@ -3069,7 +3419,10 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                   ⟨
                     - N
                       ,
-                      le_of_lt by rw [ zpow_neg y ↑ N , zpow_coe_nat ] exact inv_lt hx lt_trans inv_pos . 2 hx hN . 1 hN
+                      le_of_lt
+                        by
+                          rw [ zpow_neg y ↑ N , zpow_coe_nat ]
+                            exact inv_lt hx lt_trans inv_pos . 2 hx hN . 1 hN
                     ⟩
                 let
                   ⟨ M , hM ⟩ := pow_unbounded_of_one_lt x hy
@@ -3088,7 +3441,8 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                                   hlt
                                     =>
                                     not_lt_of_ge
-                                      zpow_le_of_le hy.le hlt . le lt_of_le_of_lt hm by rwa [ ← zpow_coe_nat ] at hM
+                                      zpow_le_of_le hy.le hlt . le
+                                        lt_of_le_of_lt hm by rwa [ ← zpow_coe_nat ] at hM
                         ⟩
                     let
                       ⟨ n , hn₁ , hn₂ ⟩ := Int.exists_greatest_of_bdd hb he
@@ -3121,7 +3475,8 @@ theorem exists_pow_lt_of_lt_one (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n <
 This is the same as `exists_nat_pow_near`, but for elements between `0` and `1` -/
 theorem exists_nat_pow_near_of_lt_one (xpos : 0 < x) (hx : x ≤ 1) (ypos : 0 < y) (hy : y < 1) :
     ∃ n : ℕ, y ^ (n + 1) < x ∧ x ≤ y ^ n := by
-  rcases exists_nat_pow_near (one_le_inv_iff.2 ⟨xpos, hx⟩) (one_lt_inv_iff.2 ⟨ypos, hy⟩) with ⟨n, hn, h'n⟩
+  rcases exists_nat_pow_near (one_le_inv_iff.2 ⟨xpos, hx⟩) (one_lt_inv_iff.2 ⟨ypos, hy⟩) with
+    ⟨n, hn, h'n⟩
   refine' ⟨n, _, _⟩
   · rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n
     
@@ -3201,7 +3556,8 @@ theorem exists_pos_rat_lt {x : α} (x0 : 0 < x) : ∃ q : ℚ, 0 < q ∧ (q : α
 #align exists_pos_rat_lt exists_pos_rat_lt
 
 theorem exists_rat_near (x : α) (ε0 : 0 < ε) : ∃ q : ℚ, |x - q| < ε :=
-  let ⟨q, h₁, h₂⟩ := exists_rat_btwn <| ((sub_lt_self_iff x).2 ε0).trans ((lt_add_iff_pos_left x).2 ε0)
+  let ⟨q, h₁, h₂⟩ :=
+    exists_rat_btwn <| ((sub_lt_self_iff x).2 ε0).trans ((lt_add_iff_pos_left x).2 ε0)
   ⟨q, abs_sub_lt_iff.2 ⟨sub_lt_comm.1 h₁, sub_lt_iff_lt_add.2 h₂⟩⟩
 #align exists_rat_near exists_rat_near
 
@@ -3213,7 +3569,8 @@ variable [LinearOrderedField α]
 
 theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
   ⟨@exists_nat_gt α _, fun H =>
-    ⟨fun x y y0 => (H (x / y)).imp fun n h => le_of_lt <| by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
+    ⟨fun x y y0 =>
+      (H (x / y)).imp fun n h => le_of_lt <| by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
 #align archimedean_iff_nat_lt archimedean_iff_nat_lt
 
 theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=
@@ -3243,7 +3600,9 @@ theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x <
   ⟨@exists_rat_gt α _, fun H =>
     archimedean_iff_nat_lt.2 fun x =>
       let ⟨q, h⟩ := H x
-      ⟨⌈q⌉₊, lt_of_lt_of_le h <| by simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
+      ⟨⌈q⌉₊,
+        lt_of_lt_of_le h <| by
+          simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 #align archimedean_iff_rat_lt archimedean_iff_rat_lt
 
 theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
@@ -3277,7 +3636,8 @@ noncomputable def Archimedean.floorRing (α) [LinearOrderedRing α] [Archimedean
 
 -- see Note [lower instance priority]
 /-- A linear ordered field that is a floor ring is archimedean. -/
-instance (priority := 100) FloorRing.archimedean (α) [LinearOrderedField α] [FloorRing α] : Archimedean α := by
+instance (priority := 100) FloorRing.archimedean (α) [LinearOrderedField α] [FloorRing α] :
+    Archimedean α := by
   rw [archimedean_iff_int_le]
   exact fun x => ⟨⌈x⌉, Int.le_ceil x⟩
 #align floor_ring.archimedean FloorRing.archimedean

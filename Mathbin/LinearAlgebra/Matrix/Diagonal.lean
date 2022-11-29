@@ -43,7 +43,8 @@ theorem diagonal_comp_std_basis (w : n → R) (i : n) :
   LinearMap.ext fun x => (diagonal_mul_vec_single w _ _).trans (Pi.single_smul' i (w i) x)
 #align matrix.diagonal_comp_std_basis Matrix.diagonal_comp_std_basis
 
-theorem diagonal_to_lin' (w : n → R) : (diagonal w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
+theorem diagonal_to_lin' (w : n → R) :
+    (diagonal w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
   LinearMap.ext fun v => funext fun i => mul_vec_diagonal _ _ _
 #align matrix.diagonal_to_lin' Matrix.diagonal_to_lin'
 
@@ -57,20 +58,24 @@ variable {K : Type u} [Field K]
 
 -- maybe try to relax the universe constraint
 theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
-    ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) := by
+    ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) :=
+  by
   rw [← comap_bot, ← infi_ker_proj, comap_infi]
   have := fun i : m => ker_comp (to_lin' (diagonal w)) (proj i)
   simp only [comap_infi, ← this, proj_diagonal, ker_smul']
   have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ := by rw [Set.union_compl_self]
-  exact (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this (Set.to_finite _)).symm
+  exact
+    (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this
+        (Set.to_finite _)).symm
 #align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_to_lin'
 
 theorem range_diagonal [DecidableEq m] (w : m → K) :
-    (diagonal w).toLin'.range = ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range := by
+    (diagonal w).toLin'.range =
+      ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range :=
+  by
   dsimp only [mem_set_of_eq]
   rw [← map_top, ← supr_range_std_basis, map_supr]
-  congr
-  funext i
+  congr ; funext i
   rw [← LinearMap.range_comp, diagonal_comp_std_basis, ← range_smul']
 #align matrix.range_diagonal Matrix.range_diagonal
 

@@ -49,7 +49,8 @@ def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).o
 def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
   f := T.μ.app X.A
   h' := T.assoc X.A
-#align category_theory.monad.free_coequalizer.bottom_map CategoryTheory.Monad.FreeCoequalizer.bottomMap
+#align
+  category_theory.monad.free_coequalizer.bottom_map CategoryTheory.Monad.FreeCoequalizer.bottomMap
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
@@ -59,9 +60,11 @@ def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X where
 #align category_theory.monad.free_coequalizer.π CategoryTheory.Monad.FreeCoequalizer.π
 
 theorem FreeCoequalizer.condition :
-    FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X = FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
+    FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X =
+      FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
   Algebra.Hom.ext _ _ X.assoc.symm
-#align category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
+#align
+  category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
 
 instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) := by
   apply is_reflexive_pair.mk' _ _ _
@@ -87,7 +90,8 @@ free algebras.
 -/
 def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
   (Cofork.IsColimit.mk' _) fun s => by
-    have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f := congr_arg monad.algebra.hom.f s.condition
+    have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f :=
+      congr_arg monad.algebra.hom.f s.condition
     have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h
     refine' ⟨⟨T.η.app _ ≫ s.π.f, _⟩, _, _⟩
     · dsimp

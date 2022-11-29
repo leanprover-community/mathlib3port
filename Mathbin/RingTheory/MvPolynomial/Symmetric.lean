@@ -55,10 +55,10 @@ def esymm (s : Multiset R) (n : ℕ) : R :=
   ((s.powersetLen n).map Multiset.prod).Sum
 #align multiset.esymm Multiset.esymm
 
-theorem _root_.finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
+theorem Finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
     (s.val.map f).esymm n = (s.powersetLen n).Sum fun t => t.Prod f := by
   simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powerset_len, map_map]
-#align multiset._root_.finset.esymm_map_val multiset._root_.finset.esymm_map_val
+#align finset.esymm_map_val Finset.esymm_map_val
 
 end Multiset
 
@@ -126,7 +126,8 @@ theorem smul (r : R) (hφ : IsSymmetric φ) : IsSymmetric (r • φ) :=
 #align mv_polynomial.is_symmetric.smul MvPolynomial.IsSymmetric.smul
 
 @[simp]
-theorem map (hφ : IsSymmetric φ) (f : R →+* S) : IsSymmetric (map f φ) := fun e => by rw [← map_rename, hφ]
+theorem map (hφ : IsSymmetric φ) (f : R →+* S) : IsSymmetric (map f φ) := fun e => by
+  rw [← map_rename, hφ]
 #align mv_polynomial.is_symmetric.map MvPolynomial.IsSymmetric.map
 
 end CommSemiring
@@ -170,7 +171,8 @@ theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :
 #align mv_polynomial.aeval_esymm_eq_multiset_esymm MvPolynomial.aeval_esymm_eq_multiset_esymm
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
-theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), x i :=
+theorem esymm_eq_sum_subtype (n : ℕ) :
+    esymm σ R n = ∑ t : { s : Finset σ // s.card = n }, ∏ i in (t : Finset σ), x i :=
   sum_subtype _ (fun _ => mem_powerset_len_univ_iff) _
 #align mv_polynomial.esymm_eq_sum_subtype MvPolynomial.esymm_eq_sum_subtype
 
@@ -182,7 +184,8 @@ theorem esymm_eq_sum_monomial (n : ℕ) :
 #align mv_polynomial.esymm_eq_sum_monomial MvPolynomial.esymm_eq_sum_monomial
 
 @[simp]
-theorem esymm_zero : esymm σ R 0 = 1 := by simp only [esymm, powerset_len_zero, sum_singleton, prod_empty]
+theorem esymm_zero : esymm σ R 0 = 1 := by
+  simp only [esymm, powerset_len_zero, sum_singleton, prod_empty]
 #align mv_polynomial.esymm_zero MvPolynomial.esymm_zero
 
 theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S n := by
@@ -221,13 +224,13 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
     exact absurd this hst.symm
     
-  all_goals
-  intro x y
-  simp [Finsupp.support_single_disjoint]
+  all_goals intro x y; simp [Finsupp.support_single_disjoint]
 #align mv_polynomial.support_esymm'' MvPolynomial.support_esymm''
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-    (esymm σ R n).support = (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} := by
+    (esymm σ R n).support =
+      (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
+  by
   rw [support_esymm'']
   congr
   funext
@@ -235,14 +238,17 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 #align mv_polynomial.support_esymm' MvPolynomial.support_esymm'
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
-    (esymm σ R n).support = (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 := by
+    (esymm σ R n).support =
+      (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
+  by
   rw [support_esymm']
   exact bUnion_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
     (esymm σ R n).degrees = (univ : Finset σ).val := by classical
-  have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
+  have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val :=
+    by
     funext
     simp [Finsupp.to_multiset_sum_single]
   rw [degrees, support_esymm, sup_finset_image, this, ← comp_sup_eq_sup_comp]

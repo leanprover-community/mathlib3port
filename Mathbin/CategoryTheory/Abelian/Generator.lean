@@ -40,22 +40,25 @@ theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG
   · rw [← limits.image.fac (h ≫ f), hh, zero_comp]
     
   let R := subobject.mk (factor_thru_image (h ≫ f)).op
-  let q₁ : image (h ≫ f) ⟶ unop R := (subobject.underlying_iso (factor_thru_image (h ≫ f)).op).unop.Hom
+  let q₁ : image (h ≫ f) ⟶ unop R :=
+    (subobject.underlying_iso (factor_thru_image (h ≫ f)).op).unop.Hom
   let q₂ : unop (R : Cᵒᵖ) ⟶ pi_obj fun P : subobject (op G) => unop P :=
     section_ (pi.π (fun P : subobject (op G) => unop P) R)
   let q : image (h ≫ f) ⟶ T := q₁ ≫ q₂ ≫ injective.ι _
   exact
     zero_of_comp_mono q
       (by
-        rw [← injective.comp_factor_thru q (limits.image.ι (h ≫ f)), limits.image.fac_assoc, category.assoc, hf,
-          comp_zero])
-#align category_theory.abelian.has_injective_coseparator CategoryTheory.Abelian.has_injective_coseparator
+        rw [← injective.comp_factor_thru q (limits.image.ι (h ≫ f)), limits.image.fac_assoc,
+          category.assoc, hf, comp_zero])
+#align
+  category_theory.abelian.has_injective_coseparator CategoryTheory.Abelian.has_injective_coseparator
 
-theorem has_projective_separator [HasColimits C] [EnoughProjectives C] (G : C) (hG : IsCoseparator G) :
-    ∃ G : C, Projective G ∧ IsSeparator G := by
+theorem has_projective_separator [HasColimits C] [EnoughProjectives C] (G : C)
+    (hG : IsCoseparator G) : ∃ G : C, Projective G ∧ IsSeparator G := by
   obtain ⟨T, hT₁, hT₂⟩ := has_injective_coseparator (op G) ((is_separator_op_iff _).2 hG)
   exact ⟨unop T, inferInstance, (is_separator_unop_iff _).2 hT₂⟩
-#align category_theory.abelian.has_projective_separator CategoryTheory.Abelian.has_projective_separator
+#align
+  category_theory.abelian.has_projective_separator CategoryTheory.Abelian.has_projective_separator
 
 end CategoryTheory.Abelian
 

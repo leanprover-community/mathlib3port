@@ -45,7 +45,8 @@ instance Setoid.decidableRel (r : Setoid α) [h : DecidableRel r.R] : DecidableR
 #align setoid.decidable_rel Setoid.decidableRel
 
 /-- A version of `quotient.eq'` compatible with `setoid.rel`, to make rewriting possible. -/
-theorem Quotient.eq_rel {r : Setoid α} {x y} : (Quotient.mk' x : Quotient r) = Quotient.mk' y ↔ r.Rel x y :=
+theorem Quotient.eq_rel {r : Setoid α} {x y} :
+    (Quotient.mk' x : Quotient r) = Quotient.mk' y ↔ r.Rel x y :=
   Quotient.eq
 #align quotient.eq_rel Quotient.eq_rel
 
@@ -83,7 +84,8 @@ theorem symm' (r : Setoid α) : ∀ {x y}, r.Rel x y → r.Rel y x := fun _ _ h 
 #align setoid.symm' Setoid.symm'
 
 @[trans]
-theorem trans' (r : Setoid α) : ∀ {x y z}, r.Rel x y → r.Rel y z → r.Rel x z := fun _ _ _ hx => r.2.2.2 hx
+theorem trans' (r : Setoid α) : ∀ {x y z}, r.Rel x y → r.Rel y z → r.Rel x z := fun _ _ _ hx =>
+  r.2.2.2 hx
 #align setoid.trans' Setoid.trans'
 
 theorem comm' (s : Setoid α) {x y} : s.Rel x y ↔ s.Rel y x :=
@@ -109,7 +111,8 @@ theorem ker_apply_mk_out {f : α → β} (a : α) :
   @Quotient.mk_out _ (Setoid.ker f) a
 #align setoid.ker_apply_mk_out Setoid.ker_apply_mk_out
 
-theorem ker_apply_mk_out' {f : α → β} (a : α) : f (Quotient.mk' a : Quotient <| Setoid.ker f).out' = f a :=
+theorem ker_apply_mk_out' {f : α → β} (a : α) :
+    f (Quotient.mk' a : Quotient <| Setoid.ker f).out' = f a :=
   @Quotient.mk_out' _ (Setoid.ker f) a
 #align setoid.ker_apply_mk_out' Setoid.ker_apply_mk_out'
 
@@ -123,8 +126,8 @@ theorem ker_def {f : α → β} {x y : α} : (ker f).Rel x y ↔ f x = f y :=
 protected def prod (r : Setoid α) (s : Setoid β) : Setoid (α × β) where
   R x y := r.Rel x.1 y.1 ∧ s.Rel x.2 y.2
   iseqv :=
-    ⟨fun x => ⟨r.refl' x.1, s.refl' x.2⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩, fun _ _ _ h1 h2 =>
-      ⟨r.trans' h1.1 h2.1, s.trans' h1.2 h2.2⟩⟩
+    ⟨fun x => ⟨r.refl' x.1, s.refl' x.2⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩,
+      fun _ _ _ h1 h2 => ⟨r.trans' h1.1 h2.1, s.trans' h1.2 h2.2⟩⟩
 #align setoid.prod Setoid.prod
 
 /-- The infimum of two equivalence relations. -/
@@ -170,7 +173,8 @@ instance : PartialOrder (Setoid α) where
 /-- The complete lattice of equivalence relations on a type, with bottom element `=`
     and top element the trivial equivalence relation. -/
 instance completeLattice : CompleteLattice (Setoid α) :=
-  { (completeLatticeOfInf (Setoid α)) fun s => ⟨fun r hr x y h => h _ hr, fun r hr x y h r' hr' => hr hr' h⟩ with
+  { (completeLatticeOfInf (Setoid α)) fun s =>
+      ⟨fun r hr x y h => h _ hr, fun r hr x y h r' hr' => hr hr' h⟩ with
     inf := HasInf.inf, inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
     le_inf := fun _ _ _ h1 h2 _ _ h => ⟨h1 h, h2 h⟩,
     top := ⟨fun _ _ => True, ⟨fun _ => trivial, fun _ _ h => h, fun _ _ _ h1 h2 => h1⟩⟩,
@@ -195,15 +199,19 @@ theorem eq_top_iff {s : Setoid α} : s = (⊤ : Setoid α) ↔ ∀ x y : α, s.R
 
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
-theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.Setoid r = inf { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
+theorem eqv_gen_eq (r : α → α → Prop) :
+    EqvGen.Setoid r = inf { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
   le_antisymm
-    (fun _ _ H => EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _) (fun _ _ _ _ _ => trans' _) H)
+    (fun _ _ H =>
+      EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _)
+        (fun _ _ _ _ _ => trans' _) H)
     (Inf_le fun _ _ h => EqvGen.rel _ _ h)
 #align setoid.eqv_gen_eq Setoid.eqv_gen_eq
 
 /-- The supremum of two equivalence relations r and s is the equivalence closure of the binary
     relation `x is related to y by r or s`. -/
-theorem sup_eq_eqv_gen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.Rel x y ∨ s.Rel x y := by
+theorem sup_eq_eqv_gen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.Rel x y ∨ s.Rel x y :=
+  by
   rw [eqv_gen_eq]
   apply congr_arg Inf
   simp only [le_def, or_imp, ← forall_and]
@@ -211,12 +219,14 @@ theorem sup_eq_eqv_gen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
-theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) := by rw [sup_eq_eqv_gen] <;> rfl
+theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) := by
+  rw [sup_eq_eqv_gen] <;> rfl
 #align setoid.sup_def Setoid.sup_def
 
 /-- The supremum of a set S of equivalence relations is the equivalence closure of the binary
     relation `there exists r ∈ S relating x and y`. -/
-theorem Sup_eq_eqv_gen (S : Set (Setoid α)) : sup S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y := by
+theorem Sup_eq_eqv_gen (S : Set (Setoid α)) :
+    sup S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
   apply congr_arg Inf
   simp only [upperBounds, le_def, and_imp, exists_imp]
@@ -246,12 +256,13 @@ theorem eqv_gen_idem (r : α → α → Prop) : EqvGen.Setoid (EqvGen.Setoid r).
 
 /-- The equivalence closure of a binary relation r is contained in any equivalence
     relation containing r. -/
-theorem eqv_gen_le {r : α → α → Prop} {s : Setoid α} (h : ∀ x y, r x y → s.Rel x y) : EqvGen.Setoid r ≤ s := by
-  rw [eqv_gen_eq] <;> exact Inf_le h
+theorem eqv_gen_le {r : α → α → Prop} {s : Setoid α} (h : ∀ x y, r x y → s.Rel x y) :
+    EqvGen.Setoid r ≤ s := by rw [eqv_gen_eq] <;> exact Inf_le h
 #align setoid.eqv_gen_le Setoid.eqv_gen_le
 
 /-- Equivalence closure of binary relations is monotone. -/
-theorem eqv_gen_mono {r s : α → α → Prop} (h : ∀ x y, r x y → s x y) : EqvGen.Setoid r ≤ EqvGen.Setoid s :=
+theorem eqv_gen_mono {r s : α → α → Prop} (h : ∀ x y, r x y → s x y) :
+    EqvGen.Setoid r ≤ EqvGen.Setoid s :=
   eqv_gen_le fun _ _ hr => EqvGen.rel _ _ <| h _ _ hr
 #align setoid.eqv_gen_mono Setoid.eqv_gen_mono
 
@@ -287,8 +298,8 @@ def liftEquiv (r : Setoid α) : { f : α → β // r ≤ ker f } ≃ (Quotient r
 #align setoid.lift_equiv Setoid.liftEquiv
 
 /-- The uniqueness part of the universal property for quotients of an arbitrary type. -/
-theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quotient r → β) (Hg : f = g ∘ Quotient.mk'') :
-    Quotient.lift f H = g := by
+theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quotient r → β)
+    (Hg : f = g ∘ Quotient.mk'') : Quotient.lift f H = g := by
   ext ⟨x⟩
   erw [Quotient.lift_mk f H, Hg]
   rfl
@@ -296,15 +307,18 @@ theorem lift_unique {r : Setoid α} {f : α → β} (H : r ≤ ker f) (g : Quoti
 
 /-- Given a map f from α to β, the natural map from the quotient of α by the kernel of f is
     injective. -/
-theorem ker_lift_injective (f : α → β) : Injective (@Quotient.lift _ _ (ker f) f fun _ _ h => h) := fun x y =>
-  (Quotient.inductionOn₂' x y) fun a b h => Quotient.sound' h
+theorem ker_lift_injective (f : α → β) : Injective (@Quotient.lift _ _ (ker f) f fun _ _ h => h) :=
+  fun x y => (Quotient.inductionOn₂' x y) fun a b h => Quotient.sound' h
 #align setoid.ker_lift_injective Setoid.ker_lift_injective
 
 /-- Given a map f from α to β, the kernel of f is the unique equivalence relation on α whose
     induced map from the quotient of α to β is injective. -/
 theorem ker_eq_lift_of_injective {r : Setoid α} (f : α → β) (H : ∀ x y, r.Rel x y → f x = f y)
     (h : Injective (Quotient.lift f H)) : ker f = r :=
-  le_antisymm (fun x y hk => Quotient.exact <| h <| show Quotient.lift f H ⟦x⟧ = Quotient.lift f H ⟦y⟧ from hk) H
+  le_antisymm
+    (fun x y hk =>
+      Quotient.exact <| h <| show Quotient.lift f H ⟦x⟧ = Quotient.lift f H ⟦y⟧ from hk)
+    H
 #align setoid.ker_eq_lift_of_injective Setoid.ker_eq_lift_of_injective
 
 variable (r : Setoid α) (f : α → β)
@@ -313,15 +327,18 @@ variable (r : Setoid α) (f : α → β)
     bijects with f's image. -/
 noncomputable def quotientKerEquivRange : Quotient (ker f) ≃ Set.range f :=
   Equiv.ofBijective
-    ((@Quotient.lift _ (Set.range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h => Subtype.ext_val h)
-    ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections, fun ⟨w, z, hz⟩ =>
+    ((@Quotient.lift _ (Set.range f) (ker f) fun x => ⟨f x, Set.mem_range_self x⟩) fun _ _ h =>
+      Subtype.ext_val h)
+    ⟨fun x y h => ker_lift_injective f <| by rcases x with ⟨⟩ <;> rcases y with ⟨⟩ <;> injections,
+      fun ⟨w, z, hz⟩ =>
       ⟨@Quotient.mk'' _ (ker f) z, by rw [Quotient.lift_mk] <;> exact Subtype.ext_iff_val.2 hz⟩⟩
 #align setoid.quotient_ker_equiv_range Setoid.quotientKerEquivRange
 
 /-- If `f` has a computable right-inverse, then the quotient by its kernel is equivalent to its
 domain. -/
 @[simps]
-def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g f) : Quotient (ker f) ≃ β where
+def quotientKerEquivOfRightInverse (g : β → α) (hf : Function.RightInverse g f) :
+    Quotient (ker f) ≃ β where
   toFun a := (Quotient.liftOn' a f) fun _ _ => id
   invFun b := Quotient.mk' (g b)
   left_inv a := (Quotient.inductionOn' a) fun a => Quotient.sound' <| hf (f a)
@@ -353,12 +370,14 @@ def mapOfSurjective (r) (f : α → β) (h : ker f ≤ r) (hf : Surjective f) : 
     ⟨fun x =>
       let ⟨y, hy⟩ := hf x
       ⟨y, y, hy, hy, r.refl' y⟩,
-      fun _ _ ⟨x, y, hx, hy, h⟩ => ⟨y, x, hy, hx, r.symm' h⟩, fun _ _ _ ⟨x, y, hx, hy, h₁⟩ ⟨y', z, hy', hz, h₂⟩ =>
+      fun _ _ ⟨x, y, hx, hy, h⟩ => ⟨y, x, hy, hx, r.symm' h⟩,
+      fun _ _ _ ⟨x, y, hx, hy, h₁⟩ ⟨y', z, hy', hz, h₂⟩ =>
       ⟨x, z, hx, hz, r.trans' h₁ <| r.trans' (h <| by rwa [← hy'] at hy) h₂⟩⟩⟩
 #align setoid.map_of_surjective Setoid.mapOfSurjective
 
 /-- A special case of the equivalence closure of an equivalence relation r equalling r. -/
-theorem map_of_surjective_eq_map (h : ker f ≤ r) (hf : Surjective f) : map r f = mapOfSurjective r f h hf := by
+theorem map_of_surjective_eq_map (h : ker f ≤ r) (hf : Surjective f) :
+    map r f = mapOfSurjective r f h hf := by
   rw [← eqv_gen_of_setoid (map_of_surjective r f h hf)] <;> rfl
 #align setoid.map_of_surjective_eq_map Setoid.map_of_surjective_eq_map
 
@@ -390,14 +409,18 @@ noncomputable def comapQuotientEquiv (f : α → β) (r : Setoid β) :
 variable (r f)
 
 /-- The third isomorphism theorem for sets. -/
-def quotientQuotientEquivQuotient (s : Setoid α) (h : r ≤ s) : Quotient (ker (Quot.mapRight h)) ≃ Quotient s where
+def quotientQuotientEquivQuotient (s : Setoid α) (h : r ≤ s) :
+    Quotient (ker (Quot.mapRight h)) ≃ Quotient s where
   toFun x :=
-    (Quotient.liftOn' x fun w => (Quotient.liftOn' w (@Quotient.mk'' _ s)) fun x y H => Quotient.sound <| h H)
-      fun x y => (Quotient.inductionOn₂' x y) fun w z H => show @Quot.mk _ _ _ = @Quot.mk _ _ _ from H
+    (Quotient.liftOn' x fun w =>
+        (Quotient.liftOn' w (@Quotient.mk'' _ s)) fun x y H => Quotient.sound <| h H)
+      fun x y =>
+      (Quotient.inductionOn₂' x y) fun w z H => show @Quot.mk _ _ _ = @Quot.mk _ _ _ from H
   invFun x :=
-    (Quotient.liftOn' x fun w => @Quotient.mk'' _ (ker <| Quot.mapRight h) <| @Quotient.mk'' _ r w) fun x y H =>
-      Quotient.sound' <| show @Quot.mk _ _ _ = @Quot.mk _ _ _ from Quotient.sound H
-  left_inv x := (Quotient.inductionOn' x) fun y => (Quotient.inductionOn' y) fun w => by show ⟦_⟧ = _ <;> rfl
+    (Quotient.liftOn' x fun w => @Quotient.mk'' _ (ker <| Quot.mapRight h) <| @Quotient.mk'' _ r w)
+      fun x y H => Quotient.sound' <| show @Quot.mk _ _ _ = @Quot.mk _ _ _ from Quotient.sound H
+  left_inv x :=
+    (Quotient.inductionOn' x) fun y => (Quotient.inductionOn' y) fun w => by show ⟦_⟧ = _ <;> rfl
   right_inv x := (Quotient.inductionOn' x) fun y => by show ⟦_⟧ = _ <;> rfl
 #align setoid.quotient_quotient_equiv_quotient Setoid.quotientQuotientEquivQuotient
 
@@ -438,7 +461,8 @@ end Setoid
 
 @[simp]
 theorem Quotient.subsingleton_iff {s : Setoid α} : Subsingleton (Quotient s) ↔ s = ⊤ := by
-  simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply, forall_const]
+  simp only [subsingleton_iff, eq_top_iff, Setoid.le_def, Setoid.top_def, Pi.top_apply,
+    forall_const]
   refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun a => _)
   refine' (surjective_quotient_mk _).forall.trans (forall_congr' fun b => _)
   exact Quotient.eq'

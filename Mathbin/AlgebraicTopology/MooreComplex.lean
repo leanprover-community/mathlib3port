@@ -59,7 +59,8 @@ variable (X : SimplicialObject C)
 def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | 0 => ⊤
   | n + 1 => Finset.univ.inf fun k : Fin (n + 1) => kernelSubobject (X.δ k.succ)
-#align algebraic_topology.normalized_Moore_complex.obj_X AlgebraicTopology.NormalizedMooreComplex.objX
+#align
+  algebraic_topology.normalized_Moore_complex.obj_X AlgebraicTopology.NormalizedMooreComplex.objX
 
 /-- The differentials in the normalized Moore complex.
 -/
@@ -87,7 +88,8 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     rw [category.assoc]
     convert comp_zero
     exact kernel_subobject_arrow_comp _
-#align algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
+#align
+  algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
 
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- It's a pity we need to do a case split here;
@@ -102,11 +104,13 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     
   · simp [factor_thru_right]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le 0)]
-    rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
+    rw [←
+      factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
     
-#align algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squared
+#align
+  algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squared
 
 /-- The normalized Moore complex functor, on objects.
 -/
@@ -181,8 +185,10 @@ variable {C}
 
 @[simp]
 theorem normalized_Moore_complex_obj_d (X : SimplicialObject C) (n : ℕ) :
-    ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by apply ChainComplex.of_d
-#align algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalized_Moore_complex_obj_d
+    ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by
+  apply ChainComplex.of_d
+#align
+  algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalized_Moore_complex_obj_d
 
 end AlgebraicTopology
 

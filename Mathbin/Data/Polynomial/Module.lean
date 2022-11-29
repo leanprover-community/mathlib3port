@@ -104,8 +104,8 @@ instance (M : Type u) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower 
     IsScalarTower S R (PolynomialModule R M) :=
   Finsupp.is_scalar_tower _ _
 
-instance is_scalar_tower' (M : Type u) [AddCommGroup M] [Module R M] [Module S M] [IsScalarTower S R M] :
-    IsScalarTower S R[X] (PolynomialModule R M) := by
+instance is_scalar_tower' (M : Type u) [AddCommGroup M] [Module R M] [Module S M]
+    [IsScalarTower S R M] : IsScalarTower S R[X] (PolynomialModule R M) := by
   haveI : IsScalarTower R R[X] (PolynomialModule R M) := modulePolynomialOfEndo.is_scalar_tower _
   constructor
   intro x y z
@@ -113,10 +113,10 @@ instance is_scalar_tower' (M : Type u) [AddCommGroup M] [Module R M] [Module S M
 #align polynomial_module.is_scalar_tower' PolynomialModule.is_scalar_tower'
 
 @[simp]
-theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) : monomial i r • single R j m = single R (i + j) (r • m) :=
-  by
-  simp only [LinearMap.mul_apply, Polynomial.aeval_monomial, LinearMap.pow_apply, Module.algebra_map_End_apply,
-    module_polynomial_of_endo_smul_def]
+theorem monomial_smul_single (i : ℕ) (r : R) (j : ℕ) (m : M) :
+    monomial i r • single R j m = single R (i + j) (r • m) := by
+  simp only [LinearMap.mul_apply, Polynomial.aeval_monomial, LinearMap.pow_apply,
+    Module.algebra_map_End_apply, module_polynomial_of_endo_smul_def]
   induction i generalizing r j m
   · simp [single]
     
@@ -179,7 +179,8 @@ theorem smul_apply (f : R[X]) (g : PolynomialModule R M) (n : ℕ) :
     ext
     rw [coeff_add, add_smul]
     
-  · rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun i j => (monomial f_n f_a).coeff i • g j, monomial_smul_apply]
+  · rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun i j => (monomial f_n f_a).coeff i • g j,
+      monomial_smul_apply]
     dsimp [monomial]
     simp_rw [Finsupp.single_smul, Finsupp.single_apply]
     rw [Finset.sum_ite_eq]
@@ -196,14 +197,15 @@ noncomputable def equivPolynomialSelf : PolynomialModule R R ≃ₗ[R[X]] R[X] :
         
       · ext i
         dsimp
-        rw [monomial_smul_apply, ← Polynomial.C_mul_X_pow_eq_monomial, mul_assoc, Polynomial.coeff_C_mul,
-          Polynomial.coeff_X_pow_mul', mul_ite, mul_zero]
+        rw [monomial_smul_apply, ← Polynomial.C_mul_X_pow_eq_monomial, mul_assoc,
+          Polynomial.coeff_C_mul, Polynomial.coeff_X_pow_mul', mul_ite, mul_zero]
         simp
          }
 #align polynomial_module.equiv_polynomial_self PolynomialModule.equivPolynomialSelf
 
 /-- `polynomial_module R S` is isomorphic to `S[X]` as an `R` module. -/
-noncomputable def equivPolynomial {S : Type _} [CommRing S] [Algebra R S] : PolynomialModule R S ≃ₗ[R] S[X] :=
+noncomputable def equivPolynomial {S : Type _} [CommRing S] [Algebra R S] :
+    PolynomialModule R S ≃ₗ[R] S[X] :=
   { (Polynomial.toFinsuppIso S).symm with map_smul' := fun r x => rfl }
 #align polynomial_module.equiv_polynomial PolynomialModule.equivPolynomial
 
@@ -235,8 +237,8 @@ theorem map_smul (f : M →ₗ[R] M') (p : R[X]) (q : PolynomialModule R M) :
     rw [add_smul, map_add, e₁, e₂, Polynomial.map_add, add_smul]
     
   · intro j s
-    rw [monomial_smul_single, map_single, Polynomial.map_monomial, map_single, monomial_smul_single, f.map_smul,
-      algebra_map_smul]
+    rw [monomial_smul_single, map_single, Polynomial.map_monomial, map_single, monomial_smul_single,
+      f.map_smul, algebra_map_smul]
     
 #align polynomial_module.map_smul PolynomialModule.map_smul
 
@@ -264,7 +266,8 @@ theorem eval_lsingle (r : R) (i : ℕ) (m : M) : eval r (lsingle R i m) = r ^ i 
   eval_single r i m
 #align polynomial_module.eval_lsingle PolynomialModule.eval_lsingle
 
-theorem eval_smul (p : R[X]) (q : PolynomialModule R M) (r : R) : eval r (p • q) = p.eval r • eval r q := by
+theorem eval_smul (p : R[X]) (q : PolynomialModule R M) (r : R) :
+    eval r (p • q) = p.eval r • eval r q := by
   apply induction_linear q
   · rw [smul_zero, map_zero, smul_zero]
     
@@ -277,8 +280,8 @@ theorem eval_smul (p : R[X]) (q : PolynomialModule R M) (r : R) : eval r (p • 
     rw [add_smul, map_add, Polynomial.eval_add, e₁, e₂, add_smul]
     
   · intro j s
-    rw [monomial_smul_single, eval_single, Polynomial.eval_monomial, eval_single, smul_comm, ← smul_smul, pow_add,
-      mul_smul]
+    rw [monomial_smul_single, eval_single, Polynomial.eval_monomial, eval_single, smul_comm, ←
+      smul_smul, pow_add, mul_smul]
     
 #align polynomial_module.eval_smul PolynomialModule.eval_smul
 
@@ -297,7 +300,8 @@ theorem eval_map (f : M →ₗ[R] M') (q : PolynomialModule R M) (r : R) :
 #align polynomial_module.eval_map PolynomialModule.eval_map
 
 @[simp]
-theorem eval_map' (f : M →ₗ[R] M) (q : PolynomialModule R M) (r : R) : eval r (map R f q) = f (eval r q) :=
+theorem eval_map' (f : M →ₗ[R] M) (q : PolynomialModule R M) (r : R) :
+    eval r (map R f q) = f (eval r q) :=
   eval_map R f q r
 #align polynomial_module.eval_map' PolynomialModule.eval_map'
 
@@ -313,7 +317,8 @@ theorem comp_single (p : R[X]) (i : ℕ) (m : M) : comp p (single R i m) = p ^ i
   rfl
 #align polynomial_module.comp_single PolynomialModule.comp_single
 
-theorem comp_eval (p : R[X]) (q : PolynomialModule R M) (r : R) : eval r (comp p q) = eval (p.eval r) q := by
+theorem comp_eval (p : R[X]) (q : PolynomialModule R M) (r : R) :
+    eval r (comp p q) = eval (p.eval r) q := by
   rw [← LinearMap.comp_apply]
   apply induction_linear q
   · rw [map_zero, map_zero]
@@ -322,11 +327,13 @@ theorem comp_eval (p : R[X]) (q : PolynomialModule R M) (r : R) : eval r (comp p
     rw [map_add, map_add, e₁, e₂]
     
   · intro i m
-    rw [LinearMap.comp_apply, comp_single, eval_single, eval_smul, eval_single, pow_zero, one_smul, Polynomial.eval_pow]
+    rw [LinearMap.comp_apply, comp_single, eval_single, eval_smul, eval_single, pow_zero, one_smul,
+      Polynomial.eval_pow]
     
 #align polynomial_module.comp_eval PolynomialModule.comp_eval
 
-theorem comp_smul (p p' : R[X]) (q : PolynomialModule R M) : comp p (p' • q) = p'.comp p • comp p q := by
+theorem comp_smul (p p' : R[X]) (q : PolynomialModule R M) :
+    comp p (p' • q) = p'.comp p • comp p q := by
   rw [comp_apply, map_smul, eval_smul, Polynomial.comp, Polynomial.eval_map, comp_apply]
   rfl
 #align polynomial_module.comp_smul PolynomialModule.comp_smul

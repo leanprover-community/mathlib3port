@@ -40,7 +40,8 @@ variable [SemilatticeSup α]
 
 /-- The monotone sequence whose value at `n` is the supremum of the `f m` where `m ≤ n`. -/
 def partialSups (f : ℕ → α) : ℕ →o α :=
-  ⟨@Nat.rec (fun _ => α) (f 0) fun (n : ℕ) (a : α) => a ⊔ f (n + 1), monotone_nat_of_le_succ fun n => le_sup_left⟩
+  ⟨@Nat.rec (fun _ => α) (f 0) fun (n : ℕ) (a : α) => a ⊔ f (n + 1),
+    monotone_nat_of_le_succ fun n => le_sup_left⟩
 #align partial_sups partialSups
 
 @[simp]
@@ -49,7 +50,8 @@ theorem partial_sups_zero (f : ℕ → α) : partialSups f 0 = f 0 :=
 #align partial_sups_zero partial_sups_zero
 
 @[simp]
-theorem partial_sups_succ (f : ℕ → α) (n : ℕ) : partialSups f (n + 1) = partialSups f n ⊔ f (n + 1) :=
+theorem partial_sups_succ (f : ℕ → α) (n : ℕ) :
+    partialSups f (n + 1) = partialSups f n ⊔ f (n + 1) :=
   rfl
 #align partial_sups_succ partial_sups_succ
 
@@ -69,7 +71,8 @@ theorem le_partial_sups_of_le (f : ℕ → α) {m n : ℕ} (h : m ≤ n) : f m �
 theorem le_partial_sups (f : ℕ → α) : f ≤ partialSups f := fun n => le_partial_sups_of_le f le_rfl
 #align le_partial_sups le_partial_sups
 
-theorem partial_sups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n → f m ≤ a) : partialSups f n ≤ a := by
+theorem partial_sups_le (f : ℕ → α) (n : ℕ) (a : α) (w : ∀ m, m ≤ n → f m ≤ a) :
+    partialSups f n ≤ a := by
   induction' n with n ih
   · apply w 0 le_rfl
     
@@ -135,8 +138,8 @@ theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ →
 
 /- Note this lemma requires a distributive lattice, so is not useful (or true) in situations such as
 submodules. -/
-theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f))
-    {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) := by
+theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : ℕ → α)
+    (h : Pairwise (Disjoint on f)) {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) := by
   induction' m with m ih
   · exact h hmn.ne
     
@@ -163,14 +166,15 @@ theorem supr_partial_sups_eq (f : ℕ → α) : (⨆ n, partialSups f n) = ⨆ n
   exact supr₂_le_supr _ _
 #align supr_partial_sups_eq supr_partial_sups_eq
 
-theorem supr_le_supr_of_partial_sups_le_partial_sups {f g : ℕ → α} (h : partialSups f ≤ partialSups g) :
-    (⨆ n, f n) ≤ ⨆ n, g n := by
+theorem supr_le_supr_of_partial_sups_le_partial_sups {f g : ℕ → α}
+    (h : partialSups f ≤ partialSups g) : (⨆ n, f n) ≤ ⨆ n, g n := by
   rw [← supr_partial_sups_eq f, ← supr_partial_sups_eq g]
   exact supr_mono h
 #align supr_le_supr_of_partial_sups_le_partial_sups supr_le_supr_of_partial_sups_le_partial_sups
 
-theorem supr_eq_supr_of_partial_sups_eq_partial_sups {f g : ℕ → α} (h : partialSups f = partialSups g) :
-    (⨆ n, f n) = ⨆ n, g n := by simp_rw [← supr_partial_sups_eq f, ← supr_partial_sups_eq g, h]
+theorem supr_eq_supr_of_partial_sups_eq_partial_sups {f g : ℕ → α}
+    (h : partialSups f = partialSups g) : (⨆ n, f n) = ⨆ n, g n := by
+  simp_rw [← supr_partial_sups_eq f, ← supr_partial_sups_eq g, h]
 #align supr_eq_supr_of_partial_sups_eq_partial_sups supr_eq_supr_of_partial_sups_eq_partial_sups
 
 end CompleteLattice

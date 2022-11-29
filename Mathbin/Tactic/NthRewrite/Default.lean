@@ -66,8 +66,8 @@ unsafe def get_nth_rewrite (n : ℕ) (q : rw_rules_t) (e : expr) : tactic tracke
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` of (optionally after zooming into) a
 hypothesis or target `h` which is an application of a relation. -/
-unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List ExprLens.Dir) (h : Option expr) :
-    tactic tracked_rewrite := do
+unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List ExprLens.Dir)
+    (h : Option expr) : tactic tracked_rewrite := do
   let e ← target_or_hyp_type h
   let (ln, new_e) ← expr_lens.entire.zoom path e
   let rw ← get_nth_rewrite n q new_e
@@ -76,9 +76,10 @@ unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List Exp
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)
 at all the locations `loc`. -/
-unsafe def nth_rewrite_core (path : List ExprLens.Dir) (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
-    tactic Unit := do
-  let fn h := get_nth_rewrite_with_zoom n q path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
+unsafe def nth_rewrite_core (path : List ExprLens.Dir) (n : parse small_nat) (q : parse rw_rules)
+    (l : parse location) : tactic Unit := do
+  let fn h :=
+    get_nth_rewrite_with_zoom n q path h >>= fun rw => rw.proof >>= replace_in_state h rw.exp
   match l with
     | loc.wildcard => l (fn ∘ some) (fn none)
     | _ => l (fn ∘ some) (fn none)
@@ -108,15 +109,18 @@ the tactic `nth_rewrite 1 h` will change the goal to `a + x = y + b`.
 The core `rewrite` has a `occs` configuration setting intended to achieve a similar
 purpose, but this doesn't really work. (If a rule matches twice, but with different
 values of arguments, the second match will not be identified.) -/
-unsafe def nth_rewrite (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic Unit :=
+unsafe def nth_rewrite (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
+    tactic Unit :=
   nth_rewrite_core [] n q l
 #align tactic.interactive.nth_rewrite tactic.interactive.nth_rewrite
 
-unsafe def nth_rewrite_lhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic Unit :=
+unsafe def nth_rewrite_lhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
+    tactic Unit :=
   nth_rewrite_core [Dir.F, Dir.A] n q l
 #align tactic.interactive.nth_rewrite_lhs tactic.interactive.nth_rewrite_lhs
 
-unsafe def nth_rewrite_rhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) : tactic Unit :=
+unsafe def nth_rewrite_rhs (n : parse small_nat) (q : parse rw_rules) (l : parse location) :
+    tactic Unit :=
   nth_rewrite_core [Dir.A] n q l
 #align tactic.interactive.nth_rewrite_rhs tactic.interactive.nth_rewrite_rhs
 
@@ -124,8 +128,8 @@ attribute [inherit_doc.1nth_rewrite] nth_rewrite_lhs nth_rewrite_rhs
 
 add_tactic_doc
   { Name := "nth_rewrite / nth_rewrite_lhs / nth_rewrite_rhs", category := DocCategory.tactic,
-    inheritDescriptionFrom := `` nth_rewrite, declNames := [`` nth_rewrite, `` nth_rewrite_lhs, `` nth_rewrite_rhs],
-    tags := ["rewriting"] }
+    inheritDescriptionFrom := `` nth_rewrite,
+    declNames := [`` nth_rewrite, `` nth_rewrite_lhs, `` nth_rewrite_rhs], tags := ["rewriting"] }
 
 end Interactive
 

@@ -93,7 +93,8 @@ Once we exhaust the elements of `lp`, we return the four lists:
 The ununified elements of `l_un` get used for error management: they keep track of which user inputs
 are superfluous. -/
 unsafe def move_left_or_right :
-    List (Bool × expr) → List expr → List Bool → tactic (List expr × List expr × List expr × List Bool)
+    List (Bool × expr) →
+      List expr → List Bool → tactic (List expr × List expr × List expr × List Bool)
   | [], l_un, l_m => return ([], [], l_un, l_m)
   | be :: l, l_un, l_m => do
     let ex :: _ ← l_un.mfilter fun e' => succeeds <| unify be.2 e' |
@@ -108,7 +109,8 @@ unsafe def move_left_or_right :
    `move_left_or_right`,
 3. we jam the third factor inside the first two.
 -/
-unsafe def final_sort (lp : List (Bool × pexpr)) (sl : List expr) : tactic (List expr × List Bool) := do
+unsafe def final_sort (lp : List (Bool × pexpr)) (sl : List expr) :
+    tactic (List expr × List Bool) := do
   let lp_exp : List (Bool × expr) ←
     lp.mmap fun x => do
         let e ← to_expr x.2 true false
@@ -214,7 +216,8 @@ The list of booleans records which variable in `ll` has been unified in the appl
 `tt` means that the corresponding variable has *not* been unified.
 
 This definition is useful to streamline error catching. -/
-unsafe def reorder_hyp (op : pexpr) (lp : List (Bool × pexpr)) (na : Option Name) : tactic (Bool × List Bool) := do
+unsafe def reorder_hyp (op : pexpr) (lp : List (Bool × pexpr)) (na : Option Name) :
+    tactic (Bool × List Bool) := do
   let (thyp, hyploc) ←
     match na with
       | none => do
@@ -281,20 +284,25 @@ open MoveOp
 Currently, the tactic uses only `add/mul_comm, add/mul_assoc, add/mul_left_comm`, so other
 operations will not actually work.
 -/
-unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse location) (op : pexpr) : tactic Unit := do
+unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse location) (op : pexpr) :
+    tactic Unit := do
   let locas ← locat.get_locals
   let tg ← target
   let locas_with_tg := if locat.include_goal then locas ++ [tg] else locas
-  let ner ← locas_with_tg.mmap fun e => reorder_hyp op args e.local_pp_name <|> reorder_hyp op args none
+  let ner ←
+    locas_with_tg.mmap fun e => reorder_hyp op args e.local_pp_name <|> reorder_hyp op args none
   let (unch_tgts, unus_vars) := ner.unzip
   let str_unva ←
-    match (returnUnused args (unus_vars.transpose.map List.band)).map fun e : Bool × pexpr => e.2 with
+    match
+        (returnUnused args (unus_vars.transpose.map List.band)).map fun e : Bool × pexpr => e.2 with
       | [] => pure []
       | [pe] => do
         let nm ← to_expr pe true false >>= fun ex => pp ex.replace_mvars
         return [f! "'{nm}' is an unused variable"]
       | pes => do
-        let nms ← (pes.mmap fun e => to_expr e true false) >>= fun exs => (exs.map expr.replace_mvars).mmap pp
+        let nms ←
+          (pes.mmap fun e => to_expr e true false) >>= fun exs =>
+              (exs.map expr.replace_mvars).mmap pp
         return [f! "'{nms}' are unused variables"]
   let str_tgts :=
     match locat with
@@ -310,7 +318,8 @@ unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse locati
 
 namespace Interactive
 
-/-- Calling `move_add [a, ← b, c]`, recursively looks inside the goal for expressions involving a sum.
+/--
+Calling `move_add [a, ← b, c]`, recursively looks inside the goal for expressions involving a sum.
 Whenever it finds one, it moves the summands that unify to `a, b, c`, removing all parentheses.
 Repetitions are allowed, and are processed following the user-specified ordering.
 The terms preceded by a `←` get placed to the left, the ones without the arrow get placed to the
@@ -395,13 +404,15 @@ of all-but-the-last variable suffices to determine the permutation.  E.g., with 
 `a + b = 0`, applying either one of `move_add [b,a]`, or `move_add a`, or `move_add ← b` has the
 same effect and changes the goal to `b + a = 0`.  These are all valid uses of `move_add`.
 -/
-unsafe def move_add (args : parse move_pexpr_list_or_texpr) (locat : parse location) : tactic Unit :=
+unsafe def move_add (args : parse move_pexpr_list_or_texpr) (locat : parse location) :
+    tactic Unit :=
   move_op args locat ``((· + ·))
 #align tactic.interactive.move_add tactic.interactive.move_add
 
 /-- See the doc-string for `tactic.interactive.move_add` and mentally
 replace addition with multiplication throughout. ;-) -/
-unsafe def move_mul (args : parse move_pexpr_list_or_texpr) (locat : parse location) : tactic Unit :=
+unsafe def move_mul (args : parse move_pexpr_list_or_texpr) (locat : parse location) :
+    tactic Unit :=
   move_op args locat ``(Mul.mul)
 #align tactic.interactive.move_mul tactic.interactive.move_mul
 
@@ -415,8 +426,8 @@ by move_oper [max] [← a, b] at *
 solves the goal.  For more details, see the `move_add` doc-string, replacing `add` with your
 intended operation.
 -/
-unsafe def move_oper (op : parse pexpr_list) (args : parse move_pexpr_list_or_texpr) (locat : parse location) :
-    tactic Unit := do
+unsafe def move_oper (op : parse pexpr_list) (args : parse move_pexpr_list_or_texpr)
+    (locat : parse location) : tactic Unit := do
   let [op] ← pure op |
     fail "only one operation is allowed"
   move_op args locat op

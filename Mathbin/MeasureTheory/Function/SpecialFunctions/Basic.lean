@@ -115,7 +115,8 @@ theorem measurableArg : Measurable arg :=
   have B : Measurable fun x : ℂ => Real.arcsin ((-x).im / x.abs) :=
     Real.measurableArcsin.comp ((measurableIm.comp measurableNeg).div measurableNorm)
   Measurable.ite (isClosedLe continuous_const continuous_re).MeasurableSet A <|
-    Measurable.ite (isClosedLe continuous_const continuous_im).MeasurableSet (B.AddConst _) (B.sub_const _)
+    Measurable.ite (isClosedLe continuous_const continuous_im).MeasurableSet (B.AddConst _)
+      (B.sub_const _)
 #align complex.measurable_arg Complex.measurableArg
 
 @[measurability]
@@ -267,9 +268,11 @@ theorem IsROrC.measurableOfReal : Measurable (coe : ℝ → 𝕜) :=
   IsROrC.continuous_of_real.Measurable
 #align is_R_or_C.measurable_of_real IsROrC.measurableOfReal
 
-theorem measurableOfReIm (hre : Measurable fun x => IsROrC.re (f x)) (him : Measurable fun x => IsROrC.im (f x)) :
-    Measurable f := by
-  convert (is_R_or_C.measurable_of_real.comp hre).add ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
+theorem measurableOfReIm (hre : Measurable fun x => IsROrC.re (f x))
+    (him : Measurable fun x => IsROrC.im (f x)) : Measurable f := by
+  convert
+    (is_R_or_C.measurable_of_real.comp hre).add
+      ((is_R_or_C.measurable_of_real.comp him).mul_const IsROrC.i)
   · ext1 x
     exact (IsROrC.re_add_im _).symm
     
@@ -299,7 +302,8 @@ instance Complex.hasMeasurablePow : HasMeasurablePow ℂ ℂ :=
 
 instance Real.hasMeasurablePow : HasMeasurablePow ℝ ℝ :=
   ⟨Complex.measurableRe.comp <|
-      (Complex.measurableOfReal.comp measurableFst).pow (Complex.measurableOfReal.comp measurableSnd)⟩
+      (Complex.measurableOfReal.comp measurableFst).pow
+        (Complex.measurableOfReal.comp measurableSnd)⟩
 #align real.has_measurable_pow Real.hasMeasurablePow
 
 instance Nnreal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=
@@ -310,7 +314,9 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ := by
   refine' ⟨Ennreal.measurableOfMeasurableNnrealProd _ _⟩
   · simp_rw [Ennreal.coe_rpow_def]
     refine' Measurable.ite _ measurableConst (measurable_fst.pow measurableSnd).coeNnrealEnnreal
-    exact MeasurableSet.inter (measurableFst (measurable_set_singleton 0)) (measurableSnd measurableSetIio)
+    exact
+      MeasurableSet.inter (measurableFst (measurable_set_singleton 0))
+        (measurableSnd measurableSetIio)
     
   · simp_rw [Ennreal.top_rpow_def]
     refine' Measurable.ite measurableSetIoi measurableConst _

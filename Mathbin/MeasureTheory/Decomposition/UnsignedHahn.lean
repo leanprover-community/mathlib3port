@@ -31,12 +31,16 @@ namespace MeasureTheory
 variable {α : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
 -- suddenly this is necessary?!
-private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) : γ - 2 * (1 / 2) ^ m + (1 / 2) ^ m ≤ d := by linarith
+private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) :
+    γ - 2 * (1 / 2) ^ m + (1 / 2) ^ m ≤ d := by linarith
 #align measure_theory.aux measure_theory.aux
 
 /-- **Hahn decomposition theorem** -/
 theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
-    ∃ s, MeasurableSet s ∧ (∀ t, MeasurableSet t → t ⊆ s → ν t ≤ μ t) ∧ ∀ t, MeasurableSet t → t ⊆ sᶜ → μ t ≤ ν t := by
+    ∃ s,
+      MeasurableSet s ∧
+        (∀ t, MeasurableSet t → t ⊆ s → ν t ≤ μ t) ∧ ∀ t, MeasurableSet t → t ⊆ sᶜ → μ t ≤ ν t :=
+  by
   let d : Set α → ℝ := fun s => ((μ s).toNnreal : ℝ) - (ν s).toNnreal
   let c : Set ℝ := d '' { s | MeasurableSet s }
   let γ : ℝ := Sup c
@@ -50,11 +54,13 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   have d_split : ∀ s t, MeasurableSet s → MeasurableSet t → d s = d (s \ t) + d (s ∩ t) := by
     intro s t hs ht
     simp only [d]
-    rw [← measure_inter_add_diff s ht, ← measure_inter_add_diff s ht, Ennreal.to_nnreal_add (hμ _) (hμ _),
-      Ennreal.to_nnreal_add (hν _) (hν _), Nnreal.coe_add, Nnreal.coe_add]
+    rw [← measure_inter_add_diff s ht, ← measure_inter_add_diff s ht,
+      Ennreal.to_nnreal_add (hμ _) (hμ _), Ennreal.to_nnreal_add (hν _) (hν _), Nnreal.coe_add,
+      Nnreal.coe_add]
     simp only [sub_eq_add_neg, neg_add]
     ac_rfl
-  have d_Union : ∀ s : ℕ → Set α, Monotone s → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋃ n, s n))) := by
+  have d_Union :
+    ∀ s : ℕ → Set α, Monotone s → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋃ n, s n))) := by
     intro s hm
     refine' tendsto.sub _ _ <;>
       refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal _).comp <| tendsto_measure_Union hm
@@ -62,11 +68,14 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     exact hν _
   have d_Inter :
     ∀ s : ℕ → Set α,
-      (∀ n, MeasurableSet (s n)) → (∀ n m, n ≤ m → s m ⊆ s n) → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋂ n, s n))) :=
+      (∀ n, MeasurableSet (s n)) →
+        (∀ n m, n ≤ m → s m ⊆ s n) → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋂ n, s n))) :=
     by
     intro s hs hm
     refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_to_nnreal <| _).comp <| tendsto_measure_Inter hs hm _
+      refine'
+        Nnreal.tendsto_coe.2 <|
+          (Ennreal.tendsto_to_nnreal <| _).comp <| tendsto_measure_Inter hs hm _
     exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
     use (μ univ).toNnreal
@@ -118,7 +127,8 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
             refine' add_le_add_left (add_le_add_left _ _) γ
             simp only [pow_add, pow_one, le_sub_iff_add_le]
             linarith
-          _ = γ - (1 / 2) ^ (n + 1) + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n) := by simp only [sub_eq_add_neg] <;> ac_rfl
+          _ = γ - (1 / 2) ^ (n + 1) + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n) := by
+            simp only [sub_eq_add_neg] <;> ac_rfl
           _ ≤ d (e (n + 1)) + d (f m n) := add_le_add (le_of_lt <| he₂ _) ih
           _ ≤ d (e (n + 1)) + d (f m n \ e (n + 1)) + d (f m (n + 1)) := by
             rw [f_succ _ _ hmn, d_split (f m n) (e (n + 1)) (hf _ _) (he₁ _), add_assoc]
@@ -138,10 +148,12 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       exact
         tendsto_const_nhds.sub <|
           tendsto_const_nhds.mul <|
-            tendsto_pow_at_top_nhds_0_of_lt_1 (le_of_lt <| half_pos <| zero_lt_one) (half_lt_self zero_lt_one)
+            tendsto_pow_at_top_nhds_0_of_lt_1 (le_of_lt <| half_pos <| zero_lt_one)
+              (half_lt_self zero_lt_one)
     have hd : tendsto (fun m => d (⋂ n, f m n)) at_top (𝓝 (d (⋃ m, ⋂ n, f m n))) := by
       refine' d_Union _ _
-      exact fun n m hnm => subset_Inter fun i => subset.trans (Inter_subset (f n) i) <| f_subset_f hnm <| le_rfl
+      exact fun n m hnm =>
+        subset_Inter fun i => subset.trans (Inter_subset (f n) i) <| f_subset_f hnm <| le_rfl
     refine' le_of_tendsto_of_tendsto' hγ hd fun m => _
     have : tendsto (fun n => d (f m n)) at_top (𝓝 (d (⋂ n, f m n))) := by
       refine' d_Inter _ _ _
@@ -174,7 +186,8 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
         calc
           γ + d t ≤ d s + d t := add_le_add γ_le_d_s le_rfl
           _ = d (s ∪ t) := by
-            rw [d_split _ _ (hs.union ht) ht, union_diff_right, union_inter_cancel_right, diff_eq_self.2]
+            rw [d_split _ _ (hs.union ht) ht, union_diff_right, union_inter_cancel_right,
+              diff_eq_self.2]
             exact fun a ⟨hat, has⟩ => hts hat has
           _ ≤ γ + 0 := by rw [add_zero] <;> exact d_le_γ _ (hs.union ht)
           

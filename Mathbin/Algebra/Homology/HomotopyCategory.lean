@@ -79,15 +79,16 @@ theorem eq_of_homotopy {C D : HomologicalComplex V c} (f g : C ⟶ D) (h : Homot
 #align homotopy_category.eq_of_homotopy HomotopyCategory.eq_of_homotopy
 
 /-- If two chain maps become equal in the homotopy category, then they are homotopic. -/
-def homotopyOfEq {C D : HomologicalComplex V c} (f g : C ⟶ D) (w : (quotient V c).map f = (quotient V c).map g) :
-    Homotopy f g :=
+def homotopyOfEq {C D : HomologicalComplex V c} (f g : C ⟶ D)
+    (w : (quotient V c).map f = (quotient V c).map g) : Homotopy f g :=
   ((Quotient.functor_map_eq_iff _ _ _).mp w).some
 #align homotopy_category.homotopy_of_eq HomotopyCategory.homotopyOfEq
 
 /-- An arbitrarily chosen representation of the image of a chain map in the homotopy category
 is homotopic to the original chain map.
 -/
-def homotopyOutMap {C D : HomologicalComplex V c} (f : C ⟶ D) : Homotopy ((quotient V c).map f).out f := by
+def homotopyOutMap {C D : HomologicalComplex V c} (f : C ⟶ D) :
+    Homotopy ((quotient V c).map f).out f := by
   apply homotopy_of_eq
   simp
 #align homotopy_category.homotopy_out_map HomotopyCategory.homotopyOutMap
@@ -114,8 +115,8 @@ def isoOfHomotopyEquiv {C D : HomologicalComplex V c} (f : HomotopyEquiv C D) :
 
 /-- If two complexes become isomorphic in the homotopy category,
   then they were homotopy equivalent. -/
-def homotopyEquivOfIso {C D : HomologicalComplex V c} (i : (quotient V c).obj C ≅ (quotient V c).obj D) :
-    HomotopyEquiv C D where
+def homotopyEquivOfIso {C D : HomologicalComplex V c}
+    (i : (quotient V c).obj C ≅ (quotient V c).obj D) : HomotopyEquiv C D where
   Hom := Quot.out i.Hom
   inv := Quot.out i.inv
   homotopyHomInvId :=
@@ -134,7 +135,8 @@ variable (V c) [HasEqualizers V] [HasImages V] [HasImageMaps V] [HasCokernels V]
 
 /-- The `i`-th homology, as a functor from the homotopy category. -/
 def homologyFunctor (i : ι) : HomotopyCategory V c ⥤ V :=
-  CategoryTheory.Quotient.lift _ (homologyFunctor V c i) fun C D f g ⟨h⟩ => homology_map_eq_of_homotopy h i
+  CategoryTheory.Quotient.lift _ (homologyFunctor V c i) fun C D f g ⟨h⟩ =>
+    homology_map_eq_of_homotopy h i
 #align homotopy_category.homology_functor HomotopyCategory.homologyFunctor
 
 /-- The homology functor on the homotopy category is just the usual homology functor. -/
@@ -143,12 +145,14 @@ def homologyFactors (i : ι) : quotient V c ⋙ homologyFunctor V c i ≅ homolo
 #align homotopy_category.homology_factors HomotopyCategory.homologyFactors
 
 @[simp]
-theorem homology_factors_hom_app (i : ι) (C : HomologicalComplex V c) : (homologyFactors V c i).Hom.app C = 𝟙 _ :=
+theorem homology_factors_hom_app (i : ι) (C : HomologicalComplex V c) :
+    (homologyFactors V c i).Hom.app C = 𝟙 _ :=
   rfl
 #align homotopy_category.homology_factors_hom_app HomotopyCategory.homology_factors_hom_app
 
 @[simp]
-theorem homology_factors_inv_app (i : ι) (C : HomologicalComplex V c) : (homologyFactors V c i).inv.app C = 𝟙 _ :=
+theorem homology_factors_inv_app (i : ι) (C : HomologicalComplex V c) :
+    (homologyFactors V c i).inv.app C = 𝟙 _ :=
   rfl
 #align homotopy_category.homology_factors_inv_app HomotopyCategory.homology_factors_inv_app
 
@@ -190,8 +194,8 @@ def Functor.mapHomotopyCategory (c : ComplexShape ι) (F : V ⥤ W) [F.Additive]
 /-- A natural transformation induces a natural transformation between
   the induced functors on the homotopy category. -/
 @[simps]
-def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G) (c : ComplexShape ι) :
-    F.mapHomotopyCategory c ⟶ G.mapHomotopyCategory c where
+def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α : F ⟶ G)
+    (c : ComplexShape ι) : F.mapHomotopyCategory c ⟶ G.mapHomotopyCategory c where
   app C := (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
   naturality' C D f := by
     dsimp
@@ -205,14 +209,17 @@ def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α :
 @[simp]
 theorem NatTrans.map_homotopy_category_id (c : ComplexShape ι) (F : V ⥤ W) [F.Additive] :
     NatTrans.mapHomotopyCategory (𝟙 F) c = 𝟙 (F.mapHomotopyCategory c) := by tidy
-#align category_theory.nat_trans.map_homotopy_category_id CategoryTheory.NatTrans.map_homotopy_category_id
+#align
+  category_theory.nat_trans.map_homotopy_category_id CategoryTheory.NatTrans.map_homotopy_category_id
 
 @[simp]
-theorem NatTrans.map_homotopy_category_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive] [G.Additive] [H.Additive]
-    (α : F ⟶ G) (β : G ⟶ H) :
-    NatTrans.mapHomotopyCategory (α ≫ β) c = NatTrans.mapHomotopyCategory α c ≫ NatTrans.mapHomotopyCategory β c := by
-  tidy
-#align category_theory.nat_trans.map_homotopy_category_comp CategoryTheory.NatTrans.map_homotopy_category_comp
+theorem NatTrans.map_homotopy_category_comp (c : ComplexShape ι) {F G H : V ⥤ W} [F.Additive]
+    [G.Additive] [H.Additive] (α : F ⟶ G) (β : G ⟶ H) :
+    NatTrans.mapHomotopyCategory (α ≫ β) c =
+      NatTrans.mapHomotopyCategory α c ≫ NatTrans.mapHomotopyCategory β c :=
+  by tidy
+#align
+  category_theory.nat_trans.map_homotopy_category_comp CategoryTheory.NatTrans.map_homotopy_category_comp
 
 end CategoryTheory
 

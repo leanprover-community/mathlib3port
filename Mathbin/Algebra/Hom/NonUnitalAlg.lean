@@ -48,8 +48,8 @@ variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 
 /-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
-structure NonUnitalAlgHom [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
-  [DistribMulAction R B] extends A →+[R] B, A →ₙ* B
+structure NonUnitalAlgHom [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
+  [NonUnitalNonAssocSemiring B] [DistribMulAction R B] extends A →+[R] B, A →ₙ* B
 #align non_unital_alg_hom NonUnitalAlgHom
 
 -- mathport name: «expr →ₙₐ »
@@ -64,9 +64,10 @@ attribute [nolint doc_blame] NonUnitalAlgHom.toMulHom
 
 /-- `non_unital_alg_hom_class F R A B` asserts `F` is a type of bundled algebra homomorphisms
 from `A` to `B`.  -/
-class NonUnitalAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _)) (B : outParam (Type _))
-  [Monoid R] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B] [DistribMulAction R A]
-  [DistribMulAction R B] extends DistribMulActionHomClass F R A B, MulHomClass F A B
+class NonUnitalAlgHomClass (F : Type _) (R : outParam (Type _)) (A : outParam (Type _))
+  (B : outParam (Type _)) [Monoid R] [NonUnitalNonAssocSemiring A] [NonUnitalNonAssocSemiring B]
+  [DistribMulAction R A] [DistribMulAction R B] extends DistribMulActionHomClass F R A B,
+  MulHomClass F A B
 #align non_unital_alg_hom_class NonUnitalAlgHomClass
 
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
@@ -77,14 +78,15 @@ namespace NonUnitalAlgHomClass
 -- `R` becomes a metavariable but that's fine because it's an `out_param`
 -- See note [lower instance priority]
 @[nolint dangerous_instance]
-instance (priority := 100) NonUnitalAlgHomClass.toNonUnitalRingHomClass {F R A B : Type _} [Monoid R]
-    [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
-    [NonUnitalAlgHomClass F R A B] : NonUnitalRingHomClass F A B :=
+instance (priority := 100) NonUnitalAlgHomClass.toNonUnitalRingHomClass {F R A B : Type _}
+    [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
+    [DistribMulAction R B] [NonUnitalAlgHomClass F R A B] : NonUnitalRingHomClass F A B :=
   { ‹NonUnitalAlgHomClass F R A B› with coe := coeFn }
 #align
   non_unital_alg_hom_class.non_unital_alg_hom_class.to_non_unital_ring_hom_class NonUnitalAlgHomClass.NonUnitalAlgHomClass.toNonUnitalRingHomClass
 
-variable [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] [NonUnitalNonAssocSemiring B] [Module R B]
+variable [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] [NonUnitalNonAssocSemiring B]
+  [Module R B]
 
 -- see Note [lower instance priority]
 instance (priority := 100) {F : Type _} [NonUnitalAlgHomClass F R A B] : LinearMapClass F R A B :=
@@ -122,7 +124,8 @@ theorem coe_coe {F : Type _} [NonUnitalAlgHomClass F R A B] (f : F) : ⇑(f : A 
   rfl
 #align non_unital_alg_hom.coe_coe NonUnitalAlgHom.coe_coe
 
-theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn := by rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
+theorem coe_injective : @Function.Injective (A →ₙₐ[R] B) (A → B) coeFn := by
+  rintro ⟨f, _⟩ ⟨g, _⟩ ⟨h⟩ <;> congr
 #align non_unital_alg_hom.coe_injective NonUnitalAlgHom.coe_injective
 
 instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
@@ -168,7 +171,8 @@ instance : Coe (A →ₙₐ[R] B) (A →ₙ* B) :=
 @[simp]
 theorem to_distrib_mul_action_hom_eq_coe (f : A →ₙₐ[R] B) : f.toDistribMulActionHom = ↑f :=
   rfl
-#align non_unital_alg_hom.to_distrib_mul_action_hom_eq_coe NonUnitalAlgHom.to_distrib_mul_action_hom_eq_coe
+#align
+  non_unital_alg_hom.to_distrib_mul_action_hom_eq_coe NonUnitalAlgHom.to_distrib_mul_action_hom_eq_coe
 
 @[simp]
 theorem to_mul_hom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
@@ -178,17 +182,20 @@ theorem to_mul_hom_eq_coe (f : A →ₙₐ[R] B) : f.toMulHom = ↑f :=
 @[simp, norm_cast]
 theorem coe_to_distrib_mul_action_hom (f : A →ₙₐ[R] B) : ((f : A →+[R] B) : A → B) = f :=
   rfl
-#align non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distrib_mul_action_hom
+#align
+  non_unital_alg_hom.coe_to_distrib_mul_action_hom NonUnitalAlgHom.coe_to_distrib_mul_action_hom
 
 @[simp, norm_cast]
 theorem coe_to_mul_hom (f : A →ₙₐ[R] B) : ((f : A →ₙ* B) : A → B) = f :=
   rfl
 #align non_unital_alg_hom.coe_to_mul_hom NonUnitalAlgHom.coe_to_mul_hom
 
-theorem to_distrib_mul_action_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g := by
+theorem to_distrib_mul_action_hom_injective {f g : A →ₙₐ[R] B}
+    (h : (f : A →+[R] B) = (g : A →+[R] B)) : f = g := by
   ext a
   exact DistribMulActionHom.congr_fun h a
-#align non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distrib_mul_action_hom_injective
+#align
+  non_unital_alg_hom.to_distrib_mul_action_hom_injective NonUnitalAlgHom.to_distrib_mul_action_hom_injective
 
 theorem to_mul_hom_injective {f g : A →ₙₐ[R] B} (h : (f : A →ₙ* B) = (g : A →ₙ* B)) : f = g := by
   ext a
@@ -200,10 +207,12 @@ theorem coe_distrib_mul_action_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h�
     ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →+[R] B) = ⟨f, h₁, h₂, h₃⟩ := by
   ext
   rfl
-#align non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distrib_mul_action_hom_mk
+#align
+  non_unital_alg_hom.coe_distrib_mul_action_hom_mk NonUnitalAlgHom.coe_distrib_mul_action_hom_mk
 
 @[norm_cast]
-theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) : ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ := by
+theorem coe_mul_hom_mk (f : A →ₙₐ[R] B) (h₁ h₂ h₃ h₄) :
+    ((⟨f, h₁, h₂, h₃, h₄⟩ : A →ₙₐ[R] B) : A →ₙ* B) = ⟨f, h₄⟩ := by
   ext
   rfl
 #align non_unital_alg_hom.coe_mul_hom_mk NonUnitalAlgHom.coe_mul_hom_mk
@@ -261,7 +270,8 @@ def comp (f : B →ₙₐ[R] C) (g : A →ₙₐ[R] B) : A →ₙₐ[R] C :=
 #align non_unital_alg_hom.comp NonUnitalAlgHom.comp
 
 @[simp, norm_cast]
-theorem coe_comp (f : B →ₙₐ[R] C) (g : A →ₙₐ[R] B) : (f.comp g : A → C) = (f : B → C) ∘ (g : A → B) :=
+theorem coe_comp (f : B →ₙₐ[R] C) (g : A →ₙₐ[R] B) :
+    (f.comp g : A → C) = (f : B → C) ∘ (g : A → B) :=
   rfl
 #align non_unital_alg_hom.coe_comp NonUnitalAlgHom.coe_comp
 
@@ -270,14 +280,14 @@ theorem comp_apply (f : B →ₙₐ[R] C) (g : A →ₙₐ[R] B) (x : A) : f.com
 #align non_unital_alg_hom.comp_apply NonUnitalAlgHom.comp_apply
 
 /-- The inverse of a bijective morphism is a morphism. -/
-def inverse (f : A →ₙₐ[R] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) :
-    B →ₙₐ[R] A :=
+def inverse (f : A →ₙₐ[R] B) (g : B → A) (h₁ : Function.LeftInverse g f)
+    (h₂ : Function.RightInverse g f) : B →ₙₐ[R] A :=
   { (f : A →ₙ* B).inverse g h₁ h₂, (f : A →+[R] B).inverse g h₁ h₂ with }
 #align non_unital_alg_hom.inverse NonUnitalAlgHom.inverse
 
 @[simp]
-theorem coe_inverse (f : A →ₙₐ[R] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) :
-    (inverse f g h₁ h₂ : B → A) = g :=
+theorem coe_inverse (f : A →ₙₐ[R] B) (g : B → A) (h₁ : Function.LeftInverse g f)
+    (h₂ : Function.RightInverse g f) : (inverse f g h₁ h₂ : B → A) = g :=
   rfl
 #align non_unital_alg_hom.coe_inverse NonUnitalAlgHom.coe_inverse
 
@@ -327,11 +337,13 @@ theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.Prod g) =
 #align non_unital_alg_hom.coe_prod NonUnitalAlgHom.coe_prod
 
 @[simp]
-theorem fst_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by ext <;> rfl
+theorem fst_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by
+  ext <;> rfl
 #align non_unital_alg_hom.fst_prod NonUnitalAlgHom.fst_prod
 
 @[simp]
-theorem snd_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by ext <;> rfl
+theorem snd_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by
+  ext <;> rfl
 #align non_unital_alg_hom.snd_prod NonUnitalAlgHom.snd_prod
 
 @[simp]

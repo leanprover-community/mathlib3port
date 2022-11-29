@@ -82,20 +82,23 @@ the `linear_equiv` arising from `to_lin b b A`.
 See `matrix.to_linear_equiv'` for this result on `n → R`.
 -/
 @[simps apply]
-noncomputable def toLinearEquiv [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) : M ≃ₗ[R] M := by
+noncomputable def toLinearEquiv [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) :
+    M ≃ₗ[R] M := by
   refine'
-      { to_lin b b A with toFun := to_lin b b A, invFun := to_lin b b A⁻¹, left_inv := fun x => _,
-        right_inv := fun x => _ } <;>
-    rw [← LinearMap.comp_apply] <;>
-      simp only [← Matrix.to_lin_mul b b b, Matrix.nonsing_inv_mul _ hA, Matrix.mul_nonsing_inv _ hA, to_lin_one,
-        LinearMap.id_apply]
+        { to_lin b b A with toFun := to_lin b b A, invFun := to_lin b b A⁻¹, left_inv := fun x => _,
+          right_inv := fun x => _ } <;>
+      rw [← LinearMap.comp_apply] <;>
+    simp only [← Matrix.to_lin_mul b b b, Matrix.nonsing_inv_mul _ hA, Matrix.mul_nonsing_inv _ hA,
+      to_lin_one, LinearMap.id_apply]
 #align matrix.to_linear_equiv Matrix.toLinearEquiv
 
-theorem ker_to_lin_eq_bot [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) : (toLin b b A).ker = ⊥ :=
+theorem ker_to_lin_eq_bot [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) :
+    (toLin b b A).ker = ⊥ :=
   ker_eq_bot.mpr (toLinearEquiv b A hA).Injective
 #align matrix.ker_to_lin_eq_bot Matrix.ker_to_lin_eq_bot
 
-theorem range_to_lin_eq_top [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) : (toLin b b A).range = ⊤ :=
+theorem range_to_lin_eq_top [DecidableEq n] (A : Matrix n n R) (hA : IsUnit A.det) :
+    (toLin b b A).range = ⊤ :=
   range_eq_top.mpr (toLinearEquiv b A hA).Surjective
 #align matrix.range_to_lin_eq_top Matrix.range_to_lin_eq_top
 
@@ -105,7 +108,7 @@ section Nondegenerate
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (v «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
 /-- This holds for all integral domains (see `matrix.exists_mul_vec_eq_zero_iff`),
 not just fields, but it's easier to prove it for the field of fractions first. -/
 theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M : Matrix n n K} :
@@ -119,7 +122,12 @@ theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M
     intro h
     have : Function.Injective M.to_lin' := by
       simpa only [← LinearMap.ker_eq_bot, ker_to_lin'_eq_bot_iff, not_imp_not] using h
-    have : M ⬝ LinearMap.toMatrix' ((LinearEquiv.ofInjectiveEndo M.to_lin' this).symm : (n → K) →ₗ[K] n → K) = 1 := by
+    have :
+      M ⬝
+          LinearMap.toMatrix'
+            ((LinearEquiv.ofInjectiveEndo M.to_lin' this).symm : (n → K) →ₗ[K] n → K) =
+        1 :=
+      by
       refine' matrix.to_lin'.injective (LinearMap.ext fun v => _)
       rw [Matrix.to_lin'_mul, Matrix.to_lin'_one, Matrix.to_lin'_to_matrix', LinearMap.comp_apply]
       exact (LinearEquiv.ofInjectiveEndo M.to_lin' this).apply_symm_apply v
@@ -127,14 +135,15 @@ theorem exists_mul_vec_eq_zero_iff_aux {K : Type _} [DecidableEq n] [Field K] {M
     
 #align matrix.exists_mul_vec_eq_zero_iff_aux Matrix.exists_mul_vec_eq_zero_iff_aux
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (v «expr ≠ » 0) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (v «expr ≠ » 0) -/
-theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [CommRing A] [Nontrivial A] [Field K]
-    [Algebra A K] [IsFractionRing A K] {M : Matrix n n A} : (∃ (v : _)(_ : v ≠ 0), M.mulVec v = 0) ↔ M.det = 0 := by
-  have : (∃ (v : _)(_ : v ≠ 0), mul_vec ((algebraMap A K).mapMatrix M) v = 0) ↔ _ := exists_mul_vec_eq_zero_iff_aux
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
+theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [CommRing A]
+    [Nontrivial A] [Field K] [Algebra A K] [IsFractionRing A K] {M : Matrix n n A} :
+    (∃ (v : _)(_ : v ≠ 0), M.mulVec v = 0) ↔ M.det = 0 := by
+  have : (∃ (v : _)(_ : v ≠ 0), mul_vec ((algebraMap A K).mapMatrix M) v = 0) ↔ _ :=
+    exists_mul_vec_eq_zero_iff_aux
   rw [← RingHom.map_det, IsFractionRing.to_map_eq_zero_iff] at this
-  refine' Iff.trans _ this
-  constructor <;> rintro ⟨v, hv, mul_eq⟩
+  refine' Iff.trans _ this; constructor <;> rintro ⟨v, hv, mul_eq⟩
   · refine' ⟨fun i => algebraMap _ _ (v i), mt (fun h => funext fun i => _) hv, _⟩
     · exact is_fraction_ring.to_map_eq_zero_iff.mp (congr_fun h i)
       
@@ -147,7 +156,9 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
     obtain ⟨⟨b, hb⟩, ba_eq⟩ :=
       IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors A) (finset.univ.image v)
     choose f hf using ba_eq
-    refine' ⟨fun i => f _ (finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩), mt (fun h => funext fun i => _) hv, _⟩
+    refine'
+      ⟨fun i => f _ (finset.mem_image.mpr ⟨i, Finset.mem_univ i, rfl⟩),
+        mt (fun h => funext fun i => _) hv, _⟩
     · have := congr_arg (algebraMap A K) (congr_fun h i)
       rw [hf, Subtype.coe_mk, Pi.zero_apply, RingHom.map_zero, Algebra.smul_def, mul_eq_zero,
         IsFractionRing.to_map_eq_zero_iff] at this
@@ -171,20 +182,20 @@ theorem exists_mul_vec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [C
     
 #align matrix.exists_mul_vec_eq_zero_iff' Matrix.exists_mul_vec_eq_zero_iff'
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (v «expr ≠ » 0) -/
-theorem exists_mul_vec_eq_zero_iff {A : Type _} [DecidableEq n] [CommRing A] [IsDomain A] {M : Matrix n n A} :
-    (∃ (v : _)(_ : v ≠ 0), M.mulVec v = 0) ↔ M.det = 0 :=
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
+theorem exists_mul_vec_eq_zero_iff {A : Type _} [DecidableEq n] [CommRing A] [IsDomain A]
+    {M : Matrix n n A} : (∃ (v : _)(_ : v ≠ 0), M.mulVec v = 0) ↔ M.det = 0 :=
   exists_mul_vec_eq_zero_iff' (FractionRing A)
 #align matrix.exists_mul_vec_eq_zero_iff Matrix.exists_mul_vec_eq_zero_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (v «expr ≠ » 0) -/
-theorem exists_vec_mul_eq_zero_iff {A : Type _} [DecidableEq n] [CommRing A] [IsDomain A] {M : Matrix n n A} :
-    (∃ (v : _)(_ : v ≠ 0), M.vecMul v = 0) ↔ M.det = 0 := by
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ≠ » 0) -/
+theorem exists_vec_mul_eq_zero_iff {A : Type _} [DecidableEq n] [CommRing A] [IsDomain A]
+    {M : Matrix n n A} : (∃ (v : _)(_ : v ≠ 0), M.vecMul v = 0) ↔ M.det = 0 := by
   simpa only [← M.det_transpose, ← mul_vec_transpose] using exists_mul_vec_eq_zero_iff
 #align matrix.exists_vec_mul_eq_zero_iff Matrix.exists_vec_mul_eq_zero_iff
 
-theorem nondegenerate_iff_det_ne_zero {A : Type _} [DecidableEq n] [CommRing A] [IsDomain A] {M : Matrix n n A} :
-    Nondegenerate M ↔ M.det ≠ 0 := by
+theorem nondegenerate_iff_det_ne_zero {A : Type _} [DecidableEq n] [CommRing A] [IsDomain A]
+    {M : Matrix n n A} : Nondegenerate M ↔ M.det ≠ 0 := by
   refine' Iff.trans _ (not_iff_not.mpr exists_vec_mul_eq_zero_iff)
   simp only [not_exists]
   constructor

@@ -141,7 +141,8 @@ theorem forall_bool {p : Bool → Prop} : (∀ b, p b) ↔ p false ∧ p true :=
 #print Bool.exists_bool /-
 @[simp]
 theorem exists_bool {p : Bool → Prop} : (∃ b, p b) ↔ p false ∨ p true :=
-  ⟨fun ⟨b, h⟩ => by cases b <;> [exact Or.inl h, exact Or.inr h], fun h => by cases h <;> exact ⟨_, h⟩⟩
+  ⟨fun ⟨b, h⟩ => by cases b <;> [exact Or.inl h, exact Or.inr h], fun h => by
+    cases h <;> exact ⟨_, h⟩⟩
 #align bool.exists_bool Bool.exists_bool
 -/
 
@@ -174,14 +175,15 @@ theorem cond_true {α} (t e : α) : cond true t e = t :=
 -/
 
 #print Bool.cond_eq_ite /-
-theorem cond_eq_ite {α} (b : Bool) (t e : α) : cond b t e = if b then t else e := by cases b <;> simp
+theorem cond_eq_ite {α} (b : Bool) (t e : α) : cond b t e = if b then t else e := by
+  cases b <;> simp
 #align bool.cond_eq_ite Bool.cond_eq_ite
 -/
 
 #print Bool.cond_decide /-
 @[simp]
-theorem cond_decide {α} (p : Prop) [Decidable p] (t e : α) : cond (decide p) t e = if p then t else e := by
-  simp [cond_eq_ite]
+theorem cond_decide {α} (p : Prop) [Decidable p] (t e : α) :
+    cond (decide p) t e = if p then t else e := by simp [cond_eq_ite]
 #align bool.cond_to_bool Bool.cond_decide
 -/
 
@@ -267,22 +269,26 @@ theorem and_elim_right : ∀ {a b : Bool}, a && b → b := by decide
 -/
 
 #print Bool.and_or_distrib_left /-
-theorem and_or_distrib_left (a b c : Bool) : (a && (b || c)) = (a && b || a && c) := by cases a <;> simp
+theorem and_or_distrib_left (a b c : Bool) : (a && (b || c)) = (a && b || a && c) := by
+  cases a <;> simp
 #align bool.band_bor_distrib_left Bool.and_or_distrib_left
 -/
 
 #print Bool.and_or_distrib_right /-
-theorem and_or_distrib_right (a b c : Bool) : ((a || b) && c) = (a && c || b && c) := by cases c <;> simp
+theorem and_or_distrib_right (a b c : Bool) : ((a || b) && c) = (a && c || b && c) := by
+  cases c <;> simp
 #align bool.band_bor_distrib_right Bool.and_or_distrib_right
 -/
 
 #print Bool.or_and_distrib_left /-
-theorem or_and_distrib_left (a b c : Bool) : (a || b && c) = ((a || b) && (a || c)) := by cases a <;> simp
+theorem or_and_distrib_left (a b c : Bool) : (a || b && c) = ((a || b) && (a || c)) := by
+  cases a <;> simp
 #align bool.bor_band_distrib_left Bool.or_and_distrib_left
 -/
 
 #print Bool.or_and_distrib_right /-
-theorem or_and_distrib_right (a b c : Bool) : (a && b || c) = ((a || c) && (b || c)) := by cases c <;> simp
+theorem or_and_distrib_right (a b c : Bool) : (a && b || c) = ((a || c) && (b || c)) := by
+  cases c <;> simp
 #align bool.bor_band_distrib_right Bool.or_and_distrib_right
 -/
 
@@ -452,12 +458,14 @@ theorem xor_false_right : ∀ a, xor a false = a := by decide
 -/
 
 #print Bool.and_xor_distrib_left /-
-theorem and_xor_distrib_left (a b c : Bool) : (a && xor b c) = xor (a && b) (a && c) := by cases a <;> simp
+theorem and_xor_distrib_left (a b c : Bool) : (a && xor b c) = xor (a && b) (a && c) := by
+  cases a <;> simp
 #align bool.band_bxor_distrib_left Bool.and_xor_distrib_left
 -/
 
 #print Bool.and_xor_distrib_right /-
-theorem and_xor_distrib_right (a b c : Bool) : (xor a b && c) = xor (a && c) (b && c) := by cases c <;> simp
+theorem and_xor_distrib_right (a b c : Bool) : (xor a b && c) = xor (a && c) (b && c) := by
+  cases c <;> simp
 #align bool.band_bxor_distrib_right Bool.and_xor_distrib_right
 -/
 
@@ -612,7 +620,8 @@ theorem to_nat_le_to_nat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤
 -/
 
 #print Bool.of_nat_to_nat /-
-theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by cases b <;> simp only [of_nat, to_nat] <;> exact by decide
+theorem of_nat_to_nat (b : Bool) : ofNat (toNat b) = b := by
+  cases b <;> simp only [of_nat, to_nat] <;> exact by decide
 #align bool.of_nat_to_nat Bool.of_nat_to_nat
 -/
 

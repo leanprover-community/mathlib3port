@@ -22,7 +22,8 @@ open Polynomial
 
 universe u v w x y z
 
-variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R} {m n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R}
+  {m n : ℕ}
 
 section Identities
 
@@ -59,9 +60,10 @@ private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
 #align polynomial.poly_binom_aux1 polynomial.poly_binom_aux1
 
 private theorem poly_binom_aux2 (f : R[X]) (x y : R) :
-    f.eval (x + y) = f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) := by
-  unfold eval eval₂
-  congr with (n z)
+    f.eval (x + y) =
+      f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) :=
+  by
+  unfold eval eval₂; congr with (n z)
   apply (poly_binom_aux1 x y _ _).property
 #align polynomial.poly_binom_aux2 polynomial.poly_binom_aux2
 

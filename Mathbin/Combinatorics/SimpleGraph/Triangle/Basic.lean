@@ -32,7 +32,8 @@ open Classical
 
 namespace SimpleGraph
 
-variable {α 𝕜 : Type _} [Fintype α] [LinearOrderedField 𝕜] {G H : SimpleGraph α} {ε δ : 𝕜} {n : ℕ} {s : Finset α}
+variable {α 𝕜 : Type _} [Fintype α] [LinearOrderedField 𝕜] {G H : SimpleGraph α} {ε δ : 𝕜} {n : ℕ}
+  {s : Finset α}
 
 /-- A simple graph is *`ε`-triangle-free far* if one must remove at least `ε * (card α)^2` edges to
 make it triangle-free. -/
@@ -42,42 +43,50 @@ def FarFromTriangleFree (G : SimpleGraph α) (ε : 𝕜) : Prop :=
 
 theorem far_from_triangle_free_iff :
     G.FarFromTriangleFree ε ↔
-      ∀ ⦃H⦄, H ≤ G → H.CliqueFree 3 → ε * (card α ^ 2 : ℕ) ≤ G.edgeFinset.card - H.edgeFinset.card :=
+      ∀ ⦃H⦄,
+        H ≤ G → H.CliqueFree 3 → ε * (card α ^ 2 : ℕ) ≤ G.edgeFinset.card - H.edgeFinset.card :=
   delete_far_iff
 #align simple_graph.far_from_triangle_free_iff SimpleGraph.far_from_triangle_free_iff
 
 alias far_from_triangle_free_iff ↔ far_from_triangle_free.le_card_sub_card _
 
-theorem FarFromTriangleFree.mono (hε : G.FarFromTriangleFree ε) (h : δ ≤ ε) : G.FarFromTriangleFree δ :=
+theorem FarFromTriangleFree.mono (hε : G.FarFromTriangleFree ε) (h : δ ≤ ε) :
+    G.FarFromTriangleFree δ :=
   hε.mono <| mul_le_mul_of_nonneg_right h <| cast_nonneg _
 #align simple_graph.far_from_triangle_free.mono SimpleGraph.FarFromTriangleFree.mono
 
 theorem FarFromTriangleFree.clique_finset_nonempty' (hH : H ≤ G) (hG : G.FarFromTriangleFree ε)
-    (hcard : (G.edgeFinset.card - H.edgeFinset.card : 𝕜) < ε * (card α ^ 2 : ℕ)) : (H.cliqueFinset 3).Nonempty :=
-  nonempty_of_ne_empty <| H.clique_finset_eq_empty_iff.Not.2 fun hH' => (hG.le_card_sub_card hH hH').not_lt hcard
+    (hcard : (G.edgeFinset.card - H.edgeFinset.card : 𝕜) < ε * (card α ^ 2 : ℕ)) :
+    (H.cliqueFinset 3).Nonempty :=
+  nonempty_of_ne_empty <|
+    H.clique_finset_eq_empty_iff.Not.2 fun hH' => (hG.le_card_sub_card hH hH').not_lt hcard
 #align
   simple_graph.far_from_triangle_free.clique_finset_nonempty' SimpleGraph.FarFromTriangleFree.clique_finset_nonempty'
 
 variable [Nonempty α]
 
-theorem FarFromTriangleFree.nonpos (h₀ : G.FarFromTriangleFree ε) (h₁ : G.CliqueFree 3) : ε ≤ 0 := by
+theorem FarFromTriangleFree.nonpos (h₀ : G.FarFromTriangleFree ε) (h₁ : G.CliqueFree 3) : ε ≤ 0 :=
+  by
   have := h₀ (empty_subset _)
   rw [coe_empty, Finset.card_empty, cast_zero, delete_edges_empty_eq] at this
   exact nonpos_of_mul_nonpos_left (this h₁) (cast_pos.2 <| sq_pos_of_pos Fintype.card_pos)
 #align simple_graph.far_from_triangle_free.nonpos SimpleGraph.FarFromTriangleFree.nonpos
 
-theorem CliqueFree.not_far_from_triangle_free (hG : G.CliqueFree 3) (hε : 0 < ε) : ¬G.FarFromTriangleFree ε := fun h =>
-  (h.nonpos hG).not_lt hε
-#align simple_graph.clique_free.not_far_from_triangle_free SimpleGraph.CliqueFree.not_far_from_triangle_free
+theorem CliqueFree.not_far_from_triangle_free (hG : G.CliqueFree 3) (hε : 0 < ε) :
+    ¬G.FarFromTriangleFree ε := fun h => (h.nonpos hG).not_lt hε
+#align
+  simple_graph.clique_free.not_far_from_triangle_free SimpleGraph.CliqueFree.not_far_from_triangle_free
 
-theorem FarFromTriangleFree.not_clique_free (hG : G.FarFromTriangleFree ε) (hε : 0 < ε) : ¬G.CliqueFree 3 := fun h =>
-  (hG.nonpos h).not_lt hε
-#align simple_graph.far_from_triangle_free.not_clique_free SimpleGraph.FarFromTriangleFree.not_clique_free
+theorem FarFromTriangleFree.not_clique_free (hG : G.FarFromTriangleFree ε) (hε : 0 < ε) :
+    ¬G.CliqueFree 3 := fun h => (hG.nonpos h).not_lt hε
+#align
+  simple_graph.far_from_triangle_free.not_clique_free SimpleGraph.FarFromTriangleFree.not_clique_free
 
 theorem FarFromTriangleFree.clique_finset_nonempty (hG : G.FarFromTriangleFree ε) (hε : 0 < ε) :
     (G.cliqueFinset 3).Nonempty :=
   nonempty_of_ne_empty <| G.clique_finset_eq_empty_iff.Not.2 <| hG.not_clique_free hε
-#align simple_graph.far_from_triangle_free.clique_finset_nonempty SimpleGraph.FarFromTriangleFree.clique_finset_nonempty
+#align
+  simple_graph.far_from_triangle_free.clique_finset_nonempty SimpleGraph.FarFromTriangleFree.clique_finset_nonempty
 
 end SimpleGraph
 

@@ -25,7 +25,8 @@ open TopologicalSpace BigOperators Nnreal Ennreal uniformity Pointwise
 
 /-- A non-unital seminormed ring is a not-necessarily-unital ring
 endowed with a seminorm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
-class NonUnitalSemiNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α, PseudoMetricSpace α where
+class NonUnitalSemiNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α,
+  PseudoMetricSpace α where
   dist_eq : ∀ x y, dist x y = norm (x - y)
   norm_mul : ∀ a b, norm (a * b) ≤ norm a * norm b
 #align non_unital_semi_normed_ring NonUnitalSemiNormedRing
@@ -53,10 +54,11 @@ class NonUnitalNormedRing (α : Type _) extends HasNorm α, NonUnitalRing α, Me
 
 -- see Note [lower instance priority]
 /-- A non-unital normed ring is a non-unital seminormed ring. -/
-instance (priority := 100) NonUnitalNormedRing.toNonUnitalSemiNormedRing [β : NonUnitalNormedRing α] :
-    NonUnitalSemiNormedRing α :=
+instance (priority := 100) NonUnitalNormedRing.toNonUnitalSemiNormedRing
+    [β : NonUnitalNormedRing α] : NonUnitalSemiNormedRing α :=
   { β with }
-#align non_unital_normed_ring.to_non_unital_semi_normed_ring NonUnitalNormedRing.toNonUnitalSemiNormedRing
+#align
+  non_unital_normed_ring.to_non_unital_semi_normed_ring NonUnitalNormedRing.toNonUnitalSemiNormedRing
 
 /-- A normed ring is a ring endowed with a norm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
 class NormedRing (α : Type _) extends HasNorm α, Ring α, MetricSpace α where
@@ -73,7 +75,8 @@ class NormedDivisionRing (α : Type _) extends HasNorm α, DivisionRing α, Metr
 
 -- see Note [lower instance priority]
 /-- A normed division ring is a normed ring. -/
-instance (priority := 100) NormedDivisionRing.toNormedRing [β : NormedDivisionRing α] : NormedRing α :=
+instance (priority := 100) NormedDivisionRing.toNormedRing [β : NormedDivisionRing α] :
+    NormedRing α :=
   { β with norm_mul := fun a b => (NormedDivisionRing.norm_mul' a b).le }
 #align normed_division_ring.to_normed_ring NormedDivisionRing.toNormedRing
 
@@ -85,7 +88,8 @@ instance (priority := 100) NormedRing.toSemiNormedRing [β : NormedRing α] : Se
 
 -- see Note [lower instance priority]
 /-- A normed ring is a non-unital normed ring. -/
-instance (priority := 100) NormedRing.toNonUnitalNormedRing [β : NormedRing α] : NonUnitalNormedRing α :=
+instance (priority := 100) NormedRing.toNonUnitalNormedRing [β : NormedRing α] :
+    NonUnitalNormedRing α :=
   { β with }
 #align normed_ring.to_non_unital_normed_ring NormedRing.toNonUnitalNormedRing
 
@@ -103,7 +107,8 @@ class NormedCommRing (α : Type _) extends NormedRing α where
 
 -- see Note [lower instance priority]
 /-- A normed commutative ring is a seminormed commutative ring. -/
-instance (priority := 100) NormedCommRing.toSemiNormedCommRing [β : NormedCommRing α] : SemiNormedCommRing α :=
+instance (priority := 100) NormedCommRing.toSemiNormedCommRing [β : NormedCommRing α] :
+    SemiNormedCommRing α :=
   { β with }
 #align normed_comm_ring.to_semi_normed_comm_ring NormedCommRing.toSemiNormedCommRing
 
@@ -125,7 +130,8 @@ theorem nnnorm_one [SeminormedAddCommGroup α] [One α] [NormOneClass α] : ‖(
   Nnreal.eq norm_one
 #align nnnorm_one nnnorm_one
 
-theorem NormOneClass.nontrivial (α : Type _) [SeminormedAddCommGroup α] [One α] [NormOneClass α] : Nontrivial α :=
+theorem NormOneClass.nontrivial (α : Type _) [SeminormedAddCommGroup α] [One α] [NormOneClass α] :
+    Nontrivial α :=
   nontrivial_of_ne 0 1 <| ne_of_apply_ne norm <| by simp
 #align norm_one_class.nontrivial NormOneClass.nontrivial
 
@@ -141,21 +147,23 @@ instance (priority := 100) NonUnitalNormedRing.toNormedAddCommGroup [β : NonUni
 #align non_unital_normed_ring.to_normed_add_comm_group NonUnitalNormedRing.toNormedAddCommGroup
 
 -- see Note [lower instance priority]
-instance (priority := 100) NonUnitalSemiNormedRing.toSeminormedAddCommGroup [NonUnitalSemiNormedRing α] :
-    SeminormedAddCommGroup α :=
+instance (priority := 100) NonUnitalSemiNormedRing.toSeminormedAddCommGroup
+    [NonUnitalSemiNormedRing α] : SeminormedAddCommGroup α :=
   { ‹NonUnitalSemiNormedRing α› with }
-#align non_unital_semi_normed_ring.to_seminormed_add_comm_group NonUnitalSemiNormedRing.toSeminormedAddCommGroup
+#align
+  non_unital_semi_normed_ring.to_seminormed_add_comm_group NonUnitalSemiNormedRing.toSeminormedAddCommGroup
 
 instance [SeminormedAddCommGroup α] [One α] [NormOneClass α] : NormOneClass (ULift α) :=
   ⟨by simp [ULift.norm_def]⟩
 
-instance Prod.norm_one_class [SeminormedAddCommGroup α] [One α] [NormOneClass α] [SeminormedAddCommGroup β] [One β]
-    [NormOneClass β] : NormOneClass (α × β) :=
+instance Prod.norm_one_class [SeminormedAddCommGroup α] [One α] [NormOneClass α]
+    [SeminormedAddCommGroup β] [One β] [NormOneClass β] : NormOneClass (α × β) :=
   ⟨by simp [Prod.norm_def]⟩
 #align prod.norm_one_class Prod.norm_one_class
 
-instance Pi.norm_one_class {ι : Type _} {α : ι → Type _} [Nonempty ι] [Fintype ι] [∀ i, SeminormedAddCommGroup (α i)]
-    [∀ i, One (α i)] [∀ i, NormOneClass (α i)] : NormOneClass (∀ i, α i) :=
+instance Pi.norm_one_class {ι : Type _} {α : ι → Type _} [Nonempty ι] [Fintype ι]
+    [∀ i, SeminormedAddCommGroup (α i)] [∀ i, One (α i)] [∀ i, NormOneClass (α i)] :
+    NormOneClass (∀ i, α i) :=
   ⟨by simp [Pi.norm_def, Finset.sup_const Finset.univ_nonempty]⟩
 #align pi.norm_one_class Pi.norm_one_class
 
@@ -168,7 +176,8 @@ theorem norm_mul_le (a b : α) : ‖a * b‖ ≤ ‖a‖ * ‖b‖ :=
 #align norm_mul_le norm_mul_le
 
 theorem nnnorm_mul_le (a b : α) : ‖a * b‖₊ ≤ ‖a‖₊ * ‖b‖₊ := by
-  simpa only [← norm_to_nnreal, ← Real.to_nnreal_mul (norm_nonneg _)] using Real.to_nnreal_mono (norm_mul_le _ _)
+  simpa only [← norm_to_nnreal, ← Real.to_nnreal_mul (norm_nonneg _)] using
+    Real.to_nnreal_mono (norm_mul_le _ _)
 #align nnnorm_mul_le nnnorm_mul_le
 
 theorem one_le_norm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ‖(1 : β)‖ :=
@@ -180,14 +189,17 @@ theorem one_le_nnnorm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ‖(1 : �
   one_le_norm_one β
 #align one_le_nnnorm_one one_le_nnnorm_one
 
-theorem Filter.Tendsto.zero_mul_is_bounded_under_le {f g : ι → α} {l : Filter ι} (hf : Tendsto f l (𝓝 0))
-    (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) : Tendsto (fun x => f x * g x) l (𝓝 0) :=
+theorem Filter.Tendsto.zero_mul_is_bounded_under_le {f g : ι → α} {l : Filter ι}
+    (hf : Tendsto f l (𝓝 0)) (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) :
+    Tendsto (fun x => f x * g x) l (𝓝 0) :=
   hf.op_zero_is_bounded_under_le hg (· * ·) norm_mul_le
 #align filter.tendsto.zero_mul_is_bounded_under_le Filter.Tendsto.zero_mul_is_bounded_under_le
 
-theorem Filter.IsBoundedUnderLe.mul_tendsto_zero {f g : ι → α} {l : Filter ι} (hf : IsBoundedUnder (· ≤ ·) l (norm ∘ f))
-    (hg : Tendsto g l (𝓝 0)) : Tendsto (fun x => f x * g x) l (𝓝 0) :=
-  hg.op_zero_is_bounded_under_le hf (flip (· * ·)) fun x y => (norm_mul_le y x).trans_eq (mul_comm _ _)
+theorem Filter.IsBoundedUnderLe.mul_tendsto_zero {f g : ι → α} {l : Filter ι}
+    (hf : IsBoundedUnder (· ≤ ·) l (norm ∘ f)) (hg : Tendsto g l (𝓝 0)) :
+    Tendsto (fun x => f x * g x) l (𝓝 0) :=
+  hg.op_zero_is_bounded_under_le hf (flip (· * ·)) fun x y =>
+    (norm_mul_le y x).trans_eq (mul_comm _ _)
 #align filter.is_bounded_under_le.mul_tendsto_zero Filter.IsBoundedUnderLe.mul_tendsto_zero
 
 /-- In a seminormed ring, the left-multiplication `add_monoid_hom` is bounded. -/
@@ -206,15 +218,18 @@ instance : NonUnitalSemiNormedRing (ULift α) :=
 
 /-- Non-unital seminormed ring structure on the product of two non-unital seminormed rings,
   using the sup norm. -/
-instance Prod.nonUnitalSemiNormedRing [NonUnitalSemiNormedRing β] : NonUnitalSemiNormedRing (α × β) :=
+instance Prod.nonUnitalSemiNormedRing [NonUnitalSemiNormedRing β] :
+    NonUnitalSemiNormedRing (α × β) :=
   { Prod.seminormedAddCommGroup with
     norm_mul := fun x y =>
       calc
         ‖x * y‖ = ‖(x.1 * y.1, x.2 * y.2)‖ := rfl
         _ = max ‖x.1 * y.1‖ ‖x.2 * y.2‖ := rfl
-        _ ≤ max (‖x.1‖ * ‖y.1‖) (‖x.2‖ * ‖y.2‖) := max_le_max (norm_mul_le x.1 y.1) (norm_mul_le x.2 y.2)
+        _ ≤ max (‖x.1‖ * ‖y.1‖) (‖x.2‖ * ‖y.2‖) :=
+          max_le_max (norm_mul_le x.1 y.1) (norm_mul_le x.2 y.2)
         _ = max (‖x.1‖ * ‖y.1‖) (‖y.2‖ * ‖x.2‖) := by simp [mul_comm]
-        _ ≤ max ‖x.1‖ ‖x.2‖ * max ‖y.2‖ ‖y.1‖ := by apply max_mul_mul_le_max_mul_max <;> simp [norm_nonneg]
+        _ ≤ max ‖x.1‖ ‖x.2‖ * max ‖y.2‖ ‖y.1‖ := by
+          apply max_mul_mul_le_max_mul_max <;> simp [norm_nonneg]
         _ = max ‖x.1‖ ‖x.2‖ * max ‖y.1‖ ‖y.2‖ := by simp [max_comm]
         _ = ‖x‖ * ‖y‖ := rfl
          }
@@ -222,13 +237,14 @@ instance Prod.nonUnitalSemiNormedRing [NonUnitalSemiNormedRing β] : NonUnitalSe
 
 /-- Non-unital seminormed ring structure on the product of finitely many non-unital seminormed
 rings, using the sup norm. -/
-instance Pi.nonUnitalSemiNormedRing {π : ι → Type _} [Fintype ι] [∀ i, NonUnitalSemiNormedRing (π i)] :
-    NonUnitalSemiNormedRing (∀ i, π i) :=
+instance Pi.nonUnitalSemiNormedRing {π : ι → Type _} [Fintype ι]
+    [∀ i, NonUnitalSemiNormedRing (π i)] : NonUnitalSemiNormedRing (∀ i, π i) :=
   { Pi.seminormedAddCommGroup with
     norm_mul := fun x y =>
       Nnreal.coe_mono <|
         calc
-          (Finset.univ.sup fun i => ‖x i * y i‖₊) ≤ Finset.univ.sup ((fun i => ‖x i‖₊) * fun i => ‖y i‖₊) :=
+          (Finset.univ.sup fun i => ‖x i * y i‖₊) ≤
+              Finset.univ.sup ((fun i => ‖x i‖₊) * fun i => ‖y i‖₊) :=
             Finset.sup_mono_fun fun b hb => norm_mul_le _ _
           _ ≤ (Finset.univ.sup fun i => ‖x i‖₊) * Finset.univ.sup fun i => ‖y i‖₊ :=
             Finset.sup_mul_le_mul_sup_of_nonneg _ (fun i _ => zero_le _) fun i _ => zero_le _
@@ -244,16 +260,16 @@ variable [SemiNormedRing α]
 /-- A subalgebra of a seminormed ring is also a seminormed ring, with the restriction of the norm.
 
 See note [implicit instance arguments]. -/
-instance Subalgebra.semiNormedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} [SemiNormedRing E] {_ : Algebra 𝕜 E}
-    (s : Subalgebra 𝕜 E) : SemiNormedRing s :=
+instance Subalgebra.semiNormedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} [SemiNormedRing E]
+    {_ : Algebra 𝕜 E} (s : Subalgebra 𝕜 E) : SemiNormedRing s :=
   { s.toSubmodule.SeminormedAddCommGroup with norm_mul := fun a b => norm_mul_le a.1 b.1 }
 #align subalgebra.semi_normed_ring Subalgebra.semiNormedRing
 
 /-- A subalgebra of a normed ring is also a normed ring, with the restriction of the norm.
 
 See note [implicit instance arguments]. -/
-instance Subalgebra.normedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} [NormedRing E] {_ : Algebra 𝕜 E}
-    (s : Subalgebra 𝕜 E) : NormedRing s :=
+instance Subalgebra.normedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} [NormedRing E]
+    {_ : Algebra 𝕜 E} (s : Subalgebra 𝕜 E) : NormedRing s :=
   { s.SemiNormedRing with }
 #align subalgebra.normed_ring Subalgebra.normedRing
 
@@ -289,26 +305,26 @@ theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ‖l.Prod‖₊ �
   l.norm_prod_le.trans_eq <| by simp [Nnreal.coe_list_prod, List.map_map]
 #align list.nnnorm_prod_le List.nnnorm_prod_le
 
-theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty) (f : ι → α) :
-    ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ := by
+theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
+    (f : ι → α) : ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ := by
   rcases s with ⟨⟨l⟩, hl⟩
   have : l.map f ≠ [] := by simpa using hs
   simpa using List.norm_prod_le' this
 #align finset.norm_prod_le' Finset.norm_prod_le'
 
-theorem Finset.nnnorm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty) (f : ι → α) :
-    ‖∏ i in s, f i‖₊ ≤ ∏ i in s, ‖f i‖₊ :=
+theorem Finset.nnnorm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
+    (f : ι → α) : ‖∏ i in s, f i‖₊ ≤ ∏ i in s, ‖f i‖₊ :=
   (s.norm_prod_le' hs f).trans_eq <| by simp [Nnreal.coe_prod]
 #align finset.nnnorm_prod_le' Finset.nnnorm_prod_le'
 
-theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι) (f : ι → α) :
-    ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ := by
+theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι)
+    (f : ι → α) : ‖∏ i in s, f i‖ ≤ ∏ i in s, ‖f i‖ := by
   rcases s with ⟨⟨l⟩, hl⟩
   simpa using (l.map f).norm_prod_le
 #align finset.norm_prod_le Finset.norm_prod_le
 
-theorem Finset.nnnorm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι) (f : ι → α) :
-    ‖∏ i in s, f i‖₊ ≤ ∏ i in s, ‖f i‖₊ :=
+theorem Finset.nnnorm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι)
+    (f : ι → α) : ‖∏ i in s, f i‖₊ ≤ ∏ i in s, ‖f i‖₊ :=
   (s.norm_prod_le f).trans_eq <| by simp [Nnreal.coe_prod]
 #align finset.nnnorm_prod_le Finset.nnnorm_prod_le
 
@@ -317,7 +333,8 @@ See also `nnnorm_pow_le`. -/
 theorem nnnorm_pow_le' (a : α) : ∀ {n : ℕ}, 0 < n → ‖a ^ n‖₊ ≤ ‖a‖₊ ^ n
   | 1, h => by simp only [pow_one]
   | n + 2, h => by
-    simpa only [pow_succ _ (n + 1)] using le_trans (nnnorm_mul_le _ _) (mul_le_mul_left' (nnnorm_pow_le' n.succ_pos) _)
+    simpa only [pow_succ _ (n + 1)] using
+      le_trans (nnnorm_mul_le _ _) (mul_le_mul_left' (nnnorm_pow_le' n.succ_pos) _)
 #align nnnorm_pow_le' nnnorm_pow_le'
 
 /-- If `α` is a seminormed ring with `‖1‖₊ = 1`, then `‖a ^ n‖₊ ≤ ‖a‖₊ ^ n`.
@@ -351,7 +368,8 @@ instance Prod.semiNormedRing [SemiNormedRing β] : SemiNormedRing (α × β) :=
 
 /-- Seminormed ring structure on the product of finitely many seminormed rings,
   using the sup norm. -/
-instance Pi.semiNormedRing {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedRing (π i)] : SemiNormedRing (∀ i, π i) :=
+instance Pi.semiNormedRing {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedRing (π i)] :
+    SemiNormedRing (∀ i, π i) :=
   { Pi.nonUnitalSemiNormedRing, Pi.seminormedAddCommGroup with }
 #align pi.semi_normed_ring Pi.semiNormedRing
 
@@ -400,26 +418,31 @@ instance Prod.normedRing [NormedRing β] : NormedRing (α × β) :=
 #align prod.normed_ring Prod.normedRing
 
 /-- Normed ring structure on the product of finitely many normed rings, using the sup norm. -/
-instance Pi.normedRing {π : ι → Type _} [Fintype ι] [∀ i, NormedRing (π i)] : NormedRing (∀ i, π i) :=
+instance Pi.normedRing {π : ι → Type _} [Fintype ι] [∀ i, NormedRing (π i)] :
+    NormedRing (∀ i, π i) :=
   { Pi.normedAddCommGroup with norm_mul := norm_mul_le }
 #align pi.normed_ring Pi.normedRing
 
 end NormedRing
 
 -- see Note [lower instance priority]
-instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing α] : HasContinuousMul α :=
+instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing α] :
+    HasContinuousMul α :=
   ⟨continuous_iff_continuous_at.2 fun x =>
       tendsto_iff_norm_tendsto_zero.2 <| by
-        have : ∀ e : α × α, ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ := by
+        have : ∀ e : α × α, ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ :=
+          by
           intro e
           calc
             ‖e.1 * e.2 - x.1 * x.2‖ ≤ ‖e.1 * (e.2 - x.2) + (e.1 - x.1) * x.2‖ := by
               rw [mul_sub, sub_mul, sub_add_sub_cancel]
-            _ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ := norm_add_le_of_le (norm_mul_le _ _) (norm_mul_le _ _)
+            _ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ :=
+              norm_add_le_of_le (norm_mul_le _ _) (norm_mul_le _ _)
             
         refine' squeeze_zero (fun e => norm_nonneg _) this _
         convert
-          ((continuous_fst.tendsto x).norm.mul ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add
+          ((continuous_fst.tendsto x).norm.mul
+                ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add
             (((continuous_fst.tendsto x).sub tendsto_const_nhds).norm.mul _)
         show tendsto _ _ _
         exact tendsto_const_nhds
@@ -428,7 +451,8 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing 
 
 -- see Note [lower instance priority]
 /-- A seminormed ring is a topological ring. -/
-instance (priority := 100) semi_normed_top_ring [NonUnitalSemiNormedRing α] : TopologicalRing α where
+instance (priority := 100) semi_normed_top_ring [NonUnitalSemiNormedRing α] :
+    TopologicalRing α where
 #align semi_normed_top_ring semi_normed_top_ring
 
 section NormedDivisionRing
@@ -535,10 +559,11 @@ instance (priority := 100) NormedDivisionRing.to_has_continuous_inv₀ : HasCont
     have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
     calc
       ‖e⁻¹ - r⁻¹‖ = ‖r‖⁻¹ * ‖r - e‖ * ‖e‖⁻¹ := by
-        rw [← norm_inv, ← norm_inv, ← norm_mul, ← norm_mul, mul_sub, sub_mul, mul_assoc _ e, inv_mul_cancel r0,
-          mul_inv_cancel e0, one_mul, mul_one]
+        rw [← norm_inv, ← norm_inv, ← norm_mul, ← norm_mul, mul_sub, sub_mul, mul_assoc _ e,
+          inv_mul_cancel r0, mul_inv_cancel e0, one_mul, mul_one]
       _ = ‖r - e‖ / ‖r‖ / ‖e‖ := by field_simp [mul_comm]
-      _ ≤ ‖r - e‖ / ‖r‖ / ε := div_le_div_of_le_left (div_nonneg (norm_nonneg _) (norm_nonneg _)) ε0 he.le
+      _ ≤ ‖r - e‖ / ‖r‖ / ε :=
+        div_le_div_of_le_left (div_nonneg (norm_nonneg _) (norm_nonneg _)) ε0 he.le
       
   refine' squeeze_zero' (eventually_of_forall fun _ => norm_nonneg _) this _
   refine' (continuous_const.sub continuous_id).norm.div_const.div_const.tendsto' _ _ _
@@ -554,7 +579,8 @@ theorem norm_one_of_pow_eq_one {x : α} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖
     
 #align norm_one_of_pow_eq_one norm_one_of_pow_eq_one
 
-theorem norm_map_one_of_pow_eq_one [CommMonoid β] (φ : β →* α) {x : β} {k : ℕ+} (h : x ^ (k : ℕ) = 1) : ‖φ x‖ = 1 :=
+theorem norm_map_one_of_pow_eq_one [CommMonoid β] (φ : β →* α) {x : β} {k : ℕ+}
+    (h : x ^ (k : ℕ) = 1) : ‖φ x‖ = 1 :=
   haveI : φ x ^ (k : ℕ) = 1 := by rw [← MonoidHom.map_pow, h, MonoidHom.map_one]
   norm_one_of_pow_eq_one this
 #align norm_map_one_of_pow_eq_one norm_map_one_of_pow_eq_one
@@ -590,7 +616,8 @@ instance (priority := 100) DenselyNormedField.toNontriviallyNormedField [Densely
       α where non_trivial :=
     let ⟨a, h, _⟩ := DenselyNormedField.lt_norm_lt 1 2 zero_le_one one_lt_two
     ⟨a, h⟩
-#align densely_normed_field.to_nontrivially_normed_field DenselyNormedField.toNontriviallyNormedField
+#align
+  densely_normed_field.to_nontrivially_normed_field DenselyNormedField.toNontriviallyNormedField
 
 variable [NormedField α]
 
@@ -720,8 +747,9 @@ theorem nnnorm_mul_to_nnreal (x : ℝ) {y : ℝ} (hy : 0 ≤ y) : ‖x‖₊ * y
 
 /-- If `E` is a nontrivial topological module over `ℝ`, then `E` has no isolated points.
 This is a particular case of `module.punctured_nhds_ne_bot`. -/
-instance puncturedNhdsModuleNeBot {E : Type _} [AddCommGroup E] [TopologicalSpace E] [HasContinuousAdd E] [Nontrivial E]
-    [Module ℝ E] [HasContinuousSmul ℝ E] (x : E) : NeBot (𝓝[≠] x) :=
+instance puncturedNhdsModuleNeBot {E : Type _} [AddCommGroup E] [TopologicalSpace E]
+    [HasContinuousAdd E] [Nontrivial E] [Module ℝ E] [HasContinuousSmul ℝ E] (x : E) :
+    NeBot (𝓝[≠] x) :=
   Module.puncturedNhdsNeBot ℝ E x
 #align real.punctured_nhds_module_ne_bot Real.puncturedNhdsModuleNeBot
 
@@ -753,16 +781,17 @@ theorem nnnorm_norm [SeminormedAddCommGroup α] (a : α) : ‖‖a‖‖₊ = �
 #align nnnorm_norm nnnorm_norm
 
 /-- A restatement of `metric_space.tendsto_at_top` in terms of the norm. -/
-theorem NormedAddCommGroup.tendsto_at_top [Nonempty α] [SemilatticeSup α] {β : Type _} [SeminormedAddCommGroup β]
-    {f : α → β} {b : β} : Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N ≤ n → ‖f n - b‖ < ε :=
+theorem NormedAddCommGroup.tendsto_at_top [Nonempty α] [SemilatticeSup α] {β : Type _}
+    [SeminormedAddCommGroup β] {f : α → β} {b : β} :
+    Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N ≤ n → ‖f n - b‖ < ε :=
   (at_top_basis.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top NormedAddCommGroup.tendsto_at_top
 
 /-- A variant of `normed_add_comm_group.tendsto_at_top` that
 uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
-theorem NormedAddCommGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] {β : Type _}
-    [SeminormedAddCommGroup β] {f : α → β} {b : β} :
+theorem NormedAddCommGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoMaxOrder α]
+    {β : Type _} [SeminormedAddCommGroup β] {f : α → β} {b : β} :
     Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N < n → ‖f n - b‖ < ε :=
   (at_top_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top' NormedAddCommGroup.tendsto_at_top'
@@ -881,8 +910,8 @@ open Finset
 open Classical
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable f) (hg : Summable g) (hf' : 0 ≤ f)
-    (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
+theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable f) (hg : Summable g)
+    (hf' : 0 ≤ f) (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
   let ⟨s, hf⟩ := hf
   let ⟨t, hg⟩ := hg
   suffices this : ∀ u : Finset (ι × ι'), (∑ x in u, f x.1 * g x.2) ≤ s * t from
@@ -892,30 +921,37 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     (∑ x in u, f x.1 * g x.2) ≤ ∑ x in u.image Prod.fst ×ˢ u.image Prod.snd, f x.1 * g x.2 :=
       sum_mono_set_of_nonneg (fun x => mul_nonneg (hf' _) (hg' _)) subset_product
     _ = ∑ x in u.image Prod.fst, ∑ y in u.image Prod.snd, f x * g y := sum_product
-    _ = ∑ x in u.image Prod.fst, f x * ∑ y in u.image Prod.snd, g y := sum_congr rfl fun x _ => mul_sum.symm
+    _ = ∑ x in u.image Prod.fst, f x * ∑ y in u.image Prod.snd, g y :=
+      sum_congr rfl fun x _ => mul_sum.symm
     _ ≤ ∑ x in u.image Prod.fst, f x * t :=
-      sum_le_sum fun x _ => mul_le_mul_of_nonneg_left (sum_le_has_sum _ (fun _ _ => hg' _) hg) (hf' _)
+      sum_le_sum fun x _ =>
+        mul_le_mul_of_nonneg_left (sum_le_has_sum _ (fun _ _ => hg' _) hg) (hf' _)
     _ = (∑ x in u.image Prod.fst, f x) * t := sum_mul.symm
-    _ ≤ s * t := mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.Nonneg fun _ => hg' _)
+    _ ≤ s * t :=
+      mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.Nonneg fun _ => hg' _)
     
 #align summable.mul_of_nonneg Summable.mul_of_nonneg
 
-theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
-    Summable fun x : ι × ι' => ‖f x.1 * g x.2‖ :=
-  summable_of_nonneg_of_le (fun x => norm_nonneg (f x.1 * g x.2)) (fun x => norm_mul_le (f x.1) (g x.2))
+theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖)
+    (hg : Summable fun x => ‖g x‖) : Summable fun x : ι × ι' => ‖f x.1 * g x.2‖ :=
+  summable_of_nonneg_of_le (fun x => norm_nonneg (f x.1 * g x.2))
+    (fun x => norm_mul_le (f x.1) (g x.2))
     (hf.mul_of_nonneg hg (fun x => norm_nonneg <| f x) fun x => norm_nonneg <| g x : _)
 #align summable.mul_norm Summable.mul_norm
 
-theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖)
-    (hg : Summable fun x => ‖g x‖) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
+theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
+    (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
+    Summable fun x : ι × ι' => f x.1 * g x.2 :=
   summable_of_summable_norm (hf.mul_norm hg)
 #align summable_mul_of_summable_norm summable_mul_of_summable_norm
 
 /-- Product of two infinites sums indexed by arbitrary types.
     See also `tsum_mul_tsum` if `f` and `g` are *not* absolutely summable. -/
-theorem tsum_mul_tsum_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖)
-    (hg : Summable fun x => ‖g x‖) : ((∑' x, f x) * ∑' y, g y) = ∑' z : ι × ι', f z.1 * g z.2 :=
-  tsum_mul_tsum (summable_of_summable_norm hf) (summable_of_summable_norm hg) (summable_mul_of_summable_norm hf hg)
+theorem tsum_mul_tsum_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
+    (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
+    ((∑' x, f x) * ∑' y, g y) = ∑' z : ι × ι', f z.1 * g z.2 :=
+  tsum_mul_tsum (summable_of_summable_norm hf) (summable_of_summable_norm hg)
+    (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_of_summable_norm tsum_mul_tsum_of_summable_norm
 
 /-! ### `ℕ`-indexed families (Cauchy product)
@@ -933,18 +969,21 @@ section Nat
 
 open Finset.Nat
 
-theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α} (hf : Summable fun x => ‖f x‖)
-    (hg : Summable fun x => ‖g x‖) : Summable fun n => ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ := by
+theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
+    (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
+    Summable fun n => ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ := by
   have :=
     summable_sum_mul_antidiagonal_of_summable_mul
       (Summable.mul_of_nonneg hf hg (fun _ => norm_nonneg _) fun _ => norm_nonneg _)
   refine' summable_of_nonneg_of_le (fun _ => norm_nonneg _) _ this
   intro n
   calc
-    ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ ≤ ∑ kl in antidiagonal n, ‖f kl.1 * g kl.2‖ := norm_sum_le _ _
+    ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ ≤ ∑ kl in antidiagonal n, ‖f kl.1 * g kl.2‖ :=
+      norm_sum_le _ _
     _ ≤ ∑ kl in antidiagonal n, ‖f kl.1‖ * ‖g kl.2‖ := sum_le_sum fun i _ => norm_mul_le _ _
     
-#align summable_norm_sum_mul_antidiagonal_of_summable_norm summable_norm_sum_mul_antidiagonal_of_summable_norm
+#align
+  summable_norm_sum_mul_antidiagonal_of_summable_norm summable_norm_sum_mul_antidiagonal_of_summable_norm
 
 /-- The Cauchy product formula for the product of two infinite sums indexed by `ℕ`,
     expressed by summing on `finset.nat.antidiagonal`.
@@ -953,9 +992,10 @@ theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α} (
 theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm [CompleteSpace α] {f g : ℕ → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
     ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ kl in antidiagonal n, f kl.1 * g kl.2 :=
-  tsum_mul_tsum_eq_tsum_sum_antidiagonal (summable_of_summable_norm hf) (summable_of_summable_norm hg)
-    (summable_mul_of_summable_norm hf hg)
-#align tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
+  tsum_mul_tsum_eq_tsum_sum_antidiagonal (summable_of_summable_norm hf)
+    (summable_of_summable_norm hg) (summable_mul_of_summable_norm hf hg)
+#align
+  tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
 
 theorem summable_norm_sum_mul_range_of_summable_norm {f g : ℕ → α} (hf : Summable fun x => ‖f x‖)
     (hg : Summable fun x => ‖g x‖) : Summable fun n => ‖∑ k in range (n + 1), f k * g (n - k)‖ := by
@@ -967,11 +1007,13 @@ theorem summable_norm_sum_mul_range_of_summable_norm {f g : ℕ → α} (hf : Su
     expressed by summing on `finset.range`.
     See also `tsum_mul_tsum_eq_tsum_sum_range` if `f` and `g` are
     *not* absolutely summable. -/
-theorem tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm [CompleteSpace α] {f g : ℕ → α} (hf : Summable fun x => ‖f x‖)
-    (hg : Summable fun x => ‖g x‖) : ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) := by
+theorem tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm [CompleteSpace α] {f g : ℕ → α}
+    (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
+    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) := by
   simp_rw [← sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm hf hg
-#align tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm
+#align
+  tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm
 
 end Nat
 
@@ -983,7 +1025,8 @@ variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 
 /-- This class states that a ring homomorphism is isometric. This is a sufficient assumption
 for a continuous semilinear map to be bounded and this is the main use for this typeclass. -/
-class RingHomIsometric [Semiring R₁] [Semiring R₂] [HasNorm R₁] [HasNorm R₂] (σ : R₁ →+* R₂) : Prop where
+class RingHomIsometric [Semiring R₁] [Semiring R₂] [HasNorm R₁] [HasNorm R₂] (σ : R₁ →+* R₂) :
+  Prop where
   is_iso : ∀ {x : R₁}, ‖σ x‖ = ‖x‖
 #align ring_hom_isometric RingHomIsometric
 
@@ -1009,8 +1052,8 @@ induces a `non_unital_semi_normed_ring` structure on the domain.
 
 See note [reducible non-instances] -/
 @[reducible]
-def NonUnitalSemiNormedRing.induced [NonUnitalRing R] [NonUnitalSemiNormedRing S] [NonUnitalRingHomClass F R S]
-    (f : F) : NonUnitalSemiNormedRing R :=
+def NonUnitalSemiNormedRing.induced [NonUnitalRing R] [NonUnitalSemiNormedRing S]
+    [NonUnitalRingHomClass F R S] (f : F) : NonUnitalSemiNormedRing R :=
   { SeminormedAddCommGroup.induced R S f with
     norm_mul := fun x y => by
       unfold norm
@@ -1022,8 +1065,8 @@ def NonUnitalSemiNormedRing.induced [NonUnitalRing R] [NonUnitalSemiNormedRing S
 
 See note [reducible non-instances] -/
 @[reducible]
-def NonUnitalNormedRing.induced [NonUnitalRing R] [NonUnitalNormedRing S] [NonUnitalRingHomClass F R S] (f : F)
-    (hf : Function.Injective f) : NonUnitalNormedRing R :=
+def NonUnitalNormedRing.induced [NonUnitalRing R] [NonUnitalNormedRing S]
+    [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Injective f) : NonUnitalNormedRing R :=
   { NonUnitalSemiNormedRing.induced R S f, NormedAddCommGroup.induced R S f hf with }
 #align non_unital_normed_ring.induced NonUnitalNormedRing.induced
 
@@ -1032,7 +1075,8 @@ def NonUnitalNormedRing.induced [NonUnitalRing R] [NonUnitalNormedRing S] [NonUn
 
 See note [reducible non-instances] -/
 @[reducible]
-def SemiNormedRing.induced [Ring R] [SemiNormedRing S] [NonUnitalRingHomClass F R S] (f : F) : SemiNormedRing R :=
+def SemiNormedRing.induced [Ring R] [SemiNormedRing S] [NonUnitalRingHomClass F R S] (f : F) :
+    SemiNormedRing R :=
   { NonUnitalSemiNormedRing.induced R S f, SeminormedAddCommGroup.induced R S f with }
 #align semi_normed_ring.induced SemiNormedRing.induced
 
@@ -1041,8 +1085,8 @@ def SemiNormedRing.induced [Ring R] [SemiNormedRing S] [NonUnitalRingHomClass F 
 
 See note [reducible non-instances] -/
 @[reducible]
-def NormedRing.induced [Ring R] [NormedRing S] [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Injective f) :
-    NormedRing R :=
+def NormedRing.induced [Ring R] [NormedRing S] [NonUnitalRingHomClass F R S] (f : F)
+    (hf : Function.Injective f) : NormedRing R :=
   { NonUnitalSemiNormedRing.induced R S f, NormedAddCommGroup.induced R S f hf with }
 #align normed_ring.induced NormedRing.induced
 
@@ -1051,9 +1095,10 @@ def NormedRing.induced [Ring R] [NormedRing S] [NonUnitalRingHomClass F R S] (f 
 
 See note [reducible non-instances] -/
 @[reducible]
-def SemiNormedCommRing.induced [CommRing R] [SemiNormedRing S] [NonUnitalRingHomClass F R S] (f : F) :
-    SemiNormedCommRing R :=
-  { NonUnitalSemiNormedRing.induced R S f, SeminormedAddCommGroup.induced R S f with mul_comm := mul_comm }
+def SemiNormedCommRing.induced [CommRing R] [SemiNormedRing S] [NonUnitalRingHomClass F R S]
+    (f : F) : SemiNormedCommRing R :=
+  { NonUnitalSemiNormedRing.induced R S f, SeminormedAddCommGroup.induced R S f with
+    mul_comm := mul_comm }
 #align semi_normed_comm_ring.induced SemiNormedCommRing.induced
 
 /-- An injective non-unital ring homomorphism from an `comm_ring` to a `normed_ring` induces a
@@ -1071,8 +1116,8 @@ def NormedCommRing.induced [CommRing R] [NormedRing S] [NonUnitalRingHomClass F 
 
 See note [reducible non-instances] -/
 @[reducible]
-def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnitalRingHomClass F R S] (f : F)
-    (hf : Function.Injective f) : NormedDivisionRing R :=
+def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnitalRingHomClass F R S]
+    (f : F) (hf : Function.Injective f) : NormedDivisionRing R :=
   { NormedAddCommGroup.induced R S f hf with
     norm_mul' := fun x y => by
       unfold norm
@@ -1084,15 +1129,16 @@ def NormedDivisionRing.induced [DivisionRing R] [NormedDivisionRing S] [NonUnita
 
 See note [reducible non-instances] -/
 @[reducible]
-def NormedField.induced [Field R] [NormedField S] [NonUnitalRingHomClass F R S] (f : F) (hf : Function.Injective f) :
-    NormedField R :=
+def NormedField.induced [Field R] [NormedField S] [NonUnitalRingHomClass F R S] (f : F)
+    (hf : Function.Injective f) : NormedField R :=
   { NormedDivisionRing.induced R S f hf with }
 #align normed_field.induced NormedField.induced
 
 /-- A ring homomorphism from a `ring R` to a `semi_normed_ring S` which induces the norm structure
 `semi_normed_ring.induced` makes `R` satisfy `‖(1 : R)‖ = 1` whenever `‖(1 : S)‖ = 1`. -/
-theorem NormOneClass.induced {F : Type _} (R S : Type _) [Ring R] [SemiNormedRing S] [NormOneClass S]
-    [RingHomClass F R S] (f : F) : @NormOneClass R (SemiNormedRing.induced R S f).toHasNorm _ :=
+theorem NormOneClass.induced {F : Type _} (R S : Type _) [Ring R] [SemiNormedRing S]
+    [NormOneClass S] [RingHomClass F R S] (f : F) :
+    @NormOneClass R (SemiNormedRing.induced R S f).toHasNorm _ :=
   { norm_one := (congr_arg norm (map_one f)).trans norm_one }
 #align norm_one_class.induced NormOneClass.induced
 
@@ -1110,7 +1156,8 @@ instance toNormedRing [NormedRing R] [SubringClass S R] (s : S) : NormedRing s :
   NormedRing.induced s R (SubringClass.subtype s) Subtype.val_injective
 #align subring_class.to_normed_ring SubringClass.toNormedRing
 
-instance toSemiNormedCommRing [SemiNormedCommRing R] [h : SubringClass S R] (s : S) : SemiNormedCommRing s :=
+instance toSemiNormedCommRing [SemiNormedCommRing R] [h : SubringClass S R] (s : S) :
+    SemiNormedCommRing s :=
   { SubringClass.toSemiNormedRing s with mul_comm := mul_comm }
 #align subring_class.to_semi_normed_comm_ring SubringClass.toSemiNormedCommRing
 

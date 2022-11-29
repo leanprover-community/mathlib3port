@@ -69,7 +69,10 @@ private unsafe
       | prf , q( $ ( a ) = $ ( b ) ) => mk_app `sub_eq_zero_of_eq [ prf ]
       | prf , q( $ ( a ) > $ ( b ) ) => mk_app `sub_neg_of_lt [ prf ]
       | prf , q( $ ( a ) ≥ $ ( b ) ) => mk_app ` ` sub_nonpos_of_le [ prf ]
-      | prf , q( ¬ $ ( t ) ) => do let nprf ← rem_neg prf t let tp ← infer_type nprf rearr_comp_aux nprf tp
+      |
+        prf , q( ¬ $ ( t ) )
+        =>
+        do let nprf ← rem_neg prf t let tp ← infer_type nprf rearr_comp_aux nprf tp
       | prf , a => trace a >> fail "couldn't rearrange comp"
 #align linarith.rearr_comp_aux linarith.rearr_comp_aux
 
@@ -92,7 +95,8 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
 #align linarith.mk_coe_nat_nonneg_prf linarith.mk_coe_nat_nonneg_prf
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
-/-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/ unsafe
+/-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/
+    unsafe
   def
     get_nat_comps
     : expr → List expr
@@ -119,8 +123,14 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
             with
             | q( $ ( a ) < $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( pf ) )
               | q( $ ( a ) > $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( pf ) )
-              | q( ¬ $ ( a ) ≤ $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr ( le_of_not_gt $ ( pf ) ) )
-              | q( ¬ $ ( a ) ≥ $ ( b ) ) => to_expr ` `( Int.add_one_le_iff . mpr ( le_of_not_gt $ ( pf ) ) )
+              |
+                q( ¬ $ ( a ) ≤ $ ( b ) )
+                =>
+                to_expr ` `( Int.add_one_le_iff . mpr ( le_of_not_gt $ ( pf ) ) )
+              |
+                q( ¬ $ ( a ) ≥ $ ( b ) )
+                =>
+                to_expr ` `( Int.add_one_le_iff . mpr ( le_of_not_gt $ ( pf ) ) )
               | _ => fail "mk_non_strict_int_pf_of_strict_int_pf failed: proof is not an inequality"
 #align linarith.mk_non_strict_int_pf_of_strict_int_pf linarith.mk_non_strict_int_pf_of_strict_int_pf
 
@@ -188,7 +198,9 @@ unsafe def nat_to_int : global_preprocessor where
   transform l :=-- we lock the tactic state here because a `simplify` call inside of
   -- `zify_proof` corrupts the tactic state when run under `io.run_tactic`.
   do
-    let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
+    let l ←
+      lock_tactic_state <|
+          l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
           (fun (es : expr_set) h => do
@@ -204,7 +216,8 @@ unsafe def strengthen_strict_int : preprocessor where
   Name := "strengthen strict inequalities over int"
   transform h := do
     let tp ← infer_type h
-    guardb (is_strict_int_prop tp) >> singleton <$> mk_non_strict_int_pf_of_strict_int_pf h <|> return [h]
+    guardb (is_strict_int_prop tp) >> singleton <$> mk_non_strict_int_pf_of_strict_int_pf h <|>
+        return [h]
 #align linarith.strengthen_strict_int linarith.strengthen_strict_int
 
 /-- `mk_comp_with_zero h` takes a proof `h` of an equality, inequality, or negation thereof,
@@ -254,7 +267,12 @@ unsafe def cancel_denoms : preprocessor where
       |
         s , e @ q( $ ( e1 ) * $ ( e2 ) )
         =>
-        if e1 = e2 then do let s ← find_squares s e1 return ( s ( e1 , ff ) ) else e . mfoldl find_squares s
+        if
+          e1 = e2
+          then
+          do let s ← find_squares s e1 return ( s ( e1 , ff ) )
+          else
+          e . mfoldl find_squares s
       | s , e => e . mfoldl find_squares s
 #align linarith.find_squares linarith.find_squares
 
@@ -303,7 +321,8 @@ unsafe def nlinarith_extras : global_preprocessor where
     return <| new_es ++ ls ++ products
 #align linarith.nlinarith_extras linarith.nlinarith_extras
 
-/-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
+/--
+`remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
 -/
 unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
@@ -336,7 +355,8 @@ unsafe def remove_ne : global_branching_preprocessor where
 /-- The default list of preprocessors, in the order they should typically run.
 -/
 unsafe def default_preprocessors : List global_branching_preprocessor :=
-  [filter_comparisons, remove_negations, nat_to_int, strengthen_strict_int, make_comp_with_zero, cancel_denoms]
+  [filter_comparisons, remove_negations, nat_to_int, strengthen_strict_int, make_comp_with_zero,
+    cancel_denoms]
 #align linarith.default_preprocessors linarith.default_preprocessors
 
 /-- `preprocess pps l` takes a list `l` of proofs of propositions.
@@ -345,7 +365,8 @@ The preprocessors are run sequentially: each recieves the output of the previous
 Note that a preprocessor may produce multiple or no expressions from each input expression,
 so the size of the list may change.
 -/
-unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) : tactic (List branch) := do
+unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) :
+    tactic (List branch) := do
   let g ← get_goal
   pps (fun ls pp => List.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
 #align linarith.preprocess linarith.preprocess

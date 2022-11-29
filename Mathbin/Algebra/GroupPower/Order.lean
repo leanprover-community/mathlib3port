@@ -88,10 +88,9 @@ theorem pow_lt_one' {a : M} (ha : a < 1) {k : ℕ} (hk : k ≠ 0) : a ^ k < 1 :=
 #align pow_lt_one' pow_lt_one'
 
 @[to_additive nsmul_lt_nsmul]
-theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ} (ha : 1 < a) (h : n < m) : a ^ n < a ^ m :=
-  by
-  rcases Nat.le.dest h with ⟨k, rfl⟩
-  clear h
+theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ} (ha : 1 < a)
+    (h : n < m) : a ^ n < a ^ m := by
+  rcases Nat.le.dest h with ⟨k, rfl⟩; clear h
   rw [pow_add, pow_succ', mul_assoc, ← pow_succ]
   exact lt_mul_of_one_lt_right' _ (one_lt_pow' ha k.succ_ne_zero)
 #align pow_lt_pow' pow_lt_pow'
@@ -142,8 +141,8 @@ theorem Right.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
 end Right
 
 @[to_additive Left.pow_neg]
-theorem Left.pow_lt_one_of_lt [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) (h : x < 1) :
-    x ^ n < 1 :=
+theorem Left.pow_lt_one_of_lt [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n)
+    (h : x < 1) : x ^ n < 1 :=
   Nat.le_induction ((pow_one _).trans_lt h)
     (fun n _ ih => by
       rw [pow_succ]
@@ -152,8 +151,8 @@ theorem Left.pow_lt_one_of_lt [CovariantClass M M (· * ·) (· < ·)] {n : ℕ}
 #align left.pow_lt_one_of_lt Left.pow_lt_one_of_lt
 
 @[to_additive Right.pow_neg]
-theorem Right.pow_lt_one_of_lt [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) (h : x < 1) :
-    x ^ n < 1 :=
+theorem Right.pow_lt_one_of_lt [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M}
+    (hn : 0 < n) (h : x < 1) : x ^ n < 1 :=
   Nat.le_induction ((pow_one _).trans_lt h)
     (fun n _ ih => by
       rw [pow_succ]
@@ -211,14 +210,15 @@ theorem pow_lt_pow_iff' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
 end CovariantLe
 
 @[to_additive Left.nsmul_neg_iff]
-theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) : x ^ n < 1 ↔ x < 1 :=
+theorem Left.pow_lt_one_iff [CovariantClass M M (· * ·) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) :
+    x ^ n < 1 ↔ x < 1 :=
   haveI := Mul.to_covariant_class_left M
   pow_lt_one_iff hn.ne'
 #align left.pow_lt_one_iff Left.pow_lt_one_iff
 
 @[to_additive Right.nsmul_neg_iff]
-theorem Right.pow_lt_one_iff [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M} (hn : 0 < n) :
-    x ^ n < 1 ↔ x < 1 :=
+theorem Right.pow_lt_one_iff [CovariantClass M M (swap (· * ·)) (· < ·)] {n : ℕ} {x : M}
+    (hn : 0 < n) : x ^ n < 1 ↔ x < 1 :=
   ⟨fun H =>
     not_le.mp fun k =>
       H.not_le <|
@@ -267,7 +267,7 @@ theorem zero_pow_le_one : ∀ n : ℕ, (0 : R) ^ n ≤ 1
 
 theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y ^ n ≤ (x + y) ^ n := by
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
-  induction' k with k ih
+  induction' k with k ih;
   · simp only [pow_one]
     
   let n := k.succ
@@ -278,8 +278,8 @@ theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y 
       rw [pow_succ _ n, pow_succ _ n]
       exact le_add_of_nonneg_right h1
     _ = (x + y) * (x ^ n + y ^ n) := by
-      rw [add_mul, mul_add, mul_add, add_comm (y * x ^ n), ← add_assoc, ← add_assoc, add_assoc (x * x ^ n) (x * y ^ n),
-        add_comm (x * y ^ n) (y * y ^ n), ← add_assoc]
+      rw [add_mul, mul_add, mul_add, add_comm (y * x ^ n), ← add_assoc, ← add_assoc,
+        add_assoc (x * x ^ n) (x * y ^ n), add_comm (x * y ^ n) (y * y ^ n), ← add_assoc]
     _ ≤ (x + y) ^ n.succ := by
       rw [pow_succ _ n]
       exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
@@ -302,7 +302,8 @@ theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
   | 0 => by rw [pow_zero]
   | n + 1 => by
     rw [pow_succ]
-    simpa only [mul_one] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_trans zero_le_one H)
+    simpa only [mul_one] using
+      mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_trans zero_le_one H)
 #align one_le_pow_of_one_le one_le_pow_of_one_le
 
 theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
@@ -347,8 +348,8 @@ theorem pow_lt_pow_of_lt_left (h : x < y) (hx : 0 ≤ x) : ∀ {n : ℕ}, 0 < n 
       mul_lt_mul_of_le_of_le' (pow_le_pow_of_le_left hx h.le _) h (pow_pos (hx.trans_lt h) _) hx
 #align pow_lt_pow_of_lt_left pow_lt_pow_of_lt_left
 
-theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.ici 0) := fun x hx y hy h =>
-  pow_lt_pow_of_lt_left h hx hn
+theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.ici 0) :=
+  fun x hx y hy h => pow_lt_pow_of_lt_left h hx hn
 #align strict_mono_on_pow strict_mono_on_pow
 
 theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
@@ -457,7 +458,8 @@ theorem one_lt_sq_iff {a : R} (ha : 0 ≤ a) : 1 < a ^ 2 ↔ 1 < a :=
 #align one_lt_sq_iff one_lt_sq_iff
 
 @[simp]
-theorem pow_left_inj {x y : R} {n : ℕ} (Hxpos : 0 ≤ x) (Hypos : 0 ≤ y) (Hnpos : 0 < n) : x ^ n = y ^ n ↔ x = y :=
+theorem pow_left_inj {x y : R} {n : ℕ} (Hxpos : 0 ≤ x) (Hypos : 0 ≤ y) (Hnpos : 0 < n) :
+    x ^ n = y ^ n ↔ x = y :=
   (@strict_mono_on_pow R _ _ Hnpos).eq_iff_eq Hxpos Hypos
 #align pow_left_inj pow_left_inj
 
@@ -494,9 +496,9 @@ theorem abs_neg_one_pow (n : ℕ) : |(-1 : R) ^ n| = 1 := by rw [← pow_abs, ab
 
 /- warning: pow_bit0_nonneg -> pow_bit0_nonneg is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u_4}} [_inst_1 : LinearOrderedRing.{u_4} R] (a : R) (n : Nat), LE.le.{u_4} R (Preorder.toLE.{u_4} R (PartialOrder.toPreorder.{u_4} R (OrderedCancelAddCommMonoid.toPartialOrder.{u_4} R (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u_4} R (StrictOrderedRing.toOrderedAddCommGroup.{u_4} R (LinearOrderedRing.toStrictOrderedRing.{u_4} R _inst_1)))))) (OfNat.ofNat.{u_4} R 0 (OfNat.mk.{u_4} R 0 (Zero.zero.{u_4} R (MulZeroClass.toHasZero.{u_4} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u_4} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u_4} R (NonAssocRing.toNonUnitalNonAssocRing.{u_4} R (Ring.toNonAssocRing.{u_4} R (StrictOrderedRing.toRing.{u_4} R (LinearOrderedRing.toStrictOrderedRing.{u_4} R _inst_1)))))))))) (HPow.hPow.{u_4 0 u_4} R Nat R (instHPow.{u_4 0} R Nat (Monoid.hasPow.{u_4} R (Ring.toMonoid.{u_4} R (StrictOrderedRing.toRing.{u_4} R (LinearOrderedRing.toStrictOrderedRing.{u_4} R _inst_1))))) a (bit0.{0} Nat Nat.hasAdd n))
+  forall {R : Type.{u_4}} [_inst_1 : LinearOrderedRing.{u_4} R] (a : R) (n : Nat), LE.le.{u_4} R (Preorder.toLE.{u_4} R (PartialOrder.toPreorder.{u_4} R (OrderedCancelAddCommMonoid.toPartialOrder.{u_4} R (OrderedAddCommGroup.toOrderedCancelAddCommMonoid.{u_4} R (StrictOrderedRing.toOrderedAddCommGroup.{u_4} R (LinearOrderedRing.toStrictOrderedRing.{u_4} R _inst_1)))))) (OfNat.ofNat.{u_4} R 0 (OfNat.mk.{u_4} R 0 (Zero.zero.{u_4} R (MulZeroClass.toHasZero.{u_4} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u_4} R (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u_4} R (NonAssocRing.toNonUnitalNonAssocRing.{u_4} R (Ring.toNonAssocRing.{u_4} R (StrictOrderedRing.toRing.{u_4} R (LinearOrderedRing.toStrictOrderedRing.{u_4} R _inst_1)))))))))) (HPow.hPow.{u_4, 0, u_4} R Nat R (instHPow.{u_4, 0} R Nat (Monoid.hasPow.{u_4} R (Ring.toMonoid.{u_4} R (StrictOrderedRing.toRing.{u_4} R (LinearOrderedRing.toStrictOrderedRing.{u_4} R _inst_1))))) a (bit0.{0} Nat Nat.hasAdd n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.217 : LinearOrderedRing.{u_1} α] (a : α) (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedRing.toPartialOrder.{u_1} α (LinearOrderedRing.toStrictOrderedRing.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.217)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (Ring.toSemiring.{u_1} α (StrictOrderedRing.toRing.{u_1} α (LinearOrderedRing.toStrictOrderedRing.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.217))))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (Ring.toSemiring.{u_1} α (StrictOrderedRing.toRing.{u_1} α (LinearOrderedRing.toStrictOrderedRing.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.217))))))) a (HMul.hMul.{0 0 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.204 : LinearOrderedRing.{u_1} α] (a : α) (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedRing.toPartialOrder.{u_1} α (LinearOrderedRing.toStrictOrderedRing.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.204)))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (Ring.toSemiring.{u_1} α (StrictOrderedRing.toRing.{u_1} α (LinearOrderedRing.toStrictOrderedRing.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.204))))))) (HPow.hPow.{u_1, 0, u_1} α Nat α (instHPow.{u_1, 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (Ring.toSemiring.{u_1} α (StrictOrderedRing.toRing.{u_1} α (LinearOrderedRing.toStrictOrderedRing.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.204))))))) a (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2)) n))
 Case conversion may be inaccurate. Consider using '#align pow_bit0_nonneg pow_bit0_nonnegₓ'. -/
 theorem pow_bit0_nonneg (a : R) (n : ℕ) : 0 ≤ a ^ bit0 n := by
   rw [pow_bit0]
@@ -539,7 +541,8 @@ theorem abs_sq (x : R) : |x ^ 2| = x ^ 2 := by simpa only [sq] using abs_mul_sel
 #align abs_sq abs_sq
 
 theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ |x| < |y| := by
-  simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
+  simpa only [sq_abs] using
+    (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
 #align sq_lt_sq sq_lt_sq
 
 theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
@@ -547,28 +550,32 @@ theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
 #align sq_lt_sq' sq_lt_sq'
 
 theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ |x| ≤ |y| := by
-  simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
+  simpa only [sq_abs] using
+    (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
 #align sq_le_sq sq_le_sq
 
 theorem sq_le_sq' (h1 : -y ≤ x) (h2 : x ≤ y) : x ^ 2 ≤ y ^ 2 :=
   sq_le_sq.2 (le_trans (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
 #align sq_le_sq' sq_le_sq'
 
-theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : |x| < y := by rwa [← abs_of_nonneg hy, ← sq_lt_sq]
+theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : |x| < y := by
+  rwa [← abs_of_nonneg hy, ← sq_lt_sq]
 #align abs_lt_of_sq_lt_sq abs_lt_of_sq_lt_sq
 
 theorem abs_lt_of_sq_lt_sq' (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : -y < x ∧ x < y :=
   abs_lt.mp <| abs_lt_of_sq_lt_sq h hy
 #align abs_lt_of_sq_lt_sq' abs_lt_of_sq_lt_sq'
 
-theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : |x| ≤ y := by rwa [← abs_of_nonneg hy, ← sq_le_sq]
+theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : |x| ≤ y := by
+  rwa [← abs_of_nonneg hy, ← sq_le_sq]
 #align abs_le_of_sq_le_sq abs_le_of_sq_le_sq
 
 theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ x ≤ y :=
   abs_le.mp <| abs_le_of_sq_le_sq h hy
 #align abs_le_of_sq_le_sq' abs_le_of_sq_le_sq'
 
-theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ |x| = |y| := by simp only [le_antisymm_iff, sq_le_sq]
+theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ |x| = |y| := by
+  simp only [le_antisymm_iff, sq_le_sq]
 #align sq_eq_sq_iff_abs_eq_abs sq_eq_sq_iff_abs_eq_abs
 
 @[simp]

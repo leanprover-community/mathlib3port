@@ -53,11 +53,13 @@ class IsAdicComplete extends IsHausdorff I M, IsPrecomplete I M : Prop
 
 variable {I M}
 
-theorem IsHausdorff.haus (h : IsHausdorff I M) : ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
+theorem IsHausdorff.haus (h : IsHausdorff I M) :
+    ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
   IsHausdorff.haus'
 #align is_Hausdorff.haus IsHausdorff.haus
 
-theorem is_Hausdorff_iff : IsHausdorff I M ↔ ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
+theorem is_Hausdorff_iff :
+    IsHausdorff I M ↔ ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
   ⟨IsHausdorff.haus, fun h => ⟨h⟩⟩
 #align is_Hausdorff_iff is_Hausdorff_iff
 
@@ -96,7 +98,8 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
             (f n) =
           f m }
   zero_mem' m n hmn := by rw [Pi.zero_apply, Pi.zero_apply, LinearMap.map_zero]
-  add_mem' f g hf hg m n hmn := by rw [Pi.add_apply, Pi.add_apply, LinearMap.map_add, hf hmn, hg hmn]
+  add_mem' f g hf hg m n hmn := by
+    rw [Pi.add_apply, Pi.add_apply, LinearMap.map_add, hf hmn, hg hmn]
   smul_mem' c f hf m n hmn := by rw [Pi.smul_apply, Pi.smul_apply, LinearMap.map_smul, hf hmn]
 #align adic_completion adicCompletion
 
@@ -141,8 +144,8 @@ def of : M →ₗ[R] HausdorffificationCat I M :=
 variable {I M}
 
 @[elab_as_elim]
-theorem induction_on {C : HausdorffificationCat I M → Prop} (x : HausdorffificationCat I M) (ih : ∀ x, C (of I M x)) :
-    C x :=
+theorem induction_on {C : HausdorffificationCat I M → Prop} (x : HausdorffificationCat I M)
+    (ih : ∀ x, C (of I M x)) : C x :=
   Quotient.inductionOn' x ih
 #align Hausdorffification.induction_on HausdorffificationCat.induction_on
 
@@ -155,8 +158,7 @@ instance : IsHausdorff I (HausdorffificationCat I M) :=
         (mem_infi _).2 fun n => by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
           simp only [sup_of_le_right (infi_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
-          rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]
-          exact hx n⟩
+          rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]; exact hx n⟩
 
 variable {M} [h : IsHausdorff I N]
 
@@ -183,7 +185,8 @@ theorem lift_comp_of (f : M →ₗ[R] N) : (lift I f).comp (of I M) = f :=
 #align Hausdorffification.lift_comp_of HausdorffificationCat.lift_comp_of
 
 /-- Uniqueness of lift. -/
-theorem lift_eq (f : M →ₗ[R] N) (g : HausdorffificationCat I M →ₗ[R] N) (hg : g.comp (of I M) = f) : g = lift I f :=
+theorem lift_eq (f : M →ₗ[R] N) (g : HausdorffificationCat I M →ₗ[R] N) (hg : g.comp (of I M) = f) :
+    g = lift I f :=
   LinearMap.ext fun x => (induction_on x) fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
 #align Hausdorffification.lift_eq HausdorffificationCat.lift_eq
 
@@ -192,14 +195,12 @@ end HausdorffificationCat
 namespace IsPrecomplete
 
 instance bot : IsPrecomplete (⊥ : Ideal R) M := by
-  refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩
-  cases n
+  refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩; cases n
   · rw [pow_zero, Ideal.one_eq_top, top_smul]
     exact Smodeq.top
     
   specialize hf (Nat.le_add_left 1 n)
-  rw [pow_one, bot_smul, Smodeq.bot] at hf
-  rw [hf]
+  rw [pow_one, bot_smul, Smodeq.bot] at hf; rw [hf]
 #align is_precomplete.bot IsPrecomplete.bot
 
 instance top : IsPrecomplete (⊤ : Ideal R) M :=
@@ -237,7 +238,8 @@ def eval (n : ℕ) : adicCompletion I M →ₗ[R] M ⧸ (I ^ n • ⊤ : Submodu
 #align adic_completion.eval adicCompletion.eval
 
 @[simp]
-theorem coe_eval (n : ℕ) : (eval I M n : adicCompletion I M → M ⧸ (I ^ n • ⊤ : Submodule R M)) = fun f => f.1 n :=
+theorem coe_eval (n : ℕ) :
+    (eval I M n : adicCompletion I M → M ⧸ (I ^ n • ⊤ : Submodule R M)) = fun f => f.1 n :=
   rfl
 #align adic_completion.coe_eval adicCompletion.coe_eval
 
@@ -310,7 +312,7 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     rw [mul_pow, pow_add, mul_assoc]
     exact Ideal.mul_mem_right _ (I ^ m) (Ideal.pow_mem_pow hx m)
   obtain ⟨L, hL⟩ := IsPrecomplete.prec to_is_precomplete hf
-  · rw [is_unit_iff_exists_inv]
+  · rw [isUnit_iff_exists_inv]
     use L
     rw [← sub_eq_zero, neg_mul]
     apply IsHausdorff.haus (to_is_Hausdorff : IsHausdorff I R)
@@ -325,8 +327,8 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     · simp only [Ideal.one_eq_top, pow_zero]
       
     · dsimp [f]
-      rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub,
-        neg_mem_iff, mul_pow]
+      rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_comm, ← sub_sub,
+        sub_self, zero_sub, neg_mem_iff, mul_pow]
       exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)
       
     

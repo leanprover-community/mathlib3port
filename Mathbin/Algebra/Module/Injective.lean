@@ -37,7 +37,8 @@ universe u v
 
 variable (R : Type u) [Ring R] (Q : Type max u v) [AddCommGroup Q] [Module R Q]
 
-/-- An `R`-module `Q` is injective if and only if every injective `R`-linear map descends to a linear
+/--
+An `R`-module `Q` is injective if and only if every injective `R`-linear map descends to a linear
 map to `Q`, i.e. in the following diagram, if `f` is injective then there is an `R`-linear map
 `h : Y ⟶ Q` such that `g = h ∘ f`
   ```
@@ -50,8 +51,9 @@ map to `Q`, i.e. in the following diagram, if `f` is injective then there is an 
 -/
 class Module.Injective : Prop where
   out :
-    ∀ (X Y : Type max u v) [AddCommGroup X] [AddCommGroup Y] [Module R X] [Module R Y] (f : X →ₗ[R] Y)
-      (hf : Function.Injective f) (g : X →ₗ[R] Q), ∃ h : Y →ₗ[R] Q, ∀ x, h (f x) = g x
+    ∀ (X Y : Type max u v) [AddCommGroup X] [AddCommGroup Y] [Module R X] [Module R Y]
+      (f : X →ₗ[R] Y) (hf : Function.Injective f) (g : X →ₗ[R] Q),
+      ∃ h : Y →ₗ[R] Q, ∀ x, h (f x) = g x
 #align module.injective Module.Injective
 
 theorem Module.injective_object_of_injective_module [Module.Injective.{u, v} R Q] :
@@ -61,7 +63,8 @@ theorem Module.injective_object_of_injective_module [Module.Injective.{u, v} R Q
       exact ⟨h, LinearMap.ext eq1⟩ }
 #align module.injective_object_of_injective_module Module.injective_object_of_injective_module
 
-theorem Module.injective_module_of_injective_object [CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R)] :
+theorem Module.injective_module_of_injective_object
+    [CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R)] :
     Module.Injective.{u, v} R Q :=
   { out := fun X Y ins1 ins2 ins3 ins4 f hf g => by
       skip
@@ -72,7 +75,8 @@ theorem Module.injective_module_of_injective_object [CategoryTheory.Injective.{m
 #align module.injective_module_of_injective_object Module.injective_module_of_injective_object
 
 theorem Module.injective_iff_injective_object :
-    Module.Injective.{u, v} R Q ↔ CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R) :=
+    Module.Injective.{u, v} R Q ↔
+      CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R) :=
   ⟨fun h => @Module.injective_object_of_injective_module R _ Q _ _ h, fun h =>
     @Module.injective_module_of_injective_object R _ Q _ _ h⟩
 #align module.injective_iff_injective_object Module.injective_iff_injective_object
@@ -103,7 +107,9 @@ variable {i f}
 
 @[ext.1]
 theorem ExtensionOf.ext {a b : ExtensionOf i f} (domain_eq : a.domain = b.domain)
-    (to_fun_eq : ∀ ⦃x : a.domain⦄ ⦃y : b.domain⦄, (x : N) = y → a.toLinearPmap x = b.toLinearPmap y) : a = b := by
+    (to_fun_eq :
+      ∀ ⦃x : a.domain⦄ ⦃y : b.domain⦄, (x : N) = y → a.toLinearPmap x = b.toLinearPmap y) :
+    a = b := by
   rcases a with ⟨a, a_le, e1⟩
   rcases b with ⟨b, b_le, e2⟩
   congr
@@ -114,19 +120,23 @@ theorem ExtensionOf.ext_iff {a b : ExtensionOf i f} :
     a = b ↔
       ∃ domain_eq : a.domain = b.domain,
         ∀ ⦃x : a.domain⦄ ⦃y : b.domain⦄, (x : N) = y → a.toLinearPmap x = b.toLinearPmap y :=
-  ⟨fun r => r ▸ ⟨rfl, fun x y h => congr_arg a.toFun <| by exact_mod_cast h⟩, fun ⟨h1, h2⟩ => ExtensionOf.ext h1 h2⟩
+  ⟨fun r => r ▸ ⟨rfl, fun x y h => congr_arg a.toFun <| by exact_mod_cast h⟩, fun ⟨h1, h2⟩ =>
+    ExtensionOf.ext h1 h2⟩
 #align module.Baer.extension_of.ext_iff Module.BaerCat.ExtensionOf.ext_iff
 
 end Ext
 
 instance :
-    HasInf (ExtensionOf i f) where inf X1 X2 :=
+    HasInf
+      (ExtensionOf i
+        f) where inf X1 X2 :=
     { X1.toLinearPmap ⊓ X2.toLinearPmap with
       le := fun x hx =>
         (by
           rcases hx with ⟨x, rfl⟩
           refine' ⟨X1.le (Set.mem_range_self _), X2.le (Set.mem_range_self _), _⟩
-          rw [← X1.is_extension x, ← X2.is_extension x] : x ∈ X1.toLinearPmap.eqLocus X2.toLinearPmap),
+          rw [← X1.is_extension x, ← X2.is_extension x] :
+          x ∈ X1.toLinearPmap.eqLocus X2.toLinearPmap),
       is_extension := fun m => X1.is_extension _ }
 
 instance : SemilatticeInf (ExtensionOf i f) :=
@@ -142,19 +152,22 @@ instance : SemilatticeInf (ExtensionOf i f) :=
 
 variable {R i f}
 
-theorem chain_linear_pmap_of_chain_extension_of {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c) :
+theorem chain_linear_pmap_of_chain_extension_of {c : Set (ExtensionOf i f)}
+    (hchain : IsChain (· ≤ ·) c) :
     IsChain (· ≤ ·) <| (fun x : ExtensionOf i f => x.toLinearPmap) '' c := by
   rintro _ ⟨a, a_mem, rfl⟩ _ ⟨b, b_mem, rfl⟩ neq
   exact hchain a_mem b_mem (ne_of_apply_ne _ neq)
-#align module.Baer.chain_linear_pmap_of_chain_extension_of Module.BaerCat.chain_linear_pmap_of_chain_extension_of
+#align
+  module.Baer.chain_linear_pmap_of_chain_extension_of Module.BaerCat.chain_linear_pmap_of_chain_extension_of
 
 /-- The maximal element of every nonempty chain of `extension_of i f`. -/
-def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c) (hnonempty : c.Nonempty) :
-    ExtensionOf i f :=
+def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
+    (hnonempty : c.Nonempty) : ExtensionOf i f :=
   { LinearPmap.sup _ (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain) with
     le :=
       le_trans hnonempty.some.le <|
-        (LinearPmap.le_Sup _ <| (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1,
+        (LinearPmap.le_Sup _ <|
+            (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1,
     is_extension := fun m => by
       refine' Eq.trans (hnonempty.some.is_extension m) _
       symm
@@ -164,8 +177,9 @@ def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
           ((Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩) ⟨i m, h1⟩ }
 #align module.Baer.extension_of.max Module.BaerCat.ExtensionOf.max
 
-theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c) (hnonempty : c.Nonempty)
-    (a : ExtensionOf i f) (ha : a ∈ c) : a ≤ ExtensionOf.max hchain hnonempty :=
+theorem ExtensionOf.le_max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
+    (hnonempty : c.Nonempty) (a : ExtensionOf i f) (ha : a ∈ c) :
+    a ≤ ExtensionOf.max hchain hnonempty :=
   LinearPmap.le_Sup (IsChain.directed_on <| chain_linear_pmap_of_chain_extension_of hchain) <|
     (Set.mem_image _ _ _).mpr ⟨a, ha, rfl⟩
 #align module.Baer.extension_of.le_max Module.BaerCat.ExtensionOf.le_max
@@ -201,14 +215,16 @@ def extensionOfMax : ExtensionOf i f :=
       ⟨ExtensionOf.max hchain hnonempty, ExtensionOf.le_max hchain hnonempty⟩).some
 #align module.Baer.extension_of_max Module.BaerCat.extensionOfMax
 
-theorem extension_of_max_is_max : ∀ a : ExtensionOf i f, extensionOfMax i f ≤ a → a = extensionOfMax i f :=
+theorem extension_of_max_is_max :
+    ∀ a : ExtensionOf i f, extensionOfMax i f ≤ a → a = extensionOfMax i f :=
   (@zorn_nonempty_partial_order (ExtensionOf i f) _ ⟨Inhabited.default⟩ fun c hchain hnonempty =>
       ⟨ExtensionOf.max hchain hnonempty, ExtensionOf.le_max hchain hnonempty⟩).some_spec
 #align module.Baer.extension_of_max_is_max Module.BaerCat.extension_of_max_is_max
 
 variable {f}
 
-private theorem extension_of_max_adjoin.aux1 {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
+private theorem extension_of_max_adjoin.aux1 {y : N}
+    (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
     ∃ (a : (extensionOfMax i f).domain)(b : R), x.1 = a.1 + b • y := by
   have mem1 : x.1 ∈ (_ : Set _) := x.2
   rw [Submodule.coe_sup] at mem1
@@ -252,7 +268,8 @@ def ExtensionOfMaxAdjoin.idealTo (y : N) : ExtensionOfMaxAdjoin.ideal i f y →�
 call this extended map `φ`-/
 def ExtensionOfMaxAdjoin.extendIdealTo (h : Module.BaerCat R Q) (y : N) : R →ₗ[R] Q :=
   (h (ExtensionOfMaxAdjoin.ideal i f y) (ExtensionOfMaxAdjoin.idealTo i f y)).some
-#align module.Baer.extension_of_max_adjoin.extend_ideal_to Module.BaerCat.ExtensionOfMaxAdjoin.extendIdealTo
+#align
+  module.Baer.extension_of_max_adjoin.extend_ideal_to Module.BaerCat.ExtensionOfMaxAdjoin.extendIdealTo
 
 theorem ExtensionOfMaxAdjoin.extend_ideal_to_is_extension (h : Module.BaerCat R Q) (y : N) :
     ∀ (x : R) (mem : x ∈ ExtensionOfMaxAdjoin.ideal i f y),
@@ -261,27 +278,33 @@ theorem ExtensionOfMaxAdjoin.extend_ideal_to_is_extension (h : Module.BaerCat R 
 #align
   module.Baer.extension_of_max_adjoin.extend_ideal_to_is_extension Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_is_extension
 
-theorem ExtensionOfMaxAdjoin.extend_ideal_to_wd' (h : Module.BaerCat R Q) {y : N} (r : R) (eq1 : r • y = 0) :
-    ExtensionOfMaxAdjoin.extendIdealTo i f h y r = 0 := by
+theorem ExtensionOfMaxAdjoin.extend_ideal_to_wd' (h : Module.BaerCat R Q) {y : N} (r : R)
+    (eq1 : r • y = 0) : ExtensionOfMaxAdjoin.extendIdealTo i f h y r = 0 := by
   rw [extension_of_max_adjoin.extend_ideal_to_is_extension i f h y r
       (by rw [eq1] <;> exact Submodule.zero_mem _ : r • y ∈ _)]
-  simp only [extension_of_max_adjoin.ideal_to, LinearMap.coe_mk, eq1, Subtype.coe_mk, ← ZeroMemClass.zero_def,
-    (extension_of_max i f).toLinearPmap.map_zero]
-#align module.Baer.extension_of_max_adjoin.extend_ideal_to_wd' Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_wd'
+  simp only [extension_of_max_adjoin.ideal_to, LinearMap.coe_mk, eq1, Subtype.coe_mk, ←
+    ZeroMemClass.zero_def, (extension_of_max i f).toLinearPmap.map_zero]
+#align
+  module.Baer.extension_of_max_adjoin.extend_ideal_to_wd' Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_wd'
 
-theorem ExtensionOfMaxAdjoin.extend_ideal_to_wd (h : Module.BaerCat R Q) {y : N} (r r' : R) (eq1 : r • y = r' • y) :
-    ExtensionOfMaxAdjoin.extendIdealTo i f h y r = ExtensionOfMaxAdjoin.extendIdealTo i f h y r' := by
+theorem ExtensionOfMaxAdjoin.extend_ideal_to_wd (h : Module.BaerCat R Q) {y : N} (r r' : R)
+    (eq1 : r • y = r' • y) :
+    ExtensionOfMaxAdjoin.extendIdealTo i f h y r = ExtensionOfMaxAdjoin.extendIdealTo i f h y r' :=
+  by
   rw [← sub_eq_zero, ← map_sub]
   convert extension_of_max_adjoin.extend_ideal_to_wd' i f h (r - r') _
   rw [sub_smul, sub_eq_zero, eq1]
-#align module.Baer.extension_of_max_adjoin.extend_ideal_to_wd Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_wd
+#align
+  module.Baer.extension_of_max_adjoin.extend_ideal_to_wd Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_wd
 
 theorem ExtensionOfMaxAdjoin.extend_ideal_to_eq (h : Module.BaerCat R Q) {y : N} (r : R)
     (hr : r • y ∈ (extensionOfMax i f).domain) :
-    ExtensionOfMaxAdjoin.extendIdealTo i f h y r = (extensionOfMax i f).toLinearPmap ⟨r • y, hr⟩ := by
-  simp only [extension_of_max_adjoin.extend_ideal_to_is_extension i f h _ _ hr, extension_of_max_adjoin.ideal_to,
-    LinearMap.coe_mk, Subtype.coe_mk]
-#align module.Baer.extension_of_max_adjoin.extend_ideal_to_eq Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_eq
+    ExtensionOfMaxAdjoin.extendIdealTo i f h y r = (extensionOfMax i f).toLinearPmap ⟨r • y, hr⟩ :=
+  by
+  simp only [extension_of_max_adjoin.extend_ideal_to_is_extension i f h _ _ hr,
+    extension_of_max_adjoin.ideal_to, LinearMap.coe_mk, Subtype.coe_mk]
+#align
+  module.Baer.extension_of_max_adjoin.extend_ideal_to_eq Module.BaerCat.ExtensionOfMaxAdjoin.extend_ideal_to_eq
 
 /-- We can finally define a linear map `M ⊔ ⟨y⟩ ⟶ Q` by `x + r • y ↦ f x + φ r`
 -/
@@ -289,18 +312,21 @@ def ExtensionOfMaxAdjoin.extensionToFun (h : Module.BaerCat R Q) {y : N} :
     (extensionOfMax i f).domain ⊔ Submodule.span R {y} → Q := fun x =>
   (extensionOfMax i f).toLinearPmap (ExtensionOfMaxAdjoin.fst i x) +
     ExtensionOfMaxAdjoin.extendIdealTo i f h y (ExtensionOfMaxAdjoin.snd i x)
-#align module.Baer.extension_of_max_adjoin.extension_to_fun Module.BaerCat.ExtensionOfMaxAdjoin.extensionToFun
+#align
+  module.Baer.extension_of_max_adjoin.extension_to_fun Module.BaerCat.ExtensionOfMaxAdjoin.extensionToFun
 
 theorem ExtensionOfMaxAdjoin.extension_to_fun_wd (h : Module.BaerCat R Q) {y : N}
-    (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) (a : (extensionOfMax i f).domain) (r : R)
-    (eq1 : ↑x = ↑a + r • y) :
+    (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) (a : (extensionOfMax i f).domain)
+    (r : R) (eq1 : ↑x = ↑a + r • y) :
     ExtensionOfMaxAdjoin.extensionToFun i f h x =
       (extensionOfMax i f).toLinearPmap a + ExtensionOfMaxAdjoin.extendIdealTo i f h y r :=
   by
   cases' a with a ha
   rw [Subtype.coe_mk] at eq1
-  have eq2 : (extension_of_max_adjoin.fst i x - a : N) = (r - extension_of_max_adjoin.snd i x) • y := by
-    rwa [extension_of_max_adjoin.eqn, ← sub_eq_zero, ← sub_sub_sub_eq, sub_eq_zero, ← sub_smul] at eq1
+  have eq2 :
+    (extension_of_max_adjoin.fst i x - a : N) = (r - extension_of_max_adjoin.snd i x) • y := by
+    rwa [extension_of_max_adjoin.eqn, ← sub_eq_zero, ← sub_sub_sub_eq, sub_eq_zero, ← sub_smul] at
+      eq1
   have eq3 :=
     extension_of_max_adjoin.extend_ideal_to_eq i f h (r - extension_of_max_adjoin.snd i x)
       (by rw [← eq2] <;> exact Submodule.sub_mem _ (extension_of_max_adjoin.fst i x).2 ha)
@@ -311,7 +337,8 @@ theorem ExtensionOfMaxAdjoin.extension_to_fun_wd (h : Module.BaerCat R Q) {y : N
   ext
   rw [Subtype.coe_mk, add_sub, ← eq1]
   exact eq_sub_of_add_eq (extension_of_max_adjoin.eqn _ _).symm
-#align module.Baer.extension_of_max_adjoin.extension_to_fun_wd Module.BaerCat.ExtensionOfMaxAdjoin.extension_to_fun_wd
+#align
+  module.Baer.extension_of_max_adjoin.extension_to_fun_wd Module.BaerCat.ExtensionOfMaxAdjoin.extension_to_fun_wd
 
 /-- The linear map `M ⊔ ⟨y⟩ ⟶ Q` by `x + r • y ↦ f x + φ r` is an extension of `f`-/
 def extensionOfMaxAdjoin (h : Module.BaerCat R Q) (y : N) : ExtensionOf i f where
@@ -327,36 +354,45 @@ def extensionOfMaxAdjoin (h : Module.BaerCat R Q) (y : N) : ExtensionOf i f wher
           by
           rw [extension_of_max_adjoin.eqn, extension_of_max_adjoin.eqn, add_smul]
           abel
-        rw [extension_of_max_adjoin.extension_to_fun_wd i f h (a + b) _ _ eq1, LinearPmap.map_add, map_add]
+        rw [extension_of_max_adjoin.extension_to_fun_wd i f h (a + b) _ _ eq1, LinearPmap.map_add,
+          map_add]
         unfold extension_of_max_adjoin.extension_to_fun
         abel,
       map_smul' := fun r a => by
         rw [RingHom.id_apply]
-        have eq1 : r • ↑a = ↑(r • extension_of_max_adjoin.fst i a) + (r • extension_of_max_adjoin.snd i a) • y := by
+        have eq1 :
+          r • ↑a =
+            ↑(r • extension_of_max_adjoin.fst i a) + (r • extension_of_max_adjoin.snd i a) • y :=
+          by
           rw [extension_of_max_adjoin.eqn, smul_add, smul_eq_mul, mul_smul]
           rfl
-        rw [extension_of_max_adjoin.extension_to_fun_wd i f h (r • a) _ _ eq1, LinearMap.map_smul, LinearPmap.map_smul,
-          ← smul_add]
+        rw [extension_of_max_adjoin.extension_to_fun_wd i f h (r • a) _ _ eq1, LinearMap.map_smul,
+          LinearPmap.map_smul, ← smul_add]
         congr }
   is_extension m := by
     simp only [LinearPmap.mk_apply, LinearMap.coe_mk]
-    rw [(extension_of_max i f).is_extension, extension_of_max_adjoin.extension_to_fun_wd i f h _ ⟨i m, _⟩ 0 _, map_zero,
-      add_zero]
+    rw [(extension_of_max i f).is_extension,
+      extension_of_max_adjoin.extension_to_fun_wd i f h _ ⟨i m, _⟩ 0 _, map_zero, add_zero]
     simp
 #align module.Baer.extension_of_max_adjoin Module.BaerCat.extensionOfMaxAdjoin
 
-theorem extension_of_max_le (h : Module.BaerCat R Q) {y : N} : extensionOfMax i f ≤ extensionOfMaxAdjoin i f h y :=
+theorem extension_of_max_le (h : Module.BaerCat R Q) {y : N} :
+    extensionOfMax i f ≤ extensionOfMaxAdjoin i f h y :=
   ⟨le_sup_left, fun x x' EQ => by
     symm
     change extension_of_max_adjoin.extension_to_fun i f h _ = _
-    rw [extension_of_max_adjoin.extension_to_fun_wd i f h x' x 0 (by simp [EQ]), map_zero, add_zero]⟩
+    rw [extension_of_max_adjoin.extension_to_fun_wd i f h x' x 0 (by simp [EQ]), map_zero,
+      add_zero]⟩
 #align module.Baer.extension_of_max_le Module.BaerCat.extension_of_max_le
 
-theorem extension_of_max_to_submodule_eq_top (h : Module.BaerCat R Q) : (extensionOfMax i f).domain = ⊤ := by
+theorem extension_of_max_to_submodule_eq_top (h : Module.BaerCat R Q) :
+    (extensionOfMax i f).domain = ⊤ := by
   refine' submodule.eq_top_iff'.mpr fun y => _
-  rw [← extension_of_max_is_max i f _ (extension_of_max_le i f h), extension_of_max_adjoin, Submodule.mem_sup]
+  rw [← extension_of_max_is_max i f _ (extension_of_max_le i f h), extension_of_max_adjoin,
+    Submodule.mem_sup]
   exact ⟨0, Submodule.zero_mem _, y, Submodule.mem_span_singleton_self _, zero_add _⟩
-#align module.Baer.extension_of_max_to_submodule_eq_top Module.BaerCat.extension_of_max_to_submodule_eq_top
+#align
+  module.Baer.extension_of_max_to_submodule_eq_top Module.BaerCat.extension_of_max_to_submodule_eq_top
 
 /-- **Baer's criterion** for injective module : a Baer module is an injective module, i.e. if every
 linear map from an ideal can be extended, then the module is injective.-/
@@ -364,7 +400,8 @@ protected theorem injective (h : Module.BaerCat R Q) : Module.Injective R Q :=
   { out := fun X Y ins1 ins2 ins3 ins4 i hi f =>
       haveI : Fact (Function.Injective i) := ⟨hi⟩
       ⟨{ toFun := fun y =>
-            (extension_of_max i f).toLinearPmap ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivial⟩,
+            (extension_of_max i f).toLinearPmap
+              ⟨y, (extension_of_max_to_submodule_eq_top i f h).symm ▸ trivial⟩,
           map_add' := fun x y => by
             rw [← LinearPmap.map_add]
             congr ,

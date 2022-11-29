@@ -18,8 +18,8 @@ that `data.pnat.defs` can have very few imports.
 -/
 
 
-deriving instance AddLeftCancelSemigroup, AddRightCancelSemigroup, AddCommSemigroup, LinearOrderedCancelCommMonoid, Add,
-  Mul, Distrib for PNat
+deriving instance AddLeftCancelSemigroup, AddRightCancelSemigroup, AddCommSemigroup,
+  LinearOrderedCancelCommMonoid, Add, Mul, Distrib for PNat
 
 namespace PNat
 
@@ -134,24 +134,24 @@ instance : ContravariantClass ℕ+ ℕ+ (· + ·) (· < ·) :=
 
 /-- An equivalence between `ℕ+` and `ℕ` given by `pnat.nat_pred` and `nat.succ_pnat`. -/
 @[simps (config := { fullyApplied := false })]
-def _root_.equiv.pnat_equiv_nat : ℕ+ ≃ ℕ where
+def Equiv.pnatEquivNat : ℕ+ ≃ ℕ where
   toFun := PNat.natPred
   invFun := Nat.succPNat
   left_inv := succ_pnat_nat_pred
   right_inv := Nat.natPred_succPNat
-#align pnat._root_.equiv.pnat_equiv_nat pnat._root_.equiv.pnat_equiv_nat
+#align equiv.pnat_equiv_nat Equiv.pnatEquivNat
 
 /-- The order isomorphism between ℕ and ℕ+ given by `succ`. -/
 @[simps (config := { fullyApplied := false }) apply]
-def _root_.order_iso.pnat_iso_nat : ℕ+ ≃o ℕ where
+def OrderIso.pnatIsoNat : ℕ+ ≃o ℕ where
   toEquiv := Equiv.pnatEquivNat
   map_rel_iff' _ _ := nat_pred_le_nat_pred
-#align pnat._root_.order_iso.pnat_iso_nat pnat._root_.order_iso.pnat_iso_nat
+#align order_iso.pnat_iso_nat OrderIso.pnatIsoNat
 
 @[simp]
-theorem _root_.order_iso.pnat_iso_nat_symm_apply : ⇑OrderIso.pnatIsoNat.symm = Nat.succPNat :=
+theorem OrderIso.pnat_iso_nat_symm_apply : ⇑OrderIso.pnatIsoNat.symm = Nat.succPNat :=
   rfl
-#align pnat._root_.order_iso.pnat_iso_nat_symm_apply pnat._root_.order_iso.pnat_iso_nat_symm_apply
+#align order_iso.pnat_iso_nat_symm_apply OrderIso.pnat_iso_nat_symm_apply
 
 theorem lt_add_one_iff : ∀ {a b : ℕ+}, a < b + 1 ↔ a ≤ b := fun a b => Nat.lt_add_one_iff
 #align pnat.lt_add_one_iff PNat.lt_add_one_iff
@@ -280,7 +280,8 @@ theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} (h1 : n ≠ 1), ∃ k : ℕ+, 
 #align pnat.exists_eq_succ_of_ne_one PNat.exists_eq_succ_of_ne_one
 
 /-- Strong induction on `ℕ+`, with `n = 1` treated separately. -/
-def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1) (hi : ∀ n, (∀ m, m ≤ n → p m) → p (n + 1)) : p a := by
+def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1)
+    (hi : ∀ n, (∀ m, m ≤ n → p m) → p (n + 1)) : p a := by
   apply strong_induction_on a
   rintro ⟨k, kprop⟩ hk
   cases' k with k
@@ -314,14 +315,15 @@ theorem rec_on_one {p} (p1 hp) : @PNat.recOn 1 p p1 hp = p1 :=
 #align pnat.rec_on_one PNat.rec_on_one
 
 @[simp]
-theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} (p1 hp) : @PNat.recOn (n + 1) p p1 hp = hp n (@PNat.recOn n p p1 hp) :=
-  by
+theorem rec_on_succ (n : ℕ+) {p : ℕ+ → Sort _} (p1 hp) :
+    @PNat.recOn (n + 1) p p1 hp = hp n (@PNat.recOn n p p1 hp) := by
   cases' n with n h
   cases n <;> [exact absurd h (by decide), rfl]
 #align pnat.rec_on_succ PNat.rec_on_succ
 
 theorem mod_div_aux_spec :
-    ∀ (k : ℕ+) (r q : ℕ) (h : ¬(r = 0 ∧ q = 0)), ((modDivAux k r q).1 : ℕ) + k * (modDivAux k r q).2 = r + k * q
+    ∀ (k : ℕ+) (r q : ℕ) (h : ¬(r = 0 ∧ q = 0)),
+      ((modDivAux k r q).1 : ℕ) + k * (modDivAux k r q).2 = r + k * q
   | k, 0, 0, h => (h ⟨rfl, rfl⟩).elim
   | k, 0, q + 1, h => by
     change (k : ℕ) + (k : ℕ) * (q + 1).pred = 0 + (k : ℕ) * (q + 1)
@@ -355,8 +357,7 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by
 
 theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k := by
   change (mod m k : ℕ) ≤ (m : ℕ) ∧ (mod m k : ℕ) ≤ (k : ℕ)
-  rw [mod_coe]
-  split_ifs
+  rw [mod_coe]; split_ifs
   · have hm : (m : ℕ) > 0 := m.pos
     rw [← Nat.mod_add_div (m : ℕ) (k : ℕ), h, zero_add] at hm⊢
     by_cases h' : (m : ℕ) / (k : ℕ) = 0
@@ -373,23 +374,17 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k := by
 #align pnat.mod_le PNat.mod_le
 
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) := by
-  constructor <;> intro h
-  rcases h with ⟨_, rfl⟩
-  apply dvd_mul_right
-  rcases h with ⟨a, h⟩
-  cases a
+  constructor <;> intro h; rcases h with ⟨_, rfl⟩; apply dvd_mul_right
+  rcases h with ⟨a, h⟩; cases a;
   · contrapose h
     apply NeZero
     
-  use a.succ
-  apply Nat.succ_pos
-  rw [← coe_inj, h, mul_coe, mk_coe]
+  use a.succ; apply Nat.succ_pos; rw [← coe_inj, h, mul_coe, mk_coe]
 #align pnat.dvd_iff PNat.dvd_iff
 
 theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k := by
   rw [dvd_iff]
-  rw [Nat.dvd_iff_mod_eq_zero]
-  constructor
+  rw [Nat.dvd_iff_mod_eq_zero]; constructor
   · intro h
     apply Eq
     rw [mod_coe, if_pos h]
@@ -413,13 +408,13 @@ theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by
 #align pnat.le_of_dvd PNat.le_of_dvd
 
 theorem mul_div_exact {m k : ℕ+} (h : k ∣ m) : k * divExact m k = m := by
-  apply Eq
-  rw [mul_coe]
+  apply Eq; rw [mul_coe]
   change (k : ℕ) * (div m k).succ = m
   rw [← div_add_mod m k, dvd_iff'.mp h, Nat.mul_succ]
 #align pnat.mul_div_exact PNat.mul_div_exact
 
-theorem dvd_antisymm {m n : ℕ+} : m ∣ n → n ∣ m → m = n := fun hmn hnm => (le_of_dvd hmn).antisymm (le_of_dvd hnm)
+theorem dvd_antisymm {m n : ℕ+} : m ∣ n → n ∣ m → m = n := fun hmn hnm =>
+  (le_of_dvd hmn).antisymm (le_of_dvd hnm)
 #align pnat.dvd_antisymm PNat.dvd_antisymm
 
 theorem dvd_one_iff (n : ℕ+) : n ∣ 1 ↔ n = 1 :=

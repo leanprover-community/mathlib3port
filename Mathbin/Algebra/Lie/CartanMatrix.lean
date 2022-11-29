@@ -168,7 +168,8 @@ private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ 
 
 /-- The union of all the relations as a subset of the free Lie algebra. -/
 def toSet : Set (FreeLieAlgebra R (Generators B)) :=
-  (Set.range <| hH R) ∪ (Set.range <| eF R) ∪ (Set.range <| hE R A) ∪ (Set.range <| hF R A) ∪ (Set.range <| adE R A) ∪
+  (Set.range <| hH R) ∪ (Set.range <| eF R) ∪ (Set.range <| hE R A) ∪ (Set.range <| hF R A) ∪
+      (Set.range <| adE R A) ∪
     (Set.range <| adF R A)
 #align cartan_matrix.relations.to_set CartanMatrix.Relations.toSet
 
@@ -205,7 +206,8 @@ o --- o --- o --- o --- o
 ```
 -/
 def e₆ : Matrix (Fin 6) (Fin 6) ℤ :=
-  «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
+  «expr!![ »
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.E₆ CartanMatrix.e₆
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -220,7 +222,8 @@ o --- o --- o --- o --- o --- o
 ```
 -/
 def e₇ : Matrix (Fin 7) (Fin 7) ℤ :=
-  «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
+  «expr!![ »
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.E₇ CartanMatrix.e₇
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -235,7 +238,8 @@ o --- o --- o --- o --- o --- o --- o
 ```
 -/
 def e₈ : Matrix (Fin 8) (Fin 8) ℤ :=
-  «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
+  «expr!![ »
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.E₈ CartanMatrix.e₈
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -248,7 +252,8 @@ o --- o =>= o --- o
 ```
 -/
 def f₄ : Matrix (Fin 4) (Fin 4) ℤ :=
-  «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
+  «expr!![ »
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.F₄ CartanMatrix.f₄
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
@@ -262,7 +267,8 @@ o ≡>≡ o
 Actually we are using the transpose of Bourbaki's matrix. This is to make this matrix consistent
 with `cartan_matrix.F₄`, in the sense that all non-zero values below the diagonal are -1. -/
 def g₂ : Matrix (Fin 2) (Fin 2) ℤ :=
-  «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
+  «expr!![ »
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.G₂ CartanMatrix.g₂
 
 end CartanMatrix

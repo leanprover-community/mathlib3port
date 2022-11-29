@@ -76,7 +76,9 @@ theorem t'_iij (i j : D.J) : D.t' i i j = (pullbackSymmetry _ _).Hom := by
   rw [D.t_id, category.comp_id, eq₂] at eq₁
   have eq₃ := (is_iso.eq_comp_inv (D.f i i)).mp eq₁
   rw [category.assoc, ← pullback.condition, ← category.assoc] at eq₃
-  exact mono.right_cancellation _ _ ((mono.right_cancellation _ _ eq₃).trans (pullback_symmetry_hom_comp_fst _ _).symm)
+  exact
+    mono.right_cancellation _ _
+      ((mono.right_cancellation _ _ eq₃).trans (pullback_symmetry_hom_comp_fst _ _).symm)
 #align category_theory.glue_data.t'_iij CategoryTheory.GlueData.t'_iij
 
 theorem t'_jii (i j : D.J) : D.t' j i i = pullback.fst ≫ D.t j i ≫ inv pullback.snd := by
@@ -115,14 +117,17 @@ instance t'_is_iso (i j k : D.J) : IsIso (D.t' i j k) :=
 
 @[reassoc]
 theorem t'_comp_eq_pullback_symmetry (i j k : D.J) :
-    D.t' j k i ≫ D.t' k i j = (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom := by
+    D.t' j k i ≫ D.t' k i j =
+      (pullbackSymmetry _ _).Hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).Hom :=
+  by
   trans inv (D.t' i j k)
   · exact is_iso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
     
   · rw [← cancel_mono (pullback.fst : pullback (D.f i j) (D.f i k) ⟶ _)]
     simp [t_fac, t_fac_assoc]
     
-#align category_theory.glue_data.t'_comp_eq_pullback_symmetry CategoryTheory.GlueData.t'_comp_eq_pullback_symmetry
+#align
+  category_theory.glue_data.t'_comp_eq_pullback_symmetry CategoryTheory.GlueData.t'_comp_eq_pullback_symmetry
 
 /-- (Implementation) The disjoint union of `U i`. -/
 def sigmaOpens [HasCoproduct D.U] : C :=
@@ -224,17 +229,20 @@ theorem types_π_surjective (D : GlueData (Type _)) : Function.Surjective D.π :
   (epi_iff_surjective _).mp inferInstance
 #align category_theory.glue_data.types_π_surjective CategoryTheory.GlueData.types_π_surjective
 
-theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ (i : _)(y : D.U i), D.ι i y = x := by
+theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) :
+    ∃ (i : _)(y : D.U i), D.ι i y = x := by
   delta CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π D.diagram]
   rcases D.types_π_surjective x with ⟨x', rfl⟩
   have := colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)
   rw [←
     show (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).inv _ = x' from
-      concrete_category.congr_hom (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).hom_inv_id x']
+      concrete_category.congr_hom
+        (colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).hom_inv_id x']
   rcases(colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).Hom x' with ⟨i, y⟩
   exact ⟨i, y, by simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
-#align category_theory.glue_data.types_ι_jointly_surjective CategoryTheory.GlueData.types_ι_jointly_surjective
+#align
+  category_theory.glue_data.types_ι_jointly_surjective CategoryTheory.GlueData.types_ι_jointly_surjective
 
 variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 
@@ -261,8 +269,8 @@ def mapGlueData : GlueData C' where
       F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
   t_fac i j k := by simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
   cocycle i j k := by
-    simp only [category.assoc, iso.hom_inv_id_assoc, ← functor.map_comp_assoc, D.cocycle, iso.inv_hom_id,
-      CategoryTheory.Functor.map_id, category.id_comp]
+    simp only [category.assoc, iso.hom_inv_id_assoc, ← functor.map_comp_assoc, D.cocycle,
+      iso.inv_hom_id, CategoryTheory.Functor.map_id, category.id_comp]
 #align category_theory.glue_data.map_glue_data CategoryTheory.GlueData.mapGlueData
 
 /-- The diagram of the image of a `glue_data` under a functor `F` is naturally isomorphic to the
@@ -291,34 +299,44 @@ def diagramIso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multisp
 #align category_theory.glue_data.diagram_iso CategoryTheory.GlueData.diagramIso
 
 @[simp]
-theorem diagram_iso_app_left (i : D.J × D.J) : (D.diagramIso F).app (WalkingMultispan.left i) = Iso.refl _ :=
+theorem diagram_iso_app_left (i : D.J × D.J) :
+    (D.diagramIso F).app (WalkingMultispan.left i) = Iso.refl _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_app_left CategoryTheory.GlueData.diagram_iso_app_left
 
 @[simp]
-theorem diagram_iso_app_right (i : D.J) : (D.diagramIso F).app (WalkingMultispan.right i) = Iso.refl _ :=
+theorem diagram_iso_app_right (i : D.J) :
+    (D.diagramIso F).app (WalkingMultispan.right i) = Iso.refl _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_app_right CategoryTheory.GlueData.diagram_iso_app_right
 
 @[simp]
-theorem diagram_iso_hom_app_left (i : D.J × D.J) : (D.diagramIso F).Hom.app (WalkingMultispan.left i) = 𝟙 _ :=
+theorem diagram_iso_hom_app_left (i : D.J × D.J) :
+    (D.diagramIso F).Hom.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
-#align category_theory.glue_data.diagram_iso_hom_app_left CategoryTheory.GlueData.diagram_iso_hom_app_left
+#align
+  category_theory.glue_data.diagram_iso_hom_app_left CategoryTheory.GlueData.diagram_iso_hom_app_left
 
 @[simp]
-theorem diagram_iso_hom_app_right (i : D.J) : (D.diagramIso F).Hom.app (WalkingMultispan.right i) = 𝟙 _ :=
+theorem diagram_iso_hom_app_right (i : D.J) :
+    (D.diagramIso F).Hom.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
-#align category_theory.glue_data.diagram_iso_hom_app_right CategoryTheory.GlueData.diagram_iso_hom_app_right
+#align
+  category_theory.glue_data.diagram_iso_hom_app_right CategoryTheory.GlueData.diagram_iso_hom_app_right
 
 @[simp]
-theorem diagram_iso_inv_app_left (i : D.J × D.J) : (D.diagramIso F).inv.app (WalkingMultispan.left i) = 𝟙 _ :=
+theorem diagram_iso_inv_app_left (i : D.J × D.J) :
+    (D.diagramIso F).inv.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
-#align category_theory.glue_data.diagram_iso_inv_app_left CategoryTheory.GlueData.diagram_iso_inv_app_left
+#align
+  category_theory.glue_data.diagram_iso_inv_app_left CategoryTheory.GlueData.diagram_iso_inv_app_left
 
 @[simp]
-theorem diagram_iso_inv_app_right (i : D.J) : (D.diagramIso F).inv.app (WalkingMultispan.right i) = 𝟙 _ :=
+theorem diagram_iso_inv_app_right (i : D.J) :
+    (D.diagramIso F).inv.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
-#align category_theory.glue_data.diagram_iso_inv_app_right CategoryTheory.GlueData.diagram_iso_inv_app_right
+#align
+  category_theory.glue_data.diagram_iso_inv_app_right CategoryTheory.GlueData.diagram_iso_inv_app_right
 
 variable [HasMulticoequalizer D.diagram] [PreservesColimit D.diagram.multispan F]
 
@@ -326,7 +344,8 @@ omit H
 
 theorem has_colimit_multispan_comp : HasColimit (D.diagram.multispan ⋙ F) :=
   ⟨⟨⟨_, PreservesColimit.preserves (colimit.isColimit _)⟩⟩⟩
-#align category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.has_colimit_multispan_comp
+#align
+  category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.has_colimit_multispan_comp
 
 include H
 
@@ -363,7 +382,9 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
     (hc : IsLimit ((D.mapGlueData F).vPullbackCone i j)) : IsLimit (D.vPullbackCone i j) := by
   apply is_limit_of_reflects F
   apply (is_limit_map_cone_pullback_cone_equiv _ _).symm _
-  let e : cospan (F.map (D.ι i)) (F.map (D.ι j)) ≅ cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
+  let e :
+    cospan (F.map (D.ι i)) (F.map (D.ι j)) ≅
+      cospan ((D.map_glue_data F).ι i) ((D.map_glue_data F).ι j)
   exact
     nat_iso.of_components
       (fun x => by
@@ -375,11 +396,10 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
   refine' cones.ext (iso.refl _) _
   · rintro (_ | _ | _)
     change _ = _ ≫ (_ ≫ _) ≫ _
-    all_goals
-    change _ = 𝟙 _ ≫ _ ≫ _
-    simpa
+    all_goals change _ = 𝟙 _ ≫ _ ≫ _; simpa
     
-#align category_theory.glue_data.V_pullback_cone_is_limit_of_map CategoryTheory.GlueData.vPullbackConeIsLimitOfMap
+#align
+  category_theory.glue_data.V_pullback_cone_is_limit_of_map CategoryTheory.GlueData.vPullbackConeIsLimitOfMap
 
 omit H
 

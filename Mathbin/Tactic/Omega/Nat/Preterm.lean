@@ -72,8 +72,7 @@ theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
 
 @[simp]
 theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
-  simp only [val]
-  by_cases h1 : m = 1
+  simp only [val]; by_cases h1 : m = 1
   rw [if_pos h1, h1, one_mul]
   rw [if_neg h1, mul_comm]
 #align omega.nat.preterm.val_var Omega.Nat.Preterm.val_var
@@ -98,7 +97,8 @@ def freshIndex : Preterm → Nat
 
 /-- If variable assignments `v` and `w` agree on all variables that occur
 in term `t`, the value of `t` under `v` and `w` are identical. -/
-theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀ x < t.freshIndex, v x = w x) → t.val v = t.val w
+theorem val_constant (v w : Nat → Nat) :
+    ∀ t : Preterm, (∀ x < t.freshIndex, v x = w x) → t.val v = t.val w
   | &n, h1 => rfl
   | m ** n, h1 => by
     simp only [val_var]
@@ -152,11 +152,14 @@ def canonize : Preterm → Term
 #align omega.nat.canonize Omega.Nat.canonize
 
 @[simp]
-theorem val_canonize {v : Nat → Nat} : ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
+theorem val_canonize {v : Nat → Nat} :
+    ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
   | &i, h1 => by simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zero]
-  | i ** n, h1 => by simp only [preterm.val_var, coeffs.val_set, term.val, zero_add, Int.ofNat_mul, canonize]
+  | i ** n, h1 => by
+    simp only [preterm.val_var, coeffs.val_set, term.val, zero_add, Int.ofNat_mul, canonize]
   | t +* s, h1 => by
-    simp only [val_canonize h1.left, val_canonize h1.right, Int.ofNat_add, canonize, term.val_add, preterm.val_add]
+    simp only [val_canonize h1.left, val_canonize h1.right, Int.ofNat_add, canonize, term.val_add,
+      preterm.val_add]
 #align omega.nat.val_canonize Omega.Nat.val_canonize
 
 end Nat

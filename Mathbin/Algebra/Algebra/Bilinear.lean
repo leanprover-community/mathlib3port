@@ -25,8 +25,8 @@ namespace LinearMap
 
 section NonUnitalNonAssoc
 
-variable (R A : Type _) [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A] [SmulCommClass R A A]
-  [IsScalarTower R A A]
+variable (R A : Type _) [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A]
+  [SmulCommClass R A A] [IsScalarTower R A A]
 
 /-- The multiplication in a non-unital non-associative algebra is a bilinear map.
 
@@ -108,12 +108,13 @@ end NonUnitalNonAssoc
 
 section NonUnital
 
-variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SmulCommClass R A A] [IsScalarTower R A A]
+variable (R A : Type _) [CommSemiring R] [NonUnitalSemiring A] [Module R A] [SmulCommClass R A A]
+  [IsScalarTower R A A]
 
 /-- The multiplication in a non-unital algebra is a bilinear map.
 
 A weaker version of this for non-unital non-associative algebras exists as `linear_map.mul`. -/
-def _root_.non_unital_alg_hom.lmul : A →ₙₐ[R] EndCat R A :=
+def NonUnitalAlgHom.lmul : A →ₙₐ[R] EndCat R A :=
   { mul R A with
     map_mul' := by
       intro a b
@@ -122,14 +123,14 @@ def _root_.non_unital_alg_hom.lmul : A →ₙₐ[R] EndCat R A :=
     map_zero' := by
       ext a
       exact zero_mul a }
-#align linear_map._root_.non_unital_alg_hom.lmul linear_map._root_.non_unital_alg_hom.lmul
+#align non_unital_alg_hom.lmul NonUnitalAlgHom.lmul
 
 variable {R A}
 
 @[simp]
-theorem _root_.non_unital_alg_hom.coe_lmul_eq_mul : ⇑(NonUnitalAlgHom.lmul R A) = mul R A :=
+theorem NonUnitalAlgHom.coe_lmul_eq_mul : ⇑(NonUnitalAlgHom.lmul R A) = mul R A :=
   rfl
-#align linear_map._root_.non_unital_alg_hom.coe_lmul_eq_mul linear_map._root_.non_unital_alg_hom.coe_lmul_eq_mul
+#align non_unital_alg_hom.coe_lmul_eq_mul NonUnitalAlgHom.coe_lmul_eq_mul
 
 theorem commute_mul_left_right (a b : A) : Commute (mulLeft R a) (mulRight R b) := by
   ext c
@@ -158,7 +159,7 @@ variable (R A : Type _) [CommSemiring R] [Semiring A] [Algebra R A]
 the algebra.
 
 A weaker version of this for non-unital algebras exists as `non_unital_alg_hom.mul`. -/
-def _root_.algebra.lmul : A →ₐ[R] EndCat R A :=
+def Algebra.lmul : A →ₐ[R] EndCat R A :=
   { LinearMap.mul R A with
     map_one' := by
       ext a
@@ -174,14 +175,14 @@ def _root_.algebra.lmul : A →ₐ[R] EndCat R A :=
       intro r
       ext a
       exact (Algebra.smul_def r a).symm }
-#align linear_map._root_.algebra.lmul linear_map._root_.algebra.lmul
+#align algebra.lmul Algebra.lmul
 
 variable {R A}
 
 @[simp]
-theorem _root_.algebra.coe_lmul_eq_mul : ⇑(Algebra.lmul R A) = mul R A :=
+theorem Algebra.coe_lmul_eq_mul : ⇑(Algebra.lmul R A) = mul R A :=
   rfl
-#align linear_map._root_.algebra.coe_lmul_eq_mul linear_map._root_.algebra.coe_lmul_eq_mul
+#align algebra.coe_lmul_eq_mul Algebra.coe_lmul_eq_mul
 
 @[simp]
 theorem mul_left_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
@@ -232,12 +233,14 @@ section Ring
 
 variable {R A : Type _} [CommSemiring R] [Ring A] [Algebra R A]
 
-theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulLeft R x) :=
+theorem mul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
+    Function.Injective (mulLeft R x) :=
   letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   mul_right_injective₀ hx
 #align linear_map.mul_left_injective LinearMap.mul_left_injective
 
-theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (mulRight R x) :=
+theorem mul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) :
+    Function.Injective (mulRight R x) :=
   letI : IsDomain A := { ‹Ring A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   mul_left_injective₀ hx
 #align linear_map.mul_right_injective LinearMap.mul_right_injective

@@ -64,8 +64,9 @@ theorem compact_space_uniformity [CompactSpace α] : 𝓤 α = ⨆ x, 𝓝 (x, x
   nhds_set_diagonal_eq_uniformity.symm.trans (nhds_set_diagonal _)
 #align compact_space_uniformity compact_space_uniformity
 
-theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ] {u u' : UniformSpace γ}
-    (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) : u = u' := by
+theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
+    {u u' : UniformSpace γ} (h : u.toTopologicalSpace = t) (h' : u'.toTopologicalSpace = t) :
+    u = u' := by
   apply uniform_space_eq
   change uniformity _ = uniformity _
   have : @CompactSpace γ u.to_topological_space := by rwa [h]
@@ -79,7 +80,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)
@@ -127,7 +128,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     haveI : NormalSpace γ := normalOfCompactT2
     -- So there are closed neighboords V₁ and V₂ of x and y contained in disjoint open neighborhoods
     -- U₁ and U₂.
-    obtain ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :=
+    obtain
+      ⟨U₁, U₁_in, V₁, V₁_in, U₂, U₂_in₂, V₂, V₂_in, V₁_cl, V₂_cl, U₁_op, U₂_op, VU₁, VU₂, hU₁₂⟩ :=
       disjoint_nested_nhds x_ne_y
     -- We set U₃ := (V₁ ∪ V₂)ᶜ so that W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃ is an open
     -- neighborhood of Δ.
@@ -159,10 +161,12 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- So u ∈ V₁, v ∈ V₂, and there exists some w such that (u, w) ∈ W and (w ,v) ∈ W.
     -- Because u is in V₁ which is disjoint from U₂ and U₃, (u, w) ∈ W forces (u, w) ∈ U₁ ×ˢ U₁.
     have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
-      (huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => hU₁₂.le_bot ⟨VU₁ u_in, h.1⟩
+      (huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h =>
+        hU₁₂.le_bot ⟨VU₁ u_in, h.1⟩
     -- Similarly, because v ∈ V₂, (w ,v) ∈ W forces (w, v) ∈ U₂ ×ˢ U₂.
     have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
-      (hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => hU₁₂.le_bot ⟨h.2, VU₂ v_in⟩
+      (hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h =>
+        hU₁₂.le_bot ⟨h.2, VU₂ v_in⟩
     -- Hence w ∈ U₁ ∩ U₂ which is empty.
     -- So we have a contradiction
     exact hU₁₂.le_bot ⟨uw_in.2, wv_in.1⟩
@@ -174,7 +178,8 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       change IsOpen s ↔ _
       simp_rw [is_open_iff_mem_nhds, nhds_eq_comap_uniformity_aux, this]
     intro x
-    simp_rw [comap_supr, nhds_prod_eq, comap_prod, show Prod.fst ∘ Prod.mk x = fun y : γ => x by ext <;> simp,
+    simp_rw [comap_supr, nhds_prod_eq, comap_prod,
+      show Prod.fst ∘ Prod.mk x = fun y : γ => x by ext <;> simp,
       show Prod.snd ∘ Prod.mk x = (id : γ → γ) by ext <;> rfl, comap_id]
     rw [supr_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
@@ -189,10 +194,11 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
 
 /-- Heine-Cantor: a continuous function on a compact separated uniform space is uniformly
 continuous. -/
-theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α → β} (h : Continuous f) :
-    UniformContinuous f :=
+theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] {f : α → β}
+    (h : Continuous f) : UniformContinuous f :=
   calc
-    map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by rw [compact_space_uniformity]
+    map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆ x, 𝓝 (x, x)) := by
+      rw [compact_space_uniformity]
     _ = ⨆ x, map (Prod.map f f) (𝓝 (x, x)) := by rw [Filter.map_supr]
     _ ≤ ⨆ x, 𝓝 (f x, f x) := supr_mono fun x => (h.prod_map h).ContinuousAt
     _ ≤ ⨆ y, 𝓝 (y, y) := supr_comp_le (fun y => 𝓝 (y, y)) f
@@ -215,18 +221,20 @@ theorem IsCompact.uniform_continuous_on_of_continuous {s : Set α} {f : α → �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
 `β` is compact and `f` is continuous on `U × (univ : set β)` for some neighborhood `U` of `x`. -/
-theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ] {f : α → β → γ} {x : α}
-    {U : Set α} (hxU : U ∈ 𝓝 x) (h : ContinuousOn (↿f) (U ×ˢ univ)) : TendstoUniformly f (f x) (𝓝 x) := by
+theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ]
+    {f : α → β → γ} {x : α} {U : Set α} (hxU : U ∈ 𝓝 x) (h : ContinuousOn (↿f) (U ×ˢ univ)) :
+    TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
   have : UniformContinuousOn (↿f) (K ×ˢ univ) :=
-    IsCompact.uniform_continuous_on_of_continuous (hK.prod is_compact_univ) (h.mono <| prod_mono hKU subset.rfl)
+    IsCompact.uniform_continuous_on_of_continuous (hK.prod is_compact_univ)
+      (h.mono <| prod_mono hKU subset.rfl)
   exact this.tendsto_uniformly hxK
 #align continuous_on.tendsto_uniformly ContinuousOn.tendsto_uniformly
 
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
 locally compact and `β` is compact. -/
-theorem Continuous.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ] (f : α → β → γ)
-    (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
+theorem Continuous.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ]
+    (f : α → β → γ) (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
   h.ContinuousOn.TendstoUniformly univ_mem
 #align continuous.tendsto_uniformly Continuous.tendsto_uniformly
 

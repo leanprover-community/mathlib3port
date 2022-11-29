@@ -36,10 +36,12 @@ isomorphisms given by equalities.
 class Bicategory.Strict : Prop where
   id_comp' : ∀ {a b : B} (f : a ⟶ b), 𝟙 a ≫ f = f := by obviously
   comp_id' : ∀ {a b : B} (f : a ⟶ b), f ≫ 𝟙 b = f := by obviously
-  assoc' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), (f ≫ g) ≫ h = f ≫ g ≫ h := by obviously
+  assoc' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), (f ≫ g) ≫ h = f ≫ g ≫ h := by
+    obviously
   left_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), λ_ f = eqToIso (id_comp' f) := by obviously
   right_unitor_eq_to_iso' : ∀ {a b : B} (f : a ⟶ b), ρ_ f = eqToIso (comp_id' f) := by obviously
-  associator_eq_to_iso' : ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), α_ f g h = eqToIso (assoc' f g h) := by
+  associator_eq_to_iso' :
+    ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), α_ f g h = eqToIso (assoc' f g h) := by
     obviously
 #align category_theory.bicategory.strict CategoryTheory.Bicategory.Strict
 
@@ -75,14 +77,16 @@ theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g
     f ◁ eqToHom η = eqToHom (congr_arg₂ (· ≫ ·) rfl η) := by
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
-#align category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whisker_left_eq_to_hom
+#align
+  category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whisker_left_eq_to_hom
 
 @[simp]
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
     eqToHom η ▷ h = eqToHom (congr_arg₂ (· ≫ ·) η rfl) := by
   cases η
   simp only [id_whisker_right, eq_to_hom_refl]
-#align category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eq_to_hom_whisker_right
+#align
+  category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eq_to_hom_whisker_right
 
 end Bicategory
 

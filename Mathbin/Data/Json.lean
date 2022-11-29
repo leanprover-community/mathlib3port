@@ -144,7 +144,8 @@ unsafe instance {n : ℕ} : non_null_json_serializable (Fin n) where
     let i ← of_json ℕ j
     if h : i < n then pure ⟨i, h⟩ else exception fun _ => f! "must be less than {n}"
 
-unsafe instance {α : Type} [json_serializable α] (p : α → Prop) [DecidablePred p] : json_serializable (Subtype p) where
+unsafe instance {α : Type} [json_serializable α] (p : α → Prop) [DecidablePred p] :
+    json_serializable (Subtype p) where
   to_json x := to_json (x : α)
   of_json j := do
     let i ← of_json α j
@@ -193,7 +194,8 @@ unsafe def json_serializable.field_terminator (l : List (String × json)) : exce
 
 /-- ``((c_name, c_fun), [(p_name, p_fun), ...]) ← get_constructor_and_projections `(struct n)``
 gets the names and partial invocations of the constructor and projections of a structure -/
-unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name × expr) × List (Name × expr)) := do
+unsafe def get_constructor_and_projections (t : expr) :
+    tactic (Name × (Name × expr) × List (Name × expr)) := do
   let (const I ls, args) ← pure (get_app_fn_args t)
   let env ← get_env
   let [ctor] ← pure (env.constructors_of I)
@@ -224,7 +226,8 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
     ∀ (vars : List (Name × pexpr)) (js : List (Name × Option expr)), tactic expr
   | vars, [] => do
     let-- allow this partial constructor if `to_expr` allows it
-    struct := pexpr.mk_structure_instance ⟨some struct_name, vars.map Prod.fst, vars.map Prod.snd, []⟩
+    struct :=
+      pexpr.mk_structure_instance ⟨some struct_name, vars.map Prod.fst, vars.map Prod.snd, []⟩
     to_expr ``((pure $(struct) : exceptional $(t)))
   | vars, (fname, some fj) :: js => do
     let u
@@ -235,8 +238,11 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
     let new_vars := vars.concat (fname, to_pexpr f_binder)
     let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
     let without_field ←
-      of_json_helper vars js <|> to_expr ``((exception fun o => f!"field {$(q(fname))} is required" : exceptional $(t)))
-    to_expr ``((Option.mapM (of_json _) $(fj) >>= Option.elim' $(without_field) $(with_field) : exceptional $(t)))
+      of_json_helper vars js <|>
+          to_expr ``((exception fun o => f!"field {$(q(fname))} is required" : exceptional $(t)))
+    to_expr
+        ``((Option.mapM (of_json _) $(fj) >>= Option.elim' $(without_field) $(with_field) :
+            exceptional $(t)))
   | vars,
     (fname, none) :: js =>-- try a default value
         of_json_helper
@@ -282,7 +288,7 @@ do
 -/
 @[derive_handler]
 unsafe def non_null_json_serializable_handler : derive_handler :=
-  instance_derive_handler `` non_null_json_serializable <| do
+  (instance_derive_handler `` non_null_json_serializable) do
     intros
     let q(non_null_json_serializable $(e)) ← target >>= whnf
     let (struct_name, (ctor_name, ctor), fields) ← get_constructor_and_projections e

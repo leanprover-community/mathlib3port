@@ -53,7 +53,8 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C] [HasEqualizers C] [HasImages C]
 
-/-- A `ProjectiveResolution Z` consists of a bundled `ℕ`-indexed chain complex of projective objects,
+/--
+A `ProjectiveResolution Z` consists of a bundled `ℕ`-indexed chain complex of projective objects,
 along with a quasi-isomorphism to the complex consisting of just `Z` supported in degree `0`.
 
 (We don't actually ask here that the chain map is a quasi-iso, just exactness everywhere:
@@ -109,12 +110,12 @@ namespace ProjectiveResolutionCat
 @[simp]
 theorem π_f_succ {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) : P.π.f (n + 1) = 0 := by
   apply zero_of_target_iso_zero
-  dsimp
-  rfl
+  dsimp; rfl
 #align category_theory.ProjectiveResolution.π_f_succ CategoryTheory.ProjectiveResolutionCat.π_f_succ
 
 @[simp]
-theorem complex_d_comp_π_f_zero {Z : C} (P : ProjectiveResolutionCat Z) : P.complex.d 1 0 ≫ P.π.f 0 = 0 :=
+theorem complex_d_comp_π_f_zero {Z : C} (P : ProjectiveResolutionCat Z) :
+    P.complex.d 1 0 ≫ P.π.f 0 = 0 :=
   P.exact₀.w
 #align
   category_theory.ProjectiveResolution.complex_d_comp_π_f_zero CategoryTheory.ProjectiveResolutionCat.complex_d_comp_π_f_zero
@@ -126,7 +127,8 @@ theorem complex_d_succ_comp {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) :
 #align
   category_theory.ProjectiveResolution.complex_d_succ_comp CategoryTheory.ProjectiveResolutionCat.complex_d_succ_comp
 
-instance {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Epi (P.π.f n) := by cases n <;> infer_instance
+instance {Z : C} (P : ProjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Epi (P.π.f n) := by
+  cases n <;> infer_instance
 
 /-- A projective object admits a trivial projective resolution: itself in degree 0. -/
 def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolutionCat Z where
@@ -152,21 +154,24 @@ def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolutionCat Z where
 #align category_theory.ProjectiveResolution.self CategoryTheory.ProjectiveResolutionCat.self
 
 /-- Auxiliary construction for `lift`. -/
-def liftFZero {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) :
-    P.complex.x 0 ⟶ Q.complex.x 0 :=
+def liftFZero {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
+    (Q : ProjectiveResolutionCat Z) : P.complex.x 0 ⟶ Q.complex.x 0 :=
   factorThru (P.π.f 0 ≫ f) (Q.π.f 0)
-#align category_theory.ProjectiveResolution.lift_f_zero CategoryTheory.ProjectiveResolutionCat.liftFZero
+#align
+  category_theory.ProjectiveResolution.lift_f_zero CategoryTheory.ProjectiveResolutionCat.liftFZero
 
 /-- Auxiliary construction for `lift`. -/
 def liftFOne {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) :
     P.complex.x 1 ⟶ Q.complex.x 1 :=
   Exact.lift (P.complex.d 1 0 ≫ liftFZero f P Q) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀
     (by simp [lift_f_zero, P.exact₀.w_assoc])
-#align category_theory.ProjectiveResolution.lift_f_one CategoryTheory.ProjectiveResolutionCat.liftFOne
+#align
+  category_theory.ProjectiveResolution.lift_f_one CategoryTheory.ProjectiveResolutionCat.liftFOne
 
 /-- Auxiliary lemma for `lift`. -/
 @[simp]
-theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) :
+theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
+    (Q : ProjectiveResolutionCat Z) :
     liftFOne f P Q ≫ Q.complex.d 1 0 = P.complex.d 1 0 ≫ liftFZero f P Q := by
   dsimp [lift_f_zero, lift_f_one]
   simp
@@ -179,26 +184,28 @@ def liftFSucc {Y Z : C} (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutio
     (w : g' ≫ Q.complex.d (n + 1) n = P.complex.d (n + 1) n ≫ g) :
     Σ'g'' : P.complex.x (n + 2) ⟶ Q.complex.x (n + 2),
       g'' ≫ Q.complex.d (n + 2) (n + 1) = P.complex.d (n + 2) (n + 1) ≫ g' :=
-  ⟨Exact.lift (P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 2) (n + 1)) (Q.complex.d (n + 1) n) (Q.exact _)
-      (by simp [w]),
+  ⟨Exact.lift (P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 2) (n + 1))
+      (Q.complex.d (n + 1) n) (Q.exact _) (by simp [w]),
     by simp⟩
-#align category_theory.ProjectiveResolution.lift_f_succ CategoryTheory.ProjectiveResolutionCat.liftFSucc
+#align
+  category_theory.ProjectiveResolution.lift_f_succ CategoryTheory.ProjectiveResolutionCat.liftFSucc
 
 /-- A morphism in `C` lifts to a chain map between projective resolutions. -/
 def lift {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) :
     P.complex ⟶ Q.complex :=
-  ChainComplex.mkHom _ _ (liftFZero f _ _) (liftFOne f _ _) (lift_f_one_zero_comm f _ _) fun n ⟨g, g', w⟩ =>
-    liftFSucc P Q n g g' w
+  ChainComplex.mkHom _ _ (liftFZero f _ _) (liftFOne f _ _) (lift_f_one_zero_comm f _ _)
+    fun n ⟨g, g', w⟩ => liftFSucc P Q n g g' w
 #align category_theory.ProjectiveResolution.lift CategoryTheory.ProjectiveResolutionCat.lift
 
 /-- The resolution maps intertwine the lift of a morphism and that morphism. -/
 @[simp, reassoc]
-theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) :
-    lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
+theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCat Y)
+    (Q : ProjectiveResolutionCat Z) : lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
   ext
   dsimp [lift, lift_f_zero]
   apply factor_thru_comp
-#align category_theory.ProjectiveResolution.lift_commutes CategoryTheory.ProjectiveResolutionCat.lift_commutes
+#align
+  category_theory.ProjectiveResolution.lift_commutes CategoryTheory.ProjectiveResolutionCat.lift_commutes
 
 -- Now that we've checked this property of the lift,
 -- we can seal away the actual definition.
@@ -213,15 +220,16 @@ variable [HasZeroObject C] [Preadditive C] [HasEqualizers C] [HasImages C]
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroZero {Y Z : C} {P : ProjectiveResolutionCat Y} {Q : ProjectiveResolutionCat Z}
     (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.x 0 ⟶ Q.complex.x 1 :=
-  Exact.lift (f.f 0) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀ (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
+  Exact.lift (f.f 0) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀
+    (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 #align
   category_theory.ProjectiveResolution.lift_homotopy_zero_zero CategoryTheory.ProjectiveResolutionCat.liftHomotopyZeroZero
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroOne {Y Z : C} {P : ProjectiveResolutionCat Y} {Q : ProjectiveResolutionCat Z}
     (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : P.complex.x 1 ⟶ Q.complex.x 2 :=
-  Exact.lift (f.f 1 - P.complex.d 1 0 ≫ liftHomotopyZeroZero f comm) (Q.complex.d 2 1) (Q.complex.d 1 0) (Q.exact _)
-    (by simp [lift_homotopy_zero_zero])
+  Exact.lift (f.f 1 - P.complex.d 1 0 ≫ liftHomotopyZeroZero f comm) (Q.complex.d 2 1)
+    (Q.complex.d 1 0) (Q.exact _) (by simp [lift_homotopy_zero_zero])
 #align
   category_theory.ProjectiveResolution.lift_homotopy_zero_one CategoryTheory.ProjectiveResolutionCat.liftHomotopyZeroOne
 
@@ -239,32 +247,38 @@ def liftHomotopyZeroSucc {Y Z : C} {P : ProjectiveResolutionCat Y} {Q : Projecti
 /-- Any lift of the zero morphism is homotopic to zero. -/
 def liftHomotopyZero {Y Z : C} {P : ProjectiveResolutionCat Y} {Q : ProjectiveResolutionCat Z}
     (f : P.complex ⟶ Q.complex) (comm : f ≫ Q.π = 0) : Homotopy f 0 :=
-  Homotopy.mkInductive _ (liftHomotopyZeroZero f comm) (by simp [lift_homotopy_zero_zero]) (liftHomotopyZeroOne f comm)
-    (by simp [lift_homotopy_zero_one]) fun n ⟨g, g', w⟩ =>
+  Homotopy.mkInductive _ (liftHomotopyZeroZero f comm) (by simp [lift_homotopy_zero_zero])
+    (liftHomotopyZeroOne f comm) (by simp [lift_homotopy_zero_one]) fun n ⟨g, g', w⟩ =>
     ⟨liftHomotopyZeroSucc f n g g' w, by simp [lift_homotopy_zero_succ, w]⟩
-#align category_theory.ProjectiveResolution.lift_homotopy_zero CategoryTheory.ProjectiveResolutionCat.liftHomotopyZero
+#align
+  category_theory.ProjectiveResolution.lift_homotopy_zero CategoryTheory.ProjectiveResolutionCat.liftHomotopyZero
 
 /-- Two lifts of the same morphism are homotopic. -/
-def liftHomotopy {Y Z : C} (f : Y ⟶ Z) {P : ProjectiveResolutionCat Y} {Q : ProjectiveResolutionCat Z}
-    (g h : P.complex ⟶ Q.complex) (g_comm : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f)
+def liftHomotopy {Y Z : C} (f : Y ⟶ Z) {P : ProjectiveResolutionCat Y}
+    {Q : ProjectiveResolutionCat Z} (g h : P.complex ⟶ Q.complex)
+    (g_comm : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f)
     (h_comm : h ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) : Homotopy g h :=
   Homotopy.equivSubZero.invFun (liftHomotopyZero _ (by simp [g_comm, h_comm]))
-#align category_theory.ProjectiveResolution.lift_homotopy CategoryTheory.ProjectiveResolutionCat.liftHomotopy
+#align
+  category_theory.ProjectiveResolution.lift_homotopy CategoryTheory.ProjectiveResolutionCat.liftHomotopy
 
 /-- The lift of the identity morphism is homotopic to the identity chain map. -/
-def liftIdHomotopy (X : C) (P : ProjectiveResolutionCat X) : Homotopy (lift (𝟙 X) P P) (𝟙 P.complex) := by
-  apply lift_homotopy (𝟙 X) <;> simp
-#align category_theory.ProjectiveResolution.lift_id_homotopy CategoryTheory.ProjectiveResolutionCat.liftIdHomotopy
+def liftIdHomotopy (X : C) (P : ProjectiveResolutionCat X) :
+    Homotopy (lift (𝟙 X) P P) (𝟙 P.complex) := by apply lift_homotopy (𝟙 X) <;> simp
+#align
+  category_theory.ProjectiveResolution.lift_id_homotopy CategoryTheory.ProjectiveResolutionCat.liftIdHomotopy
 
 /-- The lift of a composition is homotopic to the composition of the lifts. -/
-def liftCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveResolutionCat X) (Q : ProjectiveResolutionCat Y)
-    (R : ProjectiveResolutionCat Z) : Homotopy (lift (f ≫ g) P R) (lift f P Q ≫ lift g Q R) := by
-  apply lift_homotopy (f ≫ g) <;> simp
-#align category_theory.ProjectiveResolution.lift_comp_homotopy CategoryTheory.ProjectiveResolutionCat.liftCompHomotopy
+def liftCompHomotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveResolutionCat X)
+    (Q : ProjectiveResolutionCat Y) (R : ProjectiveResolutionCat Z) :
+    Homotopy (lift (f ≫ g) P R) (lift f P Q ≫ lift g Q R) := by apply lift_homotopy (f ≫ g) <;> simp
+#align
+  category_theory.ProjectiveResolution.lift_comp_homotopy CategoryTheory.ProjectiveResolutionCat.liftCompHomotopy
 
 -- We don't care about the actual definitions of these homotopies.
 /-- Any two projective resolutions are homotopy equivalent. -/
-def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) : HomotopyEquiv P.complex Q.complex where
+def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) :
+    HomotopyEquiv P.complex Q.complex where
   Hom := lift (𝟙 X) P Q
   inv := lift (𝟙 X) Q P
   homotopyHomInvId := by
@@ -275,17 +289,18 @@ def homotopyEquiv {X : C} (P Q : ProjectiveResolutionCat X) : HomotopyEquiv P.co
     refine' (lift_comp_homotopy (𝟙 X) (𝟙 X) Q P Q).symm.trans _
     simp [category.id_comp]
     apply lift_id_homotopy
-#align category_theory.ProjectiveResolution.homotopy_equiv CategoryTheory.ProjectiveResolutionCat.homotopyEquiv
+#align
+  category_theory.ProjectiveResolution.homotopy_equiv CategoryTheory.ProjectiveResolutionCat.homotopyEquiv
 
 @[simp, reassoc]
-theorem homotopy_equiv_hom_π {X : C} (P Q : ProjectiveResolutionCat X) : (homotopyEquiv P Q).Hom ≫ Q.π = P.π := by
-  simp [HomotopyEquiv]
+theorem homotopy_equiv_hom_π {X : C} (P Q : ProjectiveResolutionCat X) :
+    (homotopyEquiv P Q).Hom ≫ Q.π = P.π := by simp [HomotopyEquiv]
 #align
   category_theory.ProjectiveResolution.homotopy_equiv_hom_π CategoryTheory.ProjectiveResolutionCat.homotopy_equiv_hom_π
 
 @[simp, reassoc]
-theorem homotopy_equiv_inv_π {X : C} (P Q : ProjectiveResolutionCat X) : (homotopyEquiv P Q).inv ≫ P.π = Q.π := by
-  simp [HomotopyEquiv]
+theorem homotopy_equiv_inv_π {X : C} (P Q : ProjectiveResolutionCat X) :
+    (homotopyEquiv P Q).inv ≫ P.π = Q.π := by simp [HomotopyEquiv]
 #align
   category_theory.ProjectiveResolution.homotopy_equiv_inv_π CategoryTheory.ProjectiveResolutionCat.homotopy_equiv_inv_π
 
@@ -308,14 +323,15 @@ abbrev projectiveResolution.π (Z : C) [HasProjectiveResolution Z] :
 #align category_theory.projective_resolution.π CategoryTheory.projectiveResolution.π
 
 /-- The lift of a morphism to a chain map between the arbitrarily chosen projective resolutions. -/
-abbrev projectiveResolution.lift {X Y : C} (f : X ⟶ Y) [HasProjectiveResolution X] [HasProjectiveResolution Y] :
-    projectiveResolution X ⟶ projectiveResolution Y :=
+abbrev projectiveResolution.lift {X Y : C} (f : X ⟶ Y) [HasProjectiveResolution X]
+    [HasProjectiveResolution Y] : projectiveResolution X ⟶ projectiveResolution Y :=
   ProjectiveResolutionCat.lift f _ _
 #align category_theory.projective_resolution.lift CategoryTheory.projectiveResolution.lift
 
 end
 
-variable (C) [Preadditive C] [HasZeroObject C] [HasEqualizers C] [HasImages C] [HasProjectiveResolutions C]
+variable (C) [Preadditive C] [HasZeroObject C] [HasEqualizers C] [HasImages C]
+  [HasProjectiveResolutions C]
 
 /-- Taking projective resolutions is functorial,
 if considered with target the homotopy category

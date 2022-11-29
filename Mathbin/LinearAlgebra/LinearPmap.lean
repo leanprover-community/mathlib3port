@@ -35,8 +35,8 @@ open Set
 universe u v w
 
 /-- A `linear_pmap R E F` or `E →ₗ.[R] F` is a linear map from a submodule of `E` to `F`. -/
-structure LinearPmap (R : Type u) [Ring R] (E : Type v) [AddCommGroup E] [Module R E] (F : Type w) [AddCommGroup F]
-  [Module R F] where
+structure LinearPmap (R : Type u) [Ring R] (E : Type v) [AddCommGroup E] [Module R E] (F : Type w)
+  [AddCommGroup F] [Module R F] where
   domain : Submodule R E
   toFun : domain →ₗ[R] F
 #align linear_pmap LinearPmap
@@ -44,8 +44,8 @@ structure LinearPmap (R : Type u) [Ring R] (E : Type v) [AddCommGroup E] [Module
 -- mathport name: «expr →ₗ.[ ] »
 notation:25 E " →ₗ.[" R:25 "] " F:0 => LinearPmap R E F
 
-variable {R : Type _} [Ring R] {E : Type _} [AddCommGroup E] [Module R E] {F : Type _} [AddCommGroup F] [Module R F]
-  {G : Type _} [AddCommGroup G] [Module R G]
+variable {R : Type _} [Ring R] {E : Type _} [AddCommGroup E] [Module R E] {F : Type _}
+  [AddCommGroup F] [Module R F] {G : Type _} [AddCommGroup G] [Module R G]
 
 namespace LinearPmap
 
@@ -75,7 +75,9 @@ theorem map_zero (f : E →ₗ.[R] F) : f 0 = 0 :=
 #align linear_pmap.map_zero LinearPmap.map_zero
 
 theorem ext_iff {f g : E →ₗ.[R] F} :
-    f = g ↔ ∃ domain_eq : f.domain = g.domain, ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y :=
+    f = g ↔
+      ∃ domain_eq : f.domain = g.domain,
+        ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y :=
   ⟨fun EQ =>
     EQ ▸
       ⟨rfl, fun x y h => by
@@ -111,7 +113,8 @@ theorem mk_apply (p : Submodule R E) (f : p →ₗ[R] F) (x : p) : mk p f x = f 
 
 /-- The unique `linear_pmap` on `R ∙ x` that sends `x` to `y`. This version works for modules
 over rings, and requires a proof of `∀ c, c • x = 0 → c • y = 0`. -/
-noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) : E →ₗ.[R] F where
+noncomputable def mkSpanSingleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) :
+    E →ₗ.[R] F where
   domain := R ∙ x
   toFun :=
     have H : ∀ c₁ c₂ : R, c₁ • x = c₂ • x → c₁ • y = c₂ • y := by
@@ -149,20 +152,23 @@ theorem mk_span_singleton'_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 →
 
 @[simp]
 theorem mk_span_singleton'_apply_self (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) (h) :
-    mkSpanSingleton' x y H ⟨x, h⟩ = y := by convert mk_span_singleton'_apply x y H 1 _ <;> rwa [one_smul]
+    mkSpanSingleton' x y H ⟨x, h⟩ = y := by
+  convert mk_span_singleton'_apply x y H 1 _ <;> rwa [one_smul]
 #align linear_pmap.mk_span_singleton'_apply_self LinearPmap.mk_span_singleton'_apply_self
 
 /-- The unique `linear_pmap` on `span R {x}` that sends a non-zero vector `x` to `y`.
 This version works for modules over division rings. -/
 @[reducible]
-noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGroup E] [Module K E] [AddCommGroup F]
-    [Module K F] (x : E) (y : F) (hx : x ≠ 0) : E →ₗ.[K] F :=
-  (mkSpanSingleton' x y) fun c hc => (smul_eq_zero.1 hc).elim (fun hc => by rw [hc, zero_smul]) fun hx' => absurd hx' hx
+noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGroup E] [Module K E]
+    [AddCommGroup F] [Module K F] (x : E) (y : F) (hx : x ≠ 0) : E →ₗ.[K] F :=
+  (mkSpanSingleton' x y) fun c hc =>
+    (smul_eq_zero.1 hc).elim (fun hc => by rw [hc, zero_smul]) fun hx' => absurd hx' hx
 #align linear_pmap.mk_span_singleton LinearPmap.mkSpanSingleton
 
-theorem mk_span_singleton_apply (K : Type _) {E F : Type _} [DivisionRing K] [AddCommGroup E] [Module K E]
-    [AddCommGroup F] [Module K F] {x : E} (hx : x ≠ 0) (y : F) :
-    mkSpanSingleton x y hx ⟨x, (Submodule.mem_span_singleton_self x : x ∈ Submodule.span K {x})⟩ = y :=
+theorem mk_span_singleton_apply (K : Type _) {E F : Type _} [DivisionRing K] [AddCommGroup E]
+    [Module K E] [AddCommGroup F] [Module K F] {x : E} (hx : x ≠ 0) (y : F) :
+    mkSpanSingleton x y hx ⟨x, (Submodule.mem_span_singleton_self x : x ∈ Submodule.span K {x})⟩ =
+      y :=
   LinearPmap.mk_span_singleton'_apply_self _ _ _ _
 #align linear_pmap.mk_span_singleton_apply LinearPmap.mk_span_singleton_apply
 
@@ -173,7 +179,8 @@ protected def fst (p : Submodule R E) (p' : Submodule R F) : E × F →ₗ.[R] E
 #align linear_pmap.fst LinearPmap.fst
 
 @[simp]
-theorem fst_apply (p : Submodule R E) (p' : Submodule R F) (x : p.Prod p') : LinearPmap.fst p p' x = (x : E × F).1 :=
+theorem fst_apply (p : Submodule R E) (p' : Submodule R F) (x : p.Prod p') :
+    LinearPmap.fst p p' x = (x : E × F).1 :=
   rfl
 #align linear_pmap.fst_apply LinearPmap.fst_apply
 
@@ -184,7 +191,8 @@ protected def snd (p : Submodule R E) (p' : Submodule R F) : E × F →ₗ.[R] F
 #align linear_pmap.snd LinearPmap.snd
 
 @[simp]
-theorem snd_apply (p : Submodule R E) (p' : Submodule R F) (x : p.Prod p') : LinearPmap.snd p p' x = (x : E × F).2 :=
+theorem snd_apply (p : Submodule R E) (p' : Submodule R F) (x : p.Prod p') :
+    LinearPmap.snd p p' x = (x : E × F).2 :=
   rfl
 #align linear_pmap.snd_apply LinearPmap.snd_apply
 
@@ -199,15 +207,18 @@ theorem neg_apply (f : E →ₗ.[R] F) (x) : (-f) x = -f x :=
 instance : LE (E →ₗ.[R] F) :=
   ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y⟩
 
-theorem apply_comp_of_le {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) : T x = S (Submodule.ofLe h.1 x) :=
+theorem apply_comp_of_le {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) :
+    T x = S (Submodule.ofLe h.1 x) :=
   h.2 rfl
 #align linear_pmap.apply_comp_of_le LinearPmap.apply_comp_of_le
 
-theorem exists_of_le {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) : ∃ y : S.domain, (x : E) = y ∧ T x = S y :=
+theorem exists_of_le {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) :
+    ∃ y : S.domain, (x : E) = y ∧ T x = S y :=
   ⟨⟨x.1, h.1 x.2⟩, ⟨rfl, h.2 rfl⟩⟩
 #align linear_pmap.exists_of_le LinearPmap.exists_of_le
 
-theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.domain = g.domain) : f = g :=
+theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.domain = g.domain) :
+    f = g :=
   ext HEq hle.2
 #align linear_pmap.eq_of_le_of_domain_eq LinearPmap.eq_of_le_of_domain_eq
 
@@ -217,7 +228,8 @@ def eqLocus (f g : E →ₗ.[R] F) : Submodule R E where
   carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
-    ⟨add_mem hfx hfy, add_mem hgx hgy, by erw [f.map_add ⟨x, hfx⟩ ⟨y, hfy⟩, g.map_add ⟨x, hgx⟩ ⟨y, hgy⟩, hx, hy]⟩
+    ⟨add_mem hfx hfy, add_mem hgx hgy, by
+      erw [f.map_add ⟨x, hfx⟩ ⟨y, hfy⟩, g.map_add ⟨x, hgx⟩ ⟨y, hgy⟩, hx, hy]⟩
   smul_mem' := fun c x ⟨hfx, hgx, hx⟩ =>
     ⟨smul_mem _ c hfx, smul_mem _ c hgx, by erw [f.map_smul c ⟨x, hfx⟩, g.map_smul c ⟨x, hgx⟩, hx]⟩
 #align linear_pmap.eq_locus LinearPmap.eqLocus
@@ -241,12 +253,14 @@ instance : SemilatticeInf (E →ₗ.[R] F) where
   le_antisymm f g fg gf := eq_of_le_of_domain_eq fg (le_antisymm fg.1 gf.1)
   inf := (· ⊓ ·)
   le_inf := fun f g h ⟨fg_le, fg_eq⟩ ⟨fh_le, fh_eq⟩ =>
-    ⟨fun x hx => ⟨fg_le hx, fh_le hx, by refine' (fg_eq _).symm.trans (fh_eq _) <;> [exact ⟨x, hx⟩, rfl, rfl]⟩,
+    ⟨fun x hx =>
+      ⟨fg_le hx, fh_le hx, by refine' (fg_eq _).symm.trans (fh_eq _) <;> [exact ⟨x, hx⟩, rfl, rfl]⟩,
       fun x ⟨y, yg, hy⟩ h => by
       apply fg_eq
       exact h⟩
   inf_le_left f g := ⟨fun x hx => hx.fst, fun x y h => congr_arg f <| Subtype.eq <| h⟩
-  inf_le_right f g := ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
+  inf_le_right f g :=
+    ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
 
 instance : OrderBot (E →ₗ.[R] F) where
   bot := ⊥
@@ -265,19 +279,24 @@ theorem domain_mono : StrictMono (@domain R _ E _ _ F _ _) := fun f g hlt =>
   (lt_of_le_of_ne hlt.1.1) fun heq => ne_of_lt hlt <| eq_of_le_of_domain_eq (le_of_lt hlt) HEq
 #align linear_pmap.domain_mono LinearPmap.domain_mono
 
-private theorem sup_aux (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
-    ∃ fg : ↥(f.domain ⊔ g.domain) →ₗ[R] F, ∀ (x : f.domain) (y : g.domain) (z), (x : E) + y = ↑z → fg z = f x + g y :=
+private theorem sup_aux (f g : E →ₗ.[R] F)
+    (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+    ∃ fg : ↥(f.domain ⊔ g.domain) →ₗ[R] F,
+      ∀ (x : f.domain) (y : g.domain) (z), (x : E) + y = ↑z → fg z = f x + g y :=
   by
   choose x hx y hy hxy using fun z : f.domain ⊔ g.domain => mem_sup.1 z.Prop
   set fg := fun z => f ⟨x z, hx z⟩ + g ⟨y z, hy z⟩
   have fg_eq :
-    ∀ (x' : f.domain) (y' : g.domain) (z' : f.domain ⊔ g.domain) (H : (x' : E) + y' = z'), fg z' = f x' + g y' := by
+    ∀ (x' : f.domain) (y' : g.domain) (z' : f.domain ⊔ g.domain) (H : (x' : E) + y' = z'),
+      fg z' = f x' + g y' :=
+    by
     intro x' y' z' H
     dsimp [fg]
     rw [add_comm, ← sub_eq_sub_iff_add_eq_add, eq_comm, ← map_sub, ← map_sub]
     apply h
     simp only [← eq_sub_iff_add_eq] at hxy
-    simp only [AddSubgroupClass.coe_sub, coe_mk, coe_mk, hxy, ← sub_add, ← sub_sub, sub_self, zero_sub, ← H]
+    simp only [AddSubgroupClass.coe_sub, coe_mk, coe_mk, hxy, ← sub_add, ← sub_sub, sub_self,
+      zero_sub, ← H]
     apply neg_add_eq_sub
   refine' ⟨{ toFun := fg.. }, fg_eq⟩
   · rintro ⟨z₁, hz₁⟩ ⟨z₂, hz₂⟩
@@ -296,48 +315,50 @@ private theorem sup_aux (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.do
 /-- Given two partial linear maps that agree on the intersection of their domains,
 `f.sup g h` is the unique partial linear map on `f.domain ⊔ g.domain` that agrees
 with `f` and `g`. -/
-protected noncomputable def sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
-    E →ₗ.[R] F :=
+protected noncomputable def sup (f g : E →ₗ.[R] F)
+    (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) : E →ₗ.[R] F :=
   ⟨_, Classical.choose (sup_aux f g h)⟩
 #align linear_pmap.sup LinearPmap.sup
 
 @[simp]
-theorem domain_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
+theorem domain_sup (f g : E →ₗ.[R] F)
+    (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
     (f.sup g h).domain = f.domain ⊔ g.domain :=
   rfl
 #align linear_pmap.domain_sup LinearPmap.domain_sup
 
-theorem sup_apply {f g : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) (x y z)
-    (hz : (↑x : E) + ↑y = ↑z) : f.sup g H z = f x + g y :=
+theorem sup_apply {f g : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y)
+    (x y z) (hz : (↑x : E) + ↑y = ↑z) : f.sup g H z = f x + g y :=
   Classical.choose_spec (sup_aux f g H) x y z hz
 #align linear_pmap.sup_apply LinearPmap.sup_apply
 
-protected theorem left_le_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
-    f ≤ f.sup g h := by
+protected theorem left_le_sup (f g : E →ₗ.[R] F)
+    (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) : f ≤ f.sup g h := by
   refine' ⟨le_sup_left, fun z₁ z₂ hz => _⟩
   rw [← add_zero (f _), ← g.map_zero]
   refine' (sup_apply h _ _ _ _).symm
   simpa
 #align linear_pmap.left_le_sup LinearPmap.left_le_sup
 
-protected theorem right_le_sup (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
-    g ≤ f.sup g h := by
+protected theorem right_le_sup (f g : E →ₗ.[R] F)
+    (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) : g ≤ f.sup g h := by
   refine' ⟨le_sup_right, fun z₁ z₂ hz => _⟩
   rw [← zero_add (g _), ← f.map_zero]
   refine' (sup_apply h _ _ _ _).symm
   simpa
 #align linear_pmap.right_le_sup LinearPmap.right_le_sup
 
-protected theorem sup_le {f g h : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y)
-    (fh : f ≤ h) (gh : g ≤ h) : f.sup g H ≤ h :=
+protected theorem sup_le {f g h : E →ₗ.[R] F}
+    (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) (fh : f ≤ h) (gh : g ≤ h) :
+    f.sup g H ≤ h :=
   have Hf : f ≤ f.sup g H ⊓ h := le_inf (f.left_le_sup g H) fh
   have Hg : g ≤ f.sup g H ⊓ h := le_inf (f.right_le_sup g H) gh
   le_of_eq_locus_ge <| sup_le Hf.1 Hg.1
 #align linear_pmap.sup_le LinearPmap.sup_le
 
 /-- Hypothesis for `linear_pmap.sup` holds, if `f.domain` is disjoint with `g.domain`. -/
-theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain) (x : f.domain) (y : g.domain)
-    (hxy : (x : E) = y) : f x = g y := by
+theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain) (x : f.domain)
+    (y : g.domain) (hxy : (x : E) = y) : f x = g y := by
   rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
   have hx : x = 0 := Subtype.eq (hxy.trans <| congr_arg _ hy)
@@ -390,7 +411,8 @@ theorem vadd_domain (f : E →ₗ[R] F) (g : E →ₗ.[R] F) : (f +ᵥ g).domain
   rfl
 #align linear_pmap.vadd_domain LinearPmap.vadd_domain
 
-theorem vadd_apply (f : E →ₗ[R] F) (g : E →ₗ.[R] F) (x : (f +ᵥ g).domain) : (f +ᵥ g) x = f x + g x :=
+theorem vadd_apply (f : E →ₗ[R] F) (g : E →ₗ.[R] F) (x : (f +ᵥ g).domain) :
+    (f +ᵥ g) x = f x + g x :=
   rfl
 #align linear_pmap.vadd_apply LinearPmap.vadd_apply
 
@@ -411,7 +433,8 @@ section
 variable {K : Type _} [DivisionRing K] [Module K E] [Module K F]
 
 /-- Extend a `linear_pmap` to `f.domain ⊔ K ∙ x`. -/
-noncomputable def supSpanSingleton (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) : E →ₗ.[K] F :=
+noncomputable def supSpanSingleton (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) :
+    E →ₗ.[K] F :=
   f.sup (mkSpanSingleton x y fun h₀ => hx <| h₀.symm ▸ f.domain.zero_mem) <|
     sup_h_of_disjoint _ _ <| by simpa [disjoint_span_singleton]
 #align linear_pmap.sup_span_singleton LinearPmap.supSpanSingleton
@@ -423,9 +446,10 @@ theorem domain_sup_span_singleton (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x �
 #align linear_pmap.domain_sup_span_singleton LinearPmap.domain_sup_span_singleton
 
 @[simp]
-theorem sup_span_singleton_apply_mk (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) (x' : E) (hx' : x' ∈ f.domain)
-    (c : K) :
-    f.supSpanSingleton x y hx ⟨x' + c • x, mem_sup.2 ⟨x', hx', _, mem_span_singleton.2 ⟨c, rfl⟩, rfl⟩⟩ =
+theorem sup_span_singleton_apply_mk (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) (x' : E)
+    (hx' : x' ∈ f.domain) (c : K) :
+    f.supSpanSingleton x y hx
+        ⟨x' + c • x, mem_sup.2 ⟨x', hx', _, mem_span_singleton.2 ⟨c, rfl⟩, rfl⟩⟩ =
       f ⟨x', hx'⟩ + c • y :=
   by
   erw [sup_apply _ ⟨x', hx'⟩ ⟨c • x, _⟩, mk_span_singleton'_apply]
@@ -458,7 +482,8 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
     rcases hc (P x).1.1 (P x).1.2 (P y).1.1 (P y).1.2 with ⟨p, hpc, hpx, hpy⟩
     set x' := of_le hpx.1 ⟨x, (P x).2⟩
     set y' := of_le hpy.1 ⟨y, (P y).2⟩
-    rw [f_eq ⟨p, hpc⟩ x x' rfl, f_eq ⟨p, hpc⟩ y y' rfl, f_eq ⟨p, hpc⟩ (x + y) (x' + y') rfl, map_add]
+    rw [f_eq ⟨p, hpc⟩ x x' rfl, f_eq ⟨p, hpc⟩ y y' rfl, f_eq ⟨p, hpc⟩ (x + y) (x' + y') rfl,
+      map_add]
     
   · intro c x
     simp [f_eq (P x).1 (c • x) (c • ⟨x, (P x).2⟩) rfl, ← map_smul]
@@ -472,9 +497,9 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
 /- warning: linear_pmap.Sup clashes with linear_pmap.sup -> LinearPmap.sup
 warning: linear_pmap.Sup -> LinearPmap.sup is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u_1}} [_inst_1 : Ring.{u_1} R] {E : Type.{u_2}} [_inst_2 : AddCommGroup.{u_2} E] [_inst_3 : Module.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2)] {F : Type.{u_3}} [_inst_4 : AddCommGroup.{u_3} F] [_inst_5 : Module.{u_1 u_3} R F (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_3} F _inst_4)] (c : Set.{(max u_2 u_3)} (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)), (DirectedOn.{(max u_2 u_3)} (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (LE.le.{(max u_2 u_3)} (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (LinearPmap.hasLe.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)) c) -> (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)
+  forall {R : Type.{u_1}} [_inst_1 : Ring.{u_1} R] {E : Type.{u_2}} [_inst_2 : AddCommGroup.{u_2} E] [_inst_3 : Module.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2)] {F : Type.{u_3}} [_inst_4 : AddCommGroup.{u_3} F] [_inst_5 : Module.{u_1, u_3} R F (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_3} F _inst_4)] (c : Set.{max u_2 u_3} (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)), (DirectedOn.{max u_2 u_3} (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (LE.le.{max u_2 u_3} (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (LinearPmap.hasLe.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)) c) -> (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)
 but is expected to have type
-  forall {R : Type.{u_1}} [_inst_1 : Ring.{u_1} R] {E : Type.{u_2}} [_inst_2 : AddCommGroup.{u_2} E] [_inst_3 : Module.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2)] {F : Type.{u_3}} [_inst_4 : AddCommGroup.{u_3} F] [_inst_5 : Module.{u_1 u_3} R F (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_3} F _inst_4)] (f : LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (g : LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5), (forall (x : coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) (y : coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)), (Eq.{succ u_2} E ((fun (a : Type.{u_2}) (b : Type.{u_2}) [self : HasLiftT.{succ u_2 succ u_2} a b] => self.0) (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (HasLiftT.mk.{succ u_2 succ u_2} (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (CoeTCₓ.coe.{succ u_2 succ u_2} (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (CoeTCₓ.mk.{succ u_2 succ u_2} (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (Subtype.val.{succ u_2} E (fun (x : E) => (fun (x : E) => Membership.Mem.{u_2 u_2} E (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) (SetLike.hasMem.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) x (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) x))))) x) ((fun (a : Type.{u_2}) (b : Type.{u_2}) [self : HasLiftT.{succ u_2 succ u_2} a b] => self.0) (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (HasLiftT.mk.{succ u_2 succ u_2} (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (CoeTCₓ.coe.{succ u_2 succ u_2} (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (CoeTCₓ.mk.{succ u_2 succ u_2} (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (Subtype.val.{succ u_2} E (fun (x : E) => (fun (x : E) => Membership.Mem.{u_2 u_2} E (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) (SetLike.hasMem.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) x (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) x))))) y)) -> (Eq.{succ u_3} F (coeFn.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (fun (f : LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) => (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> F) (LinearPmap.hasCoeToFun.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) f x) (coeFn.{(max (succ u_2) (succ u_3)) (max (succ u_2) (succ u_3))} (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (fun (f : LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) => (coeSort.{succ u_2 succ (succ u_2)} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2 u_2} (Submodule.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1 u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> F) (LinearPmap.hasCoeToFun.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) g y))) -> (LinearPmap.{u_1 u_2 u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)
+  forall {R : Type.{u_1}} [_inst_1 : Ring.{u_1} R] {E : Type.{u_2}} [_inst_2 : AddCommGroup.{u_2} E] [_inst_3 : Module.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2)] {F : Type.{u_3}} [_inst_4 : AddCommGroup.{u_3} F] [_inst_5 : Module.{u_1, u_3} R F (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_3} F _inst_4)] (f : LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (g : LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5), (forall (x : coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) (y : coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)), (Eq.{succ u_2} E ((fun (a : Type.{u_2}) (b : Type.{u_2}) [self : HasLiftT.{succ u_2, succ u_2} a b] => self.0) (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (HasLiftT.mk.{succ u_2, succ u_2} (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (CoeTCₓ.coe.{succ u_2, succ u_2} (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (CoeTCₓ.mk.{succ u_2, succ u_2} (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) E (Subtype.val.{succ u_2} E (fun (x : E) => (fun (x : E) => Membership.Mem.{u_2, u_2} E (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) (SetLike.hasMem.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) x (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) x))))) x) ((fun (a : Type.{u_2}) (b : Type.{u_2}) [self : HasLiftT.{succ u_2, succ u_2} a b] => self.0) (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (HasLiftT.mk.{succ u_2, succ u_2} (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (CoeTCₓ.coe.{succ u_2, succ u_2} (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (CoeTCₓ.mk.{succ u_2, succ u_2} (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) E (Subtype.val.{succ u_2} E (fun (x : E) => (fun (x : E) => Membership.Mem.{u_2, u_2} E (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) (SetLike.hasMem.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) x (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 g)) x))))) y)) -> (Eq.{succ u_3} F (coeFn.{max (succ u_2) (succ u_3), max (succ u_2) (succ u_3)} (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (fun (f : LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) => (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> F) (LinearPmap.hasCoeToFun.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) f x) (coeFn.{max (succ u_2) (succ u_3), max (succ u_2) (succ u_3)} (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) (fun (f : LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) => (coeSort.{succ u_2, succ (succ u_2)} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) Type.{u_2} (SetLike.hasCoeToSort.{u_2, u_2} (Submodule.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3) E (Submodule.setLike.{u_1, u_2} R E (Ring.toSemiring.{u_1} R _inst_1) (AddCommGroup.toAddCommMonoid.{u_2} E _inst_2) _inst_3)) (LinearPmap.domain.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5 f)) -> F) (LinearPmap.hasCoeToFun.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5) g y))) -> (LinearPmap.{u_1, u_2, u_3} R _inst_1 E _inst_2 _inst_3 F _inst_4 _inst_5)
 Case conversion may be inaccurate. Consider using '#align linear_pmap.Sup LinearPmap.supₓ'. -/
 /-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
 of these submodules. -/
@@ -482,13 +507,13 @@ protected noncomputable def sup (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· 
   ⟨_, Classical.choose <| Sup_aux c hc⟩
 #align linear_pmap.Sup LinearPmap.sup
 
-protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {f : E →ₗ.[R] F} (hf : f ∈ c) :
-    f ≤ LinearPmap.sup c hc :=
+protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {f : E →ₗ.[R] F}
+    (hf : f ∈ c) : f ≤ LinearPmap.sup c hc :=
   Classical.choose_spec (Sup_aux c hc) hf
 #align linear_pmap.le_Sup LinearPmap.le_Sup
 
-protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F} (hg : ∀ f ∈ c, f ≤ g) :
-    LinearPmap.sup c hc ≤ g :=
+protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F}
+    (hg : ∀ f ∈ c, f ≤ g) : LinearPmap.sup c hc ≤ g :=
   le_of_eq_locus_ge <|
     Sup_le fun _ ⟨f, hf, Eq⟩ =>
       Eq ▸
@@ -496,8 +521,9 @@ protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·)
         this.1
 #align linear_pmap.Sup_le LinearPmap.Sup_le
 
-protected theorem Sup_apply {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {l : E →ₗ.[R] F} (hl : l ∈ c)
-    (x : l.domain) : (LinearPmap.sup c hc) ⟨x, (LinearPmap.le_Sup hc hl).1 x.2⟩ = l x := by
+protected theorem Sup_apply {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {l : E →ₗ.[R] F}
+    (hl : l ∈ c) (x : l.domain) :
+    (LinearPmap.sup c hc) ⟨x, (LinearPmap.le_Sup hc hl).1 x.2⟩ = l x := by
   symm
   apply (Classical.choose_spec (Sup_aux c hc) hl).2
   rfl
@@ -564,12 +590,13 @@ def domRestrict (f : E →ₗ.[R] F) (S : Submodule R E) : E →ₗ.[R] F :=
 #align linear_pmap.dom_restrict LinearPmap.domRestrict
 
 @[simp]
-theorem dom_restrict_domain (f : E →ₗ.[R] F) {S : Submodule R E} : (f.domRestrict S).domain = S ⊓ f.domain :=
+theorem dom_restrict_domain (f : E →ₗ.[R] F) {S : Submodule R E} :
+    (f.domRestrict S).domain = S ⊓ f.domain :=
   rfl
 #align linear_pmap.dom_restrict_domain LinearPmap.dom_restrict_domain
 
-theorem dom_restrict_apply {f : E →ₗ.[R] F} {S : Submodule R E} ⦃x : S ⊓ f.domain⦄ ⦃y : f.domain⦄ (h : (x : E) = y) :
-    f.domRestrict S x = f y := by
+theorem dom_restrict_apply {f : E →ₗ.[R] F} {S : Submodule R E} ⦃x : S ⊓ f.domain⦄ ⦃y : f.domain⦄
+    (h : (x : E) = y) : f.domRestrict S x = f y := by
   have : Submodule.ofLe (by simp) x = y := by
     ext
     simp [h]
@@ -591,11 +618,13 @@ def graph (f : E →ₗ.[R] F) : Submodule R (E × F) :=
   f.toFun.graph.map (f.domain.Subtype.prod_map (LinearMap.id : F →ₗ[R] F))
 #align linear_pmap.graph LinearPmap.graph
 
-theorem mem_graph_iff' (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y, f y) = x := by simp [graph]
+theorem mem_graph_iff' (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y, f y) = x :=
+  by simp [graph]
 #align linear_pmap.mem_graph_iff' LinearPmap.mem_graph_iff'
 
 @[simp]
-theorem mem_graph_iff (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 := by
+theorem mem_graph_iff (f : E →ₗ.[R] F) {x : E × F} :
+    x ∈ f.graph ↔ ∃ y : f.domain, (↑y : E) = x.1 ∧ f y = x.2 := by
   cases x
   simp_rw [mem_graph_iff', Prod.mk.inj_iff]
 #align linear_pmap.mem_graph_iff LinearPmap.mem_graph_iff
@@ -608,23 +637,25 @@ variable {M : Type _} [Monoid M] [DistribMulAction M F] [SmulCommClass R M F] (y
 
 /-- The graph of `z • f` as a pushforward. -/
 theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
-    (z • f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).prod_map (z • (LinearMap.id : F →ₗ[R] F))) := by
-  ext x
-  cases x
+    (z • f).graph =
+      f.graph.map ((LinearMap.id : E →ₗ[R] E).prod_map (z • (LinearMap.id : F →ₗ[R] F))) :=
+  by
+  ext x; cases x
   constructor <;> intro h
   · rw [mem_graph_iff] at h
     rcases h with ⟨y, hy, h⟩
     rw [LinearPmap.smul_apply] at h
     rw [Submodule.mem_map]
-    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply, Prod.mk.inj_iff,
-      Prod.exists, exists_exists_and_eq_and]
+    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def,
+      LinearMap.smul_apply, Prod.mk.inj_iff, Prod.exists, exists_exists_and_eq_and]
     use x_fst, y
     simp [hy, h]
     
   rw [Submodule.mem_map] at h
   rcases h with ⟨x', hx', h⟩
   cases x'
-  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply, Prod.mk.inj_iff] at h
+  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.smul_apply,
+    Prod.mk.inj_iff] at h
   rw [mem_graph_iff] at hx'⊢
   rcases hx' with ⟨y, hy, hx'⟩
   use y
@@ -634,23 +665,24 @@ theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
 
 /-- The graph of `-f` as a pushforward. -/
 theorem neg_graph (f : E →ₗ.[R] F) :
-    (-f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).prod_map (-(LinearMap.id : F →ₗ[R] F))) := by
-  ext
-  cases x
+    (-f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).prod_map (-(LinearMap.id : F →ₗ[R] F))) :=
+  by
+  ext; cases x
   constructor <;> intro h
   · rw [mem_graph_iff] at h
     rcases h with ⟨y, hy, h⟩
     rw [LinearPmap.neg_apply] at h
     rw [Submodule.mem_map]
-    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply, Prod.mk.inj_iff,
-      Prod.exists, exists_exists_and_eq_and]
+    simp only [mem_graph_iff, LinearMap.prod_map_apply, LinearMap.id_coe, id.def,
+      LinearMap.neg_apply, Prod.mk.inj_iff, Prod.exists, exists_exists_and_eq_and]
     use x_fst, y
     simp [hy, h]
     
   rw [Submodule.mem_map] at h
   rcases h with ⟨x', hx', h⟩
   cases x'
-  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply, Prod.mk.inj_iff] at h
+  simp only [LinearMap.prod_map_apply, LinearMap.id_coe, id.def, LinearMap.neg_apply,
+    Prod.mk.inj_iff] at h
   rw [mem_graph_iff] at hx'⊢
   rcases hx' with ⟨y, hy, hx'⟩
   use y
@@ -658,8 +690,8 @@ theorem neg_graph (f : E →ₗ.[R] F) :
   simp [hy, hx']
 #align linear_pmap.neg_graph LinearPmap.neg_graph
 
-theorem mem_graph_snd_inj (f : E →ₗ.[R] F) {x y : E} {x' y' : F} (hx : (x, x') ∈ f.graph) (hy : (y, y') ∈ f.graph)
-    (hxy : x = y) : x' = y' := by
+theorem mem_graph_snd_inj (f : E →ₗ.[R] F) {x y : E} {x' y' : F} (hx : (x, x') ∈ f.graph)
+    (hy : (y, y') ∈ f.graph) (hxy : x = y) : x' = y' := by
   rw [mem_graph_iff] at hx hy
   rcases hx with ⟨x'', hx1, hx2⟩
   rcases hy with ⟨y'', hy1, hy2⟩
@@ -668,15 +700,16 @@ theorem mem_graph_snd_inj (f : E →ₗ.[R] F) {x y : E} {x' y' : F} (hx : (x, x
   rw [← hx2, ← hy2, hxy]
 #align linear_pmap.mem_graph_snd_inj LinearPmap.mem_graph_snd_inj
 
-theorem mem_graph_snd_inj' (f : E →ₗ.[R] F) {x y : E × F} (hx : x ∈ f.graph) (hy : y ∈ f.graph) (hxy : x.1 = y.1) :
-    x.2 = y.2 := by
+theorem mem_graph_snd_inj' (f : E →ₗ.[R] F) {x y : E × F} (hx : x ∈ f.graph) (hy : y ∈ f.graph)
+    (hxy : x.1 = y.1) : x.2 = y.2 := by
   cases x
   cases y
   exact f.mem_graph_snd_inj hx hy hxy
 #align linear_pmap.mem_graph_snd_inj' LinearPmap.mem_graph_snd_inj'
 
 /-- The property that `f 0 = 0` in terms of the graph. -/
-theorem graph_fst_eq_zero_snd (f : E →ₗ.[R] F) {x : E} {x' : F} (h : (x, x') ∈ f.graph) (hx : x = 0) : x' = 0 :=
+theorem graph_fst_eq_zero_snd (f : E →ₗ.[R] F) {x : E} {x' : F} (h : (x, x') ∈ f.graph)
+    (hx : x = 0) : x' = 0 :=
   f.mem_graph_snd_inj h f.graph.zero_mem hx
 #align linear_pmap.graph_fst_eq_zero_snd LinearPmap.graph_fst_eq_zero_snd
 
@@ -693,12 +726,14 @@ theorem mem_domain_iff {f : E →ₗ.[R] F} {x : E} : x ∈ f.domain ↔ ∃ y :
   simp
 #align linear_pmap.mem_domain_iff LinearPmap.mem_domain_iff
 
-theorem mem_domain_of_mem_graph {f : E →ₗ.[R] F} {x : E} {y : F} (h : (x, y) ∈ f.graph) : x ∈ f.domain := by
+theorem mem_domain_of_mem_graph {f : E →ₗ.[R] F} {x : E} {y : F} (h : (x, y) ∈ f.graph) :
+    x ∈ f.domain := by
   rw [mem_domain_iff]
   exact ⟨y, h⟩
 #align linear_pmap.mem_domain_of_mem_graph LinearPmap.mem_domain_of_mem_graph
 
-theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) : y = f ⟨x, hx⟩ ↔ (x, y) ∈ f.graph := by
+theorem image_iff {f : E →ₗ.[R] F} {x : E} {y : F} (hx : x ∈ f.domain) :
+    y = f ⟨x, hx⟩ ↔ (x, y) ∈ f.graph := by
   rw [mem_graph_iff]
   constructor <;> intro h
   · use ⟨x, hx⟩
@@ -726,8 +761,8 @@ theorem mem_range_iff {f : E →ₗ.[R] F} {y : F} : y ∈ Set.range f ↔ ∃ x
   rw [h.2]
 #align linear_pmap.mem_range_iff LinearPmap.mem_range_iff
 
-theorem mem_domain_iff_of_eq_graph {f g : E →ₗ.[R] F} (h : f.graph = g.graph) {x : E} : x ∈ f.domain ↔ x ∈ g.domain :=
-  by simp_rw [mem_domain_iff, h]
+theorem mem_domain_iff_of_eq_graph {f g : E →ₗ.[R] F} (h : f.graph = g.graph) {x : E} :
+    x ∈ f.domain ↔ x ∈ g.domain := by simp_rw [mem_domain_iff, h]
 #align linear_pmap.mem_domain_iff_of_eq_graph LinearPmap.mem_domain_iff_of_eq_graph
 
 theorem le_of_le_graph {f g : E →ₗ.[R] F} (h : f.graph ≤ g.graph) : f ≤ g := by
@@ -779,8 +814,8 @@ namespace Submodule
 section SubmoduleToLinearPmap
 
 theorem exists_unique_from_graph {g : Submodule R (E × F)}
-    (hg : ∀ {x : E × F} (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) :
-    ∃! b : F, (a, b) ∈ g := by
+    (hg : ∀ {x : E × F} (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) {a : E}
+    (ha : a ∈ g.map (LinearMap.fst R E F)) : ∃! b : F, (a, b) ∈ g := by
   refine' exists_unique_of_exists_of_unique _ _
   · convert ha
     simp
@@ -793,13 +828,15 @@ theorem exists_unique_from_graph {g : Submodule R (E × F)}
 #align submodule.exists_unique_from_graph Submodule.exists_unique_from_graph
 
 /-- Auxiliary definition to unfold the existential quantifier. -/
-noncomputable def valFromGraph {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
-    {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) : F :=
+noncomputable def valFromGraph {g : Submodule R (E × F)}
+    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) {a : E}
+    (ha : a ∈ g.map (LinearMap.fst R E F)) : F :=
   (ExistsUnique.exists (exists_unique_from_graph hg ha)).some
 #align submodule.val_from_graph Submodule.valFromGraph
 
-theorem val_from_graph_mem {g : Submodule R (E × F)} (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
-    {a : E} (ha : a ∈ g.map (LinearMap.fst R E F)) : (a, valFromGraph hg ha) ∈ g :=
+theorem val_from_graph_mem {g : Submodule R (E × F)}
+    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) {a : E}
+    (ha : a ∈ g.map (LinearMap.fst R E F)) : (a, valFromGraph hg ha) ∈ g :=
   (ExistsUnique.exists (exists_unique_from_graph hg ha)).some_spec
 #align submodule.val_from_graph_mem Submodule.val_from_graph_mem
 
@@ -824,14 +861,15 @@ noncomputable def toLinearPmap (g : Submodule R (E × F))
 #align submodule.to_linear_pmap Submodule.toLinearPmap
 
 theorem mem_graph_to_linear_pmap (g : Submodule R (E × F))
-    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) (x : g.map (LinearMap.fst R E F)) :
-    (x.val, g.toLinearPmap hg x) ∈ g :=
+    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0)
+    (x : g.map (LinearMap.fst R E F)) : (x.val, g.toLinearPmap hg x) ∈ g :=
   val_from_graph_mem hg x.2
 #align submodule.mem_graph_to_linear_pmap Submodule.mem_graph_to_linear_pmap
 
 @[simp]
 theorem to_linear_pmap_graph_eq (g : Submodule R (E × F))
-    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) : (g.toLinearPmap hg).graph = g := by
+    (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) :
+    (g.toLinearPmap hg).graph = g := by
   ext
   constructor <;> intro hx
   · rw [LinearPmap.mem_graph_iff] at hx

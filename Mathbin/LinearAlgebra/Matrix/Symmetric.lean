@@ -50,11 +50,13 @@ theorem IsSymm.apply {A : Matrix n n α} (h : A.IsSymm) (i j : n) : A j i = A i 
   IsSymm.ext_iff.1 h i j
 #align matrix.is_symm.apply Matrix.IsSymm.apply
 
-theorem is_symm_mul_transpose_self [Fintype n] [CommSemiring α] (A : Matrix n n α) : (A ⬝ Aᵀ).IsSymm :=
+theorem is_symm_mul_transpose_self [Fintype n] [CommSemiring α] (A : Matrix n n α) :
+    (A ⬝ Aᵀ).IsSymm :=
   transpose_mul _ _
 #align matrix.is_symm_mul_transpose_self Matrix.is_symm_mul_transpose_self
 
-theorem is_symm_transpose_mul_self [Fintype n] [CommSemiring α] (A : Matrix n n α) : (Aᵀ ⬝ A).IsSymm :=
+theorem is_symm_transpose_mul_self [Fintype n] [CommSemiring α] (A : Matrix n n α) :
+    (Aᵀ ⬝ A).IsSymm :=
   transpose_mul _ _
 #align matrix.is_symm_transpose_mul_self Matrix.is_symm_transpose_mul_self
 
@@ -124,8 +126,9 @@ theorem is_symm_diagonal [DecidableEq n] [Zero α] (v : n → α) : (diagonal v)
 
 /-- A block matrix `A.from_blocks B C D` is symmetric,
     if `A` and `D` are symmetric and `Bᵀ = C`. -/
-theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} (hA : A.IsSymm)
-    (hBC : Bᵀ = C) (hD : D.IsSymm) : (A.fromBlocks B C D).IsSymm := by
+theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
+    {D : Matrix n n α} (hA : A.IsSymm) (hBC : Bᵀ = C) (hD : D.IsSymm) :
+    (A.fromBlocks B C D).IsSymm := by
   have hCB : Cᵀ = B := by
     rw [← hBC]
     simp
@@ -135,9 +138,11 @@ theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n
 #align matrix.is_symm.from_blocks Matrix.IsSymm.from_blocks
 
 /-- This is the `iff` version of `matrix.is_symm.from_blocks`. -/
-theorem is_symm_from_blocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} :
-    (A.fromBlocks B C D).IsSymm ↔ A.IsSymm ∧ Bᵀ = C ∧ Cᵀ = B ∧ D.IsSymm :=
-  ⟨fun h => ⟨congr_arg toBlocks₁₁ h, congr_arg toBlocks₂₁ h, congr_arg toBlocks₁₂ h, congr_arg toBlocks₂₂ h⟩,
+theorem is_symm_from_blocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
+    {D : Matrix n n α} : (A.fromBlocks B C D).IsSymm ↔ A.IsSymm ∧ Bᵀ = C ∧ Cᵀ = B ∧ D.IsSymm :=
+  ⟨fun h =>
+    ⟨congr_arg toBlocks₁₁ h, congr_arg toBlocks₂₁ h, congr_arg toBlocks₁₂ h,
+      congr_arg toBlocks₂₂ h⟩,
     fun ⟨hA, hBC, hCB, hD⟩ => IsSymm.from_blocks hA hBC hD⟩
 #align matrix.is_symm_from_blocks_iff Matrix.is_symm_from_blocks_iff
 

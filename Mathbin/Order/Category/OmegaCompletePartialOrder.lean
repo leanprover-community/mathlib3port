@@ -95,8 +95,9 @@ instance (J : Type v) (f : J → ωCPO.{v}) : HasProduct f :=
 
 end HasProducts
 
-instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
-    (f g : α →𝒄 β) : OmegaCompletePartialOrder { a : α // f a = g a } :=
+instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompletePartialOrder α]
+    [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
+    OmegaCompletePartialOrder { a : α // f a = g a } :=
   (OmegaCompletePartialOrder.subtype _) fun c hc => by
     rw [f.continuous, g.continuous]
     congr 1
@@ -107,14 +108,15 @@ instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompleteParti
 namespace HasEqualizers
 
 /-- The equalizer inclusion function as a `continuous_hom`. -/
-def equalizerι {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β] (f g : α →𝒄 β) :
-    { a : α // f a = g a } →𝒄 α :=
+def equalizerι {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
+    (f g : α →𝒄 β) : { a : α // f a = g a } →𝒄 α :=
   ContinuousHom.ofMono (OrderHom.Subtype.val _) fun c => rfl
 #align ωCPO.has_equalizers.equalizer_ι ωCPO.HasEqualizers.equalizerι
 
 /-- A construction of the equalizer fork. -/
 def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : Fork f g :=
-  @Fork.ofι _ _ _ _ _ _ (ωCPO.of { a // f a = g a }) (equalizerι f g) (ContinuousHom.ext _ _ fun x => x.2)
+  @Fork.ofι _ _ _ _ _ _ (ωCPO.of { a // f a = g a }) (equalizerι f g)
+    (ContinuousHom.ext _ _ fun x => x.2)
 #align ωCPO.has_equalizers.equalizer ωCPO.HasEqualizers.equalizer
 
 /-- The equalizer fork is a limit. -/
@@ -131,7 +133,8 @@ def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
 
 end HasEqualizers
 
-instance : HasProducts.{v} ωCPO.{v} := fun J => { HasLimit := fun F => has_limit_of_iso Discrete.natIsoFunctor.symm }
+instance : HasProducts.{v} ωCPO.{v} := fun J =>
+  { HasLimit := fun F => has_limit_of_iso Discrete.natIsoFunctor.symm }
 
 instance {X Y : ωCPO.{v}} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
   HasLimit.mk ⟨_, HasEqualizers.isEqualizer f g⟩

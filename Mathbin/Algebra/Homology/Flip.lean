@@ -31,7 +31,8 @@ variable {ι : Type _} {c : ComplexShape ι} {ι' : Type _} {c' : ComplexShape �
 exchanging the horizontal and vertical directions.
 -/
 @[simps]
-def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') : HomologicalComplex (HomologicalComplex V c') c where
+def flipObj (C : HomologicalComplex (HomologicalComplex V c) c') :
+    HomologicalComplex (HomologicalComplex V c') c where
   x i :=
     { x := fun j => (C.x j).x i, d := fun j j' => (C.d j j').f i,
       shape' := fun j j' w => by
@@ -48,14 +49,19 @@ variable (V c c')
 
 /-- Flipping a complex of complexes over the diagonal, as a functor. -/
 @[simps]
-def flip : HomologicalComplex (HomologicalComplex V c) c' ⥤ HomologicalComplex (HomologicalComplex V c') c where
+def flip :
+    HomologicalComplex (HomologicalComplex V c) c' ⥤
+      HomologicalComplex (HomologicalComplex V c') c where
   obj C := flipObj C
-  map C D f := { f := fun i => { f := fun j => (f.f j).f i, comm' := fun j j' h => congr_hom (f.comm j j') i } }
+  map C D f :=
+    { f := fun i =>
+        { f := fun j => (f.f j).f i, comm' := fun j j' h => congr_hom (f.comm j j') i } }
 #align homological_complex.flip HomologicalComplex.flip
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
-def flipEquivalenceUnitIso : 𝟭 (HomologicalComplex (HomologicalComplex V c) c') ≅ flip V c c' ⋙ flip V c' c :=
+def flipEquivalenceUnitIso :
+    𝟭 (HomologicalComplex (HomologicalComplex V c) c') ≅ flip V c c' ⋙ flip V c' c :=
   NatIso.ofComponents
     (fun C =>
       { Hom :=
@@ -78,7 +84,8 @@ def flipEquivalenceUnitIso : 𝟭 (HomologicalComplex (HomologicalComplex V c) c
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
 @[simps]
-def flipEquivalenceCounitIso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (HomologicalComplex (HomologicalComplex V c') c) :=
+def flipEquivalenceCounitIso :
+    flip V c' c ⋙ flip V c c' ≅ 𝟭 (HomologicalComplex (HomologicalComplex V c') c) :=
   NatIso.ofComponents
     (fun C =>
       { Hom :=
@@ -102,7 +109,8 @@ def flipEquivalenceCounitIso : flip V c' c ⋙ flip V c c' ≅ 𝟭 (Homological
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/
 @[simps]
 def flipEquivalence :
-    HomologicalComplex (HomologicalComplex V c) c' ≌ HomologicalComplex (HomologicalComplex V c') c where
+    HomologicalComplex (HomologicalComplex V c) c' ≌
+      HomologicalComplex (HomologicalComplex V c') c where
   Functor := flip V c c'
   inverse := flip V c' c
   unitIso := flipEquivalenceUnitIso V c c'

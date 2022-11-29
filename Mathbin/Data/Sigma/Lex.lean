@@ -34,8 +34,10 @@ Related files are:
 
 namespace Sigma
 
-variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop} {a b : Σi, α i}
+variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop}
+  {a b : Σi, α i}
 
+#print Sigma.Lex /-
 /-- The lexicographical order on a sigma type. It takes in a relation on the index type and a
 relation for each summand. `a` is related to `b` iff their summands are related or they are in the
 same summand and are related through the summand's relation. -/
@@ -43,7 +45,14 @@ inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀
   | left {i j : ι} (a : α i) (b : α j) : r i j → lex ⟨i, a⟩ ⟨j, b⟩
   | right {i : ι} (a b : α i) : s i a b → lex ⟨i, a⟩ ⟨i, b⟩
 #align sigma.lex Sigma.Lex
+-/
 
+/- warning: sigma.lex_iff -> Sigma.lex_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s a b) (Or (r (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.ndrec.{succ u_2, succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) α (Sigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
+but is expected to have type
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s a b) (Or (r (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.rec.{succ u_2, succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.390 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.389 : Eq.{succ u_1} ι (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.390) => α x._@.Mathlib.Data.Sigma.Lex._hyg.390) (Sigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (Sigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
+Case conversion may be inaccurate. Consider using '#align sigma.lex_iff Sigma.lex_iffₓ'. -/
 theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
@@ -63,13 +72,21 @@ theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
     
 #align sigma.lex_iff Sigma.lex_iff
 
-instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
-    [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
+#print Sigma.Lex.decidable /-
+instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι]
+    [DecidableRel r] [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
   decidable_of_decidable_of_iff inferInstance lex_iff.symm
 #align sigma.lex.decidable Sigma.Lex.decidable
+-/
 
-theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i} (h : Lex r₁ s₁ a b) :
-    Lex r₂ s₂ a b := by
+/- warning: sigma.lex.mono -> Sigma.Lex.mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₁ s₁ a b) -> (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₂ s₂ a b))
+but is expected to have type
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₁ s₁ a b) -> (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₂ s₂ a b))
+Case conversion may be inaccurate. Consider using '#align sigma.lex.mono Sigma.Lex.monoₓ'. -/
+theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i}
+    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨a, b, hij⟩ | ⟨a, b, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
@@ -77,14 +94,34 @@ theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
     
 #align sigma.lex.mono Sigma.Lex.mono
 
-theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σi, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
+/- warning: sigma.lex.mono_left -> Sigma.Lex.mono_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₁ s a b) -> (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₂ s a b))
+but is expected to have type
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₁ s a b) -> (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₂ s a b))
+Case conversion may be inaccurate. Consider using '#align sigma.lex.mono_left Sigma.Lex.mono_leftₓ'. -/
+theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σi, α i} (h : Lex r₁ s a b) :
+    Lex r₂ s a b :=
   (h.mono hr) fun _ _ _ => id
 #align sigma.lex.mono_left Sigma.Lex.mono_left
 
-theorem Lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
+/- warning: sigma.lex.mono_right -> Sigma.Lex.mono_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s₁ a b) -> (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s₂ a b))
+but is expected to have type
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s₁ a b) -> (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s₂ a b))
+Case conversion may be inaccurate. Consider using '#align sigma.lex.mono_right Sigma.Lex.mono_rightₓ'. -/
+theorem Lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σi, α i} (h : Lex r s₁ a b) :
+    Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 #align sigma.lex.mono_right Sigma.Lex.mono_right
 
+/- warning: sigma.lex_swap -> Sigma.lex_swap is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) (Function.swap.{succ u_1, succ u_1, 1} ι ι (fun (ᾰ : ι) (ᾰ : ι) => Prop) r) s a b) (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r (fun (i : ι) => Function.swap.{succ u_2, succ u_2, 1} (α i) (α i) (fun (ᾰ : α i) (ᾰ : α i) => Prop) (s i)) b a)
+but is expected to have type
+  forall {ι : Type.{u_1}} {α : ι -> Type.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : Sigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) (Function.swap.{succ u_1, succ u_1, 1} ι ι (fun (a._@.Mathlib.Data.Sigma.Lex._hyg.148 : ι) (a._@.Mathlib.Data.Sigma.Lex._hyg.146 : ι) => Prop) r) s a b) (Sigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r (fun (i : ι) => Function.swap.{succ u_2, succ u_2, 1} (α i) (α i) (fun (a._@.Mathlib.Data.Sigma.Lex._hyg.157 : α i) (a._@.Mathlib.Data.Sigma.Lex._hyg.154 : α i) => Prop) (s i)) b a)
+Case conversion may be inaccurate. Consider using '#align sigma.lex_swap Sigma.lex_swapₓ'. -/
 theorem lex_swap : Lex r.swap s a b ↔ Lex r (fun i => (s i).swap) b a := by
   constructor <;>
     · rintro (⟨a, b, h⟩ | ⟨a, b, h⟩)
@@ -178,7 +215,14 @@ namespace PSigma
 
 variable {ι : Sort _} {α : ι → Sort _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop}
 
-theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 := by
+/- warning: psigma.lex_iff -> PSigma.lex_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s a b) (Or (r (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.ndrec.{u_2, u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) α (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
+but is expected to have type
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r s a b) (Or (r (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) (Eq.rec.{u_2, u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.2478 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.2477 : Eq.{u_1} ι (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.2478) => α x._@.Mathlib.Data.Sigma.Lex._hyg.2478) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) a) (PSigma.fst.{u_1, u_2} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u_1, u_2} ι (fun (i : ι) => α i) b))))
+Case conversion may be inaccurate. Consider using '#align psigma.lex_iff PSigma.lex_iffₓ'. -/
+theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
+  by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨i, hab⟩)
     · exact Or.inl hij
@@ -197,13 +241,22 @@ theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 =
     
 #align psigma.lex_iff PSigma.lex_iff
 
-instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι] [DecidableRel r]
-    [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
+#print PSigma.Lex.decidable /-
+instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι]
+    [DecidableRel r] [∀ i, DecidableRel (s i)] : DecidableRel (Lex r s) := fun a b =>
   decidable_of_decidable_of_iff inferInstance lex_iff.symm
 #align psigma.lex.decidable PSigma.Lex.decidable
+-/
 
-theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b)
-    (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ'i, α i} (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
+/- warning: psigma.lex.mono -> PSigma.Lex.mono is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₁ s₁ a b) -> (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₂ s₂ a b))
+but is expected to have type
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r₁ s₁ a b) -> (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r₂ s₂ a b))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.mono PSigma.Lex.monoₓ'. -/
+theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop}
+    (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ'i, α i}
+    (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b := by
   obtain ⟨a, b, hij⟩ | ⟨i, hab⟩ := h
   · exact lex.left _ _ (hr _ _ hij)
     
@@ -211,13 +264,25 @@ theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
     
 #align psigma.lex.mono PSigma.Lex.mono
 
-theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop} (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ'i, α i}
-    (h : Lex r₁ s a b) : Lex r₂ s a b :=
+/- warning: psigma.lex.mono_left -> PSigma.Lex.mono_left is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₁ s a b) -> (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r₂ s a b))
+but is expected to have type
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r₁ : ι -> ι -> Prop} {r₂ : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (a : ι) (b : ι), (r₁ a b) -> (r₂ a b)) -> (forall {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r₁ s a b) -> (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r₂ s a b))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.mono_left PSigma.Lex.mono_leftₓ'. -/
+theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop}
+    (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ'i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
   (h.mono hr) fun _ _ _ => id
 #align psigma.lex.mono_left PSigma.Lex.mono_left
 
-theorem Lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop} (hs : ∀ i a b, s₁ i a b → s₂ i a b)
-    {a b : Σ'i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
+/- warning: psigma.lex.mono_right -> PSigma.Lex.mono_right is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s₁ a b) -> (PSigma.Lex.{u_1, u_2} ι (fun (i : ι) => α i) r s₂ a b))
+but is expected to have type
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}} {r : ι -> ι -> Prop} {s₁ : forall (i : ι), (α i) -> (α i) -> Prop} {s₂ : forall (i : ι), (α i) -> (α i) -> Prop}, (forall (i : ι) (a : α i) (b : α i), (s₁ i a b) -> (s₂ i a b)) -> (forall {a : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)} {b : PSigma.{u_1, u_2} ι (fun (i : ι) => α i)}, (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r s₁ a b) -> (PSigma.Lex.{u_1, u_2} ι (fun (a : ι) => α a) r s₂ a b))
+Case conversion may be inaccurate. Consider using '#align psigma.lex.mono_right PSigma.Lex.mono_rightₓ'. -/
+theorem Lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop}
+    (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ'i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 #align psigma.lex.mono_right PSigma.Lex.mono_right
 

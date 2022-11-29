@@ -71,7 +71,8 @@ unsafe def subtype_instance := do
   let cl := t.get_app_fn.const_name
   let src ← find_ancestors cl t.app_arg
   let inst :=
-    pexpr.mk_structure_instance { struct := cl, field_values := [], field_names := [], sources := src.map to_pexpr }
+    pexpr.mk_structure_instance
+      { struct := cl, field_values := [], field_names := [], sources := src.map to_pexpr }
   andthen (refine_struct inst) derive_field_subtype
 #align tactic.interactive.subtype_instance tactic.interactive.subtype_instance
 

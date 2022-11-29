@@ -38,9 +38,9 @@ abbrev AssocRingHom (M N : Type _) [Semiring M] [Semiring N] :=
 #align SemiRing.assoc_ring_hom SemiRingCat.AssocRingHom
 
 instance bundledHom : BundledHom AssocRingHom :=
-  ⟨fun M N [Semiring M] [Semiring N] => @RingHom.toFun M N _ _, fun M [Semiring M] => @RingHom.id M _,
-    fun M N P [Semiring M] [Semiring N] [Semiring P] => @RingHom.comp M N P _ _ _, fun M N [Semiring M] [Semiring N] =>
-    @RingHom.coe_inj M N _ _⟩
+  ⟨fun M N [Semiring M] [Semiring N] => @RingHom.toFun M N _ _, fun M [Semiring M] =>
+    @RingHom.id M _, fun M N P [Semiring M] [Semiring N] [Semiring P] => @RingHom.comp M N P _ _ _,
+    fun M N [Semiring M] [Semiring N] => @RingHom.coe_inj M N _ _⟩
 #align SemiRing.bundled_hom SemiRingCat.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for SemiRingCat
@@ -59,7 +59,8 @@ def ofHom {R S : Type u} [Semiring R] [Semiring S] (f : R →+* S) : of R ⟶ of
 #align SemiRing.of_hom SemiRingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [Semiring R] [Semiring S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+theorem of_hom_apply {R S : Type u} [Semiring R] [Semiring S] (f : R →+* S) (x : R) :
+    ofHom f x = f x :=
   rfl
 #align SemiRing.of_hom_apply SemiRingCat.of_hom_apply
 
@@ -99,7 +100,8 @@ instance : BundledHom.ParentProjection @Ring.toSemiring :=
 
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring,
 has_coe_to_sort[has_coe_to_sort] Ring (Type*) -/
-deriving instance «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring,
+deriving instance
+  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ Ring,
   has_coe_to_sort[has_coe_to_sort] Ring (Type*)», LargeCategory, ConcreteCategory for RingCat
 
 /-- Construct a bundled Ring from the underlying type and typeclass. -/
@@ -135,7 +137,8 @@ instance hasForgetToSemiRing : HasForget₂ RingCat SemiRingCat :=
 instance hasForgetToAddCommGroup :
     HasForget₂ RingCat
       AddCommGroupCat where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
-  forget₂ := { obj := fun R => AddCommGroupCat.of R, map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
+  forget₂ :=
+    { obj := fun R => AddCommGroupCat.of R, map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 #align Ring.has_forget_to_AddCommGroup RingCat.hasForgetToAddCommGroup
 
 end RingCat
@@ -166,7 +169,8 @@ def ofHom {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) : of 
 #align CommSemiRing.of_hom CommSemiRingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+theorem of_hom_apply {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) (x : R) :
+    ofHom f x = f x :=
   rfl
 #align CommSemiRing.of_hom_apply CommSemiRingCat.of_hom_apply
 
@@ -187,7 +191,8 @@ instance hasForgetToSemiRing : HasForget₂ CommSemiRingCat SemiRingCat :=
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommMon : HasForget₂ CommSemiRingCat CommMonCat :=
-  HasForget₂.mk' (fun R : CommSemiRingCat => CommMonCat.of R) (fun R => rfl) (fun R₁ R₂ f => f.toMonoidHom) (by tidy)
+  HasForget₂.mk' (fun R : CommSemiRingCat => CommMonCat.of R) (fun R => rfl)
+    (fun R₁ R₂ f => f.toMonoidHom) (by tidy)
 #align CommSemiRing.has_forget_to_CommMon CommSemiRingCat.hasForgetToCommMon
 
 end CommSemiRingCat
@@ -218,7 +223,8 @@ def ofHom {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) : of R ⟶ of
 #align CommRing.of_hom CommRingCat.ofHom
 
 @[simp]
-theorem of_hom_apply {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+theorem of_hom_apply {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S) (x : R) :
+    ofHom f x = f x :=
   rfl
 #align CommRing.of_hom_apply CommRingCat.of_hom_apply
 
@@ -239,7 +245,8 @@ instance hasForgetToRing : HasForget₂ CommRingCat RingCat :=
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommSemiRing : HasForget₂ CommRingCat CommSemiRingCat :=
-  HasForget₂.mk' (fun R : CommRingCat => CommSemiRingCat.of R) (fun R => rfl) (fun R₁ R₂ f => f) (by tidy)
+  HasForget₂.mk' (fun R : CommRingCat => CommSemiRingCat.of R) (fun R => rfl) (fun R₁ R₂ f => f)
+    (by tidy)
 #align CommRing.has_forget_to_CommSemiRing CommRingCat.hasForgetToCommSemiRing
 
 instance : Full (forget₂ CommRingCat CommSemiRingCat) where preimage X Y f := f
@@ -265,7 +272,8 @@ def toRingIso [Ring X] [Ring Y] (e : X ≃+* Y) : RingCat.of X ≅ RingCat.of Y 
 
 /-- Build an isomorphism in the category `CommRing` from a `ring_equiv` between `comm_ring`s. -/
 @[simps]
-def toCommRingIso [CommRing X] [CommRing Y] (e : X ≃+* Y) : CommRingCat.of X ≅ CommRingCat.of Y where
+def toCommRingIso [CommRing X] [CommRing Y] (e : X ≃+* Y) :
+    CommRingCat.of X ≅ CommRingCat.of Y where
   Hom := e.toRingHom
   inv := e.symm.toRingHom
 #align ring_equiv.to_CommRing_iso RingEquiv.toCommRingIso
@@ -313,7 +321,8 @@ theorem CommRing_iso_to_ring_equiv_symm_to_ring_hom {X Y : CommRingCat} (i : X �
 end CategoryTheory.Iso
 
 /-- Ring equivalences between `ring`s are the same as (isomorphic to) isomorphisms in `Ring`. -/
-def ringEquivIsoRingIso {X Y : Type u} [Ring X] [Ring Y] : X ≃+* Y ≅ RingCat.of X ≅ RingCat.of Y where
+def ringEquivIsoRingIso {X Y : Type u} [Ring X] [Ring Y] :
+    X ≃+* Y ≅ RingCat.of X ≅ RingCat.of Y where
   Hom e := e.toRingIso
   inv i := i.ringIsoToRingEquiv
 #align ring_equiv_iso_Ring_iso ringEquivIsoRingIso
@@ -342,12 +351,13 @@ instance CommRingCat.forget_reflects_isos :
     exact ⟨(is_iso.of_iso e.to_CommRing_iso).1⟩
 #align CommRing.forget_reflects_isos CommRingCat.forget_reflects_isos
 
-theorem CommRingCat.comp_eq_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) : f ≫ g = g.comp f :=
+theorem CommRingCat.comp_eq_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
+    f ≫ g = g.comp f :=
   rfl
 #align CommRing.comp_eq_ring_hom_comp CommRingCat.comp_eq_ring_hom_comp
 
-theorem CommRingCat.ring_hom_comp_eq_comp {R S T : Type _} [CommRing R] [CommRing S] [CommRing T] (f : R →+* S)
-    (g : S →+* T) : g.comp f = CommRingCat.ofHom f ≫ CommRingCat.ofHom g :=
+theorem CommRingCat.ring_hom_comp_eq_comp {R S T : Type _} [CommRing R] [CommRing S] [CommRing T]
+    (f : R →+* S) (g : S →+* T) : g.comp f = CommRingCat.ofHom f ≫ CommRingCat.ofHom g :=
   rfl
 #align CommRing.ring_hom_comp_eq_comp CommRingCat.ring_hom_comp_eq_comp
 

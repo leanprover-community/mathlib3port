@@ -30,8 +30,9 @@ open CategoryTheory.MonoidalCategory
 
 namespace CategoryTheory
 
-variable {C : Type _} [Category C] [MonoidalCategory C] [Preadditive C] [MonoidalPreadditive C] [HasZeroObject C]
-  [HasEqualizers C] [HasCokernels C] [HasImages C] [HasImageMaps C] [HasProjectiveResolutions C]
+variable {C : Type _} [Category C] [MonoidalCategory C] [Preadditive C] [MonoidalPreadditive C]
+  [HasZeroObject C] [HasEqualizers C] [HasCokernels C] [HasImages C] [HasImageMaps C]
+  [HasProjectiveResolutions C]
 
 variable (C)
 
@@ -51,7 +52,8 @@ def tor' (n : ℕ) : C ⥤ C ⥤ C :=
     { obj := fun X => Functor.leftDerived ((tensoringRight C).obj X) n,
       map := fun X Y f => NatTrans.leftDerived ((tensoringRight C).map f) n,
       map_id' := fun X => by rw [(tensoring_right C).map_id, nat_trans.left_derived_id],
-      map_comp' := fun X Y Z f g => by rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
+      map_comp' := fun X Y Z f g => by
+        rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
 #align category_theory.Tor' CategoryTheory.tor'
 
 open ZeroObject

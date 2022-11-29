@@ -92,7 +92,8 @@ def circle.toUnits : circle →* Units ℂ :=
 
 -- written manually because `@[simps]` was slow and generated the wrong lemma
 @[simp]
-theorem circle.to_units_apply (z : circle) : circle.toUnits z = Units.mk0 z (ne_zero_of_mem_circle z) :=
+theorem circle.to_units_apply (z : circle) :
+    circle.toUnits z = Units.mk0 z (ne_zero_of_mem_circle z) :=
   rfl
 #align circle.to_units_apply circle.to_units_apply
 
@@ -105,11 +106,13 @@ instance : TopologicalGroup circle :=
 /-- If `z` is a nonzero complex number, then `conj z / z` belongs to the unit circle. -/
 @[simps]
 def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
-  ⟨conj z / z, mem_circle_iff_abs.2 <| by rw [map_div₀, abs_conj, div_self (complex.abs.ne_zero hz)]⟩
+  ⟨conj z / z,
+    mem_circle_iff_abs.2 <| by rw [map_div₀, abs_conj, div_self (complex.abs.ne_zero hz)]⟩
 #align circle.of_conj_div_self circle.ofConjDivSelf
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
-def expMapCircle : C(ℝ, circle) where toFun t := ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
+def expMapCircle :
+    C(ℝ, circle) where toFun t := ⟨exp (t * I), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
 #align exp_map_circle expMapCircle
 
 @[simp]
@@ -124,7 +127,8 @@ theorem exp_map_circle_zero : expMapCircle 0 = 1 :=
 
 @[simp]
 theorem exp_map_circle_add (x y : ℝ) : expMapCircle (x + y) = expMapCircle x * expMapCircle y :=
-  Subtype.ext <| by simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
+  Subtype.ext <| by
+    simp only [exp_map_circle_apply, Submonoid.coe_mul, of_real_add, add_mul, Complex.exp_add]
 #align exp_map_circle_add exp_map_circle_add
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`, considered as a homomorphism of

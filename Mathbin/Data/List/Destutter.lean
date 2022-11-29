@@ -35,7 +35,8 @@ theorem destutter'_nil : destutter' R a [] = [a] :=
   rfl
 #align list.destutter'_nil List.destutter'_nil
 
-theorem destutter'_cons : (b :: l).destutter' R a = if R a b then a :: destutter' R b l else destutter' R a l :=
+theorem destutter'_cons :
+    (b :: l).destutter' R a = if R a b then a :: destutter' R b l else destutter' R a l :=
   rfl
 #align list.destutter'_cons List.destutter'_cons
 
@@ -47,13 +48,15 @@ theorem destutter'_cons_pos (h : R b a) : (a :: l).destutter' R b = b :: l.destu
 #align list.destutter'_cons_pos List.destutter'_cons_pos
 
 @[simp]
-theorem destutter'_cons_neg (h : ¬R b a) : (a :: l).destutter' R b = l.destutter' R b := by rw [destutter', if_neg h]
+theorem destutter'_cons_neg (h : ¬R b a) : (a :: l).destutter' R b = l.destutter' R b := by
+  rw [destutter', if_neg h]
 #align list.destutter'_cons_neg List.destutter'_cons_neg
 
 variable (R)
 
 @[simp]
-theorem destutter'_singleton : [b].destutter' R a = if R a b then [a, b] else [a] := by split_ifs <;> simp! [h]
+theorem destutter'_singleton : [b].destutter' R a = if R a b then [a, b] else [a] := by
+  split_ifs <;> simp! [h]
 #align list.destutter'_singleton List.destutter'_singleton
 
 theorem destutter'_sublist (a) : l.destutter' R a <+ a :: l := by
@@ -132,7 +135,8 @@ theorem destutter_cons' : (a :: l).destutter R = destutter' R a l :=
   rfl
 #align list.destutter_cons' List.destutter_cons'
 
-theorem destutter_cons_cons : (a :: b :: l).destutter R = if R a b then a :: destutter' R b l else destutter' R a l :=
+theorem destutter_cons_cons :
+    (a :: b :: l).destutter R = if R a b then a :: destutter' R b l else destutter' R a l :=
   rfl
 #align list.destutter_cons_cons List.destutter_cons_cons
 

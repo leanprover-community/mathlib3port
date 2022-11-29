@@ -83,8 +83,12 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
               
             · simpa only [add_le_add_iff_right, two_mul] using Nat.le_add_left m m
               
-          _ = ∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪ filter Nat.Prime (range (m + 2)), i := by
-            rw [filter_union]
+          _ =
+              ∏ i in
+                filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)) ∪
+                  filter Nat.Prime (range (m + 2)),
+                i :=
+            by rw [filter_union]
           _ =
               (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) *
                 ∏ i in filter Nat.Prime (range (m + 2)), i :=
@@ -98,7 +102,10 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
           _ ≤ (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) * 4 ^ (m + 1) :=
             Nat.mul_le_mul_left _ (primorial_le_4_pow (m + 1))
           _ ≤ choose (2 * m + 1) (m + 1) * 4 ^ (m + 1) := by
-            have s : (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣ choose (2 * m + 1) (m + 1) := by
+            have s :
+              (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ∣
+                choose (2 * m + 1) (m + 1) :=
+              by
               refine' prod_primes_dvd (choose (2 * m + 1) (m + 1)) _ _
               · intro a
                 rw [Finset.mem_filter, Nat.prime_iff]
@@ -112,7 +119,10 @@ theorem primorial_le_4_pow : ∀ n : ℕ, n# ≤ 4 ^ n
                 rcases size with ⟨a_big, a_small⟩
                 exact dvd_choose_of_middling_prime a is_prime m a_big (nat.lt_succ_iff.mp a_small)
                 
-            have r : (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤ choose (2 * m + 1) (m + 1) := by
+            have r :
+              (∏ i in filter Nat.Prime (Finset.ico (m + 2) (2 * m + 2)), i) ≤
+                choose (2 * m + 1) (m + 1) :=
+              by
               refine' @Nat.le_of_dvd _ _ _ s
               exact @choose_pos (2 * m + 1) (m + 1) (by linarith)
             exact Nat.mul_le_mul_right _ r

@@ -67,15 +67,18 @@ theorem mem_rees_algebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff
   Iff.rfl
 #align mem_rees_algebra_iff mem_rees_algebra_iff
 
-theorem mem_rees_algebra_iff_support (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i := by
+theorem mem_rees_algebra_iff_support (f : R[X]) :
+    f ∈ reesAlgebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i := by
   apply forall_congr'
   intro a
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]
   exact fun e => e.symm ▸ (I ^ a).zero_mem
 #align mem_rees_algebra_iff_support mem_rees_algebra_iff_support
 
-theorem reesAlgebra.monomial_mem {I : Ideal R} {i : ℕ} {r : R} : monomial i r ∈ reesAlgebra I ↔ r ∈ I ^ i := by
-  simp (config := { contextual := true }) [mem_rees_algebra_iff_support, coeff_monomial, ← imp_iff_not_or]
+theorem reesAlgebra.monomial_mem {I : Ideal R} {i : ℕ} {r : R} :
+    monomial i r ∈ reesAlgebra I ↔ r ∈ I ^ i := by
+  simp (config := { contextual := true }) [mem_rees_algebra_iff_support, coeff_monomial, ←
+    imp_iff_not_or]
 #align rees_algebra.monomial_mem reesAlgebra.monomial_mem
 
 theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈ I ^ n) :
@@ -118,7 +121,9 @@ theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by classical
   rw [← adjoin_monomial_eq_rees_algebra, ← hs]
   use s.image (monomial 1)
   rw [Finset.coe_image]
-  change _ = Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
+  change
+    _ =
+      Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
   rw [Submodule.map_span, Algebra.adjoin_span]
 #align rees_algebra.fg reesAlgebra.fg
 

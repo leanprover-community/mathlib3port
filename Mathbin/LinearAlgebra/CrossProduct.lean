@@ -44,7 +44,9 @@ variable {R : Type _} [CommRing R]
 
 /-- The cross product of two vectors in $R^3$ for $R$ a commutative ring. -/
 def crossProduct : (Fin 3 → R) →ₗ[R] (Fin 3 → R) →ₗ[R] Fin 3 → R := by
-  apply LinearMap.mk₂ R fun a b : Fin 3 → R => ![a 1 * b 2 - a 2 * b 1, a 2 * b 0 - a 0 * b 2, a 0 * b 1 - a 1 * b 0]
+  apply
+    LinearMap.mk₂ R fun a b : Fin 3 → R =>
+      ![a 1 * b 2 - a 2 * b 1, a 2 * b 0 - a 0 * b 2, a 0 * b 1 - a 1 * b 0]
   · intros
     simp [vec3_add (_ : R), add_comm, add_assoc, add_left_comm, add_mul, sub_eq_add_neg]
     
@@ -76,7 +78,8 @@ theorem cross_anticomm (v w : Fin 3 → R) : -(v ×₃ w) = w ×₃ v := by simp
 alias cross_anticomm ← neg_cross
 
 @[simp]
-theorem cross_anticomm' (v w : Fin 3 → R) : v ×₃ w + w ×₃ v = 0 := by rw [add_eq_zero_iff_eq_neg, cross_anticomm]
+theorem cross_anticomm' (v w : Fin 3 → R) : v ×₃ w + w ×₃ v = 0 := by
+  rw [add_eq_zero_iff_eq_neg, cross_anticomm]
 #align cross_anticomm' cross_anticomm'
 
 @[simp]
@@ -97,24 +100,27 @@ theorem dot_cross_self (v w : Fin 3 → R) : w ⬝ᵥ v ×₃ w = 0 := by
 
 /-- Cyclic permutations preserve the triple product. See also `triple_product_eq_det`. -/
 theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = v ⬝ᵥ w ×₃ u := by
-  simp only [cross_apply, vec3_dot_product, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_append,
-    Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_append, Matrix.cons_val_zero]
+  simp only [cross_apply, vec3_dot_product, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
+    Matrix.empty_append, Matrix.cons_val_one, Matrix.cons_vec_alt0, Matrix.cons_append,
+    Matrix.cons_val_zero]
   ring
 #align triple_product_permutation triple_product_permutation
 
 /-- The triple product of `u`, `v`, and `w` is equal to the determinant of the matrix
     with those vectors as its rows. -/
 theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matrix.det ![u, v, w] := by
-  simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
-    Matrix.empty_vec_alt0, Matrix.cons_vec_alt0, Matrix.vec_head_vec_alt0, Fin.fin_append_apply_zero,
-    Matrix.empty_append, Matrix.cons_append, Matrix.cons_val', Matrix.cons_val_one, Matrix.cons_val_zero]
+  simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons,
+    Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_vec_alt0, Matrix.cons_vec_alt0,
+    Matrix.vec_head_vec_alt0, Fin.fin_append_apply_zero, Matrix.empty_append, Matrix.cons_append,
+    Matrix.cons_val', Matrix.cons_val_one, Matrix.cons_val_zero]
   ring
 #align triple_product_eq_det triple_product_eq_det
 
 /-- The scalar quadruple product identity, related to the Binet-Cauchy identity. -/
-theorem cross_dot_cross (u v w x : Fin 3 → R) : u ×₃ v ⬝ᵥ w ×₃ x = u ⬝ᵥ w * v ⬝ᵥ x - u ⬝ᵥ x * v ⬝ᵥ w := by
-  simp only [vec3_dot_product, cross_apply, cons_append, cons_vec_bit0_eq_alt0, cons_val_one, cons_vec_alt0,
-    LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_append]
+theorem cross_dot_cross (u v w x : Fin 3 → R) :
+    u ×₃ v ⬝ᵥ w ×₃ x = u ⬝ᵥ w * v ⬝ᵥ x - u ⬝ᵥ x * v ⬝ᵥ w := by
+  simp only [vec3_dot_product, cross_apply, cons_append, cons_vec_bit0_eq_alt0, cons_val_one,
+    cons_vec_alt0, LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_append]
   ring_nf
 #align cross_dot_cross cross_dot_cross
 

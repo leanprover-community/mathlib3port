@@ -36,17 +36,17 @@ class PseudoMetrizableSpace (X : Type _) [t : TopologicalSpace X] : Prop where
   exists_pseudo_metric : ∃ m : PseudoMetricSpace X, m.toUniformSpace.toTopologicalSpace = t
 #align topological_space.pseudo_metrizable_space TopologicalSpace.PseudoMetrizableSpace
 
-instance (priority := 100) _root_.pseudo_metric_space.to_pseudo_metrizable_space {X : Type _}
+instance (priority := 100) PseudoMetricSpace.toPseudoMetrizableSpace {X : Type _}
     [m : PseudoMetricSpace X] : PseudoMetrizableSpace X :=
   ⟨⟨m, rfl⟩⟩
-#align
-  topological_space._root_.pseudo_metric_space.to_pseudo_metrizable_space topological_space._root_.pseudo_metric_space.to_pseudo_metrizable_space
+#align pseudo_metric_space.to_pseudo_metrizable_space PseudoMetricSpace.toPseudoMetrizableSpace
 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
-noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X] [h : PseudoMetrizableSpace X] :
-    PseudoMetricSpace X :=
+noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X]
+    [h : PseudoMetrizableSpace X] : PseudoMetricSpace X :=
   h.exists_pseudo_metric.some.replaceTopology h.exists_pseudo_metric.some_spec.symm
-#align topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
+#align
+  topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 
 instance pseudoMetrizableSpaceProd [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) := by
@@ -57,16 +57,15 @@ instance pseudoMetrizableSpaceProd [PseudoMetrizableSpace X] [PseudoMetrizableSp
 
 /-- Given an inducing map of a topological space into a pseudo metrizable space, the source space
 is also pseudo metrizable. -/
-theorem _root_.inducing.pseudo_metrizable_space [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
+theorem Inducing.pseudoMetrizableSpace [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
     PseudoMetrizableSpace X :=
   letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
-#align
-  topological_space._root_.inducing.pseudo_metrizable_space topological_space._root_.inducing.pseudo_metrizable_space
+#align inducing.pseudo_metrizable_space Inducing.pseudoMetrizableSpace
 
 /-- Every pseudo-metrizable space is first countable. -/
-instance (priority := 100) PseudoMetrizableSpace.first_countable_topology [h : PseudoMetrizableSpace X] :
-    TopologicalSpace.FirstCountableTopology X := by
+instance (priority := 100) PseudoMetrizableSpace.first_countable_topology
+    [h : PseudoMetrizableSpace X] : TopologicalSpace.FirstCountableTopology X := by
   rcases h with ⟨_, hm⟩
   rw [← hm]
   exact
@@ -75,11 +74,14 @@ instance (priority := 100) PseudoMetrizableSpace.first_countable_topology [h : P
 #align
   topological_space.pseudo_metrizable_space.first_countable_topology TopologicalSpace.PseudoMetrizableSpace.first_countable_topology
 
-instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) : PseudoMetrizableSpace s :=
+instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) :
+    PseudoMetrizableSpace s :=
   inducing_coe.PseudoMetrizableSpace
-#align topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
+#align
+  topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
 
-instance pseudoMetrizableSpacePi [∀ i, PseudoMetrizableSpace (π i)] : PseudoMetrizableSpace (∀ i, π i) := by
+instance pseudoMetrizableSpacePi [∀ i, PseudoMetrizableSpace (π i)] :
+    PseudoMetrizableSpace (∀ i, π i) := by
   cases nonempty_fintype ι
   letI := fun i => pseudo_metrizable_space_pseudo_metric (π i)
   infer_instance
@@ -92,20 +94,21 @@ class MetrizableSpace (X : Type _) [t : TopologicalSpace X] : Prop where
   exists_metric : ∃ m : MetricSpace X, m.toUniformSpace.toTopologicalSpace = t
 #align topological_space.metrizable_space TopologicalSpace.MetrizableSpace
 
-instance (priority := 100) _root_.metric_space.to_metrizable_space {X : Type _} [m : MetricSpace X] :
+instance (priority := 100) MetricSpace.toMetrizableSpace {X : Type _} [m : MetricSpace X] :
     MetrizableSpace X :=
   ⟨⟨m, rfl⟩⟩
-#align
-  topological_space._root_.metric_space.to_metrizable_space topological_space._root_.metric_space.to_metrizable_space
+#align metric_space.to_metrizable_space MetricSpace.toMetrizableSpace
 
-instance (priority := 100) MetrizableSpace.toPseudoMetrizableSpace [h : MetrizableSpace X] : PseudoMetrizableSpace X :=
+instance (priority := 100) MetrizableSpace.toPseudoMetrizableSpace [h : MetrizableSpace X] :
+    PseudoMetrizableSpace X :=
   ⟨let ⟨m, hm⟩ := h.1
     ⟨m.toPseudoMetricSpace, hm⟩⟩
 #align
   topological_space.metrizable_space.to_pseudo_metrizable_space TopologicalSpace.MetrizableSpace.toPseudoMetrizableSpace
 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
-noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] : MetricSpace X :=
+noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] :
+    MetricSpace X :=
   h.exists_metric.some.replaceTopology h.exists_metric.some_spec.symm
 #align topological_space.metrizable_space_metric TopologicalSpace.metrizableSpaceMetric
 
@@ -122,10 +125,11 @@ instance metrizableSpaceProd [MetrizableSpace X] [MetrizableSpace Y] : Metrizabl
 
 /-- Given an embedding of a topological space into a metrizable space, the source space is also
 metrizable. -/
-theorem _root_.embedding.metrizable_space [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) : MetrizableSpace X :=
+theorem Embedding.metrizableSpace [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) :
+    MetrizableSpace X :=
   letI : MetricSpace Y := metrizable_space_metric Y
   ⟨⟨hf.comap_metric_space f, rfl⟩⟩
-#align topological_space._root_.embedding.metrizable_space topological_space._root_.embedding.metrizable_space
+#align embedding.metrizable_space Embedding.metrizableSpace
 
 instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
   embedding_subtype_coe.MetrizableSpace
@@ -157,7 +161,8 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   rsuffices ⟨f, hf⟩ : ∃ f : X → s →ᵇ ℝ, Embedding f
   · exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
-        (BoundedContinuousFunction.isometryExtend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp hf⟩
+        (BoundedContinuousFunction.isometryExtend (Encodable.encode' s) (0 : ℕ →ᵇ ℝ)).Embedding.comp
+          hf⟩
     
   have hd : ∀ UV : s, Disjoint (closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
     disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
@@ -169,15 +174,22 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     exact ((le_has_sum hεc UV) fun _ _ => (ε0 _).le).trans hc1
   /- For each `UV = (U, V) ∈ s` we use Urysohn's lemma to choose a function `f UV` that is equal to
     zero on `U` and is equal to `ε UV` on the complement to `V`. -/
-  have : ∀ UV : s, ∃ f : C(X, ℝ), eq_on f 0 UV.1.1 ∧ eq_on f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) := by
+  have :
+    ∀ UV : s,
+      ∃ f : C(X, ℝ),
+        eq_on f 0 UV.1.1 ∧ eq_on f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) :=
+    by
     intro UV
-    rcases exists_continuous_zero_one_of_closed isClosedClosure (hB.is_open UV.2.1.2).isClosedCompl (hd UV) with
+    rcases exists_continuous_zero_one_of_closed isClosedClosure (hB.is_open UV.2.1.2).isClosedCompl
+        (hd UV) with
       ⟨f, hf₀, hf₁, hf01⟩
     exact
-      ⟨ε UV • f, fun x hx => by simp [hf₀ (subset_closure hx)], fun x hx => by simp [hf₁ hx], fun x =>
+      ⟨ε UV • f, fun x hx => by simp [hf₀ (subset_closure hx)], fun x hx => by simp [hf₁ hx],
+        fun x =>
         ⟨mul_nonneg (ε01 _).1.le (hf01 _).1, mul_le_of_le_one_right (ε01 _).1.le (hf01 _).2⟩⟩
   choose f hf0 hfε hf0ε
-  have hf01 : ∀ UV x, f UV x ∈ Icc (0 : ℝ) 1 := fun UV x => Icc_subset_Icc_right (ε01 _).2 (hf0ε _ _)
+  have hf01 : ∀ UV x, f UV x ∈ Icc (0 : ℝ) 1 := fun UV x =>
+    Icc_subset_Icc_right (ε01 _).2 (hf0ε _ _)
   -- The embedding is given by `F x UV = f UV x`.
   set F : X → s →ᵇ ℝ := fun x =>
     ⟨⟨fun UV => f UV x, continuous_of_discrete_topology⟩, 1, fun UV₁ UV₂ =>
@@ -235,7 +247,8 @@ same topology. -/
 theorem metrizableSpaceOfT3SecondCountable : MetrizableSpace X :=
   let ⟨f, hf⟩ := exists_embedding_l_infty X
   hf.MetrizableSpace
-#align topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizableSpaceOfT3SecondCountable
+#align
+  topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizableSpaceOfT3SecondCountable
 
 instance : MetrizableSpace Ennreal :=
   metrizableSpaceOfT3SecondCountable Ennreal

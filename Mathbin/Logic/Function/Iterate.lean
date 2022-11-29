@@ -81,7 +81,8 @@ theorem iterate_add : ∀ m n : ℕ, f^[m + n] = f^[m] ∘ f^[n]
 -/
 
 #print Function.iterate_add_apply /-
-theorem iterate_add_apply (m n : ℕ) (x : α) : (f^[m + n]) x = (f^[m]) ((f^[n]) x) := by rw [iterate_add]
+theorem iterate_add_apply (m n : ℕ) (x : α) : (f^[m + n]) x = (f^[m]) ((f^[n]) x) := by
+  rw [iterate_add]
 #align function.iterate_add_apply Function.iterate_add_apply
 -/
 
@@ -172,7 +173,8 @@ theorem iterate_iterate (h : Commute f g) (m n : ℕ) : Commute (f^[m]) (g^[n]) 
 -/
 
 #print Function.Commute.iterate_eq_of_map_eq /-
-theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) : (f^[n]) x = (g^[n]) x :=
+theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) :
+    (f^[n]) x = (g^[n]) x :=
   (Nat.recOn n rfl) fun n ihn => by
     simp only [iterate_succ_apply, hx, (h.iterate_left n).Eq, ihn, ((refl g).iterate_right n).Eq]
 #align function.commute.iterate_eq_of_map_eq Function.Commute.iterate_eq_of_map_eq
@@ -180,7 +182,7 @@ theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) : 
 
 #print Function.Commute.comp_iterate /-
 theorem comp_iterate (h : Commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[n] := by
-  induction' n with n ihn
+  induction' n with n ihn;
   · rfl
     
   funext x
@@ -211,7 +213,8 @@ theorem iterate_iterate_self (m n : ℕ) : Commute (f^[m]) (f^[n]) :=
 end Commute
 
 #print Function.Semiconj₂.iterate /-
-theorem Semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : Semiconj₂ f op op) (n : ℕ) : Semiconj₂ (f^[n]) op op :=
+theorem Semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : Semiconj₂ f op op) (n : ℕ) :
+    Semiconj₂ (f^[n]) op op :=
   Nat.recOn n (Semiconj₂.id_left op) fun n ihn => ihn.comp hf
 #align function.semiconj₂.iterate Function.Semiconj₂.iterate
 -/
@@ -219,12 +222,14 @@ theorem Semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : Semico
 variable (f)
 
 #print Function.iterate_succ' /-
-theorem iterate_succ' (n : ℕ) : f^[n.succ] = f ∘ f^[n] := by rw [iterate_succ, (commute.self_iterate f n).comp_eq]
+theorem iterate_succ' (n : ℕ) : f^[n.succ] = f ∘ f^[n] := by
+  rw [iterate_succ, (commute.self_iterate f n).comp_eq]
 #align function.iterate_succ' Function.iterate_succ'
 -/
 
 #print Function.iterate_succ_apply' /-
-theorem iterate_succ_apply' (n : ℕ) (x : α) : (f^[n.succ]) x = f ((f^[n]) x) := by rw [iterate_succ']
+theorem iterate_succ_apply' (n : ℕ) (x : α) : (f^[n.succ]) x = f ((f^[n]) x) := by
+  rw [iterate_succ']
 #align function.iterate_succ_apply' Function.iterate_succ_apply'
 -/
 
@@ -242,7 +247,8 @@ theorem comp_iterate_pred_of_pos {n : ℕ} (hn : 0 < n) : f ∘ f^[n.pred] = f^[
 
 #print Function.Iterate.rec /-
 /-- A recursor for the iterate of a function. -/
-def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) : p ((f^[n]) a) :=
+def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) (n : ℕ) :
+    p ((f^[n]) a) :=
   Nat.rec ha
     (fun m => by
       rw [iterate_succ']
@@ -253,9 +259,9 @@ def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a))
 
 /- warning: function.iterate.rec_zero -> Function.Iterate.rec_zero is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} (p : α -> Sort.{u_1}) {f : α -> α} (h : forall (a : α), (p a) -> (p (f a))) {a : α} (ha : p a), Eq.{u_1} (p (Nat.iterate.{succ u} α (fun (a : α) => f a) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a)) (Function.Iterate.rec.{u u_1} α p (fun (a : α) => f a) h a ha (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) ha
+  forall {α : Type.{u}} (p : α -> Sort.{u_1}) {f : α -> α} (h : forall (a : α), (p a) -> (p (f a))) {a : α} (ha : p a), Eq.{u_1} (p (Nat.iterate.{succ u} α (fun (a : α) => f a) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) a)) (Function.Iterate.rec.{u, u_1} α p (fun (a : α) => f a) h a ha (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) ha
 but is expected to have type
-  forall {α : Type.{u}} (p : α -> Sort.{u_1}) {f : α -> α} (h : forall (a : α), (p a) -> (p (f a))) {a : α} (ha : p a), Eq.{u_1} (p (Nat.iterate.{succ u} α (fun (a : α) => f a) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a)) (Function.Iterate.rec.{u u_1} α p (fun (a : α) => f a) h a ha (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) ha
+  forall {α : Type.{u}} (p : α -> Sort.{u_1}) {f : α -> α} (h : forall (a : α), (p a) -> (p (f a))) {a : α} (ha : p a), Eq.{u_1} (p (Nat.iterate.{succ u} α (fun (a : α) => f a) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a)) (Function.Iterate.rec.{u, u_1} α p (fun (a : α) => f a) h a ha (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) ha
 Case conversion may be inaccurate. Consider using '#align function.iterate.rec_zero Function.Iterate.rec_zeroₓ'. -/
 theorem Iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) :
     Iterate.rec p h ha 0 = ha :=
@@ -265,7 +271,8 @@ theorem Iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a →
 variable {f}
 
 #print Function.LeftInverse.iterate /-
-theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) : LeftInverse (g^[n]) (f^[n]) :=
+theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) :
+    LeftInverse (g^[n]) (f^[n]) :=
   (Nat.recOn n fun _ => rfl) fun n ihn => by
     rw [iterate_succ', iterate_succ]
     exact ihn.comp hg
@@ -273,7 +280,8 @@ theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) : L
 -/
 
 #print Function.RightInverse.iterate /-
-theorem RightInverse.iterate {g : α → α} (hg : RightInverse g f) (n : ℕ) : RightInverse (g^[n]) (f^[n]) :=
+theorem RightInverse.iterate {g : α → α} (hg : RightInverse g f) (n : ℕ) :
+    RightInverse (g^[n]) (f^[n]) :=
   hg.iterate n
 #align function.right_inverse.iterate Function.RightInverse.iterate
 -/
@@ -285,7 +293,8 @@ theorem iterate_comm (f : α → α) (m n : ℕ) : f^[n]^[m] = f^[m]^[n] :=
 -/
 
 #print Function.iterate_commute /-
-theorem iterate_commute (m n : ℕ) : Commute (fun f : α → α => f^[m]) fun f => f^[n] := fun f => iterate_comm f m n
+theorem iterate_commute (m n : ℕ) : Commute (fun f : α → α => f^[m]) fun f => f^[n] := fun f =>
+  iterate_comm f m n
 #align function.iterate_commute Function.iterate_commute
 -/
 
@@ -296,7 +305,8 @@ namespace List
 open Function
 
 #print List.foldl_const /-
-theorem foldl_const (f : α → α) (a : α) (l : List β) : l.foldl (fun b _ => f b) a = (f^[l.length]) a := by
+theorem foldl_const (f : α → α) (a : α) (l : List β) :
+    l.foldl (fun b _ => f b) a = (f^[l.length]) a := by
   induction' l with b l H generalizing a
   · rfl
     

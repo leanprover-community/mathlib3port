@@ -39,7 +39,8 @@ and binders (or any other element that can be pretty printed).
 `l` can be obtained e.g. by applying `list.indexes_values` to a list obtained by
 `get_pi_binders`. -/
 unsafe def print_arguments {α} [has_to_tactic_format α] (l : List (ℕ × α)) : tactic String := do
-  let fs ← l.mmap fun ⟨n, b⟩ => (fun s => to_fmt "argument " ++ to_fmt (n + 1) ++ ": " ++ s) <$> pp b
+  let fs ←
+    l.mmap fun ⟨n, b⟩ => (fun s => to_fmt "argument " ++ to_fmt (n + 1) ++ ": " ++ s) <$> pp b
   return <| fs tt
 #align print_arguments print_arguments
 
@@ -173,7 +174,8 @@ unsafe def linter.impossible_instance : linter where
 /-- Checks whether an instance can never be applied. -/
 private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Option String) := do
   let (binders, _) ← get_pi_binders d.type
-  let instance_arguments := binders.indexesValues fun b : binder => b.info = BinderInfo.inst_implicit
+  let instance_arguments :=
+    binders.indexesValues fun b : binder => b.info = BinderInfo.inst_implicit
   let bad_arguments
     ←/- the head of the type should either unfold to a class, or be a local constant.
             A local constant is allowed, because that could be a class when applied to the
@@ -195,7 +197,8 @@ unsafe def linter.incorrect_type_class_argument : linter where
   test := incorrect_type_class_argument
   auto_decls := true
   no_errors_found := "All declarations have correct type-class arguments."
-  errors_found := "INCORRECT TYPE-CLASS ARGUMENTS.\nSome declarations have non-classes between [square brackets]:"
+  errors_found :=
+    "INCORRECT TYPE-CLASS ARGUMENTS.\nSome declarations have non-classes between [square brackets]:"
 #align linter.incorrect_type_class_argument linter.incorrect_type_class_argument
 
 /-- Checks whether an instance is dangerous: it creates a new type-class problem with metavariable
@@ -213,7 +216,8 @@ private unsafe def dangerous_instance (d : declaration) : tactic (Option String)
   let bad_arguments : List (ℕ × binder) := bad_arguments.map fun ⟨n, e⟩ => ⟨n, e.to_binder⟩
   let _ :: _ ← return bad_arguments |
     return none
-  (fun s => some <| "The following arguments become metavariables. " ++ s) <$> print_arguments bad_arguments
+  (fun s => some <| "The following arguments become metavariables. " ++ s) <$>
+      print_arguments bad_arguments
 #align dangerous_instance dangerous_instance
 
 /-- A linter object for `dangerous_instance`. -/
@@ -256,7 +260,7 @@ message that it cannot find an instance. It fails if the tactic takes too long, 
 error message is raised (usually a maximum depth in the search).
 -/
 unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option String) :=
-  retrieve <| do
+  retrieve do
     let tt ← is_instance d.to_name |
       return none
     let e := d.type
@@ -281,7 +285,9 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
         if "tactic.mk_instance failed to generate instance for".isPrefixOf msg then none
         else
           some <|
-            (· ++ state_msg) <| if msg = "try_for tactic failed, timeout" then "type-class inference timed out" else msg
+            (· ++ state_msg) <|
+              if msg = "try_for tactic failed, timeout" then "type-class inference timed out"
+              else msg
 #align fails_quickly fails_quickly
 
 /-- A linter object for `fails_quickly`.
@@ -329,7 +335,9 @@ private unsafe def has_coe_variable (d : declaration) : tactic (Option String) :
     return none
   if a then return <| some <| "illegal instance, first argument is variable"
     else
-      if b ∧ ¬b a then return <| some <| "illegal instance, second argument is variable not occurring in first argument"
+      if b ∧ ¬b a then
+        return <|
+          some <| "illegal instance, second argument is variable not occurring in first argument"
       else return none
 #align has_coe_variable has_coe_variable
 
@@ -378,7 +386,8 @@ private unsafe def decidable_classical (d : declaration) : tactic (Option String
   let deceq_binders :=
     binders.filter fun pr =>
       pr.2.type.is_app_of `decidable_eq ∨
-        pr.2.type.is_app_of `decidable_pred ∨ pr.2.type.is_app_of `decidable_rel ∨ pr.2.type.is_app_of `decidable
+        pr.2.type.is_app_of `decidable_pred ∨
+          pr.2.type.is_app_of `decidable_rel ∨ pr.2.type.is_app_of `decidable
   if deceq_binders = 0 then return none
     else
       (fun s =>
@@ -424,12 +433,14 @@ unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option String) 
 unsafe def linter.fintype_finite : linter where
   test := linter.fintype_finite_fun
   auto_decls := false
-  no_errors_found := "No uses of `fintype` arguments should be replaced with `casesI nonempty_fintype _`."
-  errors_found := "USES OF `fintype` SHOULD BE REPLACED WITH `casesI nonempty_fintype _` IN THE PROOF."
+  no_errors_found :=
+    "No uses of `fintype` arguments should be replaced with `casesI nonempty_fintype _`."
+  errors_found :=
+    "USES OF `fintype` SHOULD BE REPLACED WITH `casesI nonempty_fintype _` IN THE PROOF."
 #align linter.fintype_finite linter.fintype_finite
 
 private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option String) :=
-  retrieve <| do
+  retrieve do
     let tt ← return d.is_trusted |
       pure none
     mk_meta_var d >>= set_goals ∘ pure
@@ -511,7 +522,9 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
         if l = [d ++ `_main] then return none
       else
         return <|
-          some <| "This instance contains the declarations " ++ toString l ++ ", which are semireducible non-instances."
+          some <|
+            "This instance contains the declarations " ++ toString l ++
+              ", which are semireducible non-instances."
 #align check_reducible_non_instances check_reducible_non_instances
 
 /-- A linter that checks whether an instance contains a semireducible non-instance. -/

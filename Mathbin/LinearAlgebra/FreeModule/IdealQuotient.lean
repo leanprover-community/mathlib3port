@@ -79,7 +79,8 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
   any_goals apply RingHom.id
   any_goals infer_instance
   classical
-  let this := Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
+  let this :=
+    Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
   exact this
 #align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpan
 
@@ -99,12 +100,13 @@ noncomputable def Ideal.quotientEquivPiZmod (I : Ideal S) (b : Basis ι ℤ S) (
 Can't be an instance because of the side condition `I ≠ ⊥`, and more importantly,
 because the choice of `fintype` instance is non-canonical.
 -/
-noncomputable def Ideal.fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module.Finite ℤ S] (I : Ideal S) (hI : I ≠ ⊥) :
-    Fintype (S ⧸ I) :=
+noncomputable def Ideal.fintypeQuotientOfFreeOfNeBot [Module.Free ℤ S] [Module.Finite ℤ S]
+    (I : Ideal S) (hI : I ≠ ⊥) : Fintype (S ⧸ I) :=
   let b := Module.Free.chooseBasis ℤ S
   let a := I.smithCoeffs b hI
   let e := I.quotientEquivPiZmod b hI
-  haveI : ∀ i, NeZero (a i).natAbs := fun i => ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
+  haveI : ∀ i, NeZero (a i).natAbs := fun i =>
+    ⟨Int.natAbs_ne_zero_of_ne_zero (Ideal.smith_coeffs_ne_zero b I hI i)⟩
   Fintype.ofEquiv (∀ i, Zmod (a i).natAbs) e.symm
 #align ideal.fintype_quotient_of_free_of_ne_bot Ideal.fintypeQuotientOfFreeOfNeBot
 

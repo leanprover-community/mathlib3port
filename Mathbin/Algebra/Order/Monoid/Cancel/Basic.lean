@@ -47,12 +47,15 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedCancelAddCommMonoid
       "Pullback a `linear_ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] [HasSup β] [HasInf β]
-    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
-    (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedCancelCommMonoid β :=
-  { hf.LinearOrderedCommMonoid f one mul npow hsup hinf, hf.OrderedCancelCommMonoid f one mul npow with }
-#align function.injective.linear_ordered_cancel_comm_monoid Function.Injective.linearOrderedCancelCommMonoid
+def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ]
+    [HasSup β] [HasInf β] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1)
+    (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
+    (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
+    LinearOrderedCancelCommMonoid β :=
+  { hf.LinearOrderedCommMonoid f one mul npow hsup hinf,
+    hf.OrderedCancelCommMonoid f one mul npow with }
+#align
+  function.injective.linear_ordered_cancel_comm_monoid Function.Injective.linearOrderedCancelCommMonoid
 
 end LinearOrderedCancelCommMonoid
 

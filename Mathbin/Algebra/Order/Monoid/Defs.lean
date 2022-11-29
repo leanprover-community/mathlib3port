@@ -46,7 +46,8 @@ section OrderedInstances
 
 @[to_additive]
 instance OrderedCommMonoid.to_covariant_class_left (M : Type _) [OrderedCommMonoid M] :
-    CovariantClass M M (· * ·) (· ≤ ·) where elim a b c bc := OrderedCommMonoid.mul_le_mul_left _ _ bc a
+    CovariantClass M M (· * ·)
+      (· ≤ ·) where elim a b c bc := OrderedCommMonoid.mul_le_mul_left _ _ bc a
 #align ordered_comm_monoid.to_covariant_class_left OrderedCommMonoid.to_covariant_class_left
 
 /- This instance can be proven with `by apply_instance`.  However, `with_bot ℕ` does not
@@ -61,8 +62,8 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
 `left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)` implies
 `covariant_class M M (*) (<)`, see `left_cancel_semigroup.covariant_mul_lt_of_covariant_mul_le`. -/
 @[to_additive]
-theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrder M] [CovariantClass M M (· * ·) (· < ·)] :
-    CovariantClass M M (· * ·) (· ≤ ·) :=
+theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrder M]
+    [CovariantClass M M (· * ·) (· < ·)] : CovariantClass M M (· * ·) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_left Mul.to_covariant_class_left
 
@@ -71,8 +72,8 @@ theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrder M] [Covar
 implies `covariant_class M M (swap (*)) (≤)`, see
 `right_cancel_semigroup.covariant_swap_mul_lt_of_covariant_swap_mul_le`. -/
 @[to_additive]
-theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [PartialOrder M] [CovariantClass M M (swap (· * ·)) (· < ·)] :
-    CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
+theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [PartialOrder M]
+    [CovariantClass M M (swap (· * ·)) (· < ·)] : CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   ⟨covariant_le_of_covariant_lt _ _ _ CovariantClass.elim⟩
 #align has_mul.to_covariant_class_right Mul.to_covariant_class_right
 
@@ -99,7 +100,8 @@ class LinearOrderedCommMonoid (α : Type _) extends LinearOrder α, OrderedCommM
 /-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/
 @[protect_proj]
-class LinearOrderedAddCommMonoidWithTop (α : Type _) extends LinearOrderedAddCommMonoid α, HasTop α where
+class LinearOrderedAddCommMonoidWithTop (α : Type _) extends LinearOrderedAddCommMonoid α,
+  HasTop α where
   le_top : ∀ x : α, x ≤ ⊤
   top_add' : ∀ x : α, ⊤ + x = ⊤
 #align linear_ordered_add_comm_monoid_with_top LinearOrderedAddCommMonoidWithTop
@@ -108,7 +110,8 @@ class LinearOrderedAddCommMonoidWithTop (α : Type _) extends LinearOrderedAddCo
 instance (priority := 100) LinearOrderedAddCommMonoidWithTop.toOrderTop (α : Type u)
     [h : LinearOrderedAddCommMonoidWithTop α] : OrderTop α :=
   { h with }
-#align linear_ordered_add_comm_monoid_with_top.to_order_top LinearOrderedAddCommMonoidWithTop.toOrderTop
+#align
+  linear_ordered_add_comm_monoid_with_top.to_order_top LinearOrderedAddCommMonoidWithTop.toOrderTop
 
 section LinearOrderedAddCommMonoidWithTop
 

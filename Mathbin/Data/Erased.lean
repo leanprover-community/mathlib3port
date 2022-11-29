@@ -53,8 +53,7 @@ theorem out_proof {p : Prop} (a : Erased p) : p :=
 
 @[simp]
 theorem out_mk {α} (a : α) : (mk a).out = a := by
-  let h
-  show Classical.choose h = a
+  let h; show Classical.choose h = a
   have := Classical.choose_spec h
   exact cast (congr_fun this a).symm rfl
 #align erased.out_mk Erased.out_mk
@@ -105,7 +104,8 @@ def bind {α β} (a : Erased α) (f : α → Erased β) : Erased β :=
 #align erased.bind Erased.bind
 
 @[simp]
-theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by delta bind bind._proof_1 <;> cases f a.out <;> rfl
+theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by
+  delta bind bind._proof_1 <;> cases f a.out <;> rfl
 #align erased.bind_eq_out Erased.bind_eq_out
 
 /-- Collapses two levels of erasure.

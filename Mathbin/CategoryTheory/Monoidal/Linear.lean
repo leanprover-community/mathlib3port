@@ -33,8 +33,10 @@ variable [MonoidalCategory C] [MonoidalPreadditive C]
 /-- A category is `monoidal_linear R` if tensoring is `R`-linear in both factors.
 -/
 class MonoidalLinear where
-  tensor_smul' : ∀ {W X Y Z : C} (f : W ⟶ X) (r : R) (g : Y ⟶ Z), f ⊗ r • g = r • (f ⊗ g) := by obviously
-  smul_tensor' : ∀ {W X Y Z : C} (r : R) (f : W ⟶ X) (g : Y ⟶ Z), r • f ⊗ g = r • (f ⊗ g) := by obviously
+  tensor_smul' : ∀ {W X Y Z : C} (f : W ⟶ X) (r : R) (g : Y ⟶ Z), f ⊗ r • g = r • (f ⊗ g) := by
+    obviously
+  smul_tensor' : ∀ {W X Y Z : C} (r : R) (f : W ⟶ X) (g : Y ⟶ Z), r • f ⊗ g = r • (f ⊗ g) := by
+    obviously
 #align category_theory.monoidal_linear CategoryTheory.MonoidalLinear
 
 restate_axiom monoidal_linear.tensor_smul'
@@ -61,19 +63,19 @@ instance tensoring_right_linear (X : C) : ((tensoringRight C).obj X).Linear R wh
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A faithful linear monoidal functor to a linear monoidal category
 ensures that the domain is linear monoidal. -/
-def monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Linear R D] [MonoidalCategory D]
-    [MonoidalPreadditive D] (F : MonoidalFunctor D C) [Faithful F.toFunctor] [F.toFunctor.Additive]
-    [F.toFunctor.Linear R] : MonoidalLinear R D where
+def monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Linear R D]
+    [MonoidalCategory D] [MonoidalPreadditive D] (F : MonoidalFunctor D C) [Faithful F.toFunctor]
+    [F.toFunctor.Additive] [F.toFunctor.Linear R] : MonoidalLinear R D where
   tensor_smul' := by
     intros
     apply F.to_functor.map_injective
-    simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r g, F.map_tensor, monoidal_linear.tensor_smul,
-      linear.smul_comp, linear.comp_smul]
+    simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r g, F.map_tensor,
+      monoidal_linear.tensor_smul, linear.smul_comp, linear.comp_smul]
   smul_tensor' := by
     intros
     apply F.to_functor.map_injective
-    simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor, monoidal_linear.smul_tensor,
-      linear.smul_comp, linear.comp_smul]
+    simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor,
+      monoidal_linear.smul_tensor, linear.smul_comp, linear.comp_smul]
 #align category_theory.monoidal_linear_of_faithful CategoryTheory.monoidalLinearOfFaithful
 
 end CategoryTheory

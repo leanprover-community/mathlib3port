@@ -56,7 +56,8 @@ deriving instance LargeCategory, ConcreteCategory for HeytAlgCat
 instance hasForgetToLattice :
     HasForget₂ HeytAlgCat
       BoundedDistribLatticeCat where forget₂ :=
-    { obj := fun X => BoundedDistribLatticeCat.of X, map := fun X Y f => (f : BoundedLatticeHom X Y) }
+    { obj := fun X => BoundedDistribLatticeCat.of X,
+      map := fun X Y f => (f : BoundedLatticeHom X Y) }
 #align HeytAlg.has_forget_to_Lattice HeytAlgCat.hasForgetToLattice
 
 /-- Constructs an isomorphism of Heyting algebras from an order isomorphism between them. -/

@@ -80,7 +80,11 @@ attribute [transport_simps]
                               do
                                 try unfold_projs_target
                                   sorry
-                                  try <| under_binders <| to_expr ` `( $ ( e ) . symm . Injective ) >>= apply
+                                  try
+                                    <|
+                                    under_binders
+                                      <|
+                                      to_expr ` `( $ ( e ) . symm . Injective ) >>= apply
                                   equiv_rw_hyp f e
                                   get_local f >>= exact
                     )
@@ -130,8 +134,8 @@ unsafe def transport (s : parse texpr ?) (e : parse <| tk "using" *> texpr) : it
 #align tactic.interactive.transport tactic.interactive.transport
 
 add_tactic_doc
-  { Name := "transport", category := DocCategory.tactic, declNames := [`tactic.interactive.transport],
-    tags := ["rewriting", "equiv", "transport"] }
+  { Name := "transport", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.transport], tags := ["rewriting", "equiv", "transport"] }
 
 end Interactive
 

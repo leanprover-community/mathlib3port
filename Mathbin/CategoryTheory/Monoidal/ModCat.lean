@@ -44,7 +44,8 @@ variable {A : Mon_ C} (M : ModCat A)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ (A.mul ⊗ 𝟙 M.x) ≫ M.act := by simp
+theorem assoc_flip : (𝟙 A.x ⊗ M.act) ≫ M.act = (α_ A.x A.x M.x).inv ≫ (A.mul ⊗ 𝟙 M.x) ≫ M.act := by
+  simp
 #align Mod.assoc_flip ModCat.assoc_flip
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -84,7 +85,8 @@ theorem id_hom' (M : ModCat A) : (𝟙 M : Hom M M).Hom = 𝟙 M.x :=
 #align Mod.id_hom' ModCat.id_hom'
 
 @[simp]
-theorem comp_hom' {M N K : ModCat A} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
+theorem comp_hom' {M N K : ModCat A} (f : M ⟶ N) (g : N ⟶ K) :
+    (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
   rfl
 #align Mod.comp_hom' ModCat.comp_hom'
 

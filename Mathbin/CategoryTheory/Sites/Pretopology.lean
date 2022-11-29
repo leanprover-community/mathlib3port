@@ -41,7 +41,8 @@ variable {C : Type u} [Category.{v} C] [HasPullbacks C]
 
 variable (C)
 
-/-- A (Grothendieck) pretopology on `C` consists of a collection of families of morphisms with a fixed
+/--
+A (Grothendieck) pretopology on `C` consists of a collection of families of morphisms with a fixed
 target `X` for every object `X` in `C`, called "coverings" of `X`, which satisfies the following
 three axioms:
 1. Every family consisting of a single isomorphism is a covering family.
@@ -118,9 +119,11 @@ def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
     apply t₃ (RS _ hg) _ hf
 #align category_theory.pretopology.to_grothendieck CategoryTheory.Pretopology.toGrothendieck
 
-theorem mem_to_grothendieck (K : Pretopology C) (X S) : S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
+theorem mem_to_grothendieck (K : Pretopology C) (X S) :
+    S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
   Iff.rfl
-#align category_theory.pretopology.mem_to_grothendieck CategoryTheory.Pretopology.mem_to_grothendieck
+#align
+  category_theory.pretopology.mem_to_grothendieck CategoryTheory.Pretopology.mem_to_grothendieck
 
 /-- The largest pretopology generating the given Grothendieck topology.
 
@@ -159,7 +162,8 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
   choice_eq _ _ := rfl
 #align category_theory.pretopology.gi CategoryTheory.Pretopology.gi
 
-/-- The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
+/--
+The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
 also known as the indiscrete, coarse, or chaotic topology.
 
 See <https://stacks.math.columbia.edu/tag/07GE>
@@ -211,7 +215,8 @@ instance : OrderBot (Pretopology C) where
 /-- The trivial pretopology induces the trivial grothendieck topology. -/
 theorem to_grothendieck_bot : toGrothendieck C ⊥ = ⊥ :=
   (gi C).gc.l_bot
-#align category_theory.pretopology.to_grothendieck_bot CategoryTheory.Pretopology.to_grothendieck_bot
+#align
+  category_theory.pretopology.to_grothendieck_bot CategoryTheory.Pretopology.to_grothendieck_bot
 
 end Pretopology
 

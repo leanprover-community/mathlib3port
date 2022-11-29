@@ -87,9 +87,18 @@ namespace Tactic
             t
             with
             | q( $ ( l ) ≠ $ ( r ) ) => ( to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply ) >> skip
-              | q( ¬ $ ( l ) = $ ( r ) ) => ( to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply ) >> skip
-              | q( $ ( l ) ≤ $ ( r ) ) => ( to_expr ` `( ( OrderIso.le_iff_le $ ( e ) ) . mp ) >>= apply ) >> skip
-              | q( $ ( l ) < $ ( r ) ) => ( to_expr ` `( ( OrderIso.lt_iff_lt $ ( e ) ) . mp ) >>= apply ) >> skip
+              |
+                q( ¬ $ ( l ) = $ ( r ) )
+                =>
+                ( to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply ) >> skip
+              |
+                q( $ ( l ) ≤ $ ( r ) )
+                =>
+                ( to_expr ` `( ( OrderIso.le_iff_le $ ( e ) ) . mp ) >>= apply ) >> skip
+              |
+                q( $ ( l ) < $ ( r ) )
+                =>
+                ( to_expr ` `( ( OrderIso.lt_iff_lt $ ( e ) ) . mp ) >>= apply ) >> skip
               |
                 q( $ ( l ) = $ ( r ) )
                 =>
@@ -149,13 +158,14 @@ begin
 end
 ```
  -/
-unsafe def apply_fun (q : parse texpr) (locs : parse location) (lem : parse (tk "using" *> texpr)?) : tactic Unit :=
+unsafe def apply_fun (q : parse texpr) (locs : parse location)
+    (lem : parse (tk "using" *> texpr)?) : tactic Unit :=
   locs.apply (apply_fun_to_hyp q lem) (apply_fun_to_goal q lem)
 #align tactic.interactive.apply_fun tactic.interactive.apply_fun
 
 add_tactic_doc
-  { Name := "apply_fun", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_fun],
-    tags := ["context management"] }
+  { Name := "apply_fun", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.apply_fun], tags := ["context management"] }
 
 end Interactive
 

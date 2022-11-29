@@ -101,13 +101,15 @@ protected def submodule (v : ℙ K V) : Submodule K V :=
 
 variable (K)
 
-theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) : mk K v hv = mk K w hw ↔ ∃ a : Kˣ, a • w = v :=
+theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
+    mk K v hv = mk K w hw ↔ ∃ a : Kˣ, a • w = v :=
   Quotient.eq'
 #align projectivization.mk_eq_mk_iff Projectivization.mk_eq_mk_iff
 
 /-- Two nonzero vectors go to the same point in projective space if and only if one is
 a scalar multiple of the other. -/
-theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) : mk K v hv = mk K w hw ↔ ∃ a : K, a • w = v := by
+theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
+    mk K v hv = mk K w hw ↔ ∃ a : K, a • w = v := by
   rw [mk_eq_mk_iff K v w hv hw]
   constructor
   · rintro ⟨a, ha⟩
@@ -152,9 +154,9 @@ instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by
   change FiniteDimensional K (K ∙ v.rep)
   infer_instance
 
-theorem submodule_injective : Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) := by
-  intro u v h
-  replace h := le_of_eq h
+theorem submodule_injective :
+    Function.Injective (Projectivization.submodule : ℙ K V → Submodule K V) := by
+  intro u v h; replace h := le_of_eq h
   simp only [submodule_eq] at h
   rw [Submodule.le_span_singleton_iff] at h
   rw [← mk_rep v, ← mk_rep u]
@@ -233,8 +235,8 @@ def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : �
 
 /-- Mapping with respect to a semilinear map over an isomorphism of fields yields
 an injective map on projective spaces. -/
-theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f) :
-    Function.Injective (map f hf) := by
+theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (f : V →ₛₗ[σ] W)
+    (hf : Function.Injective f) : Function.Injective (map f hf) := by
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotient.sound'
@@ -257,9 +259,10 @@ theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injec
 #align projectivization.map_id Projectivization.map_id
 
 @[simp]
-theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K →+* L} {τ : L →+* F} {γ : K →+* F}
-    [RingHomCompTriple σ τ γ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f) (g : W →ₛₗ[τ] U)
-    (hg : Function.Injective g) : map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf := by
+theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K →+* L} {τ : L →+* F}
+    {γ : K →+* F} [RingHomCompTriple σ τ γ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f)
+    (g : W →ₛₗ[τ] U) (hg : Function.Injective g) :
+    map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf := by
   ext v
   induction v using Projectivization.ind
   rfl

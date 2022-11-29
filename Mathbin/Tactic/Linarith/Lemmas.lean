@@ -15,19 +15,24 @@ If you find yourself looking for a theorem here, you might be in the wrong place
 
 namespace Linarith
 
-theorem eq_of_eq_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b = 0) : a + b = 0 := by simp [*]
+theorem eq_of_eq_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b = 0) : a + b = 0 := by
+  simp [*]
 #align linarith.eq_of_eq_of_eq Linarith.eq_of_eq_of_eq
 
-theorem le_of_eq_of_le {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b ≤ 0) : a + b ≤ 0 := by simp [*]
+theorem le_of_eq_of_le {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b ≤ 0) : a + b ≤ 0 := by
+  simp [*]
 #align linarith.le_of_eq_of_le Linarith.le_of_eq_of_le
 
-theorem lt_of_eq_of_lt {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b < 0) : a + b < 0 := by simp [*]
+theorem lt_of_eq_of_lt {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : b < 0) : a + b < 0 := by
+  simp [*]
 #align linarith.lt_of_eq_of_lt Linarith.lt_of_eq_of_lt
 
-theorem le_of_le_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a ≤ 0) (hb : b = 0) : a + b ≤ 0 := by simp [*]
+theorem le_of_le_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a ≤ 0) (hb : b = 0) : a + b ≤ 0 := by
+  simp [*]
 #align linarith.le_of_le_of_eq Linarith.le_of_le_of_eq
 
-theorem lt_of_lt_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a < 0) (hb : b = 0) : a + b < 0 := by simp [*]
+theorem lt_of_lt_of_eq {α} [OrderedSemiring α] {a b : α} (ha : a < 0) (hb : b = 0) : a + b < 0 := by
+  simp [*]
 #align linarith.lt_of_lt_of_eq Linarith.lt_of_lt_of_eq
 
 theorem mul_neg {α} [StrictOrderedRing α] {a b : α} (ha : a < 0) (hb : 0 < b) : b * a < 0 :=
@@ -42,7 +47,8 @@ theorem mul_nonpos {α} [OrderedRing α] {a b : α} (ha : a ≤ 0) (hb : 0 < b) 
 
 -- used alongside `mul_neg` and `mul_nonpos`, so has the same argument pattern for uniformity
 @[nolint unused_arguments]
-theorem mul_eq {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : 0 < b) : b * a = 0 := by simp [*]
+theorem mul_eq {α} [OrderedSemiring α] {a b : α} (ha : a = 0) (hb : 0 < b) : b * a = 0 := by
+  simp [*]
 #align linarith.mul_eq Linarith.mul_eq
 
 theorem eq_of_not_lt_of_not_gt {α} [LinearOrder α] (a b : α) (h1 : ¬a < b) (h2 : ¬b < a) : a = b :=
@@ -51,12 +57,14 @@ theorem eq_of_not_lt_of_not_gt {α} [LinearOrder α] (a b : α) (h1 : ¬a < b) (
 
 -- used in the `nlinarith` normalization steps. The `_` argument is for uniformity.
 @[nolint unused_arguments]
-theorem mul_zero_eq {α} {R : α → α → Prop} [Semiring α] {a b : α} (_ : R a 0) (h : b = 0) : a * b = 0 := by simp [h]
+theorem mul_zero_eq {α} {R : α → α → Prop} [Semiring α] {a b : α} (_ : R a 0) (h : b = 0) :
+    a * b = 0 := by simp [h]
 #align linarith.mul_zero_eq Linarith.mul_zero_eq
 
 -- used in the `nlinarith` normalization steps. The `_` argument is for uniformity.
 @[nolint unused_arguments]
-theorem zero_mul_eq {α} {R : α → α → Prop} [Semiring α] {a b : α} (h : a = 0) (_ : R b 0) : a * b = 0 := by simp [h]
+theorem zero_mul_eq {α} {R : α → α → Prop} [Semiring α] {a b : α} (h : a = 0) (_ : R b 0) :
+    a * b = 0 := by simp [h]
 #align linarith.zero_mul_eq Linarith.zero_mul_eq
 
 end Linarith

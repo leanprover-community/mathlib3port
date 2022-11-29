@@ -36,7 +36,9 @@ namespace Projectivization
 /-- A linearly independent family of nonzero vectors gives an independent family of points
 in projective space. -/
 inductive Independent : (ι → ℙ K V) → Prop
-  | mk (f : ι → V) (hf : ∀ i : ι, f i ≠ 0) (hl : LinearIndependent K f) : independent fun i => mk K (f i) (hf i)
+  |
+  mk (f : ι → V) (hf : ∀ i : ι, f i ≠ 0) (hl : LinearIndependent K f) :
+    independent fun i => mk K (f i) (hf i)
 #align projectivization.independent Projectivization.Independent
 
 /-- A family of points in a projective space is independent if and only if the representative
@@ -80,7 +82,9 @@ theorem independent_iff_complete_lattice_independent :
 /-- A linearly dependent family of nonzero vectors gives a dependent family of points
 in projective space. -/
 inductive Dependent : (ι → ℙ K V) → Prop
-  | mk (f : ι → V) (hf : ∀ i : ι, f i ≠ 0) (h : ¬LinearIndependent K f) : dependent fun i => mk K (f i) (hf i)
+  |
+  mk (f : ι → V) (hf : ∀ i : ι, f i ≠ 0) (h : ¬LinearIndependent K f) :
+    dependent fun i => mk K (f i) (hf i)
 #align projectivization.dependent Projectivization.Dependent
 
 /-- A family of points in a projective space is dependent if and only if their
@@ -104,19 +108,22 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
 #align projectivization.dependent_iff Projectivization.dependent_iff
 
 /-- Dependence is the negation of independence. -/
-theorem dependent_iff_not_independent : Dependent f ↔ ¬Independent f := by rw [dependent_iff, independent_iff]
+theorem dependent_iff_not_independent : Dependent f ↔ ¬Independent f := by
+  rw [dependent_iff, independent_iff]
 #align projectivization.dependent_iff_not_independent Projectivization.dependent_iff_not_independent
 
 /-- Independence is the negation of dependence. -/
-theorem independent_iff_not_dependent : Independent f ↔ ¬Dependent f := by rw [dependent_iff_not_independent, not_not]
+theorem independent_iff_not_dependent : Independent f ↔ ¬Dependent f := by
+  rw [dependent_iff_not_independent, not_not]
 #align projectivization.independent_iff_not_dependent Projectivization.independent_iff_not_dependent
 
 /-- Two points in a projective space are dependent if and only if they are equal. -/
 @[simp]
 theorem dependent_pair_iff_eq (u v : ℙ K V) : Dependent ![u, v] ↔ u = v := by
-  simp_rw [dependent_iff_not_independent, independent_iff, linear_independent_fin2, Function.comp_apply,
-    Matrix.cons_val_one, Matrix.head_cons, Ne.def, Matrix.cons_val_zero, not_and, not_forall, not_not, ←
-    mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v), mk_rep, imp_iff_right_iff]
+  simp_rw [dependent_iff_not_independent, independent_iff, linear_independent_fin2,
+    Function.comp_apply, Matrix.cons_val_one, Matrix.head_cons, Ne.def, Matrix.cons_val_zero,
+    not_and, not_forall, not_not, ← mk_eq_mk_iff' K _ _ (rep_nonzero u) (rep_nonzero v), mk_rep,
+    imp_iff_right_iff]
   exact Or.inl (rep_nonzero v)
 #align projectivization.dependent_pair_iff_eq Projectivization.dependent_pair_iff_eq
 

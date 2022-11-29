@@ -122,16 +122,18 @@ end Equivalent
 variable [Fintype ι] {v : Basis ι R M}
 
 /-- A quadratic form composed with a `linear_equiv` is isometric to itself. -/
-def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
+def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
+    Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
   { f.symm with
     map_app' := by
       intro
-      simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.to_fun_eq_coe, LinearEquiv.apply_symm_apply,
-        f.apply_symm_apply] }
+      simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.to_fun_eq_coe,
+        LinearEquiv.apply_symm_apply, f.apply_symm_apply] }
 #align quadratic_form.isometry_of_comp_linear_equiv QuadraticForm.isometryOfCompLinearEquiv
 
 /-- A quadratic form is isometric to its bases representations. -/
-noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) : Isometry Q (Q.basis_repr v) :=
+noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) :
+    Isometry Q (Q.basis_repr v) :=
   isometryOfCompLinearEquiv Q v.equivFun.symm
 #align quadratic_form.isometry_basis_repr QuadraticForm.isometryBasisRepr
 

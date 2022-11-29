@@ -54,11 +54,13 @@ instance hasLe (α β : Type _) [LT α] [LE β] : LE (α ×ₗ β) where le := P
 instance hasLt (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where lt := Prod.Lex (· < ·) (· < ·)
 #align prod.lex.has_lt Prod.Lex.hasLt
 
-theorem le_iff [LT α] [LE β] (a b : α × β) : toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
+theorem le_iff [LT α] [LE β] (a b : α × β) :
+    toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
   Prod.lex_def (· < ·) (· ≤ ·)
 #align prod.lex.le_iff Prod.Lex.le_iff
 
-theorem lt_iff [LT α] [LT β] (a b : α × β) : toLex a < toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 < b.2 :=
+theorem lt_iff [LT α] [LT β] (a b : α × β) :
+    toLex a < toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 < b.2 :=
   Prod.lex_def (· < ·) (· < ·)
 #align prod.lex.lt_iff Prod.Lex.lt_iff
 
@@ -152,8 +154,9 @@ instance partialOrder (α β : Type _) [PartialOrder α] [PartialOrder β] : Par
 
 /-- Dictionary / lexicographic linear_order for pairs. -/
 instance linearOrder (α β : Type _) [LinearOrder α] [LinearOrder β] : LinearOrder (α ×ₗ β) :=
-  { Prod.Lex.partialOrder α β with le_total := total_of (Prod.Lex _ _), decidableLe := Prod.Lex.decidable _ _,
-    decidableLt := Prod.Lex.decidable _ _, DecidableEq := Lex.decidableEq _ _ }
+  { Prod.Lex.partialOrder α β with le_total := total_of (Prod.Lex _ _),
+    decidableLe := Prod.Lex.decidable _ _, decidableLt := Prod.Lex.decidable _ _,
+    DecidableEq := Lex.decidableEq _ _ }
 #align prod.lex.linear_order Prod.Lex.linearOrder
 
 instance orderBot [PartialOrder α] [Preorder β] [OrderBot α] [OrderBot β] : OrderBot (α ×ₗ β) where
@@ -166,11 +169,13 @@ instance orderTop [PartialOrder α] [Preorder β] [OrderTop α] [OrderTop β] : 
   le_top a := to_lex_mono le_top
 #align prod.lex.order_top Prod.Lex.orderTop
 
-instance boundedOrder [PartialOrder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] : BoundedOrder (α ×ₗ β) :=
+instance boundedOrder [PartialOrder α] [Preorder β] [BoundedOrder α] [BoundedOrder β] :
+    BoundedOrder (α ×ₗ β) :=
   { Lex.orderBot, Lex.orderTop with }
 #align prod.lex.bounded_order Prod.Lex.boundedOrder
 
-instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] : DenselyOrdered (α ×ₗ β) :=
+instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
+    DenselyOrdered (α ×ₗ β) :=
   ⟨by
     rintro _ _ (@⟨a₁, b₁, a₂, b₂, h⟩ | @⟨a, b₁, b₂, h⟩)
     · obtain ⟨c, h₁, h₂⟩ := exists_between h

@@ -68,7 +68,8 @@ variable {α β : Type u} [∀ P, Decidable P]
 
 instance : Applicative Finset :=
   { Finset.functor, Finset.hasPure with seq := fun α β t s => t.sup fun f => s.image f,
-    seqLeft := fun α β s t => if t = ∅ then ∅ else s, seqRight := fun α β s t => if s = ∅ then ∅ else t }
+    seqLeft := fun α β s t => if t = ∅ then ∅ else s,
+    seqRight := fun α β s t => if s = ∅ then ∅ else t }
 
 @[simp]
 theorem seq_def (s : Finset α) (t : Finset (α → β)) : t <*> s = t.sup fun f => s.image f :=
@@ -87,7 +88,8 @@ theorem seq_right_def (s : Finset α) (t : Finset β) : s *> t = if s = ∅ then
 
 /-- `finset.image₂` in terms of monadic operations. Note that this can't be taken as the definition
 because of the lack of universe polymorphism. -/
-theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) : image₂ f s t = f <$> s <*> t := by
+theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) (t : Finset β) :
+    image₂ f s t = f <$> s <*> t := by
   ext
   simp [mem_sup]
 #align finset.image₂_def Finset.image₂_def
@@ -143,8 +145,8 @@ instance : IsCommApplicative Finset :=
     commutative_prod := fun α β s t => by
       simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
       change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
-      trans s ×ˢ t <;> [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;>
-        congr <;> ext <;> simp_rw [mem_image] }
+      trans s ×ˢ t <;> [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;> congr <;> ext <;>
+        simp_rw [mem_image] }
 
 end Applicative
 
@@ -189,8 +191,8 @@ end Alternative
 
 section Traversable
 
-variable {α β γ : Type u} {F G : Type u → Type u} [Applicative F] [Applicative G] [IsCommApplicative F]
-  [IsCommApplicative G]
+variable {α β γ : Type u} {F G : Type u → Type u} [Applicative F] [Applicative G]
+  [IsCommApplicative F] [IsCommApplicative G]
 
 /-- Traverse function for `finset`. -/
 def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) :=
@@ -206,7 +208,8 @@ theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := b
 open Classical
 
 @[simp]
-theorem map_comp_coe (h : α → β) : Functor.map h ∘ Multiset.toFinset = Multiset.toFinset ∘ Functor.map h :=
+theorem map_comp_coe (h : α → β) :
+    Functor.map h ∘ Multiset.toFinset = Multiset.toFinset ∘ Functor.map h :=
   funext fun s => image_to_finset
 #align finset.map_comp_coe Finset.map_comp_coe
 

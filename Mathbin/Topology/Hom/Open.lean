@@ -28,7 +28,8 @@ open Function
 variable {F α β γ δ : Type _}
 
 /-- The type of continuous open maps from `α` to `β`, aka Priestley homomorphisms. -/
-structure ContinuousOpenMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends ContinuousMap α β where
+structure ContinuousOpenMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends
+  ContinuousMap α β where
   map_open' : IsOpenMap to_fun
 #align continuous_open_map ContinuousOpenMap
 
@@ -40,8 +41,8 @@ section
 /-- `continuous_open_map_class F α β` states that `F` is a type of continuous open maps.
 
 You should extend this class when you extend `continuous_open_map`. -/
-class ContinuousOpenMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
-  ContinuousMapClass F α β where
+class ContinuousOpenMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
+  [TopologicalSpace β] extends ContinuousMapClass F α β where
   map_open (f : F) : IsOpenMap f
 #align continuous_open_map_class ContinuousOpenMapClass
 
@@ -49,7 +50,8 @@ end
 
 export ContinuousOpenMapClass (map_open)
 
-instance [TopologicalSpace α] [TopologicalSpace β] [ContinuousOpenMapClass F α β] : CoeTC F (α →CO β) :=
+instance [TopologicalSpace α] [TopologicalSpace β] [ContinuousOpenMapClass F α β] :
+    CoeTC F (α →CO β) :=
   ⟨fun f => ⟨f, map_open f⟩⟩
 
 /-! ### Continuous open maps -/
@@ -136,7 +138,8 @@ theorem comp_apply (f : β →CO γ) (g : α →CO β) (a : α) : (f.comp g) a =
 #align continuous_open_map.comp_apply ContinuousOpenMap.comp_apply
 
 @[simp]
-theorem comp_assoc (f : γ →CO δ) (g : β →CO γ) (h : α →CO β) : (f.comp g).comp h = f.comp (g.comp h) :=
+theorem comp_assoc (f : γ →CO δ) (g : β →CO γ) (h : α →CO β) :
+    (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align continuous_open_map.comp_assoc ContinuousOpenMap.comp_assoc
 
@@ -150,11 +153,13 @@ theorem id_comp (f : α →CO β) : (ContinuousOpenMap.id β).comp f = f :=
   ext fun a => rfl
 #align continuous_open_map.id_comp ContinuousOpenMap.id_comp
 
-theorem cancel_right {g₁ g₂ : β →CO γ} {f : α →CO β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
+theorem cancel_right {g₁ g₂ : β →CO γ} {f : α →CO β} (hf : Surjective f) :
+    g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_open_map.cancel_right ContinuousOpenMap.cancel_right
 
-theorem cancel_left {g : β →CO γ} {f₁ f₂ : α →CO β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
+theorem cancel_left {g : β →CO γ} {f₁ f₂ : α →CO β} (hg : Injective g) :
+    g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_open_map.cancel_left ContinuousOpenMap.cancel_left
 

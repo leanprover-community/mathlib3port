@@ -72,7 +72,8 @@ instance commutator : Bracket (Subgroup G) (Subgroup G) :=
   ⟨fun H₁ H₂ => closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g }⟩
 #align subgroup.commutator Subgroup.commutator
 
-theorem commutator_def (H₁ H₂ : Subgroup G) : ⁅H₁, H₂⁆ = closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
+theorem commutator_def (H₁ H₂ : Subgroup G) :
+    ⁅H₁, H₂⁆ = closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
   rfl
 #align subgroup.commutator_def Subgroup.commutator_def
 
@@ -83,7 +84,8 @@ theorem commutator_mem_commutator (h₁ : g₁ ∈ H₁) (h₂ : g₂ ∈ H₂) 
 #align subgroup.commutator_mem_commutator Subgroup.commutator_mem_commutator
 
 theorem commutator_le : ⁅H₁, H₂⁆ ≤ H₃ ↔ ∀ g₁ ∈ H₁, ∀ g₂ ∈ H₂, ⁅g₁, g₂⁆ ∈ H₃ :=
-  H₃.closure_le.trans ⟨fun h a b c d => h ⟨a, b, c, d, rfl⟩, fun h g ⟨a, b, c, d, h_eq⟩ => h_eq ▸ h a b c d⟩
+  H₃.closure_le.trans
+    ⟨fun h a b c d => h ⟨a, b, c, d, rfl⟩, fun h g ⟨a, b, c, d, h_eq⟩ => h_eq ▸ h a b c d⟩
 #align subgroup.commutator_le Subgroup.commutator_le
 
 theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁, H₂⁆ ≤ ⁅K₁, K₂⁆ :=
@@ -92,15 +94,16 @@ theorem commutator_mono (h₁ : H₁ ≤ K₁) (h₂ : H₂ ≤ K₂) : ⁅H₁,
 
 theorem commutator_eq_bot_iff_le_centralizer : ⁅H₁, H₂⁆ = ⊥ ↔ H₁ ≤ H₂.centralizer := by
   rw [eq_bot_iff, commutator_le]
-  refine' forall_congr' fun p => forall_congr' fun hp => forall_congr' fun q => forall_congr' fun hq => _
+  refine'
+    forall_congr' fun p => forall_congr' fun hp => forall_congr' fun q => forall_congr' fun hq => _
   rw [mem_bot, commutator_element_eq_one_iff_mul_comm, eq_comm]
 #align subgroup.commutator_eq_bot_iff_le_centralizer Subgroup.commutator_eq_bot_iff_le_centralizer
 
 /-- **The Three Subgroups Lemma** (via the Hall-Witt identity) -/
 theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁⁆ = ⊥) (h2 : ⁅⁅H₃, H₁⁆, H₂⁆ = ⊥) :
     ⁅⁅H₁, H₂⁆, H₃⁆ = ⊥ := by
-  simp_rw [commutator_eq_bot_iff_le_centralizer, commutator_le, mem_centralizer_iff_commutator_eq_one, ←
-    commutatorElement_def] at h1 h2⊢
+  simp_rw [commutator_eq_bot_iff_le_centralizer, commutator_le,
+    mem_centralizer_iff_commutator_eq_one, ← commutatorElement_def] at h1 h2⊢
   intro x hx y hy z hz
   trans x * z * ⁅y, ⁅z⁻¹, x⁻¹⁆⁆⁻¹ * z⁻¹ * y * ⁅x⁻¹, ⁅y⁻¹, z⁆⁆⁻¹ * y⁻¹ * x⁻¹
   · group
@@ -108,7 +111,8 @@ theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁�
   · rw [h1 _ (H₂.inv_mem hy) _ hz _ (H₁.inv_mem hx), h2 _ (H₃.inv_mem hz) _ (H₁.inv_mem hx) _ hy]
     group
     
-#align subgroup.commutator_commutator_eq_bot_of_rotate Subgroup.commutator_commutator_eq_bot_of_rotate
+#align
+  subgroup.commutator_commutator_eq_bot_of_rotate Subgroup.commutator_commutator_eq_bot_of_rotate
 
 variable (H₁ H₂)
 
@@ -136,7 +140,8 @@ instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal �
   exact ⟨_, h₁.conj_mem c hc d, _, h₂.conj_mem e he d, (conjugate_commutator_element c e d).symm⟩
 #align subgroup.commutator_normal Subgroup.commutator_normal
 
-theorem commutator_def' [H₁.Normal] [H₂.Normal] : ⁅H₁, H₂⁆ = normalClosure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
+theorem commutator_def' [H₁.Normal] [H₂.Normal] :
+    ⁅H₁, H₂⁆ = normalClosure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
   le_antisymm closure_le_normal_closure (normal_closure_le_normal subset_closure)
 #align subgroup.commutator_def' Subgroup.commutator_def'
 
@@ -178,19 +183,22 @@ theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁,
 
 variable {H₁ H₂}
 
-theorem commutator_le_map_commutator {f : G →* G'} {K₁ K₂ : Subgroup G'} (h₁ : K₁ ≤ H₁.map f) (h₂ : K₂ ≤ H₂.map f) :
-    ⁅K₁, K₂⁆ ≤ ⁅H₁, H₂⁆.map f :=
+theorem commutator_le_map_commutator {f : G →* G'} {K₁ K₂ : Subgroup G'} (h₁ : K₁ ≤ H₁.map f)
+    (h₂ : K₂ ≤ H₂.map f) : ⁅K₁, K₂⁆ ≤ ⁅H₁, H₂⁆.map f :=
   (commutator_mono h₁ h₂).trans (ge_of_eq (map_commutator H₁ H₂ f))
 #align subgroup.commutator_le_map_commutator Subgroup.commutator_le_map_commutator
 
 variable (H₁ H₂)
 
-instance commutator_characteristic [h₁ : Characteristic H₁] [h₂ : Characteristic H₂] : Characteristic ⁅H₁, H₂⁆ :=
+instance commutator_characteristic [h₁ : Characteristic H₁] [h₂ : Characteristic H₂] :
+    Characteristic ⁅H₁, H₂⁆ :=
   characteristic_iff_le_map.mpr fun ϕ =>
-    commutator_le_map_commutator (characteristic_iff_le_map.mp h₁ ϕ) (characteristic_iff_le_map.mp h₂ ϕ)
+    commutator_le_map_commutator (characteristic_iff_le_map.mp h₁ ϕ)
+      (characteristic_iff_le_map.mp h₂ ϕ)
 #align subgroup.commutator_characteristic Subgroup.commutator_characteristic
 
-theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ := by
+theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
+    ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ := by
   apply le_antisymm
   · rw [commutator_le]
     rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
@@ -200,8 +208,8 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁, H₂
     constructor <;>
       · rw [map_commutator]
         apply commutator_mono <;>
-          simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl, MonoidHom.fst_comp_inr,
-            MonoidHom.snd_comp_inr]
+          simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl,
+            MonoidHom.fst_comp_inr, MonoidHom.snd_comp_inr]
         
     
 #align subgroup.commutator_prod_prod Subgroup.commutator_prod_prod
@@ -210,7 +218,8 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') : ⁅H₁.Prod K₁, H₂
 
 See `commutator_pi_pi_of_finite` for equality given `fintype η`.
 -/
-theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs i)] (H K : ∀ i, Subgroup (Gs i)) :
+theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs i)]
+    (H K : ∀ i, Subgroup (Gs i)) :
     ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ ≤ Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
   commutator_le.mpr fun p hp q hq i hi => commutator_mem_commutator (hp i hi) (hq i hi)
 #align subgroup.commutator_pi_pi_le Subgroup.commutator_pi_pi_le
@@ -219,7 +228,8 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs
 -/
 theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _} [∀ i, Group (Gs i)]
     (H K : ∀ i, Subgroup (Gs i)) :
-    ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ := by classical
+    ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
+  by classical
   apply le_antisymm (commutator_pi_pi_le H K)
   · rw [pi_le_iff]
     intro i hi

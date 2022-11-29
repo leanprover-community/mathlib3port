@@ -59,8 +59,8 @@ abbrev M.mk : (Σj, F.obj j) → M :=
 #align Mon.filtered_colimits.M.mk MonCat.FilteredColimits.M.mk
 
 @[to_additive]
-theorem M.mk_eq (x y : Σj, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
-    M.mk x = M.mk y :=
+theorem M.mk_eq (x y : Σj, F.obj j)
+    (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget MonCat) x y h)
 #align Mon.filtered_colimits.M.mk_eq MonCat.FilteredColimits.M.mk_eq
 
@@ -99,10 +99,9 @@ def colimitMulAux (x y : Σj, F.obj j) : M :=
 /-- Multiplication in the colimit is well-defined in the left argument. -/
 @[to_additive "Addition in the colimit is well-defined in the left argument."]
 theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j}
-    (hxx' : Types.FilteredColimit.Rel (F ⋙ forget MonCat) x x') : colimit_mul_aux x y = colimit_mul_aux x' y := by
-  cases' x with j₁ x
-  cases' y with j₂ y
-  cases' x' with j₃ x'
+    (hxx' : Types.FilteredColimit.Rel (F ⋙ forget MonCat) x x') :
+    colimit_mul_aux x y = colimit_mul_aux x' y := by
+  cases' x with j₁ x; cases' y with j₂ y; cases' x' with j₃ x'
   obtain ⟨l, f, g, hfg⟩ := hxx'
   simp at hfg
   obtain ⟨s, α, β, γ, h₁, h₂, h₃⟩ :=
@@ -111,15 +110,15 @@ theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j}
   use s, α, γ
   dsimp
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
-#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_left
+#align
+  Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_left
 
 /-- Multiplication in the colimit is well-defined in the right argument. -/
 @[to_additive "Addition in the colimit is well-defined in the right argument."]
 theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
-    (hyy' : Types.FilteredColimit.Rel (F ⋙ forget MonCat) y y') : colimit_mul_aux x y = colimit_mul_aux x y' := by
-  cases' y with j₁ y
-  cases' x with j₂ x
-  cases' y' with j₃ y'
+    (hyy' : Types.FilteredColimit.Rel (F ⋙ forget MonCat) y y') :
+    colimit_mul_aux x y = colimit_mul_aux x y' := by
+  cases' y with j₁ y; cases' x with j₂ x; cases' y' with j₃ y'
   obtain ⟨l, f, g, hfg⟩ := hyy'
   simp at hfg
   obtain ⟨s, α, β, γ, h₁, h₂, h₃⟩ :=
@@ -128,7 +127,8 @@ theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
   use s, α, γ
   dsimp
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
-#align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_right
+#align
+  Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimit_mul_aux_eq_of_rel_right
 
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/
 @[to_additive "Addition in the colimit. See also `colimit_add_aux`."]
@@ -155,8 +155,7 @@ using a custom object `k` and morphisms `f : x.1 ⟶ k` and `g : y.1 ⟶ k`.
       "Addition in the colimit is independent of the chosen \"maximum\" in the filtered\ncategory. In particular, this lemma allows us to \"unfold\" the definition of the addition of `x`\nand `y`, using a custom object `k` and morphisms `f : x.1 ⟶ k` and `g : y.1 ⟶ k`."]
 theorem colimit_mul_mk_eq (x y : Σj, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k) :
     M.mk x * M.mk y = M.mk ⟨k, F.map f x.2 * F.map g y.2⟩ := by
-  cases' x with j₁ x
-  cases' y with j₂ y
+  cases' x with j₁ x; cases' y with j₂ y
   obtain ⟨s, α, β, h₁, h₂⟩ := bowtie (left_to_max j₁ j₂) f (right_to_max j₁ j₂) g
   apply M.mk_eq
   use s, α, β
@@ -168,26 +167,16 @@ theorem colimit_mul_mk_eq (x y : Σj, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1 
 instance colimitMonoid : Monoid M :=
   { colimit_has_one, colimit_has_mul with
     one_mul := fun x => by
-      apply Quot.induction_on x
-      clear x
-      intro x
-      cases' x with j x
-      rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, 1⟩ ⟨j, x⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one, one_mul, F.map_id,
-        id_apply],
+      apply Quot.induction_on x; clear x; intro x; cases' x with j x
+      rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, 1⟩ ⟨j, x⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one,
+        one_mul, F.map_id, id_apply],
     mul_one := fun x => by
-      apply Quot.induction_on x
-      clear x
-      intro x
-      cases' x with j x
-      rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, 1⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one, mul_one, F.map_id,
-        id_apply],
+      apply Quot.induction_on x; clear x; intro x; cases' x with j x
+      rw [colimit_one_eq F j, colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, 1⟩ j (𝟙 j) (𝟙 j), MonoidHom.map_one,
+        mul_one, F.map_id, id_apply],
     mul_assoc := fun x y z => by
-      apply Quot.induction_on₃ x y z
-      clear x y z
-      intro x y z
-      cases' x with j₁ x
-      cases' y with j₂ y
-      cases' z with j₃ z
+      apply Quot.induction_on₃ x y z; clear x y z; intro x y z
+      cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z
       rw [colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨j₂, y⟩ _ (first_to_max₃ j₁ j₂ j₃) (second_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨max₃ j₁ j₂ j₃, _⟩ ⟨j₃, z⟩ _ (𝟙 _) (third_to_max₃ j₁ j₂ j₃),
         colimit_mul_mk_eq F ⟨j₂, y⟩ ⟨j₃, z⟩ _ (second_to_max₃ j₁ j₂ j₃) (third_to_max₃ j₁ j₂ j₃),
@@ -209,12 +198,12 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit where
   map_one' := (colimit_one_eq j).symm
   map_mul' x y := by
     convert (colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 j) (𝟙 j)).symm
-    rw [F.map_id, id_apply, id_apply]
-    rfl
+    rw [F.map_id, id_apply, id_apply]; rfl
 #align Mon.filtered_colimits.cocone_morphism MonCat.FilteredColimits.coconeMorphism
 
 @[simp, to_additive]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ cocone_morphism j' = cocone_morphism j :=
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
+    F.map f ≫ cocone_morphism j' = cocone_morphism j :=
   MonoidHom.coe_inj ((Types.colimitCocone (F ⋙ forget MonCat)).ι.naturality f)
 #align Mon.filtered_colimits.cocone_naturality MonCat.FilteredColimits.cocone_naturality
 
@@ -237,11 +226,8 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x where
     rw [colimit_one_eq F is_filtered.nonempty.some]
     exact MonoidHom.map_one _
   map_mul' x y := by
-    apply Quot.induction_on₂ x y
-    clear x y
-    intro x y
-    cases' x with i x
-    cases' y with j y
+    apply Quot.induction_on₂ x y; clear x y; intro x y
+    cases' x with i x; cases' y with j y
     rw [colimit_mul_mk_eq F ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j)]
     dsimp [types.colimit_cocone_is_colimit]
     rw [MonoidHom.map_mul, t.w_apply, t.w_apply]
@@ -251,12 +237,15 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x where
 @[to_additive "The proposed colimit cocone is a colimit in `AddMon`."]
 def colimitCoconeIsColimit : IsColimit colimit_cocone where
   desc := colimit_desc
-  fac' t j := MonoidHom.coe_inj ((Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).fac ((forget MonCat).mapCocone t) j)
+  fac' t j :=
+    MonoidHom.coe_inj
+      ((Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).fac ((forget MonCat).mapCocone t) j)
   uniq' t m h :=
     MonoidHom.coe_inj <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).uniq ((forget MonCat).mapCocone t) m fun j =>
-        funext fun x => MonoidHom.congr_fun (h j) x
-#align Mon.filtered_colimits.colimit_cocone_is_colimit MonCat.FilteredColimits.colimitCoconeIsColimit
+      (Types.colimitCoconeIsColimit (F ⋙ forget MonCat)).uniq ((forget MonCat).mapCocone t) m
+        fun j => funext fun x => MonoidHom.congr_fun (h j) x
+#align
+  Mon.filtered_colimits.colimit_cocone_is_colimit MonCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive]
 instance forgetPreservesFilteredColimits :
@@ -266,7 +255,8 @@ instance forgetPreservesFilteredColimits :
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (types.colimit_cocone_is_colimit (F ⋙ forget MonCat.{u})) }
-#align Mon.filtered_colimits.forget_preserves_filtered_colimits MonCat.FilteredColimits.forgetPreservesFilteredColimits
+#align
+  Mon.filtered_colimits.forget_preserves_filtered_colimits MonCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
@@ -295,9 +285,7 @@ abbrev m : MonCat :=
 instance colimitCommMonoid : CommMonoid M :=
   { M.Monoid with
     mul_comm := fun x y => by
-      apply Quot.induction_on₂ x y
-      clear x y
-      intro x y
+      apply Quot.induction_on₂ x y; clear x y; intro x y
       let k := max' x.1 y.1
       let f := left_to_max x.1 y.1
       let g := right_to_max x.1 y.1
@@ -326,12 +314,14 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
     MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ CommMonCat MonCat.{max v u})
       ((forget₂ CommMonCat MonCat.{max v u}).mapCocone t)
   fac' t j :=
-    MonoidHom.coe_inj <| (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).fac ((forget CommMonCat).mapCocone t) j
+    MonoidHom.coe_inj <|
+      (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).fac ((forget CommMonCat).mapCocone t) j
   uniq' t m h :=
     MonoidHom.coe_inj <|
-      (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).uniq ((forget CommMonCat).mapCocone t) m fun j =>
-        funext fun x => MonoidHom.congr_fun (h j) x
-#align CommMon.filtered_colimits.colimit_cocone_is_colimit CommMonCat.FilteredColimits.colimitCoconeIsColimit
+      (Types.colimitCoconeIsColimit (F ⋙ forget CommMonCat)).uniq ((forget CommMonCat).mapCocone t)
+        m fun j => funext fun x => MonoidHom.congr_fun (h j) x
+#align
+  CommMon.filtered_colimits.colimit_cocone_is_colimit CommMonCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂MonPreservesFilteredColimits :

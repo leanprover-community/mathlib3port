@@ -77,11 +77,13 @@ private def remove_none_aux (x : α) : β :=
         simpa only using e.injective h
 #align equiv.remove_none_aux equiv.remove_none_aux
 
-private theorem remove_none_aux_some {x : α} (h : ∃ x', e (some x) = some x') : some (removeNoneAux e x) = e (some x) :=
-  by simp [remove_none_aux, option.is_some_iff_exists.mpr h]
+private theorem remove_none_aux_some {x : α} (h : ∃ x', e (some x) = some x') :
+    some (removeNoneAux e x) = e (some x) := by
+  simp [remove_none_aux, option.is_some_iff_exists.mpr h]
 #align equiv.remove_none_aux_some equiv.remove_none_aux_some
 
-private theorem remove_none_aux_none {x : α} (h : e (some x) = none) : some (removeNoneAux e x) = e none := by
+private theorem remove_none_aux_none {x : α} (h : e (some x) = none) :
+    some (removeNoneAux e x) = e none := by
   simp [remove_none_aux, option.not_is_some_iff_eq_none.mpr h]
 #align equiv.remove_none_aux_none equiv.remove_none_aux_none
 
@@ -118,7 +120,8 @@ theorem remove_none_symm : (removeNone e).symm = removeNone e.symm :=
   rfl
 #align equiv.remove_none_symm Equiv.remove_none_symm
 
-theorem remove_none_some {x : α} (h : ∃ x', e (some x) = some x') : some (removeNone e x) = e (some x) :=
+theorem remove_none_some {x : α} (h : ∃ x', e (some x) = some x') :
+    some (removeNone e x) = e (some x) :=
   remove_none_aux_some e h
 #align equiv.remove_none_some Equiv.remove_none_some
 
@@ -157,13 +160,15 @@ theorem option_congr_injective : Function.Injective (optionCongr : α ≃ β →
 
 /-- Equivalences between `option α` and `β` that send `none` to `x` are equivalent to
 equivalences between `α` and `{y : β // y ≠ x}`. -/
-def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none = x } ≃ (α ≃ { y : β // y ≠ x }) where
+def optionSubtype [DecidableEq β] (x : β) :
+    { e : Option α ≃ β // e none = x } ≃ (α ≃ { y : β // y ≠ x }) where
   toFun e :=
     { toFun := fun a => ⟨e a, ((EquivLike.injective _).ne_iff' e.property).2 (some_ne_none _)⟩,
       invFun := fun b =>
         get
           (ne_none_iff_isSome.1
-            (((EquivLike.injective _).ne_iff' ((apply_eq_iff_eq_symm_apply _).1 e.property).symm).2 b.property)),
+            (((EquivLike.injective _).ne_iff' ((apply_eq_iff_eq_symm_apply _).1 e.property).symm).2
+              b.property)),
       left_inv := fun a => by
         rw [← some_inj, some_get, ← coe_def]
         exact symm_apply_apply (e : Option α ≃ β) a,
@@ -172,12 +177,14 @@ def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none =
         simp
         exact apply_symm_apply _ _ }
   invFun e :=
-    ⟨{ toFun := fun a => casesOn' a x (coe ∘ e), invFun := fun b => if h : b = x then none else e.symm ⟨b, h⟩,
+    ⟨{ toFun := fun a => casesOn' a x (coe ∘ e),
+        invFun := fun b => if h : b = x then none else e.symm ⟨b, h⟩,
         left_inv := fun a => by
-          cases a
+          cases a;
           · simp
             
-          simp only [cases_on'_some, Function.comp_apply, Subtype.coe_eta, symm_apply_apply, dite_eq_ite]
+          simp only [cases_on'_some, Function.comp_apply, Subtype.coe_eta, symm_apply_apply,
+            dite_eq_ite]
           exact if_neg (e a).property,
         right_inv := fun b => by by_cases h : b = x <;> simp [h] },
       rfl⟩
@@ -194,33 +201,35 @@ def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none =
 #align equiv.option_subtype Equiv.optionSubtype
 
 @[simp]
-theorem option_subtype_apply_apply [DecidableEq β] (x : β) (e : { e : Option α ≃ β // e none = x }) (a : α) (h) :
-    optionSubtype x e a = ⟨(e : Option α ≃ β) a, h⟩ :=
+theorem option_subtype_apply_apply [DecidableEq β] (x : β) (e : { e : Option α ≃ β // e none = x })
+    (a : α) (h) : optionSubtype x e a = ⟨(e : Option α ≃ β) a, h⟩ :=
   rfl
 #align equiv.option_subtype_apply_apply Equiv.option_subtype_apply_apply
 
 @[simp]
-theorem coe_option_subtype_apply_apply [DecidableEq β] (x : β) (e : { e : Option α ≃ β // e none = x }) (a : α) :
+theorem coe_option_subtype_apply_apply [DecidableEq β] (x : β)
+    (e : { e : Option α ≃ β // e none = x }) (a : α) :
     ↑(optionSubtype x e a) = (e : Option α ≃ β) a :=
   rfl
 #align equiv.coe_option_subtype_apply_apply Equiv.coe_option_subtype_apply_apply
 
 @[simp]
-theorem option_subtype_apply_symm_apply [DecidableEq β] (x : β) (e : { e : Option α ≃ β // e none = x })
-    (b : { y : β // y ≠ x }) : ↑((optionSubtype x e).symm b) = (e : Option α ≃ β).symm b := by
+theorem option_subtype_apply_symm_apply [DecidableEq β] (x : β)
+    (e : { e : Option α ≃ β // e none = x }) (b : { y : β // y ≠ x }) :
+    ↑((optionSubtype x e).symm b) = (e : Option α ≃ β).symm b := by
   dsimp only [option_subtype]
   simp
 #align equiv.option_subtype_apply_symm_apply Equiv.option_subtype_apply_symm_apply
 
 @[simp]
-theorem option_subtype_symm_apply_apply_coe [DecidableEq β] (x : β) (e : α ≃ { y : β // y ≠ x }) (a : α) :
-    (optionSubtype x).symm e a = e a :=
+theorem option_subtype_symm_apply_apply_coe [DecidableEq β] (x : β) (e : α ≃ { y : β // y ≠ x })
+    (a : α) : (optionSubtype x).symm e a = e a :=
   rfl
 #align equiv.option_subtype_symm_apply_apply_coe Equiv.option_subtype_symm_apply_apply_coe
 
 @[simp]
-theorem option_subtype_symm_apply_apply_some [DecidableEq β] (x : β) (e : α ≃ { y : β // y ≠ x }) (a : α) :
-    (optionSubtype x).symm e (some a) = e a :=
+theorem option_subtype_symm_apply_apply_some [DecidableEq β] (x : β) (e : α ≃ { y : β // y ≠ x })
+    (a : α) : (optionSubtype x).symm e (some a) = e a :=
   rfl
 #align equiv.option_subtype_symm_apply_apply_some Equiv.option_subtype_symm_apply_apply_some
 
@@ -233,7 +242,8 @@ theorem option_subtype_symm_apply_apply_none [DecidableEq β] (x : β) (e : α �
 @[simp]
 theorem option_subtype_symm_apply_symm_apply [DecidableEq β] (x : β) (e : α ≃ { y : β // y ≠ x })
     (b : { y : β // y ≠ x }) : ((optionSubtype x).symm e : Option α ≃ β).symm b = e.symm b := by
-  simp only [option_subtype, coe_fn_symm_mk, Subtype.coe_mk, Subtype.coe_eta, dite_eq_ite, ite_eq_right_iff]
+  simp only [option_subtype, coe_fn_symm_mk, Subtype.coe_mk, Subtype.coe_eta, dite_eq_ite,
+    ite_eq_right_iff]
   exact fun h => False.elim (b.property h)
 #align equiv.option_subtype_symm_apply_symm_apply Equiv.option_subtype_symm_apply_symm_apply
 

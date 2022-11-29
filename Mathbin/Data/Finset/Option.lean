@@ -47,7 +47,8 @@ theorem to_finset_some {a : α} : (some a).toFinset = {a} :=
 #align option.to_finset_some Option.to_finset_some
 
 @[simp]
-theorem mem_to_finset {a : α} {o : Option α} : a ∈ o.toFinset ↔ a ∈ o := by cases o <;> simp [eq_comm]
+theorem mem_to_finset {a : α} {o : Option α} : a ∈ o.toFinset ↔ a ∈ o := by
+  cases o <;> simp [eq_comm]
 #align option.mem_to_finset Option.mem_to_finset
 
 theorem card_to_finset (o : Option α) : o.toFinset.card = o.elim 0 1 := by cases o <;> rfl
@@ -82,14 +83,17 @@ theorem card_insert_none (s : Finset α) : s.insertNone.card = s.card + 1 := by 
 /-- Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
 `some x ∈ s`. -/
 def eraseNone : Finset (Option α) →o Finset α :=
-  (Finset.mapEmbedding (Equiv.optionIsSomeEquiv α).toEmbedding).toOrderHom.comp ⟨Finset.subtype _, subtype_mono⟩
+  (Finset.mapEmbedding (Equiv.optionIsSomeEquiv α).toEmbedding).toOrderHom.comp
+    ⟨Finset.subtype _, subtype_mono⟩
 #align finset.erase_none Finset.eraseNone
 
 @[simp]
-theorem mem_erase_none {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ some x ∈ s := by simp [erase_none]
+theorem mem_erase_none {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ some x ∈ s := by
+  simp [erase_none]
 #align finset.mem_erase_none Finset.mem_erase_none
 
-theorem erase_none_eq_bUnion [DecidableEq α] (s : Finset (Option α)) : s.eraseNone = s.bUnion Option.toFinset := by
+theorem erase_none_eq_bUnion [DecidableEq α] (s : Finset (Option α)) :
+    s.eraseNone = s.bUnion Option.toFinset := by
   ext
   simp
 #align finset.erase_none_eq_bUnion Finset.erase_none_eq_bUnion
@@ -101,8 +105,8 @@ theorem erase_none_map_some (s : Finset α) : (s.map Embedding.some).eraseNone =
 #align finset.erase_none_map_some Finset.erase_none_map_some
 
 @[simp]
-theorem erase_none_image_some [DecidableEq (Option α)] (s : Finset α) : (s.image some).eraseNone = s := by
-  simpa only [map_eq_image] using erase_none_map_some s
+theorem erase_none_image_some [DecidableEq (Option α)] (s : Finset α) :
+    (s.image some).eraseNone = s := by simpa only [map_eq_image] using erase_none_map_some s
 #align finset.erase_none_image_some Finset.erase_none_image_some
 
 @[simp]
@@ -143,7 +147,8 @@ theorem image_some_erase_none [DecidableEq (Option α)] (s : Finset (Option α))
 
 @[simp]
 theorem map_some_erase_none [DecidableEq (Option α)] (s : Finset (Option α)) :
-    s.eraseNone.map Embedding.some = s.erase none := by rw [map_eq_image, embedding.some_apply, image_some_erase_none]
+    s.eraseNone.map Embedding.some = s.erase none := by
+  rw [map_eq_image, embedding.some_apply, image_some_erase_none]
 #align finset.map_some_erase_none Finset.map_some_erase_none
 
 @[simp]

@@ -112,7 +112,8 @@ theorem mem_mk_iff {p : Prop} {o : p → α} {a : α} : a ∈ Part.mk p o ↔ �
 /-- `part` extensionality -/
 @[ext.1]
 theorem ext {o p : Part α} (H : ∀ a, a ∈ o ↔ a ∈ p) : o = p :=
-  (ext' ⟨fun h => ((H _).1 ⟨h, rfl⟩).fst, fun h => ((H _).2 ⟨h, rfl⟩).fst⟩) fun a b => ((H _).2 ⟨_, rfl⟩).snd
+  (ext' ⟨fun h => ((H _).1 ⟨h, rfl⟩).fst, fun h => ((H _).2 ⟨h, rfl⟩).fst⟩) fun a b =>
+    ((H _).2 ⟨_, rfl⟩).snd
 #align part.ext Part.ext
 
 /-- The `none` value in `part` has a `false` domain and an empty function. -/
@@ -142,14 +143,16 @@ theorem mem_unique : ∀ {a b : α} {o : Part α}, a ∈ o → b ∈ o → a = b
   | _, _, ⟨p, f⟩, ⟨h₁, rfl⟩, ⟨h₂, rfl⟩ => rfl
 #align part.mem_unique Part.mem_unique
 
-theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Part α → Prop) := fun a o b => mem_unique
+theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Part α → Prop) := fun a o b =>
+  mem_unique
 #align part.mem.left_unique Part.Mem.left_unique
 
 theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) (h') : get o h' = a :=
   mem_unique ⟨_, rfl⟩ h
 #align part.get_eq_of_mem Part.get_eq_of_mem
 
-protected theorem subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb => mem_unique ha hb
+protected theorem subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb =>
+  mem_unique ha hb
 #align part.subsingleton Part.subsingleton
 
 @[simp]
@@ -210,7 +213,8 @@ theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
   or_iff_not_imp_left.2 ne_none_iff.1
 #align part.eq_none_or_eq_some Part.eq_none_or_eq_some
 
-theorem some_injective : Injective (@Part.some α) := fun a b h => congr_fun (eq_of_heq (Part.mk.inj h).2) trivial
+theorem some_injective : Injective (@Part.some α) := fun a b h =>
+  congr_fun (eq_of_heq (Part.mk.inj h).2) trivial
 #align part.some_injective Part.some_injective
 
 @[simp]
@@ -227,7 +231,8 @@ theorem get_eq_iff_eq_some {a : Part α} {ha : a.Dom} {b : α} : a.get ha = b �
   ⟨fun h => by simp [h.symm], fun h => by simp [h]⟩
 #align part.get_eq_iff_eq_some Part.get_eq_iff_eq_some
 
-theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) : a.get ha = b.get (h ▸ ha) := by
+theorem get_eq_get_of_eq (a : Part α) (ha : a.Dom) {b : Part α} (h : a = b) :
+    a.get ha = b.get (h ▸ ha) := by
   congr
   exact h
 #align part.get_eq_get_of_eq Part.get_eq_get_of_eq
@@ -264,11 +269,13 @@ def getOrElse (a : Part α) [Decidable a.Dom] (d : α) :=
   if ha : a.Dom then a.get ha else d
 #align part.get_or_else Part.getOrElse
 
-theorem get_or_else_of_dom (a : Part α) (h : a.Dom) [Decidable a.Dom] (d : α) : getOrElse a d = a.get h :=
+theorem get_or_else_of_dom (a : Part α) (h : a.Dom) [Decidable a.Dom] (d : α) :
+    getOrElse a d = a.get h :=
   dif_pos h
 #align part.get_or_else_of_dom Part.get_or_else_of_dom
 
-theorem get_or_else_of_not_dom (a : Part α) (h : ¬a.Dom) [Decidable a.Dom] (d : α) : getOrElse a d = d :=
+theorem get_or_else_of_not_dom (a : Part α) (h : ¬a.Dom) [Decidable a.Dom] (d : α) :
+    getOrElse a d = d :=
   dif_neg h
 #align part.get_or_else_of_not_dom Part.get_or_else_of_not_dom
 
@@ -353,8 +360,10 @@ theorem coe_some (a : α) : (Option.some a : Part α) = some a :=
 #align part.coe_some Part.coe_some
 
 @[elab_as_elim]
-protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none) (hsome : ∀ a : α, P (some a)) : P a :=
-  (Classical.em a.Dom).elim (fun h => Part.some_get h ▸ hsome _) fun h => (eq_none_iff'.2 h).symm ▸ hnone
+protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none)
+    (hsome : ∀ a : α, P (some a)) : P a :=
+  (Classical.em a.Dom).elim (fun h => Part.some_get h ▸ hsome _) fun h =>
+    (eq_none_iff'.2 h).symm ▸ hnone
 #align part.induction_on Part.induction_on
 
 instance ofOptionDecidable : ∀ o : Option α, Decidable (ofOption o).Dom
@@ -374,7 +383,8 @@ theorem of_to_option (o : Part α) [Decidable o.Dom] : ofOption (toOption o) = o
 /-- `part α` is (classically) equivalent to `option α`. -/
 noncomputable def equivOption : Part α ≃ Option α :=
   haveI := Classical.dec
-  ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o => Eq.trans (by dsimp <;> congr ) (to_of_option o)⟩
+  ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
+    Eq.trans (by dsimp <;> congr ) (to_of_option o)⟩
 #align part.equiv_option Part.equivOption
 
 /-- We give `part α` the order where everything is greater than `none`. -/
@@ -390,19 +400,17 @@ instance : OrderBot (Part α) where
     introv x
     rintro ⟨⟨_⟩, _⟩
 
-theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) : x ≤ y ∨ y ≤ x := by
+theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) :
+    x ≤ y ∨ y ≤ x := by
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
   · rw [h]
     left
     apply OrderBot.bot_le _
     
-  right
-  intro b' h₁
+  right; intro b' h₁
   rw [Part.eq_some_iff] at h₀
-  replace hx := hx _ h₀
-  replace hy := hy _ h₁
-  replace hx := Part.mem_unique hx hy
-  subst hx
+  replace hx := hx _ h₀; replace hy := hy _ h₁
+  replace hx := Part.mem_unique hx hy; subst hx
   exact h₀
 #align part.le_total_of_le_of_le Part.le_total_of_le_of_le
 
@@ -468,8 +476,7 @@ theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := 
 #align part.assert_pos Part.assert_pos
 
 theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
-  dsimp [assert, none]
-  congr
+  dsimp [assert, none]; congr
   · simp only [h, not_false_iff, exists_prop_of_false]
     
   · apply Function.hfunext
@@ -521,7 +528,8 @@ theorem bind_some_eq_map (f : α → β) (x : Part α) : x.bind (some ∘ f) = m
 #align part.bind_some_eq_map Part.bind_some_eq_map
 
 theorem bind_to_option (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀ a, Decidable (f a).Dom]
-    [Decidable (o.bind f).Dom] : (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption := by
+    [Decidable (o.bind f).Dom] :
+    (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption := by
   by_cases o.dom
   · simp_rw [h.to_option, h.bind]
     rfl
@@ -534,16 +542,20 @@ theorem bind_to_option (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀
 theorem bind_assoc {γ} (f : Part α) (g : α → Part β) (k : β → Part γ) :
     (f.bind g).bind k = f.bind fun x => (g x).bind k :=
   ext fun a => by
-    simp <;> exact ⟨fun ⟨_, ⟨_, h₁, h₂⟩, h₃⟩ => ⟨_, h₁, _, h₂, h₃⟩, fun ⟨_, h₁, _, h₂, h₃⟩ => ⟨_, ⟨_, h₁, h₂⟩, h₃⟩⟩
+    simp <;>
+      exact
+        ⟨fun ⟨_, ⟨_, h₁, h₂⟩, h₃⟩ => ⟨_, h₁, _, h₂, h₃⟩, fun ⟨_, h₁, _, h₂, h₃⟩ =>
+          ⟨_, ⟨_, h₁, h₂⟩, h₃⟩⟩
 #align part.bind_assoc Part.bind_assoc
 
 @[simp]
-theorem bind_map {γ} (f : α → β) (x) (g : β → Part γ) : (map f x).bind g = x.bind fun y => g (f y) := by
-  rw [← bind_some_eq_map, bind_assoc] <;> simp
+theorem bind_map {γ} (f : α → β) (x) (g : β → Part γ) :
+    (map f x).bind g = x.bind fun y => g (f y) := by rw [← bind_some_eq_map, bind_assoc] <;> simp
 #align part.bind_map Part.bind_map
 
 @[simp]
-theorem map_bind {γ} (f : α → Part β) (x : Part α) (g : β → γ) : map g (x.bind f) = x.bind fun y => map g (f y) := by
+theorem map_bind {γ} (f : α → Part β) (x : Part α) (g : β → γ) :
+    map g (x.bind f) = x.bind fun y => map g (f y) := by
   rw [← bind_some_eq_map, bind_assoc] <;> simp [bind_some_eq_map]
 #align part.map_bind Part.map_bind
 
@@ -567,7 +579,8 @@ theorem map_id' {f : α → α} (H : ∀ x : α, f x = x) (o) : map f o = o := b
 #align part.map_id' Part.map_id'
 
 @[simp]
-theorem bind_some_right (x : Part α) : x.bind some = x := by rw [bind_some_eq_map] <;> simp [map_id']
+theorem bind_some_right (x : Part α) : x.bind some = x := by
+  rw [bind_some_eq_map] <;> simp [map_id']
 #align part.bind_some_right Part.bind_some_right
 
 @[simp]
@@ -590,7 +603,8 @@ theorem bind_eq_bind {α β} (f : Part α) (g : α → Part β) : f >>= g = f.bi
   rfl
 #align part.bind_eq_bind Part.bind_eq_bind
 
-theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y := by
+theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
+    x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y := by
   constructor <;> intro h
   · intro a h' b
     replace h := h b
@@ -614,14 +628,13 @@ def restrict (p : Prop) (o : Part α) (H : p → o.Dom) : Part α :=
 #align part.restrict Part.restrict
 
 @[simp]
-theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) : a ∈ restrict p o h ↔ p ∧ a ∈ o := by
-  dsimp [restrict, mem_eq]
-  constructor
+theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) :
+    a ∈ restrict p o h ↔ p ∧ a ∈ o := by
+  dsimp [restrict, mem_eq]; constructor
   · rintro ⟨h₀, h₁⟩
     exact ⟨h₀, ⟨_, h₁⟩⟩
     
-  rintro ⟨h₀, h₁, h₂⟩
-  exact ⟨h₀, h₂⟩
+  rintro ⟨h₀, h₁, h₂⟩; exact ⟨h₀, h₂⟩
 #align part.mem_restrict Part.mem_restrict
 
 /-- `unwrap o` gets the value at `o`, ignoring the condition. This function is unsound. -/
@@ -633,7 +646,8 @@ theorem assert_defined {p : Prop} {f : p → Part α} : ∀ h : p, (f h).Dom →
   Exists.intro
 #align part.assert_defined Part.assert_defined
 
-theorem bind_defined {f : Part α} {g : α → Part β} : ∀ h : f.Dom, (g (f.get h)).Dom → (f.bind g).Dom :=
+theorem bind_defined {f : Part α} {g : α → Part β} :
+    ∀ h : f.Dom, (g (f.get h)).Dom → (f.bind g).Dom :=
   assert_defined
 #align part.bind_defined Part.bind_defined
 
@@ -673,7 +687,8 @@ theorem one_mem_one [One α] : (1 : α) ∈ (1 : Part α) :=
 #align part.one_mem_one Part.one_mem_one
 
 @[to_additive]
-theorem mul_mem_mul [Mul α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma * mb ∈ a * b := by tidy
+theorem mul_mem_mul [Mul α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma * mb ∈ a * b := by tidy
 #align part.mul_mem_mul Part.mul_mem_mul
 
 @[to_additive]
@@ -703,7 +718,8 @@ theorem inv_some [Inv α] (a : α) : (some a)⁻¹ = some a⁻¹ :=
 #align part.inv_some Part.inv_some
 
 @[to_additive]
-theorem div_mem_div [Div α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma / mb ∈ a / b := by tidy
+theorem div_mem_div [Div α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma / mb ∈ a / b := by tidy
 #align part.div_mem_div Part.div_mem_div
 
 @[to_additive]
@@ -723,7 +739,8 @@ theorem div_get_eq [Div α] (a b : Part α) (hab : Dom (a / b)) :
 theorem some_div_some [Div α] (a b : α) : some a / some b = some (a / b) := by tidy
 #align part.some_div_some Part.some_div_some
 
-theorem mod_mem_mod [Mod α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma % mb ∈ a % b := by tidy
+theorem mod_mem_mod [Mod α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma % mb ∈ a % b := by tidy
 #align part.mod_mem_mod Part.mod_mem_mod
 
 theorem left_dom_of_mod_dom [Mod α] {a b : Part α} (hab : Dom (a % b)) : a.Dom := by tidy
@@ -740,8 +757,8 @@ theorem mod_get_eq [Mod α] (a b : Part α) (hab : Dom (a % b)) :
 theorem some_mod_some [Mod α] (a b : α) : some a % some b = some (a % b) := by tidy
 #align part.some_mod_some Part.some_mod_some
 
-theorem append_mem_append [Append α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma ++ mb ∈ a ++ b := by
-  tidy
+theorem append_mem_append [Append α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma ++ mb ∈ a ++ b := by tidy
 #align part.append_mem_append Part.append_mem_append
 
 theorem left_dom_of_append_dom [Append α] {a b : Part α} (hab : Dom (a ++ b)) : a.Dom := by tidy
@@ -752,13 +769,15 @@ theorem right_dom_of_append_dom [Append α] {a b : Part α} (hab : Dom (a ++ b))
 
 @[simp]
 theorem append_get_eq [Append α] (a b : Part α) (hab : Dom (a ++ b)) :
-    (a ++ b).get hab = a.get (left_dom_of_append_dom hab) ++ b.get (right_dom_of_append_dom hab) := by tidy
+    (a ++ b).get hab = a.get (left_dom_of_append_dom hab) ++ b.get (right_dom_of_append_dom hab) :=
+  by tidy
 #align part.append_get_eq Part.append_get_eq
 
 theorem some_append_some [Append α] (a b : α) : some a ++ some b = some (a ++ b) := by tidy
 #align part.some_append_some Part.some_append_some
 
-theorem inter_mem_inter [Inter α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma ∩ mb ∈ a ∩ b := by tidy
+theorem inter_mem_inter [Inter α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma ∩ mb ∈ a ∩ b := by tidy
 #align part.inter_mem_inter Part.inter_mem_inter
 
 theorem left_dom_of_inter_dom [Inter α] {a b : Part α} (hab : Dom (a ∩ b)) : a.Dom := by tidy
@@ -769,13 +788,15 @@ theorem right_dom_of_inter_dom [Inter α] {a b : Part α} (hab : Dom (a ∩ b)) 
 
 @[simp]
 theorem inter_get_eq [Inter α] (a b : Part α) (hab : Dom (a ∩ b)) :
-    (a ∩ b).get hab = a.get (left_dom_of_inter_dom hab) ∩ b.get (right_dom_of_inter_dom hab) := by tidy
+    (a ∩ b).get hab = a.get (left_dom_of_inter_dom hab) ∩ b.get (right_dom_of_inter_dom hab) := by
+  tidy
 #align part.inter_get_eq Part.inter_get_eq
 
 theorem some_inter_some [Inter α] (a b : α) : some a ∩ some b = some (a ∩ b) := by tidy
 #align part.some_inter_some Part.some_inter_some
 
-theorem union_mem_union [Union α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma ∪ mb ∈ a ∪ b := by tidy
+theorem union_mem_union [Union α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma ∪ mb ∈ a ∪ b := by tidy
 #align part.union_mem_union Part.union_mem_union
 
 theorem left_dom_of_union_dom [Union α] {a b : Part α} (hab : Dom (a ∪ b)) : a.Dom := by tidy
@@ -786,13 +807,15 @@ theorem right_dom_of_union_dom [Union α] {a b : Part α} (hab : Dom (a ∪ b)) 
 
 @[simp]
 theorem union_get_eq [Union α] (a b : Part α) (hab : Dom (a ∪ b)) :
-    (a ∪ b).get hab = a.get (left_dom_of_union_dom hab) ∪ b.get (right_dom_of_union_dom hab) := by tidy
+    (a ∪ b).get hab = a.get (left_dom_of_union_dom hab) ∪ b.get (right_dom_of_union_dom hab) := by
+  tidy
 #align part.union_get_eq Part.union_get_eq
 
 theorem some_union_some [Union α] (a b : α) : some a ∪ some b = some (a ∪ b) := by tidy
 #align part.some_union_some Part.some_union_some
 
-theorem sdiff_mem_sdiff [SDiff α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) : ma \ mb ∈ a \ b := by tidy
+theorem sdiff_mem_sdiff [SDiff α] (a b : Part α) (ma mb : α) (ha : ma ∈ a) (hb : mb ∈ b) :
+    ma \ mb ∈ a \ b := by tidy
 #align part.sdiff_mem_sdiff Part.sdiff_mem_sdiff
 
 theorem left_dom_of_sdiff_dom [SDiff α] {a b : Part α} (hab : Dom (a \ b)) : a.Dom := by tidy
@@ -803,7 +826,8 @@ theorem right_dom_of_sdiff_dom [SDiff α] {a b : Part α} (hab : Dom (a \ b)) : 
 
 @[simp]
 theorem sdiff_get_eq [SDiff α] (a b : Part α) (hab : Dom (a \ b)) :
-    (a \ b).get hab = a.get (left_dom_of_sdiff_dom hab) \ b.get (right_dom_of_sdiff_dom hab) := by tidy
+    (a \ b).get hab = a.get (left_dom_of_sdiff_dom hab) \ b.get (right_dom_of_sdiff_dom hab) := by
+  tidy
 #align part.sdiff_get_eq Part.sdiff_get_eq
 
 theorem some_sdiff_some [SDiff α] (a b : α) : some a \ some b = some (a \ b) := by tidy

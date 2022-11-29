@@ -71,7 +71,8 @@ instance hasForgetToPartialOrder : HasForget₂ FinPartialOrderCat PartialOrderC
 #align FinPartialOrder.has_forget_to_PartialOrder FinPartialOrderCat.hasForgetToPartialOrder
 
 instance hasForgetToFintype :
-    HasForget₂ FinPartialOrderCat FintypeCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
+    HasForget₂ FinPartialOrderCat
+      FintypeCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => coeFn }
 #align FinPartialOrder.has_forget_to_Fintype FinPartialOrderCat.hasForgetToFintype
 
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
@@ -97,7 +98,8 @@ def dual : FinPartialOrderCat ⥤ FinPartialOrderCat where
 /-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : FinPartialOrderCat ≌ FinPartialOrderCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align FinPartialOrder.dual_equiv FinPartialOrderCat.dualEquiv
 
@@ -107,5 +109,6 @@ theorem FinPartialOrder_dual_comp_forget_to_PartialOrder :
     FinPartialOrderCat.dual ⋙ forget₂ FinPartialOrderCat PartialOrderCat =
       forget₂ FinPartialOrderCat PartialOrderCat ⋙ PartialOrderCat.dual :=
   rfl
-#align FinPartialOrder_dual_comp_forget_to_PartialOrder FinPartialOrder_dual_comp_forget_to_PartialOrder
+#align
+  FinPartialOrder_dual_comp_forget_to_PartialOrder FinPartialOrder_dual_comp_forget_to_PartialOrder
 

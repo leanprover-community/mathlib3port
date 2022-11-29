@@ -75,7 +75,8 @@ namespace MixedCharZero
 /-- Reduction to `p` prime: When proving any statement `P` about mixed characteristic rings we
 can always assume that `p` is prime.
 -/
-theorem reduce_to_p_prime {P : Prop} : (∀ p > 0, MixedCharZero R p → P) ↔ ∀ p : ℕ, p.Prime → MixedCharZero R p → P := by
+theorem reduce_to_p_prime {P : Prop} :
+    (∀ p > 0, MixedCharZero R p → P) ↔ ∀ p : ℕ, p.Prime → MixedCharZero R p → P := by
   constructor
   · intro h q q_prime q_mixed_char
     exact h q (Nat.Prime.pos q_prime) q_mixed_char
@@ -92,7 +93,8 @@ theorem reduce_to_p_prime {P : Prop} : (∀ p > 0, MixedCharZero R p → P) ↔ 
       simp only [map_nat_cast, map_zero] at q_zero
       apply ne_zero_of_dvd_ne_zero (ne_of_gt q_pos)
       exact (CharP.cast_eq_zero_iff (R ⧸ M) r q).mp q_zero
-    have r_prime : Nat.Prime r := or_iff_not_imp_right.1 (CharP.char_is_prime_or_zero (R ⧸ M) r) r_pos
+    have r_prime : Nat.Prime r :=
+      or_iff_not_imp_right.1 (CharP.char_is_prime_or_zero (R ⧸ M) r) r_pos
     apply h r r_prime
     haveI : CharZero R := q_mixed_char.to_char_zero
     exact ⟨⟨M, hM_max.ne_top, ringChar.of_eq rfl⟩⟩
@@ -156,7 +158,8 @@ section EqualCharZero
 /-- `ℚ`-algebra implies equal characteristic.
 -/
 @[nolint unused_arguments]
-theorem Q_algebra_to_equal_char_zero [Nontrivial R] [Algebra ℚ R] : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) := by
+theorem Q_algebra_to_equal_char_zero [Nontrivial R] [Algebra ℚ R] :
+    ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) := by
   haveI : CharZero R := algebraRat.char_zero R
   intro I hI
   constructor
@@ -172,8 +175,8 @@ theorem Q_algebra_to_equal_char_zero [Nontrivial R] [Algebra ℚ R] : ∀ I : Id
 section ConstructionOfQAlgebra
 
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pnat_coe_is_unit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] (n : ℕ+) : IsUnit (n : R) :=
-  by
+theorem EqualCharZero.pnat_coe_is_unit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
+    (n : ℕ+) : IsUnit (n : R) := by
   -- `n : R` is a unit iff `(n)` is not a proper ideal in `R`.
   rw [← Ideal.span_singleton_eq_top]
   -- So by contrapositive, we should show the quotient does not have characteristic zero.
@@ -187,29 +190,32 @@ theorem EqualCharZero.pnat_coe_is_unit [h : Fact (∀ I : Ideal R, I ≠ ⊤ →
 #align equal_char_zero.pnat_coe_is_unit EqualCharZero.pnat_coe_is_unit
 
 /-- Internal: Not intended to be used outside this local construction. -/
-noncomputable instance EqualCharZero.pnatHasCoeUnits [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeTC ℕ+ Rˣ :=
+noncomputable instance EqualCharZero.pnatHasCoeUnits
+    [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeTC ℕ+ Rˣ :=
   ⟨fun n => (EqualCharZero.pnat_coe_is_unit R n).Unit⟩
 #align equal_char_zero.pnat_has_coe_units EqualCharZero.pnatHasCoeUnits
 
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pnat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : ((1 : ℕ+) : Rˣ) = 1 := by
+theorem EqualCharZero.pnat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] :
+    ((1 : ℕ+) : Rˣ) = 1 := by
   apply Units.ext
-  rw [Units.coe_one]
+  rw [Units.val_one]
   change ((EqualCharZero.pnat_coe_is_unit R 1).Unit : R) = 1
   rw [IsUnit.unit_spec (EqualCharZero.pnat_coe_is_unit R 1)]
   rw [coe_coe, PNat.one_coe, Nat.cast_one]
 #align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pnat_coe_units_eq_one
 
 /-- Internal: Not intended to be used outside this local construction. -/
-theorem EqualCharZero.pnat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] (n : ℕ+) :
-    ((n : Rˣ) : R) = ↑n := by
+theorem EqualCharZero.pnat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
+    (n : ℕ+) : ((n : Rˣ) : R) = ↑n := by
   change ((EqualCharZero.pnat_coe_is_unit R n).Unit : R) = ↑n
   simp only [IsUnit.unit_spec]
 #align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pnat_coe_units_coe_eq_coe
 
 /-- Equal characteristic implies `ℚ`-algebra.
 -/
-noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) : Algebra ℚ R :=
+noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
+    Algebra ℚ R :=
   haveI : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) := ⟨h⟩
   RingHom.toAlgebra
     { toFun := fun x => x.num /ₚ ↑x.pnatDenom, map_zero' := by simp [divp],
@@ -257,8 +263,8 @@ theorem not_mixed_char_to_equal_char_zero [CharZero R] (h : ∀ p > 0, ¬MixedCh
 
 /-- Equal characteristic implies not mixed characteristic.
 -/
-theorem equal_char_zero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) : ∀ p > 0, ¬MixedCharZero R p :=
-  by
+theorem equal_char_zero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) :
+    ∀ p > 0, ¬MixedCharZero R p := by
   intro p p_pos
   by_contra hp_mixed_char
   rcases hp_mixed_char.char_p_quotient with ⟨I, hI_ne_top, hI_p⟩
@@ -291,7 +297,8 @@ theorem Q_algebra_iff_equal_char_zero [Nontrivial R] :
 
 /-- A ring of characteristic zero is not a `ℚ`-algebra iff it has mixed characteristic for some `p`.
 -/
-theorem not_Q_algebra_iff_not_equal_char_zero [CharZero R] : IsEmpty (Algebra ℚ R) ↔ ∃ p > 0, MixedCharZero R p := by
+theorem not_Q_algebra_iff_not_equal_char_zero [CharZero R] :
+    IsEmpty (Algebra ℚ R) ↔ ∃ p > 0, MixedCharZero R p := by
   rw [← not_iff_not]
   push_neg
   rw [not_isEmpty_iff, ← equal_char_zero_iff_not_mixed_char]
@@ -367,8 +374,9 @@ theorem split_by_characteristic_domain [IsDomain R] (h_pos : ∀ p : ℕ, Nat.Pr
 - equal characteristic zero.
 - mixed characteristic `(0, p)`.
 -/
-theorem split_by_characteristic_local_ring [LocalRing R] (h_pos : ∀ p : ℕ, IsPrimePow p → CharP R p → P)
-    (h_equal : Algebra ℚ R → P) (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P := by
+theorem split_by_characteristic_local_ring [LocalRing R]
+    (h_pos : ∀ p : ℕ, IsPrimePow p → CharP R p → P) (h_equal : Algebra ℚ R → P)
+    (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P := by
   refine' split_by_characteristic R _ h_equal h_mixed
   intro p p_pos p_char
   have p_ppow : IsPrimePow (p : ℕ) := or_iff_not_imp_left.mp (char_p_zero_or_prime_power R p) p_pos

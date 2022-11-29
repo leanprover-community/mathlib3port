@@ -83,7 +83,8 @@ scoped notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 
 /-- The conditional probability measure of any finite measure on any set of positive measure
 is a probability measure. -/
-theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure <| μ[|s] :=
+theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) :
+    is_probability_measure <| μ[|s] :=
   ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
@@ -96,7 +97,8 @@ theorem cond_empty : μ[|∅] = 0 := by simp [cond]
 #align probability_theory.cond_empty ProbabilityTheory.cond_empty
 
 @[simp]
-theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.univ] = μ := by simp [cond, measure_univ, measure.restrict_univ]
+theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.univ] = μ := by
+  simp [cond, measure_univ, measure.restrict_univ]
 #align probability_theory.cond_univ ProbabilityTheory.cond_univ
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
@@ -117,19 +119,20 @@ theorem inter_pos_of_cond_ne_zero (hms : MeasurableSet s) (hcst : μ[t|s] ≠ 0)
   simp [hms, Set.inter_comm]
 #align probability_theory.inter_pos_of_cond_ne_zero ProbabilityTheory.inter_pos_of_cond_ne_zero
 
-theorem cond_pos_of_inter_ne_zero [IsFiniteMeasure μ] (hms : MeasurableSet s) (hci : μ (s ∩ t) ≠ 0) : 0 < (μ[|s]) t :=
-  by
+theorem cond_pos_of_inter_ne_zero [IsFiniteMeasure μ] (hms : MeasurableSet s)
+    (hci : μ (s ∩ t) ≠ 0) : 0 < (μ[|s]) t := by
   rw [cond_apply _ hms]
   refine' Ennreal.mul_pos _ hci
   exact ennreal.inv_ne_zero.mpr (measure_ne_top _ _)
 #align probability_theory.cond_pos_of_inter_ne_zero ProbabilityTheory.cond_pos_of_inter_ne_zero
 
-theorem cond_cond_eq_cond_inter' (hms : MeasurableSet s) (hmt : MeasurableSet t) (hcs : μ s ≠ ∞) (hci : μ (s ∩ t) ≠ 0) :
-    μ[|s][|t] = μ[|s ∩ t] := by
-  have hcs : μ s ≠ 0 := (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
+theorem cond_cond_eq_cond_inter' (hms : MeasurableSet s) (hmt : MeasurableSet t) (hcs : μ s ≠ ∞)
+    (hci : μ (s ∩ t) ≠ 0) : μ[|s][|t] = μ[|s ∩ t] := by
+  have hcs : μ s ≠ 0 :=
+    (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
   ext u
-  simp [*, hms.inter hmt, cond_apply, ← mul_assoc, ← Set.inter_assoc, Ennreal.mul_inv, mul_comm, ← mul_assoc,
-    Ennreal.inv_mul_cancel]
+  simp [*, hms.inter hmt, cond_apply, ← mul_assoc, ← Set.inter_assoc, Ennreal.mul_inv, mul_comm, ←
+    mul_assoc, Ennreal.inv_mul_cancel]
 #align probability_theory.cond_cond_eq_cond_inter' ProbabilityTheory.cond_cond_eq_cond_inter'
 
 /-- Conditioning first on `s` and then on `t` results in the same measure as conditioning
@@ -150,15 +153,16 @@ theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ
 #align probability_theory.cond_mul_eq_inter ProbabilityTheory.cond_mul_eq_inter
 
 /-- A version of the law of total probability. -/
-theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0) (hcs' : μ (sᶜ) ≠ 0) :
-    μ[t|s] * μ s + μ[t|sᶜ] * μ (sᶜ) = μ t := by
-  rw [cond_mul_eq_inter μ hms hcs, cond_mul_eq_inter μ hms.compl hcs', Set.inter_comm _ t, Set.inter_comm _ t]
+theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0)
+    (hcs' : μ (sᶜ) ≠ 0) : μ[t|s] * μ s + μ[t|sᶜ] * μ (sᶜ) = μ t := by
+  rw [cond_mul_eq_inter μ hms hcs, cond_mul_eq_inter μ hms.compl hcs', Set.inter_comm _ t,
+    Set.inter_comm _ t]
   exact measure_inter_add_diff t hms
 #align probability_theory.cond_add_cond_compl_eq ProbabilityTheory.cond_add_cond_compl_eq
 
 /-- **Bayes' Theorem** -/
-theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s) (hmt : MeasurableSet t) :
-    μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
+theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s)
+    (hmt : MeasurableSet t) : μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
   by_cases ht : μ t = 0
   · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
     

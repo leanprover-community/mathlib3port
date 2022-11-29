@@ -40,7 +40,8 @@ exponentially in hyperbolic space. To be really explicit, consider the hyperboli
 curvature -1, the area of a disc of radius `ε` is `A(ε) = 2π(cosh(ε) - 1)` so `A(2ε)/A(ε) ~ exp(ε)`.
 -/
 class IsDoublingMeasure {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) where
-  exists_measure_closed_ball_le_mul : ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ C * μ (closedBall x ε)
+  exists_measure_closed_ball_le_mul :
+    ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ C * μ (closedBall x ε)
 #align is_doubling_measure IsDoublingMeasure
 
 namespace IsDoublingMeasure
@@ -57,12 +58,17 @@ def doublingConstant : ℝ≥0 :=
 theorem exists_measure_closed_ball_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
   Classical.choose_spec <| exists_measure_closed_ball_le_mul μ
-#align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
+#align
+  is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
 
 theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
-    ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) := by
+    ∃ C : ℝ≥0,
+      ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) :=
+  by
   let C := doubling_constant μ
-  have hμ : ∀ n : ℕ, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closed_ball x (2 ^ n * ε)) ≤ ↑(C ^ n) * μ (closed_ball x ε) := by
+  have hμ :
+    ∀ n : ℕ, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closed_ball x (2 ^ n * ε)) ≤ ↑(C ^ n) * μ (closed_ball x ε) :=
+    by
     intro n
     induction' n with n ih
     · simp
@@ -70,7 +76,8 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     replace ih := eventually_nhds_within_pos_mul_left (two_pos : 0 < (2 : ℝ)) ih
     refine' (ih.and (exists_measure_closed_ball_le_mul' μ)).mono fun ε hε x => _
     calc
-      μ (closed_ball x (2 ^ (n + 1) * ε)) = μ (closed_ball x (2 ^ n * (2 * ε))) := by rw [pow_succ', mul_assoc]
+      μ (closed_ball x (2 ^ (n + 1) * ε)) = μ (closed_ball x (2 ^ n * (2 * ε))) := by
+        rw [pow_succ', mul_assoc]
       _ ≤ ↑(C ^ n) * μ (closed_ball x (2 * ε)) := hε.1 x
       _ ≤ ↑(C ^ n) * (C * μ (closed_ball x ε)) := Ennreal.mul_left_mono (hε.2 x)
       _ = ↑(C ^ (n + 1)) * μ (closed_ball x ε) := by rw [← mul_assoc, pow_succ', Ennreal.coe_mul]
@@ -135,7 +142,8 @@ theorem scaling_scale_of_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
 #align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scaling_scale_of_pos
 
 theorem measure_mul_le_scaling_constant_of_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ ioc 0 K)
-    (hr : r ≤ scalingScaleOf μ K) : μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
+    (hr : r ≤ scalingScaleOf μ K) :
+    μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   (eventually_measure_mul_le_scaling_constant_of_mul μ K).some_spec.2 x t r ht hr
 #align
   is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scaling_constant_of_mul

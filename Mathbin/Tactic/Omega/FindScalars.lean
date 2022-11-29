@@ -17,7 +17,8 @@ namespace Omega
 /-- Divide linear combinations into three groups by the coefficient of the
     `m`th variable in their resultant terms: negative, zero, or positive. -/
 unsafe def trisect (m : Nat) :
-    List (List Nat × term) → List (List Nat × term) × List (List Nat × term) × List (List Nat × term)
+    List (List Nat × term) →
+      List (List Nat × term) × List (List Nat × term) × List (List Nat × term)
   | [] => ([], [], [])
   | (p, t) :: pts =>
     let (neg, zero, Pos) := trisect pts
@@ -41,7 +42,8 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
     include occurrences of the `m`th variable with positive coefficients,
     and one with negative coefficients) and linearly combine them in every
     possible way that eliminates the `m`th variable. -/
-unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) : tactic (List (List Nat × term)) :=
+unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) :
+    tactic (List (List Nat × term)) :=
   let pairs := List.product neg Pos
   Monad.mapM (elim_var_aux m) pairs
 #align omega.elim_var omega.elim_var

@@ -104,13 +104,16 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let (params, app (app r f) g) ← mk_local_pis t
   let (arg_rels, R) ← get_lift_fun r
   let args ←
-    (enum arg_rels).mmap fun ⟨n, a⟩ => Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ repr n)) a.in_type <*> pure a
+    (enum arg_rels).mmap fun ⟨n, a⟩ =>
+        Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ repr n)) a.in_type <*> pure a
   let a_vars ← return <| Prod.fst <$> args
   let p ← head_beta (app_of_list f a_vars)
   let p_data ← return <| mark_occurences (app R p) params
   let p_vars ← return <| List.map Prod.fst (p_data.filter fun x => ↑x.2)
   let u ← return <| collect_univ_params (app R p) ∩ u'
-  let pat ← mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u) (p_vars ++ a_vars)
+  let pat ←
+    mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u)
+        (p_vars ++ a_vars)
   return <| rule_data.mk pr (u' u) p_data u args pat g
 #align transfer.analyse_rule transfer.analyse_rule
 
@@ -122,7 +125,8 @@ unsafe def analyse_decls : List Name → tactic (List rule_data) :=
     analyse_rule ls (const n (ls level.param))
 #align transfer.analyse_decls transfer.analyse_decls
 
-private unsafe def split_params_args : List (expr × Bool) → List expr → List (expr × Option expr) × List expr
+private unsafe def split_params_args :
+    List (expr × Bool) → List expr → List (expr × Option expr) × List expr
   | (lc, tt) :: ps, e :: es =>
     let (ps', es') := split_params_args ps es
     ((lc, some e) :: ps', es')
@@ -166,7 +170,8 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
             (rds.map fun rd => do
               let (l, m) ← match_pattern rd.pat e semireducible
               let level_map ← rd.uparams.mmap fun l => Prod.mk l <$> mk_meta_univ
-              let inst_univ ← return fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
+              let inst_univ ←
+                return fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
               let (ps, args) ← return <| split_params_args (rd.params.map (Prod.map inst_univ id)) m
               let (ps, ms) ← param_substitutions ctxt ps
               return (instantiate_locals ps ∘ inst_univ, ps, args, ms, rd)) <|>
@@ -209,7 +214,8 @@ open Transfer
 unsafe def tactic.transfer (ds : List Name) : tactic Unit := do
   let rds ← analyse_decls ds
   let tgt ← target
-  guard ¬tgt <|> fail "Target contains (universe) meta variables. This is not supported by transfer."
+  guard ¬tgt <|>
+      fail "Target contains (universe) meta variables. This is not supported by transfer."
   let (new_tgt, pr, ms) ← compute_transfer rds [] ((const `iff [] : expr) tgt)
   let new_pr ← mk_meta_var new_tgt
   -- Setup final tactic state

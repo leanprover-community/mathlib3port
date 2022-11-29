@@ -43,9 +43,10 @@ theorem lie_character_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x, y�
   rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_comm, sub_self]
 #align lie_algebra.lie_character_apply_lie LieAlgebra.lie_character_apply_lie
 
-theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L} (h : x ∈ derivedSeries R L 1) : χ x = 0 := by
-  rw [derived_series_def, derived_series_of_ideal_succ, derived_series_of_ideal_zero, ← LieSubmodule.mem_coe_submodule,
-    LieSubmodule.lie_ideal_oper_eq_linear_span] at h
+theorem lie_character_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
+    (h : x ∈ derivedSeries R L 1) : χ x = 0 := by
+  rw [derived_series_def, derived_series_of_ideal_succ, derived_series_of_ideal_zero, ←
+    LieSubmodule.mem_coe_submodule, LieSubmodule.lie_ideal_oper_eq_linear_span] at h
   apply Submodule.span_induction h
   · rintro y ⟨⟨z, hz⟩, ⟨⟨w, hw⟩, rfl⟩⟩
     apply lie_character_apply_lie

@@ -46,7 +46,8 @@ def IsInvariant (ϕ : τ → α → α) (s : Set α) : Prop :=
 
 variable (ϕ : τ → α → α) (s : Set α)
 
-theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by simp_rw [IsInvariant, maps_to']
+theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by
+  simp_rw [IsInvariant, maps_to']
 #align is_invariant_iff_image is_invariant_iff_image
 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
@@ -55,20 +56,20 @@ def IsFwInvariant [Preorder τ] [Zero τ] (ϕ : τ → α → α) (s : Set α) :
   ∀ ⦃t⦄, 0 ≤ t → MapsTo (ϕ t) s s
 #align is_fw_invariant IsFwInvariant
 
-theorem IsInvariant.is_fw_invariant [Preorder τ] [Zero τ] {ϕ : τ → α → α} {s : Set α} (h : IsInvariant ϕ s) :
-    IsFwInvariant ϕ s := fun t ht => h t
+theorem IsInvariant.is_fw_invariant [Preorder τ] [Zero τ] {ϕ : τ → α → α} {s : Set α}
+    (h : IsInvariant ϕ s) : IsFwInvariant ϕ s := fun t ht => h t
 #align is_invariant.is_fw_invariant IsInvariant.is_fw_invariant
 
 /-- If `τ` is a `canonically_ordered_add_monoid` (e.g., `ℕ` or `ℝ≥0`), then the notions
 `is_fw_invariant` and `is_invariant` are equivalent. -/
-theorem IsFwInvariant.is_invariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α} {s : Set α} (h : IsFwInvariant ϕ s) :
-    IsInvariant ϕ s := fun t => h (zero_le t)
+theorem IsFwInvariant.is_invariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α} {s : Set α}
+    (h : IsFwInvariant ϕ s) : IsInvariant ϕ s := fun t => h (zero_le t)
 #align is_fw_invariant.is_invariant IsFwInvariant.is_invariant
 
 /-- If `τ` is a `canonically_ordered_add_monoid` (e.g., `ℕ` or `ℝ≥0`), then the notions
 `is_fw_invariant` and `is_invariant` are equivalent. -/
-theorem is_fw_invariant_iff_is_invariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α} {s : Set α} :
-    IsFwInvariant ϕ s ↔ IsInvariant ϕ s :=
+theorem is_fw_invariant_iff_is_invariant [CanonicallyOrderedAddMonoid τ] {ϕ : τ → α → α}
+    {s : Set α} : IsFwInvariant ϕ s ↔ IsInvariant ϕ s :=
   ⟨IsFwInvariant.is_invariant, IsInvariant.is_fw_invariant⟩
 #align is_fw_invariant_iff_is_invariant is_fw_invariant_iff_is_invariant
 
@@ -91,11 +92,12 @@ structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoid τ] [HasContinuous
 
 namespace Flow
 
-variable {τ : Type _} [AddMonoid τ] [TopologicalSpace τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
-  (ϕ : Flow τ α)
+variable {τ : Type _} [AddMonoid τ] [TopologicalSpace τ] [HasContinuousAdd τ] {α : Type _}
+  [TopologicalSpace α] (ϕ : Flow τ α)
 
 instance : Inhabited (Flow τ α) :=
-  ⟨{ toFun := fun _ x => x, cont' := continuous_snd, map_add' := fun _ _ _ => rfl, map_zero' := fun _ => rfl }⟩
+  ⟨{ toFun := fun _ x => x, cont' := continuous_snd, map_add' := fun _ _ _ => rfl,
+      map_zero' := fun _ => rfl }⟩
 
 instance : CoeFun (Flow τ α) fun _ => τ → α → α :=
   ⟨Flow.toFun⟩
@@ -109,8 +111,8 @@ theorem ext : ∀ {ϕ₁ ϕ₂ : Flow τ α}, (∀ t x, ϕ₁ t x = ϕ₂ t x) �
 #align flow.ext Flow.ext
 
 @[continuity]
-protected theorem continuous {β : Type _} [TopologicalSpace β] {t : β → τ} (ht : Continuous t) {f : β → α}
-    (hf : Continuous f) : Continuous fun x => ϕ (t x) (f x) :=
+protected theorem continuous {β : Type _} [TopologicalSpace β] {t : β → τ} (ht : Continuous t)
+    {f : β → α} (hf : Continuous f) : Continuous fun x => ϕ (t x) (f x) :=
   ϕ.cont'.comp (ht.prod_mk hf)
 #align flow.continuous Flow.continuous
 
@@ -150,13 +152,14 @@ end Flow
 
 namespace Flow
 
-variable {τ : Type _} [AddCommGroup τ] [TopologicalSpace τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
-  (ϕ : Flow τ α)
+variable {τ : Type _} [AddCommGroup τ] [TopologicalSpace τ] [TopologicalAddGroup τ] {α : Type _}
+  [TopologicalSpace α] (ϕ : Flow τ α)
 
 theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
   (is_invariant_iff_image _ _).trans
-    (Iff.intro (fun h t => Subset.antisymm (h t) fun _ hx => ⟨_, h (-t) ⟨_, hx, rfl⟩, by simp [← map_add]⟩) fun h t =>
-      by rw [h t])
+    (Iff.intro
+      (fun h t => Subset.antisymm (h t) fun _ hx => ⟨_, h (-t) ⟨_, hx, rfl⟩, by simp [← map_add]⟩)
+      fun h t => by rw [h t])
 #align flow.is_invariant_iff_image_eq Flow.is_invariant_iff_image_eq
 
 /-- The time-reversal of a flow `ϕ` by a (commutative, additive) group

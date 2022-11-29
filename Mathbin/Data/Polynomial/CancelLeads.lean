@@ -36,7 +36,8 @@ variable [Ring R] (p q : R[X])
 /-- `cancel_leads p q` is formed by multiplying `p` and `q` by monomials so that they
   have the same leading term, and then subtracting. -/
 def cancelLeads : R[X] :=
-  c p.leadingCoeff * X ^ (p.natDegree - q.natDegree) * q - c q.leadingCoeff * X ^ (q.natDegree - p.natDegree) * p
+  c p.leadingCoeff * X ^ (p.natDegree - q.natDegree) * q -
+    c q.leadingCoeff * X ^ (q.natDegree - p.natDegree) * p
 #align polynomial.cancel_leads Polynomial.cancelLeads
 
 variable {p q}
@@ -47,14 +48,16 @@ theorem neg_cancel_leads : -p.cancelLeads q = q.cancelLeads p :=
 #align polynomial.neg_cancel_leads Polynomial.neg_cancel_leads
 
 theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
-    (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff) (h : p.natDegree ≤ q.natDegree)
-    (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree := by
+    (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff)
+    (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) :
+    (p.cancelLeads q).natDegree < q.natDegree := by
   by_cases hp : p = 0
   · convert hq
     simp [hp, cancel_leads]
     
   rw [cancel_leads, sub_eq_add_neg, tsub_eq_zero_iff_le.mpr h, pow_zero, mul_one]
-  by_cases h0 : C p.leading_coeff * q + -(C q.leading_coeff * X ^ (q.nat_degree - p.nat_degree) * p) = 0
+  by_cases h0 :
+    C p.leading_coeff * q + -(C q.leading_coeff * X ^ (q.nat_degree - p.nat_degree) * p) = 0
   · exact (le_of_eq (by simp only [h0, nat_degree_zero])).trans_lt hq
     
   apply lt_of_le_of_ne
@@ -65,7 +68,8 @@ theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
     rw [← leading_coeff_eq_zero, leading_coeff, h0, mul_assoc, X_pow_mul, ← tsub_add_cancel_of_le h,
       add_comm _ p.nat_degree]
     simp only [coeff_mul_X_pow, coeff_neg, coeff_C_mul, add_tsub_cancel_left, coeff_add]
-    rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, comm, add_right_neg]
+    rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, comm,
+      add_right_neg]
     
 #align
   polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
@@ -80,8 +84,8 @@ theorem dvd_cancel_leads_of_dvd_of_dvd {r : R[X]} (pq : p ∣ q) (pr : p ∣ r) 
   dvd_sub (pr.trans (Dvd.intro_left _ rfl)) (pq.trans (Dvd.intro_left _ rfl))
 #align polynomial.dvd_cancel_leads_of_dvd_of_dvd Polynomial.dvd_cancel_leads_of_dvd_of_dvd
 
-theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) :
-    (p.cancelLeads q).natDegree < q.natDegree :=
+theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree (h : p.natDegree ≤ q.natDegree)
+    (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree :=
   nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm (mul_comm _ _) h hq
 #align
   polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree Polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree

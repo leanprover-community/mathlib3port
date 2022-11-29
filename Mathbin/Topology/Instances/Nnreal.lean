@@ -75,9 +75,9 @@ variable {α : Type _}
 
 open Filter Finset
 
-theorem _root_.continuous_real_to_nnreal : Continuous Real.toNnreal :=
+theorem continuous_real_to_nnreal : Continuous Real.toNnreal :=
   (continuous_id.max continuous_const).subtype_mk _
-#align nnreal._root_.continuous_real_to_nnreal nnreal._root_.continuous_real_to_nnreal
+#align continuous_real_to_nnreal continuous_real_to_nnreal
 
 theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
   continuous_subtype_val
@@ -85,9 +85,9 @@ theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
 
 /-- Embedding of `ℝ≥0` to `ℝ` as a bundled continuous map. -/
 @[simps (config := { fullyApplied := false })]
-def _root_.continuous_map.coe_nnreal_real : C(ℝ≥0, ℝ) :=
+def ContinuousMap.coeNnrealReal : C(ℝ≥0, ℝ) :=
   ⟨coe, continuous_coe⟩
-#align nnreal._root_.continuous_map.coe_nnreal_real nnreal._root_.continuous_map.coe_nnreal_real
+#align continuous_map.coe_nnreal_real ContinuousMap.coeNnrealReal
 
 instance ContinuousMap.canLift {X : Type _} [TopologicalSpace X] :
     CanLift C(X, ℝ) C(X, ℝ≥0) ContinuousMap.coeNnrealReal.comp fun f =>
@@ -115,23 +115,24 @@ theorem comap_coe_at_top : comap (coe : ℝ≥0 → ℝ) atTop = at_top :=
 #align nnreal.comap_coe_at_top Nnreal.comap_coe_at_top
 
 @[simp, norm_cast]
-theorem tendsto_coe_at_top {f : Filter α} {m : α → ℝ≥0} : Tendsto (fun a => (m a : ℝ)) f atTop ↔ Tendsto m f atTop :=
+theorem tendsto_coe_at_top {f : Filter α} {m : α → ℝ≥0} :
+    Tendsto (fun a => (m a : ℝ)) f atTop ↔ Tendsto m f atTop :=
   tendsto_Ici_at_top.symm
 #align nnreal.tendsto_coe_at_top Nnreal.tendsto_coe_at_top
 
-theorem _root_.tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto m f (𝓝 x)) :
+theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto m f (𝓝 x)) :
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_real_to_nnreal.Tendsto _).comp h
-#align nnreal._root_.tendsto_real_to_nnreal nnreal._root_.tendsto_real_to_nnreal
+#align tendsto_real_to_nnreal tendsto_real_to_nnreal
 
-theorem _root_.tendsto_real_to_nnreal_at_top : Tendsto Real.toNnreal atTop atTop := by
+theorem tendsto_real_to_nnreal_at_top : Tendsto Real.toNnreal atTop atTop := by
   rw [← tendsto_coe_at_top]
   apply tendsto_id.congr' _
   filter_upwards [Ici_mem_at_top (0 : ℝ)] with x hx
   simp only [max_eq_left (Set.mem_Ici.1 hx), id.def, Real.coe_to_nnreal']
-#align nnreal._root_.tendsto_real_to_nnreal_at_top nnreal._root_.tendsto_real_to_nnreal_at_top
+#align tendsto_real_to_nnreal_at_top tendsto_real_to_nnreal_at_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align nnreal.nhds_zero Nnreal.nhds_zero
@@ -144,10 +145,12 @@ instance : HasContinuousSub ℝ≥0 :=
   ⟨((continuous_coe.fst'.sub continuous_coe.snd').max continuous_const).subtype_mk _⟩
 
 instance : HasContinuousInv₀ ℝ≥0 :=
-  ⟨fun x hx => tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
+  ⟨fun x hx =>
+    tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
 
 instance [TopologicalSpace α] [MulAction ℝ α] [HasContinuousSmul ℝ α] :
-    HasContinuousSmul ℝ≥0 α where continuous_smul := (continuous_induced_dom.comp continuous_fst).smul continuous_snd
+    HasContinuousSmul ℝ≥0
+      α where continuous_smul := (continuous_induced_dom.comp continuous_fst).smul continuous_snd
 
 @[norm_cast]
 theorem has_sum_coe {f : α → ℝ≥0} {r : ℝ≥0} : HasSum (fun a => (f a : ℝ)) (r : ℝ) ↔ HasSum f r := by
@@ -179,7 +182,8 @@ open Classical
 
 @[norm_cast]
 theorem coe_tsum {f : α → ℝ≥0} : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
-  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.HasSum).tsum_eq else by simp [tsum, hf, mt summable_coe.1 hf]
+  if hf : Summable f then Eq.symm <| (has_sum_coe.2 <| hf.HasSum).tsum_eq
+  else by simp [tsum, hf, mt summable_coe.1 hf]
 #align nnreal.coe_tsum Nnreal.coe_tsum
 
 theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
@@ -196,16 +200,18 @@ theorem tsum_mul_right (f : α → ℝ≥0) (a : ℝ≥0) : (∑' x, f x * a) = 
   Nnreal.eq <| by simp only [coe_tsum, Nnreal.coe_mul, tsum_mul_right]
 #align nnreal.tsum_mul_right Nnreal.tsum_mul_right
 
-theorem summable_comp_injective {β : Type _} {f : α → ℝ≥0} (hf : Summable f) {i : β → α} (hi : Function.Injective i) :
-    Summable (f ∘ i) :=
-  Nnreal.summable_coe.1 <| show Summable ((coe ∘ f) ∘ i) from (Nnreal.summable_coe.2 hf).comp_injective hi
+theorem summable_comp_injective {β : Type _} {f : α → ℝ≥0} (hf : Summable f) {i : β → α}
+    (hi : Function.Injective i) : Summable (f ∘ i) :=
+  Nnreal.summable_coe.1 <|
+    show Summable ((coe ∘ f) ∘ i) from (Nnreal.summable_coe.2 hf).comp_injective hi
 #align nnreal.summable_comp_injective Nnreal.summable_comp_injective
 
 theorem summable_nat_add (f : ℕ → ℝ≥0) (hf : Summable f) (k : ℕ) : Summable fun i => f (i + k) :=
   summable_comp_injective hf <| add_left_injective k
 #align nnreal.summable_nat_add Nnreal.summable_nat_add
 
-theorem summable_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) : (Summable fun i => f (i + k)) ↔ Summable f := by
+theorem summable_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) : (Summable fun i => f (i + k)) ↔ Summable f :=
+  by
   rw [← summable_coe, ← summable_coe]
   exact @summable_nat_add_iff ℝ _ _ _ (fun i => (f i : ℝ)) k
 #align nnreal.summable_nat_add_iff Nnreal.summable_nat_add_iff
@@ -217,7 +223,8 @@ theorem has_sum_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) {a : ℝ≥0} :
 
 theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0} (k : ℕ) (hf : Summable f) :
     (∑' i, f i) = (∑ i in range k, f i) + ∑' i, f (i + k) := by
-  rw [← Nnreal.coe_eq, coe_tsum, Nnreal.coe_add, coe_sum, coe_tsum, sum_add_tsum_nat_add k (Nnreal.summable_coe.2 hf)]
+  rw [← Nnreal.coe_eq, coe_tsum, Nnreal.coe_add, coe_sum, coe_tsum,
+    sum_add_tsum_nat_add k (Nnreal.summable_coe.2 hf)]
 #align nnreal.sum_add_tsum_nat_add Nnreal.sum_add_tsum_nat_add
 
 theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
@@ -227,13 +234,15 @@ theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
 
 end coe
 
-theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0} (hf : Summable f) : Tendsto f cofinite (𝓝 0) := by
+theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0} (hf : Summable f) :
+    Tendsto f cofinite (𝓝 0) := by
   have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ) := funext fun n => real.to_nnreal_coe.symm
   rw [h_f_coe, ← @Real.to_nnreal_coe 0]
   exact tendsto_real_to_nnreal (summable_coe.mpr hf).tendsto_cofinite_zero
 #align nnreal.tendsto_cofinite_zero_of_summable Nnreal.tendsto_cofinite_zero_of_summable
 
-theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) : Tendsto f atTop (𝓝 0) := by
+theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0} (hf : Summable f) : Tendsto f atTop (𝓝 0) :=
+  by
   rw [← Nat.cofinite_eq_at_top]
   exact tendsto_cofinite_zero_of_summable hf
 #align nnreal.tendsto_at_top_zero_of_summable Nnreal.tendsto_at_top_zero_of_summable
@@ -250,7 +259,8 @@ theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α → ℝ≥0) :
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
   (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
       strict_mono_on_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
-    (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
+    (continuous_id.pow _).Surjective (tendsto_pow_at_top hn) <| by
+      simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
 #align nnreal.pow_order_iso Nnreal.powOrderIso
 
 end Nnreal

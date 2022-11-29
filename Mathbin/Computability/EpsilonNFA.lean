@@ -71,7 +71,8 @@ theorem mem_step_set_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosur
 #align ε_NFA.mem_step_set_iff εNFA.mem_step_set_iff
 
 @[simp]
-theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+theorem step_set_empty (a : α) : M.stepSet ∅ a = ∅ := by
+  simp_rw [step_set, Union_false, Union_empty]
 #align ε_NFA.step_set_empty εNFA.step_set_empty
 
 variable (M)
@@ -144,7 +145,8 @@ def toNFA : NFA α σ where
 #align ε_NFA.to_NFA εNFA.toNFA
 
 @[simp]
-theorem to_NFA_eval_from_match (start : Set σ) : M.toNFA.evalFrom (M.εClosure start) = M.evalFrom start :=
+theorem to_NFA_eval_from_match (start : Set σ) :
+    M.toNFA.evalFrom (M.εClosure start) = M.evalFrom start :=
   rfl
 #align ε_NFA.to_NFA_eval_from_match εNFA.to_NFA_eval_from_match
 
@@ -155,10 +157,12 @@ theorem to_NFA_correct : M.toNFA.accepts = M.accepts := by
   rfl
 #align ε_NFA.to_NFA_correct εNFA.to_NFA_correct
 
-theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
+theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
+    (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
       x = a ++ b ++ c ∧
-        a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
+        a.length + b.length ≤ Fintype.card (Set σ) ∧
+          b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
   rw [← to_NFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
@@ -188,7 +192,8 @@ theorem to_ε_NFA_ε_closure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure 
 #align NFA.to_ε_NFA_ε_closure NFA.to_ε_NFA_ε_closure
 
 @[simp]
-theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.evalFrom start = M.evalFrom start := by
+theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) :
+    M.toεNFA.evalFrom start = M.evalFrom start := by
   rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
   congr
   ext (S s)

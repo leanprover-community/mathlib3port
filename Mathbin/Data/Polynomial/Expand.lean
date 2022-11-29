@@ -63,8 +63,9 @@ theorem expand_monomial (r : R) : expand R p (monomial q r) = monomial (q * p) r
 #align polynomial.expand_monomial Polynomial.expand_monomial
 
 theorem expand_expand (f : R[X]) : expand R p (expand R q f) = expand R (p * q) f :=
-  Polynomial.induction_on f (fun r => by simp_rw [expand_C]) (fun f g ihf ihg => by simp_rw [AlgHom.map_add, ihf, ihg])
-    fun n r ih => by simp_rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, AlgHom.map_pow, expand_X, pow_mul]
+  Polynomial.induction_on f (fun r => by simp_rw [expand_C])
+    (fun f g ihf ihg => by simp_rw [AlgHom.map_add, ihf, ihg]) fun n r ih => by
+    simp_rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, AlgHom.map_pow, expand_X, pow_mul]
 #align polynomial.expand_expand Polynomial.expand_expand
 
 theorem expand_mul (f : R[X]) : expand R (p * q) f = expand R p (expand R q f) :=
@@ -77,8 +78,9 @@ theorem expand_zero (f : R[X]) : expand R 0 f = c (eval 1 f) := by simp [expand]
 
 @[simp]
 theorem expand_one (f : R[X]) : expand R 1 f = f :=
-  Polynomial.induction_on f (fun r => by rw [expand_C]) (fun f g ihf ihg => by rw [AlgHom.map_add, ihf, ihg])
-    fun n r ih => by rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, pow_one]
+  Polynomial.induction_on f (fun r => by rw [expand_C])
+    (fun f g ihf ihg => by rw [AlgHom.map_add, ihf, ihg]) fun n r ih => by
+    rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, pow_one]
 #align polynomial.expand_one Polynomial.expand_one
 
 theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
@@ -86,7 +88,8 @@ theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
     rw [Function.iterate_succ_apply', pow_succ, expand_mul, ih]
 #align polynomial.expand_pow Polynomial.expand_pow
 
-theorem derivative_expand (f : R[X]) : (expand R p f).derivative = expand R p f.derivative * (p * X ^ (p - 1)) := by
+theorem derivative_expand (f : R[X]) :
+    (expand R p f).derivative = expand R p f.derivative * (p * X ^ (p - 1)) := by
   rw [coe_expand, derivative_eval₂_C, derivative_pow, derivative_X, mul_one]
 #align polynomial.derivative_expand Polynomial.derivative_expand
 
@@ -115,13 +118,14 @@ theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
 #align polynomial.coeff_expand Polynomial.coeff_expand
 
 @[simp]
-theorem coeff_expand_mul {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) : (expand R p f).coeff (n * p) = f.coeff n := by
+theorem coeff_expand_mul {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
+    (expand R p f).coeff (n * p) = f.coeff n := by
   rw [coeff_expand hp, if_pos (dvd_mul_left _ _), Nat.mul_div_cancel _ hp]
 #align polynomial.coeff_expand_mul Polynomial.coeff_expand_mul
 
 @[simp]
-theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) : (expand R p f).coeff (p * n) = f.coeff n := by
-  rw [mul_comm, coeff_expand_mul hp]
+theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
+    (expand R p f).coeff (p * n) = f.coeff n := by rw [mul_comm, coeff_expand_mul hp]
 #align polynomial.coeff_expand_mul' Polynomial.coeff_expand_mul'
 
 /-- Expansion is injective. -/
@@ -176,7 +180,8 @@ theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R
   simp [hp, h]
 #align polynomial.monic.expand Polynomial.Monic.expand
 
-theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) = expand S p (map f q) := by
+theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) = expand S p (map f q) :=
+  by
   by_cases hp : p = 0
   · simp [hp]
     
@@ -203,8 +208,10 @@ noncomputable def contract (p : ℕ) (f : R[X]) : R[X] :=
   ∑ n in range (f.natDegree + 1), monomial n (f.coeff (n * p))
 #align polynomial.contract Polynomial.contract
 
-theorem coeff_contract {p : ℕ} (hp : p ≠ 0) (f : R[X]) (n : ℕ) : (contract p f).coeff n = f.coeff (n * p) := by
-  simp only [contract, coeff_monomial, sum_ite_eq', finset_sum_coeff, mem_range, not_lt, ite_eq_left_iff]
+theorem coeff_contract {p : ℕ} (hp : p ≠ 0) (f : R[X]) (n : ℕ) :
+    (contract p f).coeff n = f.coeff (n * p) := by
+  simp only [contract, coeff_monomial, sum_ite_eq', finset_sum_coeff, mem_range, not_lt,
+    ite_eq_left_iff]
   intro hn
   apply (coeff_eq_zero_of_nat_degree_lt _).symm
   calc
@@ -251,19 +258,20 @@ theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := b
   refine' f.induction_on' (fun a b ha hb => _) fun n a => _
   · rw [AlgHom.map_add, Polynomial.map_add, ha, hb, add_pow_char]
     
-  · rw [expand_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial, mul_pow, ← C.map_pow,
-      frobenius_def]
+  · rw [expand_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial,
+      mul_pow, ← C.map_pow, frobenius_def]
     ring
     
 #align polynomial.expand_char Polynomial.expand_char
 
-theorem map_expand_pow_char (f : R[X]) (n : ℕ) : map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n := by
+theorem map_expand_pow_char (f : R[X]) (n : ℕ) :
+    map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n := by
   induction n
   · simp [RingHom.one_def]
     
   symm
-  rw [pow_succ', pow_mul, ← n_ih, ← expand_char, pow_succ, RingHom.mul_def, ← map_map, mul_comm, expand_mul, ←
-    map_expand]
+  rw [pow_succ', pow_mul, ← n_ih, ← expand_char, pow_succ, RingHom.mul_def, ← map_map, mul_comm,
+    expand_mul, ← map_expand]
 #align polynomial.map_expand_pow_char Polynomial.map_expand_pow_char
 
 end CharP
@@ -274,19 +282,18 @@ section IsDomain
 
 variable (R : Type u) [CommRing R] [IsDomain R]
 
-theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) : IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) := by
-  refine' ⟨fun f hf1 => _⟩
-  rw [← coe_fn_coe_base] at hf1
+theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) :
+    IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) := by
+  refine' ⟨fun f hf1 => _⟩; rw [← coe_fn_coe_base] at hf1
   have hf2 := eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)
   rw [coeff_expand hp, if_pos (dvd_zero _), p.zero_div] at hf2
-  rw [hf2, is_unit_C] at hf1
-  rw [expand_eq_C hp] at hf2
-  rwa [hf2, is_unit_C]
+  rw [hf2, is_unit_C] at hf1; rw [expand_eq_C hp] at hf2; rwa [hf2, is_unit_C]
 #align polynomial.is_local_ring_hom_expand Polynomial.is_local_ring_hom_expand
 
 variable {R}
 
-theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) : Irreducible f :=
+theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) :
+    Irreducible f :=
   let _ := is_local_ring_hom_expand R hp.bot_lt
   of_irreducible_map (↑(expand R p)) hf
 #align polynomial.of_irreducible_expand Polynomial.of_irreducible_expand

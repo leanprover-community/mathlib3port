@@ -49,7 +49,8 @@ def Fix.approx : Stream <| ∀ a, Part <| β a
 #align part.fix.approx Part.Fix.approx
 
 /-- loop body for finding the fixed point of `f` -/
-def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) : ∀ a, Part <| β a :=
+def fixAux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part <| β a) :
+    ∀ a, Part <| β a :=
   f fun x : α => (assert ¬p i.val) fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_self _) x
 #align part.fix_aux Part.fixAux
 
@@ -62,7 +63,8 @@ it satisfies the equations:
   2. `∀ X, f X ≤ X → fix f ≤ X`   (least fixed point)
 -/
 protected def fix (x : α) : Part <| β x :=
-  (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h => WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
+  (Part.assert (∃ i, (Fix.approx f i x).Dom)) fun h =>
+    WellFounded.fix.{1} (Nat.Upto.wf h) (fixAux f) Nat.Upto.zero x
 #align part.fix Part.fix
 
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
@@ -73,11 +75,8 @@ protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
   replace hk : Nat.find h' = k + (@upto.zero p).val := hk
   rw [hk] at this
   revert hk
-  dsimp [Part.fix]
-  rw [assert_pos h']
-  revert this
-  generalize upto.zero = z
-  intros
+  dsimp [Part.fix]; rw [assert_pos h']; revert this
+  generalize upto.zero = z; intros
   suffices : ∀ x', WellFounded.fix (fix._proof_1 f x h') (fix_aux f) z x' = fix.approx f (succ k) x'
   exact this _
   induction k generalizing z <;> intro

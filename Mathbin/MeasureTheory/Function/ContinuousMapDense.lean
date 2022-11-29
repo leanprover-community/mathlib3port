@@ -57,19 +57,21 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (F «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (F «expr ⊆ » s) -/
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
   have hp₀ : 0 < p := lt_of_lt_of_le Ennreal.zero_lt_one _i.elim
   have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one Ennreal.to_real_nonneg
-  have hp₀'' : 0 < p.to_real := by simpa [← Ennreal.to_real_lt_to_real Ennreal.zero_ne_top hp] using hp₀
+  have hp₀'' : 0 < p.to_real := by
+    simpa [← Ennreal.to_real_lt_to_real Ennreal.zero_ne_top hp] using hp₀
   -- It suffices to prove that scalar multiples of the indicator function of a finite-measure
   -- measurable set can be approximated by continuous functions
   suffices
     ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ⊤),
-      (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈ (BoundedContinuousFunction E p μ).topologicalClosure
+      (Lp.simple_func.indicator_const p hs hμs.Ne c : Lp E p μ) ∈
+        (BoundedContinuousFunction E p μ).topologicalClosure
     by
     rw [AddSubgroup.eq_top_iff']
     refine' Lp.induction hp _ _ _ _
@@ -86,14 +88,17 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   intro ε hε
   -- A little bit of pre-emptive work, to find `η : ℝ≥0` which will be a margin small enough for
   -- our purposes
-  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε := by
+  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε :=
+    by
     have : Filter.Tendsto (fun x : ℝ≥0 => ‖bit0 ‖c‖‖₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) := by
-      have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) := filter.tendsto_id.const_mul 2
+      have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) :=
+        filter.tendsto_id.const_mul 2
       convert ((Nnreal.continuous_at_rpow_const (Or.inr hp₀')).Tendsto.comp this).const_mul _
       simp [hp₀''.ne']
     let ε' : ℝ≥0 := ⟨ε, hε.le⟩
     have hε' : 0 < ε' := by exact_mod_cast hε
-    obtain ⟨δ, hδ, hδε'⟩ := nnreal.nhds_zero_basis.eventually_iff.mp (eventually_le_of_tendsto_lt hε' this)
+    obtain ⟨δ, hδ, hδε'⟩ :=
+      nnreal.nhds_zero_basis.eventually_iff.mp (eventually_le_of_tendsto_lt hε' this)
     obtain ⟨η, hη, hηδ⟩ := exists_between hδ
     refine' ⟨η, hη, _⟩
     exact_mod_cast hδε' hηδ
@@ -119,18 +124,21 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     abel
   -- Apply Urysohn's lemma to get a continuous approximation to the characteristic function of
   -- the set `s`
-  obtain ⟨g, hgu, hgF, hg_range⟩ := exists_continuous_zero_one_of_closed u_open.is_closed_compl F_closed this
+  obtain ⟨g, hgu, hgF, hg_range⟩ :=
+    exists_continuous_zero_one_of_closed u_open.is_closed_compl F_closed this
   -- Multiply this by `c` to get a continuous approximation to the function `f`; the key point is
   -- that this is pointwise bounded by the indicator of the set `u \ F`
   have g_norm : ∀ x, ‖g x‖ = g x := fun x => by rw [Real.norm_eq_abs, abs_of_nonneg (hg_range x).1]
-  have gc_bd : ∀ x, ‖g x • c - s.indicator (fun x => c) x‖ ≤ ‖(u \ F).indicator (fun x => bit0 ‖c‖) x‖ := by
+  have gc_bd :
+    ∀ x, ‖g x • c - s.indicator (fun x => c) x‖ ≤ ‖(u \ F).indicator (fun x => bit0 ‖c‖) x‖ := by
     intro x
     by_cases hu : x ∈ u
     · rw [← Set.diff_union_of_subset (Fs.trans su)] at hu
       cases' hu with hFu hF
       · refine' (norm_sub_le _ _).trans _
         refine' (add_le_add_left (norm_indicator_le_norm_self (fun x => c) x) _).trans _
-        have h₀ : g x * ‖c‖ + ‖c‖ ≤ 2 * ‖c‖ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
+        have h₀ : g x * ‖c‖ + ‖c‖ ≤ 2 * ‖c‖ := by
+          nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
         have h₁ : (2 : ℝ) * ‖c‖ = bit0 ‖c‖ := by simpa using add_mul (1 : ℝ) 1 ‖c‖
         simp [hFu, norm_smul, h₀, ← h₁, g_norm x]
         
@@ -142,7 +150,9 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
       
   -- The rest is basically just `ennreal`-arithmetic
   have gc_snorm :
-    snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤ (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) := by
+    snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤
+      (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) :=
+    by
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _
     rw [snorm_indicator_const (u_open.sdiff F_closed).MeasurableSet hp₀.ne' hp]
     push_cast [← Ennreal.coe_rpow_of_nonneg _ hp₀']
@@ -150,7 +160,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have gc_cont : Continuous fun x => g x • c := g.continuous.smul continuous_const
   have gc_mem_ℒp : mem_ℒp (fun x => g x • c) p μ := by
     have : mem_ℒp ((fun x => g x • c) - s.indicator fun x => c) p μ :=
-      ⟨gc_cont.ae_strongly_measurable.sub (strongly_measurable_const.indicator hs).AeStronglyMeasurable,
+      ⟨gc_cont.ae_strongly_measurable.sub
+          (strongly_measurable_const.indicator hs).AeStronglyMeasurable,
         gc_snorm.trans_lt Ennreal.coe_lt_top⟩
     simpa using this.add (mem_ℒp_indicator_const p hs c (Or.inr hsμ.ne))
   refine' ⟨gc_mem_ℒp.to_Lp _, _, _⟩
@@ -165,7 +176,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     have h₀ : g x * ‖c‖ ≤ ‖c‖ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
     simp [norm_smul, g_norm x, h₀]
     
-#align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense
+#align
+  measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense
 
 end MeasureTheory.lp
 
@@ -175,11 +187,12 @@ namespace BoundedContinuousFunction
 
 open LinearMap (range)
 
-theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] : DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) :=
-  by
+theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] :
+    DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] lp E p μ) := by
   haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
-  suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by exact congr_arg coe this
+  suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by
+    exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 #align bounded_continuous_function.to_Lp_dense_range BoundedContinuousFunction.to_Lp_dense_range
 
@@ -193,7 +206,8 @@ theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure 
     DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] lp E p μ) := by
   haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
-  suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by exact congr_arg coe this
+  suffices (range (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ)).toAddSubgroup.topologicalClosure = ⊤ by
+    exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 #align continuous_map.to_Lp_dense_range ContinuousMap.to_Lp_dense_range
 

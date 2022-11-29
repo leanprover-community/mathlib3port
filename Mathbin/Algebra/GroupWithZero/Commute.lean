@@ -21,10 +21,11 @@ namespace Ring
 
 open Classical
 
-theorem mul_inverse_rev' {a b : M₀} (h : Commute a b) : inverse (a * b) = inverse b * inverse a := by
+theorem mul_inverse_rev' {a b : M₀} (h : Commute a b) : inverse (a * b) = inverse b * inverse a :=
+  by
   by_cases hab : IsUnit (a * b)
   · obtain ⟨⟨a, rfl⟩, b, rfl⟩ := h.is_unit_mul_iff.mp hab
-    rw [← Units.coe_mul, inverse_unit, inverse_unit, inverse_unit, ← Units.coe_mul, mul_inv_rev]
+    rw [← Units.val_mul, inverse_unit, inverse_unit, inverse_unit, ← Units.val_mul, mul_inv_rev]
     
   obtain ha | hb := not_and_distrib.mp (mt h.is_unit_mul_iff.mpr hab)
   · rw [inverse_non_unit _ hab, inverse_non_unit _ ha, mul_zero]
@@ -33,14 +34,17 @@ theorem mul_inverse_rev' {a b : M₀} (h : Commute a b) : inverse (a * b) = inve
     
 #align ring.mul_inverse_rev' Ring.mul_inverse_rev'
 
-theorem mul_inverse_rev {M₀} [CommMonoidWithZero M₀] (a b : M₀) : Ring.inverse (a * b) = inverse b * inverse a :=
+theorem mul_inverse_rev {M₀} [CommMonoidWithZero M₀] (a b : M₀) :
+    Ring.inverse (a * b) = inverse b * inverse a :=
   mul_inverse_rev' (Commute.all _ _)
 #align ring.mul_inverse_rev Ring.mul_inverse_rev
 
 end Ring
 
-theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) : Commute (Ring.inverse a) (Ring.inverse b) :=
-  (Ring.mul_inverse_rev' h.symm).symm.trans <| (congr_arg _ h.symm.Eq).trans <| Ring.mul_inverse_rev' h
+theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) :
+    Commute (Ring.inverse a) (Ring.inverse b) :=
+  (Ring.mul_inverse_rev' h.symm).symm.trans <|
+    (congr_arg _ h.symm.Eq).trans <| Ring.mul_inverse_rev' h
 #align commute.ring_inverse_ring_inverse Commute.ring_inverse_ring_inverse
 
 namespace Commute

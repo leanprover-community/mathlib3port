@@ -48,18 +48,22 @@ instance (priority := 100) mono_coprod_of_has_zero_morphisms [HasZeroMorphisms C
     haveI : is_split_mono c.inl :=
       is_split_mono.mk' (split_mono.mk (hc.desc (binary_cofan.mk (𝟙 A) 0)) (is_colimit.fac _ _ _))
     infer_instance⟩
-#align category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.mono_coprod_of_has_zero_morphisms
+#align
+  category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.mono_coprod_of_has_zero_morphisms
 
 namespace MonoCoprod
 
-theorem binary_cofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsColimit c) : Mono c.inr :=
+theorem binary_cofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsColimit c) :
+    Mono c.inr :=
   haveI hc' : is_colimit (binary_cofan.mk c.inr c.inl) :=
-    binary_cofan.is_colimit_mk (fun s => hc.desc (binary_cofan.mk s.inr s.inl)) (by tidy) (by tidy) fun s m h₁ h₂ =>
+    binary_cofan.is_colimit_mk (fun s => hc.desc (binary_cofan.mk s.inr s.inl)) (by tidy) (by tidy)
+      fun s m h₁ h₂ =>
       binary_cofan.is_colimit.hom_ext hc
         (by simp only [h₂, is_colimit.fac, binary_cofan.ι_app_left, binary_cofan.mk_inl])
         (by simp only [h₁, is_colimit.fac, binary_cofan.ι_app_right, binary_cofan.mk_inr])
   binary_cofan_inl _ hc'
-#align category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binary_cofan_inr
+#align
+  category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binary_cofan_inr
 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inl : A ⟶ A ⨿ B) :=
   binary_cofan_inl _ (colimit.isColimit _)
@@ -69,8 +73,10 @@ instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inr : 
 
 theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂) :
     Mono c₁.inl ↔ Mono c₂.inl := by
-  suffices ∀ (c₁ c₂ : binary_cofan A B) (hc₁ : is_colimit c₁) (hc₂ : is_colimit c₂) (h : mono c₁.inl), mono c₂.inl by
-    exact ⟨fun h₁ => this _ _ hc₁ hc₂ h₁, fun h₂ => this _ _ hc₂ hc₁ h₂⟩
+  suffices
+    ∀ (c₁ c₂ : binary_cofan A B) (hc₁ : is_colimit c₁) (hc₂ : is_colimit c₂) (h : mono c₁.inl),
+      mono c₂.inl
+    by exact ⟨fun h₁ => this _ _ hc₁ hc₂ h₁, fun h₂ => this _ _ hc₂ hc₁ h₂⟩
   intro c₁ c₂ hc₁ hc₂
   intro
   simpa only [is_colimit.comp_cocone_point_unique_up_to_iso_hom] using
@@ -108,7 +114,8 @@ instance mono_coprod_type : MonoCoprod (Type u) :=
       dsimp at h
       simpa only using h
       
-#align category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.mono_coprod_type
+#align
+  category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.mono_coprod_type
 
 end MonoCoprod
 

@@ -69,24 +69,30 @@ theorem coe_cont_linear (f : P →A[R] Q) : (f.contLinear : V → W) = f.linear 
 #align continuous_affine_map.coe_cont_linear ContinuousAffineMap.coe_cont_linear
 
 @[simp]
-theorem coe_cont_linear_eq_linear (f : P →A[R] Q) : (f.contLinear : V →ₗ[R] W) = (f : P →ᵃ[R] Q).linear := by
+theorem coe_cont_linear_eq_linear (f : P →A[R] Q) :
+    (f.contLinear : V →ₗ[R] W) = (f : P →ᵃ[R] Q).linear := by
   ext
   rfl
 #align continuous_affine_map.coe_cont_linear_eq_linear ContinuousAffineMap.coe_cont_linear_eq_linear
 
 @[simp]
-theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) (h) : ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
+theorem coe_mk_const_linear_eq_linear (f : P →ᵃ[R] Q) (h) :
+    ((⟨f, h⟩ : P →A[R] Q).contLinear : V → W) = f.linear :=
   rfl
-#align continuous_affine_map.coe_mk_const_linear_eq_linear ContinuousAffineMap.coe_mk_const_linear_eq_linear
+#align
+  continuous_affine_map.coe_mk_const_linear_eq_linear ContinuousAffineMap.coe_mk_const_linear_eq_linear
 
-theorem coe_linear_eq_coe_cont_linear (f : P →A[R] Q) : ((f : P →ᵃ[R] Q).linear : V → W) = (⇑f.contLinear : V → W) :=
+theorem coe_linear_eq_coe_cont_linear (f : P →A[R] Q) :
+    ((f : P →ᵃ[R] Q).linear : V → W) = (⇑f.contLinear : V → W) :=
   rfl
-#align continuous_affine_map.coe_linear_eq_coe_cont_linear ContinuousAffineMap.coe_linear_eq_coe_cont_linear
+#align
+  continuous_affine_map.coe_linear_eq_coe_cont_linear ContinuousAffineMap.coe_linear_eq_coe_cont_linear
 
 include W₂
 
 @[simp]
-theorem comp_cont_linear (f : P →A[R] Q) (g : Q →A[R] Q₂) : (g.comp f).contLinear = g.contLinear.comp f.contLinear :=
+theorem comp_cont_linear (f : P →A[R] Q) (g : Q →A[R] Q₂) :
+    (g.comp f).contLinear = g.contLinear.comp f.contLinear :=
   rfl
 #align continuous_affine_map.comp_cont_linear ContinuousAffineMap.comp_cont_linear
 
@@ -107,7 +113,8 @@ theorem const_cont_linear (q : Q) : (const R P q).contLinear = 0 :=
   rfl
 #align continuous_affine_map.const_cont_linear ContinuousAffineMap.const_cont_linear
 
-theorem cont_linear_eq_zero_iff_exists_const (f : P →A[R] Q) : f.contLinear = 0 ↔ ∃ q, f = const R P q := by
+theorem cont_linear_eq_zero_iff_exists_const (f : P →A[R] Q) :
+    f.contLinear = 0 ↔ ∃ q, f = const R P q := by
   have h₁ : f.cont_linear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0 := by
     refine' ⟨fun h => _, fun h => _⟩ <;> ext
     · rw [← coe_cont_linear_eq_linear, h]
@@ -224,7 +231,8 @@ instance :
     NormedSpace 𝕜
       (V →A[𝕜]
         W) where norm_smul_le t f := by
-    simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ← mul_max_of_nonneg _ _ (norm_nonneg t)]
+    simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ←
+      mul_max_of_nonneg _ _ (norm_nonneg t)]
 
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by
   rw [norm_def, max_le_iff]
@@ -234,15 +242,18 @@ theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g
       _ = ‖f.cont_linear (g 0) + f 0‖ := by
         rw [f.decomp]
         simp
-      _ ≤ ‖f.cont_linear‖ * ‖g 0‖ + ‖f 0‖ := (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)
+      _ ≤ ‖f.cont_linear‖ * ‖g 0‖ + ‖f 0‖ :=
+        (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)
       _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=
-        add_le_add_right (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
+        add_le_add_right
+          (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
       
     
   · calc
       ‖(f.comp g).contLinear‖ ≤ ‖f.cont_linear‖ * ‖g.cont_linear‖ :=
         (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _
-      _ ≤ ‖f‖ * ‖g‖ := mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)
+      _ ≤ ‖f‖ * ‖g‖ :=
+        mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)
       _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by
         rw [le_add_iff_nonneg_right]
         apply norm_nonneg
@@ -268,10 +279,12 @@ def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V �
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
   norm_map' f := rfl
-#align continuous_affine_map.to_const_prod_continuous_linear_map ContinuousAffineMap.toConstProdContinuousLinearMap
+#align
+  continuous_affine_map.to_const_prod_continuous_linear_map ContinuousAffineMap.toConstProdContinuousLinearMap
 
 @[simp]
-theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) : (toConstProdContinuousLinearMap 𝕜 V W f).fst = f 0 :=
+theorem to_const_prod_continuous_linear_map_fst (f : V →A[𝕜] W) :
+    (toConstProdContinuousLinearMap 𝕜 V W f).fst = f 0 :=
   rfl
 #align
   continuous_affine_map.to_const_prod_continuous_linear_map_fst ContinuousAffineMap.to_const_prod_continuous_linear_map_fst

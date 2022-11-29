@@ -44,7 +44,8 @@ unsafe def delta_instance_name : pexpr → String
   | _ => "inst"
 #align tactic.delta_instance_name tactic.delta_instance_name
 
-/-- Tries to derive instances by unfolding the newly introduced type and applying type class resolution.
+/--
+Tries to derive instances by unfolding the newly introduced type and applying type class resolution.
 
 For example,
 ```lean

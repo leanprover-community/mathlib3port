@@ -72,7 +72,7 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
     tactic (List (tactic expr) × tactic (List expr)) :=
   -- We lock the tactic state so that any spurious goals generated during
     -- elaboration of pre-expressions are discarded
-    lock_tactic_state <|
+    lock_tactic_state
     do
     let-- `hs` are expressions specified explicitly,
       -- `hex` are exceptions (specified via `solve_by_elim [-h]`) referring to local hypotheses,
@@ -94,7 +94,9 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
           fun h => do
           let h ← h
           return <| expr.const_name h ∉ gex
-    let hs := if no_dflt then hs else ([`rfl, `trivial, `congr_fun, `congr_arg].map fun n => mk_const n) ++ hs
+    let hs :=
+      if no_dflt then hs
+      else ([`rfl, `trivial, `congr_fun, `congr_arg].map fun n => mk_const n) ++ hs
     let locals : tactic (List expr) :=
       if ¬no_dflt ∨ all_hyps then do
         let ctx ← local_context
@@ -143,7 +145,8 @@ initialize
 /-- A helper function for trace messages, prepending '....' depending on the current search depth.
 -/
 unsafe def solve_by_elim_trace (n : ℕ) (f : format) : tactic Unit :=
-  trace_if_enabled `solve_by_elim ((f!"[solve_by_elim {(List.repeat '.' (n + 1)).asString} ") ++ f ++ "]")
+  trace_if_enabled `solve_by_elim
+    ((f!"[solve_by_elim {(List.repeat '.' (n + 1)).asString} ") ++ f ++ "]")
 #align tactic.solve_by_elim.solve_by_elim_trace tactic.solve_by_elim.solve_by_elim_trace
 
 /-- A helper function to generate trace messages on successful applications. -/
@@ -169,8 +172,8 @@ unsafe def trace_hooks (n : ℕ) : tactic ((expr → tactic Unit) × tactic Unit
 
 /-- The internal implementation of `solve_by_elim`, with a limiting counter.
 -/
-unsafe def solve_by_elim_aux (opt : basic_opt) (original_goals : List expr) (lemmas : List (tactic expr))
-    (ctx : tactic (List expr)) : ℕ → tactic Unit
+unsafe def solve_by_elim_aux (opt : basic_opt) (original_goals : List expr)
+    (lemmas : List (tactic expr)) (ctx : tactic (List expr)) : ℕ → tactic Unit
   | n => do
     -- First, check that progress so far is `accept`able.
         lock_tactic_state
@@ -257,11 +260,12 @@ See also the simpler tactic `apply_rules`, which does not perform backtracking.
 unsafe def solve_by_elim (opt : opt := {  }) : tactic Unit := do
   tactic.fail_if_no_goals
   let (lemmas, ctx_lemmas) ← opt.get_lemma_thunks
-  (if opt then id else focus1) <| do
+  (if opt then id else focus1) do
       let gs ← get_goals
       solve_by_elim_aux opt gs lemmas ctx_lemmas opt <|>
           fail
-            ("`solve_by_elim` failed.\n" ++ "Try `solve_by_elim { max_depth := N }` for `N > " ++ toString opt ++
+            ("`solve_by_elim` failed.\n" ++ "Try `solve_by_elim { max_depth := N }` for `N > " ++
+                  toString opt ++
                 "`\n" ++
               "or use `set_option trace.solve_by_elim true` to view the search.")
 #align tactic.solve_by_elim tactic.solve_by_elim
@@ -285,8 +289,8 @@ Optional arguments:
   this tactic fails, the corresponding assumption will be rejected and
   the next one will be attempted.
 -/
-unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list)) (opt : apply_any_opt := {  })
-    (tac : tactic Unit := skip) : tactic Unit := do
+unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list))
+    (opt : apply_any_opt := {  }) (tac : tactic Unit := skip) : tactic Unit := do
   let lemmas ←
     match lemmas with
       | none => local_context
@@ -295,7 +299,8 @@ unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list)) (opt :
 #align tactic.interactive.apply_assumption tactic.interactive.apply_assumption
 
 add_tactic_doc
-  { Name := "apply_assumption", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_assumption],
+  { Name := "apply_assumption", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.apply_assumption],
     tags := ["context management", "lemma application"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -336,15 +341,17 @@ optional arguments passed via a configuration argument as `solve_by_elim { ... }
     (by testing for the absence of metavariables, and then the filtering condition).
 -/
 unsafe def solve_by_elim (all_goals : parse <| parser.optional (tk "*")) (no_dflt : parse only_flag)
-    (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (opt : solve_by_elim.opt := {  }) : tactic Unit :=
-  do
+    (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
+    (opt : solve_by_elim.opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names
-  tactic.solve_by_elim { opt with backtrack_all_goals := all_goals ∨ opt, lemma_thunks := some lemma_thunks, ctx_thunk }
+  tactic.solve_by_elim
+      { opt with backtrack_all_goals := all_goals ∨ opt, lemma_thunks := some lemma_thunks,
+        ctx_thunk }
 #align tactic.interactive.solve_by_elim tactic.interactive.solve_by_elim
 
 add_tactic_doc
-  { Name := "solve_by_elim", category := DocCategory.tactic, declNames := [`tactic.interactive.solve_by_elim],
-    tags := ["search"] }
+  { Name := "solve_by_elim", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.solve_by_elim], tags := ["search"] }
 
 end Interactive
 

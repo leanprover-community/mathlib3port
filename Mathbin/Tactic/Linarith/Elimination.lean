@@ -178,8 +178,8 @@ The history is the singleton set `{n}`.
 No variables have been eliminated (effectively or implicitly).
 -/
 unsafe def pcomp.assump (c : Comp) (n : ℕ) : pcomp :=
-  { c, src := CompSource.assump n, history := mk_rb_set.insert n, effective := mk_rb_set, implicit := mk_rb_set,
-    vars := rb_set.of_list c.vars }
+  { c, src := CompSource.assump n, history := mk_rb_set.insert n, effective := mk_rb_set,
+    implicit := mk_rb_set, vars := rb_set.of_list c.vars }
 #align linarith.pcomp.assump linarith.pcomp.assump
 
 unsafe instance pcomp.to_format : has_to_format pcomp :=
@@ -287,19 +287,21 @@ unsafe def update (max_var : ℕ) (comps : rb_set pcomp) : linarith_monad Unit :
 
 Returns `(pos, neg, not_present)`.
 -/
-unsafe def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) : rb_set pcomp × rb_set pcomp × rb_set pcomp :=
+unsafe def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) :
+    rb_set pcomp × rb_set pcomp × rb_set pcomp :=
   (comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩) fun pc ⟨Pos, neg, not_present⟩ =>
     let n := pc.c.coeffOf a
     if n > 0 then ⟨Pos.insert pc, neg, not_present⟩
     else if n < 0 then ⟨Pos, neg.insert pc, not_present⟩ else ⟨Pos, neg, not_present.insert pc⟩
 #align linarith.split_set_by_var_sign linarith.split_set_by_var_sign
 
-/-- `monad.elim_var a` performs one round of Fourier-Motzkin elimination, eliminating the variable `a`
+/--
+`monad.elim_var a` performs one round of Fourier-Motzkin elimination, eliminating the variable `a`
 from the `linarith` state.
 -/
 unsafe def monad.elim_var (a : ℕ) : linarith_monad Unit := do
   let vs ← get_max_var
-  when (a ≤ vs) <| do
+  (when (a ≤ vs)) do
       let ⟨Pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps
       let cs' := Pos not_present fun p s => s (elim_with_set a p neg)
       update (vs - 1) cs'

@@ -35,17 +35,19 @@ class HasFiniteProducts : Prop where
 #align category_theory.limits.has_finite_products CategoryTheory.Limits.HasFiniteProducts
 
 /-- If `C` has finite limits then it has finite products. -/
-instance (priority := 10) has_finite_products_of_has_finite_limits [HasFiniteLimits C] : HasFiniteProducts C :=
+instance (priority := 10) has_finite_products_of_has_finite_limits [HasFiniteLimits C] :
+    HasFiniteProducts C :=
   ⟨fun n => inferInstance⟩
 #align
   category_theory.limits.has_finite_products_of_has_finite_limits CategoryTheory.Limits.has_finite_products_of_has_finite_limits
 
-instance has_limits_of_shape_discrete [HasFiniteProducts C] (ι : Type w) [Finite ι] : HasLimitsOfShape (Discrete ι) C :=
-  by
+instance has_limits_of_shape_discrete [HasFiniteProducts C] (ι : Type w) [Finite ι] :
+    HasLimitsOfShape (Discrete ι) C := by
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_products.out C n
   exact has_limits_of_shape_of_equivalence (discrete.equivalence e.symm)
-#align category_theory.limits.has_limits_of_shape_discrete CategoryTheory.Limits.has_limits_of_shape_discrete
+#align
+  category_theory.limits.has_limits_of_shape_discrete CategoryTheory.Limits.has_limits_of_shape_discrete
 
 /-- We can now write this for powers. -/
 noncomputable example [HasFiniteProducts C] (X : C) : C :=
@@ -76,10 +78,12 @@ instance has_colimits_of_shape_discrete [HasFiniteCoproducts C] (ι : Type w) [F
   rcases Finite.exists_equiv_fin ι with ⟨n, ⟨e⟩⟩
   haveI := has_finite_coproducts.out C n
   exact has_colimits_of_shape_of_equivalence (discrete.equivalence e.symm)
-#align category_theory.limits.has_colimits_of_shape_discrete CategoryTheory.Limits.has_colimits_of_shape_discrete
+#align
+  category_theory.limits.has_colimits_of_shape_discrete CategoryTheory.Limits.has_colimits_of_shape_discrete
 
 /-- If `C` has finite colimits then it has finite coproducts. -/
-instance (priority := 10) has_finite_coproducts_of_has_finite_colimits [HasFiniteColimits C] : HasFiniteCoproducts C :=
+instance (priority := 10) has_finite_coproducts_of_has_finite_colimits [HasFiniteColimits C] :
+    HasFiniteCoproducts C :=
   ⟨fun J => by infer_instance⟩
 #align
   category_theory.limits.has_finite_coproducts_of_has_finite_colimits CategoryTheory.Limits.has_finite_coproducts_of_has_finite_colimits

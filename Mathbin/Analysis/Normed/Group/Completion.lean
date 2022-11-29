@@ -26,7 +26,8 @@ namespace Completion
 
 variable (E : Type _)
 
-instance [UniformSpace E] [HasNorm E] : HasNorm (Completion E) where norm := Completion.extension HasNorm.norm
+instance [UniformSpace E] [HasNorm E] :
+    HasNorm (Completion E) where norm := Completion.extension HasNorm.norm
 
 @[simp]
 theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)‖ = ‖x‖ :=

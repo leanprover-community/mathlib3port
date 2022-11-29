@@ -23,7 +23,8 @@ namespace Native
 
 namespace RbSet
 
-unsafe instance {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] : Inhabited (rb_set key) :=
+unsafe instance {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] :
+    Inhabited (rb_set key) :=
   ⟨mk_rb_set⟩
 
 /-- `filter s P` returns the subset of elements of `s` satisfying `P`. -/
@@ -57,7 +58,8 @@ unsafe def of_list_core {key} (base : rb_set key) : List key → rb_map key Unit
 /-- `of_list l` transforms a list `l : list key` into an `rb_set`,
 inferring an order on the type `key`.
 -/
-unsafe def of_list {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] : List key → rb_set key :=
+unsafe def of_list {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] :
+    List key → rb_set key :=
   of_list_core mk_rb_set
 #align native.rb_set.of_list native.rb_set.of_list
 
@@ -82,7 +84,8 @@ end RbSet
 
 namespace RbMap
 
-unsafe instance {key data : Type} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] : Inhabited (rb_map key data) :=
+unsafe instance {key data : Type} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] :
+    Inhabited (rb_map key data) :=
   ⟨mk_rb_map⟩
 
 /-- `find_def default m k` returns the value corresponding to `k` in `m`, if it exists.
@@ -104,7 +107,8 @@ unsafe def zfind {key value} [Zero value] (m : rb_map key value) (k : key) : val
 #align native.rb_map.zfind native.rb_map.zfind
 
 /-- Returns the pointwise sum of `m1` and `m2`, treating nonexistent values as 0. -/
-unsafe def add {key value} [Add value] [Zero value] [DecidableEq value] (m1 m2 : rb_map key value) : rb_map key value :=
+unsafe def add {key value} [Add value] [Zero value] [DecidableEq value] (m1 m2 : rb_map key value) :
+    rb_map key value :=
   m1.fold m2 fun n v m =>
     let nv := v + m2.zfind n
     if nv = 0 then m.erase n else m.insert n nv
@@ -115,20 +119,20 @@ variable {m : Type → Type _} [Monad m]
 open Function
 
 /-- `mfilter P s` filters `s` by the monadic predicate `P` on keys and values. -/
-unsafe def mfilter {key val} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] (P : key → val → m Bool)
-    (s : rb_map key val) : m (rb_map.{0, 0} key val) :=
+unsafe def mfilter {key val} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
+    (P : key → val → m Bool) (s : rb_map key val) : m (rb_map.{0, 0} key val) :=
   rb_map.of_list <$> s.toList.mfilter (uncurry P)
 #align native.rb_map.mfilter native.rb_map.mfilter
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
-unsafe def mmap {key val val'} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] (f : val → m val')
-    (s : rb_map key val) : m (rb_map.{0, 0} key val') :=
+unsafe def mmap {key val val'} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
+    (f : val → m val') (s : rb_map key val) : m (rb_map.{0, 0} key val') :=
   rb_map.of_list <$> s.toList.mmap fun ⟨a, b⟩ => Prod.mk a <$> f b
 #align native.rb_map.mmap native.rb_map.mmap
 
 /-- `scale b m` multiplies every value in `m` by `b`. -/
-unsafe def scale {key value} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] [Mul value] (b : value)
-    (m : rb_map key value) : rb_map key value :=
+unsafe def scale {key value} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] [Mul value]
+    (b : value) (m : rb_map key value) : rb_map key value :=
   m.map ((· * ·) b)
 #align native.rb_map.scale native.rb_map.scale
 
@@ -141,7 +145,8 @@ variable {key : Type} {data : Type} [has_to_tactic_format key] [has_to_tactic_fo
 private unsafe def pp_key_data (k : key) (d : data) (first : Bool) : tactic format := do
   let fk ← tactic.pp k
   let fd ← tactic.pp d
-  return <| (if first then to_fmt "" else to_fmt "," ++ line) ++ fk ++ space ++ to_fmt "←" ++ space ++ fd
+  return <|
+      (if first then to_fmt "" else to_fmt "," ++ line) ++ fk ++ space ++ to_fmt "←" ++ space ++ fd
 #align native.rb_map.pp_key_data native.rb_map.pp_key_data
 
 unsafe instance : has_to_tactic_format (rb_map key data) :=
@@ -167,8 +172,8 @@ unsafe instance (key : Type) [LT key] [DecidableRel ((· < ·) : key → key →
   ⟨rb_lmap.mk _ _⟩
 
 /-- Construct a rb_lmap from a list of key-data pairs -/
-protected unsafe def of_list {key : Type} {data : Type} [LT key] [DecidableRel ((· < ·) : key → key → Prop)] :
-    List (key × data) → rb_lmap key data
+protected unsafe def of_list {key : Type} {data : Type} [LT key]
+    [DecidableRel ((· < ·) : key → key → Prop)] : List (key × data) → rb_lmap key data
   | [] => rb_lmap.mk key data
   | (k, v) :: ls => (of_list ls).insert k v
 #align native.rb_lmap.of_list native.rb_lmap.of_list

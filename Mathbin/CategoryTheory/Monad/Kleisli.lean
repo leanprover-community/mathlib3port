@@ -127,7 +127,8 @@ instance Cokleisli.category : Category (Cokleisli U) where
   id_comp' X Y f := by rw [U.right_counit_assoc]
   assoc' W X Y Z f g h := by
     unfold_projs
-    simp only [functor.map_comp, ← category.assoc, U.δ.naturality_assoc, functor.comp_map, U.coassoc]
+    simp only [functor.map_comp, ← category.assoc, U.δ.naturality_assoc, functor.comp_map,
+      U.coassoc]
 #align category_theory.cokleisli.cokleisli.category CategoryTheory.Cokleisli.Cokleisli.category
 
 namespace Adjunction
@@ -140,7 +141,8 @@ def toCokleisli : C ⥤ Cokleisli U where
   map_comp' X Y Z f g := by
     unfold_projs
     simp [← U.ε.naturality g]
-#align category_theory.cokleisli.adjunction.to_cokleisli CategoryTheory.Cokleisli.Adjunction.toCokleisli
+#align
+  category_theory.cokleisli.adjunction.to_cokleisli CategoryTheory.Cokleisli.Adjunction.toCokleisli
 
 /-- The left adjoint of the adjunction which induces the comonad `(U, ε_ U, δ_ U)`. -/
 @[simps]
@@ -154,17 +156,15 @@ def fromCokleisli : Cokleisli U ⥤ C where
     simp only [functor.map_comp, ← category.assoc]
     rw [comonad.coassoc]
     simp only [category.assoc, nat_trans.naturality, functor.comp_map]
-#align category_theory.cokleisli.adjunction.from_cokleisli CategoryTheory.Cokleisli.Adjunction.fromCokleisli
+#align
+  category_theory.cokleisli.adjunction.from_cokleisli CategoryTheory.Cokleisli.Adjunction.fromCokleisli
 
 /-- The co-Kleisli adjunction which gives rise to the monad `(U, ε_ U, δ_ U)`. -/
 def adj : fromCokleisli U ⊣ toCokleisli U :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y => Equiv.refl (U.obj X ⟶ Y),
       hom_equiv_naturality_right' := fun X Y Z f g => by
-        unfold_projs
-        dsimp
-        erw [← category.assoc (U.map f), U.ε.naturality]
-        dsimp
+        unfold_projs; dsimp; erw [← category.assoc (U.map f), U.ε.naturality]; dsimp
         simp only [← category.assoc, comonad.left_counit, category.id_comp] }
 #align category_theory.cokleisli.adjunction.adj CategoryTheory.Cokleisli.Adjunction.adj
 

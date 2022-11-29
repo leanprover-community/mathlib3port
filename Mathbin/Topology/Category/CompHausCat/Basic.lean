@@ -87,7 +87,8 @@ theorem is_closed_map {X Y : CompHausCat.{u}} (f : X ⟶ Y) : IsClosedMap f := f
 #align CompHaus.is_closed_map CompHausCat.is_closed_map
 
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
-theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : IsIso f := by
+theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
+    IsIso f := by
   let E := Equiv.ofBijective _ bij
   have hE : Continuous E.symm := by
     rw [continuous_iff_is_closed]
@@ -104,7 +105,8 @@ theorem is_iso_of_bijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Functio
 #align CompHaus.is_iso_of_bijective CompHausCat.is_iso_of_bijective
 
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
-noncomputable def isoOfBijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : X ≅ Y :=
+noncomputable def isoOfBijective {X Y : CompHausCat.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
+    X ≅ Y :=
   letI := is_iso_of_bijective _ bij
   as_iso f
 #align CompHaus.iso_of_bijective CompHausCat.isoOfBijective
@@ -134,8 +136,10 @@ Hausdorff spaces in topological spaces.
 -/
 noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHausCat.{u}) :
     (stoneCechObj X ⟶ Y) ≃ (X ⟶ compHausToTop.obj Y) where
-  toFun f := { toFun := f ∘ stoneCechUnit, continuous_to_fun := f.2.comp (@continuous_stone_cech_unit X _) }
-  invFun f := { toFun := stoneCechExtend f.2, continuous_to_fun := continuous_stone_cech_extend f.2 }
+  toFun f :=
+    { toFun := f ∘ stoneCechUnit, continuous_to_fun := f.2.comp (@continuous_stone_cech_unit X _) }
+  invFun f :=
+    { toFun := stoneCechExtend f.2, continuous_to_fun := continuous_stone_cech_extend f.2 }
   left_inv := by
     rintro ⟨f : StoneCech X ⟶ Y, hf : Continuous f⟩
     ext (x : StoneCech X)
@@ -163,7 +167,8 @@ theorem Top_to_CompHaus_obj (X : TopCat) : ↥(topToCompHaus.obj X) = StoneCech 
 /-- The category of compact Hausdorff spaces is reflective in the category of topological spaces.
 -/
 noncomputable instance compHausToTop.reflective :
-    Reflective compHausToTop where toIsRightAdjoint := ⟨topToCompHaus, Adjunction.adjunctionOfEquivLeft _ _⟩
+    Reflective
+      compHausToTop where toIsRightAdjoint := ⟨topToCompHaus, Adjunction.adjunctionOfEquivLeft _ _⟩
 #align CompHaus_to_Top.reflective compHausToTop.reflective
 
 noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop :=
@@ -209,7 +214,8 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
         · exact continuous_apply j
           ,
       isHausdorff :=
-        show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from inferInstance }
+        show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from
+          inferInstance }
   π :=
     { app := fun j => (TopCat.limitCone (F ⋙ compHausToTop)).π.app j,
       naturality' := by
@@ -220,7 +226,8 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
 #align CompHaus.limit_cone CompHausCat.limitCone
 
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
-def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) : Limits.IsLimit (limitCone F) where
+def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHausCat.{max v u}) :
+    Limits.IsLimit (limitCone F) where
   lift S := (TopCat.limitConeIsLimit (F ⋙ compHausToTop)).lift (compHausToTop.mapCone S)
   uniq' S m h := (TopCat.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
 #align CompHaus.limit_cone_is_limit CompHausCat.limitConeIsLimit
@@ -242,13 +249,16 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
     haveI : CompactSpace (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
     haveI : T2Space (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
     let Z := of (ULift.{u} <| Set.icc (0 : ℝ) 1)
-    let g : Y ⟶ Z := ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩, continuous_ulift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
+    let g : Y ⟶ Z :=
+      ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩,
+        continuous_ulift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩
     have H : h = g := by
       rw [← cancel_epi f]
       ext x
       dsimp
-      simp only [comp_apply, ContinuousMap.coe_mk, Subtype.coe_mk, hφ0 (Set.mem_range_self x), Pi.zero_apply]
+      simp only [comp_apply, ContinuousMap.coe_mk, Subtype.coe_mk, hφ0 (Set.mem_range_self x),
+        Pi.zero_apply]
     apply_fun fun e => (e y).down  at H
     dsimp at H
     simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H

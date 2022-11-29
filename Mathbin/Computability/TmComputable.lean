@@ -101,10 +101,7 @@ def initList (tm : FinTm2) (s : List (tm.Γ tm.k₀)) : tm.Cfg where
   l := Option.some tm.main
   var := tm.initialState
   stk k :=
-    @dite (List (tm.Γ k)) (k = tm.k₀) (tm.kDecidableEq k tm.k₀)
-      (fun h => by
-        rw [h]
-        exact s)
+    @dite (List (tm.Γ k)) (k = tm.k₀) (tm.kDecidableEq k tm.k₀) (fun h => by rw [h]; exact s)
       fun _ => []
 #align turing.init_list Turing.initList
 
@@ -113,10 +110,7 @@ def haltList (tm : FinTm2) (s : List (tm.Γ tm.k₁)) : tm.Cfg where
   l := Option.none
   var := tm.initialState
   stk k :=
-    @dite (List (tm.Γ k)) (k = tm.k₁) (tm.kDecidableEq k tm.k₁)
-      (fun h => by
-        rw [h]
-        exact s)
+    @dite (List (tm.Γ k)) (k = tm.k₁) (tm.kDecidableEq k tm.k₁) (fun h => by rw [h]; exact s)
       fun _ => []
 #align turing.halt_list Turing.haltList
 
@@ -132,7 +126,8 @@ structure EvalsTo {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) 
 -- natural, so there is a trade-off that needs to be made here. A notation can get around this.
 /-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
 evaluated on `a`, remembering the number of steps it takes. -/
-structure EvalsToInTime {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) (m : ℕ) extends EvalsTo f a b where
+structure EvalsToInTime {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) (m : ℕ) extends
+  EvalsTo f a b where
   steps_le_m : steps ≤ m
 #align turing.evals_to_in_time Turing.EvalsToInTime
 
@@ -144,8 +139,8 @@ def EvalsTo.refl {σ : Type _} (f : σ → Option σ) (a : σ) : EvalsTo f a a :
 
 /-- Transitivity of `evals_to` in the sum of the numbers of steps. -/
 @[trans]
-def EvalsTo.trans {σ : Type _} (f : σ → Option σ) (a : σ) (b : σ) (c : Option σ) (h₁ : EvalsTo f a b)
-    (h₂ : EvalsTo f b c) : EvalsTo f a c :=
+def EvalsTo.trans {σ : Type _} (f : σ → Option σ) (a : σ) (b : σ) (c : Option σ)
+    (h₁ : EvalsTo f a b) (h₂ : EvalsTo f b c) : EvalsTo f a c :=
   ⟨h₂.steps + h₁.steps, by rw [Function.iterate_add_apply, h₁.evals_in_steps, h₂.evals_in_steps]⟩
 #align turing.evals_to.trans Turing.EvalsTo.trans
 
@@ -157,8 +152,9 @@ def EvalsToInTime.refl {σ : Type _} (f : σ → Option σ) (a : σ) : EvalsToIn
 
 /-- Transitivity of `evals_to_in_time` in the sum of the numbers of steps. -/
 @[trans]
-def EvalsToInTime.trans {σ : Type _} (f : σ → Option σ) (m₁ : ℕ) (m₂ : ℕ) (a : σ) (b : σ) (c : Option σ)
-    (h₁ : EvalsToInTime f a b m₁) (h₂ : EvalsToInTime f b c m₂) : EvalsToInTime f a c (m₂ + m₁) :=
+def EvalsToInTime.trans {σ : Type _} (f : σ → Option σ) (m₁ : ℕ) (m₂ : ℕ) (a : σ) (b : σ)
+    (c : Option σ) (h₁ : EvalsToInTime f a b m₁) (h₂ : EvalsToInTime f b c m₂) :
+    EvalsToInTime f a c (m₂ + m₁) :=
   ⟨EvalsTo.trans f a b c h₁.toEvalsTo h₂.toEvalsTo, add_le_add h₂.steps_le_m h₁.steps_le_m⟩
 #align turing.evals_to_in_time.trans Turing.EvalsToInTime.trans
 
@@ -168,13 +164,15 @@ def Tm2Outputs (tm : FinTm2) (l : List (tm.Γ tm.k₀)) (l' : Option (List (tm.�
 #align turing.tm2_outputs Turing.Tm2Outputs
 
 /-- A proof of tm outputting l' when given l in at most m steps. -/
-def Tm2OutputsInTime (tm : FinTm2) (l : List (tm.Γ tm.k₀)) (l' : Option (List (tm.Γ tm.k₁))) (m : ℕ) :=
+def Tm2OutputsInTime (tm : FinTm2) (l : List (tm.Γ tm.k₀)) (l' : Option (List (tm.Γ tm.k₁)))
+    (m : ℕ) :=
   EvalsToInTime tm.step (initList tm l) ((Option.map (haltList tm)) l') m
 #align turing.tm2_outputs_in_time Turing.Tm2OutputsInTime
 
 /-- The forgetful map, forgetting the upper bound on the number of steps. -/
-def Tm2OutputsInTime.toTm2Outputs {tm : FinTm2} {l : List (tm.Γ tm.k₀)} {l' : Option (List (tm.Γ tm.k₁))} {m : ℕ}
-    (h : Tm2OutputsInTime tm l l' m) : Tm2Outputs tm l l' :=
+def Tm2OutputsInTime.toTm2Outputs {tm : FinTm2} {l : List (tm.Γ tm.k₀)}
+    {l' : Option (List (tm.Γ tm.k₁))} {m : ℕ} (h : Tm2OutputsInTime tm l l' m) :
+    Tm2Outputs tm l l' :=
   h.toEvalsTo
 #align turing.tm2_outputs_in_time.to_tm2_outputs Turing.Tm2OutputsInTime.toTm2Outputs
 
@@ -195,37 +193,41 @@ structure Tm2Computable {α β : Type} (ea : FinEncoding α) (eb : FinEncoding �
 #align turing.tm2_computable Turing.Tm2Computable
 
 /-- A Turing machine + a time function + a proof it outputs f in at most time(len(input)) steps. -/
-structure Tm2ComputableInTime {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β) (f : α → β) extends
-  Tm2ComputableAux ea.Γ eb.Γ where
+structure Tm2ComputableInTime {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β)
+  (f : α → β) extends Tm2ComputableAux ea.Γ eb.Γ where
   time : ℕ → ℕ
   outputsFun :
     ∀ a,
       Tm2OutputsInTime tm (List.map input_alphabet.invFun (ea.encode a))
-        (Option.some ((List.map output_alphabet.invFun) (eb.encode (f a)))) (time (ea.encode a).length)
+        (Option.some ((List.map output_alphabet.invFun) (eb.encode (f a))))
+        (time (ea.encode a).length)
 #align turing.tm2_computable_in_time Turing.Tm2ComputableInTime
 
 /-- A Turing machine + a polynomial time function + a proof it outputs f in at most time(len(input))
 steps. -/
-structure Tm2ComputableInPolyTime {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β) (f : α → β) extends
-  Tm2ComputableAux ea.Γ eb.Γ where
+structure Tm2ComputableInPolyTime {α β : Type} (ea : FinEncoding α) (eb : FinEncoding β)
+  (f : α → β) extends Tm2ComputableAux ea.Γ eb.Γ where
   time : Polynomial ℕ
   outputsFun :
     ∀ a,
       Tm2OutputsInTime tm (List.map input_alphabet.invFun (ea.encode a))
-        (Option.some ((List.map output_alphabet.invFun) (eb.encode (f a)))) (time.eval (ea.encode a).length)
+        (Option.some ((List.map output_alphabet.invFun) (eb.encode (f a))))
+        (time.eval (ea.encode a).length)
 #align turing.tm2_computable_in_poly_time Turing.Tm2ComputableInPolyTime
 
 /-- A forgetful map, forgetting the time bound on the number of steps. -/
-def Tm2ComputableInTime.toTm2Computable {α β : Type} {ea : FinEncoding α} {eb : FinEncoding β} {f : α → β}
-    (h : Tm2ComputableInTime ea eb f) : Tm2Computable ea eb f :=
+def Tm2ComputableInTime.toTm2Computable {α β : Type} {ea : FinEncoding α} {eb : FinEncoding β}
+    {f : α → β} (h : Tm2ComputableInTime ea eb f) : Tm2Computable ea eb f :=
   ⟨h.toTm2ComputableAux, fun a => Tm2OutputsInTime.toTm2Outputs (h.outputsFun a)⟩
 #align turing.tm2_computable_in_time.to_tm2_computable Turing.Tm2ComputableInTime.toTm2Computable
 
 /-- A forgetful map, forgetting that the time function is polynomial. -/
-def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncoding α} {eb : FinEncoding β} {f : α → β}
-    (h : Tm2ComputableInPolyTime ea eb f) : Tm2ComputableInTime ea eb f :=
+def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncoding α}
+    {eb : FinEncoding β} {f : α → β} (h : Tm2ComputableInPolyTime ea eb f) :
+    Tm2ComputableInTime ea eb f :=
   ⟨h.toTm2ComputableAux, fun n => h.time.eval n, h.outputsFun⟩
-#align turing.tm2_computable_in_poly_time.to_tm2_computable_in_time Turing.Tm2ComputableInPolyTime.toTm2ComputableInTime
+#align
+  turing.tm2_computable_in_poly_time.to_tm2_computable_in_time Turing.Tm2ComputableInPolyTime.toTm2ComputableInTime
 
 open Turing.TM2Cat.Stmt
 
@@ -250,12 +252,14 @@ instance inhabitedFinTm2 : Inhabited FinTm2 :=
 noncomputable section
 
 /-- A proof that the identity map on α is computable in polytime. -/
-def idComputableInPolyTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInPolyTime α α ea ea id where
+def idComputableInPolyTime {α : Type} (ea : FinEncoding α) :
+    @Tm2ComputableInPolyTime α α ea ea id where
   tm := idComputer ea
   inputAlphabet := Equiv.cast rfl
   outputAlphabet := Equiv.cast rfl
   time := 1
-  outputsFun _ := { steps := 1, evals_in_steps := rfl, steps_le_m := by simp only [Polynomial.eval_one] }
+  outputsFun _ :=
+    { steps := 1, evals_in_steps := rfl, steps_le_m := by simp only [Polynomial.eval_one] }
 #align turing.id_computable_in_poly_time Turing.idComputableInPolyTime
 
 instance inhabitedTm2ComputableInPolyTime :
@@ -277,7 +281,8 @@ instance inhabitedTm2Outputs :
   ⟨Tm2OutputsInTime.toTm2Outputs Turing.inhabitedTm2OutputsInTime.default⟩
 #align turing.inhabited_tm2_outputs Turing.inhabitedTm2Outputs
 
-instance inhabitedEvalsToInTime : Inhabited (EvalsToInTime (fun _ : Unit => some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=
+instance inhabitedEvalsToInTime :
+    Inhabited (EvalsToInTime (fun _ : Unit => some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=
   ⟨EvalsToInTime.refl _ _⟩
 #align turing.inhabited_evals_to_in_time Turing.inhabitedEvalsToInTime
 
@@ -290,7 +295,8 @@ def idComputableInTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInTime 
   tm2_computable_in_poly_time.to_tm2_computable_in_time <| idComputableInPolyTime ea
 #align turing.id_computable_in_time Turing.idComputableInTime
 
-instance inhabitedTm2ComputableInTime : Inhabited (Tm2ComputableInTime finEncodingBoolBool finEncodingBoolBool id) :=
+instance inhabitedTm2ComputableInTime :
+    Inhabited (Tm2ComputableInTime finEncodingBoolBool finEncodingBoolBool id) :=
   ⟨idComputableInTime Computability.inhabitedFinEncoding.default⟩
 #align turing.inhabited_tm2_computable_in_time Turing.inhabitedTm2ComputableInTime
 
@@ -299,7 +305,8 @@ def idComputable {α : Type} (ea : FinEncoding α) : @Tm2Computable α α ea ea 
   tm2_computable_in_time.to_tm2_computable <| idComputableInTime ea
 #align turing.id_computable Turing.idComputable
 
-instance inhabitedTm2Computable : Inhabited (Tm2Computable finEncodingBoolBool finEncodingBoolBool id) :=
+instance inhabitedTm2Computable :
+    Inhabited (Tm2Computable finEncodingBoolBool finEncodingBoolBool id) :=
   ⟨idComputable Computability.inhabitedFinEncoding.default⟩
 #align turing.inhabited_tm2_computable Turing.inhabitedTm2Computable
 

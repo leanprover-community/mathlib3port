@@ -41,9 +41,11 @@ theorem mem_sections_length {L : List (List α)} {f} (h : f ∈ sections L) : le
   (mem_sections.1 h).length_eq
 #align list.mem_sections_length List.mem_sections_length
 
-theorem rel_sections {r : α → β → Prop} : (Forall₂ (Forall₂ r) ⇒ Forall₂ (Forall₂ r)) sections sections
+theorem rel_sections {r : α → β → Prop} :
+    (Forall₂ (Forall₂ r) ⇒ Forall₂ (Forall₂ r)) sections sections
   | _, _, forall₂.nil => Forall₂.cons Forall₂.nil Forall₂.nil
-  | _, _, forall₂.cons h₀ h₁ => rel_bind (rel_sections h₁) fun _ _ hl => rel_map (fun _ _ ha => Forall₂.cons ha hl) h₀
+  | _, _, forall₂.cons h₀ h₁ =>
+    rel_bind (rel_sections h₁) fun _ _ hl => rel_map (fun _ _ ha => Forall₂.cons ha hl) h₀
 #align list.rel_sections List.rel_sections
 
 end List

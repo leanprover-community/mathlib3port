@@ -31,22 +31,23 @@ theorem Inf_def {s : Set ℕ} (h : s.Nonempty) : inf s = @Nat.find (fun n => n �
   dif_pos _
 #align nat.Inf_def Nat.Inf_def
 
-theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a ∈ s, a ≤ n) : sup s = @Nat.find (fun n => ∀ a ∈ s, a ≤ n) _ h :=
+theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a ∈ s, a ≤ n) :
+    sup s = @Nat.find (fun n => ∀ a ∈ s, a ≤ n) _ h :=
   dif_pos _
 #align nat.Sup_def Nat.Sup_def
 
-theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup s = 0 :=
+theorem Set.Infinite.Nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup s = 0 :=
   dif_neg fun ⟨n, hn⟩ =>
     let ⟨k, hks, hk⟩ := h.exists_nat_lt n
     (hn k hks).not_lt hk
-#align nat._root_.set.infinite.nat.Sup_eq_zero nat._root_.set.infinite.nat.Sup_eq_zero
+#align set.infinite.nat.Sup_eq_zero Set.Infinite.Nat.Sup_eq_zero
 
 @[simp]
 theorem Inf_eq_zero {s : Set ℕ} : inf s = 0 ↔ 0 ∈ s ∨ s = ∅ := by
   cases eq_empty_or_nonempty s
   · subst h
-    simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, HasInf.inf, mem_empty_iff_false, exists_false, dif_neg,
-      not_false_iff]
+    simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, HasInf.inf, mem_empty_iff_false,
+      exists_false, dif_neg, not_false_iff]
     
   · have := ne_empty_iff_nonempty.mpr h
     simp only [this, or_false_iff, Nat.Inf_def, h, Nat.find_eq_zero]
@@ -61,7 +62,8 @@ theorem Inf_empty : inf ∅ = 0 := by
 #align nat.Inf_empty Nat.Inf_empty
 
 @[simp]
-theorem infi_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : infi f = 0 := by rw [infi_of_empty', Inf_empty]
+theorem infi_of_empty {ι : Sort _} [IsEmpty ι] (f : ι → ℕ) : infi f = 0 := by
+  rw [infi_of_empty', Inf_empty]
 #align nat.infi_of_empty Nat.infi_of_empty
 
 theorem Inf_mem {s : Set ℕ} (h : s.Nonempty) : inf s ∈ s := by
@@ -103,8 +105,8 @@ theorem eq_Ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.Nonempty)
   ext fun n => ⟨fun H => Nat.Inf_le H, fun H => hs' (inf s) n H (Inf_mem hs)⟩
 #align nat.eq_Ici_of_nonempty_of_upward_closed Nat.eq_Ici_of_nonempty_of_upward_closed
 
-theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) (k : ℕ) :
-    inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s := by
+theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s)
+    (k : ℕ) : inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s := by
   constructor
   · intro H
     rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs, H, mem_Ici, mem_Ici]
@@ -122,13 +124,16 @@ instance : Lattice ℕ :=
   LinearOrder.toLattice
 
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
-  { (inferInstance : OrderBot ℕ), (LinearOrder.toLattice : Lattice ℕ), (inferInstance : LinearOrder ℕ) with sup := sup,
-    inf := inf, le_cSup := fun s a hb ha => by rw [Sup_def hb] <;> revert a ha <;> exact @Nat.find_spec _ _ hb,
+  { (inferInstance : OrderBot ℕ), (LinearOrder.toLattice : Lattice ℕ),
+    (inferInstance : LinearOrder ℕ) with sup := sup, inf := inf,
+    le_cSup := fun s a hb ha => by rw [Sup_def hb] <;> revert a ha <;> exact @Nat.find_spec _ _ hb,
     cSup_le := fun s a hs ha => by rw [Sup_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha,
-    le_cInf := fun s a hs hb => by rw [Inf_def hs] <;> exact hb (@Nat.find_spec (fun n => n ∈ s) _ _),
+    le_cInf := fun s a hs hb => by
+      rw [Inf_def hs] <;> exact hb (@Nat.find_spec (fun n => n ∈ s) _ _),
     cInf_le := fun s a hb ha => by rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha,
     cSup_empty := by
-      simp only [Sup_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false, not_false_iff, exists_const]
+      simp only [Sup_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false,
+        not_false_iff, exists_const]
       apply bot_unique (Nat.find_min' _ _)
       trivial }
 
@@ -137,7 +142,8 @@ theorem Sup_mem {s : Set ℕ} (h₁ : s.Nonempty) (h₂ : BddAbove s) : sup s �
   h₁.cSup_mem ((finite_le_nat k).Subset hk)
 #align nat.Sup_mem Nat.Sup_mem
 
-theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ inf { m | p m }) : inf { m | p (m + n) } + n = inf { m | p m } := by
+theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ inf { m | p m }) :
+    inf { m | p (m + n) } + n = inf { m | p m } := by
   obtain h | ⟨m, hm⟩ := { m | p (m + n) }.eq_empty_or_nonempty
   · rw [h, Nat.Inf_empty, zero_add]
     obtain hnp | hnp := hn.eq_or_lt
@@ -156,14 +162,16 @@ theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ inf { m | p m }) : inf 
     
 #align nat.Inf_add Nat.Inf_add
 
-theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) : inf { m | p m } + n = inf { m | p (m - n) } := by
+theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) :
+    inf { m | p m } + n = inf { m | p (m - n) } := by
   convert Inf_add _
   · simp_rw [add_tsub_cancel_right]
     
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
-      le_of_not_lt fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
+      le_of_not_lt fun hbn =>
+        ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
   · dsimp
     rwa [add_tsub_cancel_right]
     

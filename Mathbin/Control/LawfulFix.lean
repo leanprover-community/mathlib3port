@@ -39,8 +39,8 @@ class LawfulFix (α : Type _) [OmegaCompletePartialOrder α] extends HasFix α w
   fix_eq : ∀ {f : α →o α}, Continuous f → HasFix.fix f = f (HasFix.fix f)
 #align lawful_fix LawfulFix
 
-theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α} (hf : Continuous' f) :
-    HasFix.fix f = f (HasFix.fix f) :=
+theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α}
+    (hf : Continuous' f) : HasFix.fix f = f (HasFix.fix f) :=
   LawfulFix.fix_eq (hf.to_bundled _)
 #align lawful_fix.fix_eq' LawfulFix.fix_eq'
 
@@ -53,20 +53,16 @@ namespace Fix
 variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 
 theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
-  induction i
-  dsimp [approx]
-  apply @bot_le _ _ _ (f ⊥)
-  intro
-  apply f.monotone
-  apply i_ih
+  induction i; dsimp [approx]; apply @bot_le _ _ _ (f ⊥)
+  intro ; apply f.monotone; apply i_ih
 #align part.fix.approx_mono' Part.fix.approx_mono'
 
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j := by
-  induction' j with j ih
+  induction' j with j ih;
   · cases hij
     exact le_rfl
     
-  cases hij
+  cases hij;
   · exact le_rfl
     
   exact le_trans (ih ‹_›) (approx_mono' f)
@@ -180,11 +176,8 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := 
   apply ωSup_le _ _ _
   simp only [fix.approx_chain, OrderHom.coe_fun_mk]
   intro i
-  induction i
-  dsimp [fix.approx]
-  apply bot_le
-  trans f X
-  apply f.monotone i_ih
+  induction i; dsimp [fix.approx]; apply bot_le
+  trans f X; apply f.monotone i_ih
   apply hX
 #align part.fix_le Part.fix_le
 
@@ -224,8 +217,7 @@ theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous
   | c => by
     ext ⟨⟩ : 1
     dsimp [OmegaCompletePartialOrder.ωSup]
-    erw [hc, chain.map_comp]
-    rfl
+    erw [hc, chain.map_comp]; rfl
 #align part.to_unit_cont Part.to_unit_cont
 
 instance : LawfulFix (Part α) :=
@@ -248,14 +240,16 @@ variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotoneCurry [∀ x y, Preorder <| γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b where
+def monotoneCurry [∀ x y, Preorder <| γ x y] :
+    (∀ x : Σa, β a, γ x.1 x.2) →o ∀ (a) (b : β a), γ a b where
   toFun := curry
   monotone' x y h a b := h ⟨a, b⟩
 #align pi.monotone_curry Pi.monotoneCurry
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotoneUncurry [∀ x y, Preorder <| γ x y] : (∀ (a) (b : β a), γ a b) →o ∀ x : Σa, β a, γ x.1 x.2 where
+def monotoneUncurry [∀ x y, Preorder <| γ x y] :
+    (∀ (a) (b : β a), γ a b) →o ∀ x : Σa, β a, γ x.1 x.2 where
   toFun := uncurry
   monotone' x y h a := h a.1 a.2
 #align pi.monotone_uncurry Pi.monotoneUncurry
@@ -293,7 +287,8 @@ variable {f : (∀ (x) (y : β x), γ x y) →o ∀ (x) (y : β x), γ x y}
 
 variable (hc : Continuous f)
 
-theorem uncurry_curry_continuous : continuous <| (monotoneUncurry α β γ).comp <| f.comp <| monotoneCurry α β γ :=
+theorem uncurry_curry_continuous :
+    continuous <| (monotoneUncurry α β γ).comp <| f.comp <| monotoneCurry α β γ :=
   continuous_comp _ _ (continuous_comp _ _ (continuous_curry _ _ _) hc) (continuous_uncurry _ _ _)
 #align pi.uncurry_curry_continuous Pi.uncurry_curry_continuous
 

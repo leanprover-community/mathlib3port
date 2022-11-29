@@ -44,7 +44,8 @@ namespace Subsemigroup
 theorem mem_supr_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ ·) S) {x : M} :
     (x ∈ ⨆ i, S i) ↔ ∃ i, x ∈ S i := by
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supr S i) hi⟩
-  suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by simpa only [closure_Union, closure_eq (S _)] using this
+  suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
+    simpa only [closure_Union, closure_eq (S _)] using this
   refine' fun hx => closure_induction hx (fun y hy => mem_Union.mp hy) _
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
@@ -91,7 +92,8 @@ theorem mem_supr_of_mem {S : ι → Subsemigroup M} (i : ι) : ∀ {x : M}, x �
 #align subsemigroup.mem_supr_of_mem Subsemigroup.mem_supr_of_mem
 
 @[to_additive]
-theorem mem_Sup_of_mem {S : Set (Subsemigroup M)} {s : Subsemigroup M} (hs : s ∈ S) : ∀ {x : M}, x ∈ s → x ∈ sup S :=
+theorem mem_Sup_of_mem {S : Set (Subsemigroup M)} {s : Subsemigroup M} (hs : s ∈ S) :
+    ∀ {x : M}, x ∈ s → x ∈ sup S :=
   show s ≤ sup S from le_Sup hs
 #align subsemigroup.mem_Sup_of_mem Subsemigroup.mem_Sup_of_mem
 
@@ -101,8 +103,8 @@ then it holds for all elements of the supremum of `S`. -/
 @[elab_as_elim,
   to_additive
       " An induction principle for elements of `⨆ i, S i`.\nIf `C` holds all elements of `S i` for all `i`, and is preserved under addition,\nthen it holds for all elements of the supremum of `S`. "]
-theorem supr_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i) (hp : ∀ (i), ∀ x ∈ S i, C x)
-    (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
+theorem supr_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
+    (hp : ∀ (i), ∀ x ∈ S i, C x) (hmul : ∀ x y, C x → C y → C (x * y)) : C x := by
   rw [supr_eq_closure] at hx
   refine' closure_induction hx (fun x hx => _) hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
@@ -113,7 +115,8 @@ theorem supr_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx 
 @[elab_as_elim, to_additive "A dependent version of `add_subsemigroup.supr_induction`. "]
 theorem supr_induction' (S : ι → Subsemigroup M) {C : ∀ x, (x ∈ ⨆ i, S i) → Prop}
     (hp : ∀ (i), ∀ x ∈ S i, C x (mem_supr_of_mem i ‹_›))
-    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M} (hx : x ∈ ⨆ i, S i) : C x hx := by
+    (hmul : ∀ x y hx hy, C x hx → C y hy → C (x * y) (mul_mem ‹_› ‹_›)) {x : M}
+    (hx : x ∈ ⨆ i, S i) : C x hx := by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine' supr_induction S hx (fun i x hx => _) fun x y => _
   · exact ⟨_, hp _ _ hx⟩

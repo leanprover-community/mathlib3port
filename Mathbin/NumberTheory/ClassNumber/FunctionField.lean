@@ -51,7 +51,8 @@ noncomputable def classNumber : ℕ :=
 #align function_field.class_number FunctionField.classNumber
 
 /-- The class number of a function field is `1` iff the ring of integers is a PID. -/
-theorem class_number_eq_one_iff : classNumber Fq F = 1 ↔ IsPrincipalIdealRing (ringOfIntegers Fq F) :=
+theorem class_number_eq_one_iff :
+    classNumber Fq F = 1 ↔ IsPrincipalIdealRing (ringOfIntegers Fq F) :=
   card_class_group_eq_one_iff
 #align function_field.class_number_eq_one_iff FunctionField.class_number_eq_one_iff
 

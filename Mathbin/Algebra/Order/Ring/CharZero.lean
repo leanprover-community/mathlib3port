@@ -14,7 +14,8 @@ import Mathbin.Algebra.Order.Ring.Defs
 variable {α : Type _}
 
 -- see Note [lower instance priority]
-instance (priority := 100) StrictOrderedSemiring.to_char_zero [StrictOrderedSemiring α] : CharZero α :=
+instance (priority := 100) StrictOrderedSemiring.to_char_zero [StrictOrderedSemiring α] :
+    CharZero α :=
   ⟨StrictMono.injective <|
       strictMono_nat_of_lt_succ fun n => by
         rw [Nat.cast_succ]

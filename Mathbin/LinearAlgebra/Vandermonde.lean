@@ -55,7 +55,8 @@ theorem vandermonde_cons {n : ℕ} (v0 : R) (v : Fin n → R) :
 
 theorem vandermonde_succ {n : ℕ} (v : Fin n.succ → R) :
     vandermonde v =
-      Fin.cons (fun j => v 0 ^ (j : ℕ)) fun i => Fin.cons 1 fun j => v i.succ * vandermonde (Fin.tail v) i j :=
+      Fin.cons (fun j => v 0 ^ (j : ℕ)) fun i =>
+        Fin.cons 1 fun j => v i.succ * vandermonde (Fin.tail v) i j :=
   by
   conv_lhs => rw [← Fin.cons_self_tail v, vandermonde_cons]
   simp only [Fin.tail]
@@ -71,7 +72,8 @@ theorem vandermonde_transpose_mul_vandermonde {n : ℕ} (v : Fin n → R) (i j) 
   simp only [vandermonde_apply, Matrix.mul_apply, Matrix.transpose_apply, pow_add]
 #align matrix.vandermonde_transpose_mul_vandermonde Matrix.vandermonde_transpose_mul_vandermonde
 
-theorem det_vandermonde {n : ℕ} (v : Fin n → R) : det (vandermonde v) = ∏ i : Fin n, ∏ j in ioi i, v j - v i := by
+theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
+    det (vandermonde v) = ∏ i : Fin n, ∏ j in ioi i, v j - v i := by
   unfold vandermonde
   induction' n with n ih
   · exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
@@ -85,16 +87,18 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) : det (vandermonde v) = ∏ 
     _ =
         det
           (of fun i j : Fin n =>
-            Matrix.vecCons (v 0 ^ (j.succ : ℕ)) (fun i : Fin n => v (Fin.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ))
+            Matrix.vecCons (v 0 ^ (j.succ : ℕ))
+              (fun i : Fin n => v (Fin.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ))
               (Fin.succAbove 0 i)) :=
       by
-      simp_rw [det_succ_column_zero, Fin.sum_univ_succ, of_apply, Matrix.cons_val_zero, submatrix, of_apply,
-        Matrix.cons_val_succ, Fin.coe_zero, pow_zero, one_mul, sub_self, mul_zero, zero_mul, Finset.sum_const_zero,
-        add_zero]
+      simp_rw [det_succ_column_zero, Fin.sum_univ_succ, of_apply, Matrix.cons_val_zero, submatrix,
+        of_apply, Matrix.cons_val_succ, Fin.coe_zero, pow_zero, one_mul, sub_self, mul_zero,
+        zero_mul, Finset.sum_const_zero, add_zero]
     _ =
         det
           (of fun i j : Fin n =>
-              (v (Fin.succ i) - v 0) * ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
+              (v (Fin.succ i) - v 0) *
+                ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :
             Matrix _ _ R) :=
       by
       congr
@@ -103,9 +107,11 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) : det (vandermonde v) = ∏ 
       exact (geom_sum₂_mul (v i.succ) (v 0) (j + 1 : ℕ)).symm
     _ =
         (∏ i : Fin n, v (Fin.succ i) - v 0) *
-          det fun i j : Fin n => ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
+          det fun i j : Fin n =>
+            ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
       det_mul_column (fun i => v (Fin.succ i) - v 0) _
-    _ = (∏ i : Fin n, v (Fin.succ i) - v 0) * det fun i j : Fin n => v (Fin.succ i) ^ (j : ℕ) := congr_arg ((· * ·) _) _
+    _ = (∏ i : Fin n, v (Fin.succ i) - v 0) * det fun i j : Fin n => v (Fin.succ i) ^ (j : ℕ) :=
+      congr_arg ((· * ·) _) _
     _ = ∏ i : Fin n.succ, ∏ j in Ioi i, v j - v i := by
       simp_rw [ih (v ∘ Fin.succ), Fin.prod_univ_succ, Fin.prod_Ioi_zero, Fin.prod_Ioi_succ]
     
@@ -153,22 +159,28 @@ theorem det_vandermonde_ne_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
   simpa only [det_vandermonde_eq_zero_iff, Ne.def, not_exists, not_and, not_not]
 #align matrix.det_vandermonde_ne_zero_iff Matrix.det_vandermonde_ne_zero_iff
 
-theorem eq_zero_of_forall_index_sum_pow_mul_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ} {f v : Fin n → R}
-    (hf : Function.Injective f) (hfv : ∀ j, (∑ i : Fin n, f j ^ (i : ℕ) * v i) = 0) : v = 0 :=
+theorem eq_zero_of_forall_index_sum_pow_mul_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
+    {f v : Fin n → R} (hf : Function.Injective f)
+    (hfv : ∀ j, (∑ i : Fin n, f j ^ (i : ℕ) * v i) = 0) : v = 0 :=
   eq_zero_of_mul_vec_eq_zero (det_vandermonde_ne_zero_iff.mpr hf) (funext hfv)
-#align matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero Matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero
+#align
+  matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero Matrix.eq_zero_of_forall_index_sum_pow_mul_eq_zero
 
-theorem eq_zero_of_forall_index_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ} {f v : Fin n → R}
-    (hf : Function.Injective f) (hfv : ∀ j, (∑ i, v i * f j ^ (i : ℕ)) = 0) : v = 0 := by
+theorem eq_zero_of_forall_index_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
+    {f v : Fin n → R} (hf : Function.Injective f) (hfv : ∀ j, (∑ i, v i * f j ^ (i : ℕ)) = 0) :
+    v = 0 := by
   apply eq_zero_of_forall_index_sum_pow_mul_eq_zero hf
   simp_rw [mul_comm]
   exact hfv
-#align matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero
+#align
+  matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_index_sum_mul_pow_eq_zero
 
-theorem eq_zero_of_forall_pow_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ} {f v : Fin n → R}
-    (hf : Function.Injective f) (hfv : ∀ i : Fin n, (∑ j : Fin n, v j * f j ^ (i : ℕ)) = 0) : v = 0 :=
+theorem eq_zero_of_forall_pow_sum_mul_pow_eq_zero {R : Type _} [CommRing R] [IsDomain R] {n : ℕ}
+    {f v : Fin n → R} (hf : Function.Injective f)
+    (hfv : ∀ i : Fin n, (∑ j : Fin n, v j * f j ^ (i : ℕ)) = 0) : v = 0 :=
   eq_zero_of_vec_mul_eq_zero (det_vandermonde_ne_zero_iff.mpr hf) (funext hfv)
-#align matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero
+#align
+  matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero
 
 end Matrix
 

@@ -31,7 +31,8 @@ variable {ι : Type _} {c : ComplexShape ι}
 
 /-- A complex of functors gives a functor to complexes. -/
 @[simps obj map]
-def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) : T ⥤ HomologicalComplex V c where
+def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
+    T ⥤ HomologicalComplex V c where
   obj t :=
     { x := fun i => (C.x i).obj t, d := fun i j => (C.d i j).app t,
       d_comp_d' := fun i j k hij hjk => by
@@ -60,7 +61,8 @@ def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
     HomologicalComplex (T ⥤ V) c ⥤ T ⥤ HomologicalComplex V c where
   obj C := C.asFunctor
   map C D f :=
-    { app := fun t => { f := fun i => (f.f i).app t, comm' := fun i j w => NatTrans.congr_app (f.comm i j) t },
+    { app := fun t =>
+        { f := fun i => (f.f i).app t, comm' := fun i j w => NatTrans.congr_app (f.comm i j) t },
       naturality' := fun t t' g => by
         ext i
         exact (f.f i).naturality g }

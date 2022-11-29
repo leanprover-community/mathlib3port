@@ -59,38 +59,37 @@ def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
 
 /-- Given `s` and `t` signed measures, `s + it` is a complex measure-/
 @[simps]
-def _root_.measure_theory.signed_measure.to_complex_measure (s t : SignedMeasure α) : ComplexMeasure α where
+def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : ComplexMeasure α where
   measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
   not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
   m_Union' f hf hfdisj := (Complex.has_sum_iff _ _).2 ⟨s.m_Union hf hfdisj, t.m_Union hf hfdisj⟩
-#align
-  measure_theory.complex_measure._root_.measure_theory.signed_measure.to_complex_measure measure_theory.complex_measure._root_.measure_theory.signed_measure.to_complex_measure
+#align measure_theory.signed_measure.to_complex_measure MeasureTheory.SignedMeasure.toComplexMeasure
 
-theorem _root_.measure_theory.signed_measure.to_complex_measure_apply {s t : SignedMeasure α} {i : Set α} :
+theorem MeasureTheory.SignedMeasure.to_complex_measure_apply {s t : SignedMeasure α} {i : Set α} :
     s.toComplexMeasure t i = ⟨s i, t i⟩ :=
   rfl
 #align
-  measure_theory.complex_measure._root_.measure_theory.signed_measure.to_complex_measure_apply measure_theory.complex_measure._root_.measure_theory.signed_measure.to_complex_measure_apply
+  measure_theory.signed_measure.to_complex_measure_apply MeasureTheory.SignedMeasure.to_complex_measure_apply
 
-theorem to_complex_measure_to_signed_measure (c : ComplexMeasure α) : c.re.toComplexMeasure c.im = c := by
-  ext (i hi) <;> rfl
+theorem to_complex_measure_to_signed_measure (c : ComplexMeasure α) :
+    c.re.toComplexMeasure c.im = c := by ext (i hi) <;> rfl
 #align
   measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.to_complex_measure_to_signed_measure
 
-theorem _root_.measure_theory.signed_measure.re_to_complex_measure (s t : SignedMeasure α) :
+theorem MeasureTheory.SignedMeasure.re_to_complex_measure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).re = s := by
   ext (i hi)
   rfl
 #align
-  measure_theory.complex_measure._root_.measure_theory.signed_measure.re_to_complex_measure measure_theory.complex_measure._root_.measure_theory.signed_measure.re_to_complex_measure
+  measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_to_complex_measure
 
-theorem _root_.measure_theory.signed_measure.im_to_complex_measure (s t : SignedMeasure α) :
+theorem MeasureTheory.SignedMeasure.im_to_complex_measure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).im = t := by
   ext (i hi)
   rfl
 #align
-  measure_theory.complex_measure._root_.measure_theory.signed_measure.im_to_complex_measure measure_theory.complex_measure._root_.measure_theory.signed_measure.im_to_complex_measure
+  measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_to_complex_measure
 
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
 @[simps]
@@ -98,8 +97,10 @@ def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure
   toFun c := ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
   left_inv c := c.to_complex_measure_to_signed_measure
-  right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iff.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
-#align measure_theory.complex_measure.equiv_signed_measure MeasureTheory.ComplexMeasure.equivSignedMeasure
+  right_inv := fun ⟨s, t⟩ =>
+    Prod.mk.inj_iff.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
+#align
+  measure_theory.complex_measure.equiv_signed_measure MeasureTheory.ComplexMeasure.equivSignedMeasure
 
 section
 
@@ -112,8 +113,7 @@ variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
   { equivSignedMeasure with map_add' := fun c d => by ext (i hi) <;> rfl,
     map_smul' := by
-      intro r c
-      ext (i hi)
+      intro r c; ext (i hi)
       · change (r • c i).re = r • (c i).re
         simp [Complex.smul_re]
         
@@ -121,7 +121,8 @@ def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × Sign
         change (r • c i).im = r • (c i).im
         simp [Complex.smul_im]
          }
-#align measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ
+#align
+  measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ
 
 end
 

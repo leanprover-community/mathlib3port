@@ -38,7 +38,8 @@ def discreteSieve (α : Type u) : Sieve α where
   downward_closed' := fun β γ f ⟨x, hx⟩ g => ⟨x, fun y => hx <| g y⟩
 #align category_theory.discrete_sieve CategoryTheory.discreteSieve
 
-theorem discrete_sieve_mem (α : Type u) : discreteSieve α ∈ typesGrothendieckTopology α := fun x => ⟨x, fun y => rfl⟩
+theorem discrete_sieve_mem (α : Type u) : discreteSieve α ∈ typesGrothendieckTopology α := fun x =>
+  ⟨x, fun y => rfl⟩
 #align category_theory.discrete_sieve_mem CategoryTheory.discrete_sieve_mem
 
 /-- The discrete presieve on a type, which only includes arrows whose domain is a singleton. -/
@@ -52,7 +53,8 @@ theorem generate_discrete_presieve_mem (α : Type u) :
 
 open Presieve
 
-theorem isSheafYoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda.obj α) := fun β S hs x hx =>
+theorem isSheafYoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda.obj α) :=
+  fun β S hs x hx =>
   ⟨fun y => x _ (hs y) PUnit.unit, fun γ f h =>
     funext fun z => by
       have := congr_fun (hx (𝟙 _) (fun _ => z) (hs <| f z) h rfl) PUnit.unit
@@ -83,13 +85,15 @@ def eval (P : Type uᵒᵖ ⥤ Type u) (α : Type u) (s : P.obj (op α)) (x : α
 
 /-- Given a sheaf `S` on the category of types, construct a map
 `(α → S(*)) → S(α)` that is inverse to `eval`. -/
-noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u)
-    (f : α → S.obj (op PUnit)) : S.obj (op α) :=
+noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S)
+    (α : Type u) (f : α → S.obj (op PUnit)) : S.obj (op α) :=
   (hs.IsSheafFor _ _ (generate_discrete_presieve_mem α)).amalgamate
-    (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.choose hg) fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
+    (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.choose hg)
+    fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
     (hs.IsSheafFor _ _ (generate_discrete_presieve_mem δ)).IsSeparatedFor.ext fun ε g ⟨x, hx⟩ => by
       have : f₁ (Classical.choose hf₁) = f₂ (Classical.choose hf₂) :=
-        Classical.choose_spec hf₁ (g₁ <| g x) ▸ Classical.choose_spec hf₂ (g₂ <| g x) ▸ congr_fun h _
+        Classical.choose_spec hf₁ (g₁ <| g x) ▸
+          Classical.choose_spec hf₂ (g₂ <| g x) ▸ congr_fun h _
       simp_rw [← functor_to_types.map_comp_apply, this, ← op_comp]
       rfl
 #align category_theory.types_glue CategoryTheory.typesGlue
@@ -113,15 +117,16 @@ theorem types_glue_eval {S hs α} (s) : typesGlue.{u} S hs α (eval S α s) = s 
 
 /-- Given a sheaf `S`, construct an equivalence `S(α) ≃ (α → S(*))`. -/
 @[simps]
-noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S) (α : Type u) :
-    S.obj (op α) ≃ (α → S.obj (op PUnit)) where
+noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S)
+    (α : Type u) : S.obj (op α) ≃ (α → S.obj (op PUnit)) where
   toFun := eval S α
   invFun := typesGlue S hs α
   left_inv := types_glue_eval
   right_inv := eval_types_glue
 #align category_theory.eval_equiv CategoryTheory.evalEquiv
 
-theorem eval_map (S : Type uᵒᵖ ⥤ Type u) (α β) (f : β ⟶ α) (s x) : eval S β (S.map f.op s) x = eval S α s (f x) := by
+theorem eval_map (S : Type uᵒᵖ ⥤ Type u) (α β) (f : β ⟶ α) (s x) :
+    eval S β (S.map f.op s) x = eval S α s (f x) := by
   simp_rw [eval, ← functor_to_types.map_comp_apply, ← op_comp]
   rfl
 #align category_theory.eval_map CategoryTheory.eval_map
@@ -149,7 +154,8 @@ noncomputable def equivYoneda' (S : SheafOfTypesCat typesGrothendieckTopology) :
 #align category_theory.equiv_yoneda' CategoryTheory.equivYoneda'
 
 theorem eval_app (S₁ S₂ : SheafOfTypesCat.{u} typesGrothendieckTopology) (f : S₁ ⟶ S₂) (α : Type u)
-    (s : S₁.1.obj (op α)) (x : α) : eval S₂.1 α (f.val.app (op α) s) x = f.val.app (op PUnit) (eval S₁.1 α s x) :=
+    (s : S₁.1.obj (op α)) (x : α) :
+    eval S₂.1 α (f.val.app (op α) s) x = f.val.app (op PUnit) (eval S₁.1 α s x) :=
   (congr_fun (f.val.naturality (↾fun _ : PUnit => x).op) s).symm
 #align category_theory.eval_app CategoryTheory.eval_app
 
@@ -167,14 +173,17 @@ noncomputable def typeEquiv : Type u ≌ SheafOfTypesCat typesGrothendieckTopolo
     (iso.symm <|
       NatIso.ofComponents (fun S => equivYoneda' S) fun S₁ S₂ f =>
         SheafOfTypesCat.Hom.ext _ _ <|
-          NatTrans.ext _ _ <| funext fun α => funext fun s => funext fun x => eval_app S₁ S₂ f (unop α) s x)
+          NatTrans.ext _ _ <|
+            funext fun α => funext fun s => funext fun x => eval_app S₁ S₂ f (unop α) s x)
 #align category_theory.type_equiv CategoryTheory.typeEquiv
 
 theorem subcanonicalTypesGrothendieckTopology : Sheaf.Subcanonical typesGrothendieckTopology.{u} :=
   Sheaf.Subcanonical.ofYonedaIsSheaf _ fun X => isSheafYoneda'
-#align category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonicalTypesGrothendieckTopology
+#align
+  category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonicalTypesGrothendieckTopology
 
-theorem types_grothendieck_topology_eq_canonical : types_grothendieck_topology.{u} = Sheaf.canonicalTopology (Type u) :=
+theorem types_grothendieck_topology_eq_canonical :
+    types_grothendieck_topology.{u} = Sheaf.canonicalTopology (Type u) :=
   le_antisymm subcanonicalTypesGrothendieckTopology <|
     Inf_le
       ⟨yoneda.obj (ULift Bool), ⟨_, rfl⟩,
@@ -184,12 +193,14 @@ theorem types_grothendieck_topology_eq_canonical : types_grothendieck_topology.{
               ⟨fun hs x =>
                 Classical.by_contradiction fun hsx =>
                   have :
-                    (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ => ULift.up false :=
+                    (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ =>
+                      ULift.up false :=
                     (hs PUnit fun _ => x).IsSeparatedFor.ext fun β f hf =>
                       funext fun y => hsx.elim <| (S.2 hf) fun _ => y
                   Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
                 fun hs β f => (isSheafYoneda' _) fun y => hs _⟩⟩
-#align category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.types_grothendieck_topology_eq_canonical
+#align
+  category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.types_grothendieck_topology_eq_canonical
 
 end CategoryTheory
 

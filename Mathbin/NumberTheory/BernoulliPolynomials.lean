@@ -59,8 +59,7 @@ theorem bernoulli_def (n : ℕ) :
   rw [← sum_range_reflect, add_succ_sub_one, add_zero, bernoulli]
   apply sum_congr rfl
   rintro x hx
-  rw [mem_range_succ_iff] at hx
-  rw [choose_symm hx, tsub_tsub_cancel_of_le hx]
+  rw [mem_range_succ_iff] at hx; rw [choose_symm hx, tsub_tsub_cancel_of_le hx]
 #align polynomial.bernoulli_def Polynomial.bernoulli_def
 
 /-
@@ -85,8 +84,8 @@ theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n := by
 @[simp]
 theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
   simp only [bernoulli, eval_finset_sum]
-  simp only [← succ_eq_add_one, sum_range_succ, mul_one, cast_one, choose_self, (_root_.bernoulli _).mul_comm,
-    sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial]
+  simp only [← succ_eq_add_one, sum_range_succ, mul_one, cast_one, choose_self,
+    (_root_.bernoulli _).mul_comm, sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial]
   by_cases h : n = 1
   · norm_num [h]
     
@@ -97,10 +96,12 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
 
 end Examples
 
-theorem derivative_bernoulli_add_one (k : ℕ) : (bernoulli (k + 1)).derivative = (k + 1) * bernoulli k := by
+theorem derivative_bernoulli_add_one (k : ℕ) :
+    (bernoulli (k + 1)).derivative = (k + 1) * bernoulli k := by
   simp_rw [bernoulli, derivative_sum, derivative_monomial, Nat.sub_sub, Nat.add_sub_add_right]
   -- LHS sum has an extra term, but the coefficient is zero:
-  rw [range_add_one, sum_insert not_mem_range_self, tsub_self, cast_zero, mul_zero, map_zero, zero_add, mul_sum]
+  rw [range_add_one, sum_insert not_mem_range_self, tsub_self, cast_zero, mul_zero, map_zero,
+    zero_add, mul_sum]
   -- the rest of the sum is termwise equal:
   refine' sum_congr (by rfl) fun m hm => _
   conv_rhs => rw [← Nat.cast_one, ← Nat.cast_add, ← C_eq_nat_cast, C_mul_monomial, mul_comm]
@@ -118,9 +119,10 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
 #align polynomial.derivative_bernoulli Polynomial.derivative_bernoulli
 
 @[simp]
-theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
-  by
-  simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm, Finset.sum_Ico_eq_sum_range]
+theorem sum_bernoulli (n : ℕ) :
+    (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) := by
+  simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm,
+    Finset.sum_Ico_eq_sum_range]
   simp only [add_tsub_cancel_left, tsub_zero, zero_add, LinearMap.map_add]
   simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
   conv_lhs =>
@@ -129,12 +131,15 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : �
   conv =>
   apply_congr
   skip
-  rw [← Nat.cast_mul, choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl),
-    Nat.cast_mul, add_comm x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ← smul_monomial]
+  rw [← Nat.cast_mul,
+    choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl),
+    Nat.cast_mul, add_comm x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ←
+    smul_monomial]
   rw [← sum_smul]
   rw [sum_range_succ_comm]
-  simp only [add_right_eq_self, mul_one, cast_one, cast_add, add_tsub_cancel_left, choose_succ_self_right, one_smul,
-    _root_.bernoulli_zero, sum_singleton, zero_add, LinearMap.map_add, range_one]
+  simp only [add_right_eq_self, mul_one, cast_one, cast_add, add_tsub_cancel_left,
+    choose_succ_self_right, one_smul, _root_.bernoulli_zero, sum_singleton, zero_add,
+    LinearMap.map_add, range_one]
   apply sum_eq_zero fun x hx => _
   have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
     rintro x H
@@ -153,7 +158,9 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : �
 theorem bernoulli_eq_sub_sum (n : ℕ) :
     (n.succ : ℚ) • bernoulli n =
       monomial n (n.succ : ℚ) - ∑ k in Finset.range n, ((n + 1).choose k : ℚ) • bernoulli k :=
-  by rw [Nat.cast_succ, ← sum_bernoulli n, sum_range_succ, add_sub_cancel', choose_succ_self_right, Nat.cast_succ]
+  by
+  rw [Nat.cast_succ, ← sum_bernoulli n, sum_range_succ, add_sub_cancel', choose_succ_self_right,
+    Nat.cast_succ]
 #align polynomial.bernoulli_eq_sub_sum Polynomial.bernoulli_eq_sub_sum
 
 /-- Another version of `bernoulli.sum_range_pow`. -/
@@ -163,7 +170,8 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
   · simp_rw [eval_monomial]
     symm
     rw [← sum_flip _, sum_range_succ]
-    simp only [tsub_self, tsub_zero, choose_zero_right, cast_one, mul_one, pow_zero, add_tsub_cancel_right]
+    simp only [tsub_self, tsub_zero, choose_zero_right, cast_one, mul_one, pow_zero,
+      add_tsub_cancel_right]
     apply sum_congr rfl fun x hx => _
     apply congr_arg₂ _ (congr_arg₂ _ _ _) rfl
     · rw [Nat.sub_sub_self (mem_range_le hx)]
@@ -183,15 +191,15 @@ theorem bernoulli_succ_eval (n p : ℕ) :
   rw [sum_range_pow_eq_bernoulli_sub]
 #align polynomial.bernoulli_succ_eval Polynomial.bernoulli_succ_eval
 
-theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) : (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) :=
-  by
+theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
+    (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) := by
   apply Nat.strong_induction_on n fun d hd => _
   have nz : ((d.succ : ℕ) : ℚ) ≠ 0 := by
     norm_cast
     exact d.succ_ne_zero
   apply (mul_right_inj' nz).1
-  rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_add, ← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum,
-    eval_sub, eval_finset_sum]
+  rw [← smul_eq_mul, ← eval_smul, bernoulli_eq_sub_sum, mul_add, ← smul_eq_mul, ← eval_smul,
+    bernoulli_eq_sub_sum, eval_sub, eval_finset_sum]
   conv_lhs =>
   congr
   skip
@@ -218,27 +226,30 @@ variable {A : Type _} [CommRing A] [Algebra ℚ A]
 -- This name should probably be updated afterwards
 /-- The theorem that $(e^X - 1) * ∑ Bₙ(t)* X^n/n! = Xe^{tX}$ -/
 theorem bernoulli_generating_function (t : A) :
-    (mk fun n => aeval t ((1 / n ! : ℚ) • bernoulli n)) * (exp A - 1) = PowerSeries.x * rescale t (exp A) := by
+    (mk fun n => aeval t ((1 / n ! : ℚ) • bernoulli n)) * (exp A - 1) =
+      PowerSeries.x * rescale t (exp A) :=
+  by
   -- check equality of power series by checking coefficients of X^n
   ext n
   -- n = 0 case solved by `simp`
-  cases n
+  cases n;
   · simp
     
   -- n ≥ 1, the coefficients is a sum to n+2, so use `sum_range_succ` to write as
   -- last term plus sum to n+1
-  rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul, nat.sum_antidiagonal_eq_sum_range_succ_mk,
-    sum_range_succ]
+  rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul,
+    nat.sum_antidiagonal_eq_sum_range_succ_mk, sum_range_succ]
   -- last term is zero so kill with `add_zero`
-  simp only [RingHom.map_sub, tsub_self, constant_coeff_one, constant_coeff_exp, coeff_zero_eq_constant_coeff, mul_zero,
-    sub_self, add_zero]
+  simp only [RingHom.map_sub, tsub_self, constant_coeff_one, constant_coeff_exp,
+    coeff_zero_eq_constant_coeff, mul_zero, sub_self, add_zero]
   -- Let's multiply both sides by (n+1)! (OK because it's a unit)
   have hnp1 : IsUnit ((n + 1)! : ℚ) := IsUnit.mk0 _ (by exact_mod_cast factorial_ne_zero (n + 1))
   rw [← (hnp1.map (algebraMap ℚ A)).mul_right_inj]
   -- do trivial rearrangements to make RHS (n+1)*t^n
   rw [mul_left_comm, ← RingHom.map_mul]
   change _ = t ^ n * algebraMap ℚ A (((n + 1) * n ! : ℕ) * (1 / n !))
-  rw [cast_mul, mul_assoc, mul_one_div_cancel (show (n ! : ℚ) ≠ 0 from cast_ne_zero.2 (factorial_ne_zero n)), mul_one,
+  rw [cast_mul, mul_assoc,
+    mul_one_div_cancel (show (n ! : ℚ) ≠ 0 from cast_ne_zero.2 (factorial_ne_zero n)), mul_one,
     mul_comm (t ^ n), ← aeval_monomial, cast_add, cast_one]
   -- But this is the RHS of `sum_bernoulli_poly`
   rw [← sum_bernoulli, Finset.mul_sum, AlgHom.map_sum]
@@ -248,10 +259,11 @@ theorem bernoulli_generating_function (t : A) :
   -- factorials and binomial coefficients between ℕ and ℚ and A.
   intro i hi
   -- deal with coefficients of e^X-1
-  simp only [Nat.cast_choose ℚ (mem_range_le hi), coeff_mk, if_neg (mem_range_sub_ne_zero hi), one_div, AlgHom.map_smul,
-    PowerSeries.coeff_one, coeff_exp, sub_zero, LinearMap.map_sub, Algebra.smul_mul_assoc, Algebra.smul_def,
-    mul_right_comm _ ((aeval t) _), ← mul_assoc, ← RingHom.map_mul, succ_eq_add_one, ← Polynomial.C_eq_algebra_map,
-    Polynomial.aeval_mul, Polynomial.aeval_C]
+  simp only [Nat.cast_choose ℚ (mem_range_le hi), coeff_mk, if_neg (mem_range_sub_ne_zero hi),
+    one_div, AlgHom.map_smul, PowerSeries.coeff_one, coeff_exp, sub_zero, LinearMap.map_sub,
+    Algebra.smul_mul_assoc, Algebra.smul_def, mul_right_comm _ ((aeval t) _), ← mul_assoc, ←
+    RingHom.map_mul, succ_eq_add_one, ← Polynomial.C_eq_algebra_map, Polynomial.aeval_mul,
+    Polynomial.aeval_C]
   -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
   apply congr_arg

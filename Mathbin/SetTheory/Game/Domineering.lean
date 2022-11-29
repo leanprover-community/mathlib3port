@@ -73,17 +73,21 @@ def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
   (b.erase m).erase (m.1 - 1, m.2)
 #align pgame.domineering.move_right Pgame.Domineering.moveRight
 
-theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : (m.1 - 1, m.2) ∈ b.erase m := by
+theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
+    (m.1 - 1, m.2) ∈ b.erase m := by
   rw [mem_right] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
-#align pgame.domineering.fst_pred_mem_erase_of_mem_right Pgame.Domineering.fst_pred_mem_erase_of_mem_right
+#align
+  pgame.domineering.fst_pred_mem_erase_of_mem_right Pgame.Domineering.fst_pred_mem_erase_of_mem_right
 
-theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : (m.1, m.2 - 1) ∈ b.erase m := by
+theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
+    (m.1, m.2 - 1) ∈ b.erase m := by
   rw [mem_left] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
-#align pgame.domineering.snd_pred_mem_erase_of_mem_left Pgame.Domineering.snd_pred_mem_erase_of_mem_left
+#align
+  pgame.domineering.snd_pred_mem_erase_of_mem_left Pgame.Domineering.snd_pred_mem_erase_of_mem_left
 
 theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b := by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
@@ -101,15 +105,16 @@ theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 �
   exact Nat.lt_of_le_of_lt i₂ i₁
 #align pgame.domineering.card_of_mem_right Pgame.Domineering.card_of_mem_right
 
-theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : Finset.card (moveLeft b m) + 2 = Finset.card b := by
+theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
+    Finset.card (moveLeft b m) + 2 = Finset.card b := by
   dsimp [move_left]
   rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
 #align pgame.domineering.move_left_card Pgame.Domineering.move_left_card
 
-theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : Finset.card (moveRight b m) + 2 = Finset.card b :=
-  by
+theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
+    Finset.card (moveRight b m) + 2 = Finset.card b := by
   dsimp [move_right]
   rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]

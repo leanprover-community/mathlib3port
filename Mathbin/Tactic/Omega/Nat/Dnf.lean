@@ -27,10 +27,12 @@ def dnfCore : Preform → List Clause
   | ¬* _ => []
 #align omega.nat.dnf_core Omega.Nat.dnfCore
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.nat.preform.induce -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:61:18: unsupported non-interactive tactic omega.nat.preform.induce -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 theorem exists_clause_holds_core {v : Nat → Nat} :
-    ∀ {p : Preform}, p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c := by
+    ∀ {p : Preform},
+      p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c :=
+  by
   run_tac
     preform.induce sorry
   · apply List.exists_mem_cons_of
@@ -45,18 +47,22 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     constructor
     apply List.forall_mem_nil
     rw [List.forall_mem_singleton]
-    simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds, sub_eq_add_neg] at *
+    simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds,
+      sub_eq_add_neg] at *
     rw [← sub_eq_add_neg, le_sub_comm, sub_zero, Int.coe_nat_le]
     assumption
     
   · cases h1
     
   · cases' h2 with h2 h2 <;>
-        [· cases' ihp h1.left h0.left h2 with c h3
-          ,
-        · cases' ihq h1.right h0.right h2 with c h3
-          ] <;>
-      cases' h3 with h3 h4 <;> refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;> [left, right] <;> assumption
+              [· cases' ihp h1.left h0.left h2 with c h3
+                ,
+              · cases' ihq h1.right h0.right h2 with c h3
+                ] <;>
+            cases' h3 with h3 h4 <;>
+          refine' ⟨c, list.mem_append.elim_right _, h4⟩ <;>
+        [left, right] <;>
+      assumption
     
   · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩
@@ -131,7 +137,8 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
       
 #align omega.nat.holds_nonneg_consts_core Omega.Nat.holds_nonneg_consts_core
 
-theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} : (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
+theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
+    (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
   | h1 => by apply holds_nonneg_consts_core h1
 #align omega.nat.holds_nonneg_consts Omega.Nat.holds_nonneg_consts
 
@@ -155,16 +162,16 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   apply Int.coe_nat_nonneg
 #align omega.nat.exists_clause_holds Omega.Nat.exists_clause_holds
 
-theorem exists_clause_sat {p : Preform} : p.NegFree → p.SubFree → p.Sat → ∃ c ∈ dnf p, Clause.Sat c := by
-  intro h1 h2 h3
-  cases' h3 with v h3
+theorem exists_clause_sat {p : Preform} :
+    p.NegFree → p.SubFree → p.Sat → ∃ c ∈ dnf p, Clause.Sat c := by
+  intro h1 h2 h3; cases' h3 with v h3
   rcases exists_clause_holds h1 h2 h3 with ⟨c, h4, h5⟩
   refine' ⟨c, h4, _, h5⟩
 #align omega.nat.exists_clause_sat Omega.Nat.exists_clause_sat
 
-theorem unsat_of_unsat_dnf (p : Preform) : p.NegFree → p.SubFree → Clauses.Unsat (dnf p) → p.Unsat := by
-  intro hnf hsf h1 h2
-  apply h1
+theorem unsat_of_unsat_dnf (p : Preform) :
+    p.NegFree → p.SubFree → Clauses.Unsat (dnf p) → p.Unsat := by
+  intro hnf hsf h1 h2; apply h1
   apply exists_clause_sat hnf hsf h2
 #align omega.nat.unsat_of_unsat_dnf Omega.Nat.unsat_of_unsat_dnf
 

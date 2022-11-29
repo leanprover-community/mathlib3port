@@ -110,10 +110,14 @@ theorem le_one {t : icc (0 : α) 1} : t ≤ 1 :=
   t.2.2
 #align set.Icc.le_one Set.icc.le_one
 
-instance hasMul : Mul (icc (0 : α) 1) where mul p q := ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_le_one p.2.2 q.2.1 q.2.2⟩⟩
+instance hasMul :
+    Mul
+      (icc (0 : α)
+        1) where mul p q := ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_le_one p.2.2 q.2.1 q.2.2⟩⟩
 #align set.Icc.has_mul Set.icc.hasMul
 
-instance hasPow : Pow (icc (0 : α) 1) ℕ where pow p n := ⟨p.1 ^ n, ⟨pow_nonneg p.2.1 n, pow_le_one n p.2.1 p.2.2⟩⟩
+instance hasPow :
+    Pow (icc (0 : α) 1) ℕ where pow p n := ⟨p.1 ^ n, ⟨pow_nonneg p.2.1 n, pow_le_one n p.2.1 p.2.2⟩⟩
 #align set.Icc.has_pow Set.icc.hasPow
 
 @[simp, norm_cast]
@@ -138,19 +142,21 @@ instance monoidWithZero : MonoidWithZero (icc (0 : α) 1) :=
   Subtype.coe_injective.MonoidWithZero _ coe_zero coe_one coe_mul coe_pow
 #align set.Icc.monoid_with_zero Set.icc.monoidWithZero
 
-instance commMonoidWithZero {α : Type _} [OrderedCommSemiring α] : CommMonoidWithZero (icc (0 : α) 1) :=
+instance commMonoidWithZero {α : Type _} [OrderedCommSemiring α] :
+    CommMonoidWithZero (icc (0 : α) 1) :=
   Subtype.coe_injective.CommMonoidWithZero _ coe_zero coe_one coe_mul coe_pow
 #align set.Icc.comm_monoid_with_zero Set.icc.commMonoidWithZero
 
-instance cancelMonoidWithZero {α : Type _} [OrderedRing α] [NoZeroDivisors α] : CancelMonoidWithZero (icc (0 : α) 1) :=
-  @Function.Injective.cancelMonoidWithZero α _ NoZeroDivisors.toCancelMonoidWithZero _ _ _ _ coe Subtype.coe_injective
-    coe_zero coe_one coe_mul coe_pow
+instance cancelMonoidWithZero {α : Type _} [OrderedRing α] [NoZeroDivisors α] :
+    CancelMonoidWithZero (icc (0 : α) 1) :=
+  @Function.Injective.cancelMonoidWithZero α _ NoZeroDivisors.toCancelMonoidWithZero _ _ _ _ coe
+    Subtype.coe_injective coe_zero coe_one coe_mul coe_pow
 #align set.Icc.cancel_monoid_with_zero Set.icc.cancelMonoidWithZero
 
 instance cancelCommMonoidWithZero {α : Type _} [OrderedCommRing α] [NoZeroDivisors α] :
     CancelCommMonoidWithZero (icc (0 : α) 1) :=
-  @Function.Injective.cancelCommMonoidWithZero α _ NoZeroDivisors.toCancelCommMonoidWithZero _ _ _ _ coe
-    Subtype.coe_injective coe_zero coe_one coe_mul coe_pow
+  @Function.Injective.cancelCommMonoidWithZero α _ NoZeroDivisors.toCancelCommMonoidWithZero _ _ _ _
+    coe Subtype.coe_injective coe_zero coe_one coe_mul coe_pow
 #align set.Icc.cancel_comm_monoid_with_zero Set.icc.cancelCommMonoidWithZero
 
 variable {β : Type _} [OrderedRing β]
@@ -216,7 +222,8 @@ theorem nonneg [Nontrivial α] {t : ico (0 : α) 1} : 0 ≤ t :=
 instance hasMul :
     Mul
       (ico (0 : α)
-        1) where mul p q := ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_lt_one_of_nonneg_of_lt_one_right p.2.2.le q.2.1 q.2.2⟩⟩
+        1) where mul p q :=
+    ⟨p * q, ⟨mul_nonneg p.2.1 q.2.1, mul_lt_one_of_nonneg_of_lt_one_right p.2.2.le q.2.1 q.2.2⟩⟩
 #align set.Ico.has_mul Set.ico.hasMul
 
 @[simp, norm_cast]
@@ -280,11 +287,15 @@ theorem le_one [Nontrivial α] {t : ioc (0 : α) 1} : t ≤ 1 :=
 #align set.Ioc.le_one Set.ioc.le_one
 
 instance hasMul :
-    Mul (ioc (0 : α) 1) where mul p q := ⟨p.1 * q.1, ⟨mul_pos p.2.1 q.2.1, mul_le_one p.2.2 (le_of_lt q.2.1) q.2.2⟩⟩
+    Mul
+      (ioc (0 : α)
+        1) where mul p q :=
+    ⟨p.1 * q.1, ⟨mul_pos p.2.1 q.2.1, mul_le_one p.2.2 (le_of_lt q.2.1) q.2.2⟩⟩
 #align set.Ioc.has_mul Set.ioc.hasMul
 
 instance hasPow :
-    Pow (ioc (0 : α) 1) ℕ where pow p n := ⟨p.1 ^ n, ⟨pow_pos p.2.1 n, pow_le_one n (le_of_lt p.2.1) p.2.2⟩⟩
+    Pow (ioc (0 : α) 1)
+      ℕ where pow p n := ⟨p.1 ^ n, ⟨pow_pos p.2.1 n, pow_le_one n (le_of_lt p.2.1) p.2.2⟩⟩
 #align set.Ioc.has_pow Set.ioc.hasPow
 
 @[simp, norm_cast]
@@ -309,17 +320,22 @@ instance commSemigroup {α : Type _} [StrictOrderedCommSemiring α] : CommSemigr
   Subtype.coe_injective.CommSemigroup _ coe_mul
 #align set.Ioc.comm_semigroup Set.ioc.commSemigroup
 
-instance commMonoid {α : Type _} [StrictOrderedCommSemiring α] [Nontrivial α] : CommMonoid (ioc (0 : α) 1) :=
+instance commMonoid {α : Type _} [StrictOrderedCommSemiring α] [Nontrivial α] :
+    CommMonoid (ioc (0 : α) 1) :=
   Subtype.coe_injective.CommMonoid _ coe_one coe_mul coe_pow
 #align set.Ioc.comm_monoid Set.ioc.commMonoid
 
-instance cancelMonoid {α : Type _} [StrictOrderedRing α] [IsDomain α] : CancelMonoid (ioc (0 : α) 1) :=
+instance cancelMonoid {α : Type _} [StrictOrderedRing α] [IsDomain α] :
+    CancelMonoid (ioc (0 : α) 1) :=
   { Set.ioc.monoid with
-    mul_left_cancel := fun a b c h => Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _),
-    mul_right_cancel := fun a b c h => Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_arg Subtype.val h : _) }
+    mul_left_cancel := fun a b c h =>
+      Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _),
+    mul_right_cancel := fun a b c h =>
+      Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_arg Subtype.val h : _) }
 #align set.Ioc.cancel_monoid Set.ioc.cancelMonoid
 
-instance cancelCommMonoid {α : Type _} [StrictOrderedCommRing α] [IsDomain α] : CancelCommMonoid (ioc (0 : α) 1) :=
+instance cancelCommMonoid {α : Type _} [StrictOrderedCommRing α] [IsDomain α] :
+    CancelCommMonoid (ioc (0 : α) 1) :=
   { Set.ioc.cancelMonoid, Set.ioc.commMonoid with }
 #align set.Ioc.cancel_comm_monoid Set.ioc.cancelCommMonoid
 

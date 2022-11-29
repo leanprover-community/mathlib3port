@@ -106,7 +106,8 @@ unsafe instance : has_to_tactic_format entries :=
     let thms := pad_right <| es.l.map fun en => (entry.thm en).toString
     format_aux lines deps thms es.l⟩
 
-unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) : tactic (List Nat) :=
+unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) :
+    tactic (List Nat) :=
   (do
       let ei ← es.find e
       filter ei
@@ -124,7 +125,8 @@ end Explode
 open Explode
 
 mutual
-  unsafe def explode.core (filter : expr → tactic Unit) : expr → Bool → Nat → entries → tactic entries
+  unsafe def explode.core (filter : expr → tactic Unit) :
+      expr → Bool → Nat → entries → tactic entries
     | e@(lam n bi d b), si, depth, es => do
       let m ← mk_fresh_name
       let l := local_const m n bi d
@@ -165,7 +167,8 @@ mutual
       let es' ← explode.core arg false depth es <|> return es
       let deps' ← explode.append_dep filter es' arg deps
       explode.args e args depth es' thm deps'
-    | e, [], depth, es, thm, deps => return (es.add ⟨e, es.size, depth, Status.reg, thm, deps.reverse⟩)
+    | e, [], depth, es, thm, deps =>
+      return (es.add ⟨e, es.size, depth, Status.reg, thm, deps.reverse⟩)
 end
 #align tactic.explode.core tactic.explode.core
 #align tactic.explode.args tactic.explode.args
@@ -189,7 +192,8 @@ unsafe def explode (n : Name) : tactic Unit := do
 #align tactic.explode tactic.explode
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/-- `#explode decl_name` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
+/--
+`#explode decl_name` displays a proof term in a line-by-line format somewhat akin to a Fitch-style
 proof or the Metamath proof style.
 `#explode_widget decl_name` renders a widget that displays an `#explode` proof.
 
@@ -253,8 +257,8 @@ unsafe def explode_cmd (_ : parse <| tk "#explode") : parser Unit := do
 
 add_tactic_doc
   { Name := "#explode / #explode_widget", category := DocCategory.cmd,
-    declNames := [`tactic.explode_cmd, `tactic.explode_widget_cmd], inheritDescriptionFrom := `tactic.explode_cmd,
-    tags := ["proof display", "widgets"] }
+    declNames := [`tactic.explode_cmd, `tactic.explode_widget_cmd],
+    inheritDescriptionFrom := `tactic.explode_cmd, tags := ["proof display", "widgets"] }
 
 end Tactic
 

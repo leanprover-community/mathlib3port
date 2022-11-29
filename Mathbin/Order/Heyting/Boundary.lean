@@ -63,7 +63,8 @@ theorem boundary_hnot_le (a : α) : ∂ (￢a) ≤ ∂ a :=
 #align coheyting.boundary_hnot_le Coheyting.boundary_hnot_le
 
 @[simp]
-theorem boundary_hnot_hnot (a : α) : ∂ (￢￢a) = ∂ (￢a) := by simp_rw [boundary, hnot_hnot_hnot, inf_comm]
+theorem boundary_hnot_hnot (a : α) : ∂ (￢￢a) = ∂ (￢a) := by
+  simp_rw [boundary, hnot_hnot_hnot, inf_comm]
 #align coheyting.boundary_hnot_hnot Coheyting.boundary_hnot_hnot
 
 @[simp]
@@ -82,7 +83,9 @@ theorem boundary_inf_le : ∂ (a ⊓ b) ≤ ∂ a ⊔ ∂ b :=
 
 theorem boundary_sup_le : ∂ (a ⊔ b) ≤ ∂ a ⊔ ∂ b := by
   rw [boundary, inf_sup_right]
-  exact sup_le_sup (inf_le_inf_left _ <| hnot_anti le_sup_left) (inf_le_inf_left _ <| hnot_anti le_sup_right)
+  exact
+    sup_le_sup (inf_le_inf_left _ <| hnot_anti le_sup_left)
+      (inf_le_inf_left _ <| hnot_anti le_sup_right)
 #align coheyting.boundary_sup_le Coheyting.boundary_sup_le
 
 /- The intuitionistic version of `coheyting.boundary_le_boundary_sup_sup_boundary_inf_left`. Either
@@ -97,8 +100,10 @@ example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b))
     
 
 theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
-  simp only [boundary, sup_inf_left, sup_inf_right, sup_right_idem, le_inf_iff, sup_assoc, @sup_comm _ _ _ a]
-  refine' ⟨⟨⟨_, _⟩, _⟩, ⟨_, _⟩, _⟩ <;> try exact le_sup_of_le_left inf_le_left <;> refine' inf_le_of_right_le _
+  simp only [boundary, sup_inf_left, sup_inf_right, sup_right_idem, le_inf_iff, sup_assoc,
+    @sup_comm _ _ _ a]
+  refine' ⟨⟨⟨_, _⟩, _⟩, ⟨_, _⟩, _⟩ <;> try exact le_sup_of_le_left inf_le_left <;>
+    refine' inf_le_of_right_le _
   · rw [hnot_le_iff_codisjoint_right, codisjoint_left_comm]
     exact codisjoint_hnot_left
     
@@ -106,7 +111,8 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b)
     rw [hnot_le_iff_codisjoint_right]
     exact codisjoint_hnot_right.mono_right (hnot_anti inf_le_left)
     
-#align coheyting.boundary_le_boundary_sup_sup_boundary_inf_left Coheyting.boundary_le_boundary_sup_sup_boundary_inf_left
+#align
+  coheyting.boundary_le_boundary_sup_sup_boundary_inf_left Coheyting.boundary_le_boundary_sup_sup_boundary_inf_left
 
 theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
   rw [@sup_comm _ _ a, inf_comm]
@@ -116,7 +122,8 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b
 
 theorem boundary_sup_sup_boundary_inf (a b : α) : ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) = ∂ a ⊔ ∂ b :=
   le_antisymm (sup_le boundary_sup_le boundary_inf_le) <|
-    sup_le boundary_le_boundary_sup_sup_boundary_inf_left boundary_le_boundary_sup_sup_boundary_inf_right
+    sup_le boundary_le_boundary_sup_sup_boundary_inf_left
+      boundary_le_boundary_sup_sup_boundary_inf_right
 #align coheyting.boundary_sup_sup_boundary_inf Coheyting.boundary_sup_sup_boundary_inf
 
 @[simp]

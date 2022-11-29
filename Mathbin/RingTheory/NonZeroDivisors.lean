@@ -34,7 +34,8 @@ def nonZeroDivisors (R : Type _) [MonoidWithZero R] : Submonoid R where
 -- mathport name: non_zero_divisors
 scoped[nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
-variable {M M' M₁ R R' F : Type _} [MonoidWithZero M] [MonoidWithZero M'] [CommMonoidWithZero M₁] [Ring R] [CommRing R']
+variable {M M' M₁ R R' F : Type _} [MonoidWithZero M] [MonoidWithZero M'] [CommMonoidWithZero M₁]
+  [Ring R] [CommRing R']
 
 theorem mem_non_zero_divisors_iff {r : M} : r ∈ M⁰ ↔ ∀ x, x * r = 0 → x = 0 :=
   Iff.rfl
@@ -49,8 +50,8 @@ theorem mul_right_coe_non_zero_divisors_eq_zero_iff {x : M} {c : M⁰} : x * c =
   mul_right_mem_non_zero_divisors_eq_zero_iff c.Prop
 #align mul_right_coe_non_zero_divisors_eq_zero_iff mul_right_coe_non_zero_divisors_eq_zero_iff
 
-theorem mul_left_mem_non_zero_divisors_eq_zero_iff {r x : M₁} (hr : r ∈ M₁⁰) : r * x = 0 ↔ x = 0 := by
-  rw [mul_comm, mul_right_mem_non_zero_divisors_eq_zero_iff hr]
+theorem mul_left_mem_non_zero_divisors_eq_zero_iff {r x : M₁} (hr : r ∈ M₁⁰) : r * x = 0 ↔ x = 0 :=
+  by rw [mul_comm, mul_right_mem_non_zero_divisors_eq_zero_iff hr]
 #align mul_left_mem_non_zero_divisors_eq_zero_iff mul_left_mem_non_zero_divisors_eq_zero_iff
 
 @[simp]
@@ -58,7 +59,8 @@ theorem mul_left_coe_non_zero_divisors_eq_zero_iff {c : M₁⁰} {x : M₁} : (c
   mul_left_mem_non_zero_divisors_eq_zero_iff c.Prop
 #align mul_left_coe_non_zero_divisors_eq_zero_iff mul_left_coe_non_zero_divisors_eq_zero_iff
 
-theorem mul_cancel_right_mem_non_zero_divisor {x y r : R} (hr : r ∈ R⁰) : x * r = y * r ↔ x = y := by
+theorem mul_cancel_right_mem_non_zero_divisor {x y r : R} (hr : r ∈ R⁰) : x * r = y * r ↔ x = y :=
+  by
   refine' ⟨fun h => _, congr_arg _⟩
   rw [← sub_eq_zero, ← mul_right_mem_non_zero_divisors_eq_zero_iff hr, sub_mul, h, sub_self]
 #align mul_cancel_right_mem_non_zero_divisor mul_cancel_right_mem_non_zero_divisor
@@ -68,8 +70,8 @@ theorem mul_cancel_right_coe_non_zero_divisor {x y : R} {c : R⁰} : x * c = y *
 #align mul_cancel_right_coe_non_zero_divisor mul_cancel_right_coe_non_zero_divisor
 
 @[simp]
-theorem mul_cancel_left_mem_non_zero_divisor {x y r : R'} (hr : r ∈ R'⁰) : r * x = r * y ↔ x = y := by
-  simp_rw [mul_comm r, mul_cancel_right_mem_non_zero_divisor hr]
+theorem mul_cancel_left_mem_non_zero_divisor {x y r : R'} (hr : r ∈ R'⁰) : r * x = r * y ↔ x = y :=
+  by simp_rw [mul_comm r, mul_cancel_right_mem_non_zero_divisor hr]
 #align mul_cancel_left_mem_non_zero_divisor mul_cancel_left_mem_non_zero_divisor
 
 theorem mul_cancel_left_coe_non_zero_divisor {x y : R'} {c : R'⁰} : (c : R') * x = c * y ↔ x = y :=
@@ -100,24 +102,29 @@ theorem mul_mem_non_zero_divisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M�
     
 #align mul_mem_non_zero_divisors mul_mem_non_zero_divisors
 
-theorem is_unit_of_mem_non_zero_divisors {G₀ : Type _} [GroupWithZero G₀] {x : G₀} (hx : x ∈ nonZeroDivisors G₀) :
-    IsUnit x :=
-  ⟨⟨x, x⁻¹, mul_inv_cancel (nonZeroDivisors.ne_zero hx), inv_mul_cancel (nonZeroDivisors.ne_zero hx)⟩, rfl⟩
+theorem is_unit_of_mem_non_zero_divisors {G₀ : Type _} [GroupWithZero G₀] {x : G₀}
+    (hx : x ∈ nonZeroDivisors G₀) : IsUnit x :=
+  ⟨⟨x, x⁻¹, mul_inv_cancel (nonZeroDivisors.ne_zero hx),
+      inv_mul_cancel (nonZeroDivisors.ne_zero hx)⟩,
+    rfl⟩
 #align is_unit_of_mem_non_zero_divisors is_unit_of_mem_non_zero_divisors
 
-theorem eq_zero_of_ne_zero_of_mul_right_eq_zero [NoZeroDivisors M] {x y : M} (hnx : x ≠ 0) (hxy : y * x = 0) : y = 0 :=
+theorem eq_zero_of_ne_zero_of_mul_right_eq_zero [NoZeroDivisors M] {x y : M} (hnx : x ≠ 0)
+    (hxy : y * x = 0) : y = 0 :=
   Or.resolve_right (eq_zero_or_eq_zero_of_mul_eq_zero hxy) hnx
 #align eq_zero_of_ne_zero_of_mul_right_eq_zero eq_zero_of_ne_zero_of_mul_right_eq_zero
 
-theorem eq_zero_of_ne_zero_of_mul_left_eq_zero [NoZeroDivisors M] {x y : M} (hnx : x ≠ 0) (hxy : x * y = 0) : y = 0 :=
+theorem eq_zero_of_ne_zero_of_mul_left_eq_zero [NoZeroDivisors M] {x y : M} (hnx : x ≠ 0)
+    (hxy : x * y = 0) : y = 0 :=
   Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hxy) hnx
 #align eq_zero_of_ne_zero_of_mul_left_eq_zero eq_zero_of_ne_zero_of_mul_left_eq_zero
 
-theorem mem_non_zero_divisors_of_ne_zero [NoZeroDivisors M] {x : M} (hx : x ≠ 0) : x ∈ M⁰ := fun _ =>
-  eq_zero_of_ne_zero_of_mul_right_eq_zero hx
+theorem mem_non_zero_divisors_of_ne_zero [NoZeroDivisors M] {x : M} (hx : x ≠ 0) : x ∈ M⁰ :=
+  fun _ => eq_zero_of_ne_zero_of_mul_right_eq_zero hx
 #align mem_non_zero_divisors_of_ne_zero mem_non_zero_divisors_of_ne_zero
 
-theorem mem_non_zero_divisors_iff_ne_zero [NoZeroDivisors M] [Nontrivial M] {x : M} : x ∈ M⁰ ↔ x ≠ 0 :=
+theorem mem_non_zero_divisors_iff_ne_zero [NoZeroDivisors M] [Nontrivial M] {x : M} :
+    x ∈ M⁰ ↔ x ≠ 0 :=
   ⟨nonZeroDivisors.ne_zero, mem_non_zero_divisors_of_ne_zero⟩
 #align mem_non_zero_divisors_iff_ne_zero mem_non_zero_divisors_iff_ne_zero
 
@@ -131,18 +138,20 @@ theorem map_mem_non_zero_divisors [Nontrivial M] [NoZeroDivisors M'] [ZeroHomCla
   eq_zero_of_ne_zero_of_mul_right_eq_zero (map_ne_zero_of_mem_non_zero_divisors g hg h) hz
 #align map_mem_non_zero_divisors map_mem_non_zero_divisors
 
-theorem le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {S : Submonoid M} (hS : (0 : M) ∉ S) : S ≤ M⁰ :=
-  fun x hx y hy =>
-  Or.rec_on (eq_zero_or_eq_zero_of_mul_eq_zero hy) (fun h => h) fun h => absurd (h ▸ hx : (0 : M) ∈ S) hS
+theorem le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {S : Submonoid M}
+    (hS : (0 : M) ∉ S) : S ≤ M⁰ := fun x hx y hy =>
+  Or.rec_on (eq_zero_or_eq_zero_of_mul_eq_zero hy) (fun h => h) fun h =>
+    absurd (h ▸ hx : (0 : M) ∈ S) hS
 #align le_non_zero_divisors_of_no_zero_divisors le_non_zero_divisors_of_no_zero_divisors
 
 theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : M} (ha : a ≠ 0) :
     Submonoid.powers a ≤ M⁰ :=
   le_non_zero_divisors_of_no_zero_divisors fun h => absurd (h.recOn fun _ hn => pow_eq_zero hn) ha
-#align powers_le_non_zero_divisors_of_no_zero_divisors powers_le_non_zero_divisors_of_no_zero_divisors
+#align
+  powers_le_non_zero_divisors_of_no_zero_divisors powers_le_non_zero_divisors_of_no_zero_divisors
 
-theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M'] (f : F)
-    (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
+theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
+    (f : F) (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
   cases subsingleton_or_nontrivial M
   · simp [Subsingleton.elim S ⊥]
     
@@ -153,16 +162,15 @@ theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZer
     
 #align map_le_non_zero_divisors_of_injective map_le_non_zero_divisors_of_injective
 
-theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
-    (f : F) (hf : Function.Injective f) : M⁰ ≤ M'⁰.comap f :=
+theorem non_zero_divisors_le_comap_non_zero_divisors_of_injective [NoZeroDivisors M']
+    [MonoidWithZeroHomClass F M M'] (f : F) (hf : Function.Injective f) : M⁰ ≤ M'⁰.comap f :=
   Submonoid.le_comap_of_map_le _ (map_le_non_zero_divisors_of_injective _ hf le_rfl)
 #align
   non_zero_divisors_le_comap_non_zero_divisors_of_injective non_zero_divisors_le_comap_non_zero_divisors_of_injective
 
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
     s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 := by
-  constructor
-  swap
+  constructor; swap
   · rintro ⟨r, hrs, rfl⟩
     exact Multiset.prod_eq_zero hrs
     

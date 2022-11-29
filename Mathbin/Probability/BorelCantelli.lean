@@ -33,25 +33,32 @@ variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilit
 
 section BorelCantelli
 
-variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAddCommGroup β] [BorelSpace β] {f : ι → Ω → β}
-  {i j : ι} {s : ι → Set Ω}
+variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAddCommGroup β]
+  [BorelSpace β] {f : ι → Ω → β} {i j : ι} {s : ι → Set Ω}
 
-theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
-    (hij : i < j) : Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ := by
-  suffices indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ) (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ by
-    rwa [supr_singleton] at this
+theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
+    (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
+    Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ := by
+  suffices
+    indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
+      (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
+    by rwa [supr_singleton] at this
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
-#align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepComapNaturalOfLt
+#align
+  probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepComapNaturalOfLt
 
-theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β] [NormedSpace ℝ β]
-    (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
-    μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
-  condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _) (comapMeasurable <| f j).StronglyMeasurable
-    (hfi.indepComapNaturalOfLt hf hij)
-#align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
+theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
+    [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
+    (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
+  condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _)
+    (comapMeasurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
+#align
+  probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
-theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ)
-    (hij : i < j) : μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal := by
+theorem IndepSet.condexp_indicator_filtration_of_set_ae_eq (hsm : ∀ n, MeasurableSet (s n))
+    (hs : IndepSet s μ) (hij : i < j) :
+    μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal :=
+  by
   rw [filtration.filtration_of_set_eq_natural hsm]
   refine' (Indep_fun.condexp_natrual_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
@@ -71,11 +78,16 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
       (eventually_eq_set.2 (ae_mem_limsup_at_top_iff μ <| measurable_set_filtration_of_set' hsm) :
         (limsup s at_top : Set Ω) =ᵐ[μ]
           { ω |
-            tendsto (fun n => ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
+            tendsto
+              (fun n =>
+                ∑ k in Finset.range n,
+                  (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
               at_top at_top })]
   suffices
     { ω |
-        tendsto (fun n => ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
+        tendsto
+          (fun n =>
+            ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
           at_top at_top } =ᵐ[μ]
       Set.univ
     by rw [measure_congr this, measure_univ]

@@ -35,13 +35,14 @@ theorem smul_def [Monoid M] [HasSmul M α] (m : Mˣ) (a : α) : m • a = (m : M
 #align units.smul_def Units.smul_def
 
 @[simp]
-theorem smul_is_unit [Monoid M] [HasSmul M α] {m : M} (hm : IsUnit m) (a : α) : hm.Unit • a = m • a :=
+theorem smul_is_unit [Monoid M] [HasSmul M α] {m : M} (hm : IsUnit m) (a : α) :
+    hm.Unit • a = m • a :=
   rfl
 #align units.smul_is_unit Units.smul_is_unit
 
-theorem _root_.is_unit.inv_smul [Monoid α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a = 1 :=
+theorem IsUnit.inv_smul [Monoid α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a = 1 :=
   h.coe_inv_mul
-#align units._root_.is_unit.inv_smul units._root_.is_unit.inv_smul
+#align is_unit.inv_smul IsUnit.inv_smul
 
 @[to_additive]
 instance [Monoid M] [HasSmul M α] [HasFaithfulSmul M α] :
@@ -56,7 +57,8 @@ instance [Monoid M] [Zero α] [SmulZeroClass M α] : SmulZeroClass Mˣ α where
   smul := (· • ·)
   smul_zero m := smul_zero m
 
-instance [Monoid M] [AddZeroClass α] [DistribSmul M α] : DistribSmul Mˣ α where smul_add m := smul_add (m : M)
+instance [Monoid M] [AddZeroClass α] [DistribSmul M α] :
+    DistribSmul Mˣ α where smul_add m := smul_add (m : M)
 
 instance [Monoid M] [AddMonoid α] [DistribMulAction M α] : DistribMulAction Mˣ α :=
   { Units.distribSmul with }
@@ -83,8 +85,8 @@ instance [Monoid M] [HasSmul M N] [HasSmul M α] [HasSmul N α] [IsScalarTower M
 action on `Mˣ`. Notably, this provides `mul_action Mˣ Nˣ` under suitable
 conditions.
 -/
-instance mulAction' [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] :
-    MulAction G Mˣ where
+instance mulAction' [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M]
+    [IsScalarTower G M M] : MulAction G Mˣ where
   smul g m :=
     ⟨g • (m : M), g⁻¹ • ↑m⁻¹, by rw [smul_mul_smul, Units.mul_inv, mul_right_inv, one_smul], by
       rw [smul_mul_smul, Units.inv_mul, mul_left_inv, one_smul]⟩
@@ -93,38 +95,41 @@ instance mulAction' [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [
 #align units.mul_action' Units.mulAction'
 
 @[simp]
-theorem coe_smul [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G) (m : Mˣ) :
-    ↑(g • m) = g • (m : M) :=
+theorem coe_smul [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M]
+    (g : G) (m : Mˣ) : ↑(g • m) = g • (m : M) :=
   rfl
 #align units.coe_smul Units.coe_smul
 
 /-- Note that this lemma exists more generally as the global `smul_inv` -/
 @[simp]
-theorem smul_inv [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] (g : G) (m : Mˣ) :
-    (g • m)⁻¹ = g⁻¹ • m⁻¹ :=
+theorem smul_inv [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M]
+    (g : G) (m : Mˣ) : (g • m)⁻¹ = g⁻¹ • m⁻¹ :=
   ext rfl
 #align units.smul_inv Units.smul_inv
 
 /-- Transfer `smul_comm_class G H M` to `smul_comm_class G H Mˣ` -/
-instance smul_comm_class' [Group G] [Group H] [Monoid M] [MulAction G M] [SmulCommClass G M M] [MulAction H M]
-    [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [SmulCommClass G H M] :
+instance smul_comm_class' [Group G] [Group H] [Monoid M] [MulAction G M] [SmulCommClass G M M]
+    [MulAction H M] [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M]
+    [SmulCommClass G H M] :
     SmulCommClass G H Mˣ where smul_comm g h m := Units.ext <| smul_comm g h (m : M)
 #align units.smul_comm_class' Units.smul_comm_class'
 
 /-- Transfer `is_scalar_tower G H M` to `is_scalar_tower G H Mˣ` -/
-instance is_scalar_tower' [HasSmul G H] [Group G] [Group H] [Monoid M] [MulAction G M] [SmulCommClass G M M]
-    [MulAction H M] [SmulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M] [IsScalarTower G H M] :
+instance is_scalar_tower' [HasSmul G H] [Group G] [Group H] [Monoid M] [MulAction G M]
+    [SmulCommClass G M M] [MulAction H M] [SmulCommClass H M M] [IsScalarTower G M M]
+    [IsScalarTower H M M] [IsScalarTower G H M] :
     IsScalarTower G H Mˣ where smul_assoc g h m := Units.ext <| smul_assoc g h (m : M)
 #align units.is_scalar_tower' Units.is_scalar_tower'
 
 /-- Transfer `is_scalar_tower G M α` to `is_scalar_tower G Mˣ α` -/
-instance is_scalar_tower'_left [Group G] [Monoid M] [MulAction G M] [HasSmul M α] [HasSmul G α] [SmulCommClass G M M]
-    [IsScalarTower G M M] [IsScalarTower G M α] :
+instance is_scalar_tower'_left [Group G] [Monoid M] [MulAction G M] [HasSmul M α] [HasSmul G α]
+    [SmulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] :
     IsScalarTower G Mˣ α where smul_assoc g m := (smul_assoc g (m : M) : _)
 #align units.is_scalar_tower'_left Units.is_scalar_tower'_left
 
 -- Just to prove this transfers a particularly useful instance.
-example [Monoid M] [Monoid N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] : MulAction Mˣ Nˣ :=
+example [Monoid M] [Monoid N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] :
+    MulAction Mˣ Nˣ :=
   Units.mulAction'
 
 /-- A stronger form of `units.mul_action'`. -/
@@ -136,8 +141,8 @@ instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [Sm
 
 end Units
 
-theorem IsUnit.smul [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] {m : M} (g : G)
-    (h : IsUnit m) : IsUnit (g • m) :=
+theorem IsUnit.smul [Group G] [Monoid M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M]
+    {m : M} (g : G) (h : IsUnit m) : IsUnit (g • m) :=
   let ⟨u, hu⟩ := h
   hu ▸ ⟨g • u, Units.coe_smul _ _⟩
 #align is_unit.smul IsUnit.smul

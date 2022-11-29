@@ -26,10 +26,11 @@ open Polynomial
 namespace EisensteinCriterionAux
 
 -- Section for auxiliary lemmas used in the proof of `irreducible_of_eisenstein_criterion`
-theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R} (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
+theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
+    (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
     map (mk P) f = c ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
   Polynomial.ext fun n => by
-    by_cases hf0 : f = 0
+    by_cases hf0 : f = 0;
     · simp [hf0]
       
     rcases lt_trichotomy (↑n) (degree f) with (h | h | h)
@@ -50,8 +51,9 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R} (hfP : �
 #align
   polynomial.eisenstein_criterion_aux.map_eq_C_mul_X_pow_of_forall_coeff_mem Polynomial.EisensteinCriterionAux.map_eq_C_mul_X_pow_of_forall_coeff_mem
 
-theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]} {c : Polynomial (R ⧸ P)}
-    (hq : map (mk P) q = c * X ^ n) (hc0 : c.degree = 0) : n ≤ q.natDegree :=
+theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]}
+    {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hc0 : c.degree = 0) :
+    n ≤ q.natDegree :=
   WithBot.coe_le_coe.1
     (calc
       ↑n = degree (q.map (mk P)) := by
@@ -62,15 +64,15 @@ theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrim
 #align
   polynomial.eisenstein_criterion_aux.le_nat_degree_of_map_eq_mul_X_pow Polynomial.EisensteinCriterionAux.le_nat_degree_of_map_eq_mul_X_pow
 
-theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : R[X]} {c : Polynomial (R ⧸ P)}
-    (hq : map (mk P) q = c * X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P := by
-  rw [← coeff_zero_eq_eval_zero, ← eq_zero_iff_mem, ← coeff_map, coeff_zero_eq_eval_zero, hq, eval_mul, eval_pow,
-    eval_X, zero_pow hn0, mul_zero]
+theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : R[X]}
+    {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P := by
+  rw [← coeff_zero_eq_eval_zero, ← eq_zero_iff_mem, ← coeff_map, coeff_zero_eq_eval_zero, hq,
+    eval_mul, eval_pow, eval_X, zero_pow hn0, mul_zero]
 #align
   polynomial.eisenstein_criterion_aux.eval_zero_mem_ideal_of_eq_mul_X_pow Polynomial.EisensteinCriterionAux.eval_zero_mem_ideal_of_eq_mul_X_pow
 
-theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : R[X]} (hu : ∀ x : R, c x ∣ p * q → IsUnit x)
-    (hpm : p.natDegree = 0) : IsUnit p := by
+theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : R[X]}
+    (hu : ∀ x : R, c x ∣ p * q → IsUnit x) (hpm : p.natDegree = 0) : IsUnit p := by
   rw [eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm), is_unit_C]
   refine' hu _ _
   rw [← eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm)]
@@ -88,23 +90,26 @@ variable [IsDomain R]
 then if every coefficient in `R` except the leading coefficient is in `P`, and
 the trailing coefficient is not in `P^2` and no non units in `R` divide `f`, then `f` is
 irreducible. -/
-theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsPrime) (hfl : f.leadingCoeff ∉ P)
-    (hfP : ∀ n : ℕ, ↑n < degree f → f.coeff n ∈ P) (hfd0 : 0 < degree f) (h0 : f.coeff 0 ∉ P ^ 2) (hu : f.IsPrimitive) :
-    Irreducible f :=
+theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsPrime)
+    (hfl : f.leadingCoeff ∉ P) (hfP : ∀ n : ℕ, ↑n < degree f → f.coeff n ∈ P) (hfd0 : 0 < degree f)
+    (h0 : f.coeff 0 ∉ P ^ 2) (hu : f.IsPrimitive) : Irreducible f :=
   have hf0 : f ≠ 0 := fun _ => by simp_all only [not_true, Submodule.zero_mem, coeff_zero]
-  have hf : f.map (mk P) = c (mk P (leadingCoeff f)) * X ^ natDegree f := map_eq_C_mul_X_pow_of_forall_coeff_mem hfP
+  have hf : f.map (mk P) = c (mk P (leadingCoeff f)) * X ^ natDegree f :=
+    map_eq_C_mul_X_pow_of_forall_coeff_mem hfP
   have hfd0 : 0 < f.natDegree := WithBot.coe_lt_coe.1 (lt_of_lt_of_le hfd0 degree_le_nat_degree)
   ⟨mt degree_eq_zero_of_is_unit fun h => by simp_all only [lt_irrefl], by
     rintro p q rfl
     rw [Polynomial.map_mul] at hf
-    rcases mul_eq_mul_prime_pow (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X)
-        hf with
+    rcases mul_eq_mul_prime_pow
+        (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X) hf with
       ⟨m, n, b, c, hmnd, hbc, hp, hq⟩
     have hmn : 0 < m → 0 < n → False := by
       intro hm0 hn0
       refine' h0 _
       rw [coeff_zero_eq_eval_zero, eval_mul, sq]
-      exact Ideal.mul_mem_mul (eval_zero_mem_ideal_of_eq_mul_X_pow hp hm0) (eval_zero_mem_ideal_of_eq_mul_X_pow hq hn0)
+      exact
+        Ideal.mul_mem_mul (eval_zero_mem_ideal_of_eq_mul_X_pow hp hm0)
+          (eval_zero_mem_ideal_of_eq_mul_X_pow hq hn0)
     have hpql0 : (mk P) (p * q).leadingCoeff ≠ 0 := by rwa [Ne.def, eq_zero_iff_mem]
     have hp0 : p ≠ 0 := fun h => by simp_all only [zero_mul, eq_self_iff_true, not_true, Ne.def]
     have hq0 : q ≠ 0 := fun h => by simp_all only [eq_self_iff_true, not_true, Ne.def, mul_zero]
@@ -128,7 +133,10 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, not_not, ← or_iff_not_imp_left] at hmn
     · exact Or.inl (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit hu hpmqn.1)
       
-    · exact Or.inr (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit (by simpa only [mul_comm] using hu) hpmqn.2)
+    · exact
+        Or.inr
+          (is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit (by simpa only [mul_comm] using hu)
+            hpmqn.2)
       ⟩
 #align polynomial.irreducible_of_eisenstein_criterion Polynomial.irreducible_of_eisenstein_criterion
 

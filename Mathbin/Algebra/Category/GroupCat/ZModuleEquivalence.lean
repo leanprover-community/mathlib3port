@@ -31,17 +31,20 @@ instance forget₂AddCommGroupFull :
     f :=-- `add_monoid_hom.to_int_linear_map` doesn't work here because `A` and `B` are not definitionally
     -- equal to the canonical `add_comm_group.int_module` module instances it expects.
     { toFun := f, map_add' := AddMonoidHom.map_add f,
-      map_smul' := fun n x => by rw [int_smul_eq_zsmul, int_smul_eq_zsmul, map_zsmul, RingHom.id_apply] }
+      map_smul' := fun n x => by
+        rw [int_smul_eq_zsmul, int_smul_eq_zsmul, map_zsmul, RingHom.id_apply] }
 #align Module.forget₂_AddCommGroup_full ModuleCat.forget₂AddCommGroupFull
 
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is essentially surjective. -/
 instance forget₂_AddCommGroup_ess_surj :
     EssSurj
       (forget₂ (ModuleCat ℤ)
-        AddCommGroupCat.{u}) where mem_ess_image A := ⟨ModuleCat.of ℤ A, ⟨{ Hom := 𝟙 A, inv := 𝟙 A }⟩⟩
+        AddCommGroupCat.{u}) where mem_ess_image A :=
+    ⟨ModuleCat.of ℤ A, ⟨{ Hom := 𝟙 A, inv := 𝟙 A }⟩⟩
 #align Module.forget₂_AddCommGroup_ess_surj ModuleCat.forget₂_AddCommGroup_ess_surj
 
-noncomputable instance forget₂AddCommGroupIsEquivalence : IsEquivalence (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u}) :=
+noncomputable instance forget₂AddCommGroupIsEquivalence :
+    IsEquivalence (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u}) :=
   Equivalence.ofFullyFaithfullyEssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat)
 #align Module.forget₂_AddCommGroup_is_equivalence ModuleCat.forget₂AddCommGroupIsEquivalence
 

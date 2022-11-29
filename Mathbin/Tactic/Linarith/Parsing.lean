@@ -48,7 +48,8 @@ unsafe def monom.one : monom :=
 
 /-- Compare monomials by first comparing their keys and then their powers. -/
 @[reducible]
-unsafe def monom.lt : monom → monom → Prop := fun a b => a.keys < b.keys || a.keys = b.keys && a.values < b.values
+unsafe def monom.lt : monom → monom → Prop := fun a b =>
+  a.keys < b.keys || a.keys = b.keys && a.values < b.values
 #align linarith.monom.lt linarith.monom.lt
 
 unsafe instance : LT monom :=
@@ -155,7 +156,10 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
           let ( m' , comp1 ) ← linear_form_of_expr m e1
             let ( m' , comp2 ) ← linear_form_of_expr m' e2
             return ( m' , comp1 ( comp2 ( - 1 ) ) )
-      | m , q( - $ ( e ) ) => do let ( m' , comp ) ← linear_form_of_expr m e return ( m' , comp ( - 1 ) )
+      |
+        m , q( - $ ( e ) )
+        =>
+        do let ( m' , comp ) ← linear_form_of_expr m e return ( m' , comp ( - 1 ) )
       |
         m , p @ q( @ Pow.pow _ ℕ _ $ ( e ) $ ( n ) )
         =>
@@ -170,7 +174,9 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
         match
           e . to_int
           with
-          | some 0 => return ⟨ m , mk_rb_map ⟩ | some z => return ⟨ m , scalar z ⟩ | none => linear_form_of_atom red m e
+          | some 0 => return ⟨ m , mk_rb_map ⟩
+            | some z => return ⟨ m , scalar z ⟩
+            | none => linear_form_of_atom red m e
 #align linarith.linear_form_of_expr linarith.linear_form_of_expr
 
 /-- `sum_to_lf s map` eliminates the monomial level of the `sum` `s`.
@@ -221,7 +227,8 @@ the same length, such that `c[i]` represents the linear form of the type of `pfs
 
 It also returns the largest variable index that appears in comparisons in `c`.
 -/
-unsafe def linear_forms_and_max_var (red : Transparency) (pfs : List expr) : tactic (List Comp × ℕ) := do
+unsafe def linear_forms_and_max_var (red : Transparency) (pfs : List expr) :
+    tactic (List Comp × ℕ) := do
   let pftps ← pfs.mmap infer_type
   let (l, _, map) ← to_comp_fold red [] pftps mk_rb_map
   return (l, map - 1)

@@ -41,7 +41,8 @@ unsafe def assert_exists (_ : parse <| tk "assert_exists") : lean.parser Unit :=
   return ()
 #align assert_exists assert_exists
 
-/-- `assert_not_exists n` is a user command that asserts that a declaration named `n` *does not exist*
+/--
+`assert_not_exists n` is a user command that asserts that a declaration named `n` *does not exist*
 in the current import scope.
 
 Be careful to use names (e.g. `rat`) rather than notations (e.g. `ℚ`).
@@ -80,7 +81,8 @@ unsafe def assert_not_exists.linter : linter where
     pure none
   auto_decls := true
   no_errors_found := "All `assert_not_exists` declarations eventually exist."
-  errors_found := "The following declarations used in `assert_not_exists` never exist; perhaps there is a typo."
+  errors_found :=
+    "The following declarations used in `assert_not_exists` never exist; perhaps there is a typo."
   is_fast := true
 #align assert_not_exists.linter assert_not_exists.linter
 
@@ -131,7 +133,9 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
       let tt ← succeeds (get_decl marker) |
         add_decl (declaration.defn marker [] et e default tt)
       pure ()
-    | some i => (throwError "Instance `{(← i)} : {← e}` is not allowed to be found in this file." : tactic Unit)
+    | some i =>
+      (throwError "Instance `{(← i)} : {← e}` is not allowed to be found in this file." :
+        tactic Unit)
 #align assert_no_instance assert_no_instance
 
 /-- A linter for checking that the declarations marked `assert_no_instance` eventually exist. -/
@@ -147,7 +151,8 @@ unsafe def assert_no_instance.linter : linter where
   auto_decls := true
   no_errors_found := "All `assert_no_instance` instances eventually exist."
   errors_found :=
-    "The following typeclass instances used in `assert_no_instance` never exist; perhaps they " ++ "are missing?"
+    "The following typeclass instances used in `assert_no_instance` never exist; perhaps they " ++
+      "are missing?"
   is_fast := false
 #align assert_no_instance.linter assert_no_instance.linter
 

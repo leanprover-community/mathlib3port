@@ -70,17 +70,20 @@ instance hasForgetToBoundedOrder :
 
 instance hasForgetToLattice :
     HasForget₂ BoundedLatticeCat
-      LatticeCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+      LatticeCat where forget₂ :=
+    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
 #align BoundedLattice.has_forget_to_Lattice BoundedLatticeCat.hasForgetToLattice
 
 instance hasForgetToSemilatticeSup :
     HasForget₂ BoundedLatticeCat
-      SemilatticeSupCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toSupBotHom }
+      SemilatticeSupCat where forget₂ :=
+    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toSupBotHom }
 #align BoundedLattice.has_forget_to_SemilatticeSup BoundedLatticeCat.hasForgetToSemilatticeSup
 
 instance hasForgetToSemilatticeInf :
     HasForget₂ BoundedLatticeCat
-      SemilatticeInfCat where forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toInfTopHom }
+      SemilatticeInfCat where forget₂ :=
+    { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toInfTopHom }
 #align BoundedLattice.has_forget_to_SemilatticeInf BoundedLatticeCat.hasForgetToSemilatticeInf
 
 @[simp]
@@ -90,7 +93,8 @@ theorem coe_forget_to_BoundedOrder (X : BoundedLatticeCat) :
 #align BoundedLattice.coe_forget_to_BoundedOrder BoundedLatticeCat.coe_forget_to_BoundedOrder
 
 @[simp]
-theorem coe_forget_to_Lattice (X : BoundedLatticeCat) : ↥((forget₂ BoundedLatticeCat LatticeCat).obj X) = ↥X :=
+theorem coe_forget_to_Lattice (X : BoundedLatticeCat) :
+    ↥((forget₂ BoundedLatticeCat LatticeCat).obj X) = ↥X :=
   rfl
 #align BoundedLattice.coe_forget_to_Lattice BoundedLatticeCat.coe_forget_to_Lattice
 
@@ -151,7 +155,8 @@ def dual : BoundedLatticeCat ⥤ BoundedLatticeCat where
 /-- The equivalence between `BoundedLattice` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : BoundedLatticeCat ≌ BoundedLatticeCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoundedLattice.dual_equiv BoundedLatticeCat.dualEquiv
 
@@ -161,7 +166,8 @@ theorem BoundedLattice_dual_comp_forget_to_BoundedOrder :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat BoundedOrderCat =
       forget₂ BoundedLatticeCat BoundedOrderCat ⋙ BoundedOrderCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_BoundedOrder BoundedLattice_dual_comp_forget_to_BoundedOrder
+#align
+  BoundedLattice_dual_comp_forget_to_BoundedOrder BoundedLattice_dual_comp_forget_to_BoundedOrder
 
 theorem BoundedLattice_dual_comp_forget_to_Lattice :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat LatticeCat =
@@ -173,11 +179,13 @@ theorem BoundedLattice_dual_comp_forget_to_SemilatticeSup :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat SemilatticeSupCat =
       forget₂ BoundedLatticeCat SemilatticeInfCat ⋙ SemilatticeInfCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_SemilatticeSup BoundedLattice_dual_comp_forget_to_SemilatticeSup
+#align
+  BoundedLattice_dual_comp_forget_to_SemilatticeSup BoundedLattice_dual_comp_forget_to_SemilatticeSup
 
 theorem BoundedLattice_dual_comp_forget_to_SemilatticeInf :
     BoundedLatticeCat.dual ⋙ forget₂ BoundedLatticeCat SemilatticeInfCat =
       forget₂ BoundedLatticeCat SemilatticeSupCat ⋙ SemilatticeSupCat.dual :=
   rfl
-#align BoundedLattice_dual_comp_forget_to_SemilatticeInf BoundedLattice_dual_comp_forget_to_SemilatticeInf
+#align
+  BoundedLattice_dual_comp_forget_to_SemilatticeInf BoundedLattice_dual_comp_forget_to_SemilatticeInf
 

@@ -14,12 +14,13 @@ bundled maps.
 -/
 
 
-variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {E' : Type _}
-  [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {H' : Type _} [TopologicalSpace H']
-  (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
-  (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E'']
-  {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
-  [ChartedSpace H'' M''] (n : ℕ∞)
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
+  [NormedSpace 𝕜 E] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _}
+  [TopologicalSpace H] {H' : Type _} [TopologicalSpace H'] (I : ModelWithCorners 𝕜 E H)
+  (I' : ModelWithCorners 𝕜 E' H') (M : Type _) [TopologicalSpace M] [ChartedSpace H M] (M' : Type _)
+  [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedAddCommGroup E'']
+  [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''}
+  {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M''] (n : ℕ∞)
 
 /-- Bundled `n` times continuously differentiable maps. -/
 @[protect_proj]
@@ -38,7 +39,8 @@ def SmoothMap :=
 scoped[Manifold] notation "C^" n "⟮" I ", " M "; " I' ", " M' "⟯" => ContMdiffMap I I' M M' n
 
 -- mathport name: cont_mdiff_map.self
-scoped[Manifold] notation "C^" n "⟮" I ", " M "; " k "⟯" => ContMdiffMap I (modelWithCornersSelf k k) M k n
+scoped[Manifold]
+  notation "C^" n "⟮" I ", " M "; " k "⟯" => ContMdiffMap I (modelWithCornersSelf k k) M k n
 
 open Manifold
 
@@ -52,7 +54,8 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
   ⟨fun f => ⟨f, f.contMdiffToFun.Continuous⟩⟩
 
-attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
+attribute [to_additive_ignore_args 21]
+  ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
 
 variable {f g : C^n⟮I, M; I', M'⟯}
 
@@ -81,7 +84,8 @@ protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : Mdiffere
   f.Mdifferentiable x
 #align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
 
-theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by cases f <;> cases g <;> cases h <;> rfl
+theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
+  cases f <;> cases g <;> cases h <;> rfl
 #align cont_mdiff_map.coe_inj ContMdiffMap.coe_inj
 
 @[ext.1]
@@ -100,7 +104,8 @@ def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, 
 #align cont_mdiff_map.comp ContMdiffMap.comp
 
 @[simp]
-theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (x : M) : f.comp g x = f (g x) :=
+theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (x : M) :
+    f.comp g x = f (g x) :=
   rfl
 #align cont_mdiff_map.comp_apply ContMdiffMap.comp_apply
 
@@ -114,7 +119,8 @@ def const (y : M') : C^n⟮I, M; I', M'⟯ :=
 
 end ContMdiffMap
 
-instance ContinuousLinearMap.hasCoeToContMdiffMap : Coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
+instance ContinuousLinearMap.hasCoeToContMdiffMap :
+    Coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
   ⟨fun f => ⟨f.toFun, f.ContMdiff⟩⟩
 #align continuous_linear_map.has_coe_to_cont_mdiff_map ContinuousLinearMap.hasCoeToContMdiffMap
 

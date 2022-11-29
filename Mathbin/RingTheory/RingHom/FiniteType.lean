@@ -34,7 +34,8 @@ theorem finite_type_holds_for_localization_away : HoldsForLocalizationAway @Fini
     rw [Algebra.smul_def]
     rfl
   exact IsLocalization.finiteTypeOfMonoidFg (Submonoid.powers r) S
-#align ring_hom.finite_type_holds_for_localization_away RingHom.finite_type_holds_for_localization_away
+#align
+  ring_hom.finite_type_holds_for_localization_away RingHom.finite_type_holds_for_localization_away
 
 theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @FiniteType := by
   -- Setup algebra intances.
@@ -88,7 +89,8 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
     -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
     -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
     obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ :=
-      IsLocalization.exists_smul_mem_of_mem_adjoin (Submonoid.powers (r : S)) x (t r) (Algebra.adjoin R _) _ _ _
+      IsLocalization.exists_smul_mem_of_mem_adjoin (Submonoid.powers (r : S)) x (t r)
+        (Algebra.adjoin R _) _ _ _
     · exact ⟨n₂, hn₂⟩
       
     · intro x hx
@@ -103,11 +105,12 @@ theorem finite_type_of_localization_span_target : OfLocalizationSpanTarget @Fini
       trivial
       
     
-#align ring_hom.finite_type_of_localization_span_target RingHom.finite_type_of_localization_span_target
+#align
+  ring_hom.finite_type_of_localization_span_target RingHom.finite_type_of_localization_span_target
 
 theorem finite_type_is_local : PropertyIsLocal @FiniteType :=
-  ⟨localization_finite_type, finite_type_of_localization_span_target, finite_type_stable_under_composition,
-    finite_type_holds_for_localization_away⟩
+  ⟨localization_finite_type, finite_type_of_localization_span_target,
+    finite_type_stable_under_composition, finite_type_holds_for_localization_away⟩
 #align ring_hom.finite_type_is_local RingHom.finite_type_is_local
 
 theorem finite_type_respects_iso : RingHom.RespectsIso @RingHom.FiniteType :=

@@ -18,13 +18,16 @@ intervals as finsets and fintypes.
 open Finset Int
 
 instance : LocallyFiniteOrder ℤ where
-  finsetIcc a b := (Finset.range (b + 1 - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
+  finsetIcc a b :=
+    (Finset.range (b + 1 - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
   finsetIco a b := (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
-  finsetIoc a b := (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
-  finsetIoo a b := (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
+  finsetIoc a b :=
+    (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
+  finsetIoo a b :=
+    (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finset_mem_Icc a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
-      add_left_embedding_apply]
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+      Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h
@@ -37,8 +40,8 @@ instance : LocallyFiniteOrder ℤ where
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
       
   finset_mem_Ico a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
-      add_left_embedding_apply]
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+      Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       exact ⟨Int.le.intro rfl, lt_sub_iff_add_lt'.mp h⟩
@@ -49,8 +52,8 @@ instance : LocallyFiniteOrder ℤ where
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
       
   finset_mem_Ioc a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
-      add_left_embedding_apply]
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+      Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h
@@ -62,8 +65,8 @@ instance : LocallyFiniteOrder ℤ where
       exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
       
   finset_mem_Ioo a b x := by
-    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
-      add_left_embedding_apply]
+    simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply,
+      Nat.cast_embedding_apply, add_left_embedding_apply]
     constructor
     · rintro ⟨a, h, rfl⟩
       rw [sub_sub, lt_sub_iff_add_lt'] at h
@@ -80,7 +83,8 @@ namespace Int
 variable (a b : ℤ)
 
 theorem Icc_eq_finset_map :
-    icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
+    icc a b =
+      (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 #align int.Icc_eq_finset_map Int.Icc_eq_finset_map
 
@@ -90,12 +94,14 @@ theorem Ico_eq_finset_map :
 #align int.Ico_eq_finset_map Int.Ico_eq_finset_map
 
 theorem Ioc_eq_finset_map :
-    ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
+    ioc a b =
+      (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 #align int.Ioc_eq_finset_map Int.Ioc_eq_finset_map
 
 theorem Ioo_eq_finset_map :
-    ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
+    ioo a b =
+      (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 #align int.Ioo_eq_finset_map Int.Ioo_eq_finset_map
 
@@ -123,32 +129,40 @@ theorem card_Ioo : (ioo a b).card = (b - a - 1).toNat := by
   rw [Finset.card_map, Finset.card_range]
 #align int.card_Ioo Int.card_Ioo
 
-theorem card_Icc_of_le (h : a ≤ b + 1) : ((icc a b).card : ℤ) = b + 1 - a := by rw [card_Icc, to_nat_sub_of_le h]
+theorem card_Icc_of_le (h : a ≤ b + 1) : ((icc a b).card : ℤ) = b + 1 - a := by
+  rw [card_Icc, to_nat_sub_of_le h]
 #align int.card_Icc_of_le Int.card_Icc_of_le
 
-theorem card_Ico_of_le (h : a ≤ b) : ((ico a b).card : ℤ) = b - a := by rw [card_Ico, to_nat_sub_of_le h]
+theorem card_Ico_of_le (h : a ≤ b) : ((ico a b).card : ℤ) = b - a := by
+  rw [card_Ico, to_nat_sub_of_le h]
 #align int.card_Ico_of_le Int.card_Ico_of_le
 
-theorem card_Ioc_of_le (h : a ≤ b) : ((ioc a b).card : ℤ) = b - a := by rw [card_Ioc, to_nat_sub_of_le h]
+theorem card_Ioc_of_le (h : a ≤ b) : ((ioc a b).card : ℤ) = b - a := by
+  rw [card_Ioc, to_nat_sub_of_le h]
 #align int.card_Ioc_of_le Int.card_Ioc_of_le
 
-theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
+theorem card_Ioo_of_lt (h : a < b) : ((ioo a b).card : ℤ) = b - a - 1 := by
+  rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
 #align int.card_Ioo_of_lt Int.card_Ioo_of_lt
 
 @[simp]
-theorem card_fintype_Icc : Fintype.card (Set.icc a b) = (b + 1 - a).toNat := by rw [← card_Icc, Fintype.card_of_finset]
+theorem card_fintype_Icc : Fintype.card (Set.icc a b) = (b + 1 - a).toNat := by
+  rw [← card_Icc, Fintype.card_of_finset]
 #align int.card_fintype_Icc Int.card_fintype_Icc
 
 @[simp]
-theorem card_fintype_Ico : Fintype.card (Set.ico a b) = (b - a).toNat := by rw [← card_Ico, Fintype.card_of_finset]
+theorem card_fintype_Ico : Fintype.card (Set.ico a b) = (b - a).toNat := by
+  rw [← card_Ico, Fintype.card_of_finset]
 #align int.card_fintype_Ico Int.card_fintype_Ico
 
 @[simp]
-theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = (b - a).toNat := by rw [← card_Ioc, Fintype.card_of_finset]
+theorem card_fintype_Ioc : Fintype.card (Set.ioc a b) = (b - a).toNat := by
+  rw [← card_Ioc, Fintype.card_of_finset]
 #align int.card_fintype_Ioc Int.card_fintype_Ioc
 
 @[simp]
-theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = (b - a - 1).toNat := by rw [← card_Ioo, Fintype.card_of_finset]
+theorem card_fintype_Ioo : Fintype.card (Set.ioo a b) = (b - a - 1).toNat := by
+  rw [← card_Ioo, Fintype.card_of_finset]
 #align int.card_fintype_Ioo Int.card_fintype_Ioo
 
 theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.icc a b) : ℤ) = b + 1 - a := by

@@ -30,8 +30,8 @@ open Nnreal Ennreal TopologicalSpace BigOperators MeasureTheory
 
 namespace MeasureTheory
 
-variable {α 𝕜 E : Type _} {m m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  {μ : Measure α} {f : α → E} {s : Set α}
+variable {α 𝕜 E : Type _} {m m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [CompleteSpace E] {μ : Measure α} {f : α → E} {s : Set α}
 
 theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.restrict s] 0) :
     μ[f|m] =ᵐ[μ.restrict s] 0 := by
@@ -100,13 +100,16 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
     rw [Set.indicator_self_add_compl s f]
   refine' (this.trans _).symm
   calc
-    s.indicator (μ[s.indicator f + sᶜ.indicator f|m]) =ᵐ[μ] s.indicator (μ[s.indicator f|m] + μ[sᶜ.indicator f|m]) := by
+    s.indicator (μ[s.indicator f + sᶜ.indicator f|m]) =ᵐ[μ]
+        s.indicator (μ[s.indicator f|m] + μ[sᶜ.indicator f|m]) :=
+      by
       have : μ[s.indicator f + sᶜ.indicator f|m] =ᵐ[μ] μ[s.indicator f|m] + μ[sᶜ.indicator f|m] :=
         condexp_add (hf_int.indicator (hm _ hs)) (hf_int.indicator (hm _ hs.compl))
       filter_upwards [this] with x hx
       classical rw [Set.indicator_apply, Set.indicator_apply, hx]
     _ = s.indicator (μ[s.indicator f|m]) + s.indicator (μ[sᶜ.indicator f|m]) := s.indicator_add' _ _
-    _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) + s.indicator (sᶜ.indicator (μ[sᶜ.indicator f|m])) := by
+    _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) + s.indicator (sᶜ.indicator (μ[sᶜ.indicator f|m])) :=
+      by
       refine' filter.eventually_eq.rfl.add _
       have : sᶜ.indicator (μ[sᶜ.indicator f|m]) =ᵐ[μ] μ[sᶜ.indicator f|m] := by
         refine' (condexp_indicator_aux hs.compl _).symm.trans _
@@ -131,8 +134,9 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
     
 #align measure_theory.condexp_indicator MeasureTheory.condexp_indicator
 
-theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hs_m : measurable_set[m] s)
-    (hf_int : Integrable f μ) : μ.restrict s[f|m] =ᵐ[μ.restrict s] μ[f|m] := by
+theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
+    (hs_m : measurable_set[m] s) (hf_int : Integrable f μ) :
+    μ.restrict s[f|m] =ᵐ[μ.restrict s] μ[f|m] := by
   have : sigma_finite ((μ.restrict s).trim hm) := by
     rw [← restrict_trim hm _ hs_m]
     infer_instance
@@ -143,7 +147,8 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
   refine' eventually_eq.trans _ (condexp_indicator hf_int hs_m)
   refine' ae_eq_condexp_of_forall_set_integral_eq hm (hf_int.indicator (hm _ hs_m)) _ _ _
   · intro t ht hμt
-    rw [← integrable_indicator_iff (hm _ ht), Set.indicator_indicator, Set.inter_comm, ← Set.indicator_indicator]
+    rw [← integrable_indicator_iff (hm _ ht), Set.indicator_indicator, Set.inter_comm, ←
+      Set.indicator_indicator]
     suffices h_int_restrict : integrable (t.indicator (μ.restrict s[f|m])) (μ.restrict s)
     · rw [integrable_indicator_iff (hm _ hs_m), integrable_on]
       rw [integrable_indicator_iff (hm _ ht), integrable_on] at h_int_restrict⊢
@@ -153,13 +158,15 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
     
   · intro t ht hμt
     calc
-      (∫ x in t, s.indicator (μ.restrict s[f|m]) x ∂μ) = ∫ x in t, (μ.restrict s[f|m]) x ∂μ.restrict s := by
-        rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m), measure.restrict_restrict (hm _ ht),
-          Set.inter_comm]
+      (∫ x in t, s.indicator (μ.restrict s[f|m]) x ∂μ) =
+          ∫ x in t, (μ.restrict s[f|m]) x ∂μ.restrict s :=
+        by
+        rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
+          measure.restrict_restrict (hm _ ht), Set.inter_comm]
       _ = ∫ x in t, f x ∂μ.restrict s := set_integral_condexp hm hf_int.integrable_on ht
       _ = ∫ x in t, s.indicator f x ∂μ := by
-        rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m), measure.restrict_restrict (hm _ ht),
-          Set.inter_comm]
+        rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
+          measure.restrict_restrict (hm _ ht), Set.inter_comm]
       
     
   · exact (strongly_measurable_condexp.indicator hs_m).aeStronglyMeasurable'
@@ -168,9 +175,11 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
 
 /-- If the restriction to a `m`-measurable set `s` of a σ-algebra `m` is equal to the restriction
 to `s` of another σ-algebra `m₂` (hypothesis `hs`), then `μ[f | m] =ᵐ[μ.restrict s] μ[f | m₂]`. -/
-theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0)
-    (hm₂ : m₂ ≤ m0) [SigmaFinite (μ.trim hm)] [SigmaFinite (μ.trim hm₂)] (hs_m : measurable_set[m] s)
-    (hs : ∀ t, measurable_set[m] (s ∩ t) ↔ measurable_set[m₂] (s ∩ t)) : μ[f|m] =ᵐ[μ.restrict s] μ[f|m₂] := by
+theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : MeasurableSpace α}
+    {μ : Measure α} (hm : m ≤ m0) (hm₂ : m₂ ≤ m0) [SigmaFinite (μ.trim hm)]
+    [SigmaFinite (μ.trim hm₂)] (hs_m : measurable_set[m] s)
+    (hs : ∀ t, measurable_set[m] (s ∩ t) ↔ measurable_set[m₂] (s ∩ t)) :
+    μ[f|m] =ᵐ[μ.restrict s] μ[f|m₂] := by
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   have hs_m₂ : measurable_set[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
   by_cases hf_int : integrable f μ
@@ -179,12 +188,15 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
     
   refine' ((condexp_indicator hf_int hs_m).symm.trans _).trans (condexp_indicator hf_int hs_m₂)
   refine'
-    ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm₂ (fun s hs hμs => integrable_condexp.integrable_on)
-      (fun s hs hμs => integrable_condexp.integrable_on) _ _ strongly_measurable_condexp.ae_strongly_measurable'
+    ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm₂
+      (fun s hs hμs => integrable_condexp.integrable_on)
+      (fun s hs hμs => integrable_condexp.integrable_on) _ _
+      strongly_measurable_condexp.ae_strongly_measurable'
   swap
   · have : strongly_measurable[m] (μ[s.indicator f|m]) := strongly_measurable_condexp
     refine'
-      this.ae_strongly_measurable'.ae_strongly_measurable'_of_measurable_space_le_on hm hs_m (fun t => (hs t).mp) _
+      this.ae_strongly_measurable'.ae_strongly_measurable'_of_measurable_space_le_on hm hs_m
+        (fun t => (hs t).mp) _
     exact condexp_ae_eq_restrict_zero hs_m.compl (indicator_ae_eq_restrict_compl (hm _ hs_m))
     
   intro t ht hμt
@@ -196,7 +208,9 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
     suffices μ[s.indicator f|m] =ᵐ[μ.restrict (sᶜ)] 0 by
       rw [Set.inter_comm, ← measure.restrict_restrict (hm₂ _ ht)]
       calc
-        (∫ x : α in t, (μ[s.indicator f|m]) x ∂μ.restrict (sᶜ)) = ∫ x : α in t, 0 ∂μ.restrict (sᶜ) := by
+        (∫ x : α in t, (μ[s.indicator f|m]) x ∂μ.restrict (sᶜ)) =
+            ∫ x : α in t, 0 ∂μ.restrict (sᶜ) :=
+          by
           refine' set_integral_congr_ae (hm₂ _ ht) _
           filter_upwards [this] with x hx h using hx
         _ = 0 := integral_zero _ _

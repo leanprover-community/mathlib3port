@@ -32,7 +32,8 @@ namespace Preorder
 open CategoryTheory
 
 -- see Note [lower instance priority]
-/-- The category structure coming from a preorder. There is a morphism `X ⟶ Y` if and only if `X ≤ Y`.
+/--
+The category structure coming from a preorder. There is a morphism `X ⟶ Y` if and only if `X ≤ Y`.
 
 Because we don't allow morphisms to live in `Prop`,
 we have to define `X ⟶ Y` as `ulift (plift (X ≤ Y))`.
@@ -157,8 +158,9 @@ def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y where
   left_inv a := (e.unitIso.app a).to_eq.symm
   right_inv b := (e.counitIso.app b).to_eq
   map_rel_iff' a a' :=
-    ⟨fun h => ((Equivalence.unit e).app a ≫ e.inverse.map h.Hom ≫ (Equivalence.unitInv e).app a').le, fun h : a ≤ a' =>
-      (e.Functor.map h.Hom).le⟩
+    ⟨fun h =>
+      ((Equivalence.unit e).app a ≫ e.inverse.map h.Hom ≫ (Equivalence.unitInv e).app a').le,
+      fun h : a ≤ a' => (e.Functor.map h.Hom).le⟩
 #align category_theory.equivalence.to_order_iso CategoryTheory.Equivalence.toOrderIso
 
 -- `@[simps]` on `equivalence.to_order_iso` produces lemmas that fail the `simp_nf` linter,
@@ -169,9 +171,11 @@ theorem Equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = 
 #align category_theory.equivalence.to_order_iso_apply CategoryTheory.Equivalence.to_order_iso_apply
 
 @[simp]
-theorem Equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) : e.toOrderIso.symm y = e.inverse.obj y :=
+theorem Equivalence.to_order_iso_symm_apply (e : X ≌ Y) (y : Y) :
+    e.toOrderIso.symm y = e.inverse.obj y :=
   rfl
-#align category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.to_order_iso_symm_apply
+#align
+  category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.to_order_iso_symm_apply
 
 end PartialOrder
 

@@ -39,7 +39,8 @@ local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 
 /-- Extend `fr : F →ₗ[ℝ] ℝ` to `F →ₗ[𝕜] 𝕜` in a way that will also be continuous and have its norm
 bounded by `‖fr‖` if `fr` is continuous. -/
-noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 := by
+noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) :
+    F →ₗ[𝕜] 𝕜 := by
   let fc : F → 𝕜 := fun x => (fr x : 𝕜) - (I : 𝕜) * fr ((I : 𝕜) • x)
   have add : ∀ x y : F, fc (x + y) = fc x + fc y := by
     intro x y
@@ -65,7 +66,8 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     · simp [h]
       
     rw [mul_sub, ← mul_assoc, smul_smul, h]
-    simp only [neg_mul, LinearMap.map_neg, one_mul, one_smul, mul_neg, of_real_neg, neg_smul, sub_neg_eq_add, add_comm]
+    simp only [neg_mul, LinearMap.map_neg, one_mul, one_smul, mul_neg, of_real_neg, neg_smul,
+      sub_neg_eq_add, add_comm]
   have smul_𝕜 : ∀ (c : 𝕜) (x : F), fc (c • x) = c • fc x := by
     intro c x
     rw [← re_add_im c, add_smul, add_smul, add, smul_ℝ, ← smul_smul, smul_ℝ, smul_I, ← mul_assoc]
@@ -95,11 +97,12 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
     
   let fx := (lm x)⁻¹
   let t := fx / (abs𝕜 fx : 𝕜)
-  have ht : abs𝕜 t = 1 := by field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
+  have ht : abs𝕜 t = 1 := by
+    field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
   have h1 : (fr (t • x) : 𝕜) = lm (t • x) := by
     apply ext
-    · simp only [lm, of_real_re, LinearMap.extend_to_𝕜'_apply, mul_re, I_re, of_real_im, zero_mul, AddMonoidHom.map_sub,
-        sub_zero, mul_zero]
+    · simp only [lm, of_real_re, LinearMap.extend_to_𝕜'_apply, mul_re, I_re, of_real_im, zero_mul,
+        AddMonoidHom.map_sub, sub_zero, mul_zero]
       rfl
       
     · symm
@@ -124,12 +127,13 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
 #align norm_bound norm_bound
 
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/
-noncomputable def ContinuousLinearMap.extendTo𝕜' [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) : F →L[𝕜] 𝕜 :=
+noncomputable def ContinuousLinearMap.extendTo𝕜' [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F]
+    (fr : F →L[ℝ] ℝ) : F →L[𝕜] 𝕜 :=
   LinearMap.mkContinuous _ ‖fr‖ (norm_bound _)
 #align continuous_linear_map.extend_to_𝕜' ContinuousLinearMap.extendTo𝕜'
 
-theorem ContinuousLinearMap.extend_to_𝕜'_apply [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
-    fr.extendTo𝕜' x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x) :=
+theorem ContinuousLinearMap.extend_to_𝕜'_apply [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F]
+    (fr : F →L[ℝ] ℝ) (x : F) : fr.extendTo𝕜' x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x) :=
   rfl
 #align continuous_linear_map.extend_to_𝕜'_apply ContinuousLinearMap.extend_to_𝕜'_apply
 

@@ -49,7 +49,8 @@ theorem id_app (X : TopCat.{u}) (x : X) : (𝟙 X : X → X) x = x :=
 #align Top.id_app TopCat.id_app
 
 @[simp]
-theorem comp_app {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g : X → Z) x = g (f x) :=
+theorem comp_app {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
+    (f ≫ g : X → Z) x = g (f x) :=
   rfl
 #align Top.comp_app TopCat.comp_app
 

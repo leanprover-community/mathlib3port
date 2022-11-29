@@ -25,20 +25,22 @@ open Cardinal Polynomial
 
 namespace Algebraic
 
-theorem aleph_0_le_cardinal_mk_of_char_zero (R A : Type _) [CommRing R] [IsDomain R] [Ring A] [Algebra R A]
-    [CharZero A] : ℵ₀ ≤ (#{ x : A // IsAlgebraic R x }) :=
-  @mk_le_of_injective (ULift ℕ) { x : A | IsAlgebraic R x } (fun n => ⟨_, is_algebraic_nat n.down⟩) fun m n hmn => by
-    simpa using hmn
+theorem aleph_0_le_cardinal_mk_of_char_zero (R A : Type _) [CommRing R] [IsDomain R] [Ring A]
+    [Algebra R A] [CharZero A] : ℵ₀ ≤ (#{ x : A // IsAlgebraic R x }) :=
+  @mk_le_of_injective (ULift ℕ) { x : A | IsAlgebraic R x } (fun n => ⟨_, is_algebraic_nat n.down⟩)
+    fun m n hmn => by simpa using hmn
 #align algebraic.aleph_0_le_cardinal_mk_of_char_zero Algebraic.aleph_0_le_cardinal_mk_of_char_zero
 
 section lift
 
-variable (R : Type u) (A : Type v) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A] [NoZeroSmulDivisors R A]
+variable (R : Type u) (A : Type v) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A]
+  [NoZeroSmulDivisors R A]
 
 theorem cardinal_mk_lift_le_mul :
     Cardinal.lift.{u, v} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v, u} (#R[X]) * ℵ₀ := by
   rw [← mk_ulift, ← mk_ulift]
-  let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} R[X] := fun x => ULift.up (Classical.choose x.1.2)
+  let g : ULift.{u} { x : A | IsAlgebraic R x } → ULift.{v} R[X] := fun x =>
+    ULift.up (Classical.choose x.1.2)
   apply Cardinal.mk_le_mk_mul_of_mk_preimage_le g fun f => _
   rsuffices : Fintype (g ⁻¹' {f})
   · exact mk_le_aleph_0
@@ -84,15 +86,18 @@ theorem countable_of_encodable : Set.Countable { x : A | IsAlgebraic R x } := by
 #align algebraic.countable_of_encodable Algebraic.countable_of_encodable
 
 @[simp]
-theorem cardinal_mk_of_encodable_of_char_zero [CharZero A] [IsDomain R] : (#{ x : A // IsAlgebraic R x }) = ℵ₀ :=
+theorem cardinal_mk_of_encodable_of_char_zero [CharZero A] [IsDomain R] :
+    (#{ x : A // IsAlgebraic R x }) = ℵ₀ :=
   le_antisymm (by simp) (aleph_0_le_cardinal_mk_of_char_zero R A)
-#align algebraic.cardinal_mk_of_encodable_of_char_zero Algebraic.cardinal_mk_of_encodable_of_char_zero
+#align
+  algebraic.cardinal_mk_of_encodable_of_char_zero Algebraic.cardinal_mk_of_encodable_of_char_zero
 
 end lift
 
 section NonLift
 
-variable (R A : Type u) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A] [NoZeroSmulDivisors R A]
+variable (R A : Type u) [CommRing R] [CommRing A] [IsDomain A] [Algebra R A]
+  [NoZeroSmulDivisors R A]
 
 theorem cardinal_mk_le_mul : (#{ x : A // IsAlgebraic R x }) ≤ (#R[X]) * ℵ₀ := by
   rw [← lift_id (#_), ← lift_id (#R[X])]

@@ -53,8 +53,8 @@ attribute [local semireducible] reflected
 
 /-- `rat.reflect q` represents the rational number `q` as a numeral expression of type `ℚ`. -/
 unsafe instance rat.reflect : has_reflect ℚ :=
-  rat.mk_numeral q(ℚ) q((by infer_instance : Zero ℚ)) q((by infer_instance : One ℚ)) q((by infer_instance : Add ℚ))
-    q((by infer_instance : Neg ℚ)) q((by infer_instance : Div ℚ))
+  rat.mk_numeral q(ℚ) q((by infer_instance : Zero ℚ)) q((by infer_instance : One ℚ))
+    q((by infer_instance : Add ℚ)) q((by infer_instance : Neg ℚ)) q((by infer_instance : Div ℚ))
 #align rat.reflect rat.reflect
 
 end
@@ -70,7 +70,11 @@ end
     rat.to_pexpr
     ( q : ℚ ) : pexpr
     :=
-      let n := q . num let d := q . denom if d = 1 then n . to_pexpr else ` `( $ ( n . to_pexpr ) / $ ( d . to_pexpr ) )
+      let
+        n := q . num
+        let
+          d := q . denom
+          if d = 1 then n . to_pexpr else ` `( $ ( n . to_pexpr ) / $ ( d . to_pexpr ) )
 #align rat.to_pexpr rat.to_pexpr
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -88,7 +92,14 @@ end
         do
           let m ← e₁ . toNat
             let n ← e₂ . toNat
-            if c : m n then if h : 1 < n then return ⟨ m , n , lt_trans zero_lt_one h , c ⟩ else none else none
+            if
+              c
+              :
+              m n
+              then
+              if h : 1 < n then return ⟨ m , n , lt_trans zero_lt_one h , c ⟩ else none
+              else
+              none
       | e => do let n ← e . toNat return n
 #align expr.to_nonneg_rat expr.to_nonneg_rat
 

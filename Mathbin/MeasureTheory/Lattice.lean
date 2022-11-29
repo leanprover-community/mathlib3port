@@ -131,12 +131,14 @@ theorem Measurable.sup (hf : Measurable f) (hg : Measurable g) : Measurable fun 
 #align measurable.sup Measurable.sup
 
 @[measurability]
-theorem AeMeasurable.sup' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f ⊔ g) μ :=
+theorem AeMeasurable.sup' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
+    AeMeasurable (f ⊔ g) μ :=
   measurableSup.compAeMeasurable (hf.prod_mk hg)
 #align ae_measurable.sup' AeMeasurable.sup'
 
 @[measurability]
-theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a ⊔ g a) μ :=
+theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
+    AeMeasurable (fun a => f a ⊔ g a) μ :=
   measurableSup.compAeMeasurable (hf.prod_mk hg)
 #align ae_measurable.sup AeMeasurable.sup
 
@@ -197,12 +199,14 @@ theorem Measurable.inf (hf : Measurable f) (hg : Measurable g) : Measurable fun 
 #align measurable.inf Measurable.inf
 
 @[measurability]
-theorem AeMeasurable.inf' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (f ⊓ g) μ :=
+theorem AeMeasurable.inf' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
+    AeMeasurable (f ⊓ g) μ :=
   measurableInf.compAeMeasurable (hf.prod_mk hg)
 #align ae_measurable.inf' AeMeasurable.inf'
 
 @[measurability]
-theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) : AeMeasurable (fun a => f a ⊓ g a) μ :=
+theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
+    AeMeasurable (fun a => f a ⊓ g a) μ :=
   measurableInf.compAeMeasurable (hf.prod_mk hg)
 #align ae_measurable.inf AeMeasurable.inf
 

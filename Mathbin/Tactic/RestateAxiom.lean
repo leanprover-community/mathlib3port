@@ -17,7 +17,8 @@ unsafe def restate_axiom (d : declaration) (new_name : Name) : tactic Unit := do
   let (levels, type, value, reducibility, trusted) ←
     pure
         (match d.to_definition with
-        | declaration.defn Name levels type value reducibility trusted => (levels, type, value, reducibility, trusted)
+        | declaration.defn Name levels type value reducibility trusted =>
+          (levels, type, value, reducibility, trusted)
         | _ => undefined)
   let (s, u) ← mk_simp_set false [] []
   let new_type ← s.dsimplify [] type <|> pure type
@@ -36,14 +37,16 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
       (do
           let last := last.toString
           let last :=
-            if last.toList.ilast = ''' then (last.toList.reverse.drop 1).reverse.asString else last ++ "_lemma"
+            if last.toList.ilast = ''' then (last.toList.reverse.drop 1).reverse.asString
+            else last ++ "_lemma"
           return (mkStrName old last)) <|>
         failed
     | nil => undefined
   | some new => return (mkStrName old.getPrefix new.toString)
 #align name_lemma name_lemma
 
-/-- `restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.
+/--
+`restate_axiom` makes a new copy of a structure field, first definitionally simplifying the type.
 This is useful to remove `auto_param` or `opt_param` from the statement.
 
 As an example, we have:
@@ -71,7 +74,9 @@ unsafe def restate_axiom_cmd (_ : parse <| tk "restate_axiom") : lean.parser Uni
   let from_lemma ← ident
   let new_name ← optional ident
   let from_lemma_fully_qualified ← resolve_constant from_lemma
-  let d ← get_decl from_lemma_fully_qualified <|> fail ("declaration " ++ toString from_lemma ++ " not found")
+  let d ←
+    get_decl from_lemma_fully_qualified <|>
+        fail ("declaration " ++ toString from_lemma ++ " not found")
   do
     let new_name ← name_lemma from_lemma_fully_qualified new_name
     restate_axiom d new_name

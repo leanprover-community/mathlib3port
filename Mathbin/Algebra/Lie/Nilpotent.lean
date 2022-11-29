@@ -104,7 +104,8 @@ theorem lcs_le_self : N.lcs k ≤ N := by
     
 #align lie_submodule.lcs_le_self LieSubmodule.lcs_le_self
 
-theorem lower_central_series_eq_lcs_comap : lowerCentralSeries R L N k = (N.lcs k).comap N.incl := by
+theorem lower_central_series_eq_lcs_comap : lowerCentralSeries R L N k = (N.lcs k).comap N.incl :=
+  by
   induction' k with k ih
   · simp
     
@@ -114,7 +115,8 @@ theorem lower_central_series_eq_lcs_comap : lowerCentralSeries R L N k = (N.lcs 
       apply lcs_le_self
     rw [ih, LieSubmodule.comap_bracket_eq _ _ N.incl N.ker_incl this]
     
-#align lie_submodule.lower_central_series_eq_lcs_comap LieSubmodule.lower_central_series_eq_lcs_comap
+#align
+  lie_submodule.lower_central_series_eq_lcs_comap LieSubmodule.lower_central_series_eq_lcs_comap
 
 theorem lower_central_series_map_eq_lcs : (lowerCentralSeries R L N k).map N.incl = N.lcs k := by
   rw [lower_central_series_eq_lcs_comap, LieSubmodule.map_comap_incl, inf_eq_right]
@@ -163,7 +165,8 @@ theorem iterate_to_endomorphism_mem_lower_central_series (x : L) (m : M) (k : �
   induction' k with k ih
   · simp only [Function.iterate_zero]
     
-  · simp only [lower_central_series_succ, Function.comp_apply, Function.iterate_succ', to_endomorphism_apply_apply]
+  · simp only [lower_central_series_succ, Function.comp_apply, Function.iterate_succ',
+      to_endomorphism_apply_apply]
     exact LieSubmodule.lie_mem_lie _ _ (LieSubmodule.mem_top x) ih
     
 #align
@@ -171,8 +174,8 @@ theorem iterate_to_endomorphism_mem_lower_central_series (x : L) (m : M) (k : �
 
 variable {R L M}
 
-theorem map_lower_central_series_le {M₂ : Type w₁} [AddCommGroup M₂] [Module R M₂] [LieRingModule L M₂]
-    [LieModule R L M₂] (k : ℕ) (f : M →ₗ⁅R,L⁆ M₂) :
+theorem map_lower_central_series_le {M₂ : Type w₁} [AddCommGroup M₂] [Module R M₂]
+    [LieRingModule L M₂] [LieModule R L M₂] (k : ℕ) (f : M →ₗ⁅R,L⁆ M₂) :
     LieSubmodule.map f (lowerCentralSeries R L M k) ≤ lowerCentralSeries R L M₂ k := by
   induction' k with k ih
   · simp only [LieModule.lower_central_series_zero, le_top]
@@ -186,7 +189,8 @@ variable (R L M)
 
 open LieAlgebra
 
-theorem derived_series_le_lower_central_series (k : ℕ) : derivedSeries R L k ≤ lowerCentralSeries R L L k := by
+theorem derived_series_le_lower_central_series (k : ℕ) :
+    derivedSeries R L k ≤ lowerCentralSeries R L L k := by
   induction' k with k h
   · rw [derived_series_def, derived_series_of_ideal_zero, lower_central_series_zero]
     exact le_rfl
@@ -195,7 +199,8 @@ theorem derived_series_le_lower_central_series (k : ℕ) : derivedSeries R L k �
     rw [derived_series_def, derived_series_of_ideal_succ, lower_central_series_succ]
     exact LieSubmodule.mono_lie _ _ _ _ h' h
     
-#align lie_module.derived_series_le_lower_central_series LieModule.derived_series_le_lower_central_series
+#align
+  lie_module.derived_series_le_lower_central_series LieModule.derived_series_le_lower_central_series
 
 /-- A Lie module is nilpotent if its lower central series reaches 0 (in a finite number of
 steps). -/
@@ -210,13 +215,14 @@ theorem is_nilpotent_iff : IsNilpotent R L M ↔ ∃ k, lowerCentralSeries R L M
 
 variable {R L M}
 
-theorem _root_.lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot (N : LieSubmodule R L M) :
+theorem LieSubmodule.is_nilpotent_iff_exists_lcs_eq_bot (N : LieSubmodule R L M) :
     LieModule.IsNilpotent R L N ↔ ∃ k, N.lcs k = ⊥ := by
   rw [is_nilpotent_iff]
   refine' exists_congr fun k => _
-  rw [N.lower_central_series_eq_lcs_comap k, LieSubmodule.comap_incl_eq_bot, inf_eq_right.mpr (N.lcs_le_self k)]
+  rw [N.lower_central_series_eq_lcs_comap k, LieSubmodule.comap_incl_eq_bot,
+    inf_eq_right.mpr (N.lcs_le_self k)]
 #align
-  lie_module._root_.lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot lie_module._root_.lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot
+  lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot LieSubmodule.is_nilpotent_iff_exists_lcs_eq_bot
 
 variable (R L M)
 
@@ -231,8 +237,7 @@ theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
     ∃ k : ℕ, ∀ x : L, toEndomorphism R L M x ^ k = 0 := by
   obtain ⟨k, hM⟩ := hM
   use k
-  intro x
-  ext m
+  intro x; ext m
   rw [LinearMap.pow_apply, LinearMap.zero_apply, ← @LieSubmodule.mem_bot R L M, ← hM]
   exact iterate_to_endomorphism_mem_lower_central_series R L M x m k
 #align lie_module.nilpotent_endo_of_nilpotent_module LieModule.nilpotent_endo_of_nilpotent_module
@@ -244,12 +249,11 @@ it will be possible to state it in the language of weight spaces. -/
 theorem infi_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
     (⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace 0) = ⊤ := by
   ext m
-  simp only [Module.EndCat.mem_maximal_generalized_eigenspace, Submodule.mem_top, sub_zero, iff_true_iff, zero_smul,
-    Submodule.mem_infi]
+  simp only [Module.EndCat.mem_maximal_generalized_eigenspace, Submodule.mem_top, sub_zero,
+    iff_true_iff, zero_smul, Submodule.mem_infi]
   intro x
   obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
-  use k
-  rw [hk]
+  use k; rw [hk]
   exact LinearMap.zero_apply m
 #align
   lie_module.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent LieModule.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent
@@ -280,21 +284,24 @@ noncomputable def nilpotencyLength : ℕ :=
   inf { k | lowerCentralSeries R L M k = ⊥ }
 #align lie_module.nilpotency_length LieModule.nilpotencyLength
 
-theorem nilpotency_length_eq_zero_iff [IsNilpotent R L M] : nilpotencyLength R L M = 0 ↔ Subsingleton M := by
+theorem nilpotency_length_eq_zero_iff [IsNilpotent R L M] :
+    nilpotencyLength R L M = 0 ↔ Subsingleton M := by
   let s := { k | lower_central_series R L M k = ⊥ }
   have hs : s.nonempty := by
     obtain ⟨k, hk⟩ := (by infer_instance : IsNilpotent R L M)
     exact ⟨k, hk⟩
   change Inf s = 0 ↔ _
-  rw [← LieSubmodule.subsingleton_iff R L M, ← subsingleton_iff_bot_eq_top, ← lower_central_series_zero,
-    @eq_comm (LieSubmodule R L M)]
+  rw [← LieSubmodule.subsingleton_iff R L M, ← subsingleton_iff_bot_eq_top, ←
+    lower_central_series_zero, @eq_comm (LieSubmodule R L M)]
   refine' ⟨fun h => h ▸ Nat.Inf_mem hs, fun h => _⟩
   rw [Nat.Inf_eq_zero]
   exact Or.inl h
 #align lie_module.nilpotency_length_eq_zero_iff LieModule.nilpotency_length_eq_zero_iff
 
 theorem nilpotency_length_eq_succ_iff (k : ℕ) :
-    nilpotencyLength R L M = k + 1 ↔ lowerCentralSeries R L M (k + 1) = ⊥ ∧ lowerCentralSeries R L M k ≠ ⊥ := by
+    nilpotencyLength R L M = k + 1 ↔
+      lowerCentralSeries R L M (k + 1) = ⊥ ∧ lowerCentralSeries R L M k ≠ ⊥ :=
+  by
   let s := { k | lower_central_series R L M k = ⊥ }
   change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
   have hs : ∀ k₁ k₂, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s := by
@@ -314,7 +321,8 @@ noncomputable def lowerCentralSeriesLast : LieSubmodule R L M :=
   | k + 1 => lowerCentralSeries R L M k
 #align lie_module.lower_central_series_last LieModule.lowerCentralSeriesLast
 
-theorem lower_central_series_last_le_max_triv : lowerCentralSeriesLast R L M ≤ maxTrivSubmodule R L M := by
+theorem lower_central_series_last_le_max_triv :
+    lowerCentralSeriesLast R L M ≤ maxTrivSubmodule R L M := by
   rw [lower_central_series_last]
   cases' h : nilpotency_length R L M with k
   · exact bot_le
@@ -323,7 +331,8 @@ theorem lower_central_series_last_le_max_triv : lowerCentralSeriesLast R L M ≤
     rw [nilpotency_length_eq_succ_iff, lower_central_series_succ] at h
     exact h.1
     
-#align lie_module.lower_central_series_last_le_max_triv LieModule.lower_central_series_last_le_max_triv
+#align
+  lie_module.lower_central_series_last_le_max_triv LieModule.lower_central_series_last_le_max_triv
 
 theorem nontrivial_lower_central_series_last [Nontrivial M] [IsNilpotent R L M] :
     Nontrivial (lowerCentralSeriesLast R L M) := by
@@ -335,15 +344,20 @@ theorem nontrivial_lower_central_series_last [Nontrivial M] [IsNilpotent R L M] 
   · rw [nilpotency_length_eq_succ_iff] at h
     exact h.2
     
-#align lie_module.nontrivial_lower_central_series_last LieModule.nontrivial_lower_central_series_last
+#align
+  lie_module.nontrivial_lower_central_series_last LieModule.nontrivial_lower_central_series_last
 
-theorem nontrivial_max_triv_of_is_nilpotent [Nontrivial M] [IsNilpotent R L M] : Nontrivial (maxTrivSubmodule R L M) :=
-  Set.nontrivial_mono (lower_central_series_last_le_max_triv R L M) (nontrivial_lower_central_series_last R L M)
+theorem nontrivial_max_triv_of_is_nilpotent [Nontrivial M] [IsNilpotent R L M] :
+    Nontrivial (maxTrivSubmodule R L M) :=
+  Set.nontrivial_mono (lower_central_series_last_le_max_triv R L M)
+    (nontrivial_lower_central_series_last R L M)
 #align lie_module.nontrivial_max_triv_of_is_nilpotent LieModule.nontrivial_max_triv_of_is_nilpotent
 
 @[simp]
 theorem coe_lcs_range_to_endomorphism_eq (k : ℕ) :
-    (lowerCentralSeries R (toEndomorphism R L M).range M k : Submodule R M) = lowerCentralSeries R L M k := by
+    (lowerCentralSeries R (toEndomorphism R L M).range M k : Submodule R M) =
+      lowerCentralSeries R L M k :=
+  by
   induction' k with k ih
   · simp
     
@@ -356,15 +370,20 @@ theorem coe_lcs_range_to_endomorphism_eq (k : ℕ) :
       exact ⟨y, LieSubmodule.mem_top _, n, hn, rfl⟩
       
     · rintro ⟨x, hx, n, hn, rfl⟩
-      exact ⟨⟨to_endomorphism R L M x, LieHom.mem_range_self _ x⟩, LieSubmodule.mem_top _, n, hn, rfl⟩
+      exact
+        ⟨⟨to_endomorphism R L M x, LieHom.mem_range_self _ x⟩, LieSubmodule.mem_top _, n, hn, rfl⟩
       
     
 #align lie_module.coe_lcs_range_to_endomorphism_eq LieModule.coe_lcs_range_to_endomorphism_eq
 
 @[simp]
-theorem is_nilpotent_range_to_endomorphism_iff : IsNilpotent R (toEndomorphism R L M).range M ↔ IsNilpotent R L M := by
-  constructor <;> rintro ⟨k, hk⟩ <;> use k <;> rw [← LieSubmodule.coe_to_submodule_eq_iff] at hk⊢ <;> simpa using hk
-#align lie_module.is_nilpotent_range_to_endomorphism_iff LieModule.is_nilpotent_range_to_endomorphism_iff
+theorem is_nilpotent_range_to_endomorphism_iff :
+    IsNilpotent R (toEndomorphism R L M).range M ↔ IsNilpotent R L M := by
+  constructor <;> rintro ⟨k, hk⟩ <;> use k <;>
+      rw [← LieSubmodule.coe_to_submodule_eq_iff] at hk⊢ <;>
+    simpa using hk
+#align
+  lie_module.is_nilpotent_range_to_endomorphism_iff LieModule.is_nilpotent_range_to_endomorphism_iff
 
 end LieModule
 
@@ -395,7 +414,7 @@ theorem ucs_add (k l : ℕ) : N.ucs (k + l) = (N.ucs l).ucs k :=
 
 @[mono]
 theorem ucs_mono (k : ℕ) (h : N₁ ≤ N₂) : N₁.ucs k ≤ N₂.ucs k := by
-  induction' k with k ih
+  induction' k with k ih;
   · simpa
     
   simp only [ucs_succ]
@@ -408,14 +427,16 @@ theorem ucs_eq_self_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : �
     
   · rwa [ucs_succ, ih]
     
-#align lie_submodule.ucs_eq_self_of_centralizer_eq_self LieSubmodule.ucs_eq_self_of_centralizer_eq_self
+#align
+  lie_submodule.ucs_eq_self_of_centralizer_eq_self LieSubmodule.ucs_eq_self_of_centralizer_eq_self
 
 /-- If a Lie module `M` contains a self-centralizing Lie submodule `N`, then all terms of the upper
 central series of `M` are contained in `N`.
 
 An important instance of this situation arises from a Cartan subalgebra `H ⊆ L` with the roles of
 `L`, `M`, `N` played by `H`, `L`, `H`, respectively. -/
-theorem ucs_le_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) : (⊥ : LieSubmodule R L M).ucs k ≤ N₁ := by
+theorem ucs_le_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) :
+    (⊥ : LieSubmodule R L M).ucs k ≤ N₁ := by
   rw [← ucs_eq_self_of_centralizer_eq_self h k]
   mono
   simp
@@ -423,7 +444,7 @@ theorem ucs_le_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) : 
 
 theorem lcs_add_le_iff (l k : ℕ) : N₁.lcs (l + k) ≤ N₂ ↔ N₁.lcs l ≤ N₂.ucs k := by
   revert l
-  induction' k with k ih
+  induction' k with k ih;
   · simp
     
   intro l
@@ -436,8 +457,9 @@ theorem lcs_le_iff (k : ℕ) : N₁.lcs k ≤ N₂ ↔ N₁ ≤ N₂.ucs k := by
 #align lie_submodule.lcs_le_iff LieSubmodule.lcs_le_iff
 
 theorem gc_lcs_ucs (k : ℕ) :
-    GaloisConnection (fun N : LieSubmodule R L M => N.lcs k) fun N : LieSubmodule R L M => N.ucs k := fun N₁ N₂ =>
-  lcs_le_iff k
+    GaloisConnection (fun N : LieSubmodule R L M => N.lcs k) fun N : LieSubmodule R L M =>
+      N.ucs k :=
+  fun N₁ N₂ => lcs_le_iff k
 #align lie_submodule.gc_lcs_ucs LieSubmodule.gc_lcs_ucs
 
 theorem ucs_eq_top_iff (k : ℕ) : N.ucs k = ⊤ ↔ LieModule.lowerCentralSeries R L M k ≤ N := by
@@ -445,14 +467,14 @@ theorem ucs_eq_top_iff (k : ℕ) : N.ucs k = ⊤ ↔ LieModule.lowerCentralSerie
   rfl
 #align lie_submodule.ucs_eq_top_iff LieSubmodule.ucs_eq_top_iff
 
-theorem _root_.lie_module.is_nilpotent_iff_exists_ucs_eq_top :
+theorem LieModule.is_nilpotent_iff_exists_ucs_eq_top :
     LieModule.IsNilpotent R L M ↔ ∃ k, (⊥ : LieSubmodule R L M).ucs k = ⊤ := by
   rw [LieModule.is_nilpotent_iff]
   exact exists_congr fun k => by simp [ucs_eq_top_iff]
-#align
-  lie_submodule._root_.lie_module.is_nilpotent_iff_exists_ucs_eq_top lie_submodule._root_.lie_module.is_nilpotent_iff_exists_ucs_eq_top
+#align lie_module.is_nilpotent_iff_exists_ucs_eq_top LieModule.is_nilpotent_iff_exists_ucs_eq_top
 
-theorem ucs_comap_incl (k : ℕ) : ((⊥ : LieSubmodule R L M).ucs k).comap N.incl = (⊥ : LieSubmodule R L N).ucs k := by
+theorem ucs_comap_incl (k : ℕ) :
+    ((⊥ : LieSubmodule R L M).ucs k).comap N.incl = (⊥ : LieSubmodule R L N).ucs k := by
   induction' k with k ih
   · exact N.ker_incl
     
@@ -460,9 +482,11 @@ theorem ucs_comap_incl (k : ℕ) : ((⊥ : LieSubmodule R L M).ucs k).comap N.in
     
 #align lie_submodule.ucs_comap_incl LieSubmodule.ucs_comap_incl
 
-theorem is_nilpotent_iff_exists_self_le_ucs : LieModule.IsNilpotent R L N ↔ ∃ k, N ≤ (⊥ : LieSubmodule R L M).ucs k :=
-  by simp_rw [LieModule.is_nilpotent_iff_exists_ucs_eq_top, ← ucs_comap_incl, comap_incl_eq_top]
-#align lie_submodule.is_nilpotent_iff_exists_self_le_ucs LieSubmodule.is_nilpotent_iff_exists_self_le_ucs
+theorem is_nilpotent_iff_exists_self_le_ucs :
+    LieModule.IsNilpotent R L N ↔ ∃ k, N ≤ (⊥ : LieSubmodule R L M).ucs k := by
+  simp_rw [LieModule.is_nilpotent_iff_exists_ucs_eq_top, ← ucs_comap_incl, comap_incl_eq_top]
+#align
+  lie_submodule.is_nilpotent_iff_exists_self_le_ucs LieSubmodule.is_nilpotent_iff_exists_self_le_ucs
 
 end LieSubmodule
 
@@ -490,8 +514,8 @@ theorem Function.Surjective.lie_module_lcs_map_eq (k : ℕ) :
         { m | ∃ (x : L₂)(n : _), n ∈ lower_central_series R L M k ∧ ⁅x, g n⁆ = m }
       by
       simp only [← LieSubmodule.mem_coe_submodule] at this
-      simp [← LieSubmodule.mem_coe_submodule, ← ih, LieSubmodule.lie_ideal_oper_eq_linear_span', Submodule.map_span,
-        -Submodule.span_image, this]
+      simp [← LieSubmodule.mem_coe_submodule, ← ih, LieSubmodule.lie_ideal_oper_eq_linear_span',
+        Submodule.map_span, -Submodule.span_image, this]
     ext m₂
     constructor
     · rintro ⟨m, ⟨x, n, hn, rfl⟩, rfl⟩
@@ -513,21 +537,22 @@ theorem Function.Surjective.lie_module_is_nilpotent [IsNilpotent R L M] : IsNilp
 
 omit hf hg hfg
 
-theorem Equiv.lie_module_is_nilpotent_iff (f : L ≃ₗ⁅R⁆ L₂) (g : M ≃ₗ[R] M₂) (hfg : ∀ x m, ⁅f x, g m⁆ = g ⁅x, m⁆) :
-    IsNilpotent R L M ↔ IsNilpotent R L₂ M₂ := by
+theorem Equiv.lie_module_is_nilpotent_iff (f : L ≃ₗ⁅R⁆ L₂) (g : M ≃ₗ[R] M₂)
+    (hfg : ∀ x m, ⁅f x, g m⁆ = g ⁅x, m⁆) : IsNilpotent R L M ↔ IsNilpotent R L₂ M₂ := by
   constructor <;> intro h
   · have hg : surjective (g : M →ₗ[R] M₂) := g.surjective
     exact f.surjective.lie_module_is_nilpotent hg hfg
     
   · have hg : surjective (g.symm : M₂ →ₗ[R] M) := g.symm.surjective
     refine' f.symm.surjective.lie_module_is_nilpotent hg fun x m => _
-    rw [LinearEquiv.coe_coe, LieEquiv.coe_to_lie_hom, ← g.symm_apply_apply ⁅f.symm x, g.symm m⁆, ← hfg,
-      f.apply_symm_apply, g.apply_symm_apply]
+    rw [LinearEquiv.coe_coe, LieEquiv.coe_to_lie_hom, ← g.symm_apply_apply ⁅f.symm x, g.symm m⁆, ←
+      hfg, f.apply_symm_apply, g.apply_symm_apply]
     
 #align equiv.lie_module_is_nilpotent_iff Equiv.lie_module_is_nilpotent_iff
 
 @[simp]
-theorem LieModule.is_nilpotent_of_top_iff : IsNilpotent R (⊤ : LieSubalgebra R L) M ↔ IsNilpotent R L M :=
+theorem LieModule.is_nilpotent_of_top_iff :
+    IsNilpotent R (⊤ : LieSubalgebra R L) M ↔ IsNilpotent R L M :=
   Equiv.lie_module_is_nilpotent_iff LieSubalgebra.topEquiv (1 : M ≃ₗ[R] M) fun x m => rfl
 #align lie_module.is_nilpotent_of_top_iff LieModule.is_nilpotent_of_top_iff
 
@@ -535,11 +560,11 @@ end Morphisms
 
 end NilpotentModules
 
-instance (priority := 100) LieAlgebra.is_solvable_of_is_nilpotent (R : Type u) (L : Type v) [CommRing R] [LieRing L]
-    [LieAlgebra R L] [hL : LieModule.IsNilpotent R L L] : LieAlgebra.IsSolvable R L := by
+instance (priority := 100) LieAlgebra.is_solvable_of_is_nilpotent (R : Type u) (L : Type v)
+    [CommRing R] [LieRing L] [LieAlgebra R L] [hL : LieModule.IsNilpotent R L L] :
+    LieAlgebra.IsSolvable R L := by
   obtain ⟨k, h⟩ : ∃ k, LieModule.lowerCentralSeries R L L k = ⊥ := hL.nilpotent
-  use k
-  rw [← le_bot_iff] at h⊢
+  use k; rw [← le_bot_iff] at h⊢
   exact le_trans (LieModule.derived_series_le_lower_central_series R L k) h
 #align lie_algebra.is_solvable_of_is_nilpotent LieAlgebra.is_solvable_of_is_nilpotent
 
@@ -551,13 +576,15 @@ variable [CommRing R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L'
 
 /-- We say a Lie algebra is nilpotent when it is nilpotent as a Lie module over itself via the
 adjoint representation. -/
-abbrev LieAlgebra.IsNilpotent (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L] : Prop :=
+abbrev LieAlgebra.IsNilpotent (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L] :
+    Prop :=
   LieModule.IsNilpotent R L L
 #align lie_algebra.is_nilpotent LieAlgebra.IsNilpotent
 
 open LieAlgebra
 
-theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] : ∃ k : ℕ, ∀ x : L, ad R L x ^ k = 0 :=
+theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] :
+    ∃ k : ℕ, ∀ x : L, ad R L x ^ k = 0 :=
   LieModule.nilpotent_endo_of_nilpotent_module R L L
 #align lie_algebra.nilpotent_ad_of_nilpotent_algebra LieAlgebra.nilpotent_ad_of_nilpotent_algebra
 
@@ -580,7 +607,9 @@ whether we regard `L ⧸ I` as an `L` module or an `L ⧸ I` module.
 TODO: This result obviously generalises but the generalisation requires the missing definition of
 morphisms between Lie modules over different Lie algebras. -/
 theorem coe_lower_central_series_ideal_quot_eq {I : LieIdeal R L} (k : ℕ) :
-    (lowerCentralSeries R L (L ⧸ I) k : Submodule R (L ⧸ I)) = lowerCentralSeries R (L ⧸ I) (L ⧸ I) k := by
+    (lowerCentralSeries R L (L ⧸ I) k : Submodule R (L ⧸ I)) =
+      lowerCentralSeries R (L ⧸ I) (L ⧸ I) k :=
+  by
   induction' k with k ih
   · simp only [LieSubmodule.top_coe_submodule, LieModule.lower_central_series_zero]
     
@@ -616,13 +645,15 @@ theorem LieModule.coe_lower_central_series_ideal_le {I : LieIdeal R L} (k : ℕ)
 /-- A central extension of nilpotent Lie algebras is nilpotent. -/
 theorem LieAlgebra.nilpotent_of_nilpotent_quotient {I : LieIdeal R L} (h₁ : I ≤ center R L)
     (h₂ : IsNilpotent R (L ⧸ I)) : IsNilpotent R L := by
-  suffices LieModule.IsNilpotent R L (L ⧸ I) by exact LieModule.nilpotent_of_nilpotent_quotient R L L h₁ this
+  suffices LieModule.IsNilpotent R L (L ⧸ I) by
+    exact LieModule.nilpotent_of_nilpotent_quotient R L L h₁ this
   obtain ⟨k, hk⟩ := h₂
   use k
   simp [← LieSubmodule.coe_to_submodule_eq_iff, coe_lower_central_series_ideal_quot_eq, hk]
 #align lie_algebra.nilpotent_of_nilpotent_quotient LieAlgebra.nilpotent_of_nilpotent_quotient
 
-theorem LieAlgebra.non_trivial_center_of_is_nilpotent [Nontrivial L] [IsNilpotent R L] : Nontrivial <| center R L :=
+theorem LieAlgebra.non_trivial_center_of_is_nilpotent [Nontrivial L] [IsNilpotent R L] :
+    Nontrivial <| center R L :=
   LieModule.nontrivial_max_triv_of_is_nilpotent R L L
 #align lie_algebra.non_trivial_center_of_is_nilpotent LieAlgebra.non_trivial_center_of_is_nilpotent
 
@@ -654,8 +685,7 @@ theorem Function.Injective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L'] {f
   { nilpotent := by
       obtain ⟨k, hk⟩ := id h₁
       use k
-      apply LieIdeal.bot_of_map_eq_bot h₂
-      rw [eq_bot_iff, ← hk]
+      apply LieIdeal.bot_of_map_eq_bot h₂; rw [eq_bot_iff, ← hk]
       apply LieIdeal.map_lower_central_series_le }
 #align function.injective.lie_algebra_is_nilpotent Function.Injective.lie_algebra_is_nilpotent
 
@@ -668,7 +698,8 @@ theorem Function.Surjective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L] {f
       simp only [LieIdeal.map_eq_bot_iff, bot_le] }
 #align function.surjective.lie_algebra_is_nilpotent Function.Surjective.lie_algebra_is_nilpotent
 
-theorem LieEquiv.nilpotent_iff_equiv_nilpotent (e : L ≃ₗ⁅R⁆ L') : IsNilpotent R L ↔ IsNilpotent R L' := by
+theorem LieEquiv.nilpotent_iff_equiv_nilpotent (e : L ≃ₗ⁅R⁆ L') :
+    IsNilpotent R L ↔ IsNilpotent R L' := by
   constructor <;> intro h
   · exact e.symm.injective.lie_algebra_is_nilpotent
     
@@ -741,8 +772,8 @@ theorem coe_lcs_eq : (I.lcs M k : Submodule R M) = lowerCentralSeries R I M k :=
   · simp
     
   · simp_rw [lower_central_series_succ, lcs_succ, LieSubmodule.lie_ideal_oper_eq_linear_span', ←
-      (I.lcs M k).mem_coe_submodule, ih, LieSubmodule.mem_coe_submodule, LieSubmodule.mem_top, exists_true_left,
-      (I : LieSubalgebra R L).coe_bracket_of_module]
+      (I.lcs M k).mem_coe_submodule, ih, LieSubmodule.mem_coe_submodule, LieSubmodule.mem_top,
+      exists_true_left, (I : LieSubalgebra R L).coe_bracket_of_module]
     congr
     ext m
     constructor
@@ -761,7 +792,8 @@ section OfAssociative
 
 variable (R : Type u) {A : Type v} [CommRing R] [Ring A] [Algebra R A]
 
-theorem LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) : IsNilpotent (LieAlgebra.ad R A a) := by
+theorem LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) :
+    IsNilpotent (LieAlgebra.ad R A a) := by
   rw [LieAlgebra.ad_eq_lmul_left_sub_lmul_right]
   have hl : IsNilpotent (LinearMap.mulLeft R a) := by rwa [LinearMap.is_nilpotent_mul_left_iff]
   have hr : IsNilpotent (LinearMap.mulRight R a) := by rwa [LinearMap.is_nilpotent_mul_right_iff]
@@ -772,14 +804,16 @@ theorem LieAlgebra.ad_nilpotent_of_nilpotent {a : A} (h : IsNilpotent a) : IsNil
 variable {R}
 
 theorem LieSubalgebra.is_nilpotent_ad_of_is_nilpotent_ad {L : Type v} [LieRing L] [LieAlgebra R L]
-    (K : LieSubalgebra R L) {x : K} (h : IsNilpotent (LieAlgebra.ad R L ↑x)) : IsNilpotent (LieAlgebra.ad R K x) := by
+    (K : LieSubalgebra R L) {x : K} (h : IsNilpotent (LieAlgebra.ad R L ↑x)) :
+    IsNilpotent (LieAlgebra.ad R K x) := by
   obtain ⟨n, hn⟩ := h
   use n
   exact LinearMap.submodule_pow_eq_zero_of_pow_eq_zero (K.ad_comp_incl_eq x) hn
-#align lie_subalgebra.is_nilpotent_ad_of_is_nilpotent_ad LieSubalgebra.is_nilpotent_ad_of_is_nilpotent_ad
+#align
+  lie_subalgebra.is_nilpotent_ad_of_is_nilpotent_ad LieSubalgebra.is_nilpotent_ad_of_is_nilpotent_ad
 
-theorem LieAlgebra.is_nilpotent_ad_of_is_nilpotent {L : LieSubalgebra R A} {x : L} (h : IsNilpotent (x : A)) :
-    IsNilpotent (LieAlgebra.ad R L x) :=
+theorem LieAlgebra.is_nilpotent_ad_of_is_nilpotent {L : LieSubalgebra R A} {x : L}
+    (h : IsNilpotent (x : A)) : IsNilpotent (LieAlgebra.ad R L x) :=
   L.is_nilpotent_ad_of_is_nilpotent_ad <| LieAlgebra.ad_nilpotent_of_nilpotent R h
 #align lie_algebra.is_nilpotent_ad_of_is_nilpotent LieAlgebra.is_nilpotent_ad_of_is_nilpotent
 

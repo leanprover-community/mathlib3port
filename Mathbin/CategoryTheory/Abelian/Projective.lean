@@ -35,7 +35,8 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
 theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
-  (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
+  (Abelian.exact_iff _ _).2 <|
+    ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
 #align category_theory.exact_d_f CategoryTheory.exact_d_f
 
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
@@ -71,9 +72,11 @@ variable [EnoughProjectives C]
 /-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]
 def ofComplex (Z : C) : ChainComplex C ℕ :=
-  ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z)) (Projective.d (Projective.π Z))
-    fun ⟨X, Y, f⟩ => ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
-#align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolutionCat.ofComplex
+  ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z))
+    (Projective.d (Projective.π Z)) fun ⟨X, Y, f⟩ =>
+    ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
+#align
+  category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolutionCat.ofComplex
 
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
@@ -110,15 +113,17 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- If `X` is a chain complex of projective objects and we have a quasi-isomorphism `f : X ⟶ Y[0]`,
 then `X` is a projective resolution of `Y.` -/
-def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C} (f : X ⟶ (ChainComplex.single₀ C).obj Y) [QuasiIso f]
-    (H : ∀ n, Projective (X.x n)) : ProjectiveResolutionCat Y where
+def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
+    (f : X ⟶ (ChainComplex.single₀ C).obj Y) [QuasiIso f] (H : ∀ n, Projective (X.x n)) :
+    ProjectiveResolutionCat Y where
   complex := X
   π := f
   Projective := H
   exact₀ := f.to_single₀_exact_d_f_at_zero
   exact := f.to_single₀_exact_at_succ
   Epi := f.to_single₀_epi_at_zero
-#align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
+#align
+  homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
 
 end HomologicalComplex.Hom
 

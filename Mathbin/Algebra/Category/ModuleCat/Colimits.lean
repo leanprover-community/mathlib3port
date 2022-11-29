@@ -68,12 +68,15 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
 
   | refl : ∀ x, relation x x
   | symm : ∀ (x y) (h : relation x y), relation y x
-  | trans : ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
+  |
+  trans :
+    ∀ (x y z) (h : relation x y) (k : relation y z), relation x z-- There's always a `map` relation
 
   |
   map :
     ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j),
-      relation (of j' (F.map f x)) (of j x)-- Then one relation per operation, describing the interaction with `of`
+      relation (of j' (F.map f x))
+        (of j x)-- Then one relation per operation, describing the interaction with `of`
 
   | zero : ∀ j, relation (of j 0) zero
   | neg : ∀ (j) (x : F.obj j), relation (of j (-x)) (neg (of j x))
@@ -86,7 +89,9 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | neg_1 : ∀ (x x') (r : relation x x'), relation (neg x) (neg x')
   | add_1 : ∀ (x x' y) (r : relation x x'), relation (add x y) (add x' y)
   | add_2 : ∀ (x y y') (r : relation y y'), relation (add x y) (add x y')
-  | smul_1 : ∀ (s) (x x') (r : relation x x'), relation (smul s x) (smul s x')-- And one relation per axiom
+  |
+  smul_1 :
+    ∀ (s) (x x') (r : relation x x'), relation (smul s x) (smul s x')-- And one relation per axiom
 
   | zero_add : ∀ x, relation (add zero x) x
   | add_zero : ∀ x, relation (add x zero) x
@@ -216,9 +221,7 @@ instance : Module R (ColimitType F) where
     apply relation.smul_add
     rfl
     rfl
-  smul_zero s := by
-    apply Quot.sound
-    apply relation.smul_zero
+  smul_zero s := by apply Quot.sound; apply relation.smul_zero
   add_smul s t x := by
     induction x
     dsimp
@@ -243,7 +246,8 @@ theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : Colimit
 #align Module.colimits.quot_neg ModuleCat.Colimits.quot_neg
 
 @[simp]
-theorem quot_add (x y) : Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
+theorem quot_add (x y) :
+    Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align Module.colimits.quot_add ModuleCat.Colimits.quot_add
 
@@ -273,7 +277,8 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F where
 #align Module.colimits.cocone_morphism ModuleCat.Colimits.coconeMorphism
 
 @[simp]
-theorem cocone_naturality {j j' : J} (f : j ⟶ j') : F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
+theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
+    F.map f ≫ coconeMorphism F j' = coconeMorphism F j := by
   ext
   apply Quot.sound
   apply Relation.Map
@@ -395,7 +400,8 @@ def colimitCoconeIsColimit : IsColimit (colimitCocone F) where
     ext
     induction x
     induction x
-    · have w' := congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
+    · have w' :=
+        congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
       erw [w']
       rfl
       
@@ -414,7 +420,8 @@ instance has_colimits_Module :
     HasColimits
       (ModuleCat.{max v u}
         R) where HasColimitsOfShape J 𝒥 :=
-    { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+    { HasColimit := fun F =>
+        has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 #align Module.colimits.has_colimits_Module ModuleCat.Colimits.has_colimits_Module
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise

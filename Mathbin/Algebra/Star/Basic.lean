@@ -96,7 +96,8 @@ protected def Equiv.star [HasInvolutiveStar R] : Equiv.Perm R :=
   star_involutive.toPerm _
 #align equiv.star Equiv.star
 
-theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by simp [h]
+theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by
+  simp [h]
 #align eq_star_of_eq_star eq_star_of_eq_star
 
 theorem eq_star_iff_eq_star [HasInvolutiveStar R] {r s : R} : r = star s ↔ s = star r :=
@@ -137,7 +138,8 @@ theorem star_mul' [CommSemigroup R] [StarSemigroup R] (x y : R) : star (x * y) =
 /-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
 def starMulEquiv [Semigroup R] [StarSemigroup R] : R ≃* Rᵐᵒᵖ :=
-  { (HasInvolutiveStar.star_involutive.toPerm star).trans opEquiv with toFun := fun x => MulOpposite.op (star x),
+  { (HasInvolutiveStar.star_involutive.toPerm star).trans opEquiv with
+    toFun := fun x => MulOpposite.op (star x),
     map_mul' := fun x y => (star_mul x y).symm ▸ MulOpposite.op_mul _ _ }
 #align star_mul_equiv starMulEquiv
 
@@ -158,7 +160,8 @@ variable {R}
 
 @[simp]
 theorem star_pow [Monoid R] [StarSemigroup R] (x : R) (n : ℕ) : star (x ^ n) = star x ^ n :=
-  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
+  op_injective <|
+    ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_pow x n).trans (op_pow (star x) n).symm
 #align star_pow star_pow
 
 @[simp]
@@ -168,7 +171,8 @@ theorem star_inv [Group R] [StarSemigroup R] (x : R) : star x⁻¹ = (star x)⁻
 
 @[simp]
 theorem star_zpow [Group R] [StarSemigroup R] (x : R) (z : ℤ) : star (x ^ z) = star x ^ z :=
-  op_injective <| ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
+  op_injective <|
+    ((starMulEquiv : R ≃* Rᵐᵒᵖ).toMonoidHom.map_zpow x z).trans (op_zpow (star x) z).symm
 #align star_zpow star_zpow
 
 /-- When multiplication is commutative, `star` preserves division. -/
@@ -344,7 +348,8 @@ theorem star_ring_end_apply [CommSemiring R] [StarRing R] {x : R} : starRingEnd 
 #align star_ring_end_apply star_ring_end_apply
 
 @[simp]
-theorem star_ring_end_self_apply [CommSemiring R] [StarRing R] (x : R) : starRingEnd R (starRingEnd R x) = x :=
+theorem star_ring_end_self_apply [CommSemiring R] [StarRing R] (x : R) :
+    starRingEnd R (starRingEnd R x) = x :=
   star_star x
 #align star_ring_end_self_apply star_ring_end_self_apply
 
@@ -370,11 +375,13 @@ theorem star_div' [Field R] [StarRing R] (x y : R) : star (x / y) = star x / sta
 #align star_div' star_div'
 
 @[simp]
-theorem star_bit0 [AddMonoid R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by simp [bit0]
+theorem star_bit0 [AddMonoid R] [StarAddMonoid R] (r : R) : star (bit0 r) = bit0 (star r) := by
+  simp [bit0]
 #align star_bit0 star_bit0
 
 @[simp]
-theorem star_bit1 [Semiring R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by simp [bit1]
+theorem star_bit1 [Semiring R] [StarRing R] (r : R) : star (bit1 r) = bit1 (star r) := by
+  simp [bit1]
 #align star_bit1 star_bit1
 
 /-- Any commutative semiring admits the trivial `*`-structure.
@@ -397,7 +404,8 @@ class StarOrderedRing (R : Type u) [NonUnitalSemiring R] [PartialOrder R] extend
 namespace StarOrderedRing
 
 -- see note [lower instance priority]
-instance (priority := 100) [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R] : OrderedAddCommGroup R :=
+instance (priority := 100) [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R] :
+    OrderedAddCommGroup R :=
   { show NonUnitalRing R by infer_instance, show PartialOrder R by infer_instance,
     show StarOrderedRing R by infer_instance with }
 
@@ -431,14 +439,15 @@ section NonUnitalRing
 
 variable [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R]
 
-theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c := by
+theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c :=
+  by
   rw [← sub_nonneg] at hab⊢
   convert conjugate_nonneg hab c
   simp only [mul_sub, sub_mul]
 #align conjugate_le_conjugate conjugate_le_conjugate
 
-theorem conjugate_le_conjugate' {a b : R} (hab : a ≤ b) (c : R) : c * a * star c ≤ c * b * star c := by
-  simpa only [star_star] using conjugate_le_conjugate hab (star c)
+theorem conjugate_le_conjugate' {a b : R} (hab : a ≤ b) (c : R) : c * a * star c ≤ c * b * star c :=
+  by simpa only [star_star] using conjugate_le_conjugate hab (star c)
 #align conjugate_le_conjugate' conjugate_le_conjugate'
 
 end NonUnitalRing
@@ -479,7 +488,8 @@ end RingHomInvPair
 section
 
 /-- `star_hom_class F R S` states that `F` is a type of `star`-preserving maps from `R` to `S`. -/
-class StarHomClass (F : Type _) (R S : outParam (Type _)) [HasStar R] [HasStar S] extends FunLike F R fun _ => S where
+class StarHomClass (F : Type _) (R S : outParam (Type _)) [HasStar R] [HasStar S] extends
+  FunLike F R fun _ => S where
   map_star : ∀ (f : F) (r : R), f (star r) = star (f r)
 #align star_hom_class StarHomClass
 
@@ -526,7 +536,8 @@ theorem is_unit_star [Monoid R] [StarSemigroup R] {a : R} : IsUnit (star a) ↔ 
   ⟨fun h => star_star a ▸ h.star, IsUnit.star⟩
 #align is_unit_star is_unit_star
 
-theorem Ring.inverse_star [Semiring R] [StarRing R] (a : R) : Ring.inverse (star a) = star (Ring.inverse a) := by
+theorem Ring.inverse_star [Semiring R] [StarRing R] (a : R) :
+    Ring.inverse (star a) = star (Ring.inverse a) := by
   by_cases ha : IsUnit a
   · obtain ⟨u, rfl⟩ := ha
     rw [Ring.inverse_unit, ← Units.coe_star, Ring.inverse_unit, ← Units.coe_star_inv]
@@ -534,14 +545,15 @@ theorem Ring.inverse_star [Semiring R] [StarRing R] (a : R) : Ring.inverse (star
   rw [Ring.inverse_non_unit _ ha, Ring.inverse_non_unit _ (mt is_unit_star.mp ha), star_zero]
 #align ring.inverse_star Ring.inverse_star
 
-instance Invertible.star {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r] : Invertible (star r) where
+instance Invertible.star {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r] :
+    Invertible (star r) where
   invOf := star (⅟ r)
   inv_of_mul_self := by rw [← star_mul, mul_inv_of_self, star_one]
   mul_inv_of_self := by rw [← star_mul, inv_of_mul_self, star_one]
 #align invertible.star Invertible.star
 
-theorem star_inv_of {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r] [Invertible (star r)] :
-    star (⅟ r) = ⅟ (star r) := by
+theorem star_inv_of {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r]
+    [Invertible (star r)] : star (⅟ r) = ⅟ (star r) := by
   letI := Invertible.star r
   convert (rfl : star (⅟ r) = _)
 #align star_inv_of star_inv_of
@@ -561,9 +573,11 @@ theorem op_star [HasStar R] (r : R) : op (star r) = star (op r) :=
   rfl
 #align mul_opposite.op_star MulOpposite.op_star
 
-instance [HasInvolutiveStar R] : HasInvolutiveStar Rᵐᵒᵖ where star_involutive r := unop_injective (star_star r.unop)
+instance [HasInvolutiveStar R] :
+    HasInvolutiveStar Rᵐᵒᵖ where star_involutive r := unop_injective (star_star r.unop)
 
-instance [Monoid R] [StarSemigroup R] : StarSemigroup Rᵐᵒᵖ where star_mul x y := unop_injective (star_mul y.unop x.unop)
+instance [Monoid R] [StarSemigroup R] :
+    StarSemigroup Rᵐᵒᵖ where star_mul x y := unop_injective (star_mul y.unop x.unop)
 
 instance [AddMonoid R] [StarAddMonoid R] :
     StarAddMonoid Rᵐᵒᵖ where star_add x y := unop_injective (star_add x.unop y.unop)
@@ -575,7 +589,8 @@ end MulOpposite
 
 /-- A commutative star monoid is a star module over its opposite via
 `monoid.to_opposite_mul_action`. -/
-instance StarSemigroup.to_opposite_star_module [CommMonoid R] [StarSemigroup R] : StarModule Rᵐᵒᵖ R :=
+instance StarSemigroup.to_opposite_star_module [CommMonoid R] [StarSemigroup R] :
+    StarModule Rᵐᵒᵖ R :=
   ⟨fun r s => star_mul' s r.unop⟩
 #align star_semigroup.to_opposite_star_module StarSemigroup.to_opposite_star_module
 

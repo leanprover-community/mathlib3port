@@ -30,7 +30,8 @@ instance :
     One
       (SubMulAction R
         M) where one :=
-    { carrier := Set.range fun r : R => r • (1 : M), smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', mul_smul _ _ _⟩ }
+    { carrier := Set.range fun r : R => r • (1 : M),
+      smul_mem' := fun r m ⟨r', hr'⟩ => hr' ▸ ⟨r * r', mul_smul _ _ _⟩ }
 
 theorem coe_one : ↑(1 : SubMulAction R M) = Set.range fun r : R => r • (1 : M) :=
   rfl
@@ -41,7 +42,8 @@ theorem mem_one {x : M} : x ∈ (1 : SubMulAction R M) ↔ ∃ r : R, r • 1 = 
   Iff.rfl
 #align sub_mul_action.mem_one SubMulAction.mem_one
 
-theorem subset_coe_one : (1 : Set M) ⊆ (1 : SubMulAction R M) := fun x hx => ⟨1, (one_smul _ _).trans hx.symm⟩
+theorem subset_coe_one : (1 : Set M) ⊆ (1 : SubMulAction R M) := fun x hx =>
+  ⟨1, (one_smul _ _).trans hx.symm⟩
 #align sub_mul_action.subset_coe_one SubMulAction.subset_coe_one
 
 end One

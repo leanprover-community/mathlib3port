@@ -41,7 +41,8 @@ def splitAt : ℕ → List α → List α × List α
 -/
 
 /-- An auxiliary function for `split_on_p`. -/
-def splitOnPAux {α : Type u} (P : α → Prop) [DecidablePred P] : List α → (List α → List α) → List (List α)
+def splitOnPAux {α : Type u} (P : α → Prop) [DecidablePred P] :
+    List α → (List α → List α) → List (List α)
   | [], f => [f []]
   | h :: t, f => if P h then f [] :: split_on_p_aux t id else split_on_p_aux t fun l => f (h :: l)
 #align list.split_on_p_aux List.splitOnPAux
@@ -61,7 +62,7 @@ def splitOnP {α : Type u} (P : α → Prop) [DecidablePred P] (l : List α) : L
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α], α -> (List.{u} α) -> (List.{u} (List.{u} α))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.8086 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{u_1} (List.{u_1} α))
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.8087 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{u_1} (List.{u_1} α))
 Case conversion may be inaccurate. Consider using '#align list.split_on List.splitOnₓ'. -/
 /-- Split a list at every occurrence of an element.
 
@@ -278,7 +279,8 @@ def mfind {α} {m : Type u → Type v} [Monad m] [Alternative m] (tac : α → m
 /-- `mbfind' p l` returns the first element `a` of `l` for which `p a` returns
 true. `mbfind'` short-circuits, so `p` is not necessarily run on every `a` in
 `l`. This is a monadic version of `list.find`. -/
-def mbfind' {m : Type u → Type v} [Monad m] {α : Type u} (p : α → m (ULift Bool)) : List α → m (Option α)
+def mbfind' {m : Type u → Type v} [Monad m] {α : Type u} (p : α → m (ULift Bool)) :
+    List α → m (Option α)
   | [] => pure none
   | x :: xs => do
     let ⟨px⟩ ← p x
@@ -359,9 +361,9 @@ def findIndexes (p : α → Prop) [DecidablePred p] (l : List α) : List Nat :=
 
 /- warning: list.indexes_values -> List.indexesValues is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u_1} α p], (List.{u_1} α) -> (List.{u_1} (Prod.{0 u_1} Nat α))
+  forall {α : Type.{u_1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u_1} α p], (List.{u_1} α) -> (List.{u_1} (Prod.{0, u_1} Nat α))
 but is expected to have type
-  forall {α : Type.{u_1}}, (α -> Bool) -> (List.{u_1} α) -> (List.{u_1} (Prod.{0 u_1} Nat α))
+  forall {α : Type.{u_1}}, (α -> Bool) -> (List.{u_1} α) -> (List.{u_1} (Prod.{0, u_1} Nat α))
 Case conversion may be inaccurate. Consider using '#align list.indexes_values List.indexesValuesₓ'. -/
 /-- Returns the elements of `l` that satisfy `p` together with their indexes in
 `l`. The returned list is ordered by index. -/
@@ -373,7 +375,7 @@ def indexesValues (p : α → Prop) [DecidablePred p] (l : List α) : List (ℕ 
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} α], α -> (List.{u_1} α) -> (List.{0} Nat)
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.10782 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{0} Nat)
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.10783 : BEq.{u_1} α], α -> (List.{u_1} α) -> (List.{0} Nat)
 Case conversion may be inaccurate. Consider using '#align list.indexes_of List.indexesOfₓ'. -/
 /-- `indexes_of a l` is the list of all indexes of `a` in `l`. For example:
 ```
@@ -414,9 +416,9 @@ variable {m : Type v → Type w} [Applicative m]
 
 /- warning: list.mmap_with_index_aux -> List.mmapWithIndexAux is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v w} m] {α : Type.{u_1}} {β : Type.{v}}, (Nat -> α -> (m β)) -> Nat -> (List.{u_1} α) -> (m (List.{v} β))
+  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v, w} m] {α : Type.{u_1}} {β : Type.{v}}, (Nat -> α -> (m β)) -> Nat -> (List.{u_1} α) -> (m (List.{v} β))
 but is expected to have type
-  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v w} m] {α : Type.{_aux_param_0}} {β : Type.{v}}, (Nat -> α -> (m β)) -> Nat -> (List.{_aux_param_0} α) -> (m (List.{v} β))
+  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v, w} m] {α : Type.{_aux_param_0}} {β : Type.{v}}, (Nat -> α -> (m β)) -> Nat -> (List.{_aux_param_0} α) -> (m (List.{v} β))
 Case conversion may be inaccurate. Consider using '#align list.mmap_with_index_aux List.mmapWithIndexAuxₓ'. -/
 /-- Auxiliary definition for `mmap_with_index`. -/
 def mmapWithIndexAux {α β} (f : ℕ → α → m β) : ℕ → List α → m (List β)
@@ -431,9 +433,9 @@ def mmapWithIndex {α β} (f : ℕ → α → m β) (as : List α) : m (List β)
 
 /- warning: list.mmap_with_index'_aux -> List.mmapWithIndex'Aux is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v w} m] {α : Type.{u_1}}, (Nat -> α -> (m PUnit.{succ v})) -> Nat -> (List.{u_1} α) -> (m PUnit.{succ v})
+  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v, w} m] {α : Type.{u_1}}, (Nat -> α -> (m PUnit.{succ v})) -> Nat -> (List.{u_1} α) -> (m PUnit.{succ v})
 but is expected to have type
-  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v w} m] {α : Type.{_aux_param_0}}, (Nat -> α -> (m PUnit.{succ v})) -> Nat -> (List.{_aux_param_0} α) -> (m PUnit.{succ v})
+  forall {m : Type.{v} -> Type.{w}} [_inst_1 : Applicative.{v, w} m] {α : Type.{_aux_param_0}}, (Nat -> α -> (m PUnit.{succ v})) -> Nat -> (List.{_aux_param_0} α) -> (m PUnit.{succ v})
 Case conversion may be inaccurate. Consider using '#align list.mmap_with_index'_aux List.mmapWithIndex'Auxₓ'. -/
 /-- Auxiliary definition for `mmap_with_index'`. -/
 def mmapWithIndex'Aux {α} (f : ℕ → α → m PUnit) : ℕ → List α → m PUnit
@@ -478,7 +480,7 @@ def countp (p : α → Prop) [DecidablePred p] : List α → Nat
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : DecidableEq.{succ u_1} α], α -> (List.{u_1} α) -> Nat
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.11152 : BEq.{u_1} α], α -> (List.{u_1} α) -> Nat
+  forall {α : Type.{u_1}} [inst._@.Std.Data.List.Basic._hyg.11153 : BEq.{u_1} α], α -> (List.{u_1} α) -> Nat
 Case conversion may be inaccurate. Consider using '#align list.count List.countₓ'. -/
 /-- `count a l` is the number of occurrences of `a` in `l`. -/
 def count [DecidableEq α] (a : α) : List α → Nat :=
@@ -668,8 +670,10 @@ def PermutationsAux.rec {C : List α → List α → Sort v} (H0 : ∀ is, C [] 
   | [], is => H0 is
   | t :: ts, is =>
     have h1 : ⟨ts, t :: is⟩ ≺ ⟨t :: ts, is⟩ :=
-      show Prod.Lex _ _ (succ (length ts + length is), length ts) (succ (length ts) + length is, length (t :: ts)) by
-        rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
+      show
+        Prod.Lex _ _ (succ (length ts + length is), length ts)
+          (succ (length ts) + length is, length (t :: ts))
+        by rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
     have h2 : ⟨is, []⟩ ≺ ⟨t :: ts, is⟩ := Prod.Lex.left _ _ (Nat.lt_add_of_pos_left (succ_pos _))
     H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])termination_by'
   ⟨(· ≺ ·), @InvImage.wf _ _ _ meas (Prod.lex_wf lt_wf lt_wf)⟩
@@ -825,15 +829,19 @@ inductive Pairwise : List α → Prop
 
 variable {R}
 
+#print List.pairwise_cons /-
 @[simp]
-theorem pairwise_cons {a : α} {l : List α} : Pairwise R (a :: l) ↔ (∀ a' ∈ l, R a a') ∧ Pairwise R l :=
+theorem pairwise_cons {a : α} {l : List α} :
+    Pairwise R (a :: l) ↔ (∀ a' ∈ l, R a a') ∧ Pairwise R l :=
   ⟨fun p => by cases' p with a l n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
 #align list.pairwise_cons List.pairwise_cons
+-/
 
 attribute [simp] pairwise.nil
 
 instance decidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwise R l) := by
-  induction' l with hd tl ih <;> [exact is_true pairwise.nil, exact decidable_of_iff' _ pairwise_cons]
+  induction' l with hd tl ih <;> [exact is_true pairwise.nil,
+    exact decidable_of_iff' _ pairwise_cons]
 #align list.decidable_pairwise List.decidablePairwise
 
 end Pairwise
@@ -1004,7 +1012,8 @@ def chooseX : ∀ l : List α, ∀ hp : ∃ a, a ∈ l ∧ p a, { a // a ∈ l �
   | l :: ls, hp =>
     if pl : p l then ⟨l, ⟨Or.inl rfl, pl⟩⟩
     else
-      let ⟨a, ⟨a_mem_ls, pa⟩⟩ := choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl <| e ▸ h₂, h₂⟩)
+      let ⟨a, ⟨a_mem_ls, pa⟩⟩ :=
+        choose_x ls (hp.imp fun b ⟨o, h₂⟩ => ⟨o.resolve_left fun e => pl <| e ▸ h₂, h₂⟩)
       ⟨a, ⟨Or.inr a_mem_ls, pa⟩⟩
 #align list.choose_x List.chooseX
 
@@ -1019,9 +1028,9 @@ end Choose
 
 /- warning: list.mmap_filter -> List.mmapFilter is a dubious translation:
 lean 3 declaration is
-  forall {m : Type -> Type.{v}} [_inst_1 : Monad.{0 v} m] {α : Type.{u_1}} {β : Type}, (α -> (m (Option.{0} β))) -> (List.{u_1} α) -> (m (List.{0} β))
+  forall {m : Type -> Type.{v}} [_inst_1 : Monad.{0, v} m] {α : Type.{u_1}} {β : Type}, (α -> (m (Option.{0} β))) -> (List.{u_1} α) -> (m (List.{0} β))
 but is expected to have type
-  forall {m : Type -> Type.{v}} [_inst_1 : Monad.{0 v} m] {α : Type.{_aux_param_0}} {β : Type}, (α -> (m (Option.{0} β))) -> (List.{_aux_param_0} α) -> (m (List.{0} β))
+  forall {m : Type -> Type.{v}} [_inst_1 : Monad.{0, v} m] {α : Type.{_aux_param_0}} {β : Type}, (α -> (m (Option.{0} β))) -> (List.{_aux_param_0} α) -> (m (List.{0} β))
 Case conversion may be inaccurate. Consider using '#align list.mmap_filter List.mmapFilterₓ'. -/
 /-- Filters and maps elements of a list -/
 def mmapFilter {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)) : List α → m (List β)
@@ -1037,9 +1046,9 @@ def mmapFilter {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)
 
 /- warning: list.mmap_upper_triangle -> List.mmapUpperTriangle is a dubious translation:
 lean 3 declaration is
-  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u u_1} m] {α : Type.{u}} {β : Type.{u}}, (α -> α -> (m β)) -> (List.{u} α) -> (m (List.{u} β))
+  forall {m : Type.{u} -> Type.{u_1}} [_inst_1 : Monad.{u, u_1} m] {α : Type.{u}} {β : Type.{u}}, (α -> α -> (m β)) -> (List.{u} α) -> (m (List.{u} β))
 but is expected to have type
-  forall {m : Type.{u} -> Type.{_aux_param_0}} [_inst_1 : Monad.{u _aux_param_0} m] {α : Type.{u}} {β : Type.{u}}, (α -> α -> (m β)) -> (List.{u} α) -> (m (List.{u} β))
+  forall {m : Type.{u} -> Type.{_aux_param_0}} [_inst_1 : Monad.{u, _aux_param_0} m] {α : Type.{u}} {β : Type.{u}}, (α -> α -> (m β)) -> (List.{u} α) -> (m (List.{u} β))
 Case conversion may be inaccurate. Consider using '#align list.mmap_upper_triangle List.mmapUpperTriangleₓ'. -/
 /-- `mmap_upper_triangle f l` calls `f` on all elements in the upper triangular part of `l × l`.
 That is, for each `e ∈ l`, it will run `f e e` and then `f e e'`
@@ -1059,9 +1068,9 @@ def mmapUpperTriangle {m} [Monad m] {α β : Type u} (f : α → α → m β) : 
 
 /- warning: list.mmap'_diag -> List.mmap'Diag is a dubious translation:
 lean 3 declaration is
-  forall {m : Type -> Type.{u_1}} [_inst_1 : Monad.{0 u_1} m] {α : Type.{u_2}}, (α -> α -> (m Unit)) -> (List.{u_2} α) -> (m Unit)
+  forall {m : Type -> Type.{u_1}} [_inst_1 : Monad.{0, u_1} m] {α : Type.{u_2}}, (α -> α -> (m Unit)) -> (List.{u_2} α) -> (m Unit)
 but is expected to have type
-  forall {m : Type -> Type.{_aux_param_1}} [_inst_1 : Monad.{0 _aux_param_1} m] {α : Type.{_aux_param_0}}, (α -> α -> (m Unit)) -> (List.{_aux_param_0} α) -> (m Unit)
+  forall {m : Type -> Type.{_aux_param_1}} [_inst_1 : Monad.{0, _aux_param_1} m] {α : Type.{_aux_param_0}}, (α -> α -> (m Unit)) -> (List.{_aux_param_0} α) -> (m Unit)
 Case conversion may be inaccurate. Consider using '#align list.mmap'_diag List.mmap'Diagₓ'. -/
 /-- `mmap'_diag f l` calls `f` on all elements in the upper triangular part of `l × l`.
 That is, for each `e ∈ l`, it will run `f e e` and then `f e e'`
@@ -1077,11 +1086,12 @@ def mmap'Diag {m} [Monad m] {α} (f : α → α → m Unit) : List α → m Unit
 
 /- warning: list.traverse -> List.traverse is a dubious translation:
 lean 3 declaration is
-  forall {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u v} F] {α : Type.{u_1}} {β : Type.{u}}, (α -> (F β)) -> (List.{u_1} α) -> (F (List.{u} β))
+  forall {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u, v} F] {α : Type.{u_1}} {β : Type.{u}}, (α -> (F β)) -> (List.{u_1} α) -> (F (List.{u} β))
 but is expected to have type
-  forall {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u v} F] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (F β)) -> (List.{_aux_param_0} α) -> (F (List.{u} β))
+  forall {F : Type.{u} -> Type.{v}} [_inst_1 : Applicative.{u, v} F] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (F β)) -> (List.{_aux_param_0} α) -> (F (List.{u} β))
 Case conversion may be inaccurate. Consider using '#align list.traverse List.traverseₓ'. -/
-protected def traverse {F : Type u → Type v} [Applicative F] {α β : Type _} (f : α → F β) : List α → F (List β)
+protected def traverse {F : Type u → Type v} [Applicative F] {α β : Type _} (f : α → F β) :
+    List α → F (List β)
   | [] => pure []
   | x :: xs => List.cons <$> f x <*> traverse xs
 #align list.traverse List.traverse

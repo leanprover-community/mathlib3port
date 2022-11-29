@@ -37,7 +37,8 @@ variable [CommSemiring R] [Semiring A] [Algebra R A]
 
 variable [TopologicalSpace R] [TopologicalSpace A] [TopologicalSemiring A]
 
-theorem continuous_algebra_map_iff_smul : Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
+theorem continuous_algebra_map_iff_smul :
+    Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 := by
   refine' ⟨fun h => _, fun h => _⟩
   · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
@@ -52,7 +53,8 @@ theorem continuous_algebra_map [HasContinuousSmul R A] : Continuous (algebraMap 
   (continuous_algebra_map_iff_smul R A).2 continuous_smul
 #align continuous_algebra_map continuous_algebra_map
 
-theorem has_continuous_smul_of_algebra_map (h : Continuous (algebraMap R A)) : HasContinuousSmul R A :=
+theorem has_continuous_smul_of_algebra_map (h : Continuous (algebraMap R A)) :
+    HasContinuousSmul R A :=
   ⟨(continuous_algebra_map_iff_smul R A).1 h⟩
 #align has_continuous_smul_of_algebra_map has_continuous_smul_of_algebra_map
 
@@ -82,8 +84,8 @@ variable {A : Type u} [TopologicalSpace A]
 
 variable [Semiring A] [Algebra R A]
 
-instance Subalgebra.has_continuous_smul [TopologicalSpace R] [HasContinuousSmul R A] (s : Subalgebra R A) :
-    HasContinuousSmul R s :=
+instance Subalgebra.has_continuous_smul [TopologicalSpace R] [HasContinuousSmul R A]
+    (s : Subalgebra R A) : HasContinuousSmul R s :=
   s.toSubmodule.HasContinuousSmul
 #align subalgebra.has_continuous_smul Subalgebra.has_continuous_smul
 
@@ -109,8 +111,8 @@ theorem Subalgebra.subalgebra_topological_closure (s : Subalgebra R A) : s ≤ s
   subset_closure
 #align subalgebra.subalgebra_topological_closure Subalgebra.subalgebra_topological_closure
 
-theorem Subalgebra.isClosedTopologicalClosure (s : Subalgebra R A) : IsClosed (s.topologicalClosure : Set A) := by
-  convert isClosedClosure
+theorem Subalgebra.isClosedTopologicalClosure (s : Subalgebra R A) :
+    IsClosed (s.topologicalClosure : Set A) := by convert isClosedClosure
 #align subalgebra.is_closed_topological_closure Subalgebra.isClosedTopologicalClosure
 
 theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalgebra R A} (h : s ≤ t)
@@ -119,8 +121,8 @@ theorem Subalgebra.topological_closure_minimal (s : Subalgebra R A) {t : Subalge
 #align subalgebra.topological_closure_minimal Subalgebra.topological_closure_minimal
 
 /-- If a subalgebra of a topological algebra is commutative, then so is its topological closure. -/
-def Subalgebra.commSemiringTopologicalClosure [T2Space A] (s : Subalgebra R A) (hs : ∀ x y : s, x * y = y * x) :
-    CommSemiring s.topologicalClosure :=
+def Subalgebra.commSemiringTopologicalClosure [T2Space A] (s : Subalgebra R A)
+    (hs : ∀ x y : s, x * y = y * x) : CommSemiring s.topologicalClosure :=
   { s.topologicalClosure.toSemiring, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 #align subalgebra.comm_semiring_topological_closure Subalgebra.commSemiringTopologicalClosure
 
@@ -129,15 +131,16 @@ but we don't have those, so we use the clunky approach of talking about
 an algebra homomorphism, and a separate homeomorphism,
 along with a witness that as functions they are the same.
 -/
-theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B : Type _} [TopologicalSpace B] [Ring B]
-    [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A) (w : (f : B → A) = f') :
-    s.topologicalClosure.comap f = (s.comap f).topologicalClosure := by
+theorem Subalgebra.topological_closure_comap_homeomorph (s : Subalgebra R A) {B : Type _}
+    [TopologicalSpace B] [Ring B] [TopologicalRing B] [Algebra R B] (f : B →ₐ[R] A) (f' : B ≃ₜ A)
+    (w : (f : B → A) = f') : s.topologicalClosure.comap f = (s.comap f).topologicalClosure := by
   apply SetLike.ext'
   simp only [Subalgebra.topological_closure_coe]
   simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_to_ring_hom]
   rw [w]
   exact f'.preimage_closure _
-#align subalgebra.topological_closure_comap_homeomorph Subalgebra.topological_closure_comap_homeomorph
+#align
+  subalgebra.topological_closure_comap_homeomorph Subalgebra.topological_closure_comap_homeomorph
 
 end TopologicalAlgebra
 
@@ -154,8 +157,8 @@ variable [Algebra R A] [TopologicalRing A]
 /-- If a subalgebra of a topological algebra is commutative, then so is its topological closure.
 See note [reducible non-instances]. -/
 @[reducible]
-def Subalgebra.commRingTopologicalClosure [T2Space A] (s : Subalgebra R A) (hs : ∀ x y : s, x * y = y * x) :
-    CommRing s.topologicalClosure :=
+def Subalgebra.commRingTopologicalClosure [T2Space A] (s : Subalgebra R A)
+    (hs : ∀ x y : s, x * y = y * x) : CommRing s.topologicalClosure :=
   { s.topologicalClosure.toRing, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 #align subalgebra.comm_ring_topological_closure Subalgebra.commRingTopologicalClosure
 
@@ -186,8 +189,8 @@ end Ring
 section DivisionRing
 
 /-- The action induced by `algebra_rat` is continuous. -/
-instance DivisionRing.has_continuous_const_smul_rat {A} [DivisionRing A] [TopologicalSpace A] [HasContinuousMul A]
-    [CharZero A] : HasContinuousConstSmul ℚ A :=
+instance DivisionRing.has_continuous_const_smul_rat {A} [DivisionRing A] [TopologicalSpace A]
+    [HasContinuousMul A] [CharZero A] : HasContinuousConstSmul ℚ A :=
   ⟨fun r => by simpa only [Algebra.smul_def] using continuous_const.mul continuous_id⟩
 #align division_ring.has_continuous_const_smul_rat DivisionRing.has_continuous_const_smul_rat
 

@@ -66,7 +66,7 @@ private unsafe def match_sig (p : pexpr) (e : expr) : tactic Unit := do
 #align match_sig match_sig
 
 private unsafe def trace_match (pat : pexpr) (ty : expr) (n : Name) : tactic Unit :=
-  try <| do
+  try do
     guard ¬n
     match_sig pat ty
     let ty ← pp ty
@@ -99,7 +99,8 @@ unsafe def find_cmd (_ : parse <| tk "#find") : lean.parser Unit := do
       | _ => skip
 #align find_cmd find_cmd
 
-add_tactic_doc { Name := "#find", category := DocCategory.cmd, declNames := [`find_cmd], tags := ["search"] }
+add_tactic_doc
+  { Name := "#find", category := DocCategory.cmd, declNames := [`find_cmd], tags := ["search"] }
 
 -- #find (_ : nat) + _ = _ + _
 -- #find _ + _ = _ + _

@@ -45,7 +45,8 @@ variable [Semiring R₁] [Semiring R₂] [Semiring R₃]
 
 /-- Class that expresses the fact that three ring homomorphisms form a composition triple. This is
 used to handle composition of semilinear maps. -/
-class RingHomCompTriple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃) (σ₁₃ : outParam (R₁ →+* R₃)) : Prop where
+class RingHomCompTriple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃) (σ₁₃ : outParam (R₁ →+* R₃)) :
+  Prop where
   comp_eq : σ₂₃.comp σ₁₂ = σ₁₃
 #align ring_hom_comp_triple RingHomCompTriple
 
@@ -95,11 +96,13 @@ instance ids : RingHomInvPair (RingHom.id R₁) (RingHom.id R₁) :=
   ⟨rfl, rfl⟩
 #align ring_hom_inv_pair.ids RingHomInvPair.ids
 
-instance triples {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] : RingHomCompTriple σ₁₂ σ₂₁ (RingHom.id R₁) :=
+instance triples {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] :
+    RingHomCompTriple σ₁₂ σ₂₁ (RingHom.id R₁) :=
   ⟨by simp only [comp_eq]⟩
 #align ring_hom_inv_pair.triples RingHomInvPair.triples
 
-instance triples₂ {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] : RingHomCompTriple σ₂₁ σ₁₂ (RingHom.id R₂) :=
+instance triples₂ {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] :
+    RingHomCompTriple σ₂₁ σ₁₂ (RingHom.id R₂) :=
   ⟨by simp only [comp_eq₂]⟩
 #align ring_hom_inv_pair.triples₂ RingHomInvPair.triples₂
 
@@ -115,14 +118,16 @@ theorem of_ring_equiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* 
   ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
 #align ring_hom_inv_pair.of_ring_equiv RingHomInvPair.of_ring_equiv
 
-/-- Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
+/--
+Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
 instances are often available and may often be preferrable to using this one. Indeed, this
 declaration is not currently used in mathlib.
 
 See note [reducible non-instances].
 -/
 @[reducible]
-theorem symm (σ₁₂ : R₁ →+* R₂) (σ₂₁ : R₂ →+* R₁) [RingHomInvPair σ₁₂ σ₂₁] : RingHomInvPair σ₂₁ σ₁₂ :=
+theorem symm (σ₁₂ : R₁ →+* R₂) (σ₂₁ : R₂ →+* R₁) [RingHomInvPair σ₁₂ σ₂₁] :
+    RingHomInvPair σ₂₁ σ₁₂ :=
   ⟨RingHomInvPair.comp_eq₂, RingHomInvPair.comp_eq⟩
 #align ring_hom_inv_pair.symm RingHomInvPair.symm
 
@@ -158,7 +163,8 @@ namespace RingHomSurjective
 
 -- The linter gives a false positive, since `σ₂` is an out_param
 @[nolint dangerous_instance]
-instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
+instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] :
+    RingHomSurjective σ₁ :=
   ⟨fun x => ⟨σ₂ x, RingHomInvPair.comp_apply_eq₂⟩⟩
 #align ring_hom_surjective.inv_pair RingHomSurjective.inv_pair
 
@@ -167,7 +173,8 @@ instance ids : RingHomSurjective (RingHom.id R₁) :=
 #align ring_hom_surjective.ids RingHomSurjective.ids
 
 /-- This cannot be an instance as there is no way to infer `σ₁₂` and `σ₂₃`. -/
-theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] : RingHomSurjective σ₁₃ :=
+theorem comp [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomSurjective σ₁₂] [RingHomSurjective σ₂₃] :
+    RingHomSurjective σ₁₃ :=
   { is_surjective := by
       have := σ₂₃.is_surjective.comp σ₁₂.is_surjective
       rwa [← RingHom.coe_comp, RingHomCompTriple.comp_eq] at this }

@@ -49,15 +49,20 @@ variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[] -/
 /-- Matrices can be reflected whenever their entries can. We insert an `@id (matrix m' n' α)` to
 prevent immediate decay to a function. -/
-unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}] [reflected _ α]
-    [reflected _ m'] [reflected _ n'] [h : has_reflect (m' → n' → α)] : has_reflect (Matrix m' n' α) := fun m =>
-  (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}]
+    [reflected _ α] [reflected _ m'] [reflected _ n'] [h : has_reflect (m' → n' → α)] :
+    has_reflect (Matrix m' n' α) := fun m =>
+  (by
+          trace
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
-      ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
+      ((by
+            trace
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
         q(_) q(_) q(_)) <|
     by
@@ -83,7 +88,8 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → F
   p :
     parser (Sum (List (List α)) ℕ) :=-- empty rows
         Sum.inl <$>
-        ((pure [] <* tk ";").repeat_at_least 1 <|> (sep_by_trailing (tk ";") <| sep_by_trailing (tk ",") p)) <|>
+        ((pure [] <* tk ";").repeat_at_least 1 <|>
+          (sep_by_trailing (tk ";") <| sep_by_trailing (tk ",") p)) <|>
       Sum.inr <$> List.length <$> many (tk ",")
   let which
     ←-- empty columns
@@ -94,7 +100,8 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → F
       let n := h
       let l : List (Vector α n) ←
         l fun row =>
-            if h : row = n then pure (⟨row, h⟩ : Vector α n) else interaction_monad.fail "Rows must be of equal length"
+            if h : row = n then pure (⟨row, h⟩ : Vector α n)
+            else interaction_monad.fail "Rows must be of equal length"
       pure ⟨l, n, fun i j => (l _ i).nth j⟩
     | Sum.inr n => pure ⟨0, n, finZeroElim⟩
 #align matrix.entry_parser matrix.entry_parser
@@ -111,7 +118,8 @@ unsafe def sigma_sigma_fin_matrix_has_reflect {α : Type} [has_reflect α] [refl
 /-- `!![a, b; c, d]` notation for matrices indexed by `fin m` and `fin n`. See the module docstring
 for details. -/
 @[user_notation]
-unsafe def notation (_ : parse <| tk "!![") (val : parse (entry_parser (parser.pexpr 1) <* tk "]")) : parser pexpr := do
+unsafe def notation (_ : parse <| tk "!![")
+    (val : parse (entry_parser (parser.pexpr 1) <* tk "]")) : parser pexpr := do
   let ⟨m, n, entries⟩ := val
   let entry_vals := pi_fin.to_pexpr (pi_fin.to_pexpr ∘ entries)
   pure (``(@Matrix.of (Fin $(q(m))) (Fin $(q(n))) _).app entry_vals)
@@ -133,12 +141,13 @@ instance [Repr α] :
         α) where repr f :=
     "!![" ++
         (String.intercalate "; " <|
-          (List.finRange m).map fun i => String.intercalate ", " <| (List.finRange n).map fun j => repr (f i j)) ++
+          (List.finRange m).map fun i =>
+            String.intercalate ", " <| (List.finRange n).map fun j => repr (f i j)) ++
       "]"
 
 @[simp]
-theorem cons_val' (v : n' → α) (B : Fin m → n' → α) (i j) : vecCons v B i j = vecCons (v j) (fun i => B i j) i := by
-  refine' Fin.cases _ _ i <;> simp
+theorem cons_val' (v : n' → α) (B : Fin m → n' → α) (i j) :
+    vecCons v B i j = vecCons (v j) (fun i => B i j) i := by refine' Fin.cases _ _ i <;> simp
 #align matrix.cons_val' Matrix.cons_val'
 
 @[simp]
@@ -147,7 +156,8 @@ theorem head_val' (B : Fin m.succ → n' → α) (j : n') : (vecHead fun i => B 
 #align matrix.head_val' Matrix.head_val'
 
 @[simp]
-theorem tail_val' (B : Fin m.succ → n' → α) (j : n') : (vecTail fun i => B i j) = fun i => vecTail B i j := by
+theorem tail_val' (B : Fin m.succ → n' → α) (j : n') :
+    (vecTail fun i => B i j) = fun i => vecTail B i j := by
   ext
   simp [vec_tail]
 #align matrix.tail_val' Matrix.tail_val'
@@ -227,7 +237,8 @@ theorem cons_transpose (v : n' → α) (A : Matrix (Fin m) n' α) :
 #align matrix.cons_transpose Matrix.cons_transpose
 
 @[simp]
-theorem head_transpose (A : Matrix m' (Fin n.succ) α) : vecHead (of.symm Aᵀ) = vec_head ∘ of.symm A :=
+theorem head_transpose (A : Matrix m' (Fin n.succ) α) :
+    vecHead (of.symm Aᵀ) = vec_head ∘ of.symm A :=
   rfl
 #align matrix.head_transpose Matrix.head_transpose
 
@@ -254,12 +265,13 @@ theorem empty_mul_empty (A : Matrix m' (Fin 0) α) (B : Matrix (Fin 0) o' α) : 
 #align matrix.empty_mul_empty Matrix.empty_mul_empty
 
 @[simp]
-theorem mul_empty [Fintype n'] (A : Matrix m' n' α) (B : Matrix n' (Fin 0) α) : A ⬝ B = of fun _ => ![] :=
+theorem mul_empty [Fintype n'] (A : Matrix m' n' α) (B : Matrix n' (Fin 0) α) :
+    A ⬝ B = of fun _ => ![] :=
   funext fun _ => empty_eq _
 #align matrix.mul_empty Matrix.mul_empty
 
-theorem mul_val_succ [Fintype n'] (A : Matrix (Fin m.succ) n' α) (B : Matrix n' o' α) (i : Fin m) (j : o') :
-    (A ⬝ B) i.succ j = (of (vecTail (of.symm A)) ⬝ B) i j :=
+theorem mul_val_succ [Fintype n'] (A : Matrix (Fin m.succ) n' α) (B : Matrix n' o' α) (i : Fin m)
+    (j : o') : (A ⬝ B) i.succ j = (of (vecTail (of.symm A)) ⬝ B) i j :=
   rfl
 #align matrix.mul_val_succ Matrix.mul_val_succ
 
@@ -380,7 +392,8 @@ theorem smul_mat_empty {m' : Type _} (x : α) (A : Fin 0 → m' → α) : x • 
 #align matrix.smul_mat_empty Matrix.smul_mat_empty
 
 @[simp]
-theorem smul_mat_cons (x : α) (v : n' → α) (A : Fin m → n' → α) : x • vecCons v A = vecCons (x • v) (x • A) := by
+theorem smul_mat_cons (x : α) (v : n' → α) (A : Fin m → n' → α) :
+    x • vecCons v A = vecCons (x • v) (x • A) := by
   ext i
   refine' Fin.cases _ _ i <;> simp
 #align matrix.smul_mat_cons Matrix.smul_mat_cons
@@ -390,7 +403,8 @@ end Smul
 section Submatrix
 
 @[simp]
-theorem submatrix_empty (A : Matrix m' n' α) (row : Fin 0 → m') (col : o' → n') : submatrix A row col = ![] :=
+theorem submatrix_empty (A : Matrix m' n' α) (row : Fin 0 → m') (col : o' → n') :
+    submatrix A row col = ![] :=
   empty_eq _
 #align matrix.submatrix_empty Matrix.submatrix_empty
 
@@ -413,7 +427,8 @@ variable [Zero α] [One α]
 /- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem one_fin_two :
     (1 : Matrix (Fin 2) (Fin 2) α) =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
@@ -423,7 +438,8 @@ theorem one_fin_two :
 /- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem one_fin_three :
     (1 : Matrix (Fin 3) (Fin 3) α) =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
@@ -434,7 +450,10 @@ end One
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
-    A = «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" := by
+    A =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+  by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
@@ -442,7 +461,10 @@ theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
-    A = «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" := by
+    A =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+  by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
@@ -454,9 +476,12 @@ theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
-    «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
-        «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+    «expr!![ »
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
+        «expr!![ »
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
@@ -470,35 +495,41 @@ theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂
 /- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem mul_fin_three [AddCommMonoid α] [Mul α]
     (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
-    «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
-        «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
-      «expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+    «expr!![ »
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
+        «expr!![ »
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
+      «expr!![ »
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]
 #align matrix.mul_fin_three Matrix.mul_fin_three
 
-theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by subst_vars
+theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by
+  subst_vars
 #align matrix.vec2_eq Matrix.vec2_eq
 
-theorem vec3_eq {a₀ a₁ a₂ b₀ b₁ b₂ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) (h₂ : a₂ = b₂) : ![a₀, a₁, a₂] = ![b₀, b₁, b₂] :=
-  by subst_vars
+theorem vec3_eq {a₀ a₁ a₂ b₀ b₁ b₂ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) (h₂ : a₂ = b₂) :
+    ![a₀, a₁, a₂] = ![b₀, b₁, b₂] := by subst_vars
 #align matrix.vec3_eq Matrix.vec3_eq
 
 theorem vec2_add [Add α] (a₀ a₁ b₀ b₁ : α) : ![a₀, a₁] + ![b₀, b₁] = ![a₀ + b₀, a₁ + b₁] := by
   rw [cons_add_cons, cons_add_cons, empty_add_empty]
 #align matrix.vec2_add Matrix.vec2_add
 
-theorem vec3_add [Add α] (a₀ a₁ a₂ b₀ b₁ b₂ : α) : ![a₀, a₁, a₂] + ![b₀, b₁, b₂] = ![a₀ + b₀, a₁ + b₁, a₂ + b₂] := by
+theorem vec3_add [Add α] (a₀ a₁ a₂ b₀ b₁ b₂ : α) :
+    ![a₀, a₁, a₂] + ![b₀, b₁, b₂] = ![a₀ + b₀, a₁ + b₁, a₂ + b₂] := by
   rw [cons_add_cons, cons_add_cons, cons_add_cons, empty_add_empty]
 #align matrix.vec3_add Matrix.vec3_add
 
-theorem smul_vec2 {R : Type _} [HasSmul R α] (x : R) (a₀ a₁ : α) : x • ![a₀, a₁] = ![x • a₀, x • a₁] := by
-  rw [smul_cons, smul_cons, smul_empty]
+theorem smul_vec2 {R : Type _} [HasSmul R α] (x : R) (a₀ a₁ : α) :
+    x • ![a₀, a₁] = ![x • a₀, x • a₁] := by rw [smul_cons, smul_cons, smul_empty]
 #align matrix.smul_vec2 Matrix.smul_vec2
 
-theorem smul_vec3 {R : Type _} [HasSmul R α] (x : R) (a₀ a₁ a₂ : α) : x • ![a₀, a₁, a₂] = ![x • a₀, x • a₁, x • a₂] :=
-  by rw [smul_cons, smul_cons, smul_cons, smul_empty]
+theorem smul_vec3 {R : Type _} [HasSmul R α] (x : R) (a₀ a₁ a₂ : α) :
+    x • ![a₀, a₁, a₂] = ![x • a₀, x • a₁, x • a₂] := by
+  rw [smul_cons, smul_cons, smul_cons, smul_empty]
 #align matrix.smul_vec3 Matrix.smul_vec3
 
 variable [AddCommMonoid α] [Mul α]
@@ -512,8 +543,10 @@ theorem vec2_dot_product (v w : Fin 2 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w
   vec2_dot_product'
 #align matrix.vec2_dot_product Matrix.vec2_dot_product
 
-theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} : ![a₀, a₁, a₂] ⬝ᵥ ![b₀, b₁, b₂] = a₀ * b₀ + a₁ * b₁ + a₂ * b₂ := by
-  rw [cons_dot_product_cons, cons_dot_product_cons, cons_dot_product_cons, dot_product_empty, add_zero, add_assoc]
+theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
+    ![a₀, a₁, a₂] ⬝ᵥ ![b₀, b₁, b₂] = a₀ * b₀ + a₁ * b₁ + a₂ * b₂ := by
+  rw [cons_dot_product_cons, cons_dot_product_cons, cons_dot_product_cons, dot_product_empty,
+    add_zero, add_assoc]
 #align matrix.vec3_dot_product' Matrix.vec3_dot_product'
 
 @[simp]

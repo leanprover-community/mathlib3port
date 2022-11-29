@@ -21,7 +21,8 @@ variable [Preorder α] [Preorder β] (f : α ≃o β)
 
 theorem upper_bounds_image {s : Set α} : upperBounds (f '' s) = f '' upperBounds s :=
   Subset.antisymm
-    (fun x hx => ⟨f.symm x, fun y hy => f.le_symm_apply.2 (hx <| mem_image_of_mem _ hy), f.apply_symm_apply x⟩)
+    (fun x hx =>
+      ⟨f.symm x, fun y hy => f.le_symm_apply.2 (hx <| mem_image_of_mem _ hy), f.apply_symm_apply x⟩)
     f.Monotone.image_upper_bounds_subset_upper_bounds_image
 #align order_iso.upper_bounds_image OrderIso.upper_bounds_image
 
@@ -35,7 +36,8 @@ theorem is_lub_image {s : Set α} {x : β} : IsLub (f '' s) x ↔ IsLub s (f.sym
     (IsLub.of_image fun _ _ => f.symm.le_iff_le) <| (f.symm_image_image s).symm ▸ h⟩
 #align order_iso.is_lub_image OrderIso.is_lub_image
 
-theorem is_lub_image' {s : Set α} {x : α} : IsLub (f '' s) (f x) ↔ IsLub s x := by rw [is_lub_image, f.symm_apply_apply]
+theorem is_lub_image' {s : Set α} {x : α} : IsLub (f '' s) (f x) ↔ IsLub s x := by
+  rw [is_lub_image, f.symm_apply_apply]
 #align order_iso.is_lub_image' OrderIso.is_lub_image'
 
 @[simp]

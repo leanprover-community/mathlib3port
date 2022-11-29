@@ -32,15 +32,15 @@ def castEmbedding : ℕ ↪ R :=
 #align nat.cast_embedding Nat.castEmbedding
 
 @[simp]
-theorem cast_pow_eq_one {R : Type _} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) : (q : R) ^ n = 1 ↔ q = 1 :=
-  by
+theorem cast_pow_eq_one {R : Type _} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
+    (q : R) ^ n = 1 ↔ q = 1 := by
   rw [← cast_pow, cast_eq_one]
   exact pow_eq_one_iff hn
 #align nat.cast_pow_eq_one Nat.cast_pow_eq_one
 
 @[simp, norm_cast]
-theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℕ} (n_dvd : n ∣ m) : ((m / n : ℕ) : k) = m / n :=
-  by
+theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℕ} (n_dvd : n ∣ m) :
+    ((m / n : ℕ) : k) = m / n := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
     
@@ -141,7 +141,8 @@ theorem bit1_eq_bit1 {a b : R} : bit1 a = bit1 b ↔ a = b :=
 #align bit1_eq_bit1 bit1_eq_bit1
 
 @[simp]
-theorem bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 := by rw [show (1 : R) = bit1 0 by simp, bit1_eq_bit1]
+theorem bit1_eq_one {a : R} : bit1 a = 1 ↔ a = 0 := by
+  rw [show (1 : R) = bit1 0 by simp, bit1_eq_bit1]
 #align bit1_eq_one bit1_eq_one
 
 @[simp]
@@ -175,7 +176,10 @@ end
 namespace WithTop
 
 instance {R : Type _} [AddMonoidWithOne R] [CharZero R] :
-    CharZero (WithTop R) where cast_injective m n h := by rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
+    CharZero
+      (WithTop
+        R) where cast_injective m n h := by
+    rwa [← coe_nat, ← coe_nat n, coe_eq_coe, Nat.cast_inj] at h
 
 end WithTop
 
@@ -188,8 +192,9 @@ theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
 #align ring_hom.char_zero RingHom.char_zero
 
 theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : CharZero R ↔ CharZero S :=
-  ⟨fun hR => ⟨by intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩, fun hS =>
-    ϕ.char_zero⟩
+  ⟨fun hR =>
+    ⟨by intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
+    fun hS => ϕ.char_zero⟩
 #align ring_hom.char_zero_iff RingHom.char_zero_iff
 
 theorem RingHom.injective_nat (f : ℕ →+* R) [CharZero R] : Function.Injective f :=

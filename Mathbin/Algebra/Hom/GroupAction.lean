@@ -164,7 +164,8 @@ variable {A B}
 
 /-- The inverse of a bijective equivariant map is equivariant. -/
 @[simps]
-def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →[M] A where
+def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
+    (h₂ : Function.RightInverse g f) : B →[M] A where
   toFun := g
   map_smul' m x :=
     calc
@@ -193,8 +194,9 @@ notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 the additive monoid structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `distrib_mul_action_hom`. -/
-class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoid M] [AddMonoid A] [AddMonoid B]
-  [DistribMulAction M A] [DistribMulAction M B] extends SmulHomClass F M A B, AddMonoidHomClass F A B
+class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoid M] [AddMonoid A]
+  [AddMonoid B] [DistribMulAction M A] [DistribMulAction M B] extends SmulHomClass F M A B,
+  AddMonoidHomClass F A B
 #align distrib_mul_action_hom_class DistribMulActionHomClass
 
 -- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
@@ -250,15 +252,19 @@ protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x 
   FunLike.congr_fun h _
 #align distrib_mul_action_hom.congr_fun DistribMulActionHom.congr_fun
 
-theorem to_mul_action_hom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) : f = g := by
+theorem to_mul_action_hom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) :
+    f = g := by
   ext a
   exact MulActionHom.congr_fun h a
-#align distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.to_mul_action_hom_injective
+#align
+  distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.to_mul_action_hom_injective
 
-theorem to_add_monoid_hom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g := by
+theorem to_add_monoid_hom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g :=
+  by
   ext a
   exact AddMonoidHom.congr_fun h a
-#align distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.to_add_monoid_hom_injective
+#align
+  distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.to_add_monoid_hom_injective
 
 protected theorem map_zero (f : A →+[M] B) : f 0 = 0 :=
   map_zero _
@@ -323,7 +329,8 @@ instance : Inhabited (A →+[M] B) :=
 
 /-- Composition of two equivariant additive monoid homomorphisms. -/
 def comp (g : B →+[M] C) (f : A →+[M] B) : A →+[M] C :=
-  { MulActionHom.comp (g : B →[M] C) (f : A →[M] B), AddMonoidHom.comp (g : B →+ C) (f : A →+ B) with }
+  { MulActionHom.comp (g : B →[M] C) (f : A →[M] B),
+    AddMonoidHom.comp (g : B →+ C) (f : A →+ B) with }
 #align distrib_mul_action_hom.comp DistribMulActionHom.comp
 
 @[simp]
@@ -343,7 +350,8 @@ theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
 
 /-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
 @[simps]
-def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h₂ : Function.RightInverse g f) : B →+[M] A :=
+def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
+    (h₂ : Function.RightInverse g f) : B →+[M] A :=
   { (f : A →+ B).inverse g h₁ h₂, (f : A →[M] B).inverse g h₁ h₂ with toFun := g }
 #align distrib_mul_action_hom.inverse DistribMulActionHom.inverse
 
@@ -383,8 +391,9 @@ notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 the ring structure and scalar multiplication by `M`.
 
 You should extend this class when you extend `mul_semiring_action_hom`. -/
-class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoid M] [Semiring R] [Semiring S]
-  [DistribMulAction M R] [DistribMulAction M S] extends DistribMulActionHomClass F M R S, RingHomClass F R S
+class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoid M] [Semiring R]
+  [Semiring S] [DistribMulAction M R] [DistribMulAction M S] extends
+  DistribMulActionHomClass F M R S, RingHomClass F R S
 #align mul_semiring_action_hom_class MulSemiringActionHomClass
 
 -- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
@@ -477,7 +486,8 @@ variable {M R S T}
 
 /-- Composition of two equivariant additive monoid homomorphisms. -/
 def comp (g : S →+*[M] T) (f : R →+*[M] S) : R →+*[M] T :=
-  { DistribMulActionHom.comp (g : S →+[M] T) (f : R →+[M] S), RingHom.comp (g : S →+* T) (f : R →+* S) with }
+  { DistribMulActionHom.comp (g : S →+[M] T) (f : R →+[M] S),
+    RingHom.comp (g : S →+* T) (f : R →+* S) with }
 #align mul_semiring_action_hom.comp MulSemiringActionHom.comp
 
 @[simp]
@@ -512,58 +522,10 @@ theorem IsInvariantSubring.coe_subtype_hom : (IsInvariantSubring.subtypeHom M U 
 #align is_invariant_subring.coe_subtype_hom IsInvariantSubring.coe_subtype_hom
 
 @[simp]
-theorem IsInvariantSubring.coe_subtype_hom' : (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
+theorem IsInvariantSubring.coe_subtype_hom' :
+    (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
   rfl
 #align is_invariant_subring.coe_subtype_hom' IsInvariantSubring.coe_subtype_hom'
 
 end
-
-section coe
-
-variable (M' X Y)
-
-/-- `coe_is_smul_hom M X Y` is a class stating that the coercion map `↑ : X → Y`
-(a.k.a. `coe`) preserves scalar multiplication by `M`.
-
-Note that there is no class corresponding to `mul_action`, `distrib_mul_action` or
-`mul_semiring_action`: instead we assume `coe_is_smul_hom` and `coe_is_add_monoid_hom` or
-`coe_is_ring_hom` in separate parameters.
-This is because `coe_is_smul_hom` has a different set of parameters from those other classes,
-so extending both classes at once wouldn't work.
--/
-class CoeIsSmulHom [HasLiftT X Y] where
-  coe_smul : ∀ (c : M') (x : X), ↑(c • x) = c • (↑x : Y)
-#align coe_is_smul_hom CoeIsSmulHom
-
-export CoeIsSmulHom (coe_smul)
-
-attribute [simp, norm_cast] coe_smul
-
-/-- `mul_action_hom.coe X Y` is the map `↑ : M → N` (a.k.a. `coe`),
-bundled as a scalar-multiplication preserving map. -/
-@[simps (config := { fullyApplied := false })]
-protected def MulActionHom.coe [HasLiftT X Y] [CoeIsSmulHom M' X Y] : X →[M'] Y where
-  toFun := coe
-  map_smul' := coe_smul
-#align mul_action_hom.coe MulActionHom.coe
-
-variable (M A B)
-
-/-- `distrib_mul_action_hom.coe X Y` is the map `↑ : M → N` (a.k.a. `coe`),
-bundled as an equivariant additive monoid homomorphism. -/
-@[simps (config := { fullyApplied := false })]
-protected def DistribMulActionHom.coe [HasLiftT A B] [CoeIsAddMonoidHom A B] [CoeIsSmulHom M A B] : A →+[M] B :=
-  { MulActionHom.coe M A B, AddMonoidHom.coe A B with toFun := coe }
-#align distrib_mul_action_hom.coe DistribMulActionHom.coe
-
-variable (M X Y)
-
-/-- `mul_semiring_action_hom.coe X Y` is the map `↑ : M → N` (a.k.a. `coe`),
-bundled as an equivariant semiring homomorphism. -/
-@[simps (config := { fullyApplied := false })]
-protected def MulSemiringActionHom.coe [HasLiftT R S] [CoeIsRingHom R S] [CoeIsSmulHom M R S] : R →+*[M] S :=
-  { DistribMulActionHom.coe M R S, RingHom.coe R S with toFun := coe }
-#align mul_semiring_action_hom.coe MulSemiringActionHom.coe
-
-end coe
 

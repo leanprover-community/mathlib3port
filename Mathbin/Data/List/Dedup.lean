@@ -33,14 +33,17 @@ theorem dedup_cons_of_mem' {a : α} {l : List α} (h : a ∈ dedup l) : dedup (a
   pw_filter_cons_of_neg <| by simpa only [forall_mem_ne] using h
 #align list.dedup_cons_of_mem' List.dedup_cons_of_mem'
 
-theorem dedup_cons_of_not_mem' {a : α} {l : List α} (h : a ∉ dedup l) : dedup (a :: l) = a :: dedup l :=
+theorem dedup_cons_of_not_mem' {a : α} {l : List α} (h : a ∉ dedup l) :
+    dedup (a :: l) = a :: dedup l :=
   pw_filter_cons_of_pos <| by simpa only [forall_mem_ne] using h
 #align list.dedup_cons_of_not_mem' List.dedup_cons_of_not_mem'
 
 @[simp]
 theorem mem_dedup {a : α} {l : List α} : a ∈ dedup l ↔ a ∈ l := by
   simpa only [dedup, forall_mem_ne, not_not] using
-    not_congr (@forall_mem_pw_filter α (· ≠ ·) _ (fun x y z xz => not_and_or.1 <| mt (And.ndrec Eq.trans) xz) a l)
+    not_congr
+      (@forall_mem_pw_filter α (· ≠ ·) _
+        (fun x y z xz => not_and_or.1 <| mt (And.ndrec Eq.trans) xz) a l)
 #align list.mem_dedup List.mem_dedup
 
 @[simp]
@@ -82,9 +85,9 @@ theorem dedup_idempotent {l : List α} : dedup (dedup l) = dedup l :=
 #align list.dedup_idempotent List.dedup_idempotent
 
 theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ dedup l₂ := by
-  induction' l₁ with a l₁ IH
+  induction' l₁ with a l₁ IH;
   · rfl
-    
+    ;
   rw [cons_union, ← IH]
   show dedup (a :: (l₁ ++ l₂)) = insert a (dedup (l₁ ++ l₂))
   by_cases a ∈ dedup (l₁ ++ l₂) <;> [rw [dedup_cons_of_mem' h, insert_of_mem h],
@@ -94,7 +97,9 @@ theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ ded
 theorem repeat_dedup {x : α} : ∀ {k}, k ≠ 0 → (repeat x k).dedup = [x]
   | 0, h => (h rfl).elim
   | 1, _ => rfl
-  | n + 2, _ => by rw [repeat_succ, dedup_cons_of_mem (mem_repeat.2 ⟨n.succ_ne_zero, rfl⟩), repeat_dedup n.succ_ne_zero]
+  | n + 2, _ => by
+    rw [repeat_succ, dedup_cons_of_mem (mem_repeat.2 ⟨n.succ_ne_zero, rfl⟩),
+      repeat_dedup n.succ_ne_zero]
 #align list.repeat_dedup List.repeat_dedup
 
 theorem count_dedup (l : List α) (a : α) : l.dedup.count a = if a ∈ l then 1 else 0 := by
@@ -130,7 +135,8 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
     
 #align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countp
 
-theorem sum_map_count_dedup_eq_length (l : List α) : (l.dedup.map fun x => l.count x).Sum = l.length := by
+theorem sum_map_count_dedup_eq_length (l : List α) :
+    (l.dedup.map fun x => l.count x).Sum = l.length := by
   simpa using sum_map_count_dedup_filter_eq_countp (fun _ => True) l
 #align list.sum_map_count_dedup_eq_length List.sum_map_count_dedup_eq_length
 

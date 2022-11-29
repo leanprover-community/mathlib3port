@@ -37,7 +37,8 @@ theorem two_power_aleph_0 : 2 ^ aleph_0.{u} = continuum.{u} :=
 #align cardinal.two_power_aleph_0 Cardinal.two_power_aleph_0
 
 @[simp]
-theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by rw [← two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
+theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by
+  rw [← two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
 #align cardinal.lift_continuum Cardinal.lift_continuum
 
 /-!

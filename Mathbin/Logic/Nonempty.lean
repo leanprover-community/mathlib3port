@@ -64,9 +64,9 @@ theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ 
 
 /- warning: nonempty_psigma -> nonempty_psigma is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (Nonempty.{(max 1 u_1 u_2)} (PSigma.{u_1 u_2} α β)) (Exists.{u_1} α (fun (a : α) => Nonempty.{u_2} (β a)))
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (Nonempty.{max 1 u_1 u_2} (PSigma.{u_1, u_2} α β)) (Exists.{u_1} α (fun (a : α) => Nonempty.{u_2} (β a)))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (Nonempty.{(max (max 1 u_2) u_1)} (PSigma.{u_1 u_2} α β)) (Exists.{u_1} α (fun (a : α) => Nonempty.{u_2} (β a)))
+  forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}}, Iff (Nonempty.{max (max 1 u_2) u_1} (PSigma.{u_1, u_2} α β)) (Exists.{u_1} α (fun (a : α) => Nonempty.{u_2} (β a)))
 Case conversion may be inaccurate. Consider using '#align nonempty_psigma nonempty_psigmaₓ'. -/
 @[simp]
 theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
@@ -89,9 +89,9 @@ theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
 
 /- warning: nonempty_pprod -> nonempty_pprod is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{(max 1 u_1 u_2)} (PProd.{u_1 u_2} α β)) (And (Nonempty.{u_1} α) (Nonempty.{u_2} β))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{max 1 u_1 u_2} (PProd.{u_1, u_2} α β)) (And (Nonempty.{u_1} α) (Nonempty.{u_2} β))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{(max (max 1 u_2) u_1)} (PProd.{u_1 u_2} α β)) (And (Nonempty.{u_1} α) (Nonempty.{u_2} β))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{max (max 1 u_2) u_1} (PProd.{u_1, u_2} α β)) (And (Nonempty.{u_1} α) (Nonempty.{u_2} β))
 Case conversion may be inaccurate. Consider using '#align nonempty_pprod nonempty_pprodₓ'. -/
 @[simp]
 theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
@@ -115,9 +115,9 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
 
 /- warning: nonempty_psum -> nonempty_psum is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{(max 1 u_1 u_2)} (PSum.{u_1 u_2} α β)) (Or (Nonempty.{u_1} α) (Nonempty.{u_2} β))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{max 1 u_1 u_2} (PSum.{u_1, u_2} α β)) (Or (Nonempty.{u_1} α) (Nonempty.{u_2} β))
 but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{(max (max 1 u_2) u_1)} (PSum.{u_1 u_2} α β)) (Or (Nonempty.{u_1} α) (Nonempty.{u_2} β))
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}}, Iff (Nonempty.{max (max 1 u_2) u_1} (PSum.{u_1, u_2} α β)) (Or (Nonempty.{u_1} α) (Nonempty.{u_2} β))
 Case conversion may be inaccurate. Consider using '#align nonempty_psum nonempty_psumₓ'. -/
 @[simp]
 theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
@@ -138,9 +138,9 @@ theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 
 /- warning: nonempty_ulift -> nonempty_ulift is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}}, Iff (Nonempty.{succ (max u_1 u_2)} (ULift.{u_2 u_1} α)) (Nonempty.{succ u_1} α)
+  forall {α : Type.{u_1}}, Iff (Nonempty.{succ (max u_1 u_2)} (ULift.{u_2, u_1} α)) (Nonempty.{succ u_1} α)
 but is expected to have type
-  forall {α : Type.{u_1}}, Iff (Nonempty.{(max (succ u_1) (succ u_2))} (ULift.{u_2 u_1} α)) (Nonempty.{succ u_1} α)
+  forall {α : Type.{u_1}}, Iff (Nonempty.{max (succ u_1) (succ u_2)} (ULift.{u_2, u_1} α)) (Nonempty.{succ u_1} α)
 Case conversion may be inaccurate. Consider using '#align nonempty_ulift nonempty_uliftₓ'. -/
 @[simp]
 theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
@@ -210,7 +210,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}}, (α -> β -> γ) -> (Nonempty.{u_1} α) -> (Nonempty.{u_2} β) -> (Nonempty.{u_3} γ)
 Case conversion may be inaccurate. Consider using '#align nonempty.map2 Nonempty.map2ₓ'. -/
-protected theorem Nonempty.map2 {α β γ : Sort _} (f : α → β → γ) : Nonempty α → Nonempty β → Nonempty γ
+protected theorem Nonempty.map2 {α β γ : Sort _} (f : α → β → γ) :
+    Nonempty α → Nonempty β → Nonempty γ
   | ⟨x⟩, ⟨y⟩ => ⟨f x y⟩
 #align nonempty.map2 Nonempty.map2
 
@@ -225,7 +226,8 @@ protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonem
 #align nonempty.congr Nonempty.congr
 
 #print Nonempty.elim_to_inhabited /-
-theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) : p :=
+theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) :
+    p :=
   h.elim <| f ∘ Inhabited.mk
 #align nonempty.elim_to_inhabited Nonempty.elim_to_inhabited
 -/
@@ -238,9 +240,9 @@ instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty 
 
 /- warning: classical.nonempty_pi -> Classical.nonempty_pi is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}}, Iff (Nonempty.{(imax u_1 u_2)} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u_2} (α i))
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}}, Iff (Nonempty.{imax u_1 u_2} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u_2} (α i))
 but is expected to have type
-  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}}, Iff (Nonempty.{(imax u_1 u_2)} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u_2} (α i))
+  forall {ι : Sort.{u_1}} {α : ι -> Sort.{u_2}}, Iff (Nonempty.{imax u_1 u_2} (forall (i : ι), α i)) (forall (i : ι), Nonempty.{u_2} (α i))
 Case conversion may be inaccurate. Consider using '#align classical.nonempty_pi Classical.nonempty_piₓ'. -/
 theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
   ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
@@ -254,11 +256,12 @@ theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsing
 
 /- warning: function.surjective.nonempty -> Function.Surjective.nonempty is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_2} β] {f : α -> β}, (Function.Surjective.{succ u_1 succ u_2} α β f) -> (Nonempty.{succ u_1} α)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [h : Nonempty.{succ u_2} β] {f : α -> β}, (Function.Surjective.{succ u_1, succ u_2} α β f) -> (Nonempty.{succ u_1} α)
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_1}} [h : Nonempty.{u_1} β] {f : α -> β}, (Function.Surjective.{u_2 u_1} α β f) -> (Nonempty.{u_2} α)
+  forall {α : Sort.{u_2}} {β : Sort.{u_1}} [h : Nonempty.{u_1} β] {f : α -> β}, (Function.Surjective.{u_2, u_1} α β f) -> (Nonempty.{u_2} α)
 Case conversion may be inaccurate. Consider using '#align function.surjective.nonempty Function.Surjective.nonemptyₓ'. -/
-theorem Function.Surjective.nonempty [h : Nonempty β] {f : α → β} (hf : Function.Surjective f) : Nonempty α :=
+theorem Function.Surjective.nonempty [h : Nonempty β] {f : α → β} (hf : Function.Surjective f) :
+    Nonempty α :=
   let ⟨y⟩ := h
   let ⟨x, hx⟩ := hf y
   ⟨x⟩

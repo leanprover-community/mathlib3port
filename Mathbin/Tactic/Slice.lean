@@ -47,7 +47,8 @@ unsafe def slice (a b : ℕ) : conv Unit := do
   iterate_range (a - 1) (a - 1) do
       conv.congr
       conv.skip
-  let k ← repeat_count <| to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := true }
+  let k ←
+    repeat_count <| to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := true }
   iterate_range (k + 1 + a - b) (k + 1 + a - b) conv.congr
   repeat <| to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   rotate 1
@@ -122,5 +123,6 @@ composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invo
 -/
 add_tactic_doc
   { Name := "slice", category := DocCategory.tactic,
-    declNames := [`tactic.interactive.slice_lhs, `tactic.interactive.slice_rhs], tags := ["category theory"] }
+    declNames := [`tactic.interactive.slice_lhs, `tactic.interactive.slice_rhs],
+    tags := ["category theory"] }
 

@@ -45,7 +45,8 @@ variable (R S A B)
 
 /-- Suppose that `R -> S -> A` is a tower of algebras.
 If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
-def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible (algebraMap R A r) :=
+def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] :
+    Invertible (algebraMap R A r) :=
   Invertible.copy (Invertible.map (algebraMap S A) (algebraMap R S r)) (algebraMap R A r)
     (IsScalarTower.algebra_map_apply R S A r)
 #align is_scalar_tower.invertible.algebra_tower IsScalarTower.Invertible.algebraTower
@@ -110,11 +111,10 @@ variable [CommSemiring R] [Semiring S] [AddCommMonoid A]
 variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A} (hb : LinearIndependent R b)
-    (hc : LinearIndependent S c) : LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 := by
-  rw [linear_independent_iff'] at hb hc
-  rw [linear_independent_iff'']
-  rintro s g hg hsg ⟨i, k⟩
+theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁} {c : ι' → A}
+    (hb : LinearIndependent R b) (hc : LinearIndependent S c) :
+    LinearIndependent R fun p : ι × ι' => b p.1 • c p.2 := by
+  rw [linear_independent_iff'] at hb hc; rw [linear_independent_iff'']; rintro s g hg hsg ⟨i, k⟩
   by_cases hik : (i, k) ∈ s
   · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
       rw [← hsg]
@@ -130,11 +130,13 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
 
 /-- `basis.smul (b : basis ι R S) (c : basis ι S A)` is the `R`-basis on `A`
 where the `(i, j)`th basis vector is `b i • c j`. -/
-noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) : Basis (ι × ι') R A :=
+noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) :
+    Basis (ι × ι') R A :=
   Basis.of_repr
     (c.repr.restrictScalars R ≪≫ₗ
       (Finsupp.lcongr (Equiv.refl _) b.repr ≪≫ₗ
-        ((finsuppProdLequiv R).symm ≪≫ₗ Finsupp.lcongr (Equiv.prodComm ι' ι) (LinearEquiv.refl _ _))))
+        ((finsuppProdLequiv R).symm ≪≫ₗ
+          Finsupp.lcongr (Equiv.prodComm ι' ι) (LinearEquiv.refl _ _))))
 #align basis.smul Basis.smul
 
 @[simp]
@@ -142,8 +144,8 @@ theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c
     (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by simp [Basis.smul]
 #align basis.smul_repr Basis.smul_repr
 
-theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x i j) :
-    (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
+theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A)
+    (x i j) : (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
   b.smul_repr c x (i, j)
 #align basis.smul_repr_mk Basis.smul_repr_mk
 
@@ -153,7 +155,8 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   obtain ⟨i, j⟩ := ij
   rw [Basis.apply_eq_iff]
   ext ⟨i', j'⟩
-  rw [Basis.smul_repr, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply]
+  rw [Basis.smul_repr, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_apply,
+    Finsupp.single_apply]
   dsimp only
   split_ifs with hi
   · simp [hi, Finsupp.single_apply]
@@ -170,8 +173,8 @@ variable {R S}
 
 variable [CommRing R] [Ring S] [Algebra R S]
 
-theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S] (b : Basis ι R S) :
-    Function.Injective (algebraMap R S) :=
+theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S]
+    (b : Basis ι R S) : Function.Injective (algebraMap R S) :=
   have : NoZeroSmulDivisors R S := b.NoZeroSmulDivisors
   NoZeroSmulDivisors.algebra_map_injective R S
 #align basis.algebra_map_injective Basis.algebra_map_injective
@@ -180,7 +183,8 @@ end Ring
 
 section AlgHomTower
 
-variable {A} {C D : Type _} [CommSemiring A] [CommSemiring C] [CommSemiring D] [Algebra A C] [Algebra A D]
+variable {A} {C D : Type _} [CommSemiring A] [CommSemiring C] [CommSemiring D] [Algebra A C]
+  [Algebra A D]
 
 variable (f : C →ₐ[A] D) (B) [CommSemiring B] [Algebra A B] [Algebra B C] [IsScalarTower A B C]
 
@@ -197,7 +201,8 @@ def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrictDomain B).toRingHom.
 variable {B}
 
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
-def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
+def algHomEquivSigma :
+    (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
   toFun f := ⟨f.restrictDomain B, f.extendScalars B⟩
   invFun fg :=
     let alg := fg.1.toRingHom.toAlgebra

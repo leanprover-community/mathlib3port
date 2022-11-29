@@ -310,7 +310,8 @@ protected theorem lt_add_of_tsub_lt_left (hb : AddLeCancellable b) (h : a - b < 
   simpa [hb] using h
 #align add_le_cancellable.lt_add_of_tsub_lt_left AddLeCancellable.lt_add_of_tsub_lt_left
 
-protected theorem lt_add_of_tsub_lt_right (hc : AddLeCancellable c) (h : a - c < b) : a < b + c := by
+protected theorem lt_add_of_tsub_lt_right (hc : AddLeCancellable c) (h : a - c < b) : a < b + c :=
+  by
   rw [lt_iff_le_and_ne, ← tsub_le_iff_right]
   refine' ⟨h.le, _⟩
   rintro rfl
@@ -383,7 +384,7 @@ section Both
 variable [CovariantClass α α (· + ·) (· ≤ ·)] [ContravariantClass α α (· + ·) (· ≤ ·)]
 
 theorem add_tsub_add_eq_tsub_right (a c b : α) : a + c - (b + c) = a - b := by
-  refine' add_tsub_add_le_tsub_right.antisymm (tsub_le_iff_right.2 <| le_of_add_le_add_right _)
+  refine' add_tsub_add_le_tsub_right.antisymm (tsub_le_iff_right.2 <| le_of_add_le_add_right _);
   swap
   rw [add_assoc]
   exact le_tsub_add

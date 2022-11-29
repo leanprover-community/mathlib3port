@@ -36,7 +36,8 @@ variable {X : TopCat.{w}} {C : Type u} [Category.{v} C] [ConcreteCategory C]
 attribute [local instance] concrete_category.has_coe_to_sort
 
 /-- A subpresheaf with a submonoid structure on each of the components. -/
-structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomClass (X ⟶ Y) X Y] (F : X.Presheaf C) where
+structure SubmonoidPresheaf [∀ X : C, MulOneClass X] [∀ X Y : C, MonoidHomClass (X ⟶ Y) X Y]
+  (F : X.Presheaf C) where
   obj : ∀ U, Submonoid (F.obj U)
   map : ∀ {U V : (Opens X)ᵒᵖ} (i : U ⟶ V), obj U ≤ (obj V).comap (F.map i)
 #align Top.presheaf.submonoid_presheaf TopCat.Presheaf.SubmonoidPresheaf
@@ -49,9 +50,7 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
   map U V i := CommRingCat.ofHom <| IsLocalization.map _ (F.map i) (G.map i)
   map_id' U := by
     apply IsLocalization.ring_hom_ext (G.obj U)
-    any_goals
-    dsimp
-    infer_instance
+    any_goals dsimp; infer_instance
     refine' (IsLocalization.map_comp _).trans _
     rw [F.map_id]
     rfl
@@ -62,13 +61,15 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
     congr
     rw [F.map_comp]
     rfl
-#align Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
+#align
+  Top.presheaf.submonoid_presheaf.localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.localizationPresheaf
 
 /-- The map into the localization presheaf. -/
 def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf where
   app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
   naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
-#align Top.presheaf.submonoid_presheaf.to_localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.toLocalizationPresheaf
+#align
+  Top.presheaf.submonoid_presheaf.to_localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.toLocalizationPresheaf
 
 instance : Epi G.toLocalizationPresheaf :=
   @NatTrans.epi_of_epi_app _ _ G.toLocalizationPresheaf fun U => Localization.epi' (G.obj U)
@@ -78,7 +79,8 @@ variable (F)
 /-- Given a submonoid at each of the stalks, we may define a submonoid presheaf consisting of
 sections whose restriction onto each stalk falls in the given submonoid. -/
 @[simps]
-noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)) : F.SubmonoidPresheaf where
+noncomputable def submonoidPresheafOfStalk (S : ∀ x : X, Submonoid (F.stalk x)) :
+    F.SubmonoidPresheaf where
   obj U := ⨅ x : unop U, Submonoid.comap (F.germ x) (S x)
   map U V i := by
     intro s hs
@@ -107,7 +109,7 @@ instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf
   intro U
   apply concrete_category.mono_of_injective
   apply IsLocalization.injective _
-  pick_goal 3
+  pick_goal 3;
   · exact Localization.is_localization
     
   intro s hs t e

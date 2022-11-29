@@ -80,11 +80,13 @@ theorem Ioo_ae_eq_Icc : I.ioo =ᵐ[volume] I.icc :=
 
 end Box
 
-theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepartition I) (μ : Measure (ι → ℝ))
-    [IsLocallyFiniteMeasure μ] : (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal := by
+theorem Prepartition.measure_Union_to_real [Finite ι] {I : Box ι} (π : Prepartition I)
+    (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
+    (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal := by
   erw [← Ennreal.to_real_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
   exacts[fun J hJ => J.measurableSetCoe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
-#align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real
+#align
+  box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_Union_to_real
 
 end BoxIntegral
 
@@ -115,13 +117,15 @@ open MeasureTheory
 namespace Box
 
 @[simp]
-theorem volume_apply (I : Box ι) : (volume : Measure (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
+theorem volume_apply (I : Box ι) :
+    (volume : Measure (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
   rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_Ioc_to_real I.lower_le_upper]
 #align box_integral.box.volume_apply BoxIntegral.Box.volume_apply
 
 theorem volume_face_mul {n} (i : Fin (n + 1)) (I : Box (Fin (n + 1))) :
-    (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) = ∏ j, I.upper j - I.lower j := by
-  simp only [face_lower, face_upper, (· ∘ ·), Fin.prod_univ_succ_above _ i, mul_comm]
+    (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) =
+      ∏ j, I.upper j - I.lower j :=
+  by simp only [face_lower, face_upper, (· ∘ ·), Fin.prod_univ_succ_above _ i, mul_comm]
 #align box_integral.box.volume_face_mul BoxIntegral.Box.volume_face_mul
 
 end Box

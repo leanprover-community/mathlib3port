@@ -27,7 +27,8 @@ section
 variable (M : Type _) [Monoid M]
 
 /-- The center of a monoid `M` is the set of elements that commute with everything in `M` -/
-@[to_additive "The center of a monoid `M` is the set of elements that commute with everything in\n`M`"]
+@[to_additive
+      "The center of a monoid `M` is the set of elements that commute with everything in\n`M`"]
 def center : Submonoid M where
   carrier := Set.center M
   one_mem' := Set.one_mem_center M
@@ -44,11 +45,10 @@ theorem center_to_subsemigroup : (center M).toSubsemigroup = Subsemigroup.center
   rfl
 #align submonoid.center_to_subsemigroup Submonoid.center_to_subsemigroup
 
-theorem _root_.add_submonoid.center_to_add_subsemigroup (M) [AddMonoid M] :
+theorem AddSubmonoid.center_to_add_subsemigroup (M) [AddMonoid M] :
     (AddSubmonoid.center M).toAddSubsemigroup = AddSubsemigroup.center M :=
   rfl
-#align
-  submonoid._root_.add_submonoid.center_to_add_subsemigroup submonoid._root_.add_submonoid.center_to_add_subsemigroup
+#align add_submonoid.center_to_add_subsemigroup AddSubmonoid.center_to_add_subsemigroup
 
 attribute [to_additive AddSubmonoid.center_to_add_subsemigroup] Submonoid.center_to_subsemigroup
 

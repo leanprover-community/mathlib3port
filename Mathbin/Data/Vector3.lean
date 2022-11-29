@@ -98,13 +98,14 @@ theorem cons_head_tail (v : Vector3 α (succ n)) : (head v::tail v) = v :=
 #align vector3.cons_head_tail Vector3.cons_head_tail
 
 /-- Eliminator for an empty vector. -/
-def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by rw [eq_nil v] <;> apply H
+def nilElim {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : C v := by
+  rw [eq_nil v] <;> apply H
 #align vector3.nil_elim Vector3.nilElim
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Recursion principle for a nonempty vector. -/
-def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3 α n), C (a::t)) (v : Vector3 α (succ n)) :
-    C v := by rw [← cons_head_tail v] <;> apply H
+def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3 α n), C (a::t))
+    (v : Vector3 α (succ n)) : C v := by rw [← cons_head_tail v] <;> apply H
 #align vector3.cons_elim Vector3.consElim
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -135,7 +136,8 @@ theorem rec_on_cons {C H0 Hs n a v} :
 
 /-- Append two vectors -/
 def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
-  Nat.recOn m (fun _ => w) (fun m IH v => v.consElim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
+  Nat.recOn m (fun _ => w)
+    (fun m IH v => v.consElim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
 #align vector3.append Vector3.append
 
 -- mathport name: «expr +-+ »
@@ -154,20 +156,23 @@ theorem append_cons (a : α) (v : Vector3 α m) (w : Vector3 α n) : (a::v) +-+ 
 #align vector3.append_cons Vector3.append_cons
 
 @[simp]
-theorem append_left : ∀ {m} (i : Fin2 m) (v : Vector3 α m) {n} (w : Vector3 α n), (v +-+ w) (left n i) = v i
+theorem append_left :
+    ∀ {m} (i : Fin2 m) (v : Vector3 α m) {n} (w : Vector3 α n), (v +-+ w) (left n i) = v i
   | _, @fz m, v, n, w => v.consElim fun a t => by simp [*, left]
   | _, @fs m i, v, n, w => v.consElim fun a t => by simp [*, left]
 #align vector3.append_left Vector3.append_left
 
 @[simp]
-theorem append_add : ∀ {m} (v : Vector3 α m) {n} (w : Vector3 α n) (i : Fin2 n), (v +-+ w) (add i m) = w i
+theorem append_add :
+    ∀ {m} (v : Vector3 α m) {n} (w : Vector3 α n) (i : Fin2 n), (v +-+ w) (add i m) = w i
   | 0, v, n, w, i => rfl
   | succ m, v, n, w, i => v.consElim fun a t => by simp [*, add]
 #align vector3.append_add Vector3.append_add
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Insert `a` into `v` at index `i`. -/
-def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j => (a::v) (insertPerm i j)
+def insert (a : α) (v : Vector3 α n) (i : Fin2 (succ n)) : Vector3 α (succ n) := fun j =>
+  (a::v) (insertPerm i j)
 #align vector3.insert Vector3.insert
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -179,7 +184,8 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) : insert a (b::v) (fs i) = b::insert a v i :=
+theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
+    insert a (b::v) (fs i) = b::insert a v i :=
   funext fun j => by
     refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
     refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
@@ -187,19 +193,19 @@ theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) : ins
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (succ n)) (e : succ n + m = succ (n + m)) :
+theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (succ n))
+    (e : succ n + m = succ (n + m)) :
     insert a (t +-+ v) (Eq.recOn e (i.add m)) = Eq.recOn e (t +-+ insert a v i) := by
-  refine' Vector3.recOn t (fun e => _) (fun k b t IH e => _) e
-  rfl
+  refine' Vector3.recOn t (fun e => _) (fun k b t IH e => _) e; rfl
   have e' := succ_add n k
   change
     insert a (b::t +-+ v) (Eq.recOn (congr_arg succ e') (fs (add i k))) =
       Eq.recOn (congr_arg succ e') (b::t +-+ insert a v i)
   rw [←
-    (Eq.drecOn e' rfl : fs (Eq.recOn e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOn (congr_arg succ e') (fs (i.add k)))]
-  simp
-  rw [IH]
-  exact Eq.drecOn e' rfl
+    (Eq.drecOn e' rfl :
+      fs (Eq.recOn e' (i.add k) : Fin2 (succ (n + k))) =
+        Eq.recOn (congr_arg succ e') (fs (i.add k)))]
+  simp; rw [IH]; exact Eq.drecOn e' rfl
 #align vector3.append_insert Vector3.append_insert
 
 end Vector3
@@ -235,7 +241,8 @@ theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃
 
 theorem vector_ex_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f ↔ Exists f
   | 0, f => (exists_vector_zero f).symm
-  | succ n, f => Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
+  | succ n, f =>
+    Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
 #align vector_ex_iff_exists vector_ex_iff_exists
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -250,7 +257,8 @@ theorem vector_all_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n
 /-- `vector_allp p v` is equivalent to `∀ i, p (v i)`, but unfolds directly to a conjunction,
   i.e. `vector_allp p [0, 1, 2] = p 0 ∧ p 1 ∧ p 2`. -/
 def VectorAllp (p : α → Prop) (v : Vector3 α n) : Prop :=
-  Vector3.recOn v True fun n a v IH => @Vector3.recOn _ (fun n v => Prop) _ v (p a) fun n b v' _ => p a ∧ IH
+  Vector3.recOn v True fun n a v IH =>
+    @Vector3.recOn _ (fun n v => Prop) _ v (p a) fun n b v' _ => p a ∧ IH
 #align vector_allp VectorAllp
 
 @[simp]
@@ -265,11 +273,13 @@ theorem vector_allp_singleton (p : α → Prop) (x : α) : VectorAllp p [x] = p 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem vector_allp_cons (p : α → Prop) (x : α) (v : Vector3 α n) : VectorAllp p (x::v) ↔ p x ∧ VectorAllp p v :=
+theorem vector_allp_cons (p : α → Prop) (x : α) (v : Vector3 α n) :
+    VectorAllp p (x::v) ↔ p x ∧ VectorAllp p v :=
   Vector3.recOn v (and_true_iff _).symm fun n a v IH => Iff.rfl
 #align vector_allp_cons vector_allp_cons
 
-theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) := by
+theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp p v ↔ ∀ i, p (v i) :=
+  by
   refine' v.rec_on _ _
   · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
     
@@ -290,7 +300,8 @@ theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp
     
 #align vector_allp_iff_forall vector_allp_iff_forall
 
-theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n} (al : VectorAllp p v) : VectorAllp q v :=
+theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n}
+    (al : VectorAllp p v) : VectorAllp q v :=
   (vector_allp_iff_forall _ _).2 fun i => h _ <| (vector_allp_iff_forall _ _).1 al _
 #align vector_allp.imp VectorAllp.imp
 

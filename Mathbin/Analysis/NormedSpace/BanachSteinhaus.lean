@@ -23,14 +23,15 @@ convex spaces), but these are not yet in `mathlib`.
 
 open Set
 
-variable {E F 𝕜 𝕜₂ : Type _} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F] [NontriviallyNormedField 𝕜]
-  [NontriviallyNormedField 𝕜₂] [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+variable {E F 𝕜 𝕜₂ : Type _} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F]
+  [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F]
+  {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
 
 /-- This is the standard Banach-Steinhaus theorem, or Uniform Boundedness Principle.
 If a family of continuous linear maps from a Banach space into a normed space is pointwise
 bounded, then the norms of these linear maps are uniformly bounded. -/
-theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F} (h : ∀ x, ∃ C, ∀ i, ‖g i x‖ ≤ C) :
-    ∃ C', ∀ i, ‖g i‖ ≤ C' := by
+theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ₁₂] F}
+    (h : ∀ x, ∃ C, ∀ i, ‖g i x‖ ≤ C) : ∃ C', ∀ i, ‖g i‖ ≤ C' := by
   -- sequence of subsets consisting of those `x : E` with norms `‖g i x‖` bounded by `n`
   let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ‖g i x‖ ≤ n }
   -- each of these sets is closed
@@ -64,7 +65,8 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
         (real_norm_le x (Metric.mem_ball_self ε_pos) i)
     _ = (m + m : ℕ) := (m.cast_add m).symm
     _ ≤ (m + m : ℕ) * (‖y‖ / (ε / ‖k‖)) :=
-      le_mul_of_one_le_right (Nat.cast_nonneg _) ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)
+      le_mul_of_one_le_right (Nat.cast_nonneg _)
+        ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)
     _ = (m + m : ℕ) / (ε / ‖k‖) * ‖y‖ := (mul_comm_div _ _ _).symm
     
 #align banach_steinhaus banach_steinhaus

@@ -120,8 +120,8 @@ def mkFintype {α} (enum : α → ℕ) (s : FinsetAbove α enum 0) (H : ∀ x, x
 #align derive_fintype.mk_fintype DeriveFintype.mkFintype
 
 /-- This is the case for a simple variant (no arguments) in an inductive type. -/
-def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n) (s : FinsetAbove α enum (n + 1)) :
-    FinsetAbove α enum n := by
+def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n)
+    (s : FinsetAbove α enum (n + 1)) : FinsetAbove α enum n := by
   refine' ⟨Finset.cons a s.1 _, _⟩
   · intro h'
     have := s.2 _ h'
@@ -137,7 +137,8 @@ def FinsetAbove.cons {α} {enum : α → ℕ} (n) (a : α) (h : enum a = n) (s :
     
 #align derive_fintype.finset_above.cons DeriveFintype.FinsetAbove.cons
 
-theorem FinsetAbove.mem_cons_self {α} {enum : α → ℕ} {n a h s} : a ∈ (@FinsetAbove.cons α enum n a h s).1 :=
+theorem FinsetAbove.mem_cons_self {α} {enum : α → ℕ} {n a h s} :
+    a ∈ (@FinsetAbove.cons α enum n a h s).1 :=
   Multiset.mem_cons_self _ _
 #align derive_fintype.finset_above.mem_cons_self DeriveFintype.FinsetAbove.mem_cons_self
 
@@ -167,20 +168,21 @@ sigma over all constructor arguments. We use sigma instances and existing fintyp
 to prove that `Γ` is a fintype, and construct the function `f` that maps `⟨a, b, c, ...⟩`
 to `C_n a b c ...` where `C_n` is the nth constructor, and `mem` asserts
 `enum (C_n a b c ...) = n`. -/
-def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintype Γ] (f : Γ → α) (inj : Function.Injective f) (mem : ∀ x, P (f x)) :
-    FinsetIn P :=
-  ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
+def FinsetIn.mk {α} {P : α → Prop} (Γ) [Fintype Γ] (f : Γ → α) (inj : Function.Injective f)
+    (mem : ∀ x, P (f x)) : FinsetIn P :=
+  ⟨Finset.univ.map ⟨f, inj⟩, fun x h => by
+    rcases Finset.mem_map.1 h with ⟨x, _, rfl⟩ <;> exact mem x⟩
 #align derive_fintype.finset_in.mk DeriveFintype.FinsetIn.mk
 
-theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} (b) (H : f b = a) :
-    a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
+theorem FinsetIn.mem_mk {α} {P : α → Prop} {Γ} {s : Fintype Γ} {f : Γ → α} {inj mem a} (b)
+    (H : f b = a) : a ∈ (@FinsetIn.mk α P Γ s f inj mem).1 :=
   Finset.mem_map.2 ⟨_, Finset.mem_univ _, H⟩
 #align derive_fintype.finset_in.mem_mk DeriveFintype.FinsetIn.mem_mk
 
 /-- For nontrivial variants, we split the constructor list into a `finset_in` component for the
 current constructor and a `finset_above` for the rest. -/
-def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a = n) (t : FinsetAbove α enum (n + 1)) :
-    FinsetAbove α enum n := by
+def FinsetAbove.union {α} {enum : α → ℕ} (n) (s : FinsetIn fun a => enum a = n)
+    (t : FinsetAbove α enum (n + 1)) : FinsetAbove α enum n := by
   refine' ⟨Finset.disjUnion s.1 t.1 _, _⟩
   · rw [Finset.disjoint_left]
     intro a hs ht
@@ -202,8 +204,8 @@ theorem FinsetAbove.mem_union_left {α} {enum : α → ℕ} {n s t a} (H : a ∈
   Multiset.mem_add.2 (Or.inl H)
 #align derive_fintype.finset_above.mem_union_left DeriveFintype.FinsetAbove.mem_union_left
 
-theorem FinsetAbove.mem_union_right {α} {enum : α → ℕ} {n s t a} (H : a ∈ (t : FinsetAbove _ _ _).1) :
-    a ∈ (@FinsetAbove.union α enum n s t).1 :=
+theorem FinsetAbove.mem_union_right {α} {enum : α → ℕ} {n s t a}
+    (H : a ∈ (t : FinsetAbove _ _ _).1) : a ∈ (@FinsetAbove.union α enum n s t).1 :=
   Multiset.mem_add.2 (Or.inr H)
 #align derive_fintype.finset_above.mem_union_right DeriveFintype.FinsetAbove.mem_union_right
 
@@ -283,7 +285,8 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
     let e := (expr.const c ls).mk_app args
     let t ← infer_type e
     if is_pi t then do
-        to_expr ``(FinsetAbove.union $(reflect k)) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
+        to_expr ``(FinsetAbove.union $(reflect k)) tt ff >>= fun c =>
+            apply c { NewGoals := new_goals.all }
         let Γ ← mk_sigma t
         to_expr ``(FinsetIn.mk $(Γ)) tt ff >>= fun c => apply c { NewGoals := new_goals.all }
         let n ← mk_sigma_elim t e
@@ -338,7 +341,9 @@ unsafe def mk_fintype_instance : tactic Unit := do
   let cs := env.constructors_of I
   guard (env I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
   guard ¬env I <|>
-      fail ("@[derive fintype]: recursive inductive types are " ++ "not supported (they are also usually infinite)")
+      fail
+        ("@[derive fintype]: recursive inductive types are " ++
+          "not supported (they are also usually infinite)")
   applyc `` mk_fintype { NewGoals := new_goals.all }
   intro1 >>= cases >>= fun gs => gs fun ⟨i, _⟩ => exact (reflect i)
   mk_finset ls args 0 cs

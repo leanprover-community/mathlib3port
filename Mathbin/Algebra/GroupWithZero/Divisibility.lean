@@ -44,13 +44,15 @@ end SemigroupWithZero
 
 /-- Given two elements `b`, `c` of a `cancel_monoid_with_zero` and a nonzero element `a`,
  `a*b` divides `a*c` iff `b` divides `c`. -/
-theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 0) : a * b ∣ a * c ↔ b ∣ c :=
+theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 0) :
+    a * b ∣ a * c ↔ b ∣ c :=
   exists_congr fun d => by rw [mul_assoc, mul_right_inj' ha]
 #align mul_dvd_mul_iff_left mul_dvd_mul_iff_left
 
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
   element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
-theorem mul_dvd_mul_iff_right [CancelCommMonoidWithZero α] {a b c : α} (hc : c ≠ 0) : a * c ∣ b * c ↔ a ∣ b :=
+theorem mul_dvd_mul_iff_right [CancelCommMonoidWithZero α] {a b c : α} (hc : c ≠ 0) :
+    a * c ∣ b * c ↔ a ∣ b :=
   exists_congr fun d => by rw [mul_right_comm, mul_left_inj' hc]
 #align mul_dvd_mul_iff_right mul_dvd_mul_iff_right
 
@@ -78,10 +80,12 @@ theorem dvd_not_unit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ 
 
 end CommMonoidWithZero
 
-theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
+theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} :
+    x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
   ⟨fun ⟨⟨d, hd⟩, hyx⟩ =>
     ⟨fun hx0 => by simpa [hx0] using hyx,
-      ⟨d, mt is_unit_iff_dvd_one.1 fun ⟨e, he⟩ => hyx ⟨e, by rw [hd, mul_assoc, ← he, mul_one]⟩, hd⟩⟩,
+      ⟨d, mt is_unit_iff_dvd_one.1 fun ⟨e, he⟩ => hyx ⟨e, by rw [hd, mul_assoc, ← he, mul_one]⟩,
+        hd⟩⟩,
     fun ⟨hx0, d, hdu, hdx⟩ =>
     ⟨⟨d, hdx⟩, fun ⟨e, he⟩ =>
       hdu

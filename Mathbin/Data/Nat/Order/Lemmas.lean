@@ -48,13 +48,14 @@ theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k 
 
 
 protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < n / d ↔ d * a < n := by
-  rcases d.eq_zero_or_pos with (rfl | hd0)
+  rcases d.eq_zero_or_pos with (rfl | hd0);
   · simp [zero_dvd_iff.mp hnd]
     
   rw [← mul_lt_mul_left hd0, ← Nat.eq_mul_of_div_eq_right hnd rfl]
 #align nat.lt_div_iff_mul_lt Nat.lt_div_iff_mul_lt
 
-theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy : y ∣ n) : n / x = n / y ↔ x = y := by
+theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy : y ∣ n) :
+    n / x = n / y ↔ x = y := by
   constructor
   · intro h
     rw [← mul_right_inj' hn]
@@ -69,7 +70,8 @@ theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy
 
 protected theorem div_eq_zero_iff {a b : ℕ} (hb : 0 < b) : a / b = 0 ↔ a < b :=
   ⟨fun h => by rw [← mod_add_div a b, h, mul_zero, add_zero] <;> exact mod_lt _ hb, fun h => by
-    rw [← mul_right_inj' hb.ne', ← @add_left_cancel_iff _ _ (a % b), mod_add_div, mod_eq_of_lt h, mul_zero, add_zero]⟩
+    rw [← mul_right_inj' hb.ne', ← @add_left_cancel_iff _ _ (a % b), mod_add_div, mod_eq_of_lt h,
+      mul_zero, add_zero]⟩
 #align nat.div_eq_zero_iff Nat.div_eq_zero_iff
 
 protected theorem div_eq_zero {a b : ℕ} (hb : a < b) : a / b = 0 :=
@@ -119,8 +121,7 @@ theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 el
     have hb2 : b + 2 > 1 := by decide
     simp [ne_of_gt hb2, div_eq_of_lt hb2]
   | a + 1, b + 1 => by
-    rw [Nat.div_def]
-    conv_rhs => rw [Nat.div_def]
+    rw [Nat.div_def]; conv_rhs => rw [Nat.div_def]
     by_cases hb_eq_a : b = a + 1
     · simp [hb_eq_a, le_refl]
       
@@ -129,8 +130,8 @@ theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 el
       have h₁ : 0 < b + 1 ∧ b + 1 ≤ a + 1 + 1 := ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a1⟩
       have h₂ : 0 < b + 1 ∧ b + 1 ≤ a + 1 := ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a⟩
       have dvd_iff : b + 1 ∣ a - b + 1 ↔ b + 1 ∣ a + 1 + 1 := by
-        rw [Nat.dvd_add_iff_left (dvd_refl (b + 1)), ← add_tsub_add_eq_tsub_right a 1 b, add_comm (_ - _), add_assoc,
-          tsub_add_cancel_of_le (succ_le_succ hb_le_a), add_comm 1]
+        rw [Nat.dvd_add_iff_left (dvd_refl (b + 1)), ← add_tsub_add_eq_tsub_right a 1 b,
+          add_comm (_ - _), add_assoc, tsub_add_cancel_of_le (succ_le_succ hb_le_a), add_comm 1]
       have wf : a - b < a + 1 := lt_succ_of_le tsub_le_self
       rw [if_pos h₁, if_pos h₂, add_tsub_add_eq_tsub_right, ← tsub_add_eq_add_tsub hb_le_a,
         have := wf
@@ -139,15 +140,18 @@ theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 el
       simp [dvd_iff, succ_eq_add_one, add_comm 1, add_assoc]
       
     · have hba : ¬b ≤ a := not_le_of_gt (lt_trans (lt_succ_self a) (lt_of_not_ge hb_le_a1))
-      have hb_dvd_a : ¬b + 1 ∣ a + 2 := fun h => hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))
+      have hb_dvd_a : ¬b + 1 ∣ a + 2 := fun h =>
+        hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))
       simp [hba, hb_le_a1, hb_dvd_a]
       
 #align nat.succ_div Nat.succ_div
 
-theorem succ_div_of_dvd {a b : ℕ} (hba : b ∣ a + 1) : (a + 1) / b = a / b + 1 := by rw [succ_div, if_pos hba]
+theorem succ_div_of_dvd {a b : ℕ} (hba : b ∣ a + 1) : (a + 1) / b = a / b + 1 := by
+  rw [succ_div, if_pos hba]
 #align nat.succ_div_of_dvd Nat.succ_div_of_dvd
 
-theorem succ_div_of_not_dvd {a b : ℕ} (hba : ¬b ∣ a + 1) : (a + 1) / b = a / b := by rw [succ_div, if_neg hba, add_zero]
+theorem succ_div_of_not_dvd {a b : ℕ} (hba : ¬b ∣ a + 1) : (a + 1) / b = a / b := by
+  rw [succ_div, if_neg hba, add_zero]
 #align nat.succ_div_of_not_dvd Nat.succ_div_of_not_dvd
 
 theorem dvd_iff_div_mul_eq (n d : ℕ) : d ∣ n ↔ n / d * d = n :=
@@ -197,7 +201,8 @@ theorem div_div_div_eq_div : ∀ {a b c : ℕ} (dvd : b ∣ a) (dvd2 : a ∣ c),
 /-- If a small natural number is divisible by a larger natural number,
 the small number is zero. -/
 theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
-  Nat.eq_zero_of_dvd_of_div_eq_zero w ((Nat.div_eq_zero_iff (lt_of_le_of_lt (zero_le b) h)).elimRight h)
+  Nat.eq_zero_of_dvd_of_div_eq_zero w
+    ((Nat.div_eq_zero_iff (lt_of_le_of_lt (zero_le b) h)).elimRight h)
 #align nat.eq_zero_of_dvd_of_lt Nat.eq_zero_of_dvd_of_lt
 
 @[simp]

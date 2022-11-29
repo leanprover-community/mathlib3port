@@ -185,7 +185,8 @@ theorem min_lt_min_left_iff : min a c < min b c ↔ a < b ∧ a < c := by
   exact and_congr_left fun h => or_iff_left_of_imp h.trans
 #align min_lt_min_left_iff min_lt_min_left_iff
 
-theorem min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a := by simp_rw [min_comm a, min_lt_min_left_iff]
+theorem min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a := by
+  simp_rw [min_comm a, min_lt_min_left_iff]
 #align min_lt_min_right_iff min_lt_min_right_iff
 
 theorem max_lt_max_left_iff : max a c < max b c ↔ a < b ∧ c < b :=
@@ -210,7 +211,8 @@ theorem min_lt_max : min a b < max a b ↔ a ≠ b :=
   inf_lt_sup
 #align min_lt_max min_lt_max
 
-theorem max_lt_max (h₁ : a < c) (h₂ : b < d) : max a b < max c d := by simp [lt_max_iff, max_lt_iff, *]
+theorem max_lt_max (h₁ : a < c) (h₂ : b < d) : max a b < max c d := by
+  simp [lt_max_iff, max_lt_iff, *]
 #align max_lt_max max_lt_max
 
 theorem min_lt_min (h₁ : a < c) (h₂ : b < d) : min a b < min c d :=
@@ -229,30 +231,36 @@ theorem Max.right_comm (a b c : α) : max (max a b) c = max (max a c) b :=
   right_comm max max_comm max_assoc a b c
 #align max.right_comm Max.right_comm
 
-theorem MonotoneOn.map_max (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = max (f a) (f b) := by
+theorem MonotoneOn.map_max (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) :
+    f (max a b) = max (f a) (f b) := by
   cases le_total a b <;> simp only [max_eq_right, max_eq_left, hf ha hb, hf hb ha, h]
 #align monotone_on.map_max MonotoneOn.map_max
 
-theorem MonotoneOn.map_min (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = min (f a) (f b) :=
+theorem MonotoneOn.map_min (hf : MonotoneOn f s) (ha : a ∈ s) (hb : b ∈ s) :
+    f (min a b) = min (f a) (f b) :=
   hf.dual.map_max ha hb
 #align monotone_on.map_min MonotoneOn.map_min
 
-theorem AntitoneOn.map_max (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (max a b) = min (f a) (f b) :=
+theorem AntitoneOn.map_max (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) :
+    f (max a b) = min (f a) (f b) :=
   hf.dual_right.map_max ha hb
 #align antitone_on.map_max AntitoneOn.map_max
 
-theorem AntitoneOn.map_min (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) : f (min a b) = max (f a) (f b) :=
+theorem AntitoneOn.map_min (hf : AntitoneOn f s) (ha : a ∈ s) (hb : b ∈ s) :
+    f (min a b) = max (f a) (f b) :=
   hf.dual.map_max ha hb
 #align antitone_on.map_min AntitoneOn.map_min
 
-theorem Monotone.map_max (hf : Monotone f) : f (max a b) = max (f a) (f b) := by cases le_total a b <;> simp [h, hf h]
+theorem Monotone.map_max (hf : Monotone f) : f (max a b) = max (f a) (f b) := by
+  cases le_total a b <;> simp [h, hf h]
 #align monotone.map_max Monotone.map_max
 
 theorem Monotone.map_min (hf : Monotone f) : f (min a b) = min (f a) (f b) :=
   hf.dual.map_max
 #align monotone.map_min Monotone.map_min
 
-theorem Antitone.map_max (hf : Antitone f) : f (max a b) = min (f a) (f b) := by cases le_total a b <;> simp [h, hf h]
+theorem Antitone.map_max (hf : Antitone f) : f (max a b) = min (f a) (f b) := by
+  cases le_total a b <;> simp [h, hf h]
 #align antitone.map_max Antitone.map_max
 
 theorem Antitone.map_min (hf : Antitone f) : f (min a b) = max (f a) (f b) :=

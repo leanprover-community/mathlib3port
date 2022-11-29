@@ -78,7 +78,8 @@ def continuousPrelocal (T : TopCat.{v}) : PrelocalPredicate fun x : X => T where
 #align Top.continuous_prelocal TopCat.continuousPrelocal
 
 /-- Satisfying the inhabited linter. -/
-instance inhabitedPrelocalPredicate (T : TopCat.{v}) : Inhabited (PrelocalPredicate fun x : X => T) :=
+instance inhabitedPrelocalPredicate (T : TopCat.{v}) :
+    Inhabited (PrelocalPredicate fun x : X => T) :=
   ⟨continuousPrelocal X T⟩
 #align Top.inhabited_prelocal_predicate TopCat.inhabitedPrelocalPredicate
 
@@ -142,8 +143,8 @@ def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : Lo
     exact ⟨V', m', i' ≫ i, p'⟩
 #align Top.prelocal_predicate.sheafify TopCat.PrelocalPredicate.sheafify
 
-theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X} {f : ∀ x : U, T x}
-    (h : P.pred f) : P.sheafify.pred f := fun x =>
+theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X}
+    {f : ∀ x : U, T x} (h : P.pred f) : P.sheafify.pred f := fun x =>
   ⟨U, x.2, 𝟙 _, by
     convert h
     ext ⟨y, w⟩
@@ -179,7 +180,8 @@ theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredic
     -- by forgetting that the prediacte holds
     let sf' : ∀ i : ι, (presheaf_to_Types X T).obj (op (U i)) := fun i => (sf i).val
     -- Since our original family is compatible, this one is as well
-    have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j => congr_arg Subtype.val (sf_comp i j)
+    have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j =>
+      congr_arg Subtype.val (sf_comp i j)
     -- So, we can obtain a unique gluing
     obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).exists_unique_gluing U sf' sf'_comp
     refine' ⟨⟨gl, _⟩, _, _⟩
@@ -255,8 +257,8 @@ agree on some neighborhood of `x`.
 -/
 theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
     (w :
-      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y) (hV : P.pred fV)
-        (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
+      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y)
+        (hV : P.pred fV) (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
         ∃ (W : OpenNhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
     Function.Injective (stalkToFiber P x) := fun tU tV h => by
   -- We promise to provide all the ingredients of the proof later:
@@ -304,7 +306,8 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
           ext (⟨f, p⟩x)
           rfl })
     (by tidy)
-#align Top.subpresheaf_continuous_prelocal_iso_presheaf_to_Top TopCat.subpresheafContinuousPrelocalIsoPresheafToTop
+#align
+  Top.subpresheaf_continuous_prelocal_iso_presheaf_to_Top TopCat.subpresheafContinuousPrelocalIsoPresheafToTop
 
 /-- The sheaf of continuous functions on `X` with values in a space `T`.
 -/

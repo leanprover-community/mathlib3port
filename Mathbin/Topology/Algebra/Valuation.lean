@@ -60,7 +60,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (x * y) : Γ₀) < γ
         rw [Valuation.map_mul, Hx, mul_comm]
-        rw [Units.coe_mul, mul_comm] at vy_lt
+        rw [Units.val_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
         ,
     rightMul := by
@@ -76,7 +76,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (y * x) : Γ₀) < γ
         rw [Valuation.map_mul, Hx]
-        rw [Units.coe_mul, mul_comm] at vy_lt
+        rw [Units.val_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
          }
 #align valuation.subgroups_basis Valuation.subgroups_basis
@@ -90,8 +90,8 @@ TODO: show that there always exists an equivalent valuation taking values in a t
 the same universe as the ring.
 
 See Note [forgetful inheritance] for why we extend `uniform_space`, `uniform_add_group`. -/
-class Valued (R : Type u) [Ring R] (Γ₀ : outParam (Type v)) [LinearOrderedCommGroupWithZero Γ₀] extends UniformSpace R,
-  UniformAddGroup R where
+class Valued (R : Type u) [Ring R] (Γ₀ : outParam (Type v))
+  [LinearOrderedCommGroupWithZero Γ₀] extends UniformSpace R, UniformAddGroup R where
   V : Valuation R Γ₀
   is_topological_valuation : ∀ s, s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x : R | v x < γ } ⊆ s
 #align valued Valued
@@ -116,18 +116,21 @@ variable (R Γ₀) [_i : Valued R Γ₀]
 
 include _i
 
-theorem has_basis_nhds_zero : (𝓝 (0 : R)).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { x | v x < (γ : Γ₀) } := by
+theorem has_basis_nhds_zero :
+    (𝓝 (0 : R)).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { x | v x < (γ : Γ₀) } := by
   simp [Filter.has_basis_iff, is_topological_valuation]
 #align valued.has_basis_nhds_zero Valued.has_basis_nhds_zero
 
-theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } :=
-  by
+theorem has_basis_uniformity :
+    (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } := by
   rw [uniformity_eq_comap_nhds_zero]
   exact (has_basis_nhds_zero R Γ₀).comap _
 #align valued.has_basis_uniformity Valued.has_basis_uniformity
 
-theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _ :=
-  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroups_basis.has_basis_nhds_zero.comap _)
+theorem to_uniform_space_eq :
+    to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _ :=
+  uniform_space_eq
+    ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroups_basis.has_basis_nhds_zero.comap _)
 #align valued.to_uniform_space_eq Valued.to_uniform_space_eq
 
 variable {R Γ₀}
@@ -153,9 +156,11 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
-    Cauchy F ↔ F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ := by
+    Cauchy F ↔
+      F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x y) (_ : x ∈ M) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=
+  by
   rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
   apply and_congr Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]

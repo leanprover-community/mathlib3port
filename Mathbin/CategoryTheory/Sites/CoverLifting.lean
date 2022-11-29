@@ -82,8 +82,8 @@ theorem idCoverLifting : CoverLifting J J (𝟭 _) :=
 variable {J K}
 
 /-- The composition of two cover-lifting functors are cover-lifting -/
-theorem compCoverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E} (hv : CoverLifting K L G) :
-    CoverLifting J L (F ⋙ G) :=
+theorem compCoverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E}
+    (hv : CoverLifting K L G) : CoverLifting J L (F ⋙ G) :=
   ⟨fun _ S h => hu.cover_lift (hv.cover_lift h)⟩
 #align category_theory.comp_cover_lifting CategoryTheory.compCoverLifting
 
@@ -156,7 +156,8 @@ def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right := 
   have S' := K.pullback_stable Y.hom.unop hS
   have hs' := ((hx.pullback Y.3.unop).functorPullback G).compPresheafMap hom_sh
   exact (ℱ.2 X _ (hu.cover_lift S')).amalgamate _ hs'
-#align category_theory.Ran_is_sheaf_of_cover_lifting.get_section CategoryTheory.RanIsSheafOfCoverLifting.getSection
+#align
+  category_theory.Ran_is_sheaf_of_cover_lifting.get_section CategoryTheory.RanIsSheafOfCoverLifting.getSection
 
 theorem get_section_is_amalgamation (Y : StructuredArrow (op U) G.op) :
     (pulledbackFamily ℱ S x Y).IsAmalgamation (getSection hu ℱ hS hx Y) :=
@@ -164,8 +165,8 @@ theorem get_section_is_amalgamation (Y : StructuredArrow (op U) G.op) :
 #align
   category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_amalgamation CategoryTheory.RanIsSheafOfCoverLifting.get_section_is_amalgamation
 
-theorem get_section_is_unique (Y : StructuredArrow (op U) G.op) {y} (H : (pulledbackFamily ℱ S x Y).IsAmalgamation y) :
-    y = getSection hu ℱ hS hx Y := by
+theorem get_section_is_unique (Y : StructuredArrow (op U) G.op) {y}
+    (H : (pulledbackFamily ℱ S x Y).IsAmalgamation y) : y = getSection hu ℱ hS hx Y := by
   apply is_sheaf_for.is_separated_for _ (pulledback_family ℱ S x Y)
   · exact H
     
@@ -188,7 +189,8 @@ theorem get_section_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
   convert get_section_is_amalgamation hu ℱ hS hx Y (fV' ≫ f.right.unop) _ using 1
   · tidy
     
-  · simp only [Eq, Quiver.Hom.unop_op, pulledback_family_apply, functor.map_comp, unop_comp, category.assoc]
+  · simp only [Eq, Quiver.Hom.unop_op, pulledback_family_apply, functor.map_comp, unop_comp,
+      category.assoc]
     
   · change S (G.map _ ≫ Y.hom.unop)
     simpa only [functor.map_comp, category.assoc] using hV'
@@ -203,7 +205,8 @@ def gluedLimitCone : Limits.Cone (RanCat.diagram G.op ℱ.val (op U)) :=
   category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone CategoryTheory.RanIsSheafOfCoverLifting.gluedLimitCone
 
 @[simp]
-theorem glued_limit_cone_π_app (W) : (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
+theorem glued_limit_cone_π_app (W) :
+    (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
   rfl
 #align
   category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone_π_app CategoryTheory.RanIsSheafOfCoverLifting.glued_limit_cone_π_app
@@ -211,9 +214,11 @@ theorem glued_limit_cone_π_app (W) : (gluedLimitCone hu ℱ hS hx).π.app W = g
 /-- The section obtained by passing `glued_limit_cone` into `category_theory.limits.limit.lift`. -/
 def gluedSection : X ⟶ ((ran G.op).obj ℱ.val).obj (op U) :=
   limit.lift _ (gluedLimitCone hu ℱ hS hx)
-#align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section CategoryTheory.RanIsSheafOfCoverLifting.gluedSection
+#align
+  category_theory.Ran_is_sheaf_of_cover_lifting.glued_section CategoryTheory.RanIsSheafOfCoverLifting.gluedSection
 
-/-- A helper lemma for the following two lemmas. Basically stating that if the section `y : X ⟶ 𝒢(V)`
+/--
+A helper lemma for the following two lemmas. Basically stating that if the section `y : X ⟶ 𝒢(V)`
 coincides with `x` on `G(V')` for all `G(V') ⊆ V ∈ S`, then `X ⟶ 𝒢(V) ⟶ ℱ(W)` is indeed the
 section obtained in `get_sections`. That said, this is littered with some more categorical jargon
 in order to be applied in the following lemmas easier.
@@ -232,17 +237,20 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
     y ≫ ((Ran G.op).obj ℱ.val).map (G.map fV' ≫ W.hom.unop).op =
       x (G.map fV' ≫ W.hom.unop ≫ f) (by simpa only using hV') :=
     by
-    convert H (show S ((G.map fV' ≫ W.hom.unop) ≫ f) by simpa only [category.assoc] using hV') using 2
+    convert H (show S ((G.map fV' ≫ W.hom.unop) ≫ f) by simpa only [category.assoc] using hV') using
+      2
     simp only [category.assoc]
-  simp only [Quiver.Hom.unop_op, Equiv.symm_symm, structured_arrow.map_obj_hom, unop_comp, Equiv.coe_fn_mk,
-    functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp, Ran_obj_map, nat_trans.id_app]
+  simp only [Quiver.Hom.unop_op, Equiv.symm_symm, structured_arrow.map_obj_hom, unop_comp,
+    Equiv.coe_fn_mk, functor.comp_map, coyoneda_obj_map, category.assoc, ← this, op_comp,
+    Ran_obj_map, nat_trans.id_app]
   erw [category.id_comp, limit.pre_π]
   congr
   convert limit.w (Ran.diagram G.op ℱ.val (op V)) (structured_arrow.hom_mk' W fV'.op)
   rw [structured_arrow.map_mk]
   erw [category.comp_id]
   simp only [Quiver.Hom.unop_op, functor.op_map, Quiver.Hom.op_unop]
-#align category_theory.Ran_is_sheaf_of_cover_lifting.helper CategoryTheory.RanIsSheafOfCoverLifting.helper
+#align
+  category_theory.Ran_is_sheaf_of_cover_lifting.helper CategoryTheory.RanIsSheafOfCoverLifting.helper
 
 /-- Verify that the `glued_section` is an amalgamation of `x`. -/
 theorem glued_section_is_amalgamation : x.IsAmalgamation (gluedSection hu ℱ hS hx) := by
@@ -283,8 +291,7 @@ but without the condition that `C` or `D` has pullbacks.
 theorem ranIsSheafOfCoverLifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ : SheafCat J A) :
     Presheaf.IsSheaf K ((ran G.op).obj ℱ.val) := by
   intro X U S hS x hx
-  constructor
-  swap
+  constructor; swap
   · apply Ran_is_sheaf_of_cover_lifting.glued_section hG ℱ hS hx
     
   constructor
@@ -304,12 +311,14 @@ def Sites.copullback {G : C ⥤ D} (hG : CoverLifting J K G) : SheafCat J A ⥤ 
   map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ <| (ran G.op).map_comp f.val g.val
 #align category_theory.sites.copullback CategoryTheory.Sites.copullback
 
-/-- Given a functor between sites that is cover-preserving, cover-lifting, and compatible-preserving,
+/--
+Given a functor between sites that is cover-preserving, cover-lifting, and compatible-preserving,
 the pullback and copullback along `G` are adjoint to each other
 -/
 @[simps unit_app_val counit_app_val]
-noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPreserving J K G) (Hl : CoverLifting J K G)
-    (Hc : CompatiblePreserving K G) : Sites.pullback A Hc Hp ⊣ Sites.copullback A Hl where
+noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPreserving J K G)
+    (Hl : CoverLifting J K G) (Hc : CompatiblePreserving K G) :
+    Sites.pullback A Hc Hp ⊣ Sites.copullback A Hl where
   homEquiv X Y :=
     { toFun := fun f => ⟨(ran.adjunction A G.op).homEquiv X.val Y.val f.val⟩,
       invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩,
@@ -323,17 +332,20 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
         rw [Equiv.apply_symm_apply] }
   Unit :=
     { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩,
-      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
+      naturality' := fun _ _ f =>
+        SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).Unit.naturality f.val }
   counit :=
     { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩,
-      naturality' := fun _ _ f => SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
+      naturality' := fun _ _ f =>
+        SheafCat.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
   hom_equiv_unit' X Y f := by
     ext1
     apply (Ran.adjunction A G.op).hom_equiv_unit
   hom_equiv_counit' X Y f := by
     ext1
     apply (Ran.adjunction A G.op).hom_equiv_counit
-#align category_theory.sites.pullback_copullback_adjunction CategoryTheory.Sites.pullbackCopullbackAdjunction
+#align
+  category_theory.sites.pullback_copullback_adjunction CategoryTheory.Sites.pullbackCopullbackAdjunction
 
 end CategoryTheory
 

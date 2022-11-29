@@ -38,8 +38,9 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
       funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 #align pi.can_lift Pi.canLift
 
-theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
-    (f : ∀ i : Subtype p, α i) : ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by classical
+theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)]
+    {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
+    ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by classical
   refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
   rintro ⟨i, hi⟩
   exact dif_pos hi
@@ -55,7 +56,8 @@ instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : 
   PiSubtype.canLift ι (fun _ => α) p
 #align pi_subtype.can_lift' PiSubtype.canLift'
 
-instance Subtype.canLift {α : Sort _} (p : α → Prop) : CanLift α { x // p x } coe p where prf a ha := ⟨⟨a, ha⟩, rfl⟩
+instance Subtype.canLift {α : Sort _} (p : α → Prop) :
+    CanLift α { x // p x } coe p where prf a ha := ⟨⟨a, ha⟩, rfl⟩
 #align subtype.can_lift Subtype.canLift
 
 open Tactic
@@ -99,7 +101,9 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
     ( p : pexpr ) ( t : pexpr ) ( h : Option pexpr ) ( n : List Name ) : tactic Unit
     :=
       do
-        propositional_goal <|> fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
+        propositional_goal
+            <|>
+            fail "lift tactic failed. Tactic is only applicable when the target is a proposition."
           let e ← i_to_expr p
           let old_tp ← infer_type e
           let new_tp ← i_to_expr ` `( ( $ ( t ) : Sort _ ) )
@@ -152,15 +156,28 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
           let temp_nm ← get_unused_name
           let temp_e ← note temp_nm none prf_ex
           dsimp_hyp temp_e none [ ] { failIfUnchanged := ff }
-          rcases none ( pexpr.of_expr temp_e ) <| rcases_patt.tuple ( [ new_nm , eq_nm ] . map rcases_patt.one )
+          rcases none ( pexpr.of_expr temp_e )
+            <|
+            rcases_patt.tuple ( [ new_nm , eq_nm ] . map rcases_patt.one )
           when
             ( ¬ e )
               (
                 get_local eq_nm
                   >>=
-                  fun e => interactive.rw ⟨ [ ⟨ ⟨ 0 , 0 ⟩ , tt , pexpr.of_expr e ⟩ ] , none ⟩ Interactive.Loc.wildcard
+                  fun
+                    e
+                      =>
+                      interactive.rw
+                        ⟨ [ ⟨ ⟨ 0 , 0 ⟩ , tt , pexpr.of_expr e ⟩ ] , none ⟩ Interactive.Loc.wildcard
                 )
-          if h_prf_nm : prf_nm ∧ n 2 ≠ prf_nm then get_local ( Option.get h_prf_nm . 1 ) >>= clear else skip
+          if
+            h_prf_nm
+            :
+            prf_nm ∧ n 2 ≠ prf_nm
+            then
+            get_local ( Option.get h_prf_nm . 1 ) >>= clear
+            else
+            skip
           if b then skip else swap
 #align tactic.lift tactic.lift
 
@@ -216,13 +233,14 @@ integer `z` (in the supertype) to `ℕ` (the subtype), given a proof that `z ≥
 propositions concerning `z` will still be over `ℤ`. `zify` changes propositions about `ℕ` (the
 subtype) to propositions about `ℤ` (the supertype), without changing the type of any variable.
 -/
-unsafe def lift (p : parse texpr) (t : parse to_texpr) (h : parse using_texpr) (n : parse with_ident_list) :
-    tactic Unit :=
+unsafe def lift (p : parse texpr) (t : parse to_texpr) (h : parse using_texpr)
+    (n : parse with_ident_list) : tactic Unit :=
   tactic.lift p t h n
 #align tactic.interactive.lift tactic.interactive.lift
 
 add_tactic_doc
-  { Name := "lift", category := DocCategory.tactic, declNames := [`tactic.interactive.lift], tags := ["coercions"] }
+  { Name := "lift", category := DocCategory.tactic, declNames := [`tactic.interactive.lift],
+    tags := ["coercions"] }
 
 end Interactive
 

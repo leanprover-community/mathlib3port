@@ -45,22 +45,27 @@ theorem is_sheaf_of_is_terminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = �
     · convert hf
       
     
-#align Top.presheaf.is_sheaf_of_is_terminal_of_indiscrete TopCat.Presheaf.is_sheaf_of_is_terminal_of_indiscrete
+#align
+  Top.presheaf.is_sheaf_of_is_terminal_of_indiscrete TopCat.Presheaf.is_sheaf_of_is_terminal_of_indiscrete
 
-theorem is_sheaf_iff_is_terminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤) (F : Presheaf C X) :
-    F.IsSheaf ↔ Nonempty (is_terminal <| F.obj <| op ⊥) :=
-  ⟨fun h => ⟨Sheaf.isTerminalOfEmpty ⟨F, h⟩⟩, fun ⟨it⟩ => is_sheaf_of_is_terminal_of_indiscrete hind F it⟩
-#align Top.presheaf.is_sheaf_iff_is_terminal_of_indiscrete TopCat.Presheaf.is_sheaf_iff_is_terminal_of_indiscrete
+theorem is_sheaf_iff_is_terminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤)
+    (F : Presheaf C X) : F.IsSheaf ↔ Nonempty (is_terminal <| F.obj <| op ⊥) :=
+  ⟨fun h => ⟨Sheaf.isTerminalOfEmpty ⟨F, h⟩⟩, fun ⟨it⟩ =>
+    is_sheaf_of_is_terminal_of_indiscrete hind F it⟩
+#align
+  Top.presheaf.is_sheaf_iff_is_terminal_of_indiscrete TopCat.Presheaf.is_sheaf_iff_is_terminal_of_indiscrete
 
-theorem is_sheaf_on_punit_of_is_terminal (F : Presheaf C (TopCat.of PUnit)) (it : is_terminal <| F.obj <| op ⊥) :
-    F.IsSheaf :=
+theorem is_sheaf_on_punit_of_is_terminal (F : Presheaf C (TopCat.of PUnit))
+    (it : is_terminal <| F.obj <| op ⊥) : F.IsSheaf :=
   is_sheaf_of_is_terminal_of_indiscrete (@Subsingleton.elim (TopologicalSpace PUnit) _ _ _) F it
-#align Top.presheaf.is_sheaf_on_punit_of_is_terminal TopCat.Presheaf.is_sheaf_on_punit_of_is_terminal
+#align
+  Top.presheaf.is_sheaf_on_punit_of_is_terminal TopCat.Presheaf.is_sheaf_on_punit_of_is_terminal
 
 theorem is_sheaf_on_punit_iff_is_terminal (F : Presheaf C (TopCat.of PUnit)) :
     F.IsSheaf ↔ Nonempty (is_terminal <| F.obj <| op ⊥) :=
   ⟨fun h => ⟨Sheaf.isTerminalOfEmpty ⟨F, h⟩⟩, fun ⟨it⟩ => is_sheaf_on_punit_of_is_terminal F it⟩
-#align Top.presheaf.is_sheaf_on_punit_iff_is_terminal TopCat.Presheaf.is_sheaf_on_punit_iff_is_terminal
+#align
+  Top.presheaf.is_sheaf_on_punit_iff_is_terminal TopCat.Presheaf.is_sheaf_on_punit_iff_is_terminal
 
 end TopCat.Presheaf
 

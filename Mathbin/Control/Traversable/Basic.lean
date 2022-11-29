@@ -93,19 +93,23 @@ theorem app_eq_coe (η : ApplicativeTransformation F G) : η.app = η :=
 #align applicative_transformation.app_eq_coe ApplicativeTransformation.app_eq_coe
 
 @[simp]
-theorem coe_mk (f : ∀ α : Type u, F α → G α) (pp ps) : ⇑(ApplicativeTransformation.mk f pp ps) = f :=
+theorem coe_mk (f : ∀ α : Type u, F α → G α) (pp ps) :
+    ⇑(ApplicativeTransformation.mk f pp ps) = f :=
   rfl
 #align applicative_transformation.coe_mk ApplicativeTransformation.coe_mk
 
-protected theorem congr_fun (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u} (x : F α) : η x = η' x :=
+protected theorem congr_fun (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u}
+    (x : F α) : η x = η' x :=
   congr_arg (fun η'' : ApplicativeTransformation F G => η'' x) h
 #align applicative_transformation.congr_fun ApplicativeTransformation.congr_fun
 
-protected theorem congr_arg (η : ApplicativeTransformation F G) {α : Type u} {x y : F α} (h : x = y) : η x = η y :=
+protected theorem congr_arg (η : ApplicativeTransformation F G) {α : Type u} {x y : F α}
+    (h : x = y) : η x = η y :=
   congr_arg (fun z : F α => η z) h
 #align applicative_transformation.congr_arg ApplicativeTransformation.congr_arg
 
-theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' := by
+theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' :=
+  by
   cases η
   cases η'
   congr
@@ -113,13 +117,15 @@ theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, 
 #align applicative_transformation.coe_inj ApplicativeTransformation.coe_inj
 
 @[ext.1]
-theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) : η = η' := by
+theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) :
+    η = η' := by
   apply coe_inj
   ext1 α
   exact funext (h α)
 #align applicative_transformation.ext ApplicativeTransformation.ext
 
-theorem ext_iff {η η' : ApplicativeTransformation F G} : η = η' ↔ ∀ (α : Type u) (x : F α), η x = η' x :=
+theorem ext_iff {η η' : ApplicativeTransformation F G} :
+    η = η' ↔ ∀ (α : Type u) (x : F α), η x = η' x :=
   ⟨fun h α x => h ▸ rfl, fun h => ext h⟩
 #align applicative_transformation.ext_iff ApplicativeTransformation.ext_iff
 
@@ -164,21 +170,22 @@ universe s t
 variable {H : Type u → Type s} [Applicative H] [LawfulApplicative H]
 
 /-- The composition of applicative transformations. -/
-def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) : ApplicativeTransformation F H where
+def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) :
+    ApplicativeTransformation F H where
   app α x := η' (η x)
   preserves_pure' α x := by simp [functor_norm]
   preserves_seq' α β x y := by simp [functor_norm]
 #align applicative_transformation.comp ApplicativeTransformation.comp
 
 @[simp]
-theorem comp_apply (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) {α : Type u} (x : F α) :
-    η'.comp η x = η' (η x) :=
+theorem comp_apply (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G)
+    {α : Type u} (x : F α) : η'.comp η x = η' (η x) :=
   rfl
 #align applicative_transformation.comp_apply ApplicativeTransformation.comp_apply
 
-theorem comp_assoc {I : Type u → Type t} [Applicative I] [LawfulApplicative I] (η'' : ApplicativeTransformation H I)
-    (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) :
-    (η''.comp η').comp η = η''.comp (η'.comp η) :=
+theorem comp_assoc {I : Type u → Type t} [Applicative I] [LawfulApplicative I]
+    (η'' : ApplicativeTransformation H I) (η' : ApplicativeTransformation G H)
+    (η : ApplicativeTransformation F G) : (η''.comp η').comp η = η''.comp (η'.comp η) :=
   rfl
 #align applicative_transformation.comp_assoc ApplicativeTransformation.comp_assoc
 
@@ -232,15 +239,18 @@ send the composition of applicative functors to the composition of the
 `traverse` of each, send each function `f` to `λ x, f <$> x`, and
 satisfy a naturality condition with respect to applicative
 transformations. -/
-class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawfulFunctor t : Type (u + 1) where
+class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawfulFunctor t :
+  Type (u + 1) where
   id_traverse : ∀ {α} (x : t α), traverse id.mk x = x
   comp_traverse :
-    ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G] {α β γ} (f : β → F γ)
-      (g : α → G β) (x : t α), traverse (comp.mk ∘ map f ∘ g) x = Comp.mk (map (traverse f) (traverse g x))
+    ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G] {α β γ}
+      (f : β → F γ) (g : α → G β) (x : t α),
+      traverse (comp.mk ∘ map f ∘ g) x = Comp.mk (map (traverse f) (traverse g x))
   traverse_eq_map_id : ∀ {α β} (f : α → β) (x : t α), traverse (id.mk ∘ f) x = id.mk (f <$> x)
   naturality :
     ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G]
-      (η : ApplicativeTransformation F G) {α β} (f : α → F β) (x : t α), η (traverse f x) = traverse (@η _ ∘ f) x
+      (η : ApplicativeTransformation F G) {α β} (f : α → F β) (x : t α),
+      η (traverse f x) = traverse (@η _ ∘ f) x
 #align is_lawful_traversable IsLawfulTraversable
 
 instance : Traversable id :=
@@ -270,9 +280,9 @@ variable [Applicative F]
 
 /- warning: sum.traverse -> Sum.traverse is a dubious translation:
 lean 3 declaration is
-  forall {σ : Type.{u}} {F : Type.{u} -> Type.{u}} [_inst_1 : Applicative.{u u} F] {α : Type.{u_1}} {β : Type.{u}}, (α -> (F β)) -> (Sum.{u u_1} σ α) -> (F (Sum.{u u} σ β))
+  forall {σ : Type.{u}} {F : Type.{u} -> Type.{u}} [_inst_1 : Applicative.{u, u} F] {α : Type.{u_1}} {β : Type.{u}}, (α -> (F β)) -> (Sum.{u, u_1} σ α) -> (F (Sum.{u, u} σ β))
 but is expected to have type
-  forall {σ : Type.{u}} {F : Type.{u} -> Type.{u}} [_inst_1 : Applicative.{u u} F] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (F β)) -> (Sum.{u _aux_param_0} σ α) -> (F (Sum.{u u} σ β))
+  forall {σ : Type.{u}} {F : Type.{u} -> Type.{u}} [_inst_1 : Applicative.{u, u} F] {α : Type.{_aux_param_0}} {β : Type.{u}}, (α -> (F β)) -> (Sum.{u, _aux_param_0} σ α) -> (F (Sum.{u, u} σ β))
 Case conversion may be inaccurate. Consider using '#align sum.traverse Sum.traverseₓ'. -/
 /-- Defines a `traverse` function on the second component of a sum type.
 This is used to give a `traversable` instance for the functor `σ ⊕ -`. -/

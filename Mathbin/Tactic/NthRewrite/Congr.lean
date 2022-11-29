@@ -15,10 +15,11 @@ open NthRewrite
 /-- Helper function which just tries to rewrite `e` using the equality `r` without assigning any
 metavariables in the tactic state, and without creating any metavariables which cannot be
 discharged by `cfg.discharger` in the process. -/
-unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) : tactic (expr × expr) :=
-  lock_tactic_state <|-- This makes sure that we forget everything in between rewrites;
-  -- otherwise we don't correctly find everything!
-  do
+unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) :
+    tactic (expr × expr) :=
+  lock_tactic_state do
+    -- This makes sure that we forget everything in between rewrites;
+    -- otherwise we don't correctly find everything!
     let (new_t, prf, metas) ← rewrite_core r e { cfg.to_rewrite_cfg with md := semireducible }
     try_apply_opt_auto_param cfg metas
     set_goals metas
@@ -28,7 +29,8 @@ unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cf
     -- This is necessary because of the locked tactic state.
         return
         (new_t, prf)
-#align tactic.nth_rewrite.congr.rewrite_without_new_mvars tactic.nth_rewrite.congr.rewrite_without_new_mvars
+#align
+  tactic.nth_rewrite.congr.rewrite_without_new_mvars tactic.nth_rewrite.congr.rewrite_without_new_mvars
 
 /-- Returns true if the argument is a proof that the entire expression was rewritten.
 
@@ -69,7 +71,8 @@ unsafe def rewrite_at_lens (cfg : nth_rewrite.cfg) (r : expr × Bool) (l : expr_
 
 /-- List of all rewrites of an expression `e` by `r : expr × bool`.
 Here `r.1` is the substituting expression and `r.2` flags the direction of the rewrite. -/
-unsafe def all_rewrites (e : expr) (r : expr × Bool) (cfg : nth_rewrite.cfg := {  }) : tactic (List tracked_rewrite) :=
+unsafe def all_rewrites (e : expr) (r : expr × Bool) (cfg : nth_rewrite.cfg := {  }) :
+    tactic (List tracked_rewrite) :=
   e.app_map (rewrite_at_lens cfg r)
 #align tactic.nth_rewrite.congr.all_rewrites tactic.nth_rewrite.congr.all_rewrites
 

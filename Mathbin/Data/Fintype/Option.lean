@@ -29,13 +29,15 @@ theorem univ_option (α : Type _) [Fintype α] : (univ : Finset (Option α)) = i
 #align univ_option univ_option
 
 @[simp]
-theorem Fintype.card_option {α : Type _} [Fintype α] : Fintype.card (Option α) = Fintype.card α + 1 :=
+theorem Fintype.card_option {α : Type _} [Fintype α] :
+    Fintype.card (Option α) = Fintype.card α + 1 :=
   (Finset.card_cons _).trans <| congr_arg₂ _ (card_map _) rfl
 #align fintype.card_option Fintype.card_option
 
 /-- If `option α` is a `fintype` then so is `α` -/
 def fintypeOfOption {α : Type _} [Fintype (Option α)] : Fintype α :=
-  ⟨Finset.eraseNone (Fintype.elems (Option α)), fun x => mem_erase_none.mpr (Fintype.complete (some x))⟩
+  ⟨Finset.eraseNone (Fintype.elems (Option α)), fun x =>
+    mem_erase_none.mpr (Fintype.complete (some x))⟩
 #align fintype_of_option fintypeOfOption
 
 /-- A type is a `fintype` if its successor (using `option`) is a `fintype`. -/
@@ -48,9 +50,9 @@ namespace Fintype
 
 /-- A recursor principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
-def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P PEmpty)
-    (h_option : ∀ {α} [Fintype α] [DecidableEq α], P α → P (Option α)) (α : Type u) [Fintype α] [DecidableEq α] :
-    Trunc (P α) := by
+def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
+    (h_empty : P PEmpty) (h_option : ∀ {α} [Fintype α] [DecidableEq α], P α → P (Option α))
+    (α : Type u) [Fintype α] [DecidableEq α] : Trunc (P α) := by
   suffices ∀ n : ℕ, Trunc (P (ULift <| Fin n)) by
     apply Trunc.bind (this (Fintype.card α))
     intro h
@@ -65,7 +67,8 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
     apply Trunc.mk
     refine' of_equiv e h_empty
     
-  · have : card (Option (ULift (Fin n))) = card (ULift (Fin n.succ)) := by simp only [card_fin, card_option, card_ulift]
+  · have : card (Option (ULift (Fin n))) = card (ULift (Fin n.succ)) := by
+      simp only [card_fin, card_option, card_ulift]
     apply Trunc.bind (trunc_equiv_of_card_eq this)
     intro e
     apply Trunc.map _ ih
@@ -78,8 +81,9 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 @[elab_as_elim]
 theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
-    (of_equiv : ∀ (α β) [Fintype β] (e : α ≃ β), @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›) (h_empty : P PEmpty)
-    (h_option : ∀ (α) [Fintype α], P α → P (Option α)) (α : Type u) [Fintype α] : P α := by
+    (of_equiv : ∀ (α β) [Fintype β] (e : α ≃ β), @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›)
+    (h_empty : P PEmpty) (h_option : ∀ (α) [Fintype α], P α → P (Option α)) (α : Type u)
+    [Fintype α] : P α := by
   obtain ⟨p⟩ :=
     @trunc_rec_empty_option (fun α => ∀ h, @P α h) (fun α β e hα hβ => @of_equiv α β hβ e (hα _))
       (fun _i => by convert h_empty) _ α _ (Classical.decEq α)
@@ -95,8 +99,9 @@ end Fintype
 
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
-theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P PEmpty)
-    (h_option : ∀ {α} [Fintype α], P α → P (Option α)) (α : Type u) [Finite α] : P α := by
+theorem Finite.induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α ≃ β → P α → P β)
+    (h_empty : P PEmpty) (h_option : ∀ {α} [Fintype α], P α → P (Option α)) (α : Type u)
+    [Finite α] : P α := by
   cases nonempty_fintype α
   refine' Fintype.induction_empty_option _ _ _ α
   exacts[fun α β _ => of_equiv, h_empty, @h_option]

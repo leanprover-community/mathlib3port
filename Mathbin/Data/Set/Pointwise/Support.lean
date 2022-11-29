@@ -21,13 +21,14 @@ section Group
 
 variable {α β γ : Type _} [Group α] [MulAction α β]
 
-theorem mul_support_comp_inv_smul [One γ] (c : α) (f : β → γ) : (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f :=
-  by
+theorem mul_support_comp_inv_smul [One γ] (c : α) (f : β → γ) :
+    (mulSupport fun x => f (c⁻¹ • x)) = c • mulSupport f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_mul_support]
 #align mul_support_comp_inv_smul mul_support_comp_inv_smul
 
-theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) : (support fun x => f (c⁻¹ • x)) = c • support f := by
+theorem support_comp_inv_smul [Zero γ] (c : α) (f : β → γ) :
+    (support fun x => f (c⁻¹ • x)) = c • support f := by
   ext x
   simp only [mem_smul_set_iff_inv_smul_mem, mem_support]
 #align support_comp_inv_smul support_comp_inv_smul

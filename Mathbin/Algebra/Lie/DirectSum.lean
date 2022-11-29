@@ -74,8 +74,7 @@ variable (R ι L M)
 def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
   { lof R ι M j with
     map_lie' := fun x m => by
-      ext i
-      by_cases h : j = i
+      ext i; by_cases h : j = i
       · rw [← h]
         simp
         
@@ -86,7 +85,8 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
 /-- The projection map onto one component, as a morphism of Lie modules. -/
 def lieModuleComponent (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
-    map_lie' := fun x m => by simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.to_fun_eq_coe] }
+    map_lie' := fun x m => by
+      simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.to_fun_eq_coe] }
 #align direct_sum.lie_module_component DirectSum.lieModuleComponent
 
 end Modules
@@ -101,7 +101,8 @@ variable (L : ι → Type w)
 variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
 instance lieRing : LieRing (⨁ i, L i) :=
-  { (inferInstance : AddCommGroup _) with bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0,
+  { (inferInstance : AddCommGroup _) with
+    bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0,
     add_lie := fun x y z => by
       ext
       simp only [zip_with_apply, add_apply, add_lie],
@@ -149,22 +150,24 @@ def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
 @[simps]
 def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
   { component R ι L j with toFun := component R ι L j,
-    map_lie' := fun x y => by simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
+    map_lie' := fun x y => by
+      simp only [component, bracket_apply, lapply_apply, LinearMap.to_fun_eq_coe] }
 #align direct_sum.lie_algebra_component DirectSum.lieAlgebraComponent
 
 @[ext.1]
-theorem lie_algebra_ext {x y : ⨁ i, L i} (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) :
-    x = y :=
+theorem lie_algebra_ext {x y : ⨁ i, L i}
+    (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) : x = y :=
   Dfinsupp.ext h
 #align direct_sum.lie_algebra_ext DirectSum.lie_algebra_ext
 
 include R
 
-theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : L j) : ⁅of L i x, of L j y⁆ = 0 := by
-  apply lie_algebra_ext R ι L
-  intro k
+theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : L j) :
+    ⁅of L i x, of L j y⁆ = 0 := by
+  apply lie_algebra_ext R ι L; intro k
   rw [LieHom.map_lie]
-  simp only [component, of, lapply_apply, single_add_hom_apply, lie_algebra_component_apply, single_apply, zero_apply]
+  simp only [component, of, lapply_apply, single_add_hom_apply, lie_algebra_component_apply,
+    single_apply, zero_apply]
   by_cases hik : i = k
   · simp only [dif_neg, not_false_iff, lie_zero, hik.symm, hij]
     
@@ -196,8 +199,9 @@ variable {R L ι}
 `(⨁ i, L i) →ₗ[R] L'`. If in addition `⁅f i x, f j y⁆ = 0` for any `x ∈ L i` and `y ∈ L j` (`i ≠ j`)
 then this map is a morphism of Lie algebras. -/
 @[simps]
-def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'] (f : ∀ i, L i →ₗ⁅R⁆ L')
-    (hf : ∀ i j : ι, i ≠ j → ∀ (x : L i) (y : L j), ⁅f i x, f j y⁆ = 0) : (⨁ i, L i) →ₗ⁅R⁆ L' :=
+def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L']
+    (f : ∀ i, L i →ₗ⁅R⁆ L') (hf : ∀ i j : ι, i ≠ j → ∀ (x : L i) (y : L j), ⁅f i x, f j y⁆ = 0) :
+    (⨁ i, L i) →ₗ⁅R⁆ L' :=
   { /- The goal is linear in `y`. We can use this to reduce to the case that `y` has only one
               non-zero component. -/
       -- Similarly, we can reduce to the case that `x` has only one non-zero component. 
@@ -209,7 +213,9 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
     map_lie' := fun x y => by
       let f' i := (f i : L i →ₗ[R] L')
       suffices
-        ∀ (i : ι) (y : L i), to_module R ι L' f' ⁅x, of L i y⁆ = ⁅to_module R ι L' f' x, to_module R ι L' f' (of L i y)⁆
+        ∀ (i : ι) (y : L i),
+          to_module R ι L' f' ⁅x, of L i y⁆ =
+            ⁅to_module R ι L' f' x, to_module R ι L' f' (of L i y)⁆
         by
         simp only [← LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
@@ -219,7 +225,8 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         exact this i y
       suffices
         ∀ (i j) (y : L i) (x : L j),
-          to_module R ι L' f' ⁅of L j x, of L i y⁆ = ⁅to_module R ι L' f' (of L j x), to_module R ι L' f' (of L i y)⁆
+          to_module R ι L' f' ⁅of L j x, of L i y⁆ =
+            ⁅to_module R ι L' f' (of L j x), to_module R ι L' f' (of L i y)⁆
         by
         intro i y
         rw [← lie_skew x, ← lie_skew (to_module R ι L' f' x)]

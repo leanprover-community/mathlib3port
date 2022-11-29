@@ -86,8 +86,10 @@ def swap : TwopCat ⥤ TwopCat where
 @[simps]
 def swapEquiv : TwopCat ≌ TwopCat :=
   Equivalence.mk swap swap
-    ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f =>
+      rfl)
+    ((NatIso.ofComponents fun X => { Hom := ⟨id, rfl, rfl⟩, inv := ⟨id, rfl, rfl⟩ }) fun X Y f =>
+      rfl)
 #align Twop.swap_equiv TwopCat.swapEquiv
 
 @[simp]
@@ -99,7 +101,8 @@ end TwopCat
 
 @[simp]
 theorem Twop_swap_comp_forget_to_Bipointed :
-    TwopCat.swap ⋙ forget₂ TwopCat BipointedCat = forget₂ TwopCat BipointedCat ⋙ BipointedCat.swap :=
+    TwopCat.swap ⋙ forget₂ TwopCat BipointedCat =
+      forget₂ TwopCat BipointedCat ⋙ BipointedCat.swap :=
   rfl
 #align Twop_swap_comp_forget_to_Bipointed Twop_swap_comp_forget_to_Bipointed
 

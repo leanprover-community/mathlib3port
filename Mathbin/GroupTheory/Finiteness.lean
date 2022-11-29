@@ -48,18 +48,23 @@ def Submonoid.Fg (P : Submonoid M) : Prop :=
 add_decl_doc AddSubmonoid.Fg
 
 /-- An equivalent expression of `submonoid.fg` in terms of `set.finite` instead of `finset`. -/
-@[to_additive "An equivalent expression of `add_submonoid.fg` in terms of `set.finite` instead of\n`finset`."]
-theorem Submonoid.fg_iff (P : Submonoid M) : Submonoid.Fg P ↔ ∃ S : Set M, Submonoid.closure S = P ∧ S.Finite :=
-  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ => ⟨Set.Finite.toFinset hf, by simp [hS]⟩⟩
+@[to_additive
+      "An equivalent expression of `add_submonoid.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Submonoid.fg_iff (P : Submonoid M) :
+    Submonoid.Fg P ↔ ∃ S : Set M, Submonoid.closure S = P ∧ S.Finite :=
+  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ =>
+    ⟨Set.Finite.toFinset hf, by simp [hS]⟩⟩
 #align submonoid.fg_iff Submonoid.fg_iff
 
 theorem Submonoid.fg_iff_add_fg (P : Submonoid M) : P.Fg ↔ P.toAddSubmonoid.Fg :=
   ⟨fun h =>
     let ⟨S, hS, hf⟩ := (Submonoid.fg_iff _).1 h
-    (AddSubmonoid.fg_iff _).mpr ⟨Additive.toMul ⁻¹' S, by simp [← Submonoid.to_add_submonoid_closure, hS], hf⟩,
+    (AddSubmonoid.fg_iff _).mpr
+      ⟨Additive.toMul ⁻¹' S, by simp [← Submonoid.to_add_submonoid_closure, hS], hf⟩,
     fun h =>
     let ⟨T, hT, hf⟩ := (AddSubmonoid.fg_iff _).1 h
-    (Submonoid.fg_iff _).mpr ⟨Multiplicative.ofAdd ⁻¹' T, by simp [← AddSubmonoid.to_submonoid'_closure, hT], hf⟩⟩
+    (Submonoid.fg_iff _).mpr
+      ⟨Multiplicative.ofAdd ⁻¹' T, by simp [← AddSubmonoid.to_submonoid'_closure, hT], hf⟩⟩
 #align submonoid.fg_iff_add_fg Submonoid.fg_iff_add_fg
 
 theorem AddSubmonoid.fg_iff_mul_fg (P : AddSubmonoid N) : P.Fg ↔ P.toSubmonoid.Fg := by
@@ -97,8 +102,10 @@ theorem AddMonoid.fg_def : AddMonoid.Fg N ↔ (⊤ : AddSubmonoid N).Fg :=
 #align add_monoid.fg_def AddMonoid.fg_def
 
 /-- An equivalent expression of `monoid.fg` in terms of `set.finite` instead of `finset`. -/
-@[to_additive "An equivalent expression of `add_monoid.fg` in terms of `set.finite` instead of\n`finset`."]
-theorem Monoid.fg_iff : Monoid.Fg M ↔ ∃ S : Set M, Submonoid.closure S = (⊤ : Submonoid M) ∧ S.Finite :=
+@[to_additive
+      "An equivalent expression of `add_monoid.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Monoid.fg_iff :
+    Monoid.Fg M ↔ ∃ S : Set M, Submonoid.closure S = (⊤ : Submonoid M) ∧ S.Finite :=
   ⟨fun h => (Submonoid.fg_iff ⊤).1 h.out, fun h => ⟨(Submonoid.fg_iff ⊤).2 h⟩⟩
 #align monoid.fg_iff Monoid.fg_iff
 
@@ -107,7 +114,8 @@ theorem Monoid.fg_iff_add_fg : Monoid.Fg M ↔ AddMonoid.Fg (Additive M) :=
 #align monoid.fg_iff_add_fg Monoid.fg_iff_add_fg
 
 theorem AddMonoid.fg_iff_mul_fg : AddMonoid.Fg N ↔ Monoid.Fg (Multiplicative N) :=
-  ⟨fun h => ⟨(AddSubmonoid.fg_iff_mul_fg ⊤).1 h.out⟩, fun h => ⟨(AddSubmonoid.fg_iff_mul_fg ⊤).2 h.out⟩⟩
+  ⟨fun h => ⟨(AddSubmonoid.fg_iff_mul_fg ⊤).1 h.out⟩, fun h =>
+    ⟨(AddSubmonoid.fg_iff_mul_fg ⊤).2 h.out⟩⟩
 #align add_monoid.fg_iff_mul_fg AddMonoid.fg_iff_mul_fg
 
 instance AddMonoid.fg_of_monoid_fg [Monoid.Fg M] : AddMonoid.Fg (Additive M) :=
@@ -127,15 +135,15 @@ instance (priority := 100) Monoid.fg_of_finite [Finite M] : Monoid.Fg M := by
 end Monoid
 
 @[to_additive]
-theorem Submonoid.Fg.map {M' : Type _} [Monoid M'] {P : Submonoid M} (h : P.Fg) (e : M →* M') : (P.map e).Fg := by
-  classical
+theorem Submonoid.Fg.map {M' : Type _} [Monoid M'] {P : Submonoid M} (h : P.Fg) (e : M →* M') :
+    (P.map e).Fg := by classical
   obtain ⟨s, rfl⟩ := h
   exact ⟨s.image e, by rw [Finset.coe_image, MonoidHom.map_mclosure]⟩
 #align submonoid.fg.map Submonoid.Fg.map
 
 @[to_additive]
-theorem Submonoid.Fg.map_injective {M' : Type _} [Monoid M'] {P : Submonoid M} (e : M →* M') (he : Function.Injective e)
-    (h : (P.map e).Fg) : P.Fg := by
+theorem Submonoid.Fg.map_injective {M' : Type _} [Monoid M'] {P : Submonoid M} (e : M →* M')
+    (he : Function.Injective e) (h : (P.map e).Fg) : P.Fg := by
   obtain ⟨s, hs⟩ := h
   use s.preimage e (he.inj_on _)
   apply Submonoid.map_injective_of_injective he
@@ -152,15 +160,17 @@ theorem Monoid.fg_iff_submonoid_fg (N : Submonoid M) : Monoid.Fg N ↔ N.Fg := b
 #align monoid.fg_iff_submonoid_fg Monoid.fg_iff_submonoid_fg
 
 @[to_additive]
-theorem Monoid.fg_of_surjective {M' : Type _} [Monoid M'] [Monoid.Fg M] (f : M →* M') (hf : Function.Surjective f) :
-    Monoid.Fg M' := by classical
+theorem Monoid.fg_of_surjective {M' : Type _} [Monoid M'] [Monoid.Fg M] (f : M →* M')
+    (hf : Function.Surjective f) : Monoid.Fg M' := by classical
   obtain ⟨s, hs⟩ := monoid.fg_def.mp ‹_›
   use s.image f
-  rwa [Finset.coe_image, ← MonoidHom.map_mclosure, hs, ← MonoidHom.mrange_eq_map, MonoidHom.mrange_top_iff_surjective]
+  rwa [Finset.coe_image, ← MonoidHom.map_mclosure, hs, ← MonoidHom.mrange_eq_map,
+    MonoidHom.mrange_top_iff_surjective]
 #align monoid.fg_of_surjective Monoid.fg_of_surjective
 
 @[to_additive]
-instance Monoid.fg_range {M' : Type _} [Monoid M'] [Monoid.Fg M] (f : M →* M') : Monoid.Fg f.mrange :=
+instance Monoid.fg_range {M' : Type _} [Monoid M'] [Monoid.Fg M] (f : M →* M') :
+    Monoid.Fg f.mrange :=
   Monoid.fg_of_surjective f.mrangeRestrict f.mrange_restrict_surjective
 #align monoid.fg_range Monoid.fg_range
 
@@ -204,9 +214,12 @@ def Subgroup.Fg (P : Subgroup G) : Prop :=
 add_decl_doc AddSubgroup.Fg
 
 /-- An equivalent expression of `subgroup.fg` in terms of `set.finite` instead of `finset`. -/
-@[to_additive "An equivalent expression of `add_subgroup.fg` in terms of `set.finite` instead of\n`finset`."]
-theorem Subgroup.fg_iff (P : Subgroup G) : Subgroup.Fg P ↔ ∃ S : Set G, Subgroup.closure S = P ∧ S.Finite :=
-  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ => ⟨Set.Finite.toFinset hf, by simp [hS]⟩⟩
+@[to_additive
+      "An equivalent expression of `add_subgroup.fg` in terms of `set.finite` instead of\n`finset`."]
+theorem Subgroup.fg_iff (P : Subgroup G) :
+    Subgroup.Fg P ↔ ∃ S : Set G, Subgroup.closure S = P ∧ S.Finite :=
+  ⟨fun ⟨S, hS⟩ => ⟨S, hS, Finset.finite_to_set S⟩, fun ⟨S, hS, hf⟩ =>
+    ⟨Set.Finite.toFinset hf, by simp [hS]⟩⟩
 #align subgroup.fg_iff Subgroup.fg_iff
 
 /-- A subgroup is finitely generated if and only if it is finitely generated as a submonoid. -/
@@ -270,13 +283,15 @@ theorem AddGroup.fg_def : AddGroup.Fg H ↔ (⊤ : AddSubgroup H).Fg :=
 #align add_group.fg_def AddGroup.fg_def
 
 /-- An equivalent expression of `group.fg` in terms of `set.finite` instead of `finset`. -/
-@[to_additive "An equivalent expression of `add_group.fg` in terms of `set.finite` instead of\n`finset`."]
+@[to_additive
+      "An equivalent expression of `add_group.fg` in terms of `set.finite` instead of\n`finset`."]
 theorem Group.fg_iff : Group.Fg G ↔ ∃ S : Set G, Subgroup.closure S = (⊤ : Subgroup G) ∧ S.Finite :=
   ⟨fun h => (Subgroup.fg_iff ⊤).1 h.out, fun h => ⟨(Subgroup.fg_iff ⊤).2 h⟩⟩
 #align group.fg_iff Group.fg_iff
 
 @[to_additive]
-theorem Group.fg_iff' : Group.Fg G ↔ ∃ (n : _)(S : Finset G), S.card = n ∧ Subgroup.closure (S : Set G) = ⊤ :=
+theorem Group.fg_iff' :
+    Group.Fg G ↔ ∃ (n : _)(S : Finset G), S.card = n ∧ Subgroup.closure (S : Set G) = ⊤ :=
   Group.fg_def.trans ⟨fun ⟨S, hS⟩ => ⟨S.card, S, rfl, hS⟩, fun ⟨n, S, hn, hS⟩ => ⟨S, hS⟩⟩
 #align group.fg_iff' Group.fg_iff'
 
@@ -293,7 +308,8 @@ theorem GroupFg.iff_add_fg : Group.Fg G ↔ AddGroup.Fg (Additive G) :=
 #align group_fg.iff_add_fg GroupFg.iff_add_fg
 
 theorem AddGroup.fg_iff_mul_fg : AddGroup.Fg H ↔ Group.Fg (Multiplicative H) :=
-  ⟨fun h => ⟨(AddSubgroup.fg_iff_mul_fg ⊤).1 h.out⟩, fun h => ⟨(AddSubgroup.fg_iff_mul_fg ⊤).2 h.out⟩⟩
+  ⟨fun h => ⟨(AddSubgroup.fg_iff_mul_fg ⊤).1 h.out⟩, fun h =>
+    ⟨(AddSubgroup.fg_iff_mul_fg ⊤).2 h.out⟩⟩
 #align add_group.fg_iff_mul_fg AddGroup.fg_iff_mul_fg
 
 instance AddGroup.fg_of_group_fg [Group.Fg G] : AddGroup.Fg (Additive G) :=
@@ -311,8 +327,8 @@ instance (priority := 100) Group.fg_of_finite [Finite G] : Group.Fg G := by
 #align group.fg_of_finite Group.fg_of_finite
 
 @[to_additive]
-theorem Group.fg_of_surjective {G' : Type _} [Group G'] [hG : Group.Fg G] {f : G →* G'} (hf : Function.Surjective f) :
-    Group.Fg G' :=
+theorem Group.fg_of_surjective {G' : Type _} [Group G'] [hG : Group.Fg G] {f : G →* G'}
+    (hf : Function.Surjective f) : Group.Fg G' :=
   Group.FgIffMonoid.fg.mpr <| @Monoid.fg_of_surjective G _ G' _ (Group.FgIffMonoid.fg.mp hG) f hf
 #align group.fg_of_surjective Group.fg_of_surjective
 
@@ -342,20 +358,22 @@ noncomputable def Group.rank [h : Group.Fg G] :=
 #align group.rank Group.rank
 
 @[to_additive]
-theorem Group.rank_spec [h : Group.Fg G] : ∃ S : Finset G, S.card = Group.rank G ∧ Subgroup.closure (S : Set G) = ⊤ :=
+theorem Group.rank_spec [h : Group.Fg G] :
+    ∃ S : Finset G, S.card = Group.rank G ∧ Subgroup.closure (S : Set G) = ⊤ :=
   @Nat.find_spec _ (Classical.decPred _) (Group.fg_iff'.mp h)
 #align group.rank_spec Group.rank_spec
 
 @[to_additive]
-theorem Group.rank_le [h : Group.Fg G] {S : Finset G} (hS : Subgroup.closure (S : Set G) = ⊤) : Group.rank G ≤ S.card :=
+theorem Group.rank_le [h : Group.Fg G] {S : Finset G} (hS : Subgroup.closure (S : Set G) = ⊤) :
+    Group.rank G ≤ S.card :=
   @Nat.find_le _ _ (Classical.decPred _) (Group.fg_iff'.mp h) ⟨S, rfl, hS⟩
 #align group.rank_le Group.rank_le
 
 variable {G} {G' : Type _} [Group G']
 
 @[to_additive]
-theorem Group.rank_le_of_surjective [Group.Fg G] [Group.Fg G'] (f : G →* G') (hf : Function.Surjective f) :
-    Group.rank G' ≤ Group.rank G := by classical
+theorem Group.rank_le_of_surjective [Group.Fg G] [Group.Fg G'] (f : G →* G')
+    (hf : Function.Surjective f) : Group.rank G' ≤ Group.rank G := by classical
   obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
   trans (S.image f).card
   · apply Group.rank_le
@@ -372,7 +390,8 @@ theorem Group.rank_range_le [Group.Fg G] {f : G →* G'} : Group.rank f.range �
 
 @[to_additive]
 theorem Group.rank_congr [Group.Fg G] [Group.Fg G'] (f : G ≃* G') : Group.rank G = Group.rank G' :=
-  le_antisymm (Group.rank_le_of_surjective f.symm f.symm.Surjective) (Group.rank_le_of_surjective f f.Surjective)
+  le_antisymm (Group.rank_le_of_surjective f.symm f.symm.Surjective)
+    (Group.rank_le_of_surjective f f.Surjective)
 #align group.rank_congr Group.rank_congr
 
 end Group
@@ -380,11 +399,13 @@ end Group
 namespace Subgroup
 
 @[to_additive]
-theorem rank_congr {H K : Subgroup G} [Group.Fg H] [Group.Fg K] (h : H = K) : Group.rank H = Group.rank K := by subst h
+theorem rank_congr {H K : Subgroup G} [Group.Fg H] [Group.Fg K] (h : H = K) :
+    Group.rank H = Group.rank K := by subst h
 #align subgroup.rank_congr Subgroup.rank_congr
 
 @[to_additive]
-theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Set G)) ≤ s.card := by classical
+theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Set G)) ≤ s.card := by
+  classical
   let t : Finset (closure (s : Set G)) := s.preimage coe (subtype.coe_injective.inj_on _)
   have ht : closure (t : Set (closure (s : Set G))) = ⊤ := by
     rw [Finset.coe_preimage]
@@ -398,7 +419,8 @@ theorem rank_closure_finset_le_card (s : Finset G) : Group.rank (closure (s : Se
 #align subgroup.rank_closure_finset_le_card Subgroup.rank_closure_finset_le_card
 
 @[to_additive]
-theorem rank_closure_finite_le_nat_card (s : Set G) [Finite s] : Group.rank (closure s) ≤ Nat.card s := by
+theorem rank_closure_finite_le_nat_card (s : Set G) [Finite s] :
+    Group.rank (closure s) ≤ Nat.card s := by
   haveI := Fintype.ofFinite s
   rw [Nat.card_eq_fintype_card, ← s.to_finset_card, ← rank_congr (congr_arg _ s.coe_to_finset)]
   exact rank_closure_finset_le_card s.to_finset

@@ -87,7 +87,8 @@ def id (M : Mat_ C) : Hom M M := fun i j => if h : i = j then eqToHom (congr_arg
 #align category_theory.Mat_.hom.id CategoryTheory.Mat_.Hom.id
 
 /-- Composition of matrices using matrix multiplication. -/
-def comp {M N K : Mat_ C} (f : Hom M N) (g : Hom N K) : Hom M K := fun i k => ∑ j : N.ι, f i j ≫ g j k
+def comp {M N K : Mat_ C} (f : Hom M N) (g : Hom N K) : Hom M K := fun i k =>
+  ∑ j : N.ι, f i j ≫ g j k
 #align category_theory.Mat_.hom.comp CategoryTheory.Mat_.Hom.comp
 
 end Hom
@@ -107,11 +108,13 @@ instance : Category.{v₁} (Mat_ C) where
     simp_rw [hom.comp, sum_comp, comp_sum, category.assoc]
     rw [Finset.sum_comm]
 
-theorem id_def (M : Mat_ C) : (𝟙 M : Hom M M) = fun i j => if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
+theorem id_def (M : Mat_ C) :
+    (𝟙 M : Hom M M) = fun i j => if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
   rfl
 #align category_theory.Mat_.id_def CategoryTheory.Mat_.id_def
 
-theorem id_apply (M : Mat_ C) (i j : M.ι) : (𝟙 M : Hom M M) i j = if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
+theorem id_apply (M : Mat_ C) (i j : M.ι) :
+    (𝟙 M : Hom M M) i j = if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
   rfl
 #align category_theory.Mat_.id_apply CategoryTheory.Mat_.id_apply
 
@@ -120,15 +123,18 @@ theorem id_apply_self (M : Mat_ C) (i : M.ι) : (𝟙 M : Hom M M) i i = 𝟙 _ 
 #align category_theory.Mat_.id_apply_self CategoryTheory.Mat_.id_apply_self
 
 @[simp]
-theorem id_apply_of_ne (M : Mat_ C) (i j : M.ι) (h : i ≠ j) : (𝟙 M : Hom M M) i j = 0 := by simp [id_apply, h]
+theorem id_apply_of_ne (M : Mat_ C) (i j : M.ι) (h : i ≠ j) : (𝟙 M : Hom M M) i j = 0 := by
+  simp [id_apply, h]
 #align category_theory.Mat_.id_apply_of_ne CategoryTheory.Mat_.id_apply_of_ne
 
-theorem comp_def {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i k => ∑ j : N.ι, f i j ≫ g j k :=
+theorem comp_def {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) :
+    f ≫ g = fun i k => ∑ j : N.ι, f i j ≫ g j k :=
   rfl
 #align category_theory.Mat_.comp_def CategoryTheory.Mat_.comp_def
 
 @[simp]
-theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) (i k) : (f ≫ g) i k = ∑ j : N.ι, f i j ≫ g j k :=
+theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) (i k) :
+    (f ≫ g) i k = ∑ j : N.ι, f i j ≫ g j k :=
   rfl
 #align category_theory.Mat_.comp_apply CategoryTheory.Mat_.comp_apply
 
@@ -174,7 +180,8 @@ instance has_finite_biproducts :
               refine' if h : x.1 = j then _ else 0
               refine' if h' : @Eq.ndrec (Fin n) x.1 (fun j => (f j).ι) x.2 _ h = y then _ else 0
               apply eq_to_hom
-              substs h h',-- Notice we were careful not to use `subst` until we had a goal in `Prop`.
+              substs h
+                h',-- Notice we were careful not to use `subst` until we had a goal in `Prop`.
             ι := fun j x y => by
               dsimp at y⊢
               refine' if h : y.1 = j then _ else 0
@@ -185,8 +192,8 @@ instance has_finite_biproducts :
               ext (x y)
               dsimp
               simp_rw [dite_comp, comp_dite]
-              simp only [if_t_t, dite_eq_ite, dif_ctx_congr, limits.comp_zero, limits.zero_comp, eq_to_hom_trans,
-                Finset.sum_congr]
+              simp only [if_t_t, dite_eq_ite, dif_ctx_congr, limits.comp_zero, limits.zero_comp,
+                eq_to_hom_trans, Finset.sum_congr]
               erw [Finset.sum_sigma]
               dsimp
               simp only [if_congr, if_true, dif_ctx_congr, Finset.sum_dite_irrel, Finset.mem_univ,
@@ -213,10 +220,10 @@ instance has_finite_biproducts :
               symm
               funext i₂
               rcases i₂ with ⟨j₂, i₂⟩
-              simp only [comp_apply, dite_comp, comp_dite, if_t_t, dite_eq_ite, if_congr, if_true, dif_ctx_congr,
-                Finset.sum_dite_irrel, Finset.sum_dite_eq, Finset.mem_univ, Finset.sum_const_zero, Finset.sum_congr,
-                Finset.sum_dite_eq, Finset.sum_apply, limits.comp_zero, limits.zero_comp, eq_to_hom_trans,
-                Mat_.id_apply]
+              simp only [comp_apply, dite_comp, comp_dite, if_t_t, dite_eq_ite, if_congr, if_true,
+                dif_ctx_congr, Finset.sum_dite_irrel, Finset.sum_dite_eq, Finset.mem_univ,
+                Finset.sum_const_zero, Finset.sum_congr, Finset.sum_dite_eq, Finset.sum_apply,
+                limits.comp_zero, limits.zero_comp, eq_to_hom_trans, Mat_.id_apply]
               by_cases h : j₁ = j₂
               · subst h
                 simp
@@ -257,16 +264,15 @@ def mapMatId : (𝟭 C).mapMat_ ≅ 𝟭 (Mat_ C) :=
           rfl))
     fun M N f => by
     ext (i j)
-    cases M
-    cases N
+    cases M; cases N
     simp [comp_dite, dite_comp]
 #align category_theory.functor.map_Mat_id CategoryTheory.Functor.mapMatId
 
 /-- Composite functors induce composite functors on matrix categories.
 -/
 @[simps]
-def mapMatComp {E : Type _} [Category.{v₁} E] [Preadditive E] (F : C ⥤ D) [Functor.Additive F] (G : D ⥤ E)
-    [Functor.Additive G] : (F ⋙ G).mapMat_ ≅ F.mapMat_ ⋙ G.mapMat_ :=
+def mapMatComp {E : Type _} [Category.{v₁} E] [Preadditive E] (F : C ⥤ D) [Functor.Additive F]
+    (G : D ⥤ E) [Functor.Additive G] : (F ⋙ G).mapMat_ ≅ F.mapMat_ ⋙ G.mapMat_ :=
   NatIso.ofComponents
     (fun M =>
       eqToIso
@@ -275,8 +281,7 @@ def mapMatComp {E : Type _} [Category.{v₁} E] [Preadditive E] (F : C ⥤ D) [F
           rfl))
     fun M N f => by
     ext (i j)
-    cases M
-    cases N
+    cases M; cases N
     simp [comp_dite, dite_comp]
 #align category_theory.functor.map_Mat_comp CategoryTheory.Functor.mapMatComp
 
@@ -302,7 +307,9 @@ def embedding : C ⥤ Mat_ C where
 
 namespace Embedding
 
-instance : Faithful (embedding C) where map_injective' X Y f g h := congr_fun (congr_fun h PUnit.unit) PUnit.unit
+instance :
+    Faithful
+      (embedding C) where map_injective' X Y f g h := congr_fun (congr_fun h PUnit.unit) PUnit.unit
 
 instance : Full (embedding C) where Preimage X Y f := f PUnit.unit PUnit.unit
 
@@ -343,7 +350,8 @@ def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M
     intro i
     apply biproduct.hom_ext'
     intro j
-    simp only [category.id_comp, category.assoc, biproduct.lift_π, biproduct.ι_desc_assoc, biproduct.ι_π]
+    simp only [category.id_comp, category.assoc, biproduct.lift_π, biproduct.ι_desc_assoc,
+      biproduct.ι_π]
     ext (⟨⟩⟨⟩)
     simp [dite_comp, comp_dite]
     split_ifs
@@ -366,14 +374,16 @@ def additiveObjIsoBiproduct (F : Mat_ C ⥤ D) [Functor.Additive F] (M : Mat_ C)
 variable [HasFiniteBiproducts D]
 
 @[reassoc]
-theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C} (f : M ⟶ N) :
+theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
+    (f : M ⟶ N) :
     F.map f ≫ (additiveObjIsoBiproduct F N).hom =
-      (additiveObjIsoBiproduct F M).hom ≫ biproduct.matrix fun i j => F.map ((embedding C).map (f i j)) :=
+      (additiveObjIsoBiproduct F M).hom ≫
+        biproduct.matrix fun i j => F.map ((embedding C).map (f i j)) :=
   by
   -- This is disappointingly tedious.
   ext
-  simp only [additive_obj_iso_biproduct_hom, category.assoc, biproduct.lift_π, functor.map_bicone_π, biproduct.bicone_π,
-    biproduct.lift_matrix]
+  simp only [additive_obj_iso_biproduct_hom, category.assoc, biproduct.lift_π, functor.map_bicone_π,
+    biproduct.bicone_π, biproduct.lift_matrix]
   dsimp [embedding]
   simp only [← F.map_comp, biproduct.lift_π, biproduct.matrix_π, category.assoc]
   simp only [← F.map_comp, ← F.map_sum, biproduct.lift_desc, biproduct.lift_π_assoc, comp_sum]
@@ -391,9 +401,11 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
   category_theory.Mat_.additive_obj_iso_biproduct_naturality CategoryTheory.Mat_.additive_obj_iso_biproduct_naturality
 
 @[reassoc]
-theorem additive_obj_iso_biproduct_naturality' (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C} (f : M ⟶ N) :
+theorem additive_obj_iso_biproduct_naturality' (F : Mat_ C ⥤ D) [Functor.Additive F] {M N : Mat_ C}
+    (f : M ⟶ N) :
     (additiveObjIsoBiproduct F M).inv ≫ F.map f =
-      biproduct.matrix (fun i j => F.map ((embedding C).map (f i j)) : _) ≫ (additiveObjIsoBiproduct F N).inv :=
+      biproduct.matrix (fun i j => F.map ((embedding C).map (f i j)) : _) ≫
+        (additiveObjIsoBiproduct F N).inv :=
   by rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv, additive_obj_iso_biproduct_naturality]
 #align
   category_theory.Mat_.additive_obj_iso_biproduct_naturality' CategoryTheory.Mat_.additive_obj_iso_biproduct_naturality'
@@ -424,8 +436,9 @@ instance lift_additive (F : C ⥤ D) [Functor.Additive F] : Functor.Additive (li
 @[simps]
 def embeddingLiftIso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F ≅ F :=
   NatIso.ofComponents
-    (fun X => { hom := biproduct.desc fun P => 𝟙 (F.obj X), inv := biproduct.lift fun P => 𝟙 (F.obj X) }) fun X Y f =>
-    by
+    (fun X =>
+      { hom := biproduct.desc fun P => 𝟙 (F.obj X), inv := biproduct.lift fun P => 𝟙 (F.obj X) })
+    fun X Y f => by
     dsimp
     ext
     simp only [category.id_comp, biproduct.ι_desc_assoc]
@@ -436,8 +449,8 @@ def embeddingLiftIso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F
 
 /-- `Mat_.lift F` is the unique additive functor `L : Mat_ C ⥤ D` such that `F ≅ embedding C ⋙ L`.
 -/
-def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Additive L] (α : embedding C ⋙ L ≅ F) :
-    L ≅ lift F :=
+def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Additive L]
+    (α : embedding C ⋙ L ≅ F) : L ≅ lift F :=
   NatIso.ofComponents
     (fun M =>
       additiveObjIsoBiproduct L M ≪≫
@@ -452,8 +465,7 @@ def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Ad
     simp only [biproduct.map_matrix_assoc, category.assoc]
     congr
     ext (j k⟨⟩)
-    dsimp
-    simp
+    dsimp; simp
     exact α.hom.naturality (f j k)
 #align category_theory.Mat_.lift_unique CategoryTheory.Mat_.liftUnique
 
@@ -461,7 +473,8 @@ def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Ad
 /-- Two additive functors `Mat_ C ⥤ D` are naturally isomorphic if
 their precompositions with `embedding C` are naturally isomorphic as functors `C ⥤ D`. -/
 @[ext.1]
-def ext {F G : Mat_ C ⥤ D} [Functor.Additive F] [Functor.Additive G] (α : embedding C ⋙ F ≅ embedding C ⋙ G) : F ≅ G :=
+def ext {F G : Mat_ C ⥤ D} [Functor.Additive F] [Functor.Additive G]
+    (α : embedding C ⋙ F ≅ embedding C ⋙ G) : F ≅ G :=
   liftUnique (embedding C ⋙ G) _ α ≪≫ (liftUnique _ _ (Iso.refl _)).symm
 #align category_theory.Mat_.ext CategoryTheory.Mat_.ext
 
@@ -470,17 +483,19 @@ def ext {F G : Mat_ C ⥤ D} [Functor.Additive F] [Functor.Additive G] (α : emb
 def equivalenceSelfOfHasFiniteBiproductsAux [HasFiniteBiproducts C] :
     embedding C ⋙ 𝟭 (Mat_ C) ≅ embedding C ⋙ lift (𝟭 C) ⋙ embedding C :=
   Functor.rightUnitor _ ≪≫
-    (Functor.leftUnitor _).symm ≪≫ isoWhiskerRight (embeddingLiftIso _).symm _ ≪≫ Functor.associator _ _ _
+    (Functor.leftUnitor _).symm ≪≫
+      isoWhiskerRight (embeddingLiftIso _).symm _ ≪≫ Functor.associator _ _ _
 #align
   category_theory.Mat_.equivalence_self_of_has_finite_biproducts_aux CategoryTheory.Mat_.equivalenceSelfOfHasFiniteBiproductsAux
 
-/-- A preadditive category that already has finite biproducts is equivalent to its additive envelope.
+/--
+A preadditive category that already has finite biproducts is equivalent to its additive envelope.
 
 Note that we only prove this for a large category;
 otherwise there are universe issues that I haven't attempted to sort out.
 -/
-def equivalenceSelfOfHasFiniteBiproducts (C : Type (u₁ + 1)) [LargeCategory C] [Preadditive C] [HasFiniteBiproducts C] :
-    Mat_ C ≌ C :=
+def equivalenceSelfOfHasFiniteBiproducts (C : Type (u₁ + 1)) [LargeCategory C] [Preadditive C]
+    [HasFiniteBiproducts C] : Mat_ C ≌ C :=
   Equivalence.mk
     (-- I suspect this is already an adjoint equivalence, but it seems painful to verify.
       lift
@@ -490,15 +505,17 @@ def equivalenceSelfOfHasFiniteBiproducts (C : Type (u₁ + 1)) [LargeCategory C]
   category_theory.Mat_.equivalence_self_of_has_finite_biproducts CategoryTheory.Mat_.equivalenceSelfOfHasFiniteBiproducts
 
 @[simp]
-theorem equivalence_self_of_has_finite_biproducts_functor {C : Type (u₁ + 1)} [LargeCategory C] [Preadditive C]
-    [HasFiniteBiproducts C] : (equivalenceSelfOfHasFiniteBiproducts C).Functor = lift (𝟭 C) :=
+theorem equivalence_self_of_has_finite_biproducts_functor {C : Type (u₁ + 1)} [LargeCategory C]
+    [Preadditive C] [HasFiniteBiproducts C] :
+    (equivalenceSelfOfHasFiniteBiproducts C).Functor = lift (𝟭 C) :=
   rfl
 #align
   category_theory.Mat_.equivalence_self_of_has_finite_biproducts_functor CategoryTheory.Mat_.equivalence_self_of_has_finite_biproducts_functor
 
 @[simp]
-theorem equivalence_self_of_has_finite_biproducts_inverse {C : Type (u₁ + 1)} [LargeCategory C] [Preadditive C]
-    [HasFiniteBiproducts C] : (equivalenceSelfOfHasFiniteBiproducts C).inverse = embedding C :=
+theorem equivalence_self_of_has_finite_biproducts_inverse {C : Type (u₁ + 1)} [LargeCategory C]
+    [Preadditive C] [HasFiniteBiproducts C] :
+    (equivalenceSelfOfHasFiniteBiproducts C).inverse = embedding C :=
   rfl
 #align
   category_theory.Mat_.equivalence_self_of_has_finite_biproducts_inverse CategoryTheory.Mat_.equivalence_self_of_has_finite_biproducts_inverse
@@ -546,15 +563,18 @@ theorem id_apply_self (M : MatCat R) (i : M) : (𝟙 M : Matrix M M R) i i = 1 :
 #align category_theory.Mat.id_apply_self CategoryTheory.MatCat.id_apply_self
 
 @[simp]
-theorem id_apply_of_ne (M : MatCat R) (i j : M) (h : i ≠ j) : (𝟙 M : Matrix M M R) i j = 0 := by simp [id_apply, h]
+theorem id_apply_of_ne (M : MatCat R) (i j : M) (h : i ≠ j) : (𝟙 M : Matrix M M R) i j = 0 := by
+  simp [id_apply, h]
 #align category_theory.Mat.id_apply_of_ne CategoryTheory.MatCat.id_apply_of_ne
 
-theorem comp_def {M N K : MatCat R} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i k => ∑ j : N, f i j * g j k :=
+theorem comp_def {M N K : MatCat R} (f : M ⟶ N) (g : N ⟶ K) :
+    f ≫ g = fun i k => ∑ j : N, f i j * g j k :=
   rfl
 #align category_theory.Mat.comp_def CategoryTheory.MatCat.comp_def
 
 @[simp]
-theorem comp_apply {M N K : MatCat R} (f : M ⟶ N) (g : N ⟶ K) (i k) : (f ≫ g) i k = ∑ j : N, f i j * g j k :=
+theorem comp_apply {M N K : MatCat R} (f : M ⟶ N) (g : N ⟶ K) (i k) :
+    (f ≫ g) i k = ∑ j : N, f i j * g j k :=
   rfl
 #align category_theory.Mat.comp_apply CategoryTheory.MatCat.comp_apply
 
@@ -576,7 +596,8 @@ def equivalenceSingleObjInverse : Mat_ (SingleObj Rᵐᵒᵖ) ⥤ MatCat R where
     ext (i j)
     simp [id_def, Mat_.id_def]
     split_ifs <;> rfl
-#align category_theory.Mat.equivalence_single_obj_inverse CategoryTheory.MatCat.equivalenceSingleObjInverse
+#align
+  category_theory.Mat.equivalence_single_obj_inverse CategoryTheory.MatCat.equivalenceSingleObjInverse
 
 instance :
     Faithful (equivalenceSingleObjInverse R) where map_injective' X Y f g w := by
@@ -587,7 +608,9 @@ instance :
 instance : Full (equivalenceSingleObjInverse R) where Preimage X Y f i j := MulOpposite.op (f i j)
 
 instance :
-    EssSurj (equivalenceSingleObjInverse R) where mem_ess_image X :=
+    EssSurj
+      (equivalenceSingleObjInverse
+        R) where mem_ess_image X :=
     ⟨{ ι := X, x := fun _ => PUnit.unit },
       ⟨eqToIso
           (by

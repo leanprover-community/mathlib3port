@@ -80,8 +80,8 @@ unsafe instance : ToString strictness :=
 unsafe instance : has_to_format strictness :=
   ⟨fun s => toString s⟩
 
-private theorem lt_of_eq_of_lt'' {α} [Preorder α] {b b' a : α} : b = b' → a < b' → a < b := fun h1 h2 =>
-  lt_of_lt_of_eq h2 h1.symm
+private theorem lt_of_eq_of_lt'' {α} [Preorder α] {b b' a : α} : b = b' → a < b' → a < b :=
+  fun h1 h2 => lt_of_lt_of_eq h2 h1.symm
 #align tactic.lt_of_eq_of_lt'' tactic.lt_of_eq_of_lt''
 
 /-- First base case of the `positivity` tactic.  We try `norm_num` to prove directly that an
@@ -174,13 +174,17 @@ unsafe def positivity_fail {α : Type _} (e a b : expr) (pa pb : strictness) : t
     | nonnegative _ => "0 ≤ " ++ c
     | nonzero _ => c ++ " ≠ 0"
   fail
-      (↑"`positivity` can't say anything about `" ++ e' ++ "` knowing only `" ++ f pa a' ++ "` and `" ++ f pb b' ++ "`")
+      (↑"`positivity` can't say anything about `" ++ e' ++ "` knowing only `" ++ f pa a' ++
+            "` and `" ++
+          f pb b' ++
+        "`")
 #align tactic.positivity.positivity_fail tactic.positivity.positivity_fail
 
 /-! ### Core logic of the `positivity` tactic -/
 
 
-private theorem ne_of_ne_of_eq' {α : Type _} {a b c : α} (ha : a ≠ c) (h : a = b) : b ≠ c := by rwa [← h]
+private theorem ne_of_ne_of_eq' {α : Type _} {a b c : α} (ha : a ≠ c) (h : a = b) : b ≠ c := by
+  rwa [← h]
 #align tactic.positivity.ne_of_ne_of_eq' tactic.positivity.ne_of_ne_of_eq'
 
 /-- Calls `norm_num` on `a` to prove positivity/nonnegativity of `e` assuming `b` is defeq to `e`
@@ -233,7 +237,10 @@ unsafe def compare_hyp_ne (e a b p₂ : expr) : tactic strictness := do
       let e' ← pp e
       let p₂' ← pp p₂
       let a' ← pp a
-      fail (↑"`norm_num` can't prove non-zeroness of " ++ e' ++ " using " ++ p₂' ++ " because " ++ a' ++ " is non-zero")
+      fail
+          (↑"`norm_num` can't prove non-zeroness of " ++ e' ++ " using " ++ p₂' ++ " because " ++
+              a' ++
+            " is non-zero")
 #align tactic.positivity.compare_hyp_ne tactic.positivity.compare_hyp_ne
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -258,14 +265,23 @@ unsafe def compare_hyp_ne (e a b p₂ : expr) : tactic strictness := do
               |
                 q( $ ( lo ) = $ ( hi ) )
                 =>
-                compare_hyp_eq e lo hi p₂ <|> do let p₂' ← mk_app ` ` Eq.symm [ p₂ ] compare_hyp_eq e hi lo p₂'
+                compare_hyp_eq e lo hi p₂
+                  <|>
+                  do let p₂' ← mk_app ` ` Eq.symm [ p₂ ] compare_hyp_eq e hi lo p₂'
               |
                 q( $ ( hi ) ≠ $ ( lo ) )
                 =>
                 compare_hyp_ne e lo hi p₂
                   <|>
-                  do let p₂' ← mk_mapp ` ` Ne.symm [ none , none , none , p₂ ] compare_hyp_ne e hi lo p₂'
-              | e => do let p₂' ← pp p₂ fail ( p₂' ++ "is not of the form `a ≤ b`, `a < b`, `a = b` or `a ≠ b`" )
+                  do
+                    let p₂' ← mk_mapp ` ` Ne.symm [ none , none , none , p₂ ]
+                      compare_hyp_ne e hi lo p₂'
+              |
+                e
+                =>
+                do
+                  let p₂' ← pp p₂
+                    fail ( p₂' ++ "is not of the form `a ≤ b`, `a < b`, `a = b` or `a ≠ b`" )
 #align tactic.positivity.compare_hyp tactic.positivity.compare_hyp
 
 /-- Attribute allowing a user to tag a tactic as an extension for `tactic.interactive.positivity`.
@@ -294,7 +310,8 @@ unsafe def attr : user_attribute (expr → tactic strictness) Unit where
                     positivity_canon
                     e ≤|≥
                   local_context >>=
-                    List.foldl (fun tac h => tac ≤|≥ compare_hyp e h) (fail "no applicable positivity extension found"),
+                    List.foldl (fun tac h => tac ≤|≥ compare_hyp e h)
+                      (fail "no applicable positivity extension found"),
       dependencies := [] }
 #align tactic.positivity.attr tactic.positivity.attr
 
@@ -337,7 +354,6 @@ namespace Interactive
     : tactic Unit
     :=
       focus1
-        <|
         do
           let t ← target >>= instantiate_mvars
             let
@@ -430,7 +446,8 @@ namespace Interactive
 #align tactic.interactive.positivity tactic.interactive.positivity
 
 add_tactic_doc
-  { Name := "positivity", category := DocCategory.tactic, declNames := [`tactic.interactive.positivity],
+  { Name := "positivity", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.positivity],
     tags := ["arithmetic", "monotonicity", "finishing"] }
 
 end Interactive
@@ -502,14 +519,17 @@ unsafe def positivity_max : expr → tactic strictness
         -- of the `orelse'`.
         do
           match strictness_a with
-            | some (positive pa) => positive <$> mk_mapp `` lt_max_of_lt_left [none, none, none, a, b, pa]
-            | some (nonnegative pa) => nonnegative <$> mk_mapp `` le_max_of_le_left [none, none, none, a, b, pa]
+            | some (positive pa) =>
+              positive <$> mk_mapp `` lt_max_of_lt_left [none, none, none, a, b, pa]
+            | some (nonnegative pa) =>
+              nonnegative <$> mk_mapp `` le_max_of_le_left [none, none, none, a, b, pa]
             | _ => failed) ≤|≥
         do
         let strictness_b ← core b
         match strictness_b with
           | positive pb => positive <$> mk_mapp `` lt_max_of_lt_right [none, none, none, a, b, pb]
-          | nonnegative pb => nonnegative <$> mk_mapp `` le_max_of_le_right [none, none, none, a, b, pb]
+          | nonnegative pb =>
+            nonnegative <$> mk_mapp `` le_max_of_le_right [none, none, none, a, b, pb]
           | nonzero pb => do
             let nonzero pa ← strictness_a
             nonzero <$> to_expr ``(max_ne $(pa) $(pb))
@@ -535,9 +555,18 @@ unsafe def positivity_max : expr → tactic strictness
               strictness_a , strictness_b
               with
               | positive pa , positive pb => positive <$> mk_app ` ` add_pos [ pa , pb ]
-                | positive pa , nonnegative pb => positive <$> mk_app ` ` lt_add_of_pos_of_le [ pa , pb ]
-                | nonnegative pa , positive pb => positive <$> mk_app ` ` lt_add_of_le_of_pos [ pa , pb ]
-                | nonnegative pa , nonnegative pb => nonnegative <$> mk_app ` ` add_nonneg [ pa , pb ]
+                |
+                  positive pa , nonnegative pb
+                  =>
+                  positive <$> mk_app ` ` lt_add_of_pos_of_le [ pa , pb ]
+                |
+                  nonnegative pa , positive pb
+                  =>
+                  positive <$> mk_app ` ` lt_add_of_le_of_pos [ pa , pb ]
+                |
+                  nonnegative pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` add_nonneg [ pa , pb ]
                 | sa @ _ , sb @ _ => positivity_fail e a b sa sb
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a + b`"
 #align tactic.positivity_add tactic.positivity_add
@@ -554,11 +583,13 @@ private theorem mul_nonneg_of_nonneg_of_pos (ha : 0 ≤ a) (hb : 0 < b) : 0 ≤ 
   mul_nonneg ha hb.le
 #align tactic.mul_nonneg_of_nonneg_of_pos tactic.mul_nonneg_of_nonneg_of_pos
 
-private theorem mul_ne_zero_of_pos_of_ne_zero [NoZeroDivisors R] (ha : 0 < a) (hb : b ≠ 0) : a * b ≠ 0 :=
+private theorem mul_ne_zero_of_pos_of_ne_zero [NoZeroDivisors R] (ha : 0 < a) (hb : b ≠ 0) :
+    a * b ≠ 0 :=
   mul_ne_zero ha.ne' hb
 #align tactic.mul_ne_zero_of_pos_of_ne_zero tactic.mul_ne_zero_of_pos_of_ne_zero
 
-private theorem mul_ne_zero_of_ne_zero_of_pos [NoZeroDivisors R] (ha : a ≠ 0) (hb : 0 < b) : a * b ≠ 0 :=
+private theorem mul_ne_zero_of_ne_zero_of_pos [NoZeroDivisors R] (ha : a ≠ 0) (hb : 0 < b) :
+    a * b ≠ 0 :=
   mul_ne_zero ha hb.ne'
 #align tactic.mul_ne_zero_of_ne_zero_of_pos tactic.mul_ne_zero_of_ne_zero_of_pos
 
@@ -583,12 +614,30 @@ end OrderedSemiring
               strictness_a , strictness_b
               with
               | positive pa , positive pb => positive <$> mk_app ` ` mul_pos [ pa , pb ]
-                | positive pa , nonnegative pb => nonnegative <$> mk_app ` ` mul_nonneg_of_pos_of_nonneg [ pa , pb ]
-                | nonnegative pa , positive pb => nonnegative <$> mk_app ` ` mul_nonneg_of_nonneg_of_pos [ pa , pb ]
-                | nonnegative pa , nonnegative pb => nonnegative <$> mk_app ` ` mul_nonneg [ pa , pb ]
-                | positive pa , nonzero pb => nonzero <$> to_expr ` `( mul_ne_zero_of_pos_of_ne_zero $ ( pa ) $ ( pb ) )
-                | nonzero pa , positive pb => nonzero <$> to_expr ` `( mul_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
-                | nonzero pa , nonzero pb => nonzero <$> to_expr ` `( mul_ne_zero $ ( pa ) $ ( pb ) )
+                |
+                  positive pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` mul_nonneg_of_pos_of_nonneg [ pa , pb ]
+                |
+                  nonnegative pa , positive pb
+                  =>
+                  nonnegative <$> mk_app ` ` mul_nonneg_of_nonneg_of_pos [ pa , pb ]
+                |
+                  nonnegative pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` mul_nonneg [ pa , pb ]
+                |
+                  positive pa , nonzero pb
+                  =>
+                  nonzero <$> to_expr ` `( mul_ne_zero_of_pos_of_ne_zero $ ( pa ) $ ( pb ) )
+                |
+                  nonzero pa , positive pb
+                  =>
+                  nonzero <$> to_expr ` `( mul_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
+                |
+                  nonzero pa , nonzero pb
+                  =>
+                  nonzero <$> to_expr ` `( mul_ne_zero $ ( pa ) $ ( pb ) )
                 | sa @ _ , sb @ _ => positivity_fail e a b sa sb
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a * b`"
 #align tactic.positivity_mul tactic.positivity_mul
@@ -659,9 +708,18 @@ private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < 
                     positive <$> mk_app ` ` int_div_self_pos [ pa ]
                     else
                     nonnegative <$> mk_app ` ` int_div_nonneg_of_pos_of_pos [ pa , pb ]
-                | positive pa , nonnegative pb => nonnegative <$> mk_app ` ` int_div_nonneg_of_pos_of_nonneg [ pa , pb ]
-                | nonnegative pa , positive pb => nonnegative <$> mk_app ` ` int_div_nonneg_of_nonneg_of_pos [ pa , pb ]
-                | nonnegative pa , nonnegative pb => nonnegative <$> mk_app ` ` Int.div_nonneg [ pa , pb ]
+                |
+                  positive pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` int_div_nonneg_of_pos_of_nonneg [ pa , pb ]
+                |
+                  nonnegative pa , positive pb
+                  =>
+                  nonnegative <$> mk_app ` ` int_div_nonneg_of_nonneg_of_pos [ pa , pb ]
+                |
+                  nonnegative pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` Int.div_nonneg [ pa , pb ]
                 | sa @ _ , sb @ _ => positivity_fail e a b sa sb
       |
         e @ q( $ ( a ) / $ ( b ) )
@@ -673,12 +731,30 @@ private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < 
               strictness_a , strictness_b
               with
               | positive pa , positive pb => positive <$> mk_app ` ` div_pos [ pa , pb ]
-                | positive pa , nonnegative pb => nonnegative <$> mk_app ` ` div_nonneg_of_pos_of_nonneg [ pa , pb ]
-                | nonnegative pa , positive pb => nonnegative <$> mk_app ` ` div_nonneg_of_nonneg_of_pos [ pa , pb ]
-                | nonnegative pa , nonnegative pb => nonnegative <$> mk_app ` ` div_nonneg [ pa , pb ]
-                | positive pa , nonzero pb => nonzero <$> to_expr ` `( div_ne_zero_of_pos_of_ne_zero $ ( pa ) $ ( pb ) )
-                | nonzero pa , positive pb => nonzero <$> to_expr ` `( div_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
-                | nonzero pa , nonzero pb => nonzero <$> to_expr ` `( div_ne_zero $ ( pa ) $ ( pb ) )
+                |
+                  positive pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` div_nonneg_of_pos_of_nonneg [ pa , pb ]
+                |
+                  nonnegative pa , positive pb
+                  =>
+                  nonnegative <$> mk_app ` ` div_nonneg_of_nonneg_of_pos [ pa , pb ]
+                |
+                  nonnegative pa , nonnegative pb
+                  =>
+                  nonnegative <$> mk_app ` ` div_nonneg [ pa , pb ]
+                |
+                  positive pa , nonzero pb
+                  =>
+                  nonzero <$> to_expr ` `( div_ne_zero_of_pos_of_ne_zero $ ( pa ) $ ( pb ) )
+                |
+                  nonzero pa , positive pb
+                  =>
+                  nonzero <$> to_expr ` `( div_ne_zero_of_ne_zero_of_pos $ ( pa ) $ ( pb ) )
+                |
+                  nonzero pa , nonzero pb
+                  =>
+                  nonzero <$> to_expr ` `( div_ne_zero $ ( pa ) $ ( pb ) )
                 | sa @ _ , sb @ _ => positivity_fail e a b sa sb
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a / b`"
 #align tactic.positivity_div tactic.positivity_div
@@ -742,13 +818,21 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
                             match
                               n
                               with
-                              | q( bit0 $ ( n ) ) => nonnegative <$> mk_app ` ` pow_bit0_nonneg [ a , n ]
+                              |
+                                  q( bit0 $ ( n ) )
+                                  =>
+                                  nonnegative <$> mk_app ` ` pow_bit0_nonneg [ a , n ]
                                 |
                                   _
                                   =>
                                   do
                                     let e' ← pp e
-                                      fail ( e' ++ "is not an even power so positivity can't prove it's nonnegative" )
+                                      fail
+                                        (
+                                          e'
+                                            ++
+                                            "is not an even power so positivity can't prove it's nonnegative"
+                                          )
                             )
                           ≤|≥
                           do
@@ -758,7 +842,10 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
                                 with
                                 | positive p => positive <$> mk_app ` ` pow_pos [ p , n ]
                                   | nonnegative p => nonnegative <$> mk_app `pow_nonneg [ p , n ]
-                                  | nonzero p => nonzero <$> to_expr ` `( pow_ne_zero $ ( n ) $ ( p ) )
+                                  |
+                                    nonzero p
+                                    =>
+                                    nonzero <$> to_expr ` `( pow_ne_zero $ ( n ) $ ( p ) )
                 )
               <|>
               do
@@ -773,13 +860,21 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
                           match
                             n
                             with
-                            | q( bit0 $ ( n ) ) => nonnegative <$> mk_app ` ` zpow_bit0_nonneg [ a , n ]
+                            |
+                                q( bit0 $ ( n ) )
+                                =>
+                                nonnegative <$> mk_app ` ` zpow_bit0_nonneg [ a , n ]
                               |
                                 _
                                 =>
                                 do
                                   let e' ← pp e
-                                    fail ( e' ++ "is not an even power so positivity can't prove it's nonnegative" )
+                                    fail
+                                      (
+                                        e'
+                                          ++
+                                          "is not an even power so positivity can't prove it's nonnegative"
+                                        )
                           )
                         ≤|≥
                         do
@@ -789,7 +884,10 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
                               with
                               | positive p => positive <$> mk_app ` ` zpow_pos_of_pos [ p , n ]
                                 | nonnegative p => nonnegative <$> mk_app ` ` zpow_nonneg [ p , n ]
-                                | nonzero p => nonzero <$> to_expr ` `( zpow_ne_zero $ ( n ) $ ( p ) )
+                                |
+                                  nonzero p
+                                  =>
+                                  nonzero <$> to_expr ` `( zpow_ne_zero $ ( n ) $ ( p ) )
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a ^ n`"
 #align tactic.positivity_pow tactic.positivity_pow
 
@@ -917,12 +1015,17 @@ unsafe def positivity_coe : expr → tactic strictness
             q(Nat.castCoe),
             positive p => positive <$> mk_mapp `` nat_cast_pos [typ, none, none, none, p]
           | q(Nat.castCoe), _ => nonnegative <$> mk_mapp `` Nat.cast_nonneg [typ, none, a]
-          | q(Int.castCoe), positive p => positive <$> mk_mapp `` int_cast_pos [typ, none, none, none, p]
-          | q(Int.castCoe), nonnegative p => nonnegative <$> mk_mapp `` int_cast_nonneg [typ, none, none, p]
-          | q(Int.castCoe), nonzero p => nonzero <$> mk_mapp `` int_cast_ne_zero [typ, none, none, none, p]
+          | q(Int.castCoe), positive p =>
+            positive <$> mk_mapp `` int_cast_pos [typ, none, none, none, p]
+          | q(Int.castCoe), nonnegative p =>
+            nonnegative <$> mk_mapp `` int_cast_nonneg [typ, none, none, p]
+          | q(Int.castCoe), nonzero p =>
+            nonzero <$> mk_mapp `` int_cast_ne_zero [typ, none, none, none, p]
           | q(Rat.castCoe), positive p => positive <$> mk_mapp `` rat_cast_pos [typ, none, none, p]
-          | q(Rat.castCoe), nonnegative p => nonnegative <$> mk_mapp `` rat_cast_nonneg [typ, none, none, p]
-          | q(Rat.castCoe), nonzero p => nonzero <$> mk_mapp `` rat_cast_ne_zero [typ, none, none, none, p]
+          | q(Rat.castCoe), nonnegative p =>
+            nonnegative <$> mk_mapp `` rat_cast_nonneg [typ, none, none, p]
+          | q(Rat.castCoe), nonzero p =>
+            nonzero <$> mk_mapp `` rat_cast_ne_zero [typ, none, none, none, p]
           | q(@coeBase _ _ Int.hasCoe), positive p => positive <$> mk_app `` int_coe_nat_pos [p]
           | q(@coeBase _ _ Int.hasCoe), _ => nonnegative <$> mk_app `` int_coe_nat_nonneg [a]
           | _, _ => failed
@@ -948,10 +1051,12 @@ unsafe def positivity_factorial : expr → tactic strictness
 @[positivity]
 unsafe def positivity_asc_factorial : expr → tactic strictness
   | q(Nat.ascFactorial $(a) $(b)) => positive <$> mk_app `` Nat.asc_factorial_pos [a, b]
-  | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `nat.asc_factorial n k`"
+  | e =>
+    pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `nat.asc_factorial n k`"
 #align tactic.positivity_asc_factorial tactic.positivity_asc_factorial
 
-private theorem card_univ_pos (α : Type _) [Fintype α] [Nonempty α] : 0 < (Finset.univ : Finset α).card :=
+private theorem card_univ_pos (α : Type _) [Fintype α] [Nonempty α] :
+    0 < (Finset.univ : Finset α).card :=
   Finset.univ_nonempty.card_pos
 #align tactic.card_univ_pos tactic.card_univ_pos
 
@@ -966,7 +1071,10 @@ unsafe def positivity_finset_card : expr → tactic strictness
           find_assumption
     positive <$> mk_app `` Finset.Nonempty.card_pos [p]
   | q(@Fintype.card $(α) $(i)) => positive <$> mk_mapp `` Fintype.card_pos [α, i, none]
-  | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `finset.card s` or `fintype.card α`"
+  | e =>
+    pp e >>=
+      fail ∘
+        format.bracket "The expression `" "` isn't of the form `finset.card s` or `fintype.card α`"
 #align tactic.positivity_finset_card tactic.positivity_finset_card
 
 end Tactic

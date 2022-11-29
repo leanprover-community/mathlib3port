@@ -34,8 +34,8 @@ theorem is_idempotent_elem_iff_of_fg {R : Type _} [CommRing R] (I : Ideal R) (h 
     
 #align ideal.is_idempotent_elem_iff_of_fg Ideal.is_idempotent_elem_iff_of_fg
 
-theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRing R] [IsDomain R] (I : Ideal R) (h : I.Fg) :
-    IsIdempotentElem I ↔ I = ⊥ ∨ I = ⊤ := by
+theorem is_idempotent_elem_iff_eq_bot_or_top {R : Type _} [CommRing R] [IsDomain R] (I : Ideal R)
+    (h : I.Fg) : IsIdempotentElem I ↔ I = ⊥ ∨ I = ⊤ := by
   constructor
   · intro H
     obtain ⟨e, he, rfl⟩ := (I.is_idempotent_elem_iff_of_fg h).mp H

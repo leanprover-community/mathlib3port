@@ -18,10 +18,10 @@ namespace String
 /-- `<` on string iterators. This coincides with `<` on strings as lists. -/
 def ltb : Iterator → Iterator → Bool
   | s₁, s₂ => by
-    cases s₂.has_next
+    cases s₂.has_next;
     · exact ff
       
-    cases h₁ : s₁.has_next
+    cases h₁ : s₁.has_next;
     · exact tt
       
     exact
@@ -47,7 +47,8 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toLis
   | ⟨i₁⟩, ⟨i₂⟩ => by
     suffices ∀ {p₁ p₂ s₁ s₂}, ltb ⟨p₁, s₁⟩ ⟨p₂, s₂⟩ ↔ s₁ < s₂ from this
     intros
-    induction' s₁ with a s₁ IH generalizing p₁ p₂ s₂ <;> cases' s₂ with b s₂ <;> rw [ltb] <;> simp [iterator.has_next]
+    induction' s₁ with a s₁ IH generalizing p₁ p₂ s₂ <;> cases' s₂ with b s₂ <;> rw [ltb] <;>
+      simp [iterator.has_next]
     · rfl
       
     · exact iff_of_true rfl List.Lex.nil
@@ -163,7 +164,8 @@ theorem List.length_as_string (l : List Char) : l.asString.length = l.length :=
 
 @[simp]
 theorem List.as_string_inj {l l' : List Char} : l.asString = l'.asString ↔ l = l' :=
-  ⟨fun h => by rw [← List.to_list_inv_as_string l, ← List.to_list_inv_as_string l', to_list_inj, h], fun h => h ▸ rfl⟩
+  ⟨fun h => by rw [← List.to_list_inv_as_string l, ← List.to_list_inv_as_string l', to_list_inj, h],
+    fun h => h ▸ rfl⟩
 #align list.as_string_inj List.as_string_inj
 
 @[simp]

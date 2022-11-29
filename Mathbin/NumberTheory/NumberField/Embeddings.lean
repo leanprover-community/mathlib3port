@@ -55,11 +55,13 @@ variable (K A : Type _) [Field K] [NumberField K] [Field A] [Algebra ℚ A] [IsA
 /-- Let `A` be an algebraically closed field and let `x ∈ K`, with `K` a number field.
 The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` of
 the minimal polynomial of `x` over `ℚ`. -/
-theorem range_eval_eq_root_set_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A := by
+theorem range_eval_eq_root_set_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A :=
+  by
   convert (NumberField.is_algebraic K).range_eval_eq_root_set_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
-#align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
+#align
+  number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
 
 end Roots
 
@@ -76,8 +78,8 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x�
   have hx := IsSeparable.is_integral ℚ x
   rw [← norm_algebra_map' A, ← coeff_map (algebraMap ℚ A)]
   refine'
-    coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splitsCodomain _) (minpoly.nat_degree_le hx) (fun z hz => _)
-      i
+    coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splitsCodomain _)
+      (minpoly.nat_degree_le hx) (fun z hz => _) i
   classical
   rw [← Multiset.mem_to_finset] at hz
   obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
@@ -88,11 +90,11 @@ variable (K A)
 
 /-- Let `B` be a real number. The set of algebraic integers in `K` whose conjugates are all
 smaller in norm than `B` is finite. -/
-theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K →+* A, ‖φ x‖ ≤ B }.Finite := by
+theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K →+* A, ‖φ x‖ ≤ B }.Finite :=
+  by
   let C := Nat.ceil (max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2))
   have := bUnion_roots_finite (algebraMap ℤ K) (finrank ℚ K) (finite_Icc (-C : ℤ) C)
-  refine' this.subset fun x hx => _
-  simp_rw [mem_Union]
+  refine' this.subset fun x hx => _; simp_rw [mem_Union]
   have h_map_ℚ_minpoly := minpoly.gcd_domain_eq_field_fractions' ℚ hx.1
   refine' ⟨_, ⟨_, fun i => _⟩, (mem_root_set_iff (minpoly.ne_zero hx.1) x).2 (minpoly.aeval ℤ x)⟩
   · rw [← (minpoly.monic hx.1).nat_degree_map (algebraMap ℤ ℚ), ← h_map_ℚ_minpoly]
@@ -128,7 +130,8 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     
   · exact fun a _ => ⟨hxi.pow a, fun φ => by simp only [hx φ, norm_pow, one_pow, map_pow]⟩
     
-#align number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
+#align
+  number_field.embeddings.pow_eq_one_of_norm_eq_one NumberField.Embeddings.pow_eq_one_of_norm_eq_one
 
 end Bounded
 

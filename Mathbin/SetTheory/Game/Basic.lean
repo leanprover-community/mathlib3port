@@ -50,7 +50,9 @@ instance : AddCommGroupWithOne Game where
   zero := ⟦0⟧
   one := ⟦1⟧
   neg := Quot.lift (fun x => ⟦-x⟧) fun x y h => Quot.sound ((@neg_equiv_neg_iff x y).2 h)
-  add := Quotient.lift₂ (fun x y : Pgame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
+  add :=
+    Quotient.lift₂ (fun x y : Pgame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy =>
+      Quot.sound (Pgame.add_congr hx hy)
   add_zero := by
     rintro ⟨x⟩
     exact Quot.sound (add_zero_equiv x)
@@ -122,21 +124,21 @@ instance : IsTrichotomous Game (· ⧏ ·) :=
 the `add_comm_group` structure on `game` often simplifies many proofs. -/
 
 
-theorem _root_.pgame.le_iff_game_le {x y : Pgame} : x ≤ y ↔ ⟦x⟧ ≤ ⟦y⟧ :=
+theorem Pgame.le_iff_game_le {x y : Pgame} : x ≤ y ↔ ⟦x⟧ ≤ ⟦y⟧ :=
   Iff.rfl
-#align game._root_.pgame.le_iff_game_le game._root_.pgame.le_iff_game_le
+#align pgame.le_iff_game_le Pgame.le_iff_game_le
 
-theorem _root_.pgame.lf_iff_game_lf {x y : Pgame} : Pgame.Lf x y ↔ ⟦x⟧ ⧏ ⟦y⟧ :=
+theorem Pgame.lf_iff_game_lf {x y : Pgame} : Pgame.Lf x y ↔ ⟦x⟧ ⧏ ⟦y⟧ :=
   Iff.rfl
-#align game._root_.pgame.lf_iff_game_lf game._root_.pgame.lf_iff_game_lf
+#align pgame.lf_iff_game_lf Pgame.lf_iff_game_lf
 
-theorem _root_.pgame.lt_iff_game_lt {x y : Pgame} : x < y ↔ ⟦x⟧ < ⟦y⟧ :=
+theorem Pgame.lt_iff_game_lt {x y : Pgame} : x < y ↔ ⟦x⟧ < ⟦y⟧ :=
   Iff.rfl
-#align game._root_.pgame.lt_iff_game_lt game._root_.pgame.lt_iff_game_lt
+#align pgame.lt_iff_game_lt Pgame.lt_iff_game_lt
 
-theorem _root_.pgame.equiv_iff_game_eq {x y : Pgame} : (x ≈ y) ↔ ⟦x⟧ = ⟦y⟧ :=
+theorem Pgame.equiv_iff_game_eq {x y : Pgame} : (x ≈ y) ↔ ⟦x⟧ = ⟦y⟧ :=
   (@Quotient.eq _ _ x y).symm
-#align game._root_.pgame.equiv_iff_game_eq game._root_.pgame.equiv_iff_game_eq
+#align pgame.equiv_iff_game_eq Pgame.equiv_iff_game_eq
 
 /-- The fuzzy, confused, or incomparable relation on games.
 
@@ -148,9 +150,9 @@ def Fuzzy : Game → Game → Prop :=
 -- mathport name: «expr ‖ »
 local infixl:50 " ‖ " => Fuzzy
 
-theorem _root_.pgame.fuzzy_iff_game_fuzzy {x y : Pgame} : Pgame.Fuzzy x y ↔ ⟦x⟧ ‖ ⟦y⟧ :=
+theorem Pgame.fuzzy_iff_game_fuzzy {x y : Pgame} : Pgame.Fuzzy x y ↔ ⟦x⟧ ‖ ⟦y⟧ :=
   Iff.rfl
-#align game._root_.pgame.fuzzy_iff_game_fuzzy game._root_.pgame.fuzzy_iff_game_fuzzy
+#align pgame.fuzzy_iff_game_fuzzy Pgame.fuzzy_iff_game_fuzzy
 
 instance covariant_class_add_le : CovariantClass Game Game (· + ·) (· ≤ ·) :=
   ⟨by
@@ -210,8 +212,9 @@ theorem quot_sub (a b : Pgame) : ⟦a - b⟧ = ⟦a⟧ - ⟦b⟧ :=
   rfl
 #align pgame.quot_sub Pgame.quot_sub
 
-theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
-    (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧) (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ := by
+theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves)
+    (R : x.RightMoves ≃ y.RightMoves) (hl : ∀ i, ⟦x.moveLeft i⟧ = ⟦y.moveLeft (L i)⟧)
+    (hr : ∀ j, ⟦x.moveRight j⟧ = ⟦y.moveRight (R j)⟧) : ⟦x⟧ = ⟦y⟧ := by
   simp_rw [Quotient.eq] at hl hr
   exact Quot.sound (equiv_of_mk_equiv L R hl hr)
 #align pgame.quot_eq_of_mk_quot_eq Pgame.quot_eq_of_mk_quot_eq
@@ -239,12 +242,14 @@ instance : Mul Pgame.{u} :=
       ⟩
 
 theorem left_moves_mul :
-    ∀ x y : Pgame.{u}, (x * y).LeftMoves = Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves)
+    ∀ x y : Pgame.{u},
+      (x * y).LeftMoves = Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves)
   | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩ => rfl
 #align pgame.left_moves_mul Pgame.left_moves_mul
 
 theorem right_moves_mul :
-    ∀ x y : Pgame.{u}, (x * y).RightMoves = Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves)
+    ∀ x y : Pgame.{u},
+      (x * y).RightMoves = Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves)
   | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩ => rfl
 #align pgame.right_moves_mul Pgame.right_moves_mul
 
@@ -252,7 +257,8 @@ theorem right_moves_mul :
 
 Even though these types are the same (not definitionally so), this is the preferred way to convert
 between them. -/
-def toLeftMovesMul {x y : Pgame} : Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) ≃ (x * y).LeftMoves :=
+def toLeftMovesMul {x y : Pgame} :
+    Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) ≃ (x * y).LeftMoves :=
   Equiv.cast (left_moves_mul x y).symm
 #align pgame.to_left_moves_mul Pgame.toLeftMovesMul
 
@@ -362,8 +368,8 @@ theorem neg_mk_mul_move_right_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 #align pgame.neg_mk_mul_move_right_inr Pgame.neg_mk_mul_move_right_inr
 
 theorem left_moves_mul_cases {x y : Pgame} (k) {P : (x * y).LeftMoves → Prop}
-    (hl : ∀ ix iy, P <| toLeftMovesMul (Sum.inl ⟨ix, iy⟩)) (hr : ∀ jx jy, P <| toLeftMovesMul (Sum.inr ⟨jx, jy⟩)) :
-    P k := by
+    (hl : ∀ ix iy, P <| toLeftMovesMul (Sum.inl ⟨ix, iy⟩))
+    (hr : ∀ jx jy, P <| toLeftMovesMul (Sum.inr ⟨jx, jy⟩)) : P k := by
   rw [← to_left_moves_mul.apply_symm_apply k]
   rcases to_left_moves_mul.symm k with (⟨ix, iy⟩ | ⟨jx, jy⟩)
   · apply hl
@@ -373,8 +379,8 @@ theorem left_moves_mul_cases {x y : Pgame} (k) {P : (x * y).LeftMoves → Prop}
 #align pgame.left_moves_mul_cases Pgame.left_moves_mul_cases
 
 theorem right_moves_mul_cases {x y : Pgame} (k) {P : (x * y).RightMoves → Prop}
-    (hl : ∀ ix jy, P <| toRightMovesMul (Sum.inl ⟨ix, jy⟩)) (hr : ∀ jx iy, P <| toRightMovesMul (Sum.inr ⟨jx, iy⟩)) :
-    P k := by
+    (hl : ∀ ix jy, P <| toRightMovesMul (Sum.inl ⟨ix, jy⟩))
+    (hr : ∀ jx iy, P <| toRightMovesMul (Sum.inr ⟨jx, iy⟩)) : P k := by
   rw [← to_right_moves_mul.apply_symm_apply k]
   rcases to_right_moves_mul.symm k with (⟨ix, iy⟩ | ⟨jx, jy⟩)
   · apply hl
@@ -387,14 +393,15 @@ theorem right_moves_mul_cases {x y : Pgame} (k) {P : (x * y).RightMoves → Prop
 def mulCommRelabelling : ∀ x y : Pgame.{u}, x * y ≡r y * x
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
     refine'
-        ⟨Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _),
-          (Equiv.sumComm _ _).trans (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _)), _, _⟩ <;>
-      rintro (⟨i, j⟩ | ⟨i, j⟩) <;>
+            ⟨Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _),
+              (Equiv.sumComm _ _).trans (Equiv.sumCongr (Equiv.prodComm _ _) (Equiv.prodComm _ _)),
+              _, _⟩ <;>
+          rintro (⟨i, j⟩ | ⟨i, j⟩) <;>
         dsimp <;>
-          exact
-            ((add_comm_relabelling _ _).trans <|
-                  (mul_comm_relabelling _ _).addCongr (mul_comm_relabelling _ _)).subCongr
-              (mul_comm_relabelling _ _)decreasing_by
+      exact
+        ((add_comm_relabelling _ _).trans <|
+              (mul_comm_relabelling _ _).addCongr (mul_comm_relabelling _ _)).subCongr
+          (mul_comm_relabelling _ _)decreasing_by
   pgame_wf_tac
 #align pgame.mul_comm_relabelling Pgame.mulCommRelabelling
 
@@ -460,12 +467,10 @@ theorem quot_zero_mul (x : Pgame) : ⟦0 * x⟧ = ⟦0⟧ :=
 /-- `-x * y` and `-(x * y)` have the same moves. -/
 def negMulRelabelling : ∀ x y : Pgame.{u}, -x * y ≡r -(x * y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
-    refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;>
-      rintro (⟨i, j⟩ | ⟨i, j⟩) <;>
-        dsimp <;>
+    refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;> rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp <;>
           apply ((neg_add_relabelling _ _).trans _).symm <;>
-            apply ((neg_add_relabelling _ _).trans (relabelling.add_congr _ _)).subCongr <;>
-              exact (neg_mul_relabelling _ _).symm decreasing_by
+        apply ((neg_add_relabelling _ _).trans (relabelling.add_congr _ _)).subCongr <;>
+      exact (neg_mul_relabelling _ _).symm decreasing_by
   pgame_wf_tac
 #align pgame.neg_mul_relabelling Pgame.negMulRelabelling
 
@@ -492,7 +497,8 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
     let z := mk zl zr zL zR
     refine' quot_eq_of_mk_quot_eq _ _ _ _
     · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
+          solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
           solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
@@ -503,7 +509,8 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
         
       
     · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
+      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
+          solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
         
       · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
           solve_by_elim (config := { max_depth := 5 }) [Sum.inl, Sum.inr, Prod.mk]
@@ -514,37 +521,53 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
         
       
     · rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
-      · change ⟦xL i * (y + z) + x * (yL j + z) - xL i * (yL j + z)⟧ = ⟦xL i * y + x * yL j - xL i * yL j + x * z⟧
+      · change
+          ⟦xL i * (y + z) + x * (yL j + z) - xL i * (yL j + z)⟧ =
+            ⟦xL i * y + x * yL j - xL i * yL j + x * z⟧
         simp [quot_left_distrib]
         abel
         
-      · change ⟦xL i * (y + z) + x * (y + zL k) - xL i * (y + zL k)⟧ = ⟦x * y + (xL i * z + x * zL k - xL i * zL k)⟧
+      · change
+          ⟦xL i * (y + z) + x * (y + zL k) - xL i * (y + zL k)⟧ =
+            ⟦x * y + (xL i * z + x * zL k - xL i * zL k)⟧
         simp [quot_left_distrib]
         abel
         
-      · change ⟦xR i * (y + z) + x * (yR j + z) - xR i * (yR j + z)⟧ = ⟦xR i * y + x * yR j - xR i * yR j + x * z⟧
+      · change
+          ⟦xR i * (y + z) + x * (yR j + z) - xR i * (yR j + z)⟧ =
+            ⟦xR i * y + x * yR j - xR i * yR j + x * z⟧
         simp [quot_left_distrib]
         abel
         
-      · change ⟦xR i * (y + z) + x * (y + zR k) - xR i * (y + zR k)⟧ = ⟦x * y + (xR i * z + x * zR k - xR i * zR k)⟧
+      · change
+          ⟦xR i * (y + z) + x * (y + zR k) - xR i * (y + zR k)⟧ =
+            ⟦x * y + (xR i * z + x * zR k - xR i * zR k)⟧
         simp [quot_left_distrib]
         abel
         
       
     · rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
-      · change ⟦xL i * (y + z) + x * (yR j + z) - xL i * (yR j + z)⟧ = ⟦xL i * y + x * yR j - xL i * yR j + x * z⟧
+      · change
+          ⟦xL i * (y + z) + x * (yR j + z) - xL i * (yR j + z)⟧ =
+            ⟦xL i * y + x * yR j - xL i * yR j + x * z⟧
         simp [quot_left_distrib]
         abel
         
-      · change ⟦xL i * (y + z) + x * (y + zR k) - xL i * (y + zR k)⟧ = ⟦x * y + (xL i * z + x * zR k - xL i * zR k)⟧
+      · change
+          ⟦xL i * (y + z) + x * (y + zR k) - xL i * (y + zR k)⟧ =
+            ⟦x * y + (xL i * z + x * zR k - xL i * zR k)⟧
         simp [quot_left_distrib]
         abel
         
-      · change ⟦xR i * (y + z) + x * (yL j + z) - xR i * (yL j + z)⟧ = ⟦xR i * y + x * yL j - xR i * yL j + x * z⟧
+      · change
+          ⟦xR i * (y + z) + x * (yL j + z) - xR i * (yL j + z)⟧ =
+            ⟦xR i * y + x * yL j - xR i * yL j + x * z⟧
         simp [quot_left_distrib]
         abel
         
-      · change ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ = ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
+      · change
+          ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ =
+            ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
         simp [quot_left_distrib]
         abel
         
@@ -583,15 +606,18 @@ theorem quot_right_distrib_sub (x y z : Pgame) : ⟦(y - z) * x⟧ = ⟦y * x⟧
 def mulOneRelabelling : ∀ x : Pgame.{u}, x * 1 ≡r x
   | ⟨xl, xr, xL, xR⟩ => by
     unfold One.one
-    refine' ⟨(Equiv.sumEmpty _ _).trans (Equiv.prodPunit _), (Equiv.emptySum _ _).trans (Equiv.prodPunit _), _, _⟩ <;>
-      try rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩) <;>
-        try intro i <;>
-          dsimp <;>
-            apply (relabelling.sub_congr (relabelling.refl _) (mul_zero_relabelling _)).trans <;>
-              rw [sub_zero] <;>
-                exact
-                  (add_zero_relabelling _).trans
-                    (((mul_one_relabelling _).addCongr (mul_zero_relabelling _)).trans <| add_zero_relabelling _)
+    refine'
+                  ⟨(Equiv.sumEmpty _ _).trans (Equiv.prodPUnit _),
+                    (Equiv.emptySum _ _).trans (Equiv.prodPUnit _), _, _⟩ <;>
+                try rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩) <;>
+              try intro i <;>
+            dsimp <;>
+          apply (relabelling.sub_congr (relabelling.refl _) (mul_zero_relabelling _)).trans <;>
+        rw [sub_zero] <;>
+      exact
+        (add_zero_relabelling _).trans
+          (((mul_one_relabelling _).addCongr (mul_zero_relabelling _)).trans <|
+            add_zero_relabelling _)
 #align pgame.mul_one_relabelling Pgame.mulOneRelabelling
 
 @[simp]
@@ -651,52 +677,68 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
       
     · rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
       · change
-          ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zL k - (xL i * y + x * yL j - xL i * yL j) * zL k⟧ =
-            ⟦xL i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) - xL i * (yL j * z + y * zL k - yL j * zL k)⟧
+          ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zL k -
+                (xL i * y + x * yL j - xL i * yL j) * zL k⟧ =
+            ⟦xL i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
+                xL i * (yL j * z + y * zL k - yL j * zL k)⟧
         simp [quot_mul_assoc]
         abel
         
       · change
-          ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zL k - (xR i * y + x * yR j - xR i * yR j) * zL k⟧ =
-            ⟦xR i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) - xR i * (yR j * z + y * zL k - yR j * zL k)⟧
+          ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zL k -
+                (xR i * y + x * yR j - xR i * yR j) * zL k⟧ =
+            ⟦xR i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
+                xR i * (yR j * z + y * zL k - yR j * zL k)⟧
         simp [quot_mul_assoc]
         abel
         
       · change
-          ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zR k - (xL i * y + x * yR j - xL i * yR j) * zR k⟧ =
-            ⟦xL i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) - xL i * (yR j * z + y * zR k - yR j * zR k)⟧
+          ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zR k -
+                (xL i * y + x * yR j - xL i * yR j) * zR k⟧ =
+            ⟦xL i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
+                xL i * (yR j * z + y * zR k - yR j * zR k)⟧
         simp [quot_mul_assoc]
         abel
         
       · change
-          ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zR k - (xR i * y + x * yL j - xR i * yL j) * zR k⟧ =
-            ⟦xR i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) - xR i * (yL j * z + y * zR k - yL j * zR k)⟧
+          ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zR k -
+                (xR i * y + x * yL j - xR i * yL j) * zR k⟧ =
+            ⟦xR i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
+                xR i * (yL j * z + y * zR k - yL j * zR k)⟧
         simp [quot_mul_assoc]
         abel
         
       
     · rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
       · change
-          ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zR k - (xL i * y + x * yL j - xL i * yL j) * zR k⟧ =
-            ⟦xL i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) - xL i * (yL j * z + y * zR k - yL j * zR k)⟧
+          ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zR k -
+                (xL i * y + x * yL j - xL i * yL j) * zR k⟧ =
+            ⟦xL i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
+                xL i * (yL j * z + y * zR k - yL j * zR k)⟧
         simp [quot_mul_assoc]
         abel
         
       · change
-          ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zR k - (xR i * y + x * yR j - xR i * yR j) * zR k⟧ =
-            ⟦xR i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) - xR i * (yR j * z + y * zR k - yR j * zR k)⟧
+          ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zR k -
+                (xR i * y + x * yR j - xR i * yR j) * zR k⟧ =
+            ⟦xR i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
+                xR i * (yR j * z + y * zR k - yR j * zR k)⟧
         simp [quot_mul_assoc]
         abel
         
       · change
-          ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zL k - (xL i * y + x * yR j - xL i * yR j) * zL k⟧ =
-            ⟦xL i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) - xL i * (yR j * z + y * zL k - yR j * zL k)⟧
+          ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zL k -
+                (xL i * y + x * yR j - xL i * yR j) * zL k⟧ =
+            ⟦xL i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
+                xL i * (yR j * z + y * zL k - yR j * zL k)⟧
         simp [quot_mul_assoc]
         abel
         
       · change
-          ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zL k - (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
-            ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) - xR i * (yL j * z + y * zL k - yL j * zL k)⟧
+          ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zL k -
+                (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
+            ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
+                xR i * (yL j * z + y * zL k - yL j * zL k)⟧
         simp [quot_mul_assoc]
         abel
         
@@ -737,7 +779,8 @@ instance uniqueInvTy (l r : Type u) [IsEmpty l] [IsEmpty r] : Unique (InvTy l r 
 /-- Because the two halves of the definition of `inv` produce more elements
 of each side, we have to define the two families inductively.
 This is the function part, defined by recursion on `inv_ty`. -/
-def invVal {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : r → Pgame) : ∀ {b}, InvTy l r b → Pgame
+def invVal {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : r → Pgame) :
+    ∀ {b}, InvTy l r b → Pgame
   | _, inv_ty.zero => 0
   | _, inv_ty.left₁ i j => (1 + (R i - mk l r L R) * inv_val j) * IHr i
   | _, inv_ty.left₂ i j => (1 + (L i - mk l r L R) * inv_val j) * IHl i
@@ -746,8 +789,8 @@ def invVal {l r} (L : l → Pgame) (R : r → Pgame) (IHl : l → Pgame) (IHr : 
 #align pgame.inv_val Pgame.invVal
 
 @[simp]
-theorem inv_val_is_empty {l r : Type u} {b} (L R IHl IHr) (i : InvTy l r b) [IsEmpty l] [IsEmpty r] :
-    invVal L R IHl IHr i = 0 := by
+theorem inv_val_is_empty {l r : Type u} {b} (L R IHl IHr) (i : InvTy l r b) [IsEmpty l]
+    [IsEmpty r] : invVal L R IHl IHr i = 0 := by
   cases' i with a _ a _ a _ a
   · rfl
     

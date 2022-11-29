@@ -45,29 +45,25 @@ section cast
 
 /- warning: int.cast_mul -> Int.cast_mul is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_3}} [_inst_1 : NonAssocRing.{u_3} α] (m : Int) (n : Int), Eq.{succ u_3} α ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1 succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1 succ u_3} Int α (CoeTCₓ.coe.{1 succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) (HMul.hMul.{u_3 u_3 u_3} α α α (instHMul.{u_3} α (Distrib.toHasMul.{u_3} α (NonUnitalNonAssocSemiring.toDistrib.{u_3} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u_3} α (NonAssocRing.toNonUnitalNonAssocRing.{u_3} α _inst_1))))) ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1 succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1 succ u_3} Int α (CoeTCₓ.coe.{1 succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) m) ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1 succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1 succ u_3} Int α (CoeTCₓ.coe.{1 succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) n))
+  forall {α : Type.{u_3}} [_inst_1 : NonAssocRing.{u_3} α] (m : Int) (n : Int), Eq.{succ u_3} α ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1, succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1, succ u_3} Int α (CoeTCₓ.coe.{1, succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) (HMul.hMul.{u_3, u_3, u_3} α α α (instHMul.{u_3} α (Distrib.toHasMul.{u_3} α (NonUnitalNonAssocSemiring.toDistrib.{u_3} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u_3} α (NonAssocRing.toNonUnitalNonAssocRing.{u_3} α _inst_1))))) ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1, succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1, succ u_3} Int α (CoeTCₓ.coe.{1, succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) m) ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1, succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1, succ u_3} Int α (CoeTCₓ.coe.{1, succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Int.Cast._hyg.8 : Ring.{u_1} α] (m : Int) (n : Int), Eq.{succ u_1} α (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (NonUnitalNonAssocRing.toMul.{u_1} α (NonAssocRing.toNonUnitalNonAssocRing.{u_1} α (Ring.toNonAssocRing.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8)))) (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) m) (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Int.Cast._hyg.8 : Ring.{u_1} α] (m : Int) (n : Int), Eq.{succ u_1} α (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) (HMul.hMul.{u_1, u_1, u_1} α α α (instHMul.{u_1} α (NonUnitalNonAssocRing.toMul.{u_1} α (NonAssocRing.toNonUnitalNonAssocRing.{u_1} α (Ring.toNonAssocRing.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8)))) (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) m) (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) n))
 Case conversion may be inaccurate. Consider using '#align int.cast_mul Int.cast_mulₓ'. -/
+@[simp, norm_cast]
 theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m =>
-  Int.inductionOn' m 0 (by simp [cast_zero]) (fun k _ ih n => by simp [add_mul, ih, cast_add, cast_one]) fun k _ ih n =>
-    by simp [sub_mul, ih, cast_sub, cast_one]
+  Int.inductionOn' m 0 (by simp) (fun k _ ih n => by simp [add_mul, ih]) fun k _ ih n => by
+    simp [sub_mul, ih]
 #align int.cast_mul Int.cast_mul
 
 @[simp, norm_cast]
-theorem cast_ite [AddGroupWithOne α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
+theorem cast_ite [AddGroupWithOne α] (P : Prop) [Decidable P] (m n : ℤ) :
+    ((ite P m n : ℤ) : α) = ite P m n :=
   apply_ite _ _ _ _
 #align int.cast_ite Int.cast_ite
 
-instance (α : Type _) [AddGroupWithOne α] : CoeIsAddMonoidHom ℤ α where
-  coe_zero := cast_zero
-  coe_add := cast_add
-
-instance (α : Type _) [AddGroupWithOne α] : CoeIsOneHom ℤ α where coe_one := cast_one
-
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
 def castAddHom (α : Type _) [AddGroupWithOne α] : ℤ →+ α :=
-  AddMonoidHom.coe ℤ α
+  ⟨coe, cast_zero, cast_add⟩
 #align int.cast_add_hom Int.castAddHom
 
 @[simp]
@@ -75,12 +71,9 @@ theorem coe_cast_add_hom [AddGroupWithOne α] : ⇑(castAddHom α) = coe :=
   rfl
 #align int.coe_cast_add_hom Int.coe_cast_add_hom
 
-instance (α : Type _) [NonAssocRing α] : CoeIsRingHom ℤ α :=
-  { Int.coe_is_one_hom α, Int.coeIsAddMonoidHom α with coe_mul := cast_mul }
-
 /-- `coe : ℤ → α` as a `ring_hom`. -/
 def castRingHom (α : Type _) [NonAssocRing α] : ℤ →+* α :=
-  RingHom.coe ℤ α
+  ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
 #align int.cast_ring_hom Int.castRingHom
 
 @[simp]
@@ -91,7 +84,8 @@ theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
 theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
   | (n : ℕ), x => by simpa using n.cast_commute x
   | -[n+1], x => by
-    simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using (n + 1).cast_commute (-x)
+    simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using
+      (n + 1).cast_commute (-x)
 #align int.cast_commute Int.cast_commute
 
 theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
@@ -133,15 +127,18 @@ theorem cast_lt [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) < n ↔ 
 #align int.cast_lt Int.cast_lt
 
 @[simp]
-theorem cast_nonpos [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) ≤ 0 ↔ n ≤ 0 := by rw [← cast_zero, cast_le]
+theorem cast_nonpos [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) ≤ 0 ↔ n ≤ 0 := by
+  rw [← cast_zero, cast_le]
 #align int.cast_nonpos Int.cast_nonpos
 
 @[simp]
-theorem cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : (0 : α) < n ↔ 0 < n := by rw [← cast_zero, cast_lt]
+theorem cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : (0 : α) < n ↔ 0 < n := by
+  rw [← cast_zero, cast_lt]
 #align int.cast_pos Int.cast_pos
 
 @[simp]
-theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 ↔ n < 0 := by rw [← cast_zero, cast_lt]
+theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 ↔ n < 0 := by
+  rw [← cast_zero, cast_lt]
 #align int.cast_lt_zero Int.cast_lt_zero
 
 section LinearOrderedRing
@@ -236,7 +233,8 @@ theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :
 
 end AddMonoidHom
 
-theorem eq_int_cast' [AddGroupWithOne α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) : ∀ n : ℤ, f n = n :=
+theorem eq_int_cast' [AddGroupWithOne α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) :
+    ∀ n : ℤ, f n = n :=
   AddMonoidHom.ext_iff.1 <| (f : ℤ →+ α).eq_int_cast_hom h₁
 #align eq_int_cast' eq_int_cast'
 
@@ -278,19 +276,22 @@ variable {M : Type _} [MonoidWithZero M]
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the naturals then they are equal. -/
 @[ext.1]
 theorem ext_int {f g : ℤ →*₀ M} (h_neg_one : f (-1) = g (-1))
-    (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) : f = g :=
+    (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) :
+    f = g :=
   to_monoid_hom_injective <| MonoidHom.ext_int h_neg_one <| MonoidHom.ext (congr_fun h_nat : _)
 #align monoid_with_zero_hom.ext_int MonoidWithZeroHom.ext_int
 
 end MonoidWithZeroHom
 
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
-theorem ext_int' [MonoidWithZero α] [MonoidWithZeroHomClass F ℤ α] {f g : F} (h_neg_one : f (-1) = g (-1))
-    (h_pos : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
+theorem ext_int' [MonoidWithZero α] [MonoidWithZeroHomClass F ℤ α] {f g : F}
+    (h_neg_one : f (-1) = g (-1)) (h_pos : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
   (FunLike.ext _ _) fun n =>
     haveI :=
       FunLike.congr_fun
-        (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <| MonoidWithZeroHom.ext_nat h_pos) n
+        (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <|
+          MonoidWithZeroHom.ext_nat h_pos)
+        n
     this
 #align ext_int' ext_int'
 
@@ -328,7 +329,7 @@ end NonAssocRing
 
 /- warning: int.cast_id -> Int.cast_id is a dubious translation:
 lean 3 declaration is
-  forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Int Int (HasLiftT.mk.{1 1} Int Int (CoeTCₓ.coe.{1 1} Int Int (Int.castCoe.{0} Int (AddGroupWithOne.toHasIntCast.{0} Int (NonAssocRing.toAddGroupWithOne.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))))) n) n
+  forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Int Int (HasLiftT.mk.{1, 1} Int Int (CoeTCₓ.coe.{1, 1} Int Int (Int.castCoe.{0} Int (AddGroupWithOne.toHasIntCast.{0} Int (NonAssocRing.toAddGroupWithOne.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))))) n) n
 but is expected to have type
   forall {n : Int}, Eq.{1} Int (Int.cast.{0} Int (Ring.toIntCast.{0} Int (CommRing.toRing.{0} Int Int.instCommRingInt)) n) n
 Case conversion may be inaccurate. Consider using '#align int.cast_id Int.cast_idₓ'. -/
@@ -359,7 +360,8 @@ theorem coe_int (n : ℤ) : (n : ∀ i, π i) = fun _ => n :=
 
 end Pi
 
-theorem Sum.elim_int_cast_int_cast {α β γ : Type _} [IntCast γ] (n : ℤ) : Sum.elim (n : α → γ) (n : β → γ) = n :=
+theorem Sum.elim_int_cast_int_cast {α β γ : Type _} [IntCast γ] (n : ℤ) :
+    Sum.elim (n : α → γ) (n : β → γ) = n :=
   @Sum.elim_lam_const_lam_const α β γ n
 #align sum.elim_int_cast_int_cast Sum.elim_int_cast_int_cast
 

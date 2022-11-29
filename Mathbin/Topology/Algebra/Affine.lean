@@ -51,7 +51,8 @@ theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linea
 @[continuity]
 theorem line_map_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : F} :
     Continuous ⇑(lineMap p v : R →ᵃ[R] F) :=
-  continuous_iff.mpr <| (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)
+  continuous_iff.mpr <|
+    (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)
 #align affine_map.line_map_continuous AffineMap.line_map_continuous
 
 end Ring
@@ -76,8 +77,8 @@ section Field
 variable [Field R] [Module R F] [HasContinuousConstSmul R F]
 
 theorem homothety_is_open_map (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap <| homothety x t := by
-  apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;>
-    intro e <;> simp [← AffineMap.comp_apply, ← homothety_mul, ht]
+  apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;> intro e <;>
+    simp [← AffineMap.comp_apply, ← homothety_mul, ht]
 #align affine_map.homothety_is_open_map AffineMap.homothety_is_open_map
 
 end Field

@@ -97,7 +97,9 @@ variable [Preadditive 𝒜]
 
 Such a sequence is automatically short exact (i.e., `f` is mono and `g` is epi). -/
 structure Split : Prop where
-  split : ∃ (φ : B ⟶ A)(χ : C ⟶ B), f ≫ φ = 𝟙 A ∧ χ ≫ g = 𝟙 C ∧ f ≫ g = 0 ∧ χ ≫ φ = 0 ∧ φ ≫ f + g ≫ χ = 𝟙 B
+  split :
+    ∃ (φ : B ⟶ A)(χ : C ⟶ B),
+      f ≫ φ = 𝟙 A ∧ χ ≫ g = 𝟙 C ∧ f ≫ g = 0 ∧ χ ≫ φ = 0 ∧ φ ≫ f + g ≫ χ = 𝟙 B
 #align category_theory.split CategoryTheory.Split
 
 variable [HasKernels 𝒜] [HasImages 𝒜]
@@ -106,7 +108,8 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
     (H : φ ≫ f + g ≫ χ = 𝟙 B) : Exact f g :=
   { w := hfg,
     Epi := by
-      let ψ : (kernel_subobject g : 𝒜) ⟶ image_subobject f := subobject.arrow _ ≫ φ ≫ factor_thru_image_subobject f
+      let ψ : (kernel_subobject g : 𝒜) ⟶ image_subobject f :=
+        subobject.arrow _ ≫ φ ≫ factor_thru_image_subobject f
       suffices ψ ≫ imageToKernel f g hfg = 𝟙 _ by
         convert epi_of_epi ψ _
         rw [this]
@@ -115,7 +118,8 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       swap
       · infer_instance
         
-      simp only [image_to_kernel_arrow, image_subobject_arrow_comp, category.id_comp, category.assoc]
+      simp only [image_to_kernel_arrow, image_subobject_arrow_comp, category.id_comp,
+        category.assoc]
       calc
         (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _
         _ = (kernel_subobject g).arrow := category.comp_id _
@@ -165,20 +169,23 @@ theorem Split.short_exact (h : Split f g) : ShortExact f g :=
 
 end
 
-theorem Split.map {𝒜 ℬ : Type _} [Category 𝒜] [Preadditive 𝒜] [Category ℬ] [Preadditive ℬ] (F : 𝒜 ⥤ ℬ)
-    [Functor.Additive F] {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} (h : Split f g) : Split (F.map f) (F.map g) := by
+theorem Split.map {𝒜 ℬ : Type _} [Category 𝒜] [Preadditive 𝒜] [Category ℬ] [Preadditive ℬ]
+    (F : 𝒜 ⥤ ℬ) [Functor.Additive F] {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} (h : Split f g) :
+    Split (F.map f) (F.map g) := by
   obtain ⟨φ, χ, h1, h2, h3, h4, h5⟩ := h
   refine' ⟨⟨F.map φ, F.map χ, _⟩⟩
   simp only [← F.map_comp, ← F.map_id, ← F.map_add, F.map_zero, *, eq_self_iff_true, and_true_iff]
 #align category_theory.split.map CategoryTheory.Split.map
 
 /-- The sequence `A ⟶ A ⊞ B ⟶ B` is exact. -/
-theorem exact_inl_snd [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inl : A ⟶ A ⊞ B) biprod.snd :=
+theorem exact_inl_snd [HasBinaryBiproducts 𝒜] (A B : 𝒜) :
+    Exact (biprod.inl : A ⟶ A ⊞ B) biprod.snd :=
   exact_of_split biprod.inl_snd biprod.total
 #align category_theory.exact_inl_snd CategoryTheory.exact_inl_snd
 
 /-- The sequence `B ⟶ A ⊞ B ⟶ A` is exact. -/
-theorem exact_inr_fst [HasBinaryBiproducts 𝒜] (A B : 𝒜) : Exact (biprod.inr : B ⟶ A ⊞ B) biprod.fst :=
+theorem exact_inr_fst [HasBinaryBiproducts 𝒜] (A B : 𝒜) :
+    Exact (biprod.inr : B ⟶ A ⊞ B) biprod.fst :=
   exact_of_split biprod.inr_fst ((add_comm _ _).trans biprod.total)
 #align category_theory.exact_inr_fst CategoryTheory.exact_inr_fst
 
@@ -216,10 +223,9 @@ theorem iso_comp_eq_snd : h.Iso.inv ≫ g = biprod.snd := by rw [iso.inv_comp_eq
 
 /-- If `h` is a splitting of `A -f⟶ B -g⟶ C`,
 then `h.section : C ⟶ B` is the morphism satisfying `h.section ≫ g = 𝟙 C`. -/
-def _root_.category_theory.splitting.section : C ⟶ B :=
+def CategoryTheory.Splitting.section : C ⟶ B :=
   biprod.inr ≫ h.Iso.inv
-#align
-  category_theory.splitting._root_.category_theory.splitting.section category_theory.splitting._root_.category_theory.splitting.section
+#align category_theory.splitting.section CategoryTheory.Splitting.section
 
 /-- If `h` is a splitting of `A -f⟶ B -g⟶ C`,
 then `h.retraction : B ⟶ A` is the morphism satisfying `f ≫ h.retraction = 𝟙 A`. -/
@@ -267,9 +273,11 @@ theorem iso_hom_fst : h.Iso.Hom ≫ biprod.fst = h.retraction :=
 
 /-- A short exact sequence of the form `X -f⟶ Y -0⟶ Z` where `f` is an iso and `Z` is zero
 has a splitting. -/
-def splittingOfIsIsoZero {X Y Z : 𝒜} (f : X ⟶ Y) [IsIso f] (hZ : IsZero Z) : Splitting f (0 : Y ⟶ Z) :=
+def splittingOfIsIsoZero {X Y Z : 𝒜} (f : X ⟶ Y) [IsIso f] (hZ : IsZero Z) :
+    Splitting f (0 : Y ⟶ Z) :=
   ⟨(asIso f).symm ≪≫ isoBiprodZero hZ, by simp [hZ.eq_of_tgt _ 0], by simp⟩
-#align category_theory.splitting.splitting_of_is_iso_zero CategoryTheory.Splitting.splittingOfIsIsoZero
+#align
+  category_theory.splitting.splitting_of_is_iso_zero CategoryTheory.Splitting.splittingOfIsIsoZero
 
 include h
 
@@ -304,22 +312,24 @@ variable (h : Splitting f g)
 theorem split_add : h.retraction ≫ f + g ≫ h.section = 𝟙 _ := by
   delta splitting.section retraction
   rw [← cancel_mono h.iso.hom, ← cancel_epi h.iso.inv]
-  simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_assoc, iso.inv_hom_id,
-    limits.biprod.total, preadditive.comp_add, preadditive.add_comp, splitting.comp_iso_eq_inl,
-    splitting.iso_comp_eq_snd_assoc]
+  simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_assoc,
+    iso.inv_hom_id, limits.biprod.total, preadditive.comp_add, preadditive.add_comp,
+    splitting.comp_iso_eq_inl, splitting.iso_comp_eq_snd_assoc]
 #align category_theory.splitting.split_add CategoryTheory.Splitting.split_add
 
 @[reassoc]
 theorem retraction_ι_eq_id_sub : h.retraction ≫ f = 𝟙 _ - g ≫ h.section :=
   eq_sub_iff_add_eq.mpr h.split_add
-#align category_theory.splitting.retraction_ι_eq_id_sub CategoryTheory.Splitting.retraction_ι_eq_id_sub
+#align
+  category_theory.splitting.retraction_ι_eq_id_sub CategoryTheory.Splitting.retraction_ι_eq_id_sub
 
 @[reassoc]
 theorem π_section_eq_id_sub : g ≫ h.section = 𝟙 _ - h.retraction ≫ f :=
   eq_sub_iff_add_eq.mpr ((add_comm _ _).trans h.split_add)
 #align category_theory.splitting.π_section_eq_id_sub CategoryTheory.Splitting.π_section_eq_id_sub
 
-theorem splittings_comm (h h' : Splitting f g) : h'.section ≫ h.retraction = -h.section ≫ h'.retraction := by
+theorem splittings_comm (h h' : Splitting f g) :
+    h'.section ≫ h.retraction = -h.section ≫ h'.retraction := by
   haveI := h.mono
   rw [← cancel_mono f]
   simp [retraction_ι_eq_id_sub]
@@ -330,7 +340,8 @@ include h
 theorem split : Split f g := by
   let φ := h.iso.hom ≫ biprod.fst
   let χ := biprod.inr ≫ h.iso.inv
-  refine' ⟨⟨h.retraction, h.section, h.ι_retraction, h.section_π, _, h.section_retraction, h.split_add⟩⟩
+  refine'
+    ⟨⟨h.retraction, h.section, h.ι_retraction, h.section_π, _, h.section_retraction, h.split_add⟩⟩
   rw [← h.inl_comp_iso_eq, category.assoc, h.iso_comp_eq_snd, biprod.inl_snd]
 #align category_theory.splitting.split CategoryTheory.Splitting.split
 

@@ -91,12 +91,14 @@ theorem mem_part_of_vertex (v : V) : v ∈ P.partOfVertex v := by
   exact h2.1
 #align simple_graph.partition.mem_part_of_vertex SimpleGraph.Partition.mem_part_of_vertex
 
-theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ≠ P.partOfVertex w := by
+theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v ≠ P.partOfVertex w :=
+  by
   intro hn
   have hw := P.mem_part_of_vertex w
   rw [← hn] at hw
   exact P.independent _ (P.part_of_vertex_mem v) (P.mem_part_of_vertex v) hw (G.ne_of_adj h) h
-#align simple_graph.partition.part_of_vertex_ne_of_adj SimpleGraph.Partition.part_of_vertex_ne_of_adj
+#align
+  simple_graph.partition.part_of_vertex_ne_of_adj SimpleGraph.Partition.part_of_vertex_ne_of_adj
 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/

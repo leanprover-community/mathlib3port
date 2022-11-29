@@ -19,7 +19,8 @@ open Cardinal
 
 /-- The cardinality of the complex numbers, as a type. -/
 @[simp]
-theorem mk_complex : (#ℂ) = 𝔠 := by rw [mk_congr Complex.equivRealProd, mk_prod, lift_id, mk_real, continuum_mul_self]
+theorem mk_complex : (#ℂ) = 𝔠 := by
+  rw [mk_congr Complex.equivRealProd, mk_prod, lift_id, mk_real, continuum_mul_self]
 #align mk_complex mk_complex
 
 /-- The cardinality of the complex numbers, as a set. -/

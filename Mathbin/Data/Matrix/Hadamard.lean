@@ -75,12 +75,14 @@ theorem add_hadamard [Distrib α] : (B + C) ⊙ A = B ⊙ A + C ⊙ A :=
 section Scalar
 
 @[simp]
-theorem smul_hadamard [Mul α] [HasSmul R α] [IsScalarTower R α α] (k : R) : (k • A) ⊙ B = k • A ⊙ B :=
+theorem smul_hadamard [Mul α] [HasSmul R α] [IsScalarTower R α α] (k : R) :
+    (k • A) ⊙ B = k • A ⊙ B :=
   ext fun _ _ => smul_mul_assoc _ _ _
 #align matrix.smul_hadamard Matrix.smul_hadamard
 
 @[simp]
-theorem hadamard_smul [Mul α] [HasSmul R α] [SmulCommClass R α α] (k : R) : A ⊙ (k • B) = k • A ⊙ B :=
+theorem hadamard_smul [Mul α] [HasSmul R α] [SmulCommClass R α α] (k : R) :
+    A ⊙ (k • B) = k • A ⊙ B :=
   ext fun _ _ => mul_smul_comm _ _ _
 #align matrix.hadamard_smul Matrix.hadamard_smul
 
@@ -124,7 +126,8 @@ section Diagonal
 
 variable [DecidableEq n] [MulZeroClass α]
 
-theorem diagonal_hadamard_diagonal (v : n → α) (w : n → α) : diagonal v ⊙ diagonal w = diagonal (v * w) :=
+theorem diagonal_hadamard_diagonal (v : n → α) (w : n → α) :
+    diagonal v ⊙ diagonal w = diagonal (v * w) :=
   ext fun _ _ => (apply_ite₂ _ _ _ _ _ _).trans (congr_arg _ <| zero_mul 0)
 #align matrix.diagonal_hadamard_diagonal Matrix.diagonal_hadamard_diagonal
 

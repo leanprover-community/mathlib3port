@@ -20,8 +20,8 @@ variable {𝕜 : Type _} [LinearOrderedField 𝕜] {s : Set 𝕜} {f : 𝕜 → 
 
 /-- If `f : 𝕜 → 𝕜` is convex, then for any three points `x < y < z` the slope of the secant line of
 `f` on `[x, y]` is less than the slope of the secant line of `f` on `[x, z]`. -/
-theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y)
-    (hyz : y < z) : (f y - f x) / (y - x) ≤ (f z - f y) / (z - y) := by
+theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
+    (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) ≤ (f z - f y) / (z - y) := by
   have hxz := hxy.trans hyz
   rw [← sub_pos] at hxy hxz hyz
   suffices f y / (y - x) + f y / (z - y) ≤ f x / (y - x) + f z / (z - y) by
@@ -33,7 +33,8 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
     field_simp
     rw [div_eq_iff] <;> [ring, linarith]
   have key :=
-    hf.2 hx hz (show 0 ≤ a by apply div_nonneg <;> linarith) (show 0 ≤ b by apply div_nonneg <;> linarith)
+    hf.2 hx hz (show 0 ≤ a by apply div_nonneg <;> linarith)
+      (show 0 ≤ b by apply div_nonneg <;> linarith)
       (show a + b = 1 by
         field_simp
         rw [div_eq_iff] <;> [ring, linarith])
@@ -49,8 +50,8 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
 
 /-- If `f : 𝕜 → 𝕜` is concave, then for any three points `x < y < z` the slope of the secant line of
 `f` on `[x, y]` is greater than the slope of the secant line of `f` on `[x, z]`. -/
-theorem ConcaveOn.slope_anti_adjacent (hf : ConcaveOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y)
-    (hyz : y < z) : (f z - f y) / (z - y) ≤ (f y - f x) / (y - x) := by
+theorem ConcaveOn.slope_anti_adjacent (hf : ConcaveOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
+    (hxy : x < y) (hyz : y < z) : (f z - f y) / (z - y) ≤ (f y - f x) / (y - x) := by
   rw [← neg_le_neg_iff, ← neg_sub_neg (f x), ← neg_sub_neg (f y)]
   simp_rw [← Pi.neg_apply, ← neg_div, neg_sub]
   exact ConvexOn.slope_mono_adjacent hf.neg hx hz hxy hyz
@@ -59,8 +60,9 @@ theorem ConcaveOn.slope_anti_adjacent (hf : ConcaveOn 𝕜 s f) {x y z : 𝕜} (
 /-- If `f : 𝕜 → 𝕜` is strictly convex, then for any three points `x < y < z` the slope of the
 secant line of `f` on `[x, y]` is strictly less than the slope of the secant line of `f` on
 `[x, z]`. -/
-theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
-    (hxy : x < y) (hyz : y < z) : (f y - f x) / (y - x) < (f z - f y) / (z - y) := by
+theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f) {x y z : 𝕜}
+    (hx : x ∈ s) (hz : z ∈ s) (hxy : x < y) (hyz : y < z) :
+    (f y - f x) / (y - x) < (f z - f y) / (z - y) := by
   have hxz := hxy.trans hyz
   have hxz' := hxz.ne
   rw [← sub_pos] at hxy hxz hyz
@@ -90,8 +92,8 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
 /-- If `f : 𝕜 → 𝕜` is strictly concave, then for any three points `x < y < z` the slope of the
 secant line of `f` on `[x, y]` is strictly greater than the slope of the secant line of `f` on
 `[x, z]`. -/
-theorem StrictConcaveOn.slope_anti_adjacent (hf : StrictConcaveOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s) (hz : z ∈ s)
-    (hxy : x < y) (hyz : y < z) : (f z - f y) / (z - y) < (f y - f x) / (y - x) := by
+theorem StrictConcaveOn.slope_anti_adjacent (hf : StrictConcaveOn 𝕜 s f) {x y z : 𝕜} (hx : x ∈ s)
+    (hz : z ∈ s) (hxy : x < y) (hyz : y < z) : (f z - f y) / (z - y) < (f y - f x) / (y - x) := by
   rw [← neg_lt_neg_iff, ← neg_sub_neg (f x), ← neg_sub_neg (f y)]
   simp_rw [← Pi.neg_apply, ← neg_div, neg_sub]
   exact StrictConvexOn.slope_strict_mono_adjacent hf.neg hx hz hxy hyz
@@ -100,7 +102,9 @@ theorem StrictConcaveOn.slope_anti_adjacent (hf : StrictConcaveOn 𝕜 s f) {x y
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
 less than the slope of the secant line of `f` on `[x, z]`, then `f` is convex. -/
 theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
-    (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y)) :
+    (hf :
+      ∀ {x y z : 𝕜},
+        x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y)) :
     ConvexOn 𝕜 s f :=
   (LinearOrder.convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
@@ -121,14 +125,17 @@ theorem convex_on_of_slope_mono_adjacent (hs : Convex 𝕜 s)
       rw [eq_comm, ← sub_eq_iff_eq_add] at hab
       simp_rw [div_eq_iff hxz.ne', y, ← hab]
       ring
-    rwa [sub_mul, sub_mul, sub_le_iff_le_add', ← add_sub_assoc, le_sub_iff_add_le, ← mul_add, sub_add_sub_cancel, ←
-      le_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x), mul_comm (f z), ha, hb] at this
+    rwa [sub_mul, sub_mul, sub_le_iff_le_add', ← add_sub_assoc, le_sub_iff_add_le, ← mul_add,
+      sub_add_sub_cancel, ← le_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x),
+      mul_comm (f z), ha, hb] at this
 #align convex_on_of_slope_mono_adjacent convex_on_of_slope_mono_adjacent
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
 greater than the slope of the secant line of `f` on `[x, z]`, then `f` is concave. -/
 theorem concave_on_of_slope_anti_adjacent (hs : Convex 𝕜 s)
-    (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) ≤ (f y - f x) / (y - x)) :
+    (hf :
+      ∀ {x y z : 𝕜},
+        x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) ≤ (f y - f x) / (y - x)) :
     ConcaveOn 𝕜 s f := by
   rw [← neg_convex_on_iff]
   refine' convex_on_of_slope_mono_adjacent hs fun x y z hx hz hxy hyz => _
@@ -140,7 +147,9 @@ theorem concave_on_of_slope_anti_adjacent (hs : Convex 𝕜 s)
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
 strictly less than the slope of the secant line of `f` on `[x, z]`, then `f` is strictly convex. -/
 theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
-    (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y)) :
+    (hf :
+      ∀ {x y z : 𝕜},
+        x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y)) :
     StrictConvexOn 𝕜 s f :=
   (LinearOrder.strict_convex_on_of_lt hs) fun x hx z hz hxz a b ha hb hab => by
     let y := a * x + b * z
@@ -161,37 +170,47 @@ theorem strict_convex_on_of_slope_strict_mono_adjacent (hs : Convex 𝕜 s)
       rw [eq_comm, ← sub_eq_iff_eq_add] at hab
       simp_rw [div_eq_iff hxz.ne', y, ← hab]
       ring
-    rwa [sub_mul, sub_mul, sub_lt_iff_lt_add', ← add_sub_assoc, lt_sub_iff_add_lt, ← mul_add, sub_add_sub_cancel, ←
-      lt_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x), mul_comm (f z), ha, hb] at this
+    rwa [sub_mul, sub_mul, sub_lt_iff_lt_add', ← add_sub_assoc, lt_sub_iff_add_lt, ← mul_add,
+      sub_add_sub_cancel, ← lt_div_iff hxz, add_div, mul_div_assoc, mul_div_assoc, mul_comm (f x),
+      mul_comm (f z), ha, hb] at this
 #align strict_convex_on_of_slope_strict_mono_adjacent strict_convex_on_of_slope_strict_mono_adjacent
 
 /-- If for any three points `x < y < z`, the slope of the secant line of `f : 𝕜 → 𝕜` on `[x, y]` is
 strictly greater than the slope of the secant line of `f` on `[x, z]`, then `f` is strictly concave.
 -/
 theorem strict_concave_on_of_slope_strict_anti_adjacent (hs : Convex 𝕜 s)
-    (hf : ∀ {x y z : 𝕜}, x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) < (f y - f x) / (y - x)) :
+    (hf :
+      ∀ {x y z : 𝕜},
+        x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) < (f y - f x) / (y - x)) :
     StrictConcaveOn 𝕜 s f := by
   rw [← neg_strict_convex_on_iff]
   refine' strict_convex_on_of_slope_strict_mono_adjacent hs fun x y z hx hz hxy hyz => _
   rw [← neg_lt_neg_iff]
   simp_rw [← neg_div, neg_sub, Pi.neg_apply, neg_sub_neg]
   exact hf hx hz hxy hyz
-#align strict_concave_on_of_slope_strict_anti_adjacent strict_concave_on_of_slope_strict_anti_adjacent
+#align
+  strict_concave_on_of_slope_strict_anti_adjacent strict_concave_on_of_slope_strict_anti_adjacent
 
 /-- A function `f : 𝕜 → 𝕜` is convex iff for any three points `x < y < z` the slope of the secant
 line of `f` on `[x, y]` is less than the slope of the secant line of `f` on `[x, z]`. -/
 theorem convex_on_iff_slope_mono_adjacent :
     ConvexOn 𝕜 s f ↔
-      Convex 𝕜 s ∧ ∀ ⦃x y z : 𝕜⦄, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y) :=
-  ⟨fun h => ⟨h.1, fun x y z => h.slope_mono_adjacent⟩, fun h => convex_on_of_slope_mono_adjacent h.1 h.2⟩
+      Convex 𝕜 s ∧
+        ∀ ⦃x y z : 𝕜⦄,
+          x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) ≤ (f z - f y) / (z - y) :=
+  ⟨fun h => ⟨h.1, fun x y z => h.slope_mono_adjacent⟩, fun h =>
+    convex_on_of_slope_mono_adjacent h.1 h.2⟩
 #align convex_on_iff_slope_mono_adjacent convex_on_iff_slope_mono_adjacent
 
 /-- A function `f : 𝕜 → 𝕜` is concave iff for any three points `x < y < z` the slope of the secant
 line of `f` on `[x, y]` is greater than the slope of the secant line of `f` on `[x, z]`. -/
 theorem concave_on_iff_slope_anti_adjacent :
     ConcaveOn 𝕜 s f ↔
-      Convex 𝕜 s ∧ ∀ ⦃x y z : 𝕜⦄, x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) ≤ (f y - f x) / (y - x) :=
-  ⟨fun h => ⟨h.1, fun x y z => h.slope_anti_adjacent⟩, fun h => concave_on_of_slope_anti_adjacent h.1 h.2⟩
+      Convex 𝕜 s ∧
+        ∀ ⦃x y z : 𝕜⦄,
+          x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) ≤ (f y - f x) / (y - x) :=
+  ⟨fun h => ⟨h.1, fun x y z => h.slope_anti_adjacent⟩, fun h =>
+    concave_on_of_slope_anti_adjacent h.1 h.2⟩
 #align concave_on_iff_slope_anti_adjacent concave_on_iff_slope_anti_adjacent
 
 /-- A function `f : 𝕜 → 𝕜` is strictly convex iff for any three points `x < y < z` the slope of
@@ -199,17 +218,24 @@ the secant line of `f` on `[x, y]` is strictly less than the slope of the secant
 `[x, z]`. -/
 theorem strict_convex_on_iff_slope_strict_mono_adjacent :
     StrictConvexOn 𝕜 s f ↔
-      Convex 𝕜 s ∧ ∀ ⦃x y z : 𝕜⦄, x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y) :=
+      Convex 𝕜 s ∧
+        ∀ ⦃x y z : 𝕜⦄,
+          x ∈ s → z ∈ s → x < y → y < z → (f y - f x) / (y - x) < (f z - f y) / (z - y) :=
   ⟨fun h => ⟨h.1, fun x y z => h.slope_strict_mono_adjacent⟩, fun h =>
     strict_convex_on_of_slope_strict_mono_adjacent h.1 h.2⟩
-#align strict_convex_on_iff_slope_strict_mono_adjacent strict_convex_on_iff_slope_strict_mono_adjacent
+#align
+  strict_convex_on_iff_slope_strict_mono_adjacent strict_convex_on_iff_slope_strict_mono_adjacent
 
 /-- A function `f : 𝕜 → 𝕜` is strictly concave iff for any three points `x < y < z` the slope of
 the secant line of `f` on `[x, y]` is strictly greater than the slope of the secant line of `f` on
 `[x, z]`. -/
 theorem strict_concave_on_iff_slope_strict_anti_adjacent :
     StrictConcaveOn 𝕜 s f ↔
-      Convex 𝕜 s ∧ ∀ ⦃x y z : 𝕜⦄, x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) < (f y - f x) / (y - x) :=
-  ⟨fun h => ⟨h.1, fun x y z => h.slope_anti_adjacent⟩, fun h => strict_concave_on_of_slope_strict_anti_adjacent h.1 h.2⟩
-#align strict_concave_on_iff_slope_strict_anti_adjacent strict_concave_on_iff_slope_strict_anti_adjacent
+      Convex 𝕜 s ∧
+        ∀ ⦃x y z : 𝕜⦄,
+          x ∈ s → z ∈ s → x < y → y < z → (f z - f y) / (z - y) < (f y - f x) / (y - x) :=
+  ⟨fun h => ⟨h.1, fun x y z => h.slope_anti_adjacent⟩, fun h =>
+    strict_concave_on_of_slope_strict_anti_adjacent h.1 h.2⟩
+#align
+  strict_concave_on_iff_slope_strict_anti_adjacent strict_concave_on_iff_slope_strict_anti_adjacent
 

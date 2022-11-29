@@ -102,7 +102,8 @@ theorem cs_down_0_not_rel_left (j : ℕ) : ¬c.Rel 0 j := by
   dsimp at hj
   apply Nat.not_succ_le_zero j
   rw [Nat.succ_eq_add_one, hj]
-#align algebraic_topology.dold_kan.cs_down_0_not_rel_left AlgebraicTopology.DoldKan.cs_down_0_not_rel_left
+#align
+  algebraic_topology.dold_kan.cs_down_0_not_rel_left AlgebraicTopology.DoldKan.cs_down_0_not_rel_left
 
 /-- The sequence of maps which gives the null homotopic maps `Hσ` that shall be in
 the inductive construction of the projections `P q : K[X] ⟶ K[X]` -/
@@ -111,10 +112,12 @@ def hσ (q : ℕ) (n : ℕ) : X _[n] ⟶ X _[n + 1] :=
 #align algebraic_topology.dold_kan.hσ AlgebraicTopology.DoldKan.hσ
 
 /-- We can turn `hσ` into a datum that can be passed to `null_homotopic_map'`. -/
-def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].x n ⟶ K[X].x m) := fun n m hnm => hσ q n ≫ eqToHom (by congr )
+def hσ' (q : ℕ) : ∀ n m, c.Rel m n → (K[X].x n ⟶ K[X].x m) := fun n m hnm =>
+  hσ q n ≫ eqToHom (by congr )
 #align algebraic_topology.dold_kan.hσ' AlgebraicTopology.DoldKan.hσ'
 
-theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) : (hσ' q n m hnm : X _[n] ⟶ X _[m]) = 0 := by
+theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) :
+    (hσ' q n m hnm : X _[n] ⟶ X _[m]) = 0 := by
   simp only [hσ', hσ]
   split_ifs
   exact zero_comp
@@ -122,7 +125,8 @@ theorem hσ'_eq_zero {q n m : ℕ} (hnq : n < q) (hnm : c.Rel m n) : (hσ' q n m
 
 theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
     (hσ' q n m hnm : X _[n] ⟶ X _[m]) =
-      ((-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro (Eq.symm ha))⟩) ≫ eqToHom (by congr ) :=
+      ((-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro (Eq.symm ha))⟩) ≫
+        eqToHom (by congr ) :=
   by
   simp only [hσ', hσ]
   split_ifs
@@ -143,9 +147,9 @@ theorem hσ'_eq' {q n a : ℕ} (ha : n = a + q) :
 /- warning: algebraic_topology.dold_kan.Hσ clashes with algebraic_topology.dold_kan.hσ -> AlgebraicTopology.DoldKan.hσ
 warning: algebraic_topology.dold_kan.Hσ -> AlgebraicTopology.DoldKan.hσ is a dubious translation:
 lean 3 declaration is
-  forall {C : Type.{u_1}} [_inst_1 : CategoryTheory.Category.{u_2 u_1} C] [_inst_2 : CategoryTheory.Preadditive.{u_2 u_1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u_2 u_1} C _inst_1}, Nat -> (Quiver.Hom.{succ u_2 (max u_1 u_2)} (ChainComplex.{u_2 u_1 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.CategoryStruct.toQuiver.{u_2 (max u_1 u_2)} (HomologicalComplex.{u_2 u_1 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (CategoryTheory.Category.toCategoryStruct.{u_2 (max u_1 u_2)} (HomologicalComplex.{u_2 u_1 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (HomologicalComplex.CategoryTheory.category.{u_2 u_1 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2 u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)))) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u_1 u_2} C _inst_1 _inst_2 X) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u_1 u_2} C _inst_1 _inst_2 X))
+  forall {C : Type.{u_1}} [_inst_1 : CategoryTheory.Category.{u_2, u_1} C] [_inst_2 : CategoryTheory.Preadditive.{u_2, u_1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u_2, u_1} C _inst_1}, Nat -> (Quiver.Hom.{succ u_2, max u_1 u_2} (ChainComplex.{u_2, u_1, 0} C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2, u_1} C _inst_1 _inst_2) Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne) (CategoryTheory.CategoryStruct.toQuiver.{u_2, max u_1 u_2} (HomologicalComplex.{u_2, u_1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2, u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (CategoryTheory.Category.toCategoryStruct.{u_2, max u_1 u_2} (HomologicalComplex.{u_2, u_1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2, u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)) (HomologicalComplex.CategoryTheory.category.{u_2, u_1, 0} Nat C _inst_1 (CategoryTheory.Preadditive.preadditiveHasZeroMorphisms.{u_2, u_1} C _inst_1 _inst_2) (ComplexShape.down.{0} Nat (AddRightCancelMonoid.toAddRightCancelSemigroup.{0} Nat (AddCancelMonoid.toAddRightCancelMonoid.{0} Nat (AddCancelCommMonoid.toCancelAddMonoid.{0} Nat (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))))) Nat.hasOne)))) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u_1, u_2} C _inst_1 _inst_2 X) (AlgebraicTopology.AlternatingFaceMapComplex.obj.{u_1, u_2} C _inst_1 _inst_2 X))
 but is expected to have type
-  forall {C : Type.{u_1}} [_inst_1 : CategoryTheory.Category.{u_2 u_1} C] [_inst_2 : CategoryTheory.Preadditive.{u_2 u_1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u_2 u_1} C _inst_1}, Nat -> (forall (n : Nat), Quiver.Hom.{succ u_2 u_1} C (CategoryTheory.CategoryStruct.toQuiver.{u_2 u_1} C (CategoryTheory.Category.toCategoryStruct.{u_2 u_1} C _inst_1)) (CategoryTheory.Functor.obj.{0 u_2 0 u_1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (CategoryTheory.Functor.obj.{0 u_2 0 u_1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
+  forall {C : Type.{u_1}} [_inst_1 : CategoryTheory.Category.{u_2, u_1} C] [_inst_2 : CategoryTheory.Preadditive.{u_2, u_1} C _inst_1] {X : CategoryTheory.SimplicialObject.{u_2, u_1} C _inst_1}, Nat -> (forall (n : Nat), Quiver.Hom.{succ u_2, u_1} C (CategoryTheory.CategoryStruct.toQuiver.{u_2, u_1} C (CategoryTheory.Category.toCategoryStruct.{u_2, u_1} C _inst_1)) (CategoryTheory.Functor.obj.{0, u_2, 0, u_1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk n))) (CategoryTheory.Functor.obj.{0, u_2, 0, u_1} (Opposite.{1} SimplexCategory) (CategoryTheory.Category.opposite.{0, 0} SimplexCategory SimplexCategory.smallCategory) C _inst_1 X (Opposite.op.{1} SimplexCategory (SimplexCategory.mk (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) n (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))))))
 Case conversion may be inaccurate. Consider using '#align algebraic_topology.dold_kan.Hσ AlgebraicTopology.DoldKan.hσₓ'. -/
 /-- The null homotopic map $(hσ q) ∘ d + d ∘ (hσ q)$ -/
 def hσ (q : ℕ) : K[X] ⟶ K[X] :=
@@ -165,8 +169,8 @@ theorem Hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 := by
   · rw [hσ'_eq (show 0 = 0 + 0 by rfl) (c_mk 1 0 rfl)]
     simp only [pow_zero, Fin.mk_zero, one_zsmul, eq_to_hom_refl, category.comp_id]
     erw [ChainComplex.of_d]
-    simp only [alternating_face_map_complex.obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero, one_zsmul, Fin.coe_one,
-      pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
+    simp only [alternating_face_map_complex.obj_d, Fin.sum_univ_two, Fin.coe_zero, pow_zero,
+      one_zsmul, Fin.coe_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
     
   · rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
@@ -201,9 +205,11 @@ def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapCo
 #align algebraic_topology.dold_kan.nat_trans_Hσ AlgebraicTopology.DoldKan.natTransHσ
 
 /-- The maps `hσ' q n m hnm` are compatible with the application of additive functors. -/
-theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive] (X : SimplicialObject C) (q n m : ℕ)
-    (hnm : c.Rel m n) :
-    (hσ' q n m hnm : K[((whiskering _ _).obj G).obj X].x n ⟶ _) = G.map (hσ' q n m hnm : K[X].x n ⟶ _) := by
+theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
+    (X : SimplicialObject C) (q n m : ℕ) (hnm : c.Rel m n) :
+    (hσ' q n m hnm : K[((whiskering _ _).obj G).obj X].x n ⟶ _) =
+      G.map (hσ' q n m hnm : K[X].x n ⟶ _) :=
+  by
   unfold hσ' hσ
   split_ifs
   · simp only [functor.map_zero, zero_comp]
@@ -213,7 +219,8 @@ theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addi
 #align algebraic_topology.dold_kan.map_hσ' AlgebraicTopology.DoldKan.map_hσ'
 
 /-- The null homotopic maps `Hσ` are compatible with the application of additive functors. -/
-theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive] (X : SimplicialObject C) (q n : ℕ) :
+theorem map_Hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
+    (X : SimplicialObject C) (q n : ℕ) :
     (hσ q : K[((whiskering C D).obj G).obj X] ⟶ _).f n = G.map ((hσ q : K[X] ⟶ _).f n) := by
   unfold Hσ
   have eq := HomologicalComplex.congr_hom (map_null_homotopic_map' G (hσ' q)) n

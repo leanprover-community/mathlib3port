@@ -34,7 +34,8 @@ def map (F : C → D) [Functorial.{v₁, v₂} F] {X Y : C} (f : X ⟶ Y) : F X 
 #align category_theory.map CategoryTheory.map
 
 @[simp]
-theorem map_as_map {F : C → D} [Functorial.{v₁, v₂} F] {X Y : C} {f : X ⟶ Y} : Functorial.map.{v₁, v₂} f = map F f :=
+theorem map_as_map {F : C → D} [Functorial.{v₁, v₂} F] {X Y : C} {f : X ⟶ Y} :
+    Functorial.map.{v₁, v₂} f = map F f :=
   rfl
 #align category_theory.map_as_map CategoryTheory.map_as_map
 
@@ -44,8 +45,8 @@ theorem Functorial.map_id {F : C → D} [Functorial.{v₁, v₂} F] {X : C} : ma
 #align category_theory.functorial.map_id CategoryTheory.Functorial.map_id
 
 @[simp]
-theorem Functorial.map_comp {F : C → D} [Functorial.{v₁, v₂} F] {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} :
-    map F (f ≫ g) = map F f ≫ map F g :=
+theorem Functorial.map_comp {F : C → D} [Functorial.{v₁, v₂} F] {X Y Z : C} {f : X ⟶ Y}
+    {g : Y ⟶ Z} : map F (f ≫ g) = map F f ≫ map F g :=
   Functorial.map_comp' f g
 #align category_theory.functorial.map_comp CategoryTheory.Functorial.map_comp
 

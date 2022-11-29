@@ -45,7 +45,8 @@ def map {α β : Typevec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a,
 instance : Inhabited (Mvpfunctor n) :=
   ⟨⟨default, default⟩⟩
 
-instance Obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.Obj α) :=
+instance Obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] :
+    Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ _ => default⟩⟩
 #align mvpfunctor.obj.inhabited Mvpfunctor.Obj.inhabited
 
@@ -61,7 +62,8 @@ theorem id_map {α : Typevec n} : ∀ x : P.Obj α, Typevec.id <$$> x = x
   | ⟨a, g⟩ => rfl
 #align mvpfunctor.id_map Mvpfunctor.id_map
 
-theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) : ∀ x : P.Obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
+theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) :
+    ∀ x : P.Obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
   | ⟨a, h⟩ => rfl
 #align mvpfunctor.comp_map Mvpfunctor.comp_map
 
@@ -143,14 +145,9 @@ theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x
 theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
   cases x
   dsimp [comp.get, comp.mk]
-  ext : 2 <;> intros
-  rfl
-  rfl
-  congr
-  ext1 <;> intros <;> rfl
-  ext : 2
-  congr
-  rcases x_1 with ⟨a, b, c⟩ <;> rfl
+  ext : 2 <;> intros ; rfl; rfl
+  congr ; ext1 <;> intros <;> rfl
+  ext : 2; congr ; rcases x_1 with ⟨a, b, c⟩ <;> rfl
 #align mvpfunctor.comp.mk_get Mvpfunctor.comp.mk_get
 
 /-
@@ -167,8 +164,7 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
     
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i j => ⟨f i j, pf i j⟩⟩
-  rw [xeq]
-  rfl
+  rw [xeq]; rfl
 #align mvpfunctor.liftp_iff Mvpfunctor.liftp_iff
 
 theorem liftp_iff' {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
@@ -200,21 +196,18 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
-  dsimp
-  constructor
+  dsimp; constructor
   · rw [xeq]
     rfl
     
-  rw [yeq]
-  rfl
+  rw [yeq]; rfl
 #align mvpfunctor.liftr_iff Mvpfunctor.liftr_iff
 
 open Set Mvfunctor
 
 theorem supp_eq {α : Typevec n} (a : P.A) (f : P.B a ⟹ α) (i) :
     @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ := by
-  ext
-  simp only [supp, image_univ, mem_range, mem_set_of_eq]
+  ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
   constructor <;> intro h
   · apply @h fun i x => ∃ y : P.B a i, f i y = x
     rw [liftp_iff']
@@ -256,8 +249,8 @@ def last : Pfunctor where
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- append arrows of a polynomial functor application -/
 @[reducible]
-def appendContents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
-    P.B a ⟹ (α ::: β) :=
+def appendContents {α : Typevec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α)
+    (f : P.last.B a → β) : P.B a ⟹ (α ::: β) :=
   splitFun f' f
 #align mvpfunctor.append_contents Mvpfunctor.appendContents
 

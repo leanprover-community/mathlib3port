@@ -76,7 +76,8 @@ def dual : PreorderCat ⥤ PreorderCat where
 /-- The equivalence between `Preorder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PreorderCat ≌ PreorderCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Preorder.dual_equiv PreorderCat.dualEquiv
 
@@ -88,22 +89,15 @@ end PreorderCat
 def preorderToCat : PreorderCat.{u} ⥤ Cat where
   obj X := CatCat.of X.1
   map X Y f := f.Monotone.Functor
-  map_id' X := by
-    apply CategoryTheory.Functor.ext
-    tidy
-  map_comp' X Y Z f g := by
-    apply CategoryTheory.Functor.ext
-    tidy
+  map_id' X := by apply CategoryTheory.Functor.ext; tidy
+  map_comp' X Y Z f g := by apply CategoryTheory.Functor.ext; tidy
 #align Preorder_to_Cat preorderToCat
 
 instance :
-    Faithful preorderToCat.{u} where map_injective' X Y f g h := by
-    ext x
-    exact functor.congr_obj h x
+    Faithful
+      preorderToCat.{u} where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
 
 instance : Full preorderToCat.{u} where
   preimage X Y f := ⟨f.obj, f.Monotone⟩
-  witness' X Y f := by
-    apply CategoryTheory.Functor.ext
-    tidy
+  witness' X Y f := by apply CategoryTheory.Functor.ext; tidy
 

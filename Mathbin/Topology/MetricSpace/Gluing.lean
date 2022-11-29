@@ -90,7 +90,8 @@ theorem glue_dist_glued_points [Nonempty Z] (Φ : Z → X) (Ψ : Z → Y) (ε : 
   rw [glue_dist, this, zero_add]
 #align metric.glue_dist_glued_points Metric.glue_dist_glued_points
 
-private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x y, glueDist Φ Ψ ε x y = glueDist Φ Ψ ε y x
+private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) :
+    ∀ x y, glueDist Φ Ψ ε x y = glueDist Φ Ψ ε y x
   | inl x, inl y => dist_comm _ _
   | inr x, inr y => dist_comm _ _
   | inl x, inr y => rfl
@@ -113,7 +114,8 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (⨅ p, dist y (Φ p) + dist x (Ψ p)) + dist y z =
           infi ((fun t => t + dist y z) ∘ fun p => dist y (Φ p) + dist x (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
+        refine'
+          Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -133,7 +135,8 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (dist x y + ⨅ p, dist z (Φ p) + dist y (Ψ p)) =
           infi ((fun t => dist x y + t) ∘ fun p => dist z (Φ p) + dist y (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
+        refine'
+          Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -153,13 +156,15 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (dist x y + ⨅ p, dist y (Φ p) + dist z (Ψ p)) =
           infi ((fun t => dist x y + t) ∘ fun p => dist y (Φ p) + dist z (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
+        refine'
+          Monotone.map_cinfi_of_continuous_at (continuous_at_const.add continuous_at_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
       refine' cinfi_mono (B _ _) fun p => _
       calc
-        dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) := add_le_add (dist_triangle _ _ _) le_rfl
+        dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) :=
+          add_le_add (dist_triangle _ _ _) le_rfl
         _ = dist x y + (dist y (Φ p) + dist z (Ψ p)) := by ring
         
     linarith
@@ -172,7 +177,8 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         (⨅ p, dist x (Φ p) + dist y (Ψ p)) + dist y z =
           infi ((fun t => t + dist y z) ∘ fun p => dist x (Φ p) + dist y (Ψ p)) :=
         by
-        refine' Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
+        refine'
+          Monotone.map_cinfi_of_continuous_at (continuous_at_id.add continuous_at_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -195,10 +201,12 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           
       calc
         dist x z ≤ dist x (Φ p) + dist (Φ p) (Φ q) + dist (Φ q) z := dist_triangle4 _ _ _ _
-        _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by rw [dist_comm z] <;> linarith
+        _ ≤ dist x (Φ p) + dist (Ψ p) (Ψ q) + dist z (Φ q) + 2 * ε := by
+          rw [dist_comm z] <;> linarith
         _ ≤ dist x (Φ p) + (dist y (Ψ p) + dist y (Ψ q)) + dist z (Φ q) + 2 * ε :=
           add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl
-        _ ≤ (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε + ((⨅ p, dist z (Φ p) + dist y (Ψ p)) + ε) + δ := by linarith
+        _ ≤ (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε + ((⨅ p, dist z (Φ p) + dist y (Ψ p)) + ε) + δ :=
+          by linarith
         
   | inr x, inl y, inr z =>
     le_of_forall_pos_le_add fun δ δpos => by
@@ -212,10 +220,12 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           
       calc
         dist x z ≤ dist x (Ψ p) + dist (Ψ p) (Ψ q) + dist (Ψ q) z := dist_triangle4 _ _ _ _
-        _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by rw [dist_comm z] <;> linarith
+        _ ≤ dist x (Ψ p) + dist (Φ p) (Φ q) + dist z (Ψ q) + 2 * ε := by
+          rw [dist_comm z] <;> linarith
         _ ≤ dist x (Ψ p) + (dist y (Φ p) + dist y (Φ q)) + dist z (Ψ q) + 2 * ε :=
           add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl
-        _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ := by linarith
+        _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ :=
+          by linarith
         
 #align metric.glue_dist_triangle metric.glue_dist_triangle
 
@@ -230,7 +240,8 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     linarith
   | inr x, inl y, h => by
     have : 0 ≤ ⨅ p, dist y (Φ p) + dist x (Ψ p) :=
-      le_cinfi fun p => by simpa [add_comm] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
+      le_cinfi fun p => by
+        simpa [add_comm] using add_le_add (@dist_nonneg _ _ x _) (@dist_nonneg _ _ y _)
     have : 0 + ε ≤ glue_dist Φ Ψ ε (inr x) (inl y) := add_le_add this (le_refl ε)
     exfalso
     linarith
@@ -282,7 +293,9 @@ def Sum.dist : Sum X Y → Sum X Y → ℝ
 #align metric.sum.dist Metric.Sum.dist
 
 theorem Sum.dist_eq_glue_dist {p q : Sum X Y} (x : X) (y : Y) :
-    Sum.dist p q = glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q := by
+    Sum.dist p q =
+      glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q :=
+  by
   cases p <;> cases q <;> first |rfl|simp [sum.dist, glue_dist, dist_comm, add_comm, add_left_comm]
 #align metric.sum.dist_eq_glue_dist Metric.Sum.dist_eq_glue_dist
 
@@ -291,7 +304,8 @@ private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := b
 #align metric.sum.dist_comm metric.sum.dist_comm
 
 theorem Sum.one_dist_le {x : X} {y : Y} : 1 ≤ Sum.dist (inl x) (inr y) :=
-  le_trans (le_add_of_nonneg_right dist_nonneg) <| add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
+  le_trans (le_add_of_nonneg_right dist_nonneg) <|
+    add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
 #align metric.sum.one_dist_le Metric.Sum.one_dist_le
 
 theorem Sum.one_dist_le' {x : X} {y : Y} : 1 ≤ Sum.dist (inr y) (inl x) := by
@@ -316,7 +330,8 @@ private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
       
     
   · rintro ⟨ε, ε0, H⟩
-    constructor <;> rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;> exact ⟨ε, ε0, fun x y h => H _ _ h⟩
+    constructor <;> rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;>
+      exact ⟨ε, ε0, fun x y h => H _ _ h⟩
     
 #align metric.sum.mem_uniformity metric.sum.mem_uniformity
 
@@ -429,30 +444,28 @@ theorem dist_same (i : ι) (x : E i) (y : E i) : dist (⟨i, x⟩ : Σj, E j) �
 
 @[simp]
 theorem dist_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
-    dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y := by
-  simp [HasDist.dist, sigma.dist, h]
+    dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y :=
+  by simp [HasDist.dist, sigma.dist, h]
 #align metric.sigma.dist_ne Metric.Sigma.dist_ne
 
-theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) : 1 ≤ dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ := by
+theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
+    1 ≤ dist (⟨i, x⟩ : Σk, E k) ⟨j, y⟩ := by
   rw [sigma.dist_ne h x y]
   linarith [@dist_nonneg _ _ x (Nonempty.some ⟨x⟩), @dist_nonneg _ _ (Nonempty.some ⟨y⟩) y]
 #align metric.sigma.one_le_dist_of_ne Metric.Sigma.one_le_dist_of_ne
 
 theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 := by
-  cases x
-  cases y
+  cases x; cases y
   contrapose! h
   apply one_le_dist_of_ne h
 #align metric.sigma.fst_eq_of_dist_lt_one Metric.Sigma.fst_eq_of_dist_lt_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_nonneg, ",", expr zero_le_one, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr zero_le_one, ",", expr dist_nonneg, ",", expr le_rfl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_nonneg, ",", expr zero_le_one, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr le_rfl, ",", expr dist_triangle, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[["[", expr add_le_add, ",", expr zero_le_one, ",", expr dist_nonneg, ",", expr le_rfl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z := by
-  rcases x with ⟨i, x⟩
-  rcases y with ⟨j, y⟩
-  rcases z with ⟨k, z⟩
+  rcases x with ⟨i, x⟩; rcases y with ⟨j, y⟩; rcases z with ⟨k, z⟩
   rcases eq_or_ne i k with (rfl | hik)
   · rcases eq_or_ne i j with (rfl | hij)
     · simpa using dist_triangle x y z
@@ -463,7 +476,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
           simpa only [zero_add, add_zero] using dist_triangle _ _ _
         _ ≤ _ := by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_nonneg, \",\", expr zero_le_one, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_nonneg, \",\", expr zero_le_one, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         
       
     
@@ -474,7 +487,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
             dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z :=
           by
           trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = _ := by abel
         
       
@@ -485,7 +498,7 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
               dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) :=
             by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr le_rfl, \",\", expr dist_triangle, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           _ = _ := by abel
           
         
@@ -496,14 +509,15 @@ protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dis
             by simp only [add_zero, zero_add]
           _ ≤ _ := by
             trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr zero_le_one, \",\", expr dist_nonneg, \",\", expr le_rfl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:64:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr zero_le_one, \",\", expr dist_nonneg, \",\", expr le_rfl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
           
         
       
     
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 
-protected theorem is_open_iff (s : Set (Σi, E i)) : IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s := by
+protected theorem is_open_iff (s : Set (Σi, E i)) :
+    IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s := by
   constructor
   · rintro hs ⟨i, x⟩ hx
     obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ball x ε ⊆ Sigma.mk i ⁻¹' s :=
@@ -524,7 +538,8 @@ protected theorem is_open_iff (s : Set (Σi, E i)) : IsOpen s ↔ ∀ x ∈ s, �
   · intro H
     apply is_open_sigma_iff.2 fun i => _
     apply Metric.is_open_iff.2 fun x hx => _
-    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ y, dist (⟨i, x⟩ : Σj, E j) y < ε → y ∈ s := H ⟨i, x⟩ hx
+    obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ y, dist (⟨i, x⟩ : Σj, E j) y < ε → y ∈ s :=
+      H ⟨i, x⟩ hx
     refine' ⟨ε, εpos, fun y hy => _⟩
     apply hε ⟨i, y⟩
     rw [sigma.dist_same]
@@ -599,7 +614,8 @@ section Gluing
 -- Exact gluing of two metric spaces along isometric subsets.
 variable {X : Type u} {Y : Type v} {Z : Type w}
 
-variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ}
+variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y}
+  {ε : ℝ}
 
 open _Root_.Sum (inl inr)
 
@@ -636,15 +652,18 @@ def toGlueR (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : GlueSpace hΦ hΨ 
   ⟦inr y⟧
 #align metric.to_glue_r Metric.toGlueR
 
-instance inhabitedLeft (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : Inhabited (GlueSpace hΦ hΨ) :=
+instance inhabitedLeft (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] :
+    Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueL _ _ default⟩
 #align metric.inhabited_left Metric.inhabitedLeft
 
-instance inhabitedRight (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] : Inhabited (GlueSpace hΦ hΨ) :=
+instance inhabitedRight (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] :
+    Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueR _ _ default⟩
 #align metric.inhabited_right Metric.inhabitedRight
 
-theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : toGlueL hΦ hΨ ∘ Φ = toGlueR hΦ hΨ ∘ Ψ := by
+theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
+    toGlueL hΦ hΨ ∘ Φ = toGlueR hΦ hΨ ∘ Ψ := by
   letI : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
   funext
   simp only [comp, to_glue_l, to_glue_r, Quotient.eq]
@@ -678,13 +697,16 @@ variable {X : ℕ → Type u} [∀ n, MetricSpace (X n)] {f : ∀ n, X n → X (
 
 /-- Predistance on the disjoint union `Σ n, X n`. -/
 def inductiveLimitDist (f : ∀ n, X n → X (n + 1)) (x y : Σn, X n) : ℝ :=
-  dist (leRecOn (le_max_left x.1 y.1) f x.2 : X (max x.1 y.1)) (leRecOn (le_max_right x.1 y.1) f y.2 : X (max x.1 y.1))
+  dist (leRecOn (le_max_left x.1 y.1) f x.2 : X (max x.1 y.1))
+    (leRecOn (le_max_right x.1 y.1) f y.2 : X (max x.1 y.1))
 #align metric.inductive_limit_dist Metric.inductiveLimitDist
 
 /-- The predistance on the disjoint union `Σ n, X n` can be computed in any `X k` for large
 enough `k`. -/
 theorem inductive_limit_dist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) (m : ℕ) :
-    ∀ hx : x.1 ≤ m, ∀ hy : y.1 ≤ m, inductiveLimitDist f x y = dist (leRecOn hx f x.2 : X m) (leRecOn hy f y.2 : X m) :=
+    ∀ hx : x.1 ≤ m,
+      ∀ hy : y.1 ≤ m,
+        inductiveLimitDist f x y = dist (leRecOn hx f x.2 : X m) (leRecOn hy f y.2 : X m) :=
   by
   induction' m with m hm
   · intro hx hy
@@ -718,7 +740,8 @@ def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n
     have hx : x.1 ≤ m := le_max_left _ _
     have hy : y.1 ≤ m := le_max_right _ _
     unfold dist
-    rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y x m hy hx, dist_comm]
+    rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y x m hy hx,
+      dist_comm]
   dist_triangle x y z := by
     let m := max (max x.1 y.1) z.1
     have hx : x.1 ≤ m := le_trans (le_max_left _ _) (le_max_left _ _)
@@ -758,10 +781,12 @@ instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLim
   ⟨toInductiveLimit _ 0 default⟩
 
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
-theorem toInductiveLimitIsometry (I : ∀ n, Isometry (f n)) (n : ℕ) : Isometry (toInductiveLimit I n) :=
+theorem toInductiveLimitIsometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
+    Isometry (toInductiveLimit I n) :=
   Isometry.ofDistEq fun x y => by
     change inductive_limit_dist f ⟨n, x⟩ ⟨n, y⟩ = dist x y
-    rw [inductive_limit_dist_eq_dist I ⟨n, x⟩ ⟨n, y⟩ n (le_refl n) (le_refl n), le_rec_on_self, le_rec_on_self]
+    rw [inductive_limit_dist_eq_dist I ⟨n, x⟩ ⟨n, y⟩ n (le_refl n) (le_refl n), le_rec_on_self,
+      le_rec_on_self]
 #align metric.to_inductive_limit_isometry Metric.toInductiveLimitIsometry
 
 /-- The maps `to_inductive_limit n` are compatible with the maps `f n`. -/
@@ -770,8 +795,8 @@ theorem to_inductive_limit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
   funext
   simp only [comp, to_inductive_limit, Quotient.eq]
   show inductive_limit_dist f ⟨n.succ, f n x⟩ ⟨n, x⟩ = 0
-  · rw [inductive_limit_dist_eq_dist I ⟨n.succ, f n x⟩ ⟨n, x⟩ n.succ, le_rec_on_self, le_rec_on_succ, le_rec_on_self,
-      dist_self]
+  · rw [inductive_limit_dist_eq_dist I ⟨n.succ, f n x⟩ ⟨n, x⟩ n.succ, le_rec_on_self,
+      le_rec_on_succ, le_rec_on_self, dist_self]
     exact le_rfl
     exact le_rfl
     exact le_succ _

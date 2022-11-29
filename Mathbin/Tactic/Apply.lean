@@ -47,15 +47,17 @@ private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) 
     false
 #align tactic.has_opt_auto_param_inst_for_apply tactic.has_opt_auto_param_inst_for_apply
 
-private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg) (ms : List (Name × expr)) :
-    tactic Unit :=
-  whenM (has_opt_auto_param_inst_for_apply ms) <| do
+private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg)
+    (ms : List (Name × expr)) : tactic Unit :=
+  (whenM (has_opt_auto_param_inst_for_apply ms)) do
     let gs ← get_goals
     ms fun m =>
         whenM (not <$> is_assigned m.2) <|
-          ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >> when cfg (try apply_auto_param)
+          ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >>
+            when cfg (try apply_auto_param)
     set_goals gs
-#align tactic.try_apply_opt_auto_param_instance_for_apply tactic.try_apply_opt_auto_param_instance_for_apply
+#align
+  tactic.try_apply_opt_auto_param_instance_for_apply tactic.try_apply_opt_auto_param_instance_for_apply
 
 private unsafe def retry_apply_aux :
     ∀ (e : expr) (cfg : ApplyCfg), List (Bool × Name × expr) → tactic (List (Name × expr))
@@ -106,8 +108,8 @@ unsafe def eapply' (e : expr) : tactic (List (Name × expr)) :=
 
 /-- `relation_tactic` finds a proof rule for the relation found in the goal and uses `apply'`
 to make one proof step. -/
-private unsafe def relation_tactic (md : Transparency) (op_for : environment → Name → Option Name) (tac_name : String) :
-    tactic Unit := do
+private unsafe def relation_tactic (md : Transparency) (op_for : environment → Name → Option Name)
+    (tac_name : String) : tactic Unit := do
   let tgt ← target >>= instantiate_mvars
   let env ← get_env
   let r := expr.get_app_fn tgt
@@ -116,7 +118,10 @@ private unsafe def relation_tactic (md : Transparency) (op_for : environment →
       let r ← mk_const refl
       retry_apply r { md, NewGoals := new_goals.non_dep_only }
       return ()
-    | none => fail <| tac_name ++ " tactic failed, target is not a relation application with the expected property."
+    | none =>
+      fail <|
+        tac_name ++
+          " tactic failed, target is not a relation application with the expected property."
 #align tactic.relation_tactic tactic.relation_tactic
 
 /-- Similar to `reflexivity` with the difference that `apply'` is used instead of `apply` -/
@@ -160,14 +165,16 @@ unsafe def fapply' (q : parse texpr) : tactic Unit :=
   concat_tags (i_to_expr_for_apply q >>= tactic.fapply')
 #align tactic.interactive.fapply' tactic.interactive.fapply'
 
-/-- Similar to the `apply'` tactic, but only creates subgoals for non-dependent premises that have not
+/--
+Similar to the `apply'` tactic, but only creates subgoals for non-dependent premises that have not
 been fixed by type inference or type class resolution.
 -/
 unsafe def eapply' (q : parse texpr) : tactic Unit :=
   concat_tags (i_to_expr_for_apply q >>= tactic.eapply')
 #align tactic.interactive.eapply' tactic.interactive.eapply'
 
-/-- Similar to the `apply'` tactic, but allows the user to provide a `apply_cfg` configuration object.
+/--
+Similar to the `apply'` tactic, but allows the user to provide a `apply_cfg` configuration object.
 -/
 unsafe def apply_with' (q : parse parser.pexpr) (cfg : ApplyCfg) : tactic Unit :=
   concat_tags do
@@ -196,7 +203,8 @@ unsafe def refl' : tactic Unit :=
   tactic.reflexivity'
 #align tactic.interactive.refl' tactic.interactive.refl'
 
-/-- `symmetry'` behaves like `symmetry` but also offers the option `symmetry' at h` to apply symmetry
+/--
+`symmetry'` behaves like `symmetry` but also offers the option `symmetry' at h` to apply symmetry
 to assumption `h`
 -/
 unsafe def symmetry' : parse location → tactic Unit

@@ -95,10 +95,8 @@ def horn (n : ℕ) (i : Fin (n + 1)) : SSet where
   obj m := { α : Δ[n].obj m // Set.range (asOrderHom α) ∪ {i} ≠ Set.univ }
   map m₁ m₂ f α :=
     ⟨f.unop ≫ (α : Δ[n].obj m₁), by
-      intro h
-      apply α.property
-      rw [Set.eq_univ_iff_forall] at h⊢
-      intro j
+      intro h; apply α.property
+      rw [Set.eq_univ_iff_forall] at h⊢; intro j
       apply Or.imp _ id (h j)
       intro hj
       exact Set.range_comp_subset_range _ _ hj⟩
@@ -108,7 +106,8 @@ def horn (n : ℕ) (i : Fin (n + 1)) : SSet where
 scoped[Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
-def hornInclusion (n : ℕ) (i : Fin (n + 1)) : Λ[n, i] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
+def hornInclusion (n : ℕ) (i : Fin (n + 1)) :
+    Λ[n, i] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
 #align sSet.horn_inclusion SSet.hornInclusion
 
 section Examples
@@ -149,7 +148,9 @@ namespace Augmented
 the obvious augmentation towards the terminal object of the category of sets. -/
 @[simps]
 noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented where
-  obj Δ := { left := SSet.standardSimplex.obj Δ, right := terminal _, hom := { app := fun Δ' => terminal.from _ } }
+  obj Δ :=
+    { left := SSet.standardSimplex.obj Δ, right := terminal _,
+      hom := { app := fun Δ' => terminal.from _ } }
   map Δ₁ Δ₂ θ := { left := SSet.standardSimplex.map θ, right := terminal.from _ }
 #align sSet.augmented.standard_simplex SSet.Augmented.standardSimplex
 
@@ -174,7 +175,8 @@ noncomputable def sSetTopAdj : SSet.toTop ⊣ TopCat.toSSet :=
 
 /-- The geometric realization of the representable simplicial sets agree
   with the usual topological simplices. -/
-noncomputable def SSet.toTopSimplex : (yoneda : SimplexCategory ⥤ _) ⋙ SSet.toTop ≅ SimplexCategory.toTop :=
+noncomputable def SSet.toTopSimplex :
+    (yoneda : SimplexCategory ⥤ _) ⋙ SSet.toTop ≅ SimplexCategory.toTop :=
   ColimitAdj.isExtensionAlongYoneda _
 #align sSet.to_Top_simplex SSet.toTopSimplex
 

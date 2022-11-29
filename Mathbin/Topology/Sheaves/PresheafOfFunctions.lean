@@ -51,7 +51,8 @@ def presheafToTypes (T : X → Type v) : X.Presheaf (Type v) where
 #align Top.presheaf_to_Types TopCat.presheafToTypes
 
 @[simp]
-theorem presheaf_to_Types_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} : (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
+theorem presheaf_to_Types_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} :
+    (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
   rfl
 #align Top.presheaf_to_Types_obj TopCat.presheaf_to_Types_obj
 
@@ -80,7 +81,8 @@ def presheafToType (T : Type v) : X.Presheaf (Type v) where
 #align Top.presheaf_to_Type TopCat.presheafToType
 
 @[simp]
-theorem presheaf_to_Type_obj {T : Type v} {U : (Opens X)ᵒᵖ} : (presheafToType X T).obj U = (unop U → T) :=
+theorem presheaf_to_Type_obj {T : Type v} {U : (Opens X)ᵒᵖ} :
+    (presheafToType X T).obj U = (unop U → T) :=
   rfl
 #align Top.presheaf_to_Type_obj TopCat.presheaf_to_Type_obj
 
@@ -112,7 +114,8 @@ def continuousFunctions (X : TopCat.{v}ᵒᵖ) (R : TopCommRingCat.{v}) : CommRi
 namespace ContinuousFunctions
 
 /-- Pulling back functions into a topological ring along a continuous map is a ring homomorphism. -/
-def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRingCat) : continuousFunctions X R ⟶ continuousFunctions Y R where
+def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRingCat) :
+    continuousFunctions X R ⟶ continuousFunctions Y R where
   toFun g := f.unop ≫ g
   map_one' := rfl
   map_zero' := rfl

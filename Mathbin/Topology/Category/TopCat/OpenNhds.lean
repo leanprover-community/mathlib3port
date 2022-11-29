@@ -52,9 +52,12 @@ instance (x : X) : PartialOrder (OpenNhds x) where
 
 instance (x : X) : Lattice (OpenNhds x) :=
   { OpenNhds.partialOrder x with inf := fun U V => ⟨U.1 ⊓ V.1, ⟨U.2, V.2⟩⟩,
-    le_inf := fun U V W => @le_inf _ _ U.1.1 V.1.1 W.1.1, inf_le_left := fun U V => @inf_le_left _ _ U.1.1 V.1.1,
-    inf_le_right := fun U V => @inf_le_right _ _ U.1.1 V.1.1, sup := fun U V => ⟨U.1 ⊔ V.1, V.1.1.mem_union_left U.2⟩,
-    sup_le := fun U V W => @sup_le _ _ U.1.1 V.1.1 W.1.1, le_sup_left := fun U V => @le_sup_left _ _ U.1.1 V.1.1,
+    le_inf := fun U V W => @le_inf _ _ U.1.1 V.1.1 W.1.1,
+    inf_le_left := fun U V => @inf_le_left _ _ U.1.1 V.1.1,
+    inf_le_right := fun U V => @inf_le_right _ _ U.1.1 V.1.1,
+    sup := fun U V => ⟨U.1 ⊔ V.1, V.1.1.mem_union_left U.2⟩,
+    sup_le := fun U V W => @sup_le _ _ U.1.1 V.1.1 W.1.1,
+    le_sup_left := fun U V => @le_sup_left _ _ U.1.1 V.1.1,
     le_sup_right := fun U V => @le_sup_right _ _ U.1.1 V.1.1 }
 
 instance (x : X) : OrderTop (OpenNhds x) where
@@ -71,7 +74,8 @@ instance openNhdsCategory (x : X) : Category.{u} (OpenNhds x) := by
 
 instance opensNhdsHomHasCoeToFun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) fun _ => U.1 → V.1 :=
   ⟨fun f x => ⟨x, f.le x.2⟩⟩
-#align topological_space.open_nhds.opens_nhds_hom_has_coe_to_fun TopologicalSpace.OpenNhds.opensNhdsHomHasCoeToFun
+#align
+  topological_space.open_nhds.opens_nhds_hom_has_coe_to_fun TopologicalSpace.OpenNhds.opensNhdsHomHasCoeToFun
 
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
@@ -121,7 +125,8 @@ theorem map_id_obj' (x : X) (U) (p) (q) : (map (𝟙 X) x).obj ⟨⟨U, p⟩, q�
 #align topological_space.open_nhds.map_id_obj' TopologicalSpace.OpenNhds.map_id_obj'
 
 @[simp]
-theorem map_id_obj_unop (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).obj (unop U) = unop U := by simp
+theorem map_id_obj_unop (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).obj (unop U) = unop U := by
+  simp
 #align topological_space.open_nhds.map_id_obj_unop TopologicalSpace.OpenNhds.map_id_obj_unop
 
 @[simp]
@@ -131,23 +136,20 @@ theorem op_map_id_obj (x : X) (U : (OpenNhds x)ᵒᵖ) : (map (𝟙 X) x).op.obj
 /-- `opens.map f` and `open_nhds.map f` form a commuting square (up to natural isomorphism)
 with the inclusion functors into `opens X`. -/
 def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ inclusion x :=
-  NatIso.ofComponents
-    (fun U => by
-      constructor
-      exact 𝟙 _
-      exact 𝟙 _)
-    (by tidy)
+  NatIso.ofComponents (fun U => by constructor; exact 𝟙 _; exact 𝟙 _) (by tidy)
 #align topological_space.open_nhds.inclusion_map_iso TopologicalSpace.OpenNhds.inclusionMapIso
 
 @[simp]
 theorem inclusion_map_iso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=
   rfl
-#align topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusion_map_iso_hom
+#align
+  topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusion_map_iso_hom
 
 @[simp]
 theorem inclusion_map_iso_inv (x : X) : (inclusionMapIso f x).inv = 𝟙 _ :=
   rfl
-#align topological_space.open_nhds.inclusion_map_iso_inv TopologicalSpace.OpenNhds.inclusion_map_iso_inv
+#align
+  topological_space.open_nhds.inclusion_map_iso_inv TopologicalSpace.OpenNhds.inclusion_map_iso_inv
 
 end OpenNhds
 

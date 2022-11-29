@@ -32,7 +32,7 @@ unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit 
 when the `trace.linarith` option is set to true.
 -/
 unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Unit :=
-  tactic.when_tracing `linarith <| do
+  (tactic.when_tracing `linarith) do
     tactic.trace s
     l tactic.infer_type >>= tactic.trace
 #align linarith.linarith_trace_proofs linarith.linarith_trace_proofs
@@ -110,7 +110,9 @@ def cmp : Linexp → Linexp → Ordering
   | _, [] => Ordering.gt
   | (n1, z1) :: t1, (n2, z2) :: t2 =>
     if n1 < n2 then Ordering.lt
-    else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
+    else
+      if n2 < n1 then Ordering.gt
+      else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
 #align linarith.linexp.cmp Linarith.Linexp.cmp
 
 end Linexp
@@ -290,7 +292,8 @@ unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor wher
 
 /-- A `global_preprocessor` lifts to a `global_branching_preprocessor` by producing only one branch.
 -/
-unsafe def global_preprocessor.branching (pp : global_preprocessor) : global_branching_preprocessor where
+unsafe def global_preprocessor.branching (pp : global_preprocessor) :
+    global_branching_preprocessor where
   Name := pp.Name
   transform l := do
     let g ← tactic.get_goal
@@ -300,8 +303,8 @@ unsafe def global_preprocessor.branching (pp : global_preprocessor) : global_bra
 /-- `process pp l` runs `pp.transform` on `l` and returns the result,
 tracing the result if `trace.linarith` is on.
 -/
-unsafe def global_branching_preprocessor.process (pp : global_branching_preprocessor) (l : List expr) :
-    tactic (List branch) := do
+unsafe def global_branching_preprocessor.process (pp : global_branching_preprocessor)
+    (l : List expr) : tactic (List branch) := do
   let l ← pp.transform l
   when (l > 1) <| linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
   l fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
@@ -312,11 +315,14 @@ unsafe instance preprocessor_to_gb_preprocessor : Coe preprocessor global_branch
   ⟨global_preprocessor.branching ∘ preprocessor.globalize⟩
 #align linarith.preprocessor_to_gb_preprocessor linarith.preprocessor_to_gb_preprocessor
 
-unsafe instance global_preprocessor_to_gb_preprocessor : Coe global_preprocessor global_branching_preprocessor :=
+unsafe instance global_preprocessor_to_gb_preprocessor :
+    Coe global_preprocessor global_branching_preprocessor :=
   ⟨global_preprocessor.branching⟩
-#align linarith.global_preprocessor_to_gb_preprocessor linarith.global_preprocessor_to_gb_preprocessor
+#align
+  linarith.global_preprocessor_to_gb_preprocessor linarith.global_preprocessor_to_gb_preprocessor
 
-/-- A `certificate_oracle` is a function `produce_certificate : list comp → ℕ → tactic (rb_map ℕ ℕ)`.
+/--
+A `certificate_oracle` is a function `produce_certificate : list comp → ℕ → tactic (rb_map ℕ ℕ)`.
 `produce_certificate hyps max_var` tries to derive a contradiction from the comparisons in `hyps`
 by eliminating all variables ≤ `max_var`.
 If successful, it returns a map `coeff : ℕ → ℕ` as a certificate.
@@ -348,7 +354,8 @@ unsafe structure linarith_config : Type where
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
 -/
-unsafe def linarith_config.update_reducibility (cfg : linarith_config) (reduce_semi : Bool) : linarith_config :=
+unsafe def linarith_config.update_reducibility (cfg : linarith_config) (reduce_semi : Bool) :
+    linarith_config :=
   if reduce_semi then { cfg with Transparency := semireducible, discharger := sorry } else cfg
 #align linarith.linarith_config.update_reducibility linarith.linarith_config.update_reducibility
 

@@ -17,9 +17,11 @@ open Interactive Interactive.Types Lean.Parser
 
 namespace Tactic
 
-private unsafe def collect_proofs_in : expr → List expr → List Name × List expr → tactic (List Name × List expr)
+private unsafe def collect_proofs_in :
+    expr → List expr → List Name × List expr → tactic (List Name × List expr)
   | e, ctx, (ns, hs) =>
-    let go (tac : List Name × List expr → tactic (List Name × List expr)) : tactic (List Name × List expr) := do
+    let go (tac : List Name × List expr → tactic (List Name × List expr)) :
+      tactic (List Name × List expr) := do
       let t ← infer_type e
       condM (is_prop t)
           (do
@@ -107,8 +109,8 @@ unsafe def generalize_proofs : parse ident_* → parse location → tactic Unit 
 end Interactive
 
 add_tactic_doc
-  { Name := "generalize_proofs", category := DocCategory.tactic, declNames := [`tactic.interactive.generalize_proofs],
-    tags := ["context management"] }
+  { Name := "generalize_proofs", category := DocCategory.tactic,
+    declNames := [`tactic.interactive.generalize_proofs], tags := ["context management"] }
 
 end Tactic
 
