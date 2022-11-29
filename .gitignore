@@ -1,3 +1,3 @@
 build/
-lean_packages/
+lake-packages/
 mathlib3-synport.tar.gz*

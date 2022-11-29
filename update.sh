@@ -5,8 +5,8 @@ echo and creates a bump commit.
 
 set -ex
 
-lake print-paths
-pushd lean_packages/lean3port
+lake resolve-deps
+pushd lake-packages/lean3port
 git fetch origin
 git checkout origin/master
 cp lean-toolchain ../..
@@ -20,7 +20,6 @@ sed -i.bak '
   /^require lean3port / s/@"\([^"]*\)"$/@"'$lean3port_rev'"/
 ' lakefile.lean
 rm lakefile.lean.bak
-rm -f lean_packages/manifest.json
 lake update
 
 rm -rf Mathbin
@@ -32,7 +31,7 @@ cp build/lib/upstream-rev .
 upstream_rev=$(cat upstream-rev)
 sed -i 's|\(.* mathlib commit:\).*|\1 '"[\`$upstream_rev\`](https://github.com/leanprover-community/mathlib/commit/$upstream_rev)|" README.md
 
-git add Mathbin upstream-rev README.md
+git add Mathbin upstream-rev README.md lake-manifest.json
 git commit -am "bump to $tag
 
 mathlib commit https://github.com/leanprover-community/mathlib/commit/$upstream_rev" || true that
